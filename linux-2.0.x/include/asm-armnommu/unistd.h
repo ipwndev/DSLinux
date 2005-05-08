@@ -179,8 +179,20 @@
 #define __sys2(x) #x
 #define __sys1(x) __sys2(x)
 
+#if defined(CONFIG_ARCH_GBA)
+#undef __syscall
+#define __syscall(name)					\
+	"stmfd	sp!, {r11, r12}"		"\n\t"	\
+	"ldr	r11, =0x04000208"		"\n\t"	\
+	"mov	r12, #0"			"\n\t"	\
+	"str	r12, [r11]"			"\n\t"	\
+	"ldmfd	sp!, {r11, r12}"		"\n\t"	\
+	"swi	0x290000"			"\n\t"	\
+	"swi	" __sys1(__NR_##name) 		"\n\t"
+#else
 #ifndef __syscall
 #define __syscall(name) "swi " __sys1(__NR_##name) "\n\t"
+#endif
 #endif
 
 #define _syscall0(type,name)								\
