@@ -31,7 +31,12 @@
 ENTRY (__vfork)
 
 #ifdef __SYS_vfork
+	/* TC!IB! Only the first swi is execute, 
+ 	 * the second is just used to get the swi value, not really execute */		 
+	swi 0x290000
+
 	swi	SYS_ify(vfork)
+	
 	cmn	a1, #4096
 	RETINSTR(movcc, pc, lr)
 
@@ -42,7 +47,12 @@ ENTRY (__vfork)
 #endif
 
 	/* If we don't have vfork, fork is close enough.  */
+	/* TC!IB! Only the first swi is execute, 
+ 	 * the second is just used to get the swi value, not really execute */
+	swi 0x290000 /* TC! */
+	
 	swi	SYS_ify(fork)
+		
 	cmn	a1, #4096
 	RETINSTR(movcc, pc, lr)
     	b	PLTJMP(C_SYMBOL_NAME(__syscall_error))

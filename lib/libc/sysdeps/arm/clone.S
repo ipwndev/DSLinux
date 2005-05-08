@@ -44,7 +44,13 @@ ENTRY(__clone)
 	@ get flags
 	mov	r0, r2
 	@ new sp is already in r1
+
+	/* TC!IB! Only the first swi is execute, 
+ 	 * the second is just used to get the swi value, not really execute */		
+	swi 0x290000
+	
 	swi	SYS_ify(clone)
+	
 	movs	a1, a1
 	blt	PLTJMP(C_SYMBOL_NAME(__syscall_error))
 	RETINSTR(movne, pc, lr)
