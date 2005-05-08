@@ -167,7 +167,7 @@ ifeq ($(CONFIG_ARCH_GBA),y)
 HEAD		 := arch/armnommu/kernel/head-arm-gba.o
 MACHINE 	 = gba
 TEXTADDR	 = 0x08000000
-ARCHLDFLAGS      = -Tdata=0x02000000 -T $(TOPDIR)/arch/armnommu/vmlinux-armv.lds.in
+ARCHLDFLAGS      = -Tdata=0x02005000 -T $(TOPDIR)/arch/armnommu/vmlinux-armv.lds.in
 endif
 
 OBJDUMP		 = $(CROSS_COMPILE)objdump
