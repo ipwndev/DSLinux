@@ -52,16 +52,126 @@ char *gbatxt_drivername = "GBA text console, version 1.0\n";
 #define	GBA_PALBASE	0x05000000		/* Pallete RAM base */
 #define	GBA_VIDBASE	0x06000000		/* Video RAM base */
 
+#define GBA_DISPCNT	(GBA_CTRLBASE + 0x00)
+/* GBA_BGnCNT */
+#define GBA_BG_CNT(n)	(GBA_CTRLBASE + 0x08 + 2*(n))
+/* GBA_BGnHOFS */
+#define GBA_BG_HOFS(n)	(GBA_CTRLBASE + 0x10 + 4*(n))
+/* GBA_BGnVOFS */
+#define GBA_BG_VOFS(n)	(GBA_CTRLBASE + 0x12 + 4*(n))
+
+/* 16 16-colour palettes */
+#define GBA_BG_COL16	(0<<7)
+/* 1 256-colour palette */
+#define GBA_BG_COL256	(1<<7)
+
+/* 15-bit colour */
+#define GBA_RGB(r,g,b)	((((b<<5)|g)<<5)|r)
+
+/* white */
+#define GBA_COL_WHITE	GBA_RGB(31,31,31)
+/* grey */
+#define GBA_COL_GREY	GBA_RGB(23,23,23)
+/* bright green */
+#define GBA_COL_GREEN_L	GBA_RGB( 0,31, 0)
+/* medium green */
+#define GBA_COL_GREEN_M	GBA_RGB( 0,23, 0)
+/* dark green */
+#define GBA_COL_GREEN_D	GBA_RGB( 0,15, 0)
+/* bright red */
+#define GBA_COL_RED_L	GBA_RGB(31, 0, 0)
+/* medium red */
+#define GBA_COL_RED_M	GBA_RGB(23, 0, 0)
+/* dark red */
+#define GBA_COL_RED_D	GBA_RGB(15, 0, 0)
+/* bright blue */
+#define GBA_COL_BLUE_L	GBA_RGB(0, 0, 31)
+/* medium blue */
+#define GBA_COL_BLUE_M	GBA_RGB(0, 0, 23)
+/* dark blue */
+#define GBA_COL_BLUE_D	GBA_RGB(0, 0, 15)
+/* black (very dark ;-) */
+#define GBA_COL_BLACK	GBA_RGB( 0, 0, 0)
+
+/* 
+ * Choose palette entry for character colour
+ * Must be different from 0 (= backdrop colour)
+ */
+#define GBA_TXT_COL_IDX	1
+#if GBA_TXT_COL_IDX == 0
+#error GBA palette entry 0 is reserved for backdrop colour
+#endif
+
+#define GBA_TXT_COL0	GBA_COL_WHITE
+#define GBA_TXT_COL1	GBA_COL_GREEN_L
+#define GBA_TXT_COL2	GBA_COL_RED_L
+#define GBA_TXT_COL3	GBA_COL_BLUE_L
+#define GBA_TXT_COL4	GBA_COL_GREEN_M
+#define GBA_TXT_COL5	GBA_COL_RED_M
+#define GBA_TXT_COL6	GBA_COL_BLUE_M
+#define GBA_TXT_COL7	GBA_COL_GREEN_D
+#define GBA_TXT_COL8	GBA_COL_RED_D
+#define GBA_TXT_COL9	GBA_COL_BLUE_D
+#define GBA_TXT_COL10	GBA_COL_GREY
+#define GBA_TXT_COL11	GBA_COL_GREY
+#define GBA_TXT_COL12	GBA_COL_GREY
+#define GBA_TXT_COL13	GBA_COL_GREY
+#define GBA_TXT_COL14	GBA_COL_GREY
+#define GBA_TXT_COL15	GBA_COL_GREY
+#define GBA_TXT_COL(i)	GBA_TXT_COL##i
+
+/* GBA text screen number */
+#define GBA_TXT_BG	0
+
+/* Text mode */
+#define GBA_BG_MODE	0
+#define GBA_BG_ACTIVE(n)	(1<<(8+n))
+
+/* Screen size 256x256 (BG0 only) */
+#define GBA_SC_SIZE	0
+#define GBA_TILE_OFF	(0<<14)
+#define GBA_TILE	(GBA_VIDBASE + GBA_TILE_OFF)
+/* 32 kB offset (configurable in units of 2 kB */
+#define GBA_BGMAP_OFF	(16<<11)
+/* add a 2 kB offset for each BG map */
+#define GBA_BGMAP(n)	(GBA_VIDBASE + GBA_BGMAP_OFF + (1<<11)*(n))
+/* Priority = [0;3], 0=Highest */
+#define GBA_BG_PRI(n)	(n)
+/* Palette */
+#define GBA_COL		16
+#if GBA_COL == 256
+#define GBA_BG_COL	(GBA_BG_COL256)
+#if GBA_TXT_COL_IDX < 0 || GBA_TXT_COL_IDX > 255
+#error GBA Text colour index must be in range [1;255]
+#endif
+#elif GBA_COL == 16
+#define GBA_BG_COL	(GBA_BG_COL16)
+#if GBA_TXT_COL_IDX < 0 || GBA_TXT_COL_IDX > 15
+#error GBA Text colour index must be in range [1;15]
+#endif
+#else
+#error Only 16- and 256-colour palettes are available for the GBA.
+#endif
+
+/* Flags for DISPCNT register */
+/* Activate GBA_TXT_BG */
+#define GBA_DISPCNT_F	(GBA_BG_MODE | GBA_BG_ACTIVE(GBA_TXT_BG))
+/* Flags for GBA_BG_CNT(GBA_TXT_BG) register */
+/* BG1-3 automatically use the correct offset from GBA_MAP(0) (2kB each) */
+#define GBA_TXT_BG_CNT_F	(GBA_BG_PRI(0) | GBA_BG_COL | ((GBA_BGMAP_OFF>>11)<<8) | GBA_SC_SIZE)
+
 /****************************************************************************/
 
 /*
  *	Screen dimensions. Need to allow for screen overshoot regions too.
  *	Also keep track of current cursor postion (x,y).
  */
-#define	GBA_XMAX	32
-#define	GBA_XLEN	30
-#define	GBA_YMAX	32
-#define	GBA_YLEN	20
+#define	GBA_XORD	5
+#define	GBA_XMAX	(1<<GBA_XORD)
+#define	GBA_XLEN	32
+#define	GBA_YORD	5
+#define	GBA_YMAX	(1<<GBA_YORD)
+#define	GBA_YLEN	24
 
 int	gbatxt_x;
 int	gbatxt_y;
@@ -69,6 +179,7 @@ int	gbatxt_y;
 /****************************************************************************/
 
 int gbatxt_console_inited = 0;
+static signed short vert_offset = 0;
 
 DECLARE_TASK_QUEUE(gbatxt_tq_serial);
 
@@ -124,7 +235,7 @@ extern int	magic_sysrq_key(int ch);
 /****************************************************************************/
 
 void gbatxt_console_print(char *s);
-void gbatxt_console_putc(int c);
+void gbatxt_console_putc(char c);
 
 /****************************************************************************/
 
@@ -1254,9 +1365,13 @@ int gbatxt_init(void)
 	/* Initialize the tty_driver structure */
 	memset(&gbatxt_serial_driver, 0, sizeof(struct tty_driver));
 	gbatxt_serial_driver.magic = TTY_DRIVER_MAGIC;
-	gbatxt_serial_driver.name = "ttyS";
+// TC!IB!
+	gbatxt_serial_driver.name = "tty";
+//	gbatxt_serial_driver.name = "ttyS";
 	gbatxt_serial_driver.major = TTY_MAJOR;
-	gbatxt_serial_driver.minor_start = 64;
+// TC!IB!
+	gbatxt_serial_driver.minor_start = 1;
+//	gbatxt_serial_driver.minor_start = 64;
 	gbatxt_serial_driver.num = NR_PORTS;
 	gbatxt_serial_driver.type = TTY_DRIVER_TYPE_SERIAL;
 	gbatxt_serial_driver.subtype = SERIAL_TYPE_NORMAL;
@@ -1327,7 +1442,7 @@ int gbatxt_init(void)
 		gbatxt_irqinit(info);
 
 		printk("%s%d", gbatxt_serial_driver.name, info->line);
-		printk(" is a GBA console\n");
+		printk(" is a NDS console\n");
 	}
 
 	restore_flags(flags);
@@ -1480,22 +1595,32 @@ const struct charmap	gbatxt_charmap[] = {
 
 void gbatxt_inittext(void)
 {
-	unsigned short	*vp;
+	unsigned short	*vp = (unsigned short *) GBA_TILE;
 	struct charmap	*cp;
 	unsigned char	bits;
 	int		i, j, r, b;
 
-	vp = (unsigned short *) GBA_VIDBASE;
-
 	for (j = 0; (j < 2); j++) {
 		cp = (struct charmap *) &gbatxt_charmap[0];
-		for (i = 0; (i < 128); i++, cp++) {
+		for (i = 0; i < sizeof(gbatxt_charmap)/sizeof(struct charmap); i++, cp++) {
 			for (r = 0; (r < 8); r++) {
 				bits = cp->bitmap[r];
-				for (b = 0; (b < 8); b += 2) {
-					*vp++ = ((bits & (0x80>>b)) ? 1 : 0) |
-					    ((bits & (0x40>>b)) ? 0x100 : 0);
+/* tile format depends on palettes mode */
+#if   GBA_BG_COL == GBA_BG_COL16
+				for (b = 0; b < 8; b += 4) {
+					*vp++ = ((bits & (0x80>>b)) ? (((unsigned short)GBA_TXT_COL_IDX)<< 0) : 0) |
+						((bits & (0x40>>b)) ? (((unsigned short)GBA_TXT_COL_IDX)<< 4) : 0) |
+						((bits & (0x20>>b)) ? (((unsigned short)GBA_TXT_COL_IDX)<< 8) : 0) |
+						((bits & (0x10>>b)) ? (((unsigned short)GBA_TXT_COL_IDX)<<12) : 0);
 				}
+#elif GBA_BG_COL == GBA_BG_COL256
+				for (b = 0; b < 8; b += 2) {
+					*vp++ = ((bits & (0x80>>b)) ? (((unsigned short)GBA_TXT_COL_IDX)<<0) : 0) |
+						((bits & (0x40>>b)) ? (((unsigned short)GBA_TXT_COL_IDX)<<8) : 0);
+				}
+#else
+#error Only 16- and 256-colour palettes are available for the GBA.
+#endif
 			}
 		}
 	}
@@ -1514,14 +1639,37 @@ void gbatxt_console_init(void)
 	int			i;
 
 	/* Enable mode 0 */
-	*((unsigned short *) (GBA_CTRLBASE + 0x00)) = 0x0100;	/*MODE0|BG0*/
-	*((unsigned short *) (GBA_CTRLBASE + 0x08)) = 0x1080;
+	*((unsigned short *) GBA_DISPCNT) = GBA_DISPCNT_F;	/*MODE0|BG0*/
+	/* BG0: 256 colour palette, 32kB BG Map Data */
+	*((unsigned short *) GBA_BG_CNT(GBA_TXT_BG)) = GBA_TXT_BG_CNT_F;
 
 	/* Default palete, everything is white :-) */
 	pp = (volatile unsigned short *) GBA_PALBASE;
 	for (i = 255; i; i--)
-		pp[i] = 0x7fff;
-	pp[0] = 0;
+		pp[i] = GBA_COL_WHITE;
+
+#if   GBA_BG_COL == GBA_BG_COL16
+	/* text colours */
+	pp[16* 0 + GBA_TXT_COL_IDX] = GBA_TXT_COL( 0);
+	pp[16* 1 + GBA_TXT_COL_IDX] = GBA_TXT_COL( 1);
+	pp[16* 2 + GBA_TXT_COL_IDX] = GBA_TXT_COL( 2);
+	pp[16* 3 + GBA_TXT_COL_IDX] = GBA_TXT_COL( 3);
+	pp[16* 4 + GBA_TXT_COL_IDX] = GBA_TXT_COL( 4);
+	pp[16* 5 + GBA_TXT_COL_IDX] = GBA_TXT_COL( 5);
+	pp[16* 6 + GBA_TXT_COL_IDX] = GBA_TXT_COL( 6);
+	pp[16* 7 + GBA_TXT_COL_IDX] = GBA_TXT_COL( 7);
+	pp[16* 8 + GBA_TXT_COL_IDX] = GBA_TXT_COL( 8);
+	pp[16* 9 + GBA_TXT_COL_IDX] = GBA_TXT_COL( 9);
+	pp[16*10 + GBA_TXT_COL_IDX] = GBA_TXT_COL(10);
+	pp[16*11 + GBA_TXT_COL_IDX] = GBA_TXT_COL(11);
+	pp[16*12 + GBA_TXT_COL_IDX] = GBA_TXT_COL(12);
+	pp[16*13 + GBA_TXT_COL_IDX] = GBA_TXT_COL(13);
+	pp[16*14 + GBA_TXT_COL_IDX] = GBA_TXT_COL(14);
+	pp[16*15 + GBA_TXT_COL_IDX] = GBA_TXT_COL(15);
+#endif
+
+	/* backdrop colour */
+	pp[0] = GBA_COL_BLACK;
 
 	gbatxt_x = 0;
 	gbatxt_y = 0;
@@ -1555,46 +1703,58 @@ int gbatxt_gety(void)
 /****************************************************************************/
 
 /*
- *	Scroll one screen line. There is probably a better/quicker
- *	way to do this. But this will do for now...
+ *	Scroll one screen line.
  */
 
 void gbatxt_scroll(void)
 {
-	unsigned short	*sp, *dp;
-	int		len;
+	unsigned short* vert_offset_reg = (unsigned short *) (GBA_BG_VOFS(GBA_TXT_BG));
 
-	dp = (unsigned short *) (GBA_VIDBASE + 0x8000);
-	sp = dp + GBA_XMAX;
-	len = (GBA_XMAX * (GBA_YLEN - 1));
-
-	while (len--)
-		*dp++ = *sp++;
-	for (len = GBA_XMAX; len; len--)
-		*dp++ = 0;
+	/* scroll up 1 line, wrap around at 32 lines */
+	vert_offset = (vert_offset + 1) & (GBA_YMAX-1);
 	
+	/* 8 dots makes 1 character line */
+	*vert_offset_reg = vert_offset << 3;
 }
 
 /****************************************************************************/
 
-void gbatxt_console_putc(int c)
+void gbatxt_console_putc(char c)
 {
-	unsigned short	*vp;
+	/* 
+	 * Note that this works because the BG maps are
+	 * always aligned at a 2 kB boundary
+	 */
+	unsigned short *vp = (unsigned short*) 
+		(GBA_BGMAP(GBA_TXT_BG) |
+		 (((((gbatxt_y + vert_offset) & (GBA_YMAX-1)) << GBA_XORD) |
+		   gbatxt_x) << 1)
+		);
+	unsigned int i;
+	/* choose colour for the character */
+	unsigned short gba_palette = 0;	/* white */
 
-	vp = (unsigned short *) (GBA_VIDBASE + 0x8000);
-	vp += (gbatxt_y * GBA_XMAX) + gbatxt_x;
-	*vp = c;
+	/* don't print special characters */
+	if (c != '\r' && c != '\n')
+		*vp = (gba_palette << 12) | (((unsigned short)c) & 0x1ff);
 
 	gbatxt_x++;
 	if ((gbatxt_x >= GBA_XLEN) || (c == '\n')) {
 		gbatxt_x = 0;
+		if (gbatxt_y < GBA_YLEN - 1) {
 		gbatxt_y++;
-		if (gbatxt_y >= GBA_YLEN) {
+		} else {
+			/* blank out new line */
+			vp = (unsigned short*) 
+				(GBA_BGMAP(GBA_TXT_BG) |
+				 (((GBA_YLEN + vert_offset) & (GBA_YMAX-1)) << (GBA_XORD + 1))
+				);
+			for (i = GBA_XLEN; i; i--)
+				*vp++ = ' ';
 			gbatxt_scroll();
-			gbatxt_y = GBA_YLEN - 1;
 		}
 	}
-	if (c == '\r')
+	else if (c == '\r')
 		gbatxt_x = 0;
 }
 
