@@ -112,6 +112,7 @@ struct armversions armidlist[] = {
 	{ 0x41007100, 0xffffff00, F_32BIT , "ARM/APLIO",   "arm7"		, &arm7_processor_functions   },
 	{ 0x41007200, 0xffffff00, F_32BIT , "ARM/NETsilicon",   "arm7"		, &arm7_processor_functions   },
 	{ 0x41007300, 0xffffff00, F_32BIT , "ARM/GBA",   "arm7"	 		, &arm7_processor_functions   },
+	{ 0x41007400, 0xffffff00, F_32BIT , "ARM/DS",   "arm9"	 		, &arm7_processor_functions   },
 #endif
 	{ 0x00000000, 0x00000000, 0		, "***",	"*unknown*"	, NULL }
 	
@@ -374,7 +375,9 @@ void setup_arch(char **cmdline_p,
 
 		gbatxt_console_init();
 		register_console(gbatxt_console_print);
-		printk("uClinux/GBA\n");
+		printk("uClinux/NDS\n");
+		printk("Nintendo DS port by Malcolm Parsons (pepsiman@blueyonder.co.uk)\n");
+        printk("based on the\n");
 		printk("GameBoyAdvance port by Greg Ungerer (gerg@napgearcom)\n");
 	}
 #endif
