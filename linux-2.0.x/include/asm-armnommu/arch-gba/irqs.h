@@ -14,8 +14,8 @@
 /*
  *	GBA interrupts are controlled by 3 registers in the IO memory space.
  */
-#define	GBA_IE		0x04000200		/* Interrupt mask */
-#define	GBA_IF		0x04000202		/* Interrup service */
+#define	GBA_IE		0x04000210		/* Interrupt mask */
+#define	GBA_IF		0x04000214		/* Interrup service */
 #define	GBA_IME		0x04000208		/* Enable/disable */
 
 /*
