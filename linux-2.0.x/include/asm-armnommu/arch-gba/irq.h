@@ -54,9 +54,6 @@ extern int probe_IRQ_interrupt(int irq, struct pt_regs *regs);
 #define IRQ_interrupt30 IRQ_interrupt
 #define IRQ_interrupt31 IRQ_interrupt
 
-/* GBA timer is configured on TIMER1 (cascaded from 0). */
-#undef IRQ_interrupt4
-#define	IRQ_interrupt4	timer_IRQ_interrupt
 
 #define IRQ_INTERRUPT(n)   (void (*)(void))IRQ_interrupt##n
 #define FAST_INTERRUPT(n)  (void (*)(void))fast_IRQ_interrupt
