@@ -12,12 +12,14 @@ DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
 	\
 	mem,c,1,1      kmem,c,1,2         null,c,1,3       ram0,b,1,0 \
-	ram1,b,1,1 \
+	ram1,b,1,1 	   hda,b,3,0 \
 	\
 	ptyp0,c,2,0    ptyp1,c,2,1        ptyp2,c,2,2      ptyp3,c,2,3 \
 	ptyp4,c,2,4    ptyp5,c,2,5        ptyp6,c,2,6      ptyp7,c,2,7 \
 	ptyp8,c,2,8    ptyp9,c,2,9        ptypa,c,2,10     ptypb,c,2,11 \
 	ptypc,c,2,12   ptypd,c,2,13       ptype,c,2,14     ptypf,c,2,15 \
+	\
+	dsp,c,14,0\
 	\
 	rom0,b,31,0    rom1,b,31,1        rom2,b,31,2      rom3,b,31,3 \
 	rom4,b,31,4    rom5,b,31,5        rom6,b,31,6      rom7,b,31,7 \
