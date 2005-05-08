@@ -246,48 +246,47 @@ irq_prio_netarm:
 		.endm
 
 		.macro	get_irqnr_and_base, irqnr, base
-		ldr	r4, =0x04000200			/* Get IE/IF reg */
+		ldr	r4, =0x04000214			/* Get IF reg */
 		ldr	r0, [r4]
-		and	r0, r0, r0, lsr #16		/* IE & IF */
 
-		/* This is grossly inefficient, I dis-own it :-) */
-		mov	\irqnr, #0			/* default IRQ=0 */
-		tst	r0, #0x0001			/* VBLANK intr */
-		movne	\irqnr, #1
-		tst	r0, #0x0002			/* HBLANK intr */
-		movne	\irqnr, #2
-		tst	r0, #0x0004			/* YTRIG intr */
-		movne	\irqnr, #3
-		tst	r0, #0x0008			/* TIMER0 intr */
-		movne	\irqnr, #4
-		tst	r0, #0x0010			/* TIMER1 intr */
-		movne	\irqnr, #5
-		tst	r0, #0x0020			/* TIMER2 intr */
-		movne	\irqnr, #6
-		tst	r0, #0x0040			/* TIMER3 intr */
-		movne	\irqnr, #7
-		tst	r0, #0x0080			/* COMMS intr */
-		movne	\irqnr, #8
-		tst	r0, #0x0100			/* DMA0 intr */
-		movne	\irqnr, #9
-		tst	r0, #0x0200			/* DMA1 intr */
-		movne	\irqnr, #10
-		tst	r0, #0x0400			/* DMA2 intr */
-		movne	\irqnr, #11
-		tst	r0, #0x0800			/* DMA3 intr */
-		movne	\irqnr, #12
-		tst	r0, #0x1000			/* KEYPAD intr */
-		movne	\irqnr, #13
-		tst	r0, #0x2000			/* CART intr */
-		movne	\irqnr, #14
+		/* TC!IB! */
+		mov	r4, #1				/* IRQ counter */
+1:
+		tst	r0, #0x0001			/* test if irq r4 active */
+		movne	\irqnr, r4
+		bne	2f
 
+		mov	r0, r0, lsr #1			/* prepare test next irq */
+		add	r4, r4, #1
+		teq	r4, #15				/* test if irqs ended*/
+		bne	1b
+ 
+		moveq	\irqnr, #0			/* no irq found */
+		beq	3f
+2:
+		adr	\base, flag_irqs
+		ldr	r0, [\base, \irqnr, lsl #2]
+		ldr	r4, =0x04000214
+		str	r0, [r4]			/* irq acquired */
+3:
 		adr	\base, irq_prio_gba
 		.endm
 		
 		.macro	irq_prio_table
 irq_prio_gba:
-		.byte   0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
+		.byte   0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34
+flag_irqs:
+		.word	0x00000000,0x00000001, 0x00000002,0x00000004
+		.word	0x00000008,0x00000010, 0x00000020,0x00000040
+		.word	0x00000080,0x00000100, 0x00000200,0x00000400
+		.word	0x00000800,0x00001000, 0x00002000,0x00004000
+		.word	0x00000000,0x00010000, 0x00020000,0x00040000
+		.word	0x00080000,0x00100000, 0x00200000,0x00400000
+		.word	0x00800000,0x01000000, 0x02000000,0x04000000
+		.word	0x08000000,0x10000000, 0x20000000,0x00000000
 		.endm
+
+		/* TC!IB! */		
 
 #else
 #error Unknown architecture
@@ -392,6 +391,20 @@ jump_addresses:	.word	0
 		.word	vector_data
 		.word	vector_addrexcptn
 		.word	vector_IRQ
+
+@ TC!IB! 
+#if defined(CONFIG_ARCH_GBA)
+.ltorg
+.code 16
+jump_to_vector_swi:
+		ldr r2, =vector_swi
+        bx r2
+.ltorg
+.align
+.code 32
+#endif
+@ TC!IB
+
 /*
  * initialise the trap system
  */
@@ -417,6 +430,14 @@ _trap_init:	stmfd	sp !,{r4 - r9, lr}		@ Save link register
 		adr	r1, Lbranches
 		ldmia	r1, {r1 - r9}
 		stmia	r0, {r1 - r9}			@ Save all into page 0 ram
+@ TC!IB!
+#if defined(CONFIG_ARCH_GBA)
+		ldr	r0, =0x02004918
+		adr	r1, jump_to_vector_swi
+		ldmia	r1, {r1 - r3}
+		stmia	r0, {r1 - r3}
+#endif
+@ TC!IB!
 		ldmfd	sp!, {r4 - r9, pc}
 /*
  * Undefined FIQs
@@ -444,7 +465,12 @@ _unexp_fiq:	disable_fiq
 
 
 LCirq:		.word	__temp_irq
-vector_IRQ:	@
+vector_IRQ:
+#if defined(CONFIG_ARCH_GBA)
+		@TC!IB! load registers saved by GBA BIOS
+		ldmfd	sp!,{r0,r1,r2,r3,r12,lr}
+#endif
+		@
 		@ save mode specific registers
 		@
 		ldr	r13, LCirq
@@ -459,10 +485,20 @@ vector_IRQ:	@
 		bic	sp, sp, #31
 		orr	sp, sp, #0x13
 		msr	spsr, sp
+
+#if defined(CONFIG_ARCH_GBA)
+		@TC!IB! set SP to right value for the next IRQ call
+		ldr	sp, =0x00803f80
+#endif
+
 		and	lr, lr, #15
 		cmp	lr, #4
 		addlts	pc, pc, lr, lsl #2		@ Changes mode and branches
+#if defined(CONFIG_ARCH_GBA)
+		b	__irq_sys			@  4 - 14, SYS_32 (on SWI entry)
+#else
 		b	__irq_invalid			@  4 - 15
+#endif
 		b	__irq_usr			@  0  (USR_26 / USR_32)
 		b	__irq_invalid			@  1  (FIQ_26 / FIQ_32)
 		b	__irq_invalid			@  2  (IRQ_26 / IRQ_32)
@@ -575,7 +611,23 @@ LC1:		.word	current
 /*
  * Enter in SVC mode, spsr_all = OLD_USER_cpsr_all, R14 = OLD_USER_PC
  */
-vector_swi:	sub	sp, sp, #S_FRAME_SIZE
+vector_swi:
+#if defined(CONFIG_ARCH_GBA)
+		@ TC!IB! Undo the changes made by GBA BIOS 
+		ldmfd	sp!, {r2,lr}
+//		ldr	r11,=0x13
+		@ keep interrupts disabled/enabled
+		@ 0x1f xor 0x0c => 0x13
+		eor	r11, r11, #0x0c
+		msr	cpsr, r11
+		ldmfd	sp!, {r11}
+		msr	spsr, r11
+		ldmfd	sp!, {r11,r12,lr}
+
+		@TC!IB! lr set to swi instruction
+		add	lr, lr, #4
+#endif
+		sub	sp, sp, #S_FRAME_SIZE
 		stmia	sp, {r0 - r12}			@ Calling r0 - r12
 		add	r8, sp, #S_PC
 		stmdb	r8, {sp, lr}^			@ Calling sp, lr
@@ -588,9 +640,16 @@ vector_swi:	sub	sp, sp, #S_FRAME_SIZE
 		and	r5, r6, #0x0f000000
 		teq	r5, #0x0f000000
 		bne	Larm700bug
+#ifdef CONFIG_ARCH_GBA
+		@ GBA does not disable irqs on swi, using PIC instead
+		ldr	r5, =0x04000208
+		mov	ip, #1
+		str	ip, [r5]
+#else
 		mrs	r5, cpsr			@ enable irqs
 		bic	r5, r5, #I_BIT
 		msr	cpsr, r5
+#endif
 		bic	r6, r6, #0xff000000		@ mask off swi op code
 		eor	r6, r6, #OS_NUMBER << 20	@ check OS number
 Lretry:		cmp	r6, #NR_SYSCALLS		@ check upper syscall limit
@@ -933,7 +992,12 @@ has_irq_usr:
 		beq	_ret_from_sys_call
 		ldr	r0, [sp, #S_PSR]		@ Get saved SPSR
 		msr	spsr, r0			@ restore SPSR
+#if defined(CONFIG_ARCH_GBA) && defined(CONFIG_GBAEMU)
+		@ TC!IB! forced user bank not supported
+		ldmia	sp, {r0 - r12}			@ Get calling r0 - r12
+#else
 		ldmia	sp, {r0 - lr}^			@ Get calling r0 - lr
+#endif
 		mov	r0, r0
 		add	sp, sp, #S_PC
 		ldr	lr, [sp], #S_FRAME_SIZE - S_PC
@@ -972,23 +1036,23 @@ srepeat:	get_irqnr_and_base r6, r5
 		@
 		ldr	pc, [r2, r0, lsl #2]
 		teq	r0, #0				@ Check to see if it was a fast IRQ
-#ifndef CONFIG_ARCH_GBA
+//#ifndef CONFIG_ARCH_GBA
 		bne	srepeat
-#endif
+//#endif
 		ldr	r4, [pc, #LC5 - . - 8]
 		ldr	r5, [r4]
 		teq	r5, #0
-#ifndef CONFIG_ARCH_GBA
+//#ifndef CONFIG_ARCH_GBA
 		bne	srepeat
-#endif
+//#endif
 		ldr	r6, [pc, #LC5 - . - 4]
 		ldr	r7, [pc, #LC5 - . - 0]
 recheck_bh2:	ldr	r0, [r6]
 		ldr	r1, [r7]
 		tst	r0, r1
-#ifndef CONFIG_ARCH_GBA
+//#ifndef CONFIG_ARCH_GBA
 		beq	srepeat
-#endif
+//#endif
 		add	r0, r5, #1
 		str	r0, [r4]
 		mrs	r8, cpsr			@ Enable interrupts
@@ -997,9 +1061,9 @@ recheck_bh2:	ldr	r0, [r6]
 		bl	do_bottom_half
 		msr	cpsr, r8			@ Restore interrupt state
 		str	r5, [r4]
-#ifndef CONFIG_ARCH_GBA
+//#ifndef CONFIG_ARCH_GBA
 		b	recheck_bh2
-#endif
+//#endif
 no_irq2:
 #if defined(CONFIG_ARCH_TRIO)
 		ldr	r4, =AIC_EOICR
@@ -1014,6 +1078,11 @@ no_irq2:
 		msr	spsr, r0
 		ldmia	sp, {r0 - pc}^			@ load r0 - pc, cpsr
 
+__irq_sys:	teq	lr, #15
+		adreq	lr, __irq_svc
+		moveqs	pc, lr
+		@ fall through
+		
 __irq_invalid:	sub	sp, sp, #S_FRAME_SIZE	@ Allocate space on stack for frame
 		stmfd	sp, {r0 - lr}		@ Save r0 - lr
 		mov	r7, #-1
@@ -1144,7 +1213,12 @@ Lret_no_check:	mrs	r0, cpsr			@ disable IRQs
 		msr	cpsr, r0
 		ldr	r0, [sp, #S_PSR]		@ Get calling cpsr
 		msr	spsr, r0
+#if defined(CONFIG_ARCH_GBA) && defined(CONFIG_GBAEMU)
+		@ TC!IB! forced user bank not supported
+		ldmia	sp, {r0 - r12}			@ Get calling r0 - r12
+#else
 		ldmia	sp, {r0 - lr}^			@ Get calling r0 - lr
+#endif
 		mov	r0, r0
 		add	sp, sp, #S_PC
 		ldr	lr, [sp], #S_FRAME_SIZE - S_PC	@ Get PC and jump over PC, PSR, OLD_R0
