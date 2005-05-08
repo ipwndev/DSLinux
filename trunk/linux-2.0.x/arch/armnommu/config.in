@@ -109,9 +109,9 @@ fi
 
 if [ "$CONFIG_ARCH_GBA" = "y" ]; then
   bool 'GBA TEXT console support' CONFIG_GBATXT
-  define_int CONFIG_ARM_CLK 167800000
+  define_int CONFIG_ARM_CLK 16780000
   define_hex DRAM_BASE 0x02000000
-  define_hex DRAM_SIZE 0x00040000
+  define_hex DRAM_SIZE 0x00400000
   define_hex FLASH_MEM_BASE 0x08000000
   define_hex FLASH_SIZE 0x02000000
 fi
