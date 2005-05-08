@@ -32,7 +32,7 @@
 #define	GBA_TCR_CLK64	0x0001			/* Use clock/64 freq */
 #define	GBA_TCR_CLK256	0x0002			/* Use clock/256 freq */
 #define	GBA_TCR_CLK1024	0x0003			/* Use clock/1024 freq */
-#define	GBA_TCR_CASCADE	0x0008			/* Cascade timer */
+#define	GBA_TCR_CASCADE	0x0004			/* Cascade timer */
 #define	GBA_TCR_IRQ	0x0040			/* Generate IRQ */
 #define	GBA_TCR_ENB	0x0080			/* Enable timer */
 
@@ -41,7 +41,7 @@
 /*
  *	Define the timer that we use as main Hz source.
  */
-#define	KERNEL_TIMER_IRQ_NUM	1
+#define	KERNEL_TIMER	0
 
 
 extern __inline__ unsigned long gettimeoffset (void)
