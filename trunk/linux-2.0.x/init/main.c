@@ -223,6 +223,9 @@ extern void ad1845_init(void);
 #ifdef CONFIG_M5249AUDIO
 extern void m5249audio_init(void);
 #endif
+#ifdef CONFIG_ARCH_GBA
+extern void gba_audio_init(void);
+#endif
 #ifdef CONFIG_DS1302
 extern void ds1302_init(void);
 #endif
@@ -1178,6 +1181,9 @@ static int init(void * unused)
 #ifdef CONFIG_M5249AUDIO
 	m5249audio_init();
 #endif
+#ifdef CONFIG_ARCH_GBA
+	gba_audio_init();
+#endif
 #ifdef CONFIG_DS1302
 	ds1302_init();
 #endif
@@ -1255,6 +1261,12 @@ static int init(void * unused)
 #if defined(CONFIG_M68360)
         quicc_kick_wdt();
 #endif
+#ifdef CONFIG_ARCH_GBA
+	execve("/bin/sh",argv_init,envp_init); /* TC!IB! run shell */
+	printk("execve failed.");
+	while (1)
+		/* nothing */;
+#endif
 	if (!execute_command) {
 #ifdef __sparc__
 		/* Temporary fix */
@@ -1291,3 +1303,9 @@ static int init(void * unused)
 	}
 	return -1;
 }
+
+#ifdef CONFIG_ARCH_GBA
+void memcheck(void){
+	printk("        ");
+}
+#endif
