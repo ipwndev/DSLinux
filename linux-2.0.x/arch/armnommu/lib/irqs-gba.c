@@ -57,7 +57,7 @@ asmlinkage int timer_IRQ_interrupt(int irq, struct pt_regs * regs)
 	register unsigned long flags;
 	register unsigned long saved_count;
 
-#if 1
+#if 0
 	printk("timer_IRQ_interrupt(irq=%d)\n", irq);
 #endif
 
