@@ -126,7 +126,8 @@ static void timer_interrupt(int irq, void *dev_id, struct pt_regs *regs)
 	update_rtc ();
 }
 
-static struct irqaction irq_kernel_timer = { timer_interrupt, 0, 0, "timer", NULL, NULL};
+static struct irqaction irq_kernel_timer =
+	{ timer_interrupt, SA_INTERRUPT, 0, "timer", NULL, NULL};
 
 extern int setup_arm_irq(int, struct irqaction *);
 
@@ -189,15 +190,17 @@ unsigned long setup_timer (void)
 	volatile unsigned short	*tcp;
 
 	/*
-	 *	GBA timers are not very programmable, so cascade 2
-	 *	timers to generate a 64 Hz clock.
+	 *	HSSE: GBA timers are 16 bit wide, reloading automatically at an
+	 *	overflow. So preload with -2^(24-6-10)+1 = -255 at Clk
+	 *	Frequency 2^24 = 16.78 MHz and prescaler 2^-10 = 1/1024 to
+	 *	generate a 2^6 = 64 Hz clock.
 	 */
+	tcp = (volatile unsigned short *) GBA_TIMER0_DATA;
+	*tcp = -(1<<(24-6-10))+1;
 	tcp = (volatile unsigned short *) GBA_TIMER0_CR;
-	*tcp = (GBA_TCR_CLK1024 | GBA_TCR_ENB);
-	tcp = (volatile unsigned short *) GBA_TIMER1_CR;
-	*tcp = (GBA_TCR_CLK256 | GBA_TCR_CASCADE | GBA_TCR_ENB |GBA_TCR_IRQ);
+	*tcp = (GBA_TCR_CLK1024 | GBA_TCR_ENB | GBA_TCR_IRQ);
 
-#if 1
+#if 0
 	/*
 	 *	FIXME: can't get the timers to work (at least with the
 	 *	boycott/advance emulator. VBLANK interrupt does seem to
@@ -220,8 +223,9 @@ unsigned long setup_timer (void)
 		printk("TIMER0=%04x  TIMER1=%04x\n", *td0, *td1);
 }
 #endif
+	return mktime(2000, 1, 1, 0, 0, 0);
 }
-#endif /* CONFIG_ARCH_BGA */
+#endif /* CONFIG_ARCH_GBA */
 
 void time_init(void)
 {
