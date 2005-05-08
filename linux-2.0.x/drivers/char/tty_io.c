@@ -80,6 +80,10 @@
 #include "vt_kern.h"
 #include "selection.h"
 
+#ifdef CONFIG_ARCH_GBA
+#include <asm/arch/irqs.h> // TC!IB!
+#endif
+
 #ifdef CONFIG_KERNELD
 #include <linux/kerneld.h>
 #endif
@@ -1847,6 +1851,12 @@ void do_SAK( struct tty_struct *tty)
 #endif
 }
 
+#ifdef CONFIG_ARCH_GBA
+extern void gbatxt_setxy(int x, int y);
+extern int gbatxt_getx(void);
+extern int gbatxt_gety(void);
+#endif
+
 /*
  * This routine is called out of the software interrupt to flush data
  * from the flip buffer to the line discipline.
@@ -1858,6 +1868,31 @@ static void flush_to_ldisc(void *private_)
 	char		*fp;
 	int		count;
 
+#ifdef CONFIG_ARCH_GBA
+	/* TC!IB! */
+	unsigned char lbuf[2];
+	int x,y;
+	unsigned char execute = 0;
+	unsigned char display = 0;
+	static unsigned char list[][32] = {
+		"\0""abcdefghijklmnopqrstuvwxyz""\0",
+		"\0""ABCDEFGHIJKLMNOPQRSTUVWXYZ""\0",
+		"\0""0123456789""\0",
+		"\0""/ -\"""\0",
+		"\0\0"
+	};
+	static unsigned int index[] = {
+		0,
+		1,
+		1,
+		1
+	};
+	static unsigned int kind = 0;
+	static unsigned char actual_key = 0;
+	unsigned int lcount;
+	/* TC!IB! */
+#endif
+	
 	if (tty->flip.buf_num) {
 		cp = tty->flip.char_buf + TTY_FLIPBUF_SIZE;
 		fp = tty->flip.flag_buf + TTY_FLIPBUF_SIZE;
@@ -1877,6 +1912,7 @@ static void flush_to_ldisc(void *private_)
 	}
 	count = tty->flip.count;
 	tty->flip.count = 0;
+#ifndef CONFIG_ARCH_GBA
 	sti();
 	
 #if 0
@@ -1884,6 +1920,160 @@ static void flush_to_ldisc(void *private_)
 		tty->max_flip_cnt = count;
 #endif
 	tty->ldisc.receive_buf(tty, cp, fp, count);
+#else
+	/* TC!IB! */
+	switch (*cp){ 
+	// key accepted A
+		case 0:
+			if (actual_key) {
+				*cp = actual_key;
+				execute = 1;
+				kind = 0;
+				index[kind++] = 0;
+				while (list[kind][1]) {
+					index[kind++] = 1;
+				}
+				kind = 0;
+				actual_key = 0;
+			}
+
+			break;
+		// B = ENTER
+		case 1:
+			*cp = 0x0d;
+			execute = 1;
+			kind = 0;
+			index[kind++] = 0;
+			while (list[kind][1]){
+				index[kind++] = 1;
+			}
+			kind = 0;
+			actual_key = 0;
+			break;
+
+		// Select
+		case 2:
+			break;
+
+		// Start
+		case 3:
+			break;
+
+		// Rigth = increment 1 to kind position
+		case 4:
+			actual_key = list[kind][++index[kind]];
+			if (!actual_key){
+				index[kind] = 1;
+				actual_key = list[kind][index[kind]];
+			}
+			display = 1;
+
+			break;
+
+		// Left = decrement 1 to kind position
+		case 5:
+			if (!index[kind]){
+				index[kind] = 1;
+			}
+			actual_key = list[kind][--index[kind]];
+			if (!actual_key){
+				while (list[kind][++index[kind]]);
+				actual_key = list[kind][--index[kind]];
+			}
+			display = 1;
+
+			break;
+
+		// Up = increment of 10 to kind position
+		case 6:
+			if (!index[kind]){
+				index[kind] = 1;
+			}
+			for (lcount = 0; lcount < 10; lcount++){
+				actual_key = list[kind][++index[kind]];
+				if (!actual_key){
+					index[kind] = 1;
+					actual_key = list[kind][index[kind]];
+				}
+			}
+			display = 1;
+
+			break;
+
+		// Down = decrement of 10 to kind position
+		case 7:
+			if (!index[kind]){
+				index[kind] = 1;
+			}
+			for (lcount = 0; lcount < 10; lcount++){
+				actual_key = list[kind][--index[kind]];
+				if (!actual_key){
+					while (list[kind][++index[kind]]);
+					actual_key = list[kind][--index[kind]];
+				}
+			}
+			display = 1;
+
+			break;
+
+		// Button Rigth = change kind
+		case 8:
+			if (!index[kind]){
+				index[kind] = 1;
+			}
+			if (!kind){
+				index[kind+1] = index[kind];
+			}
+			else if (kind == 1){
+				index[kind-1] = index[kind];
+			}
+
+			kind++;
+			if (!list[kind][1]){
+				kind=0;
+			}
+			actual_key = list[kind][index[kind]];
+			display = 1;
+
+			break;
+
+		// Button Left = TAB
+		case 9:
+			// key = TAB
+			*cp = '\t';
+			execute = 1;
+			kind = 0;
+			index[kind++] = 0;
+			while (list[kind][1]){
+				index[kind++] = 1;
+			}
+			kind = 0;
+			actual_key = 0;
+
+			break;
+	}
+
+	if (display){
+		lbuf[0] = actual_key;
+		lbuf[1] = 0;
+
+		x = gbatxt_getx ();
+		y = gbatxt_gety ();
+		printk (lbuf);
+		gbatxt_setxy (x, y);
+	}
+	/* TC!IB! */
+#endif
+
+	sti();
+	
+#ifdef CONFIG_ARCH_GBA
+	if (execute) {
+		tty->ldisc.receive_buf(tty, cp, fp, count);
+	}
+#else
+	tty->ldisc.receive_buf(tty, cp, fp, count);
+#endif
 }
 
 /*
@@ -2014,6 +2204,14 @@ long console_init(long kmem_start, long kmem_end)
 	tty_std_termios.c_lflag = ISIG | ICANON | ECHO | ECHOE | ECHOK |
 		ECHOCTL | ECHOKE | IEXTEN;
 
+#ifdef CONFIG_ARCH_GBA
+	/* TC!IB! Init console driver */
+	{
+		extern void gbatxt_init(void);
+		gbatxt_init();
+	}
+#endif
+
 #ifdef CONFIG_CONSOLE
 	/*
 	 * set up the console device so that later boot sequences can 
@@ -2026,6 +2224,68 @@ long console_init(long kmem_start, long kmem_end)
 }
 
 static struct tty_driver dev_tty_driver, dev_console_driver;
+
+#ifdef CONFIG_ARCH_GBA
+/* 
+ * TC!IB!
+ * keypad management 
+ */
+extern int setup_arm_irq(int, struct irqaction *);
+
+static struct tty_struct **ttytab;
+
+void keypad_interrupt(int irq, void *dev_id, struct pt_regs *regs)
+{
+	unsigned short key;
+	static unsigned short last_key = 0x3ff;
+	unsigned char ch = 0;
+
+	// read keypad key value
+	insw (0x04000130, &key, 1);
+	// save new key value
+	last_key = key;
+	// some key is pressed?
+	if (key != 0x03ff){
+		// key table ch:
+		// 0 = A
+		// 1 = B
+		// 2 = Select
+		// 3 = Start
+		// 4 = Rigth
+		// 5 = Left
+		// 6 = Up
+		// 7 = Down
+		// 8 = Button Rigth
+		// 9 = Button Left
+		// altri = nessun tasto
+		while (key & 1){
+		  key >>= 1;
+		  ch++;
+		}
+		wake_up(&keypress_wait);
+		// insert key into queue
+		tty_insert_flip_char(ttytab[0], ch, 0);
+		tty_schedule_flip(ttytab[0]); // TC!IB!
+	}
+}
+
+static struct irqaction irq_keypad = { keypad_interrupt, 0, 0, "keypad", NULL, NULL};
+
+int gbakeypad_console_init(void)
+{
+	extern struct tty_driver gbatxt_serial_driver;
+
+	ttytab = gbatxt_serial_driver.table;
+
+	// set keypad interrupt
+	// called by timer irq (emulator pbm)
+	*((unsigned short *) 0x04000132) = 0x43ff;
+	setup_arm_irq (IRQ_KEYPAD, &irq_keypad);
+
+	return 0;
+}
+/* END TC!IB! */
+#endif
 
 /*
  * Ok, now we can initialize the rest of the tty devices and can count
@@ -2060,6 +2320,10 @@ int tty_init(void)
 	if (tty_register_driver(&dev_console_driver))
 		panic("Couldn't register /dev/console driver\n");
 	
+#ifdef CONFIG_ARCH_GBA	
+	gbakeypad_console_init (); // TC!IB!
+#endif
+
 #ifdef CONFIG_FRAMEBUFFER
 	fbmem_init();
 #endif
