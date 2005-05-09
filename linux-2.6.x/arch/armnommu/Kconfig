@@ -151,6 +151,11 @@ config ARCH_P2001
 	  The LPEC P2001 evaluation board has an P2001 processor from
 	  MAZ Brandenburg GmbH, which is based an ARM9TDMI processor core.
 
+config ARCH_NDS
+	bool "Nintendo DS"
+	help
+	  The Nintendo DS.
+
 endchoice
 
 config SET_MEM_PARAM
