@@ -18,7 +18,7 @@ CONSOLE_BAUD_RATE = 9600
 
 MACHINE       = arm
 ARCH          = armnommu
-CROSS_COMPILE = arm-elf-
+CROSS_COMPILE = arm-uclinux-
 CROSS         = $(CROSS_COMPILE)
 
 CC        = $(CROSS_COMPILE)gcc
