@@ -208,6 +208,7 @@ source "arch/armnommu/mach-s3c44b0x/Kconfig"
 source "arch/armnommu/mach-s5c7375/Kconfig"
 source "arch/armnommu/mach-espd_4510b/Kconfig"
 source "arch/armnommu/mach-s3c24a0/Kconfig" 
+source "arch/armnommu/mach-nds/Kconfig" 
 source arch/armnommu/mm/Kconfig
 
 endmenu
