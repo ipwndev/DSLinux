@@ -3,7 +3,7 @@
 #
 
 ROMFSIMG = $(IMAGEDIR)/romfs.img
-IMAGE    = $(IMAGEDIR)/image.bin
+IMAGE    = $(IMAGEDIR)/dslinux.ds.gba
 
 
 ROMFS_DIRS = bin dev etc home lib mnt proc usr var
@@ -70,5 +70,4 @@ image:
 		--change-section-lma .data=0 \
 		$(ROOTDIR)/$(LINUXDIR)/linux $(IMAGEDIR)/linux.data
 	cat $(IMAGEDIR)/linux.text $(IMAGEDIR)/linux.data $(ROMFSIMG) > $(IMAGE)
-	-cp $(IMAGE) /tftpboot
 
