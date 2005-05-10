@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.9-uc0
-# Tue May 10 06:28:04 2005
+# Tue May 10 11:44:17 2005
 #
 CONFIG_ARM=y
 CONFIG_UCLINUX=y
@@ -64,10 +64,16 @@ CONFIG_FLASH_SIZE=0x00400000
 # Processor Type
 #
 CONFIG_CPU_32=y
+CONFIG_CPU_ARM946E=y
+CONFIG_CPU_32v5=y
+CONFIG_CPU_ABRT_EV5T=y
+CONFIG_CPU_CACHE_V4WT=y
 
 #
 # Processor Features
 #
+CONFIG_ARM_THUMB=y
+# CONFIG_CPU_MXU_ENABLE is not set
 
 #
 # General setup
@@ -128,12 +134,6 @@ CONFIG_BLK_DEV_RAM_SIZE=8192
 # Networking support
 #
 # CONFIG_NET is not set
-# CONFIG_SCTP_HMAC_NONE is not set
-# CONFIG_SCTP_HMAC_SHA1 is not set
-# CONFIG_SCTP_HMAC_MD5 is not set
-# CONFIG_NET_SCH_CLK_JIFFIES is not set
-# CONFIG_NET_SCH_CLK_GETTIMEOFDAY is not set
-# CONFIG_NET_SCH_CLK_CPU is not set
 # CONFIG_NETPOLL is not set
 # CONFIG_NET_POLL_CONTROLLER is not set
 
@@ -375,8 +375,6 @@ CONFIG_LOGO=y
 CONFIG_LOGO_LINUX_MONO=y
 CONFIG_LOGO_LINUX_VGA16=y
 CONFIG_LOGO_LINUX_CLUT224=y
-# CONFIG_AEDSP16_MSS is not set
-# CONFIG_AEDSP16_SBPRO is not set
 
 #
 # Misc devices
@@ -390,18 +388,6 @@ CONFIG_LOGO_LINUX_CLUT224=y
 # USB Gadget Support
 #
 # CONFIG_USB_GADGET is not set
-# CONFIG_USB_GADGET_NET2280 is not set
-# CONFIG_USB_GADGET_PXA2XX is not set
-# CONFIG_USB_GADGET_GOKU is not set
-# CONFIG_USB_GADGET_SA1100 is not set
-# CONFIG_USB_GADGET_LH7A40X is not set
-# CONFIG_USB_GADGET_DUMMY_HCD is not set
-# CONFIG_USB_GADGET_OMAP is not set
-# CONFIG_USB_ZERO is not set
-# CONFIG_USB_ETH is not set
-# CONFIG_USB_GADGETFS is not set
-# CONFIG_USB_FILE_STORAGE is not set
-# CONFIG_USB_G_SERIAL is not set
 
 #
 # Kernel hacking
