@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.9-uc0
-# Tue May 10 20:17:26 2005
+# Wed May 11 13:18:36 2005
 #
 CONFIG_ARM=y
 CONFIG_UCLINUX=y
@@ -225,12 +225,7 @@ CONFIG_LEGACY_PTY_COUNT=256
 #
 # IPMI
 #
-CONFIG_IPMI_HANDLER=y
-# CONFIG_IPMI_PANIC_EVENT is not set
-CONFIG_IPMI_DEVICE_INTERFACE=y
-CONFIG_IPMI_SI=y
-CONFIG_IPMI_WATCHDOG=y
-CONFIG_IPMI_POWEROFF=y
+# CONFIG_IPMI_HANDLER is not set
 
 #
 # Watchdog Cards
@@ -278,7 +273,7 @@ CONFIG_RTC=y
 # CONFIG_XFS_FS is not set
 # CONFIG_MINIX_FS is not set
 CONFIG_ROMFS_FS=y
-CONFIG_MAGIC_ROM_PTR=y
+# CONFIG_MAGIC_ROM_PTR is not set
 # CONFIG_QUOTA is not set
 # CONFIG_AUTOFS_FS is not set
 # CONFIG_AUTOFS4_FS is not set
