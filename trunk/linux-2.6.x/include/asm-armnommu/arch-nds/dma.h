@@ -1,7 +1,7 @@
 /****************************************************************************/
 
 /*
- * linux/include/asm-armnommu/arch-gba/dma.h
+ * linux/include/asm-armnommu/arch-nds/dma.h
  */
 
 /****************************************************************************/
@@ -11,7 +11,7 @@
 
 #define MAX_DMA_ADDRESS		0x03000000
 
-#define MAX_DMA_CHANNELS	1
+#define MAX_DMA_CHANNELS	0
 
 /****************************************************************************/
 #endif	/* __ASM_ARCH_DMA_H */
