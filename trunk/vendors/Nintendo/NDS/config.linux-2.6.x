@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.9-uc0
-# Wed May 11 13:18:36 2005
+# Thu May 12 22:31:04 2005
 #
 CONFIG_ARM=y
 CONFIG_UCLINUX=y
@@ -335,6 +335,7 @@ CONFIG_RAMFS=y
 #
 CONFIG_FB=y
 # CONFIG_FB_MODE_HELPERS is not set
+CONFIG_FB_NDS=y
 # CONFIG_FB_VIRTUAL is not set
 
 #
