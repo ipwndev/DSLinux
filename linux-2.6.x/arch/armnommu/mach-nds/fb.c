@@ -22,6 +22,99 @@
 #include <linux/fb.h>
 #include <linux/init.h>
 
+#define DISPLAY_CR       (*(volatile u32*)0x04000000)
+#define SUB_DISPLAY_CR   (*(volatile u32*)0x04001000)
+
+#define MODE_0_2D      0x10000
+#define MODE_1_2D      0x10001
+#define MODE_2_2D      0x10002
+#define MODE_3_2D      0x10003
+#define MODE_4_2D      0x10004
+#define MODE_5_2D      0x10005
+
+#define DISPLAY_BG0_ACTIVE    (1 << 8)
+#define DISPLAY_BG1_ACTIVE    (1 << 9)
+#define DISPLAY_BG2_ACTIVE    (1 << 10)
+#define DISPLAY_BG3_ACTIVE    (1 << 11)
+#define DISPLAY_SPR_ACTIVE    (1 << 12)
+#define DISPLAY_WIN0_ON       (1 << 13)
+#define DISPLAY_WIN1_ON       (1 << 14)
+#define DISPLAY_SPR_WIN_ON    (1 << 15)
+
+#define BG_256_COLOR   (1<<7)
+#define BG_16_COLOR    (0)
+
+#define BG_32x32       (0 << 14)
+#define BG_32x64       (1 << 14)
+#define BG_64x32       (2 << 14)
+#define BG_64x64       (3 << 14)
+
+#define BG_RS_16x16    (0 << 14)
+#define BG_RS_32x32    (1 << 14)
+#define BG_RS_64x64    (2 << 14)
+#define BG_RS_128x128  (3 << 14)
+
+#define BG_BMP8_128x128 (BG_RS_16x16 | BG_256_COLOR)
+#define BG_BMP8_256x256 (BG_RS_32x32 | BG_256_COLOR)
+#define BG_BMP8_512x256 (BG_RS_64x64 | BG_256_COLOR)
+#define BG_BMP8_512x512 (BG_RS_128x128 | BG_256_COLOR)
+#define BG_BMP8_1024x512 0
+#define BG_BMP8_512x1024 (1<<14)
+
+#define BG_BMP16_128x128 (BG_RS_16x16 | BG_256_COLOR | 1<<2)
+#define BG_BMP16_256x256 (BG_RS_32x32 | BG_256_COLOR | 1<<2)
+#define BG_BMP16_512x256 (BG_RS_64x64 | BG_256_COLOR | 1<<2)
+#define BG_BMP16_512x512 (BG_RS_128x128 | BG_256_COLOR | 1<<2)
+
+#define BG_PALETTE_SLOT0 0
+#define BG_PALETTE_SLOT1 0
+#define BG_PALETTE_SLOT2 (1<<13)
+#define BG_PALETTE_SLOT3 (1<<13)
+
+#define BG3_XDX        (*(volatile u16*)0x04000030)
+#define BG3_XDY        (*(volatile u16*)0x04000032)
+#define BG3_YDX        (*(volatile u16*)0x04000034)
+#define BG3_YDY        (*(volatile u16*)0x04000036)
+
+#define BG_CR           ((volatile u16*)0x04000008)
+#define BG0_CR         (*(volatile u16*)0x04000008)
+#define BG1_CR         (*(volatile u16*)0x0400000A)
+#define BG2_CR         (*(volatile u16*)0x0400000C)
+#define BG3_CR         (*(volatile u16*)0x0400000E)
+
+#define VRAM_CR         (*(volatile u32*)0x04000240)
+#define VRAM_A_CR       (*(volatile u8*)0x04000240)
+#define VRAM_B_CR       (*(volatile u8*)0x04000241)
+#define VRAM_C_CR       (*(volatile u8*)0x04000242)
+#define VRAM_D_CR       (*(volatile u8*)0x04000243)
+#define VRAM_E_CR       (*(volatile u8*)0x04000244)
+#define VRAM_F_CR       (*(volatile u8*)0x04000245)
+#define VRAM_G_CR       (*(volatile u8*)0x04000246)
+#define WRAM_CR         (*(volatile u8*)0x04000247)
+#define VRAM_H_CR       (*(volatile u8*)0x04000248)
+#define VRAM_I_CR       (*(volatile u8*)0x04000249)
+
+#define VRAM_ENABLE   (1<<7)
+
+#define VRAM_OFFSET(n)  ((n)<<3)
+
+typedef enum
+{
+    VRAM_A_LCD = 0,
+    VRAM_A_MAIN_BG  = 1,
+    VRAM_A_MAIN_BG_0x6000000  = 1 | VRAM_OFFSET(0),
+    VRAM_A_MAIN_BG_0x6020000  = 1 | VRAM_OFFSET(1),
+    VRAM_A_MAIN_BG_0x6040000  = 1 | VRAM_OFFSET(2),
+    VRAM_A_MAIN_BG_0x6060000  = 1 | VRAM_OFFSET(3),
+    VRAM_A_MAIN_SPRITE = 2,
+    VRAM_A_TEXTURE = 3,
+    VRAM_A_TEXTURE_SLOT0 = 3 | VRAM_OFFSET(0),
+    VRAM_A_TEXTURE_SLOT1 = 3 | VRAM_OFFSET(1),
+    VRAM_A_TEXTURE_SLOT2 = 3 | VRAM_OFFSET(2),
+    VRAM_A_TEXTURE_SLOT3 = 3 | VRAM_OFFSET(3)
+
+}VRAM_A_TYPE;
+
     /*
      *  RAM we reserve for the frame buffer. This defines the maximum screen
      *  size
@@ -207,7 +300,15 @@ static int ndsfb_check_var(struct fb_var_screeninfo *var,
 static int ndsfb_set_par(struct fb_info *info)
 {
 	info->fix.line_length = 256;
-    MODE_5_2D | DISPLAY_BG3_ACTIVE;
+    DISPLAY_CR = MODE_5_2D | DISPLAY_BG3_ACTIVE;
+    VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG_0x6000000 ;
+    BG3_CR = BG_BMP16_256x256;
+
+    BG3_XDX = 1 << 8;
+    BG3_XDY = 0;
+    BG3_YDX = 0;
+    BG3_YDY = 1 << 8;
+
 	return 0;
 }
 
@@ -426,7 +527,7 @@ static struct device_driver ndsfb_driver = {
 	.remove = ndsfb_remove,
 };
 
-static struct platform_device ndsfb_device = {
+static struct platform_device ndsfb_device0 = {
 	.name	= "ndsfb",
 	.id	= 0,
 	.dev	= {
@@ -434,7 +535,7 @@ static struct platform_device ndsfb_device = {
 	}
 };
 
-static struct platform_device ndsfb_device = {
+static struct platform_device ndsfb_device1 = {
 	.name	= "ndsfb",
 	.id	= 1,
 	.dev	= {
@@ -460,7 +561,7 @@ int __init ndsfb_init(void)
 	ret = driver_register(&ndsfb_driver);
 
 	if (!ret) {
-		ret = platform_device_register(&ndsfb_device);
+		ret = platform_device_register(&ndsfb_device0);
 		if (ret)
 			driver_unregister(&ndsfb_driver);
 	}
