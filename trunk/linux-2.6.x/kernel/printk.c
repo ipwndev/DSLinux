@@ -554,6 +554,13 @@ asmlinkage int vprintk(const char *fmt, va_list args)
 			log_level_unknown = 1;
 	}
 
+#if 0
+    asm volatile (
+            "mov r0, %0;"
+            "swi 0xff0000;"
+           : : "r" (printk_buf) : "r0" );
+#endif
+
 	if (!cpu_online(smp_processor_id()) &&
 	    system_state != SYSTEM_RUNNING) {
 		/*
