@@ -71,6 +71,7 @@
 	.type	stext, #function
 ENTRY(stext)
 
+#ifdef CONFIG_NDS_DSGBA
 	/* GBA has header info at start of ROM */
 	b switch_to_arm9
 	.long 0,0,0,0,0,0,0,0
@@ -119,6 +120,8 @@ _copyarm7:
 	/* jump to ARM7 program */
 	ldr pc, =0x037f8000
 
+#endif
+
 /****************************************************************************/
 
 _entry:
@@ -148,9 +151,7 @@ _entry:
 
 	/*  Pretend we know what our processor code is (for arm_id)   */
 
-	ldr	r2, L_AT91_SF_CIDR
-	ldr	r2, [r2]		@ read processor id
-
+	ldr	r2, =0x41009460
 	str	r2, [r6]
 	ldr	r2, =MACH_TYPE_NDS
 	str	r2, [r9]
@@ -174,6 +175,8 @@ L_AT91_SF_CIDR:
 	.long	0xfff00000
 
 /****************************************************************************/
+
+#ifdef CONFIG_NDS_DSGBA
 
 .ltorg
 
@@ -199,4 +202,6 @@ arm7loop:
 	b arm7loop
 .ltorg
 arm7_end:
+
+#endif
 
