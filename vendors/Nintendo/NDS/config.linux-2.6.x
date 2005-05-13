@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.9-uc0
-# Thu May 12 22:31:04 2005
+# Fri May 13 16:41:52 2005
 #
 CONFIG_ARM=y
 CONFIG_UCLINUX=y
@@ -57,8 +57,14 @@ CONFIG_ARCH_NDS=y
 # CONFIG_SET_MEM_PARAM is not set
 CONFIG_DRAM_BASE=0x00800000
 CONFIG_DRAM_SIZE=0x00800000
-CONFIG_FLASH_MEM_BASE=0x00400000
+CONFIG_FLASH_MEM_BASE=0x08000000
 CONFIG_FLASH_SIZE=0x00400000
+
+#
+# NDS Options
+#
+CONFIG_NDS_DSGBA=y
+# CONFIG_NDS_NDS is not set
 
 #
 # Processor Type
