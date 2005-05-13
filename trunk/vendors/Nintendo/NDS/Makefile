@@ -64,7 +64,7 @@ romfs:
 image:
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
-	$(CROSS_COMPILE)objcopy -O binary -j .text \
+	$(CROSS_COMPILE)objcopy -O binary -j .init -j .text -j __param \
 		$(ROOTDIR)/$(LINUXDIR)/linux $(IMAGEDIR)/linux.text
 	$(CROSS_COMPILE)objcopy -O binary -j .data \
 		--change-section-lma .data=0 \
