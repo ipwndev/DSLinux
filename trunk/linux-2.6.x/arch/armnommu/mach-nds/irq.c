@@ -28,8 +28,44 @@
 #include <asm/system.h>
 #include <asm/hardware.h>
 #include <asm/irq.h>
+#include <asm/mach/irq.h>
+
+/*
+ *  NDS interrupts are controlled by 3 registers in the IO memory space.
+ */
+#define NDS_IE      0x04000210      /* Interrupt mask */
+#define NDS_IF      0x04000214      /* Interrup service */
+#define NDS_IME     0x04000208      /* Enable/disable */
+
+extern void vector_IRQ(void);
+
+static __inline__ void __nds_mask_irq(unsigned int irq)
+{
+	*((unsigned short *) NDS_IE) &= ~(0x1 << irq);
+}
+
+static __inline__ void __nds_unmask_irq(unsigned int irq)
+{
+	*((unsigned short *) NDS_IE) |= (0x1 << irq);
+}
+
+static struct irqchip nds_chip = {
+	.mask	= __nds_mask_irq,
+	.unmask = __nds_unmask_irq
+};
 
 void nds_init_irq( void )
 {
+	int irq;
+
+	for (irq = 0; irq < NR_IRQS; irq++) {
+		set_irq_chip(irq, &nds_chip);
+		set_irq_handler(irq, do_level_IRQ);
+		set_irq_flags(irq, IRQF_VALID | IRQF_PROBE);
+	}
+
+	*(volatile u32*)0x00803FFC = vector_IRQ ;
+	*((unsigned short *) NDS_IE) = 0;
+	*((unsigned short *) NDS_IME) = 0x0001;
 }
 
