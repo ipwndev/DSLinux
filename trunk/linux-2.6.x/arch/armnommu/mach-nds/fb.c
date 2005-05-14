@@ -127,11 +127,11 @@ static struct fb_var_screeninfo ndsfb_default __initdata = {
 	.yres =		192,
 	.xres_virtual =	256,
 	.yres_virtual =	192,
-	.bits_per_pixel = 8,
+	.bits_per_pixel = 16,
 	.red =		{ 0, 5, 0 },
       	.green =	{ 5, 5, 0 },
-      	.blue =		{ 100, 5, 0 },
-      	.transp =		{ 15, 1, 0 },
+      	.blue =		{ 10, 5, 0 },
+      	.transp =	{ 15, 1, 0 },
       	.activate =	FB_ACTIVATE_NOW,
       	.height =	-1,
       	.width =	-1,
@@ -200,97 +200,97 @@ static struct fb_ops ndsfb_ops = {
 static int ndsfb_check_var(struct fb_var_screeninfo *var,
 			 struct fb_info *info)
 {
-	u_long line_length;
+        /*
+         *  FB_VMODE_CONUPDATE and FB_VMODE_SMOOTH_XPAN are equal!
+         *  as FB_VMODE_SMOOTH_XPAN is only used internally
+         */
 
-	/*
-	 *  FB_VMODE_CONUPDATE and FB_VMODE_SMOOTH_XPAN are equal!
-	 *  as FB_VMODE_SMOOTH_XPAN is only used internally
-	 */
+        if (var->vmode & FB_VMODE_CONUPDATE) {
+                var->vmode |= FB_VMODE_YWRAP;
+                var->xoffset = info->var.xoffset;
+                var->yoffset = info->var.yoffset;
+        }
 
-	if (var->vmode & FB_VMODE_CONUPDATE) {
-		var->vmode |= FB_VMODE_YWRAP;
-		var->xoffset = info->var.xoffset;
-		var->yoffset = info->var.yoffset;
-	}
+        /*
+         *  Some very basic checks
+         */
+        if ( var->xres != 256 )
+                return -EINVAL;
+        if ( var->yres != 192 )
+                return -EINVAL;
+        if ( var->xres_virtual != 256 )
+                return -EINVAL;
+        if ( var->yres_virtual != 192 )
+                return -EINVAL;
 
-	/*
-	 *  Some very basic checks
-	 */
-    if ( var->xres != 256 )
-        return -EINVAL;
-    if ( var->yres != 192 )
-        return -EINVAL;
-    if ( var->xres_virtual != 256 )
-        return -EINVAL;
-    if ( var->yres_virtual != 192 )
-        return -EINVAL;
+        if (!var->xres)
+                var->xres = 1;
+        if (!var->yres)
+                var->yres = 1;
+        if (var->xres > var->xres_virtual)
+                var->xres_virtual = var->xres;
+        if (var->yres > var->yres_virtual)
+                var->yres_virtual = var->yres;
 
-	if (!var->xres)
-		var->xres = 1;
-	if (!var->yres)
-		var->yres = 1;
-	if (var->xres > var->xres_virtual)
-		var->xres_virtual = var->xres;
-	if (var->yres > var->yres_virtual)
-		var->yres_virtual = var->yres;
+        if ( var->bits_per_pixel != 16 )
+                return -EINVAL;
 
-    if ( var->bits_per_pixel != 8 )
-        return -EINVAL;
+        if (var->bits_per_pixel <= 1)
+                var->bits_per_pixel = 1;
+        else if (var->bits_per_pixel <= 8)
+                var->bits_per_pixel = 8;
+        else if (var->bits_per_pixel <= 16)
+                var->bits_per_pixel = 16;
+        else if (var->bits_per_pixel <= 24)
+                var->bits_per_pixel = 24;
+        else if (var->bits_per_pixel <= 32)
+                var->bits_per_pixel = 32;
+        else
+                return -EINVAL;
 
-	if (var->bits_per_pixel <= 1)
-		var->bits_per_pixel = 1;
-	else if (var->bits_per_pixel <= 8)
-		var->bits_per_pixel = 8;
-	else if (var->bits_per_pixel <= 16)
-		var->bits_per_pixel = 16;
-	else if (var->bits_per_pixel <= 24)
-		var->bits_per_pixel = 24;
-	else if (var->bits_per_pixel <= 32)
-		var->bits_per_pixel = 32;
-	else
-		return -EINVAL;
+        if (var->xres_virtual < var->xoffset + var->xres)
+                var->xres_virtual = var->xoffset + var->xres;
+        if (var->yres_virtual < var->yoffset + var->yres)
+                var->yres_virtual = var->yoffset + var->yres;
 
-	if (var->xres_virtual < var->xoffset + var->xres)
-		var->xres_virtual = var->xoffset + var->xres;
-	if (var->yres_virtual < var->yoffset + var->yres)
-		var->yres_virtual = var->yoffset + var->yres;
+        /*
+         * Now that we checked it we alter var. The reason being is that the video
+         * mode passed in might not work but slight changes to it might make it 
+         * work. This way we let the user know what is acceptable.
+         */
+        switch (var->bits_per_pixel) {
+#if 0
+                case 1:
+                case 8:
+                        var->red.offset = 0;
+                        var->red.length = 5;
+                        var->green.offset = 0;
+                        var->green.length = 5;
+                        var->blue.offset = 0;
+                        var->blue.length = 5;
+                        var->transp.offset = 0;
+                        var->transp.length = 0;
+                        break;
+#endif
+                case 16:		/* RGBA 5551 */
+                        var->red.offset = 0;
+                        var->red.length = 5;
+                        var->green.offset = 5;
+                        var->green.length = 5;
+                        var->blue.offset = 10;
+                        var->blue.length = 5;
+                        var->transp.offset = 15;
+                        var->transp.length = 1;
+                        break;
+                default:
+                        return -EINVAL;
+        }
+        var->red.msb_right = 0;
+        var->green.msb_right = 0;
+        var->blue.msb_right = 0;
+        var->transp.msb_right = 0;
 
-	/*
-	 * Now that we checked it we alter var. The reason being is that the video
-	 * mode passed in might not work but slight changes to it might make it 
-	 * work. This way we let the user know what is acceptable.
-	 */
-	switch (var->bits_per_pixel) {
-	case 1:
-	case 8:
-		var->red.offset = 0;
-		var->red.length = 5;
-		var->green.offset = 0;
-		var->green.length = 5;
-		var->blue.offset = 0;
-		var->blue.length = 5;
-		var->transp.offset = 0;
-		var->transp.length = 0;
-		break;
-	case 16:		/* RGBA 5551 */
-        var->red.offset = 0;
-        var->red.length = 5;
-        var->green.offset = 5;
-        var->green.length = 5;
-        var->blue.offset = 10;
-        var->blue.length = 5;
-        var->transp.offset = 15;
-        var->transp.length = 1;
-		break;
-    default:
-        return -EINVAL;
-	}
-	var->red.msb_right = 0;
-	var->green.msb_right = 0;
-	var->blue.msb_right = 0;
-	var->transp.msb_right = 0;
-
-	return 0;
+        return 0;
 }
 
 /* This routine actually sets the video mode. It's in here where we
@@ -299,17 +299,17 @@ static int ndsfb_check_var(struct fb_var_screeninfo *var,
  */
 static int ndsfb_set_par(struct fb_info *info)
 {
-	info->fix.line_length = 256;
-    DISPLAY_CR = MODE_5_2D | DISPLAY_BG3_ACTIVE;
-    VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG_0x6000000 ;
-    BG3_CR = BG_BMP16_256x256;
+        info->fix.line_length = 256 * 2;
+        DISPLAY_CR = MODE_5_2D | DISPLAY_BG3_ACTIVE;
+        VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG_0x6000000 ;
+        BG3_CR = BG_BMP16_256x256;
 
-    BG3_XDX = 1 << 8;
-    BG3_XDY = 0;
-    BG3_YDX = 0;
-    BG3_YDY = 1 << 8;
+        BG3_XDX = 1 << 8;
+        BG3_XDY = 0;
+        BG3_YDX = 0;
+        BG3_YDY = 1 << 8;
 
-	return 0;
+        return 0;
 }
 
     /*
@@ -475,7 +475,7 @@ static int __init ndsfb_probe(struct device *device)
 	if (!info)
 		goto err;
 
-	info->screen_base = dev->id == 0 ? 0x06000000 : 0x06040000 ;
+	info->screen_base = dev->id == 0 ? (void*)0x06000000 : (void*)0x06040000 ;
 	info->fbops = &ndsfb_ops;
 
 	retval = fb_find_mode(&info->var, info, NULL,
@@ -547,6 +547,8 @@ int __init ndsfb_init(void)
 {
 	int ret = 0;
 
+    printk("ndsfb_init\n");
+
 #ifndef MODULE
 	char *option = NULL;
 
@@ -567,4 +569,6 @@ int __init ndsfb_init(void)
 	}
 	return ret;
 }
+
+module_init(ndsfb_init);
 
