@@ -418,7 +418,11 @@ __stubs_start:
  * Interrupt dispatcher
  * Enter in IRQ mode, spsr = SVC/USR CPSR, lr = SVC/USR PC
  */
-vector_IRQ:	@
+ENTRY(vector_IRQ)
+#ifdef CONFIG_ARCH_NDS
+		@load registers saved by NDS BIOS
+		ldmfd   sp!,{r0,r1,r2,r3,r12,lr}
+#endif
 		@ save mode specific registers
 		@
 		ldr	r13, .LCsirq
