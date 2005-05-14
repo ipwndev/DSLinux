@@ -1,16 +1,6 @@
 /*
- *  linux/arch/arm/kernel/time.c
+ *  linux/arch/armnommu/mach-nds/time.c
  *
- *  Copyright (C) 1991, 1992, 1995  Linus Torvalds
- *  Modifications for ARM (C) 1994, 1995, 1996,1997 Russell King
- *
- * This file contains the ARM-specific time handling details:
- * reading the RTC at bootup, etc...
- *
- * 1994-07-02  Alan Modra
- *             fixed set_rtc_mmss, fixed time.year for >= 2000, new mktime
- * 1997-09-10  Updated NTP code according to technical memorandum Jan '96
- *             "A Kernel Model for Precision Timekeeping" by Dave Mills
  */
 #include <linux/errno.h>
 #include <linux/sched.h>
@@ -54,7 +44,18 @@
 
 #include <asm/arch/time.h>
 
-unsigned long setup_timer (void)
+static irqreturn_t nds_timer_interrupt(int irq, void *dev_id, struct pt_regs *regs)
+{
+    timer_tick(regs);
+    return IRQ_HANDLED;
+}
+
+static struct irqaction nds_timer_irq = {
+    .name    = "NDS Timer Tick",
+    .flags   = SA_INTERRUPT,
+    .handler = nds_timer_interrupt
+};
+static unsigned long setup_timer (void)
 {
 	volatile unsigned short	*tcp;
 
@@ -68,6 +69,12 @@ unsigned long setup_timer (void)
 	*tcp = -(1<<(24-6-10))+1;
 	tcp = (volatile unsigned short *) NDS_TIMER0_CR;
 	*tcp = (NDS_TCR_CLK1024 | NDS_TCR_ENB | NDS_TCR_IRQ);
+#if 0
+    printk("setting up timer\n");
+    printk("interrupt handler = %x\n", *(volatile u32*)0x00803FFC );
+    printk("IF=%x\n", *(volatile u32*)0x04000214 );
+    printk("IE=%x\n", *(volatile u32*)0x04000210 );
+#endif
 
 	return mktime(2000, 1, 1, 0, 0, 0);
 }
@@ -84,6 +91,6 @@ void nds_time_init(void)
 #error Wierd -- KERNEL_TIMER is not defined or something....
 #endif
 
-	//setup_arm_irq(KERNEL_TIMER_IRQ_NUM, &irq_kernel_timer);
+	setup_irq(KERNEL_TIMER_IRQ_NUM, &nds_timer_irq);
 	xtime.tv_sec = setup_timer();
 }
