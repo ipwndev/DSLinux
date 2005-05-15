@@ -2,8 +2,14 @@
 #	Makefile -- Build instructions for ATMEL/AT91
 #
 
+include $(LINUX_CONFIG)
+
 ROMFSIMG = $(IMAGEDIR)/romfs.img
+ifdef CONFIG_NDS_NDS
+IMAGE    = $(IMAGEDIR)/dslinux.nds.gba
+else
 IMAGE    = $(IMAGEDIR)/dslinux.ds.gba
+endif
 
 
 ROMFS_DIRS = bin dev etc home lib mnt proc usr var
@@ -64,10 +70,11 @@ romfs:
 image:
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
-	$(CROSS_COMPILE)objcopy -O binary -j .init -j .text -j __param \
-		$(ROOTDIR)/$(LINUXDIR)/linux $(IMAGEDIR)/linux.text
-	$(CROSS_COMPILE)objcopy -O binary -j .data \
-		--change-section-lma .data=0 \
-		$(ROOTDIR)/$(LINUXDIR)/linux $(IMAGEDIR)/linux.data
-	cat $(IMAGEDIR)/linux.text $(IMAGEDIR)/linux.data $(ROMFSIMG) > $(IMAGE)
+	if [ "$(CONFIG_NDS_NDS)" = "y" ]; then \
+		cat $(ROOTDIR)/$(LINUXDIR)/linux.bin $(ROMFSIMG) > $(IMAGEDIR)/arm9.bin ; \
+		ndstool -c $(IMAGEDIR)/dslinux.nds -9 $(IMAGEDIR)/arm9.bin -r9 0x02005000 -e9 0x02005000 ; \
+		dsbuild $(IMAGEDIR)/dslinux.nds -o $(IMAGE) ; \
+	else \
+		cat $(ROOTDIR)/$(LINUXDIR)/linux.bin $(ROMFSIMG) > $(IMAGE) ; \
+	fi 
 
