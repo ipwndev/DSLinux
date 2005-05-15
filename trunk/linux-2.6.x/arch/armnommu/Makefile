@@ -89,7 +89,7 @@ machine-$(CONFIG_ARCH_P2001) 		:= p2001
 	textaddr-$(CONFIG_ARCH_P2001)	 	:= 0x40100000
 machine-$(CONFIG_ARCH_NDS) 		:= nds
 	textaddr-$(CONFIG_ARCH_NDS)	 	:= 0x08000000
-	textaddr-$(CONFIG_NDS_NDS)	 	:= 0x02004000
+	textaddr-$(CONFIG_NDS_NDS)	 	:= 0x02005000
 
 # set the environment variables and export
 MACHINE  := $(machine-y)
