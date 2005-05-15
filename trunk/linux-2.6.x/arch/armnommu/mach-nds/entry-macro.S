@@ -25,27 +25,27 @@
 		.endm
 
         .macro get_irqnr_and_base, irqnr, irqstat, base, tmp
-		ldr	r4, =0x04000214			/* Get IF reg */
-		ldr	r0, [r4]
+		ldr	\base, =0x04000214			/* Get IF reg */
+		ldr	\tmp, [\base]
 
-		mov	r4, #1				/* IRQ counter */
+		mov	\base, #1				/* IRQ counter */
 1:
-		tst	r0, #0x0001			/* test if irq r4 active */
-		movne	\irqnr, r4
+		tst	\tmp, #0x0001			/* test if irq \tmp active */
+		movne	\irqnr, \base
 		bne	2f
 
-		mov	r0, r0, lsr #1			/* prepare test next irq */
-		add	r4, r4, #1
-		teq	r4, #15				/* test if irqs ended*/
+		mov	\tmp, \tmp, lsr #1			/* prepare test next irq */
+		add	\base, \base, #1
+		teq	\base, #15				/* test if irqs ended*/
 		bne	1b
  
 		moveq	\irqnr, #0			/* no irq found */
 		beq	3f
 2:
 		adr	\base, flag_irqs
-		ldr	r0, [\base, \irqnr, lsl #2]
-		ldr	r4, =0x04000214
-		str	r0, [r4]			/* irq acquired */
+		ldr	\tmp, [\base, \irqnr, lsl #2]
+		ldr	\base, =0x04000214
+		str	\tmp, [\base]			/* irq acquired */
 3:
 		adr	\base, irq_prio_gba
 		.endm
