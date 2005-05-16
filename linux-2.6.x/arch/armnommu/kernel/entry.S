@@ -438,6 +438,11 @@ ENTRY(vector_IRQ)
 		orr	r13, r13, #MODE_SVC
 		msr	spsr, r13			@ switch to SVC_32 mode
 
+#if defined(CONFIG_ARCH_NDS)
+                @ set SP to right value for the next IRQ call
+                ldr     sp, =0x00803f80
+#endif
+
 		and	lr, lr, #15
 		ldr	lr, [pc, lr, lsl #2]
 		movs	pc, lr				@ Changes mode and branches
