@@ -49,7 +49,14 @@ static __inline__ void __nds_unmask_irq(unsigned int irq)
 	*((unsigned short *) NDS_IE) |= (0x1 << irq);
 }
 
+static __inline__ void __nds_ack_irq(unsigned int irq)
+{
+	*((unsigned short *) NDS_IF) = (0x1 << irq);
+	*((unsigned short *) NDS_IE) &= ~(0x1 << irq);
+}
+
 static struct irqchip nds_chip = {
+	.ack    = __nds_ack_irq,
 	.mask	= __nds_mask_irq,
 	.unmask = __nds_unmask_irq
 };
