@@ -72,7 +72,9 @@ image:
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
 	if [ "$(CONFIG_NDS_NDS)" = "y" ]; then \
 		cat $(ROOTDIR)/$(LINUXDIR)/linux.bin $(ROMFSIMG) > $(IMAGEDIR)/arm9.bin ; \
-		ndstool -c $(IMAGEDIR)/dslinux.nds -9 $(IMAGEDIR)/arm9.bin -r9 0x02005000 -e9 0x02005000 ; \
+		ndstool -c $(IMAGEDIR)/dslinux.nds -9 $(IMAGEDIR)/arm9.bin \
+			-r9 0x02005000 -e9 0x02005000  \
+			-b tux.bmp "DSLinux;Port of Linux;to the DS!" ; \
 		dsbuild $(IMAGEDIR)/dslinux.nds -o $(IMAGE) ; \
 	else \
 		cat $(ROOTDIR)/$(LINUXDIR)/linux.bin $(ROMFSIMG) > $(IMAGE) ; \
