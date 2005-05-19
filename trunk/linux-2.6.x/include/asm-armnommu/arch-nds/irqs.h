@@ -37,7 +37,9 @@
 #define	IRQ_KEYPAD	12			/* Keypad intr */
 #define	IRQ_CART	13			/* CART intr */
 
-#define	GBA_IRQ_MASK	0x3fff			/* All intr mask */
+#define	NDS_IRQ_MASK	0x3fff			/* All intr mask */
+
+#define NR_IRQS             32
 
 
 /* Machine specific interrupt sources.
