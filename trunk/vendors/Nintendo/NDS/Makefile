@@ -5,6 +5,7 @@
 include $(LINUX_CONFIG)
 
 ROMFSIMG = $(IMAGEDIR)/romfs.img
+ELFIMAGE = $(IMAGEDIR)/image.elf
 ifdef CONFIG_NDS_NDS
 IMAGE    = $(IMAGEDIR)/dslinux.nds.gba
 else
@@ -70,13 +71,24 @@ romfs:
 image:
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
+	BSS=`$(CROSS_COMPILE)objdump --headers $(ROOTDIR)/$(LINUXDIR)/linux | \
+	grep .bss` ; \
+	BSSADDR=`set -- $${BSS} ; echo 0x$${4}` ; \
+	BSSSIZE=`set -- $${BSS} ; echo 0x$${3}` ; \
+	ADDR=`echo $${BSSADDR} $${BSSSIZE} | \
+	perl -ane 'printf "0x%x\n",hex($$F[0]) + hex($$F[1])' ` ; \
+	echo "BSS=$${BSSADDR},$${BSSSIZE} ADDR=$${ADDR}" ; \
+	$(CROSS_COMPILE)objcopy --add-section=.romfs=$(ROMFSIMG) \
+	--adjust-section-vma=.romfs=$${ADDR} --no-adjust-warnings \
+	--set-section-flags=.romfs=alloc,load,data   \
+	$(ROOTDIR)/$(LINUXDIR)/linux $(ELFIMAGE) 2> /dev/null
 	if [ "$(CONFIG_NDS_NDS)" = "y" ]; then \
-		cat $(ROOTDIR)/$(LINUXDIR)/linux.bin $(ROMFSIMG) > $(IMAGEDIR)/arm9.bin ; \
+		$(CROSS_COMPILE)objcopy -O binary $(ELFIMAGE) $(IMAGEDIR)/arm9.bin ; \
 		ndstool -c $(IMAGEDIR)/dslinux.nds -9 $(IMAGEDIR)/arm9.bin \
 			-r9 0x02005000 -e9 0x02005000  \
 			-b tux.bmp "DSLinux;Port of Linux;to the DS!" ; \
 		dsbuild $(IMAGEDIR)/dslinux.nds -o $(IMAGE) ; \
 	else \
-		cat $(ROOTDIR)/$(LINUXDIR)/linux.bin $(ROMFSIMG) > $(IMAGE) ; \
+		$(CROSS_COMPILE)objcopy -O binary $(ELFIMAGE) $(IMAGE) ; \
 	fi 
 
