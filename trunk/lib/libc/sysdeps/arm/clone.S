@@ -31,7 +31,7 @@ ENTRY(__clone)
 	@ sanity check args
 	cmp	r0, #0
 	cmpne	r1, #0
-	moveq	r0, #-EINVAL
+	moveq	r0, #-22
 	beq	PLTJMP(syscall_error)
 
 	@ insert the args onto the new stack
