@@ -46,14 +46,14 @@
 
 static irqreturn_t nds_timer_interrupt(int irq, void *dev_id, struct pt_regs *regs)
 {
-    timer_tick(regs);
-    return IRQ_HANDLED;
+	timer_tick(regs);
+	return IRQ_HANDLED;
 }
 
 static struct irqaction nds_timer_irq = {
-    .name    = "NDS Timer Tick",
-    .flags   = SA_INTERRUPT,
-    .handler = nds_timer_interrupt
+	.name    = "NDS Timer Tick",
+	.flags   = SA_INTERRUPT,
+	.handler = nds_timer_interrupt
 };
 static unsigned long setup_timer (void)
 {
@@ -69,12 +69,6 @@ static unsigned long setup_timer (void)
 	*tcp = -(1<<(24-6-10))+1;
 	tcp = (volatile unsigned short *) NDS_TIMER0_CR;
 	*tcp = (NDS_TCR_CLK1024 | NDS_TCR_ENB | NDS_TCR_IRQ);
-#if 0
-    printk("setting up timer\n");
-    printk("interrupt handler = %x\n", *(volatile u32*)0x00803FFC );
-    printk("IF=%x\n", *(volatile u32*)0x04000214 );
-    printk("IE=%x\n", *(volatile u32*)0x04000210 );
-#endif
 
 	return mktime(2000, 1, 1, 0, 0, 0);
 }
