@@ -159,7 +159,7 @@ Cambridge, MA 02139, USA.  */
 				"@ syscall " #name /* TC!IB! */ \
 			: "=r" (_a1)				\
 			: "i" (SYS_ify(name)) ASM_ARGS_##nr	\
-			: "a1", "r11", "r12");					\
+			: "r11", "r12");					\
 			_sys_result = _a1;					\
 			}								\
 			if (_sys_result >= (unsigned int) -4095)			\
