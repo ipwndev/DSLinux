@@ -16,6 +16,10 @@ CFLAGS		+=-fno-builtin -D__linux__
 
 CFLAGS		:=$(CFLAGS:-O2=-Os)
 
+ifeq ($(CONFIG_MMU),)
+MMUEXT		:= -nommu
+endif
+
 ifeq ($(CONFIG_FRAME_POINTER),y)
 CFLAGS		+=-fno-omit-frame-pointer -mapcs -mno-sched-prolog
 endif
@@ -55,6 +59,7 @@ tune-$(CONFIG_CPU_ARM922T)	:=-mtune=arm9tdmi
 tune-$(CONFIG_CPU_ARM925T)	:=-mtune=arm9tdmi
 tune-$(CONFIG_CPU_ARM926T)	:=-mtune=arm9tdmi
 tune-$(CONFIG_CPU_ARM940T)	:=-mtune=arm9tdmi
+tune-$(CONFIG_CPU_ARM946T)	:=-mtune=arm9tdmi
 
 # Need -Uarm for gcc < 3.x
 CFLAGS		+=-mapcs-32 $(arch-y) $(tune-y) $(call cc-option,-malignment-traps,-mshort-load-bytes) -msoft-float -Uarm
@@ -73,27 +78,32 @@ textaddr-y	:= 0x00008000			# default text address
 
 # setup the machine name and the machine dependent settings
 #   in alphabetical order.
-machine-$(CONFIG_ARCH_ATMEL)		:= atmel
-	textaddr-$(CONFIG_ARCH_ATMEL)		:= 0x01000000
-machine-$(CONFIG_ARCH_ESPD_4510B)	:= espd_4510b
-	textaddr-$(CONFIG_ARCH_ESPD_4510B)	:= 0x00008000
-machine-$(CONFIG_ARCH_S3C3410)		:= s3c3410
-	textaddr-$(CONFIG_ARCH_S3C3410)		:= 0x01020000
-machine-$(CONFIG_ARCH_S3C44B0)		:= s3c44b0x
-	textaddr-$(CONFIG_ARCH_S3C44B0)		:= 0x0c008000
-machine-$(CONFIG_ARCH_S5C7375) 		:= s5c7375
-	textaddr-$(CONFIG_ARCH_S5C7375) 	:= 0x00008000
-machine-$(CONFIG_ARCH_S3C24A0)		:= s3c24a0
-	textaddr-$(CONFIG_ARCH_S3C24A0) 	:= 0x10008000
-machine-$(CONFIG_ARCH_P2001) 		:= p2001
-	textaddr-$(CONFIG_ARCH_P2001)	 	:= 0x40100000
-machine-$(CONFIG_ARCH_NDS) 		:= nds
-	textaddr-$(CONFIG_ARCH_NDS)	 	:= 0x08000000
-	textaddr-$(CONFIG_NDS_NDS)	 	:= 0x02005000
+ machine-$(CONFIG_ARCH_ATMEL)	   := atmel
+textaddr-$(CONFIG_ARCH_ATMEL)	   := 0x01000000
+ machine-$(CONFIG_ARCH_ESPD_4510B) := espd_4510b
+textaddr-$(CONFIG_ARCH_ESPD_4510B) := 0x00008000
+ machine-$(CONFIG_ARCH_S3C3410)	   := s3c3410
+textaddr-$(CONFIG_ARCH_S3C3410)	   := 0x01020000
+ machine-$(CONFIG_ARCH_S3C44B0)	   := s3c44b0x
+textaddr-$(CONFIG_ARCH_S3C44B0)	   := 0x0c008000
+ machine-$(CONFIG_ARCH_S5C7375)	   := s5c7375
+textaddr-$(CONFIG_ARCH_S5C7375)	   := 0x00008000
+ machine-$(CONFIG_ARCH_S3C24A0)	   := s3c24a0
+textaddr-$(CONFIG_ARCH_S3C24A0)	   := 0x10008000
+ machine-$(CONFIG_ARCH_P2001)	   := p2001
+textaddr-$(CONFIG_ARCH_P2001)	   := 0x40100000
+ machine-$(CONFIG_ARCH_NDS)	   := nds
+textaddr-$(CONFIG_ARCH_NDS)	   := 0x02005000
 
 # set the environment variables and export
 MACHINE  := $(machine-y)
 TEXTADDR := $(textaddr-y)
+
+ifeq ($(CONFIG_NDS_DSGBA),y)
+  DATAADDR := $(TEXTADDR)
+  TEXTADDR := 0x08000000
+endif
+
 ifeq ($(incdir-y),)
 incdir-y := $(MACHINE)
 endif
@@ -169,7 +179,7 @@ uCImage: vmlinux linux.bin
 linux.bin: vmlinux FORCE
 	@$(OBJCOPY) $(OBJCOPYFLAGS) vmlinux $@
 	@echo '  Kernel: $@ is ready'
-	
+
 zinstall install: vmlinux
 	$(Q)$(MAKE) $(build)=$(boot) $@
 
