@@ -547,8 +547,6 @@ int __init ndsfb_init(void)
 {
 	int ret = 0;
 
-    printk("ndsfb_init\n");
-
 #ifndef MODULE
 	char *option = NULL;
 
@@ -570,5 +568,5 @@ int __init ndsfb_init(void)
 	return ret;
 }
 
-module_init(ndsfb_init);
+//module_init(ndsfb_init);
 
