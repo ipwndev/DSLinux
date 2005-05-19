@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.9-uc0
-# Fri May 13 16:41:52 2005
+# Thu May 19 19:25:26 2005
 #
 CONFIG_ARM=y
 CONFIG_UCLINUX=y
@@ -55,16 +55,16 @@ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
 # CONFIG_ARCH_P2001 is not set
 CONFIG_ARCH_NDS=y
 # CONFIG_SET_MEM_PARAM is not set
-CONFIG_DRAM_BASE=0x00800000
-CONFIG_DRAM_SIZE=0x00800000
+CONFIG_DRAM_BASE=0x02000000
+CONFIG_DRAM_SIZE=0x00400000
 CONFIG_FLASH_MEM_BASE=0x08000000
 CONFIG_FLASH_SIZE=0x00400000
 
 #
 # NDS Options
 #
-CONFIG_NDS_DSGBA=y
-# CONFIG_NDS_NDS is not set
+# CONFIG_NDS_DSGBA is not set
+CONFIG_NDS_NDS=y
 
 #
 # Processor Type
@@ -106,17 +106,86 @@ CONFIG_BINFMT_FLAT=y
 #
 # Generic Driver Options
 #
-CONFIG_STANDALONE=y
+# CONFIG_STANDALONE is not set
 CONFIG_PREVENT_FIRMWARE_BUILD=y
+# CONFIG_DEBUG_DRIVER is not set
 # CONFIG_PM is not set
 # CONFIG_PREEMPT is not set
-CONFIG_CMDLINE=""
-# CONFIG_ALIGNMENT_TRAP is not set
+CONFIG_CMDLINE="rootfstype=romfs "
+CONFIG_ALIGNMENT_TRAP=y
 
 #
 # Parallel port support
 #
 # CONFIG_PARPORT is not set
+
+#
+# Memory Technology Devices (MTD)
+#
+CONFIG_MTD=y
+# CONFIG_MTD_DEBUG is not set
+CONFIG_MTD_PARTITIONS=y
+# CONFIG_MTD_CONCAT is not set
+# CONFIG_MTD_REDBOOT_PARTS is not set
+CONFIG_MTD_CMDLINE_PARTS=y
+# CONFIG_MTD_AFS_PARTS is not set
+
+#
+# User Modules And Translation Layers
+#
+CONFIG_MTD_CHAR=y
+# CONFIG_MTD_BLOCK is not set
+CONFIG_MTD_BLOCK_RO=y
+# CONFIG_FTL is not set
+# CONFIG_NFTL is not set
+# CONFIG_INFTL is not set
+
+#
+# RAM/ROM/Flash chip drivers
+#
+# CONFIG_MTD_CFI is not set
+# CONFIG_MTD_JEDECPROBE is not set
+CONFIG_MTD_MAP_BANK_WIDTH_1=y
+CONFIG_MTD_MAP_BANK_WIDTH_2=y
+CONFIG_MTD_MAP_BANK_WIDTH_4=y
+# CONFIG_MTD_MAP_BANK_WIDTH_8 is not set
+# CONFIG_MTD_MAP_BANK_WIDTH_16 is not set
+# CONFIG_MTD_MAP_BANK_WIDTH_32 is not set
+CONFIG_MTD_CFI_I1=y
+CONFIG_MTD_CFI_I2=y
+# CONFIG_MTD_CFI_I4 is not set
+# CONFIG_MTD_CFI_I8 is not set
+# CONFIG_MTD_RAM is not set
+CONFIG_MTD_ROM=y
+# CONFIG_MTD_ABSENT is not set
+# CONFIG_MTD_OBSOLETE_CHIPS is not set
+
+#
+# Mapping drivers for chip access
+#
+# CONFIG_MTD_COMPLEX_MAPPINGS is not set
+CONFIG_MTD_UCLINUX=y
+# CONFIG_MTD_SNAPGEARuC is not set
+
+#
+# Self-contained MTD device drivers
+#
+# CONFIG_MTD_SLRAM is not set
+# CONFIG_MTD_PHRAM is not set
+# CONFIG_MTD_MTDRAM is not set
+# CONFIG_MTD_BLKMTD is not set
+
+#
+# Disk-On-Chip Device Drivers
+#
+# CONFIG_MTD_DOC2000 is not set
+# CONFIG_MTD_DOC2001 is not set
+# CONFIG_MTD_DOC2001PLUS is not set
+
+#
+# NAND Flash Device Drivers
+#
+# CONFIG_MTD_NAND is not set
 
 #
 # Plug and Play support
@@ -319,6 +388,8 @@ CONFIG_RAMFS=y
 # CONFIG_BEFS_FS is not set
 # CONFIG_BFS_FS is not set
 # CONFIG_EFS_FS is not set
+# CONFIG_JFFS_FS is not set
+# CONFIG_JFFS2_FS is not set
 # CONFIG_CRAMFS is not set
 # CONFIG_VXFS_FS is not set
 # CONFIG_HPFS_FS is not set
