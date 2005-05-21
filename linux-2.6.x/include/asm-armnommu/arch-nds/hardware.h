@@ -33,7 +33,7 @@
 #endif
 
 #define MACH_RESERVE_BOOTMEM()  do { \
-    reserve_bootmem_node(pgdat, (CONFIG_DRAM_BASE + 0x4000), 0x4000); \
+    reserve_bootmem_node(pgdat, (CONFIG_DRAM_BASE), 0x200000); \
   } while(0)
 
 #define MACH_FREE_BOOTMEM()
