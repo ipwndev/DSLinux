@@ -75,12 +75,27 @@
 #define BG3_XDY        (*(volatile u16*)0x04000032)
 #define BG3_YDX        (*(volatile u16*)0x04000034)
 #define BG3_YDY        (*(volatile u16*)0x04000036)
+#define BG3_CX         (*(volatile u32*)0x04000038)
+#define BG3_CY         (*(volatile u32*)0x0400003C)
+
+#define SUB_BG3_XDX    (*(volatile u16*)0x04001030)
+#define SUB_BG3_XDY    (*(volatile u16*)0x04001032)
+#define SUB_BG3_YDX    (*(volatile u16*)0x04001034)
+#define SUB_BG3_YDY    (*(volatile u16*)0x04001036)
+#define SUB_BG3_CX     (*(volatile u32*)0x04001038)
+#define SUB_BG3_CY     (*(volatile u32*)0x0400103C)
 
 #define BG_CR           ((volatile u16*)0x04000008)
 #define BG0_CR         (*(volatile u16*)0x04000008)
 #define BG1_CR         (*(volatile u16*)0x0400000A)
 #define BG2_CR         (*(volatile u16*)0x0400000C)
 #define BG3_CR         (*(volatile u16*)0x0400000E)
+
+#define SUB_BG_CR               ((volatile u16*)0x04001008)
+#define SUB_BG0_CR     (*(volatile u16*)0x04001008)
+#define SUB_BG1_CR     (*(volatile u16*)0x0400100A)
+#define SUB_BG2_CR     (*(volatile u16*)0x0400100C)
+#define SUB_BG3_CR     (*(volatile u16*)0x0400100E)
 
 #define VRAM_CR         (*(volatile u32*)0x04000240)
 #define VRAM_A_CR       (*(volatile u8*)0x04000240)
@@ -115,6 +130,28 @@ typedef enum
 
 }VRAM_A_TYPE;
 
+typedef enum
+{
+        VRAM_C_LCD = 0,
+        VRAM_C_MAIN_BG  = 1 | VRAM_OFFSET(2),
+        VRAM_C_MAIN_BG_0x6000000  = 1 | VRAM_OFFSET(0),
+        VRAM_C_MAIN_BG_0x6020000  = 1 | VRAM_OFFSET(1),
+        VRAM_C_MAIN_BG_0x6040000  = 1 | VRAM_OFFSET(2),
+        VRAM_C_MAIN_BG_0x6060000  = 1 | VRAM_OFFSET(3),
+        VRAM_C_ARM7 = 2,
+        VRAM_C_SUB_BG  = 4,
+        VRAM_C_SUB_BG_0x6200000  = 4 | VRAM_OFFSET(0),
+        VRAM_C_SUB_BG_0x6220000  = 4 | VRAM_OFFSET(1),
+        VRAM_C_SUB_BG_0x6240000  = 4 | VRAM_OFFSET(2),
+        VRAM_C_SUB_BG_0x6260000  = 4 | VRAM_OFFSET(3),
+        VRAM_C_TEXTURE = 3 | VRAM_OFFSET(2),
+        VRAM_C_TEXTURE_SLOT0 = 3 | VRAM_OFFSET(0),
+        VRAM_C_TEXTURE_SLOT1 = 3 | VRAM_OFFSET(1),
+        VRAM_C_TEXTURE_SLOT2 = 3 | VRAM_OFFSET(2),
+        VRAM_C_TEXTURE_SLOT3 = 3 | VRAM_OFFSET(3)
+
+}VRAM_C_TYPE;
+
     /*
      *  RAM we reserve for the frame buffer. This defines the maximum screen
      *  size
@@ -148,7 +185,7 @@ static struct fb_var_screeninfo ndsfb_default __initdata = {
 static struct fb_fix_screeninfo ndsfb_fix __initdata = {
 	.id =		"Nintendo DS FB",
 	.type =		FB_TYPE_PACKED_PIXELS,
-	.visual =	FB_VISUAL_PSEUDOCOLOR,
+	.visual =	FB_VISUAL_TRUECOLOR,
 	.xpanstep =	1,
 	.ypanstep =	1,
 	.ywrapstep =	1,
@@ -300,14 +337,19 @@ static int ndsfb_check_var(struct fb_var_screeninfo *var,
 static int ndsfb_set_par(struct fb_info *info)
 {
         info->fix.line_length = 256 * 2;
-        DISPLAY_CR = MODE_5_2D | DISPLAY_BG3_ACTIVE;
-        VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG_0x6000000 ;
-        BG3_CR = BG_BMP16_256x256;
+	info->fix.smem_start = info->screen_base ;
+	info->fix.smem_len = 256 * 192 * 2 ;
 
-        BG3_XDX = 1 << 8;
-        BG3_XDY = 0;
-        BG3_YDX = 0;
-        BG3_YDY = 1 << 8;
+        SUB_DISPLAY_CR = MODE_5_2D | DISPLAY_BG3_ACTIVE;
+        VRAM_C_CR = VRAM_ENABLE | VRAM_C_SUB_BG_0x6200000 ;
+        SUB_BG3_CR = BG_BMP16_256x256;
+
+        SUB_BG3_XDX = 1 << 8;
+        SUB_BG3_XDY = 0;
+        SUB_BG3_YDX = 0;
+        SUB_BG3_YDY = 1 << 8;
+	SUB_BG3_CX  = 0;
+	SUB_BG3_CY  = 0;
 
         return 0;
 }
@@ -321,82 +363,26 @@ static int ndsfb_set_par(struct fb_info *info)
 static int ndsfb_setcolreg(u_int regno, u_int red, u_int green, u_int blue,
 			 u_int transp, struct fb_info *info)
 {
-	if (regno >= 256)	/* no. of hw registers */
+	u32 v;
+
+	if (regno >= 16)
 		return 1;
-	/*
-	 * Program hardware... do anything you want with transp
-	 */
 
-	/* grayscale works only partially under directcolor */
-	if (info->var.grayscale) {
-		/* grayscale = 0.30*R + 0.59*G + 0.11*B */
-		red = green = blue =
-		    (red * 77 + green * 151 + blue * 28) >> 8;
-	}
-
-	/* Directcolor:
-	 *   var->{color}.offset contains start of bitfield
-	 *   var->{color}.length contains length of bitfield
-	 *   {hardwarespecific} contains width of RAMDAC
-	 *   cmap[X] is programmed to (X << red.offset) | (X << green.offset) | (X << blue.offset)
-	 *   RAMDAC[X] is programmed to (red, green, blue)
-	 * 
-	 * Pseudocolor:
-	 *    uses offset = 0 && length = RAMDAC register width.
-	 *    var->{color}.offset is 0
-	 *    var->{color}.length contains widht of DAC
-	 *    cmap is not used
-	 *    RAMDAC[X] is programmed to (red, green, blue)
-	 * Truecolor:
-	 *    does not use DAC. Usually 3 are present.
-	 *    var->{color}.offset contains start of bitfield
-	 *    var->{color}.length contains length of bitfield
-	 *    cmap is programmed to (red << red.offset) | (green << green.offset) |
-	 *                      (blue << blue.offset) | (transp << transp.offset)
-	 *    RAMDAC does not exist
-	 */
 #define CNVT_TOHW(val,width) ((((val)<<(width))+0x7FFF-(val))>>16)
-	switch (info->fix.visual) {
-	case FB_VISUAL_TRUECOLOR:
-	case FB_VISUAL_PSEUDOCOLOR:
-		red = CNVT_TOHW(red, info->var.red.length);
-		green = CNVT_TOHW(green, info->var.green.length);
-		blue = CNVT_TOHW(blue, info->var.blue.length);
-		transp = CNVT_TOHW(transp, info->var.transp.length);
-		break;
-	case FB_VISUAL_DIRECTCOLOR:
-		red = CNVT_TOHW(red, 8);	/* expect 8 bit DAC */
-		green = CNVT_TOHW(green, 8);
-		blue = CNVT_TOHW(blue, 8);
-		/* hey, there is bug in transp handling... */
-		transp = CNVT_TOHW(transp, 8);
-		break;
-	}
+	red = CNVT_TOHW(red, info->var.red.length);
+	green = CNVT_TOHW(green, info->var.green.length);
+	blue = CNVT_TOHW(blue, info->var.blue.length);
+	transp = CNVT_TOHW(transp, info->var.transp.length);
 #undef CNVT_TOHW
+
 	/* Truecolor has hardware independent palette */
-	if (info->fix.visual == FB_VISUAL_TRUECOLOR) {
-		u32 v;
 
-		if (regno >= 16)
-			return 1;
+	v = (red << info->var.red.offset) |
+	    (green << info->var.green.offset) |
+	    (blue << info->var.blue.offset) |
+	    (1 << info->var.transp.offset);
+	((u32 *) (info->pseudo_palette))[regno] = v;
 
-		v = (red << info->var.red.offset) |
-		    (green << info->var.green.offset) |
-		    (blue << info->var.blue.offset) |
-		    (transp << info->var.transp.offset);
-		switch (info->var.bits_per_pixel) {
-		case 8:
-			break;
-		case 16:
-			((u32 *) (info->pseudo_palette))[regno] = v;
-			break;
-		case 24:
-		case 32:
-			((u32 *) (info->pseudo_palette))[regno] = v;
-			break;
-		}
-		return 0;
-	}
 	return 0;
 }
 
@@ -475,7 +461,7 @@ static int __init ndsfb_probe(struct device *device)
 	if (!info)
 		goto err;
 
-	info->screen_base = dev->id == 0 ? (void*)0x06000000 : (void*)0x06040000 ;
+	info->screen_base = dev->id == 0 ? (void*)0x06000000 : (void*)0x06200000 ;
 	info->fbops = &ndsfb_ops;
 
 	retval = fb_find_mode(&info->var, info, NULL,
@@ -561,12 +547,12 @@ int __init ndsfb_init(void)
 	ret = driver_register(&ndsfb_driver);
 
 	if (!ret) {
-		ret = platform_device_register(&ndsfb_device0);
+		ret = platform_device_register(&ndsfb_device1);
 		if (ret)
 			driver_unregister(&ndsfb_driver);
 	}
 	return ret;
 }
 
-//module_init(ndsfb_init);
+module_init(ndsfb_init);
 
