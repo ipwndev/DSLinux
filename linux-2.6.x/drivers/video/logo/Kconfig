@@ -33,6 +33,11 @@ config LOGO_MAC_CLUT224
 	depends on LOGO && MAC
 	default y
 
+config LOGO_NDS_CLUT224
+	bool "224-color Nintendo Linux logo"
+	depends on LOGO && ARCH_NDS
+	default y
+
 config LOGO_PARISC_CLUT224
 	bool "224-color PA-RISC Linux logo"
 	depends on LOGO && PARISC
