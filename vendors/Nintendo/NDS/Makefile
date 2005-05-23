@@ -40,7 +40,7 @@ DEVICES = \
 	ttyp8,c,3,8    ttyp9,c,3,9        ttypa,c,3,10     ttypb,c,3,11 \
 	ttypc,c,3,12   ttypd,c,3,13       ttype,c,3,14     ttypf,c,3,15 \
 	\
-	zero,c,1,5     random,c,1,8       urandom,c,1,9 
+	zero,c,1,5     random,c,1,8       urandom,c,1,9
 
 
 clean:
@@ -71,24 +71,30 @@ romfs:
 image:
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
-	BSS=`$(CROSS_COMPILE)objdump --headers $(ROOTDIR)/$(LINUXDIR)/linux | \
-	grep .bss` ; \
-	BSSADDR=`set -- $${BSS} ; echo 0x$${4}` ; \
-	BSSSIZE=`set -- $${BSS} ; echo 0x$${3}` ; \
-	ADDR=`echo $${BSSADDR} $${BSSSIZE} | \
-	perl -ane 'printf "0x%x\n",hex($$F[0]) + hex($$F[1])' ` ; \
-	echo "BSS=$${BSSADDR},$${BSSSIZE} ADDR=$${ADDR}" ; \
-	$(CROSS_COMPILE)objcopy --add-section=.romfs=$(ROMFSIMG) \
-	--adjust-section-vma=.romfs=$${ADDR} --no-adjust-warnings \
-	--set-section-flags=.romfs=alloc,load,data   \
-	$(ROOTDIR)/$(LINUXDIR)/linux $(ELFIMAGE) 2> /dev/null
 	if [ "$(CONFIG_NDS_NDS)" = "y" ]; then \
+		BSS=`$(CROSS_COMPILE)objdump --headers $(ROOTDIR)/$(LINUXDIR)/linux | \
+		grep .bss` ; \
+		BSSADDR=`set -- $${BSS} ; echo 0x$${4}` ; \
+		BSSSIZE=`set -- $${BSS} ; echo 0x$${3}` ; \
+		ADDR=`echo $${BSSADDR} $${BSSSIZE} | \
+		perl -ane 'printf "0x%x\n",hex($$F[0]) + hex($$F[1])' ` ; \
+		echo "BSS=$${BSSADDR},$${BSSSIZE} ADDR=$${ADDR}" ; \
+		$(CROSS_COMPILE)objcopy --add-section=.romfs=$(ROMFSIMG) \
+		--adjust-section-vma=.romfs=$${ADDR} --no-adjust-warnings \
+		--set-section-flags=.romfs=alloc,load,data   \
+		$(ROOTDIR)/$(LINUXDIR)/linux $(ELFIMAGE) 2> /dev/null ; \
 		$(CROSS_COMPILE)objcopy -O binary $(ELFIMAGE) $(IMAGEDIR)/arm9.bin ; \
 		ndstool -c $(IMAGEDIR)/dslinux.nds -9 $(IMAGEDIR)/arm9.bin \
 			-r9 0x02005000 -e9 0x02005000  \
 			-b tux.bmp "DSLinux;Port of Linux;to the DS!" ; \
 		dsbuild $(IMAGEDIR)/dslinux.nds -o $(IMAGE) ; \
 	else \
-		$(CROSS_COMPILE)objcopy -O binary $(ELFIMAGE) $(IMAGE) ; \
-	fi 
+	        $(CROSS_COMPILE)objcopy -O binary \
+                        --remove-section=.text --remove-section=.init \
+                        $(ROOTDIR)/$(LINUXDIR)/linux $(IMAGEDIR)/linux.data ; \
+		$(CROSS_COMPILE)objcopy -O binary \
+                        -j .init -j .text \
+                        $(ROOTDIR)/$(LINUXDIR)/linux $(IMAGEDIR)/linux.text ; \
+		cat $(IMAGEDIR)/linux.text $(IMAGEDIR)/linux.data $(ROMFSIMG) > $(IMAGE) ; \
+	fi
 
