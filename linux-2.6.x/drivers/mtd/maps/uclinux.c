@@ -56,11 +56,13 @@ int __init uclinux_mtd_init(void)
 {
 	struct mtd_info *mtd;
 	struct map_info *mapp;
+#ifdef CONFIG_NDS_DSGBA
+	extern char _etext, _edata, __data_start;
+	unsigned long addr = (unsigned long) (&_etext + ( &_edata - &__data_start ) );
+#else
 	extern char _end;
-//	extern char _etext;
-//	extern char __data_start;
-//	unsigned long addr = (unsigned long) (&_etext + ( &_end - &__data_start ) );
 	unsigned long addr = (unsigned long) &_end ;
+#endif
 
 	mapp = &uclinux_ram_map;
 	mapp->phys = addr;
