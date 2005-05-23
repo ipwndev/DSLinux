@@ -131,14 +131,6 @@ _copyarm7:
 /****************************************************************************/
 
 _entry:
-	/* move this to the framebuffer driver */
-	ldr r1, =0x04000000
-	ldr r0, =0x00010100
-	str r0, [r1]
-	ldr r1, =0x04000240
-	ldr r0, =0x81
-	strb r0, [r1]
-
 	mov	r0, #PSR_F_BIT | PSR_I_BIT | MODE_SVC	@ make sure svc mode
 	msr	cpsr_c, r0			@ and all irqs disabled
 
