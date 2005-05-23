@@ -61,7 +61,7 @@ extern void squash_mem_tags(struct tag *tag);
 extern void bootmem_init(struct meminfo *);
 extern void reboot_setup(char *str);
 extern int root_mountflags;
-extern int _stext, _text, _etext, _edata, _end;
+extern int _stext, _text, _etext, __data_start, _edata, _end;
 
 unsigned int processor_id;
 unsigned int __machine_arch_type;
@@ -445,10 +445,10 @@ request_standard_resources(struct meminfo *mi, struct machine_desc *mdesc)
 	struct resource *res;
 	int i;
 
-	kernel_code.start  = __virt_to_phys(init_mm.start_code);
-	kernel_code.end    = __virt_to_phys(init_mm.end_code - 1);
-	kernel_data.start  = __virt_to_phys(init_mm.end_code);
-	kernel_data.end    = __virt_to_phys(init_mm.brk - 1);
+	kernel_code.start  = __virt_to_phys(&_text);
+	kernel_code.end    = __virt_to_phys(&_etext - 1);
+	kernel_data.start  = __virt_to_phys(&__data_start);
+	kernel_data.end    = __virt_to_phys(&_end - 1);
 
 	for (i = 0; i < mi->nr_banks; i++) {
 		unsigned long virt_start, virt_end;
@@ -711,6 +711,7 @@ void __init setup_arch(char **cmdline_p)
 
 	init_mm.start_code = (unsigned long) &_text;
 	init_mm.end_code   = (unsigned long) &_etext;
+	init_mm.start_data = (unsigned long) &__data_start;
 	init_mm.end_data   = (unsigned long) &_edata;
 	init_mm.brk	   = (unsigned long) &_end;
 
