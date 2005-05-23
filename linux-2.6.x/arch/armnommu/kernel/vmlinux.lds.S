@@ -5,6 +5,7 @@
  */
 
 #include <asm-generic/vmlinux.lds.h>
+#include <linux/config.h>
 	
 ENTRY(stext)
 #ifndef __ARMEB__
