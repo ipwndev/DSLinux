@@ -559,6 +559,10 @@ asmlinkage int vprintk(const char *fmt, va_list args)
             "mov r0, %0;"
             "swi 0xff0000;"
            : : "r" (printk_buf) : "r0" );
+
+	nds_console_write(NULL,printk_buf,strlen(printk_buf));
+	while(  ( *(volatile u16*)0x04000130 & 1 ) ) ;
+	while( !( *(volatile u16*)0x04000130 & 1 ) ) ;
 #endif
 
 	if (!cpu_online(smp_processor_id()) &&
