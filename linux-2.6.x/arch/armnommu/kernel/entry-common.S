@@ -116,12 +116,33 @@ ENTRY(ret_from_fork)
 
 	.align	5
 ENTRY(vector_swi)
+#if defined(CONFIG_ARCH_NDS)
+	@ Undo the changes made by NDS BIOS
+	ldmfd   sp!, {r2,lr}
+	@ keep interrupts disabled/enabled
+	@ 0x1f xor 0x0c => 0x13
+	eor     r11, r11, #0x0c
+	msr     cpsr, r11
+	ldmfd   sp!, {r11}
+	msr     spsr, r11
+	ldmfd   sp!, {r11,r12,lr}
+
+	@ lr set to swi instruction
+	add     lr, lr, #4
+#endif
 	save_user_regs
 	zero_fp
 	get_scno
 	arm710_bug_check scno, ip
 
+#ifdef CONFIG_ARCH_NDS
+	@ NDS does not disable irqs on swi, using PIC instead
+	ldr     r5, =0x04000208
+	mov     ip, #1
+	str     ip, [r5]
+#else
 	enable_irq ip
+#endif
 
 	str	r4, [sp, #-S_OFF]!		@ push fifth arg
 
