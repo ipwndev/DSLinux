@@ -122,11 +122,6 @@ _copyarm7:
 
 #endif
 
-	ldr	r0, =0x02004918
-	adr	r1, jump_to_vector_swi
-	ldmia	r1, {r1 - r3}
-	stmia	r0, {r1 - r3}
-
 
 /****************************************************************************/
 
@@ -245,6 +240,11 @@ _entry:
 
 	adr	r5, LC0
 	ldmia	r5, {r5, r6, r8, r9, sp}			@ Setup stack
+
+	ldr	r0, =0x02004918
+	adr	r1, jump_to_vector_swi
+	ldmia	r1, {r1 - r3}
+	stmia	r0, {r1 - r3}
 
 #ifdef CONFIG_NDS_DSGBA
 	/*  Copy data sections to their new home.  */
