@@ -118,7 +118,12 @@ find_bootmap_pfn(int node, struct meminfo *mi, unsigned int bootmap_pages)
 {
 	unsigned int start_pfn, bank, bootmap_pfn;
 
+#ifdef CONFIG_NDS_NDS
+        unsigned int rootfs_len = ntohl(((unsigned int *)&_end)[2]);
+	start_pfn   = V_PFN_UP(((char*)&_end) + rootfs_len);
+#else
 	start_pfn   = V_PFN_UP(&_end);
+#endif
 	bootmap_pfn = 0;
 
 	for (bank = 0; bank < mi->nr_banks; bank ++) {
