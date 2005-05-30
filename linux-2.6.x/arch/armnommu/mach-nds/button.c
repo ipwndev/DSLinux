@@ -51,14 +51,14 @@ static int __init ndsbutton_init(void)
 {
 	int i;
 
-        if (request_irq(IRQ_KEYPAD, ndsbutton_interrupt, 0, "button", NULL)) {
+        if (request_irq(IRQ_VBLANK, ndsbutton_interrupt, 0, "button", NULL)) {
                 printk(KERN_ERR "button.c: Can't allocate irq %d\n", IRQ_KEYPAD);
                 return -EBUSY;
         }
 
-	*(volatile u16*) 0x04000132 = 0x3ff | 1 << 14 ;
+	*(volatile u16*) 0x04000004 |= 1 << 3 ;
 
-        ndsbutton_dev.evbit[0] = BIT(EV_KEY);
+        ndsbutton_dev.evbit[0] = BIT(EV_KEY) | BIT(EV_REP) ;
 	for ( i = 0 ; i < 10 ; i++ )
 		ndsbutton_dev.keybit[LONG(ndsbuttons[i])] |= BIT(ndsbuttons[i]);
         
