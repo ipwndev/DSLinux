@@ -175,7 +175,6 @@ find_memend_and_nodes(struct meminfo *mi, struct node_info *np)
 		np[i].bootmap_pages = 0;
 	}
 
-	printk("mi->nr_banks=%d\n",mi->nr_banks);
 	for (i = 0; i < mi->nr_banks; i++) {
 		unsigned long start, end;
 		int node;
@@ -347,7 +346,6 @@ void __init bootmem_init(struct meminfo *mi)
 	unsigned int bootmap_pages, bootmap_pfn, map_pg;
 	int node, initrd_node;
 
-	printk("bootmem_init\n");
 	bootmap_pages = find_memend_and_nodes(mi, np);
 	bootmap_pfn   = find_bootmap_pfn(0, mi, bootmap_pages);
 	initrd_node   = check_initrd(mi);
@@ -374,7 +372,6 @@ void __init bootmem_init(struct meminfo *mi)
 	 * into one generic "memory_init" type function).
 	 */
 	np += numnodes - 1;
-	printk("numnodes = %d\n", numnodes);
 	for (node = numnodes - 1; node >= 0; node--, np--) {
 		/*
 		 * If there are no pages in this node, ignore it.
