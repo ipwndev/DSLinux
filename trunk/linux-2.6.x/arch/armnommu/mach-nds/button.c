@@ -70,7 +70,7 @@ static int __init ndsbutton_init(void)
 static void __exit ndsbutton_exit(void)
 {
         input_unregister_device(&ndsbutton_dev);
-        free_irq(IRQ_KEYPAD, ndsbutton_interrupt);
+        free_irq(IRQ_VBLANK, ndsbutton_interrupt);
 }
 
 module_init(ndsbutton_init);
