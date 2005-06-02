@@ -66,7 +66,7 @@ int __init uclinux_mtd_init(void)
 
 	mapp = &uclinux_ram_map;
 	mapp->phys = addr;
-	mapp->size = PAGE_ALIGN(*((unsigned long *)(addr + 8)));
+	mapp->size = PAGE_ALIGN(ntohl(*((unsigned long *)(addr + 8))));
 	mapp->bankwidth = 4;
 
 	printk("uclinux[mtd]: RAM probe address=0x%x size=0x%x\n",
