@@ -43,10 +43,19 @@
 
 #define BG_256_COLOR   (1<<7)
 
+#define BG_WRAP_ON     (1 << 13)
+
 #define BG_RS_16x16    (0 << 14)
 #define BG_RS_32x32    (1 << 14)
 #define BG_RS_64x64    (2 << 14)
 #define BG_RS_128x128  (3 << 14)
+
+#define BG_BMP8_128x128 (BG_RS_16x16 | BG_256_COLOR)
+#define BG_BMP8_256x256 (BG_RS_32x32 | BG_256_COLOR)
+#define BG_BMP8_512x256 (BG_RS_64x64 | BG_256_COLOR)
+#define BG_BMP8_512x512 (BG_RS_128x128 | BG_256_COLOR)
+#define BG_BMP8_1024x512 0
+#define BG_BMP8_512x1024 BIT(14)
 
 #define BG_BMP16_128x128 (BG_RS_16x16 | BG_256_COLOR | 1<<2)
 #define BG_BMP16_256x256 (BG_RS_32x32 | BG_256_COLOR | 1<<2)
@@ -144,7 +153,7 @@ static struct fb_var_screeninfo ndsfb_default __initdata = {
       	.green =	{ 5, 5, 0 },
       	.blue =		{ 10, 5, 0 },
       	.transp =	{ 15, 1, 0 },
-      	.activate =	FB_ACTIVATE_NOW,
+      	.activate =	FB_ACTIVATE_NOW | FB_ACTIVATE_FORCE,
       	.height =	-1,
       	.width =	-1,
       	.pixclock =	20000,
@@ -197,6 +206,18 @@ static struct fb_ops ndsfb_ops = {
 	.fb_mmap	= ndsfb_mmap,
 };
 
+static irqreturn_t ndsfb_interrupt(int irq, void *dev_id, struct pt_regs *regs)
+{
+	struct fb_info *info = dev_get_drvdata(dev_id);
+
+	if ( 1 )
+	{
+		ndsfb_set_par( info ) ;
+	}
+
+        return IRQ_HANDLED ;
+}
+
     /*
      *  Internal routines
      */
@@ -217,13 +238,11 @@ static int ndsfb_check_var(struct fb_var_screeninfo *var,
          *  as FB_VMODE_SMOOTH_XPAN is only used internally
          */
 
-#if 0
         if (var->vmode & FB_VMODE_CONUPDATE) {
                 var->vmode |= FB_VMODE_YWRAP;
                 var->xoffset = info->var.xoffset;
                 var->yoffset = info->var.yoffset;
         }
-#endif
 
         /*
          *  Some very basic checks
@@ -280,7 +299,10 @@ static int ndsfb_set_par(struct fb_info *info)
 	{
 		DISPLAY_CR = MODE_5_2D | DISPLAY_BG3_ACTIVE;
 		VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG_0x6000000 ;
-		BG3_CR = BG_BMP16_256x256;
+		if (var->vmode & FB_VMODE_YWRAP)
+			BG3_CR = BG_BMP16_256x256 | BG_WRAP_ON ;
+		else
+			BG3_CR = BG_BMP16_256x256 ;
 
 		BG3_XDX = 1 << 8;
 		BG3_XDY = 0;
@@ -293,14 +315,17 @@ static int ndsfb_set_par(struct fb_info *info)
 	{
 		SUB_DISPLAY_CR = MODE_5_2D | DISPLAY_BG3_ACTIVE;
 		VRAM_C_CR = VRAM_ENABLE | VRAM_C_SUB_BG_0x6200000 ;
-		SUB_BG3_CR = BG_BMP16_256x256;
+		if (var->vmode & FB_VMODE_YWRAP)
+			SUB_BG3_CR = BG_BMP16_256x256 | BG_WRAP_ON ;
+		else
+			SUB_BG3_CR = BG_BMP16_256x256 ;
 
 		SUB_BG3_XDX = 1 << 8;
 		SUB_BG3_XDY = 0;
 		SUB_BG3_YDX = 0;
 		SUB_BG3_YDY = 1 << 8;
-		SUB_BG3_CX  = (-info->var.xoffset) << 8;
-		SUB_BG3_CY  = (-info->var.yoffset) << 8;
+		SUB_BG3_CX  = (info->var.xoffset) << 8;
+		SUB_BG3_CY  = (info->var.yoffset) << 8;
 	}
 
         return 0;
@@ -363,6 +388,9 @@ static int ndsfb_pan_display(struct fb_var_screeninfo *var,
 		info->var.vmode |= FB_VMODE_YWRAP;
 	else
 		info->var.vmode &= ~FB_VMODE_YWRAP;
+
+	ndsfb_set_par( info );
+
 	return 0;
 }
 
@@ -423,8 +451,12 @@ static int __init ndsfb_probe(struct device *device)
 		info->var = ndsfb_default;
 	info->fix = ndsfb_fix;
 	info->pseudo_palette = info->par;
-	info->par = dev->id;
-	info->flags = FBINFO_FLAG_DEFAULT;
+	info->par = (void*)dev->id;
+	info->flags = FBINFO_FLAG_DEFAULT
+		| FBINFO_PARTIAL_PAN_OK
+		| FBINFO_HWACCEL_XPAN
+		| FBINFO_HWACCEL_YPAN
+		| FBINFO_HWACCEL_YWRAP ;
 
 	retval = fb_alloc_cmap(&info->cmap, 256, 0);
 	if (retval < 0)
@@ -434,6 +466,8 @@ static int __init ndsfb_probe(struct device *device)
 	if (retval < 0)
 		goto err2;
 	dev_set_drvdata(&dev->dev, info);
+
+	//request_irq(IRQ_VBLANK, ndsfb_interrupt, SA_SHIRQ, "ndsfb", device);
 
 	printk(KERN_INFO
 	       "fb%d: Nintendo DS frame buffer device\n",
@@ -454,6 +488,7 @@ static int ndsfb_remove(struct device *device)
 	if (info) {
 		unregister_framebuffer(info);
 		framebuffer_release(info);
+		//free_irq(IRQ_VBLANK, device);
 	}
 	return 0;
 }
@@ -484,6 +519,7 @@ static struct platform_device ndsfb_device1 = {
 int __init ndsfb_init(void)
 {
 	int ret = 0;
+	struct fb_info *info;
 
 #ifndef MODULE
 	char *option = NULL;
@@ -505,6 +541,14 @@ int __init ndsfb_init(void)
 		else
 			ret = platform_device_register(&ndsfb_device1);
 	}
+
+	if (!ret) {
+		info = dev_get_drvdata( &ndsfb_device1.dev );
+		fb_set_var(info, &info->var);
+		fb_prepare_logo(info);
+		fb_show_logo(info);
+	}
+
 	return ret;
 }
 
