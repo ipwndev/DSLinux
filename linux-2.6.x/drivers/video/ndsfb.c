@@ -299,7 +299,7 @@ static int ndsfb_set_par(struct fb_info *info)
 	{
 		DISPLAY_CR = MODE_5_2D | DISPLAY_BG3_ACTIVE;
 		VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG_0x6000000 ;
-		if (var->vmode & FB_VMODE_YWRAP)
+		if (info->var.vmode & FB_VMODE_YWRAP)
 			BG3_CR = BG_BMP16_256x256 | BG_WRAP_ON ;
 		else
 			BG3_CR = BG_BMP16_256x256 ;
@@ -315,7 +315,7 @@ static int ndsfb_set_par(struct fb_info *info)
 	{
 		SUB_DISPLAY_CR = MODE_5_2D | DISPLAY_BG3_ACTIVE;
 		VRAM_C_CR = VRAM_ENABLE | VRAM_C_SUB_BG_0x6200000 ;
-		if (var->vmode & FB_VMODE_YWRAP)
+		if (info->var.vmode & FB_VMODE_YWRAP)
 			SUB_BG3_CR = BG_BMP16_256x256 | BG_WRAP_ON ;
 		else
 			SUB_BG3_CR = BG_BMP16_256x256 ;
