@@ -884,6 +884,9 @@ static void fbcon_init(struct vc_data *vc, int init)
 	if (vc->vc_num != display_fg || (info->flags & FBINFO_MODULE) ||
 	    (info->fix.type == FB_TYPE_TEXT))
 		logo = 0;
+#ifdef CONFIG_ARCH_NDS
+	logo = 0;
+#endif
 
 	info->var.xoffset = info->var.yoffset = p->yscroll = 0;	/* reset wrap/pan */
 
@@ -2098,7 +2101,9 @@ static int fbcon_switch(struct vc_data *vc)
 	if (vt_cons[vc->vc_num]->vc_mode == KD_TEXT)
 		accel_clear_margins(vc, info, 0);
 	if (logo_shown == -2) {
+#ifndef CONFIG_ARCH_NDS
 		logo_shown = fg_console;
+#endif
 		/* This is protected above by initmem_freed */
 		fb_show_logo(info);
 		update_region(fg_console,
