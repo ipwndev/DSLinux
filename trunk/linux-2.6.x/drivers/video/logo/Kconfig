@@ -38,6 +38,11 @@ config LOGO_NDS_CLUT224
 	depends on LOGO && ARCH_NDS
 	default y
 
+config LOGO_NDS_BIG_CLUT224
+	bool "224-color Big Nintendo Linux logo"
+	depends on LOGO && ARCH_NDS
+	default y
+
 config LOGO_PARISC_CLUT224
 	bool "224-color PA-RISC Linux logo"
 	depends on LOGO && PARISC
