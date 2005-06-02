@@ -51,7 +51,7 @@ static int __init ndsbutton_init(void)
 {
 	int i;
 
-        if (request_irq(IRQ_VBLANK, ndsbutton_interrupt, 0, "button", NULL)) {
+        if (request_irq(IRQ_VBLANK, ndsbutton_interrupt, SA_SHIRQ, "button", &ndsbutton_dev)) {
                 printk(KERN_ERR "button.c: Can't allocate irq %d\n", IRQ_KEYPAD);
                 return -EBUSY;
         }
@@ -70,7 +70,7 @@ static int __init ndsbutton_init(void)
 static void __exit ndsbutton_exit(void)
 {
         input_unregister_device(&ndsbutton_dev);
-        free_irq(IRQ_VBLANK, ndsbutton_interrupt);
+        free_irq(IRQ_VBLANK, &ndsbutton_dev);
 }
 
 module_init(ndsbutton_init);
