@@ -106,7 +106,7 @@ _copyarm9boot:
 
 	/* copy small ARM7 program to RAM */
 	ldr r0, =arm7_start
-	ldr r1, =0x037f8000
+	ldr r1, =0x03800000
 	ldr r2, =arm7_end
 	subs r2, r2, r0
 	add r2, r2, r1
@@ -308,17 +308,7 @@ arm9boot_start:
 arm9boot_end:
 
 arm7_start:
-	/* Run program on ARM9 */
-	ldr r0, =0x02004000
-	ldr r1, =0x027FFE24
-	str r0, [r1]
-
-	/* busy loop */
-	ldr r0, =0xffff
-arm7loop:
-	swi 0x03
-	b arm7loop
-.ltorg
+.incbin "arch/armnommu/mach-nds/arm7.bin"
 arm7_end:
 
 #endif
