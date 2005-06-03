@@ -1,7 +1,7 @@
 ENTRY(stext)
 SECTIONS
 {
- . = 0x02004000;
+ . = 0x03800000;
  .text : {
   _stext = .;
   *(.text)
