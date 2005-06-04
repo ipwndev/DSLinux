@@ -43,6 +43,8 @@
 
 #define BG_256_COLOR   (1<<7)
 
+#define BG_BMP_BASE(base)  ((base) << 8)
+
 #define BG_WRAP_ON     (1 << 13)
 
 #define BG_RS_16x16    (0 << 14)
@@ -61,6 +63,13 @@
 #define BG_BMP16_256x256 (BG_RS_32x32 | BG_256_COLOR | 1<<2)
 #define BG_BMP16_512x256 (BG_RS_64x64 | BG_256_COLOR | 1<<2)
 #define BG_BMP16_512x512 (BG_RS_128x128 | BG_256_COLOR | 1<<2)
+
+#define BG2_XDX        (*(volatile u16*)0x04000020)
+#define BG2_XDY        (*(volatile u16*)0x04000022)
+#define BG2_YDX        (*(volatile u16*)0x04000024)
+#define BG2_YDY        (*(volatile u16*)0x04000026)
+#define BG2_CX         (*(volatile u32*)0x04000028)
+#define BG2_CY         (*(volatile u32*)0x0400002C)
 
 #define BG3_XDX        (*(volatile u16*)0x04000030)
 #define BG3_XDY        (*(volatile u16*)0x04000032)
@@ -123,23 +132,40 @@ typedef enum
 
 typedef enum
 {
-        VRAM_C_LCD = 0,
-        VRAM_C_MAIN_BG  = 1 | VRAM_OFFSET(2),
-        VRAM_C_MAIN_BG_0x6000000  = 1 | VRAM_OFFSET(0),
-        VRAM_C_MAIN_BG_0x6020000  = 1 | VRAM_OFFSET(1),
-        VRAM_C_MAIN_BG_0x6040000  = 1 | VRAM_OFFSET(2),
-        VRAM_C_MAIN_BG_0x6060000  = 1 | VRAM_OFFSET(3),
-        VRAM_C_ARM7 = 2,
-        VRAM_C_SUB_BG  = 4,
-        VRAM_C_SUB_BG_0x6200000  = 4 | VRAM_OFFSET(0),
-        VRAM_C_SUB_BG_0x6220000  = 4 | VRAM_OFFSET(1),
-        VRAM_C_SUB_BG_0x6240000  = 4 | VRAM_OFFSET(2),
-        VRAM_C_SUB_BG_0x6260000  = 4 | VRAM_OFFSET(3),
-        VRAM_C_TEXTURE = 3 | VRAM_OFFSET(2),
-        VRAM_C_TEXTURE_SLOT0 = 3 | VRAM_OFFSET(0),
-        VRAM_C_TEXTURE_SLOT1 = 3 | VRAM_OFFSET(1),
-        VRAM_C_TEXTURE_SLOT2 = 3 | VRAM_OFFSET(2),
-        VRAM_C_TEXTURE_SLOT3 = 3 | VRAM_OFFSET(3)
+	VRAM_B_LCD = 0,
+	VRAM_B_MAIN_BG  = 1 | VRAM_OFFSET(1),
+	VRAM_B_MAIN_BG_0x6000000  = 1 | VRAM_OFFSET(0),
+	VRAM_B_MAIN_BG_0x6020000  = 1 | VRAM_OFFSET(1),
+	VRAM_B_MAIN_BG_0x6040000  = 1 | VRAM_OFFSET(2),
+	VRAM_B_MAIN_BG_0x6060000  = 1 | VRAM_OFFSET(3),
+	VRAM_B_MAIN_SPRITE = 2,
+	VRAM_B_TEXTURE = 3 | VRAM_OFFSET(1),
+	VRAM_B_TEXTURE_SLOT0 = 3 | VRAM_OFFSET(0),
+	VRAM_B_TEXTURE_SLOT1 = 3 | VRAM_OFFSET(1),
+	VRAM_B_TEXTURE_SLOT2 = 3 | VRAM_OFFSET(2),
+	VRAM_B_TEXTURE_SLOT3 = 3 | VRAM_OFFSET(3)
+
+}VRAM_B_TYPE;
+
+typedef enum
+{
+	VRAM_C_LCD = 0,
+	VRAM_C_MAIN_BG  = 1 | VRAM_OFFSET(2),
+	VRAM_C_MAIN_BG_0x6000000  = 1 | VRAM_OFFSET(0),
+	VRAM_C_MAIN_BG_0x6020000  = 1 | VRAM_OFFSET(1),
+	VRAM_C_MAIN_BG_0x6040000  = 1 | VRAM_OFFSET(2),
+	VRAM_C_MAIN_BG_0x6060000  = 1 | VRAM_OFFSET(3),
+	VRAM_C_ARM7 = 2,
+	VRAM_C_SUB_BG  = 4,
+	VRAM_C_SUB_BG_0x6200000  = 4 | VRAM_OFFSET(0),
+	VRAM_C_SUB_BG_0x6220000  = 4 | VRAM_OFFSET(1),
+	VRAM_C_SUB_BG_0x6240000  = 4 | VRAM_OFFSET(2),
+	VRAM_C_SUB_BG_0x6260000  = 4 | VRAM_OFFSET(3),
+	VRAM_C_TEXTURE = 3 | VRAM_OFFSET(2),
+	VRAM_C_TEXTURE_SLOT0 = 3 | VRAM_OFFSET(0),
+	VRAM_C_TEXTURE_SLOT1 = 3 | VRAM_OFFSET(1),
+	VRAM_C_TEXTURE_SLOT2 = 3 | VRAM_OFFSET(2),
+	VRAM_C_TEXTURE_SLOT3 = 3 | VRAM_OFFSET(3)
 
 }VRAM_C_TYPE;
 
@@ -147,23 +173,23 @@ static struct fb_var_screeninfo ndsfb_default __initdata = {
 	.xres =		256,
 	.yres =		192,
 	.xres_virtual =	256,
-	.yres_virtual =	256,
+	.yres_virtual =	512,
 	.bits_per_pixel = 16,
 	.red =		{ 0, 5, 0 },
-      	.green =	{ 5, 5, 0 },
-      	.blue =		{ 10, 5, 0 },
-      	.transp =	{ 15, 1, 0 },
-      	.activate =	FB_ACTIVATE_NOW | FB_ACTIVATE_FORCE,
-      	.height =	-1,
-      	.width =	-1,
-      	.pixclock =	20000,
-      	.left_margin =	64,
-      	.right_margin =	64,
-      	.upper_margin =	32,
-      	.lower_margin =	32,
-      	.hsync_len =	64,
-      	.vsync_len =	2,
-      	.vmode =	FB_VMODE_NONINTERLACED,
+	.green =	{ 5, 5, 0 },
+	.blue =		{ 10, 5, 0 },
+	.transp =	{ 15, 1, 0 },
+	.activate =	FB_ACTIVATE_NOW | FB_ACTIVATE_FORCE,
+	.height =	-1,
+	.width =	-1,
+	.pixclock =	20000,
+	.left_margin =	64,
+	.right_margin =	64,
+	.upper_margin =	32,
+	.lower_margin =	32,
+	.hsync_len =	64,
+	.vsync_len =	2,
+	.vmode =	FB_VMODE_NONINTERLACED,
 };
 
 static struct fb_fix_screeninfo ndsfb_fix __initdata = {
@@ -255,8 +281,24 @@ static int ndsfb_check_var(struct fb_var_screeninfo *var,
         if ( var->bits_per_pixel != 16 )
                 return -EINVAL;
 
-	var->xres_virtual = 256;
-	var->yres_virtual = 256;
+	if (info->par != 0)
+	{
+		var->xres_virtual = 256;
+		var->yres_virtual = 256;
+	}
+	else
+	{
+		if ( var->xres_virtual > 256 )
+		{
+			var->xres_virtual = 512;
+			var->yres_virtual = 256;
+		}
+		else
+		{
+			var->xres_virtual = 256;
+			var->yres_virtual = var->yres_virtual > 256 ? 512 : 256 ;
+		}
+	}
 
         if (var->xres_virtual < var->xoffset + var->xres)
                 return -EINVAL;
@@ -291,34 +333,49 @@ static int ndsfb_check_var(struct fb_var_screeninfo *var,
  */
 static int ndsfb_set_par(struct fb_info *info)
 {
-	info->fix.line_length = 256 * 2;
+	info->fix.line_length = info->var.xres_virtual * 2;
 	//info->fix.smem_start = info->screen_base ;
 	//info->fix.smem_len = info->var->xres_virtual * info->var->yres_virtual * 2 ;
 
 	if (info->par == 0)
 	{
-		DISPLAY_CR = MODE_5_2D | DISPLAY_BG3_ACTIVE;
-		VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG_0x6000000 ;
-		if (info->var.vmode & FB_VMODE_YWRAP)
-			BG3_CR = BG_BMP16_256x256 | BG_WRAP_ON ;
-		else
-			BG3_CR = BG_BMP16_256x256 ;
+		if ( info->var.yres_virtual == 512 )
+		{
+			DISPLAY_CR = MODE_5_2D | DISPLAY_BG2_ACTIVE | DISPLAY_BG3_ACTIVE ;
+			VRAM_B_CR = VRAM_ENABLE | VRAM_B_MAIN_BG_0x6020000 ;
+			BG3_CR = BG_BMP16_256x256 | BG_BMP_BASE(8) ;
 
-		BG3_XDX = 1 << 8;
-		BG3_XDY = 0;
-		BG3_YDX = 0;
-		BG3_YDY = 1 << 8;
-		BG3_CX  = (info->var.xoffset) << 8;
-		BG3_CY  = (info->var.yoffset) << 8;
+			BG3_XDX = 1 << 8;
+			BG3_XDY = 0;
+			BG3_YDX = 0;
+			BG3_YDY = 1 << 8;
+			BG3_CX  = (info->var.xoffset) << 8;
+			BG3_CY  = (info->var.yoffset-256) << 8;
+		}
+		else
+		{
+			DISPLAY_CR = MODE_5_2D | DISPLAY_BG2_ACTIVE ;
+		}
+		VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG_0x6000000 ;
+		if ( info->var.xres_virtual == 512 )
+			BG2_CR = BG_BMP16_512x256 | BG_BMP_BASE(0) ;
+		else
+			BG2_CR = BG_BMP16_256x256 | BG_BMP_BASE(0) ;
+
+		BG2_XDX = 1 << 8;
+		BG2_XDY = 0;
+		BG2_YDX = 0;
+		BG2_YDY = 1 << 8;
+		BG2_CX  = (info->var.xoffset) << 8;
+		BG2_CY  = (info->var.yoffset) << 8;
 	}
 	else
 	{
 		SUB_DISPLAY_CR = MODE_5_2D | DISPLAY_BG3_ACTIVE;
 		VRAM_C_CR = VRAM_ENABLE | VRAM_C_SUB_BG_0x6200000 ;
+		SUB_BG3_CR = BG_BMP16_256x256 ;
 		if (info->var.vmode & FB_VMODE_YWRAP)
-			SUB_BG3_CR = BG_BMP16_256x256 | BG_WRAP_ON ;
-		else
-			SUB_BG3_CR = BG_BMP16_256x256 ;
+			SUB_BG3_CR |= BG_WRAP_ON ;
 
 		SUB_BG3_XDX = 1 << 8;
 		SUB_BG3_XDY = 0;
