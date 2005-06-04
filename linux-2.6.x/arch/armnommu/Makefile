@@ -131,10 +131,10 @@ FASTFPE_OBJ	:=$(FASTFPE)/
 endif
 
 # If we have a machine-specific directory, then include it in the build.
-core-y				+= arch/armnommu/kernel/ arch/armnommu/mm/ arch/arm/common/
 ifneq ($(MACHINE),)
 core-y				+= arch/armnommu/mach-$(MACHINE)/
 endif
+core-y				+= arch/armnommu/kernel/ arch/armnommu/mm/ arch/arm/common/
 core-$(CONFIG_FPE_NWFPE)	+= arch/arm/nwfpe/
 core-$(CONFIG_FPE_FASTFPE)	+= $(FASTFPE_OBJ)
 core-$(CONFIG_VFP)		+= arch/arm/vfp/
