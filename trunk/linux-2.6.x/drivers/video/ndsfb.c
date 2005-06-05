@@ -25,6 +25,9 @@
 #define DISPLAY_CR       (*(volatile u32*)0x04000000)
 #define SUB_DISPLAY_CR   (*(volatile u32*)0x04001000)
 
+#define PALETTE        ((volatile u16*)0x05000000)
+#define PALETTE_SUB    ((volatile u16*)0x05000400)
+
 #define MODE_0_2D      0x10000
 #define MODE_1_2D      0x10001
 #define MODE_2_2D      0x10002
@@ -174,11 +177,11 @@ static struct fb_var_screeninfo ndsfb_default __initdata = {
 	.yres =		192,
 	.xres_virtual =	256,
 	.yres_virtual =	512,
-	.bits_per_pixel = 16,
+	.bits_per_pixel = 8,
 	.red =		{ 0, 5, 0 },
 	.green =	{ 5, 5, 0 },
 	.blue =		{ 10, 5, 0 },
-	.transp =	{ 15, 1, 0 },
+	.transp =	{ 15, 0, 0 },
 	.activate =	FB_ACTIVATE_NOW | FB_ACTIVATE_FORCE,
 	.height =	-1,
 	.width =	-1,
@@ -195,7 +198,7 @@ static struct fb_var_screeninfo ndsfb_default __initdata = {
 static struct fb_fix_screeninfo ndsfb_fix __initdata = {
 	.id =		"Nintendo DS FB",
 	.type =		FB_TYPE_PACKED_PIXELS,
-	.visual =	FB_VISUAL_TRUECOLOR,
+	.visual =	FB_VISUAL_PSEUDOCOLOR,
 	.xpanstep =	1,
 	.ypanstep =	1,
 	.ywrapstep =	1,
@@ -278,7 +281,8 @@ static int ndsfb_check_var(struct fb_var_screeninfo *var,
         if ( var->yres != 192 )
                 return -EINVAL;
 
-        if ( var->bits_per_pixel != 16 )
+        if ( var->bits_per_pixel != 16 &&
+	     var->bits_per_pixel != 8 )
                 return -EINVAL;
 
 	if (info->par != 0)
@@ -306,6 +310,11 @@ static int ndsfb_check_var(struct fb_var_screeninfo *var,
                 return -EINVAL;
 
         switch (var->bits_per_pixel) {
+		case 8:
+			var->red.length = 5;
+			var->green.length = 5;
+			var->blue.length = 5;
+			var->transp.length = 0;
                 case 16:		/* RGBA 5551 */
                         var->red.offset = 0;
                         var->red.length = 5;
@@ -333,7 +342,12 @@ static int ndsfb_check_var(struct fb_var_screeninfo *var,
  */
 static int ndsfb_set_par(struct fb_info *info)
 {
-	info->fix.line_length = info->var.xres_virtual * 2;
+	if ( info->var.bits_per_pixel == 16 )
+		info->fix.visual = FB_VISUAL_TRUECOLOR ;
+	else
+		info->fix.visual = FB_VISUAL_PSEUDOCOLOR ;
+
+	info->fix.line_length = info->var.xres_virtual * (info->var.bits_per_pixel / 8 );
 	//info->fix.smem_start = info->screen_base ;
 	//info->fix.smem_len = info->var->xres_virtual * info->var->yres_virtual * 2 ;
 
@@ -342,8 +356,15 @@ static int ndsfb_set_par(struct fb_info *info)
 		if ( info->var.yres_virtual == 512 )
 		{
 			DISPLAY_CR = MODE_5_2D | DISPLAY_BG2_ACTIVE | DISPLAY_BG3_ACTIVE ;
-			VRAM_B_CR = VRAM_ENABLE | VRAM_B_MAIN_BG_0x6020000 ;
-			BG3_CR = BG_BMP16_256x256 | BG_BMP_BASE(8) ;
+			if (info->fix.visual == FB_VISUAL_TRUECOLOR)
+			{
+				VRAM_B_CR = VRAM_ENABLE | VRAM_B_MAIN_BG_0x6020000 ;
+				BG3_CR = BG_BMP16_256x256 | BG_BMP_BASE(8) ;
+			}
+			else
+			{
+				BG3_CR = BG_BMP8_256x256 | BG_BMP_BASE(4) ;
+			}
 
 			BG3_XDX = 1 << 8;
 			BG3_XDY = 0;
@@ -358,9 +379,15 @@ static int ndsfb_set_par(struct fb_info *info)
 		}
 		VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG_0x6000000 ;
 		if ( info->var.xres_virtual == 512 )
-			BG2_CR = BG_BMP16_512x256 | BG_BMP_BASE(0) ;
+			if (info->fix.visual == FB_VISUAL_TRUECOLOR)
+				BG2_CR = BG_BMP16_512x256 | BG_BMP_BASE(0) ;
+			else
+				BG2_CR = BG_BMP8_512x256 | BG_BMP_BASE(0) ;
 		else
-			BG2_CR = BG_BMP16_256x256 | BG_BMP_BASE(0) ;
+			if (info->fix.visual == FB_VISUAL_TRUECOLOR)
+				BG2_CR = BG_BMP16_256x256 | BG_BMP_BASE(0) ;
+			else
+				BG2_CR = BG_BMP8_256x256 | BG_BMP_BASE(0) ;
 
 		BG2_XDX = 1 << 8;
 		BG2_XDY = 0;
@@ -373,7 +400,12 @@ static int ndsfb_set_par(struct fb_info *info)
 	{
 		SUB_DISPLAY_CR = MODE_5_2D | DISPLAY_BG3_ACTIVE;
 		VRAM_C_CR = VRAM_ENABLE | VRAM_C_SUB_BG_0x6200000 ;
-		SUB_BG3_CR = BG_BMP16_256x256 ;
+
+		if (info->fix.visual == FB_VISUAL_TRUECOLOR)
+			SUB_BG3_CR = BG_BMP16_256x256 ;
+		else
+			SUB_BG3_CR = BG_BMP8_256x256 ;
+
 		if (info->var.vmode & FB_VMODE_YWRAP)
 			SUB_BG3_CR |= BG_WRAP_ON ;
 
@@ -399,7 +431,7 @@ static int ndsfb_setcolreg(u_int regno, u_int red, u_int green, u_int blue,
 {
 	u32 v;
 
-	if (regno >= 16)
+	if (regno >= 256)
 		return 1;
 
 #define CNVT_TOHW(val,width) ((((val)<<(width))+0x7FFF-(val))>>16)
@@ -411,11 +443,27 @@ static int ndsfb_setcolreg(u_int regno, u_int red, u_int green, u_int blue,
 
 	/* Truecolor has hardware independent palette */
 
-	v = (red << info->var.red.offset) |
-	    (green << info->var.green.offset) |
-	    (blue << info->var.blue.offset) |
-	    (1 << info->var.transp.offset);
-	((u32 *) (info->pseudo_palette))[regno] = v;
+	if (info->fix.visual == FB_VISUAL_TRUECOLOR)
+	{
+		if (regno >= 16)
+			return 1;
+		v = (red << info->var.red.offset) |
+		    (green << info->var.green.offset) |
+		    (blue << info->var.blue.offset) |
+		    (1 << info->var.transp.offset);
+		((u32 *) (info->pseudo_palette))[regno] = v;
+	}
+	else
+	{
+		v = (red << info->var.red.offset) |
+		    (green << info->var.green.offset) |
+		    (blue << info->var.blue.offset);
+
+		if (info->par == 0)
+			PALETTE[regno] = v ;
+		else
+			PALETTE_SUB[regno] = v ;
+	}
 
 	return 0;
 }
