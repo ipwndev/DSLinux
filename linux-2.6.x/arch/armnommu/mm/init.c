@@ -535,7 +535,7 @@ void __init mem_init(void)
 	int i, node;
 
 	codepages = &_etext - &_text;
-	datapages = &__data_start - &_etext;
+	datapages = &_end - &__data_start;
 	initpages = &__init_end - &__init_begin;
 
 #ifndef CONFIG_DISCONTIGMEM
