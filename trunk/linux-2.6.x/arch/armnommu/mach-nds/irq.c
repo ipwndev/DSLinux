@@ -41,18 +41,18 @@ extern void vector_IRQ(void);
 
 static __inline__ void __nds_mask_irq(unsigned int irq)
 {
-	*((unsigned short *) NDS_IE) &= ~(0x1 << irq);
+	*((u32*) NDS_IE) &= ~(0x1 << irq);
 }
 
 static __inline__ void __nds_unmask_irq(unsigned int irq)
 {
-	*((unsigned short *) NDS_IE) |= (0x1 << irq);
+	*((u32*) NDS_IE) |= (0x1 << irq);
 }
 
 static __inline__ void __nds_ack_irq(unsigned int irq)
 {
-	*((unsigned short *) NDS_IF) = (0x1 << irq);
-	*((unsigned short *) NDS_IE) &= ~(0x1 << irq);
+	*((u32*) NDS_IF) = (0x1 << irq);
+	*((u32*) NDS_IE) &= ~(0x1 << irq);
 }
 
 static struct irqchip nds_chip = {
@@ -72,7 +72,7 @@ void nds_init_irq( void )
 	}
 
 	*(volatile u32*)0x00803FFC = vector_IRQ ;
-	*((unsigned short *) NDS_IE) = 0;
-	*((unsigned short *) NDS_IME) = 0x0001;
+	*((u32*) NDS_IE) = 0;
+	*((u32*) NDS_IME) = 0x0001;
 }
 
