@@ -1,5 +1,5 @@
 /*
- * NDS buttons driver
+ * NDS FIFO driver
  *
  * Copyright (c) 2005 Malcolm Parsons
  */
