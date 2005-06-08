@@ -14,15 +14,21 @@ stext:
 	str	r0, [r1]
 #endif
 
-	/* Disable interrupts */
-	mov	r0, #0
-	ldr	r1, =0x04000208
-	str	r0, [r1]
-	ldr	r1, =0x04000210
-	str	r0, [r1]
+	mov     r0, #0x12			@ Switch to IRQ Mode
+	msr     cpsr, r0
+	ldr     sp, =__sp_irq			@ Set IRQ stack
+
+	mov     r0, #0x1F			@ Switch to System Mode
+	msr     cpsr, r0
+	ldr     sp, =__sp_usr			@ Set user stack
 
 	/* Jump to main */
 	b	main
+
+.global swiDelay
+swiDelay:
+	swi	0x030000
+	bx	lr
 
 .global swiWaitForVBlank
 swiWaitForVBlank:
