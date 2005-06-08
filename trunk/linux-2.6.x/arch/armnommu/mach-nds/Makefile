@@ -4,7 +4,7 @@
 
 # Object file lists.
 
-obj-y                += arch.o irq.o time.o button.o
+obj-y                += arch.o irq.o time.o button.o fifo.o
 
 obj-$(CONFIG_NDS_TEXT_CONSOLE) += console.o
 
