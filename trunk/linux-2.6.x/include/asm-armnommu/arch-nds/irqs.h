@@ -1,7 +1,7 @@
 /****************************************************************************/
 
 /*
- *	linux/include/asm-armnommu/arch-gba/irqs.h
+ *	linux/include/asm-armnommu/arch-nds/irqs.h
  *
  *	(C) Copyright 2001, Greg Ungerer (gerg@snapgear.com)
  */
@@ -10,13 +10,6 @@
 #ifndef __ASM_ARCH_IRQS_H
 #define __ASM_ARCH_IRQS_H
 /****************************************************************************/
-
-/*
- *	GBA interrupts are controlled by 3 registers in the IO memory space.
- */
-#define	GBA_IE		0x04000210		/* Interrupt mask */
-#define	GBA_IF		0x04000214		/* Interrup service */
-#define	GBA_IME		0x04000208		/* Enable/disable */
 
 /*
  *	Interrupt numbers. These are as per hardware registers.
@@ -36,10 +29,13 @@
 #define	IRQ_DMA3	11			/* DMA 3 intr */
 #define	IRQ_KEYPAD	12			/* Keypad intr */
 #define	IRQ_CART	13			/* CART intr */
+#define	IRQ_ARM7	16			/* ARM7 interrupt */
+#define	IRQ_SEND	17			/* SEND FIFO empty */
+#define	IRQ_RECV	18			/* RECV FIFO non empty */
 
-#define	NDS_IRQ_MASK	0x3fff			/* All intr mask */
+#define	NDS_IRQ_MASK	0xffffff			/* All intr mask */
 
-#define NR_IRQS             32
+#define NR_IRQS		32
 
 
 /* Machine specific interrupt sources.
