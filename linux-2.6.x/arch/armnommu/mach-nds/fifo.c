@@ -25,13 +25,13 @@
 static irqreturn_t ndsfifo_interrupt(int irq, void *dev_id, struct pt_regs *regs)
 {
 	u32 data;
-	printk("fifo data %d, %x:",irq, REG_IPCFIFOCNT);
+	//printk("fifo data %d, %x:",irq, REG_IPCFIFOCNT);
 	while ( ! ( REG_IPCFIFOCNT & (1<<8) ) )
 	{
 		data = REG_IPCFIFORECV;
-		printk(" %d", data);
+		//printk(" %d", data);
 	}
-	printk("\n");
+	//printk("\n");
 
 	return IRQ_HANDLED ;
 }
