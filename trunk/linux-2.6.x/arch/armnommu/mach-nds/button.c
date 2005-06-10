@@ -17,8 +17,9 @@
 
 #include <asm/irq.h>
 #include <asm/io.h>
+#include <asm/arch/fifo.h>
 
-struct input_dev ndsbutton_dev;
+static struct input_dev ndsbutton_dev;
 
 #if 0
 static short ndsbuttons[] = { 
@@ -32,6 +33,9 @@ static short ndsbuttons[] = {
        	KEY_L, KEY_S, BTN_2, BTN_3,
 	BTN_THUMBR, BTN_THUMBL
 };
+static short ndsbuttons2[] = { 
+	KEY_X, KEY_Y
+};
 #endif
 
 static irqreturn_t ndsbutton_interrupt(int irq, void *dev_id, struct pt_regs *regs)
@@ -39,13 +43,29 @@ static irqreturn_t ndsbutton_interrupt(int irq, void *dev_id, struct pt_regs *re
 	int i;
 	u16 state = *(volatile u16*) 0x04000130 ;
 
-	for (i = 0 ; i < 10 ; i++)
+	for (i = 0 ; i < (sizeof(ndsbuttons)/sizeof(ndsbuttons[0])) ; i++)
 		input_report_key(&ndsbutton_dev, ndsbuttons[i], !((state >> i) & 1));
 
         input_sync(&ndsbutton_dev);
 
 	return IRQ_HANDLED ;
 }
+
+static void ndsbutton_xkeys(u32 state)
+{
+	int i;
+	for (i = 0 ; i < (sizeof(ndsbuttons2)/sizeof(ndsbuttons2[0])) ; i++)
+	{
+		input_report_key(&ndsbutton_dev, ndsbuttons2[i], !((state >> i) & 1));
+	}
+        input_sync(&ndsbutton_dev);
+
+}
+
+static struct fifo_cb ndsbutton_fifocb = {
+	.type = FIFO_BUTTONS,
+	.handler.button_handler = ndsbutton_xkeys
+};
 
 static int __init ndsbutton_init(void)
 {
@@ -59,10 +79,14 @@ static int __init ndsbutton_init(void)
 	*(volatile u16*) 0x04000004 |= 1 << 3 ;
 
         ndsbutton_dev.evbit[0] = BIT(EV_KEY) | BIT(EV_REP) ;
-	for ( i = 0 ; i < 10 ; i++ )
+	for ( i = 0 ; i < (sizeof(ndsbuttons)/sizeof(ndsbuttons[0])) ; i++ )
 		ndsbutton_dev.keybit[LONG(ndsbuttons[i])] |= BIT(ndsbuttons[i]);
+	for ( i = 0 ; i < (sizeof(ndsbuttons2)/sizeof(ndsbuttons2[0])) ; i++ )
+		ndsbutton_dev.keybit[LONG(ndsbuttons2[i])] |= BIT(ndsbuttons2[i]);
         
         input_register_device(&ndsbutton_dev);
+
+	register_fifocb( &ndsbutton_fifocb ) ;
 
 	return 0;
 }
