@@ -1,5 +1,6 @@
 
 #include "asm/types.h"
+#include "asm/arch/fifo.h"
 
 extern void swiDelay( u32 duration );
 extern void swiWaitForVBlank( void );
@@ -40,7 +41,7 @@ void InterruptHandler(void)
 		buttons = XKEYS;
 
 		/* send to ARM9 */
-		REG_IPCFIFOSEND = buttons;
+		REG_IPCFIFOSEND = FIFO_BUTTONS | buttons;
 
 		/* clear FIFO errors (just in case) */
 		if ( REG_IPCFIFOCNT & (1<<14) )
