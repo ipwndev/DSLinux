@@ -18,28 +18,50 @@
 #include <asm/irq.h>
 #include <asm/io.h>
 
+#include <asm/arch/fifo.h>
+
 #define REG_IPCFIFOSEND (*(volatile u32*) 0x04000188)
 #define REG_IPCFIFORECV (*(volatile u32*) 0x04100000)
 #define REG_IPCFIFOCNT  (*(volatile u16*) 0x04000184)
 
+struct fifo_cb *cbhead = NULL ;
+
 static irqreturn_t ndsfifo_interrupt(int irq, void *dev_id, struct pt_regs *regs)
 {
 	u32 data;
-	//printk("fifo data %d, %x:",irq, REG_IPCFIFOCNT);
+	struct fifo_cb * cb;
+
 	while ( ! ( REG_IPCFIFOCNT & (1<<8) ) )
 	{
 		data = REG_IPCFIFORECV;
-		//printk(" %d", data);
+		for ( cb = cbhead ; cb ; cb = cb->next )
+		{
+			if ( cb->type & data )
+			{
+				switch ( cb->type )
+				{
+					case FIFO_BUTTONS:
+						cb->handler.button_handler( data & 0xff ) ;
+						break ;
+					default:
+						break;
+				}
+			}
+		}
 	}
-	//printk("\n");
 
 	return IRQ_HANDLED ;
 }
 
+int register_fifocb( struct fifo_cb *fifo_cb )
+{
+	fifo_cb->next = cbhead ;
+	cbhead = fifo_cb ;
+	return 0 ;
+}
+
 static int __init ndsfifo_init(void)
 {
-	u32 data;
-
         if (request_irq(IRQ_RECV, ndsfifo_interrupt, 0, "fifo", NULL)) {
                 printk(KERN_ERR "fifo.c: Can't allocate irq %d\n", IRQ_RECV);
                 return -EBUSY;
