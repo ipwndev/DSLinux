@@ -108,7 +108,7 @@ void InterruptHandler(void)
 		}
 		else
 		{
-			//			REG_IPCFIFOSEND = FIFO_TOUCH ;
+			REG_IPCFIFOSEND = FIFO_TOUCH ;
 		}
 
 		/* clear FIFO errors (just in case) */
