@@ -31,7 +31,7 @@ struct fifo_cb
 	union
 	{
 		void (*button_handler)( u8 state ) ;
-		void (*touch_handler)( u8 x, u8 y ) ;
+		void (*touch_handler)( u8 pressed, u8 x, u8 y ) ;
 		/* ... */
 	} handler ;
 	struct fifo_cb *next ;
