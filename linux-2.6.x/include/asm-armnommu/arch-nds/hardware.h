@@ -32,9 +32,17 @@
   #define CONFIG_DRAM_BASE 0x10000000
 #endif
 
+#ifdef CONFIG_NDS_DSGBA
+
+#define MACH_RESERVE_BOOTMEM()
+
+#else
+
 #define MACH_RESERVE_BOOTMEM()  do { \
-    reserve_bootmem_node(pgdat, (CONFIG_DRAM_BASE), 0x200000); \
+	reserve_bootmem_node(pgdat, (&_end), 0x100000); \
   } while(0)
+
+#endif
 
 #define MACH_FREE_BOOTMEM()
 
