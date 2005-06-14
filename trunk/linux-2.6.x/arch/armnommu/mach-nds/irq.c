@@ -37,8 +37,6 @@
 #define NDS_IF      0x04000214      /* Interrup service */
 #define NDS_IME     0x04000208      /* Enable/disable */
 
-extern void vector_IRQ(void);
-
 static __inline__ void __nds_mask_irq(unsigned int irq)
 {
 	*((u32*) NDS_IE) &= ~(0x1 << irq);
@@ -71,7 +69,6 @@ void nds_init_irq( void )
 		set_irq_flags(irq, IRQF_VALID | IRQF_PROBE);
 	}
 
-	*(volatile u32*)0x00803FFC = vector_IRQ ;
 	*((u32*) NDS_IE) = 0;
 	*((u32*) NDS_IME) = 0x0001;
 }
