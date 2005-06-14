@@ -116,13 +116,7 @@ Cambridge, MA 02139, USA.  */
 
 #undef	DO_CALL
 #define DO_CALL(args, syscall_name)		\
-			stmfd	sp!, {r11, r12};	\
-			ldr	r11, =0x04000208;	\
-			mov	r12, $0;		\
-			str	r12, [r11];		\
-			ldmfd	sp!, {r11, r12};	\
 			DOARGS_##args				\
-			swi 0x290000; /* TC!IB!  */ 	\
 			swi SYS_ify (syscall_name); 		\
 			UNDOARGS_##args
 
@@ -150,16 +144,10 @@ Cambridge, MA 02139, USA.  */
 			{								\
 			register int _a1 asm ("a1");				\
 			LOAD_ARGS_##nr (args)					\
-			asm volatile (						\
-				"ldr	r11, =0x04000208"	"\n\t"		\
-				"mov	r12, #0"		"\n\t"		\
-				"str	r12, [r11]"		"\n\t"		\
-				"swi	0x290000"		"\n\t"		\
-				"swi	%1"			"\n\t"		\
-				"@ syscall " #name /* TC!IB! */ \
+			asm volatile ("swi	%1	@ syscall " #name	\
 			: "=r" (_a1)				\
 			: "i" (SYS_ify(name)) ASM_ARGS_##nr	\
-			: "r11", "r12");					\
+			 );					\
 			_sys_result = _a1;					\
 			}								\
 			if (_sys_result >= (unsigned int) -4095)			\
