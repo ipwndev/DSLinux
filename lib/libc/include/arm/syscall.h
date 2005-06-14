@@ -6,15 +6,8 @@
 
 
 #undef __syscall
-/* TC!IB! Only the first swi is execute, 
- * the second is just used to get the swi value, not really execute */
-#define __syscall(name)					\
-	"ldr	r11, =0x04000208"		"\n\t"	\
-	"mov	r12, #0"			"\n\t"	\
-	"str	r12, [r11]"			"\n\t"	\
-	"swi	0xd40000"			"\n\t"	\
-	"swi	0x900000+" __sys1(SYS_##name)	"\n\t"
-//#define __syscall(name) "swi 0xd40000\n\tswi "  "0x900000+" __sys1(SYS_##name) "\n\t"
+#define __syscall(name) "swi "  "0x900000+" __sys1(SYS_##name) "\n\t"
+
 
 #ifdef PTHREADS_SYSCALL
 
@@ -38,7 +31,7 @@
 			__asm__ __volatile__ (								\
 			__syscall(name)									\
 			"mov %0,r0\n\t"									\
-			:"=r" (__res) : : "r0","r1","r2","r3","r11","r12","lr");				\
+			:"=r" (__res) : : "r0","r1","r2","r3","lr");						\
 			__fixret(__res, type); \
 			}
 
@@ -51,7 +44,7 @@
 			"mov %0,r0\n\t"									\
 			: "=r" (__res)									\
 			: "r" ((long)(arg1))								\
-			: "r0","r1","r2","r3","r11","r12","lr");					\
+			: "r0","r1","r2","r3","lr");							\
 			__fixret(__res,type); \
 			}
 
@@ -65,7 +58,7 @@
 		"mov %0,r0\n\t"									\
 		: "=r" (__res)									\
 		: "r" ((long)(arg1)),"r" ((long)(arg2))						\
-		: "r0","r1","r2","r3","r11","r12","lr");					\
+		: "r0","r1","r2","r3","lr");							\
 		__fixret(__res,type); \
 		}
 
@@ -81,7 +74,7 @@
 				"mov %0,r0\n\t"									\
 				: "=r" (__res)									\
 				: "r" ((long)(arg1)),"r" ((long)(arg2)),"r" ((long)(arg3))			\
-				: "r0","r1","r2","r3","r11","r12","lr");					\
+				: "r0","r1","r2","r3","lr");							\
 				__fixret(__res,type); \
 				}
 
@@ -98,7 +91,7 @@
 					"mov %0,r0\n\t"									\
 					: "=r" (__res)									\
 					: "r" ((long)(arg1)),"r" ((long)(arg2)),"r" ((long)(arg3)),"r" ((long)(arg4))	\
-					: "r0","r1","r2","r3","r11","r12","lr");					\
+					: "r0","r1","r2","r3","lr");							\
 					__fixret(__res,type); \
 					}
 
@@ -117,7 +110,7 @@
 					: "=r" (__res)									\
 					: "r" ((long)(arg1)),"r" ((long)(arg2)),"r" ((long)(arg3)),"r" ((long)(arg4)),	\
 					"r" ((long)(arg5))								\
-					: "r0","r1","r2","r3","r4","r11","r12","lr");					\
+					: "r0","r1","r2","r3","r4","lr");						\
 					__fixret(__res,type); \
 					}
 
