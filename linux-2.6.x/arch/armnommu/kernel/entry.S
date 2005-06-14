@@ -418,11 +418,7 @@ __stubs_start:
  * Interrupt dispatcher
  * Enter in IRQ mode, spsr = SVC/USR CPSR, lr = SVC/USR PC
  */
-ENTRY(vector_IRQ)
-#ifdef CONFIG_ARCH_NDS
-		@load registers saved by NDS BIOS
-		ldmfd   sp!,{r0,r1,r2,r3,r12,lr}
-#endif
+vector_IRQ:	@
 		@ save mode specific registers
 		@
 		ldr	r13, .LCsirq
@@ -437,11 +433,6 @@ ENTRY(vector_IRQ)
 		bic	r13, r13, #MODE_MASK
 		orr	r13, r13, #MODE_SVC
 		msr	spsr, r13			@ switch to SVC_32 mode
-
-#if defined(CONFIG_ARCH_NDS)
-                @ set SP to right value for the next IRQ call
-                ldr     sp, =0x00803f80
-#endif
 
 		and	lr, lr, #15
 		ldr	lr, [pc, lr, lsl #2]
