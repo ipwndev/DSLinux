@@ -39,7 +39,8 @@
 #else
 
 #define MACH_RESERVE_BOOTMEM()  do { \
-	reserve_bootmem_node(pgdat, (&_end), 0x100000); \
+	unsigned int rootfs_len = ntohl(((unsigned int *)&_end)[2]); \
+	reserve_bootmem_node(pgdat, (&_end), rootfs_len); \
   } while(0)
 
 #endif
