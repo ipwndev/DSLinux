@@ -35,3 +35,54 @@ config TOUCHSCREEN_GUNZE
 	  To compile this driver as a module, choose M here: the
 	  module will be called gunze.
 
+config TOUCHSCREEN_NDS
+	tristate "Nintendo DS touchscreen"
+	depends on INPUT && INPUT_TOUCHSCREEN && ARCH_NDS
+	help
+	  Say Y here if you are compiling the kernel for the Nintendo DS.
+
+	  If unsure, say N.
+
+	  To compile this driver as a module, choose M here:  The module
+	  will be called nds_ts
+
+config TOUCHSCREEN_NDS_DEFAULT_MODE
+       int "Starting mode of the driver."
+       depends on INPUT && INPUT_TOUCHSCREEN && TOUCHSCREEN_NDS && ARCH_NDS
+       default 1
+       help
+	 Determines if the driver returns absolute x/y coordinates
+	 (mode 2), key codes for a keyboard (mode 1), or is currently
+	 disabled (mode 0.)  When in mouse mode, the driver returns
+	 the absolute position of the cursor.  When in keyboard mode,
+	 the driver returns key codes based on the location that the
+	 user touched.  When disabled, the driver does not generate
+	 any input in response to touchscreen activity.
+
+config TOUCHSCREEN_NDS_MAX_KEYBOARDS
+       int "Maxmimum graphical keyboards"
+       default 2
+       depends on INPUT && INPUT_TOUCHSCREEN && TOUCHSCREEN_NDS && ARCH_NDS
+       help
+         The NDS Touchscreen kernel module displays a graphical
+         keyboard on the touch screen when not in mouse mode.  This
+         determines how many graphical keyboards (upper case vs. lower
+         case for example) the module can support.  Leave the default
+         of 2 unless a different type of keyboard is required.
+
+config TOUCHSCREEN_NDS_MAX_KEYCODES
+       int "Maximum keys per keyboard"
+       default 128
+       depends on INPUT && INPUT_TOUCHSCREEN && TOUCHSCREEN_NDS && ARCH_NDS
+       help
+         Determines the maximum number of keys available on the keyboard.
+       
+config TOUCHSCREEN_NDS_DEBUG_LEVEL
+	int "Module debug level"
+	range 0 3
+	default 0
+	depends on INPUT && INPUT_TOUCHSCREEN && TOUCHSCREEN_NDS && ARCH_NDS
+	help
+	  Enables debugging of the touch screen driver.  At level
+	  zero, no debugging messages will appear.  Level three is
+	  maximum verbosity.
