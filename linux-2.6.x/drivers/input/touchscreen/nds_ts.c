@@ -197,9 +197,10 @@ void touchscreen_event(u8 touched, u8 x, u8 y)
 
 				wasTouched = TRUE ;
 			}
-			else if ( wasTouched && currentKey != KEY_RESERVED )
+			else if ( wasTouched )
 			{
-				input_report_key(dev, currentKey, 0 ) ;
+				if ( currentKey != KEY_RESERVED )
+					input_report_key(dev, currentKey, 0 ) ;
 				wasTouched = FALSE ;
 				currentKey = KEY_RESERVED ;
 			}
