@@ -15,10 +15,19 @@
 #include <linux/init.h> 
 #include <linux/interrupt.h> 
 #include <linux/version.h>
+//#include <linux/config.h>
 #include <asm/arch/fifo.h>
 
 #include <asm/irq.h>
 #include <asm/io.h>
+
+extern const unsigned short master_Palette[16];
+extern const unsigned char keyboard_Tiles[5728];
+extern const unsigned short keyboard_Map_Unpressed[480];
+extern const unsigned short keyboard_Map_Pressed[480];
+extern const unsigned short keyboard_Map_Qwerty_Lower[480];
+extern const unsigned short keyboard_Map_Qwerty_Caps[480];
+extern const unsigned short qwertyKeyMap[32*24];
 
 /*
  * Useful defines
@@ -37,6 +46,54 @@
 #define NULL                            (void *) 0
 #endif
 
+#define SUB_DISPLAY_CR	(*(volatile u32*)0x04001000)
+
+#define MODE_0_2D      0x10000
+
+#define DISPLAY_BG0_ACTIVE    (1 << 8)
+#define DISPLAY_BG1_ACTIVE    (1 << 9)
+
+#define SUB_BG0_CR     (*(volatile u16*)0x04001008)
+#define SUB_BG1_CR     (*(volatile u16*)0x0400100A)
+
+#define BG_COLOR_16        0x0
+
+#define BG_PRIORITY(n) (n)
+
+#define BG_TILE_BASE(base) ((base) << 2)
+#define BG_MAP_BASE(base)  ((base) << 8)
+
+#define SCREEN_BASE_BLOCK_SUB(n)  (((n)*0x800)+0x6200000)
+
+#define PALETTE_SUB	((volatile u16*)0x05000400)
+#define BG_GFX_SUB	((u16*)0x6200000)
+
+#define VRAM_C_CR	(*(volatile u8*)0x04000242)
+#define VRAM_ENABLE	(1<<7)
+#define VRAM_OFFSET(n)	((n)<<3)
+typedef enum
+{
+	VRAM_C_LCD = 0,
+	VRAM_C_MAIN_BG  = 1 | VRAM_OFFSET(2),
+	VRAM_C_MAIN_BG_0x6000000  = 1 | VRAM_OFFSET(0),
+	VRAM_C_MAIN_BG_0x6020000  = 1 | VRAM_OFFSET(1),
+	VRAM_C_MAIN_BG_0x6040000  = 1 | VRAM_OFFSET(2),
+	VRAM_C_MAIN_BG_0x6060000  = 1 | VRAM_OFFSET(3),
+	VRAM_C_ARM7 = 2,
+	VRAM_C_SUB_BG  = 4,
+	VRAM_C_SUB_BG_0x6200000  = 4 | VRAM_OFFSET(0),
+	VRAM_C_SUB_BG_0x6220000  = 4 | VRAM_OFFSET(1),
+	VRAM_C_SUB_BG_0x6240000  = 4 | VRAM_OFFSET(2),
+	VRAM_C_SUB_BG_0x6260000  = 4 | VRAM_OFFSET(3),
+	VRAM_C_TEXTURE = 3 | VRAM_OFFSET(2),
+	VRAM_C_TEXTURE_SLOT0 = 3 | VRAM_OFFSET(0),
+	VRAM_C_TEXTURE_SLOT1 = 3 | VRAM_OFFSET(1),
+	VRAM_C_TEXTURE_SLOT2 = 3 | VRAM_OFFSET(2),
+	VRAM_C_TEXTURE_SLOT3 = 3 | VRAM_OFFSET(3)
+
+}VRAM_C_TYPE;
+
+
 #define DRIVER_DESC "Nintendo DS touchscreen driver"
 #define NDS_TS_VERSION_CODE KERNEL_VERSION(0, 0, 1)
 
@@ -44,8 +101,8 @@ MODULE_AUTHOR("Anthony Zawacki aka PhoenixRising (pr@dspassme.com)");
 MODULE_DESCRIPTION(DRIVER_DESC);
 MODULE_LICENSE("GPL");
 
-#define SCREEN_WIDTH CONFIG_INPUT_TSDEV_SCREEN_X
-#define SCREEN_HEIGHT CONFIG_INPUT_TSDEV_SCREEN_Y
+#define SCREEN_WIDTH 256
+#define SCREEN_HEIGHT 192
 #define MAX_KEYBOARDS CONFIG_TOUCHSCREEN_NDS_MAX_KEYBOARDS
 #define MAX_KEYCODES CONFIG_TOUCHSCREEN_NDS_MAX_KEYCODES
 #define DEFAULT_MODE CONFIG_TOUCHSCREEN_NDS_DEFAULT_MODE
@@ -78,8 +135,31 @@ static char keyboard_gfx[MAX_KEYBOARDS][SCREEN_WIDTH * SCREEN_HEIGHT];
 static char keyboard_pal[MAX_KEYBOARDS][256];
 static struct keycode_item keycodes[MAX_KEYBOARDS][MAX_KEYCODES];
 
-static void load_keyboard_graphic(int gfx_id)
+static void draw_keyboard(int gfx_id)
 {
+	int i;
+	u16* bgmap = (u16*)SCREEN_BASE_BLOCK_SUB(4);
+	u16* fgmap = (u16*)SCREEN_BASE_BLOCK_SUB(5);
+
+	VRAM_C_CR = VRAM_ENABLE | VRAM_C_SUB_BG_0x6200000 ;
+
+	SUB_DISPLAY_CR = MODE_0_2D | DISPLAY_BG0_ACTIVE | DISPLAY_BG1_ACTIVE ;
+
+	SUB_BG0_CR = BG_COLOR_16 | BG_MAP_BASE(4) | BG_PRIORITY(1);
+	SUB_BG1_CR = BG_COLOR_16 | BG_MAP_BASE(5) | BG_PRIORITY(0);
+
+	for( i = 0 ; i < 16 ; i++ )
+	{
+		PALETTE_SUB[i] = master_Palette[i];
+	}
+	memcpy( BG_GFX_SUB, keyboard_Tiles, sizeof(keyboard_Tiles) );
+	memset( bgmap, 0, 32 * 24 * 2 );
+	memset( fgmap, 0, 32 * 24 * 2 );
+	memcpy( bgmap + 32 * 9, keyboard_Map_Unpressed, 32 * 15 * 2 );
+	memcpy( fgmap + 32 * 9, keyboard_Map_Qwerty_Lower, 32 * 15 * 2 );
+
+
+#if 0
   if ((gfx_id >= 0) && (gfx_id < MAX_KEYBOARDS) && keyboard_loaded[gfx_id]) {
     if (debug_level) {
       printk(KERN_INFO "nds_tc.c: Loading keyboard graphic %d.\n", gfx_id);
@@ -90,76 +170,100 @@ static void load_keyboard_graphic(int gfx_id)
 	   "the keyboard graphic is not loaded or gfx_id >= %d, which is "\
 	   "too large.", gfx_id, MAX_KEYBOARDS);
   }
+#endif
 }
 
 void touchscreen_event(u8 touched, u8 x, u8 y)
 {
-  int i = 0;
-  struct input_dev* dev = &ndstouch_dev;
+	int i = 0;
+	struct input_dev* dev = &ndstouch_dev;
+	static int wasTouched = FALSE ;
+	static u16 currentKey = KEY_RESERVED ;
+	u16 key ;
 
-  switch(mode) {
-  case KEYBOARD_MODE:
-    break;
-    for(i = 0; i < MAX_KEYCODES; ++i) {
-      if ((x >= keycodes[current_keyboard][i].x1) &&
-	  (x <= keycodes[current_keyboard][i].x2) &&
-	  (y >= keycodes[current_keyboard][i].y1) &&
-	  (y <= keycodes[current_keyboard][i].y2)) {
-	input_report_key(dev, keycodes[current_keyboard][i].keycode & 0xFFFF,
-			 touched);
-	/* Check to see if the upper bits indicate a keyboard change */
-	if (keycodes[current_keyboard][i].keycode & ~0xFFFF) {
-	  /* Which keyboard is desired? */
-	  load_keyboard_graphic(keycodes[current_keyboard][i].keycode >> 16);
+	switch(mode) {
+		case KEYBOARD_MODE:
+			x /= 8;
+			y /= 8;
+
+			if ( touched )
+			{
+				key = qwertyKeyMap[y * 32 + x] ;
+				if ( !wasTouched && key != KEY_RESERVED )
+				{
+					input_report_key(dev, key, 1 ) ;
+					currentKey = key ;
+				}
+
+				wasTouched = TRUE ;
+			}
+			else if ( wasTouched && currentKey != KEY_RESERVED )
+			{
+				input_report_key(dev, currentKey, 0 ) ;
+				wasTouched = FALSE ;
+				currentKey = KEY_RESERVED ;
+			}
+			input_sync(dev);
+
+			/* update background of keys */
+			for ( y = 0 ; y < 24 ; y++ )
+			{
+				for ( x = 0 ; x < 32 ; x++ )
+				{
+					if ( 0)
+					{
+					}
+				}
+			}
+
+			break;
+		case MOUSE_MODE:
+			if (touched) {
+				input_report_abs(dev, ABS_X, x);
+				input_report_abs(dev, ABS_Y, y);
+				input_sync(dev);
+			}
+			break;
+		case DISABLED_MODE:
+			break;
 	}
-	/*
-	 * We don't break in case the user has defined multiple scan
-	 * codes for a keypress area on the keyboard.  Perhaps a macro
-	 * button of some sort?
-	 */
-      }
-    }
-  case MOUSE_MODE:
-    if (touched) {
-      input_report_abs(dev, ABS_X, x);
-      input_report_abs(dev, ABS_Y, y);
-    }
-    break;
-  case DISABLED_MODE:
-    break;
-  }
 }
 
-static struct fifo_cb my_callback;
+static struct fifo_cb my_callback = {
+	.type = FIFO_TOUCH,
+	.handler.touch_handler = touchscreen_event
+};
 
 static int __init touchscreen_init(void)
 {
-  printk(KERN_INFO "nds_ts:  Driver version %d.%d.%d loaded\n",
-	 (NDS_TS_VERSION_CODE >> 16) & 0xff,
-	 (NDS_TS_VERSION_CODE >>  8) & 0xff,
-	 (NDS_TS_VERSION_CODE      ) & 0xff);
+	int i ;
+	printk(KERN_INFO "nds_ts:  Driver version %d.%d.%d loaded\n",
+			(NDS_TS_VERSION_CODE >> 16) & 0xff,
+			(NDS_TS_VERSION_CODE >>  8) & 0xff,
+			(NDS_TS_VERSION_CODE      ) & 0xff);
 
-  my_callback.type = FIFO_TOUCH;
-  my_callback.handler.touch_handler = touchscreen_event;
+	switch(mode) {
+		case KEYBOARD_MODE:
+			draw_keyboard(0);
+			break;
+		case MOUSE_MODE:
+		case DISABLED_MODE:
+			break;
+	}
 
-  switch(mode) {
-  case KEYBOARD_MODE:
-    load_keyboard_graphic(0);
-    break;
-  case MOUSE_MODE:
-  case DISABLED_MODE:
-    break;
-  }
+	ndstouch_dev.name="Nintendo DS Touchscreen";
+	ndstouch_dev.evbit[0] = BIT(EV_KEY);
+	for ( i = 0 ; i < sizeof(qwertyKeyMap)/sizeof(qwertyKeyMap[0]) ; i++)
+	{
+		if ( qwertyKeyMap[i] != KEY_RESERVED )
+			ndstouch_dev.keybit[LONG(qwertyKeyMap[i])] |= BIT(qwertyKeyMap[i]);
+	}
 
-  ndstouch_dev.name="Nintendo DS Touchscreen";
-  ndstouch_dev.evbit[0] = BIT(EV_KEY);
-  ndstouch_dev.keybit[LONG(BTN_0)] = BIT(BTN_0);
+	input_register_device(&ndstouch_dev);
 
-  input_register_device(&ndstouch_dev);
+	register_fifocb(&my_callback);
 
-  register_fifocb(&my_callback);
-
-  return 0;
+	return 0;
 }
 
 static void __exit touchscreen_exit(void)
