@@ -135,11 +135,12 @@ static char keyboard_gfx[MAX_KEYBOARDS][SCREEN_WIDTH * SCREEN_HEIGHT];
 static char keyboard_pal[MAX_KEYBOARDS][256];
 static struct keycode_item keycodes[MAX_KEYBOARDS][MAX_KEYCODES];
 
+static u16* const bgmap = (u16*)SCREEN_BASE_BLOCK_SUB(4);
+static u16* const fgmap = (u16*)SCREEN_BASE_BLOCK_SUB(5);
+
 static void draw_keyboard(int gfx_id)
 {
 	int i;
-	u16* bgmap = (u16*)SCREEN_BASE_BLOCK_SUB(4);
-	u16* fgmap = (u16*)SCREEN_BASE_BLOCK_SUB(5);
 
 	VRAM_C_CR = VRAM_ENABLE | VRAM_C_SUB_BG_0x6200000 ;
 
@@ -157,20 +158,28 @@ static void draw_keyboard(int gfx_id)
 	memset( fgmap, 0, 32 * 24 * 2 );
 	memcpy( bgmap + 32 * 9, keyboard_Map_Unpressed, 32 * 15 * 2 );
 	memcpy( fgmap + 32 * 9, keyboard_Map_Qwerty_Lower, 32 * 15 * 2 );
+}
 
+static void update_keyboard(u16 pressedKey)
+{
+	int x,y ;
 
-#if 0
-  if ((gfx_id >= 0) && (gfx_id < MAX_KEYBOARDS) && keyboard_loaded[gfx_id]) {
-    if (debug_level) {
-      printk(KERN_INFO "nds_tc.c: Loading keyboard graphic %d.\n", gfx_id);
-    }
-    current_keyboard = gfx_id;
-  } else {
-    printk(KERN_ERR "nds_ts.c:  Cannot load keyboard graphic %d.  Either "\
-	   "the keyboard graphic is not loaded or gfx_id >= %d, which is "\
-	   "too large.", gfx_id, MAX_KEYBOARDS);
-  }
-#endif
+	memcpy( bgmap + 32 * 9, keyboard_Map_Unpressed, 32 * 15 * 2 );
+	/* update background of keys */
+	if ( pressedKey != KEY_RESERVED )
+	{
+		for ( y = 9 ; y < 24 ; y++ )
+		{
+			for ( x = 0 ; x < 32 ; x++ )
+			{
+				if ( qwertyKeyMap[ y * 32 + x ] == pressedKey )
+				{
+					bgmap[ y * 32 + x ] = keyboard_Map_Pressed[ (y-9) * 32 + x ] ;
+				}
+			}
+		}
+	}
+	//memcpy( fgmap + 32 * 9, keyboard_Map_Qwerty_Lower, 32 * 15 * 2 );
 }
 
 void touchscreen_event(u8 touched, u8 x, u8 y)
@@ -206,16 +215,7 @@ void touchscreen_event(u8 touched, u8 x, u8 y)
 			}
 			input_sync(dev);
 
-			/* update background of keys */
-			for ( y = 0 ; y < 24 ; y++ )
-			{
-				for ( x = 0 ; x < 32 ; x++ )
-				{
-					if ( 0)
-					{
-					}
-				}
-			}
+			update_keyboard( currentKey ) ;
 
 			break;
 		case MOUSE_MODE:
