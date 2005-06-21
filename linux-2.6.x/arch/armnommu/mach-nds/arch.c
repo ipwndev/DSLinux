@@ -41,13 +41,20 @@
 #include <asm/mach/irq.h>
 #include <asm/mach/map.h>
 
+#include <asm/arch/power.h>
+
 extern void nds_time_init(void);
 
 extern void __init nds_init_irq(void);
 
+extern void nds_machine_init(void)
+{
+	POWER_CR = POWER_2D | POWER_2D_SUB | POWER_LCD_TOP | POWER_LCD_BOTTOM | POWER_SWAP_LCDS ;
+}
 
 MACHINE_START(NDS, "Nintendo DS")
 	MAINTAINER("Malcolm Parsons <pepsiman@blueyonder.co.uk>")
 	INITIRQ(nds_init_irq)
 	INITTIME(nds_time_init)
+	INIT_MACHINE(nds_machine_init)
 MACHINE_END
