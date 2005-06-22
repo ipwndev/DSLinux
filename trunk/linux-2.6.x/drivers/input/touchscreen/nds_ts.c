@@ -15,6 +15,7 @@
 #include <linux/init.h> 
 #include <linux/interrupt.h> 
 #include <linux/version.h>
+#include <linux/kbd_kern.h>
 //#include <linux/config.h>
 #include <asm/arch/fifo.h>
 
@@ -26,7 +27,7 @@ extern const unsigned char keyboard_Tiles[6016];
 extern const unsigned short keyboard_Map_Unpressed[480];
 extern const unsigned short keyboard_Map_Pressed[480];
 extern const unsigned short keyboard_Map_Qwerty_Lower[480];
-extern const unsigned short keyboard_Map_Qwerty_Caps[480];
+extern const unsigned short keyboard_Map_Qwerty_Upper[480];
 extern const unsigned short qwertyKeyMap[32*24];
 
 /*
@@ -163,23 +164,44 @@ static void draw_keyboard(int gfx_id)
 static void update_keyboard(u16 pressedKey)
 {
 	int x,y ;
+	u16 key ;
+	struct kbd_struct *kbd = kbd_table + fg_console;
+	int shift_pressed = 0 ;
+	int caps_pressed = 0 ;
+	unsigned short keysym ;
+	unsigned char type ;
 
-	memcpy( bgmap + 32 * 9, keyboard_Map_Unpressed, 32 * 15 * 2 );
-	/* update background of keys */
-	if ( pressedKey != KEY_RESERVED )
+	if ( kbd->slockstate & ( 1<<KG_SHIFTL | 1<<KG_SHIFTR | 1<<KG_SHIFT ) )
+		shift_pressed = 1 ;
+
+	if ( vc_kbd_led( kbd, VC_CAPSLOCK ) )
+		caps_pressed = 1 ;
+
+	for ( y = 9 ; y < 24 ; y++ )
 	{
-		for ( y = 9 ; y < 24 ; y++ )
+		for ( x = 0 ; x < 32 ; x++ )
 		{
-			for ( x = 0 ; x < 32 ; x++ )
+			key = qwertyKeyMap[ y * 32 + x ] ;
+			if ( key != KEY_RESERVED )
 			{
-				if ( qwertyKeyMap[ y * 32 + x ] == pressedKey )
+				keysym = plain_map[key];
+				type = KTYP(keysym) ;
+				type -= 0xf0;
+				if ( key == pressedKey || 
+						( type == KT_SLOCK &&
+						  ( 1 << (keysym & 0xff) ) & kbd->slockstate ) )
 				{
 					bgmap[ y * 32 + x ] = keyboard_Map_Pressed[ (y-9) * 32 + x ] ;
 				}
+				else
+					bgmap[ y * 32 + x ] = keyboard_Map_Unpressed[ (y-9) * 32 + x ] ;
+				if ( shift_pressed || ( caps_pressed && type == KT_LETTER ) )
+					fgmap[ y * 32 + x ] = keyboard_Map_Qwerty_Upper[ (y-9) * 32 + x ] ;
+				else
+					fgmap[ y * 32 + x ] = keyboard_Map_Qwerty_Lower[ (y-9) * 32 + x ] ;
 			}
 		}
 	}
-	//memcpy( fgmap + 32 * 9, keyboard_Map_Qwerty_Lower, 32 * 15 * 2 );
 }
 
 void touchscreen_event(u8 touched, u8 x, u8 y)
@@ -192,6 +214,7 @@ void touchscreen_event(u8 touched, u8 x, u8 y)
 
 	switch(mode) {
 		case KEYBOARD_MODE:
+			/* convert to tile indexes */
 			x /= 8;
 			y /= 8;
 
@@ -200,8 +223,8 @@ void touchscreen_event(u8 touched, u8 x, u8 y)
 				key = qwertyKeyMap[y * 32 + x] ;
 				if ( !wasTouched && key != KEY_RESERVED )
 				{
-					input_report_key(dev, key, 1 ) ;
 					currentKey = key ;
+					input_report_key(dev, currentKey, 1 ) ;
 				}
 
 				wasTouched = TRUE ;
@@ -209,10 +232,13 @@ void touchscreen_event(u8 touched, u8 x, u8 y)
 			else if ( wasTouched )
 			{
 				if ( currentKey != KEY_RESERVED )
+				{
 					input_report_key(dev, currentKey, 0 ) ;
+					currentKey = KEY_RESERVED ;
+				}
 				wasTouched = FALSE ;
-				currentKey = KEY_RESERVED ;
 			}
+
 			input_sync(dev);
 
 			update_keyboard( currentKey ) ;
