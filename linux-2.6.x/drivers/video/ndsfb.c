@@ -22,6 +22,8 @@
 #include <linux/fb.h>
 #include <linux/init.h>
 
+#include <asm/arch/power.h>
+
 #define DISPLAY_CR       (*(volatile u32*)0x04000000)
 #define SUB_DISPLAY_CR   (*(volatile u32*)0x04001000)
 
@@ -222,6 +224,7 @@ static int ndsfb_pan_display(struct fb_var_screeninfo *var,
 			   struct fb_info *info);
 static int ndsfb_mmap(struct fb_info *info, struct file *file,
 		    struct vm_area_struct *vma);
+static int ndsfb_blank(int blank_mode, const struct fb_info *info);
 
 static struct fb_ops ndsfb_ops = {
 	.fb_check_var	= ndsfb_check_var,
@@ -233,6 +236,7 @@ static struct fb_ops ndsfb_ops = {
 	.fb_imageblit	= cfb_imageblit,
 	.fb_cursor	= soft_cursor,
 	.fb_mmap	= ndsfb_mmap,
+	.fb_blank	= ndsfb_blank
 };
 
 static irqreturn_t ndsfb_interrupt(int irq, void *dev_id, struct pt_regs *regs)
@@ -418,6 +422,19 @@ static int ndsfb_set_par(struct fb_info *info)
 	}
 
         return 0;
+}
+
+static int ndsfb_blank(int blank_mode, const struct fb_info *info)
+{
+	if ( blank_mode )
+	{
+		POWER_CR &= ~ ( POWER_2D | POWER_2D_SUB | POWER_LCD_TOP | POWER_LCD_TOP ) ;
+	}
+	else
+	{
+		POWER_CR |= ( POWER_2D | POWER_2D_SUB | POWER_LCD_TOP | POWER_LCD_TOP ) ;
+	}
+	return 0;
 }
 
     /*
