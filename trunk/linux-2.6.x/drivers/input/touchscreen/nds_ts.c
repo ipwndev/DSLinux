@@ -120,7 +120,21 @@ MODULE_PARM_DESC(debug_level, "Specifes the amount of debug information that wil
 #define KEYBOARD_MODE 1
 #define MOUSE_MODE 2
 
-struct input_dev ndstouch_dev;
+
+static void ndstouch_input_event(u8 touched, u8 x, u8 y);
+static int ndstouch_output_event(struct input_dev *dev, unsigned int type, unsigned int code, int value);
+
+static struct input_dev ndstouch_dev = {
+	.name="Nintendo DS Touchscreen",
+	.evbit = { BIT(EV_KEY) | BIT(EV_REP) | BIT(EV_LED) },
+	.ledbit = { BIT(LED_CAPSL) },
+        .event = ndstouch_output_event
+};
+
+static struct fifo_cb my_callback = {
+	.type = FIFO_TOUCH,
+	.handler.touch_handler = ndstouch_input_event
+};
 
 struct keycode_item {
   u8 x1;		/* Left side of the key code start */
@@ -204,7 +218,16 @@ static void update_keyboard(u16 pressedKey)
 	}
 }
 
-void touchscreen_event(u8 touched, u8 x, u8 y)
+int ndstouch_output_event(struct input_dev *dev, unsigned int type, unsigned int code, int value)
+{
+	if (type == EV_LED && code == LED_CAPSL ) {
+		PALETTE_SUB[5] = value ? 0x03e0 : 0x0060 ;
+		return 0;
+	}
+	return -1;
+}
+
+static void ndstouch_input_event(u8 touched, u8 x, u8 y)
 {
 	int i = 0;
 	struct input_dev* dev = &ndstouch_dev;
@@ -256,11 +279,6 @@ void touchscreen_event(u8 touched, u8 x, u8 y)
 	}
 }
 
-static struct fifo_cb my_callback = {
-	.type = FIFO_TOUCH,
-	.handler.touch_handler = touchscreen_event
-};
-
 static int __init touchscreen_init(void)
 {
 	int i ;
@@ -278,8 +296,6 @@ static int __init touchscreen_init(void)
 			break;
 	}
 
-	ndstouch_dev.name="Nintendo DS Touchscreen";
-	ndstouch_dev.evbit[0] = BIT(EV_KEY);
 	for ( i = 0 ; i < sizeof(qwertyKeyMap)/sizeof(qwertyKeyMap[0]) ; i++)
 	{
 		if ( qwertyKeyMap[i] != KEY_RESERVED )
