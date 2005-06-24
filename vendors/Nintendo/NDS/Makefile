@@ -28,6 +28,8 @@ DEVICES = \
 	\
 	dsp,c,14,0\
 	\
+	fb0,c,29,0\
+	\
 	rom0,b,31,0    rom1,b,31,1        rom2,b,31,2      rom3,b,31,3 \
 	rom4,b,31,4    rom5,b,31,5        rom6,b,31,6      rom7,b,31,7 \
 	rom8,b,31,8    rom9,b,31,9 \
