@@ -428,7 +428,8 @@ static int ndsfb_blank(int blank_mode, const struct fb_info *info)
 {
 	if ( blank_mode )
 	{
-		POWER_CR &= ~ ( POWER_2D | POWER_2D_SUB | POWER_LCD_TOP | POWER_LCD_TOP ) ;
+		//POWER_CR &= ~ ( POWER_2D | POWER_2D_SUB | POWER_LCD_TOP | POWER_LCD_TOP ) ;
+		POWER_CR &= ~ ( POWER_LCD_TOP | POWER_LCD_TOP ) ;
 	}
 	else
 	{
