@@ -136,20 +136,6 @@ static struct fifo_cb my_callback = {
 	.handler.touch_handler = ndstouch_input_event
 };
 
-struct keycode_item {
-  u8 x1;		/* Left side of the key code start */
-  u8 y1;		/* Top side of the key code start */
-  u8 x2;		/* Right side of the key code end */
-  u8 y2;		/* Bottom side of the key code end */
-  unsigned int keycode;	/* Key code to return from this area */
-};
-
-static int current_keyboard = 0;
-static char keyboard_loaded[MAX_KEYBOARDS];
-static char keyboard_gfx[MAX_KEYBOARDS][SCREEN_WIDTH * SCREEN_HEIGHT];
-static char keyboard_pal[MAX_KEYBOARDS][256];
-static struct keycode_item keycodes[MAX_KEYBOARDS][MAX_KEYCODES];
-
 static u16* const bgmap = (u16*)SCREEN_BASE_BLOCK_SUB(4);
 static u16* const fgmap = (u16*)SCREEN_BASE_BLOCK_SUB(5);
 
