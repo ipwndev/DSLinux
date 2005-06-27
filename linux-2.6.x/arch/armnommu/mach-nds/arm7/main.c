@@ -33,11 +33,11 @@ extern void swiWaitForVBlank( void );
 #define SERIAL_ENABLE   0x8000
 #define SERIAL_BUSY     0x80
 
-#define TSC_MEASURE_Y        0x94
+#define TSC_MEASURE_Y        0x90
 #define TSC_MEASURE_BATTERY  0xA4
-#define TSC_MEASURE_Z1       0xB4
-#define TSC_MEASURE_Z2       0xC4
-#define TSC_MEASURE_X        0xD4
+#define TSC_MEASURE_Z1       0xB0
+#define TSC_MEASURE_Z2       0xC0
+#define TSC_MEASURE_X        0xD0
 
 #define MIN(x,y) ((x)<(y)?(x):(y))
 #define MAX(x,y) ((x)>(y)?(x):(y))
@@ -73,6 +73,7 @@ void InterruptHandler(void)
 	u16 buttons;
 	u32 data;
 	u16 x,y;
+	static u8 lastx = 0, lasty = 0;
 
 	if ( NDS_IF & IRQ_RECV )
 	{
@@ -104,10 +105,19 @@ void InterruptHandler(void)
 				(TOUCH_HEIGHT) + 31;
 			x = MIN(255,MAX(x,0));
 			y = MIN(191,MAX(y,0));
-			REG_IPCFIFOSEND = FIFO_TOUCH | 1 << 16 | x << 8 | y ;
+			
+			if ( lastx + 6 > x && lastx < x + 6 &&
+			     lasty + 6 > y && lasty < y + 6 )
+			{
+				REG_IPCFIFOSEND = FIFO_TOUCH | 1 << 16 | x << 8 | y ;
+			}
+			lastx = x ;
+			lasty = y ;
 		}
 		else
 		{
+			lastx = -1 ;
+			lasty = -1 ;
 			REG_IPCFIFOSEND = FIFO_TOUCH ;
 		}
 
