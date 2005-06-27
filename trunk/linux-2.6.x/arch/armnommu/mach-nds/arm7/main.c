@@ -42,8 +42,10 @@ extern void swiWaitForVBlank( void );
 #define MIN(x,y) ((x)<(y)?(x):(y))
 #define MAX(x,y) ((x)>(y)?(x):(y))
 
-static s32 TOUCH_WIDTH;
-static s32 TOUCH_HEIGHT;
+static s32 touch_width;
+static s32 touch_height;
+static s16 touch_cal_x1;
+static s16 touch_cal_y1;
 
 u16 touchRead(u32 command) {
 	u16 result;
@@ -99,10 +101,10 @@ void InterruptHandler(void)
 		{
 			x = touchRead(TSC_MEASURE_X);
 			y = touchRead(TSC_MEASURE_Y);
-			x = ( (x - TOUCH_CAL_X1) * (256-62) ) /
-				(TOUCH_WIDTH) + 31;
-			y = ( (y - TOUCH_CAL_Y1) * (192-62) ) /
-				(TOUCH_HEIGHT) + 31;
+			x = ( (x - touch_cal_x1) * (256-62) ) /
+				(touch_width) + 31;
+			y = ( (y - touch_cal_y1) * (192-62) ) /
+				(touch_height) + 31;
 			x = MIN(255,MAX(x,0));
 			y = MIN(191,MAX(y,0));
 			
@@ -136,8 +138,11 @@ int main( void )
 	/* Disable Interrupts */
 	NDS_IME = 0;
 
-	TOUCH_WIDTH  = TOUCH_CAL_X2 - TOUCH_CAL_X1;
-	TOUCH_HEIGHT = TOUCH_CAL_Y2 - TOUCH_CAL_Y1;
+	/* Read calibration values, the arm9 will probably overwrite the originals later */
+	touch_width  = TOUCH_CAL_X2 - TOUCH_CAL_X1;
+	touch_height = TOUCH_CAL_Y2 - TOUCH_CAL_Y1;
+	touch_cal_x1 = TOUCH_CAL_X1;
+	touch_cal_y1 = TOUCH_CAL_Y1;
 
 	/* Enable VBLANK Interrupt */
 	DISP_SR = DISP_VBLANK_IRQ;
