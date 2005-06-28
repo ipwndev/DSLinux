@@ -1,0 +1,6 @@
+
+tty1::respawn:/bin/agetty 38400 tty1
+tty2::respawn:/bin/agetty 38400 tty2
+tty3::respawn:/bin/agetty 38400 tty2
+tty4::respawn:/bin/agetty 38400 tty2
+
