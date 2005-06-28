@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.9-uc0
-# Thu May 19 19:25:26 2005
+# Tue Jun 28 12:29:46 2005
 #
 CONFIG_ARM=y
 CONFIG_UCLINUX=y
@@ -21,6 +21,7 @@ CONFIG_BROKEN_ON_SMP=y
 # General setup
 #
 CONFIG_LOCALVERSION="ds"
+# CONFIG_POSIX_MQUEUE is not set
 CONFIG_BSD_PROCESS_ACCT=y
 # CONFIG_BSD_PROCESS_ACCT_V3 is not set
 # CONFIG_SYSCTL is not set
@@ -63,8 +64,8 @@ CONFIG_FLASH_SIZE=0x00400000
 #
 # NDS Options
 #
-# CONFIG_NDS_DSGBA is not set
-CONFIG_NDS_NDS=y
+CONFIG_NDS_DSGBA=y
+# CONFIG_NDS_NDS is not set
 
 #
 # Processor Type
@@ -79,7 +80,7 @@ CONFIG_CPU_CACHE_V4WT=y
 # Processor Features
 #
 CONFIG_ARM_THUMB=y
-# CONFIG_CPU_MXU_ENABLE is not set
+CONFIG_CPU_MXU_ENABLE=y
 
 #
 # General setup
@@ -95,10 +96,11 @@ CONFIG_ZBOOT_ROM_BSS=0x0
 #
 # At least one math emulation must be selected
 #
-# CONFIG_FPE_NWFPE is not set
+CONFIG_FPE_NWFPE=y
+# CONFIG_FPE_NWFPE_XP is not set
 # CONFIG_FPE_FASTFPE is not set
 CONFIG_BINFMT_FLAT=y
-# CONFIG_BINFMT_ZFLAT is not set
+CONFIG_BINFMT_ZFLAT=y
 # CONFIG_BINFMT_SHARED_FLAT is not set
 # CONFIG_BINFMT_AOUT is not set
 # CONFIG_BINFMT_MISC is not set
@@ -108,7 +110,6 @@ CONFIG_BINFMT_FLAT=y
 #
 # CONFIG_STANDALONE is not set
 CONFIG_PREVENT_FIRMWARE_BUILD=y
-# CONFIG_DEBUG_DRIVER is not set
 # CONFIG_PM is not set
 # CONFIG_PREEMPT is not set
 CONFIG_CMDLINE="rootfstype=romfs "
@@ -127,7 +128,7 @@ CONFIG_MTD=y
 CONFIG_MTD_PARTITIONS=y
 # CONFIG_MTD_CONCAT is not set
 # CONFIG_MTD_REDBOOT_PARTS is not set
-CONFIG_MTD_CMDLINE_PARTS=y
+# CONFIG_MTD_CMDLINE_PARTS is not set
 # CONFIG_MTD_AFS_PARTS is not set
 
 #
@@ -196,6 +197,7 @@ CONFIG_MTD_UCLINUX=y
 #
 # CONFIG_BLK_DEV_FD is not set
 # CONFIG_BLK_DEV_LOOP is not set
+# CONFIG_BLK_DEV_NBD is not set
 CONFIG_BLK_DEV_RAM=y
 CONFIG_BLK_DEV_RAM_SIZE=8192
 # CONFIG_BLK_DEV_INITRD is not set
@@ -208,9 +210,50 @@ CONFIG_BLK_DEV_RAM_SIZE=8192
 #
 # Networking support
 #
-# CONFIG_NET is not set
+CONFIG_NET=y
+
+#
+# Networking options
+#
+# CONFIG_PACKET is not set
+# CONFIG_NETLINK_DEV is not set
+CONFIG_UNIX=y
+# CONFIG_NET_KEY is not set
+# CONFIG_INET is not set
+# CONFIG_INET_AH is not set
+# CONFIG_INET_ESP is not set
+# CONFIG_INET_IPCOMP is not set
+# CONFIG_INET_TUNNEL is not set
+# CONFIG_NETFILTER is not set
+# CONFIG_ATM is not set
+# CONFIG_BRIDGE is not set
+# CONFIG_VLAN_8021Q is not set
+# CONFIG_DECNET is not set
+# CONFIG_LLC2 is not set
+# CONFIG_IPX is not set
+# CONFIG_ATALK is not set
+# CONFIG_X25 is not set
+# CONFIG_LAPB is not set
+# CONFIG_NET_DIVERT is not set
+# CONFIG_WAN_ROUTER is not set
+# CONFIG_NET_HW_FLOWCONTROL is not set
+
+#
+# QoS and/or fair queueing
+#
+# CONFIG_NET_SCHED is not set
+# CONFIG_NET_CLS_ROUTE is not set
+
+#
+# Network testing
+#
+# CONFIG_NET_PKTGEN is not set
 # CONFIG_NETPOLL is not set
 # CONFIG_NET_POLL_CONTROLLER is not set
+# CONFIG_HAMRADIO is not set
+# CONFIG_IRDA is not set
+# CONFIG_BT is not set
+# CONFIG_NETDEVICES is not set
 
 #
 # ATA/ATAPI/MFM/RLL support
@@ -238,6 +281,7 @@ CONFIG_BLK_DEV_RAM_SIZE=8192
 #
 # ISDN subsystem
 #
+# CONFIG_ISDN is not set
 
 #
 # Input device support
@@ -252,11 +296,9 @@ CONFIG_INPUT_MOUSEDEV_PSAUX=y
 CONFIG_INPUT_MOUSEDEV_SCREEN_X=256
 CONFIG_INPUT_MOUSEDEV_SCREEN_Y=192
 CONFIG_INPUT_JOYDEV=y
-CONFIG_INPUT_TSDEV=y
-CONFIG_INPUT_TSDEV_SCREEN_X=256
-CONFIG_INPUT_TSDEV_SCREEN_Y=192
+# CONFIG_INPUT_TSDEV is not set
 CONFIG_INPUT_EVDEV=y
-CONFIG_INPUT_EVBUG=y
+# CONFIG_INPUT_EVBUG is not set
 
 #
 # Input I/O drivers
@@ -271,7 +313,13 @@ CONFIG_SOUND_GAMEPORT=y
 # CONFIG_INPUT_KEYBOARD is not set
 # CONFIG_INPUT_MOUSE is not set
 # CONFIG_INPUT_JOYSTICK is not set
-# CONFIG_INPUT_TOUCHSCREEN is not set
+CONFIG_INPUT_TOUCHSCREEN=y
+# CONFIG_TOUCHSCREEN_GUNZE is not set
+CONFIG_TOUCHSCREEN_NDS=y
+CONFIG_TOUCHSCREEN_NDS_DEFAULT_MODE=1
+CONFIG_TOUCHSCREEN_NDS_MAX_KEYBOARDS=2
+CONFIG_TOUCHSCREEN_NDS_MAX_KEYCODES=128
+CONFIG_TOUCHSCREEN_NDS_DEBUG_LEVEL=0
 # CONFIG_INPUT_MISC is not set
 
 #
@@ -294,8 +342,7 @@ CONFIG_HW_CONSOLE=y
 #
 # CONFIG_SERIAL_T32 is not set
 CONFIG_UNIX98_PTYS=y
-CONFIG_LEGACY_PTYS=y
-CONFIG_LEGACY_PTY_COUNT=256
+# CONFIG_LEGACY_PTYS is not set
 
 #
 # IPMI
@@ -305,13 +352,7 @@ CONFIG_LEGACY_PTY_COUNT=256
 #
 # Watchdog Cards
 #
-CONFIG_WATCHDOG=y
-# CONFIG_WATCHDOG_NOWAYOUT is not set
-
-#
-# Watchdog Device Drivers
-#
-CONFIG_SOFT_WATCHDOG=y
+# CONFIG_WATCHDOG is not set
 # CONFIG_NVRAM is not set
 CONFIG_RTC=y
 # CONFIG_DTLK is not set
@@ -398,6 +439,11 @@ CONFIG_RAMFS=y
 # CONFIG_UFS_FS is not set
 
 #
+# Network File Systems
+#
+# CONFIG_EXPORTFS is not set
+
+#
 # Partition Types
 #
 # CONFIG_PARTITION_ADVANCED is not set
@@ -435,9 +481,11 @@ CONFIG_FONT_MINI_4x6=y
 # Logo configuration
 #
 CONFIG_LOGO=y
-CONFIG_LOGO_LINUX_MONO=y
-CONFIG_LOGO_LINUX_VGA16=y
-CONFIG_LOGO_LINUX_CLUT224=y
+# CONFIG_LOGO_LINUX_MONO is not set
+# CONFIG_LOGO_LINUX_VGA16 is not set
+# CONFIG_LOGO_LINUX_CLUT224 is not set
+# CONFIG_LOGO_NDS_CLUT224 is not set
+CONFIG_LOGO_NDS_BIG_CLUT224=y
 
 #
 # Misc devices
@@ -476,3 +524,4 @@ CONFIG_LOGO_LINUX_CLUT224=y
 # CONFIG_CRC_CCITT is not set
 # CONFIG_CRC32 is not set
 # CONFIG_LIBCRC32C is not set
+CONFIG_ZLIB_INFLATE=y
