@@ -63,6 +63,7 @@ romfs:
 	$(ROMFSINST) /etc/rc
 	$(ROMFSINST) /etc/inittab
 	$(ROMFSINST) /etc/motd
+	$(ROMFSINST) /etc/issue
 	$(ROMFSINST) /etc/passwd
 	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
 
