@@ -13,7 +13,7 @@ IMAGE    = $(IMAGEDIR)/dslinux.ds.gba
 endif
 
 
-ROMFS_DIRS = bin dev etc home lib mnt proc usr var
+ROMFS_DIRS = bin dev etc home lib mnt proc usr var sys
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
@@ -35,7 +35,7 @@ DEVICES = \
 	rom8,b,31,8    rom9,b,31,9 \
 	\
 	tty0,c,4,0     tty1,c,4,1         tty2,c,4,2       tty3,c,4,3 \
-	ttyS0,c,4,64   ttyS1,c,4,65 \
+	tty4,c,4,4     tty5,c,4,5         tty6,c,4,6       tty7,c,4,7 \
 	\
 	ttyp0,c,3,0    ttyp1,c,3,1        ttyp2,c,3,2      ttyp3,c,3,3 \
 	ttyp4,c,3,4    ttyp5,c,3,5        ttyp6,c,3,6      ttyp7,c,3,7 \
@@ -62,10 +62,6 @@ romfs:
 	$(ROMFSINST) -s /bin /sbin
 	$(ROMFSINST) /etc/rc
 	$(ROMFSINST) /etc/inittab
-	case "$(LINUXDIR)" in \
-	*2.4.*) ;; \
-	*) echo "ttyS0:linux:/bin/sh" >> $(ROMFSDIR)/etc/inittab ;; \
-	esac
 	$(ROMFSINST) /etc/motd
 	$(ROMFSINST) /etc/passwd
 	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
