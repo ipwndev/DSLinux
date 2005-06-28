@@ -1,6 +1,5 @@
-#hostname NintendoDS
+hostname NintendoDS
 mount -t proc none /proc
 mount -t sysfs none /sys
 mount -t ramfs none /var
 mkdir /var/tmp
-cat /etc/motd
