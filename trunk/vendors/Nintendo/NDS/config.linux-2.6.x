@@ -64,8 +64,8 @@ CONFIG_FLASH_SIZE=0x00400000
 #
 # NDS Options
 #
-CONFIG_NDS_DSGBA=y
-# CONFIG_NDS_NDS is not set
+# CONFIG_NDS_DSGBA is not set
+CONFIG_NDS_NDS=y
 
 #
 # Processor Type
