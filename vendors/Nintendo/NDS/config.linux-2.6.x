@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.9-uc0
-# Tue Jun 28 12:29:46 2005
+# Thu Jul  7 13:12:44 2005
 #
 CONFIG_ARM=y
 CONFIG_UCLINUX=y
@@ -22,8 +22,7 @@ CONFIG_BROKEN_ON_SMP=y
 #
 CONFIG_LOCALVERSION="ds"
 # CONFIG_POSIX_MQUEUE is not set
-CONFIG_BSD_PROCESS_ACCT=y
-# CONFIG_BSD_PROCESS_ACCT_V3 is not set
+# CONFIG_BSD_PROCESS_ACCT is not set
 # CONFIG_SYSCTL is not set
 # CONFIG_AUDIT is not set
 CONFIG_LOG_BUF_SHIFT=14
@@ -60,10 +59,6 @@ CONFIG_DRAM_BASE=0x02000000
 CONFIG_DRAM_SIZE=0x00400000
 CONFIG_FLASH_MEM_BASE=0x08000000
 CONFIG_FLASH_SIZE=0x00400000
-
-#
-# NDS Options
-#
 # CONFIG_NDS_DSGBA is not set
 CONFIG_NDS_NDS=y
 
@@ -198,9 +193,7 @@ CONFIG_MTD_UCLINUX=y
 # CONFIG_BLK_DEV_FD is not set
 # CONFIG_BLK_DEV_LOOP is not set
 # CONFIG_BLK_DEV_NBD is not set
-CONFIG_BLK_DEV_RAM=y
-CONFIG_BLK_DEV_RAM_SIZE=8192
-# CONFIG_BLK_DEV_INITRD is not set
+# CONFIG_BLK_DEV_RAM is not set
 
 #
 # Multi-device support (RAID and LVM)
@@ -341,7 +334,7 @@ CONFIG_HW_CONSOLE=y
 # Non-8250 serial port support
 #
 # CONFIG_SERIAL_T32 is not set
-CONFIG_UNIX98_PTYS=y
+# CONFIG_UNIX98_PTYS is not set
 # CONFIG_LEGACY_PTYS is not set
 
 #
@@ -411,10 +404,9 @@ CONFIG_ROMFS_FS=y
 # Pseudo filesystems
 #
 CONFIG_PROC_FS=y
-CONFIG_SYSFS=y
+# CONFIG_SYSFS is not set
 # CONFIG_DEVFS_FS is not set
-# CONFIG_DEVPTS_FS_XATTR is not set
-CONFIG_TMPFS=y
+# CONFIG_TMPFS is not set
 # CONFIG_HUGETLBFS is not set
 # CONFIG_HUGETLB_PAGE is not set
 CONFIG_RAMFS=y
