@@ -27,6 +27,11 @@ extern void swiWaitForVBlank( void );
 #define TOUCH_CAL_X2 (*(volatile s16*)0x027FFCDE)
 #define TOUCH_CAL_Y2 (*(volatile s16*)0x027FFCE0)
 
+#define TOUCH_CNTRL_X1   (*(volatile u8*)0x027FFCDC)
+#define TOUCH_CNTRL_Y1   (*(volatile u8*)0x027FFCDD)
+#define TOUCH_CNTRL_X2   (*(volatile u8*)0x027FFCE2)
+#define TOUCH_CNTRL_Y2   (*(volatile u8*)0x027FFCE3) 
+
 #define SERIAL_CR      (*(volatile u16*)0x040001C0)
 #define SERIAL_DATA    (*(volatile u16*)0x040001C2)
 
@@ -42,8 +47,12 @@ extern void swiWaitForVBlank( void );
 #define MIN(x,y) ((x)<(y)?(x):(y))
 #define MAX(x,y) ((x)>(y)?(x):(y))
 
-static s32 touch_width;
-static s32 touch_height;
+static s16 cntrl_width;
+static s16 cntrl_height;
+static s16 touch_cntrl_x1;
+static s16 touch_cntrl_y1;
+static s16 touch_width;
+static s16 touch_height;
 static s16 touch_cal_x1;
 static s16 touch_cal_y1;
 
@@ -101,10 +110,10 @@ void InterruptHandler(void)
 		{
 			x = touchRead(TSC_MEASURE_X);
 			y = touchRead(TSC_MEASURE_Y);
-			x = ( (x - touch_cal_x1) * (256-62) ) /
-				(touch_width) + 31;
-			y = ( (y - touch_cal_y1) * (192-62) ) /
-				(touch_height) + 31;
+			x = ( (x - touch_cal_x1) * cntrl_width) /
+				(touch_width) + touch_cntrl_x1;
+			y = ( (y - touch_cal_y1) * cntrl_height) /
+				(touch_height) + touch_cntrl_y1;
 			x = MIN(255,MAX(x,0));
 			y = MIN(191,MAX(y,0));
 			
@@ -143,6 +152,10 @@ int main( void )
 	touch_height = TOUCH_CAL_Y2 - TOUCH_CAL_Y1;
 	touch_cal_x1 = TOUCH_CAL_X1;
 	touch_cal_y1 = TOUCH_CAL_Y1;
+	cntrl_width  = TOUCH_CNTRL_X2 - TOUCH_CNTRL_X1;
+	cntrl_height = TOUCH_CNTRL_Y2 - TOUCH_CNTRL_Y1;
+	touch_cntrl_x1 = TOUCH_CNTRL_X1;
+	touch_cntrl_y1 = TOUCH_CNTRL_Y1;
 
 	/* Enable VBLANK Interrupt */
 	DISP_SR = DISP_VBLANK_IRQ;
