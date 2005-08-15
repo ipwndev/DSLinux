@@ -93,7 +93,7 @@ textaddr-$(CONFIG_ARCH_S3C24A0)	   := 0x10008000
  machine-$(CONFIG_ARCH_P2001)	   := p2001
 textaddr-$(CONFIG_ARCH_P2001)	   := 0x40100000
  machine-$(CONFIG_ARCH_NDS)	   := nds
-textaddr-$(CONFIG_ARCH_NDS)	   := 0x02005000
+textaddr-$(CONFIG_ARCH_NDS)	   := 0x02000000
 
 # set the environment variables and export
 MACHINE  := $(machine-y)

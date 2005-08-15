@@ -84,7 +84,7 @@ image:
 		$(ROOTDIR)/$(LINUXDIR)/linux $(ELFIMAGE) 2> /dev/null ; \
 		$(CROSS_COMPILE)objcopy -O binary $(ELFIMAGE) $(IMAGEDIR)/arm9.bin ; \
 		ndstool -c $(IMAGEDIR)/dslinux.nds -9 $(IMAGEDIR)/arm9.bin \
-			-r9 0x02005000 -e9 0x02005000  \
+			-r9 0x02000000 -e9 0x02000000  \
 			-7 $(ROOTDIR)/$(LINUXDIR)/arch/armnommu/mach-nds/arm7.bin \
 		       	-r7 0x03800000 -e7 0x03800000  \
 			-b tux.bmp "DSLinux;Port of Linux;to the DS!" ; \
