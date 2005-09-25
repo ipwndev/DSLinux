@@ -13,7 +13,7 @@ IMAGE    = $(IMAGEDIR)/dslinux.ds.gba
 endif
 
 
-ROMFS_DIRS = bin dev etc home lib mnt proc usr var sys
+ROMFS_DIRS = bin dev etc home lib mnt proc usr var sram
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
@@ -32,7 +32,8 @@ DEVICES = \
 	\
 	rom0,b,31,0    rom1,b,31,1        rom2,b,31,2      rom3,b,31,3 \
 	rom4,b,31,4    rom5,b,31,5        rom6,b,31,6      rom7,b,31,7 \
-	rom8,b,31,8    rom9,b,31,9 \
+	\
+	mtd0,c,90,0    mtd1,c,90,2 \
 	\
 	tty0,c,4,0     tty1,c,4,1         tty2,c,4,2       tty3,c,4,3 \
 	tty4,c,4,4     tty5,c,4,5         tty6,c,4,6       tty7,c,4,7 \
