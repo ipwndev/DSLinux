@@ -168,6 +168,7 @@ CONFIG_MTD_UCLINUX=y
 #
 # CONFIG_MTD_SLRAM is not set
 # CONFIG_MTD_PHRAM is not set
+# CONFIG_MTD_SRAM is not set
 # CONFIG_MTD_MTDRAM is not set
 # CONFIG_MTD_BLKMTD is not set
 
