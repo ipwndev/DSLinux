@@ -83,7 +83,7 @@ image:
 		--set-section-flags=.romfs=alloc,load,data   \
 		$(ROOTDIR)/$(LINUXDIR)/linux $(ELFIMAGE) 2> /dev/null ; \
 		$(CROSS_COMPILE)objcopy -O binary $(ELFIMAGE) $(IMAGEDIR)/arm9.bin ; \
-		ndstool -c $(IMAGEDIR)/dslinux.nds -9 $(IMAGEDIR)/arm9.bin \
+		ndstool -c $(IMAGEDIR)/dslinux-gbamp.nds -9 $(IMAGEDIR)/arm9.bin \
 			-r9 0x02000000 -e9 0x02000000  \
 			-7 $(ROOTDIR)/$(LINUXDIR)/arch/armnommu/mach-nds/arm7.bin \
 		       	-r7 0x03800000 -e7 0x03800000  \
