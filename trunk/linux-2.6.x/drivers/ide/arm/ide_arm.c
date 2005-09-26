@@ -34,10 +34,13 @@ void __init ide_arm_init(void)
 {
 	if (IDE_ARM_HOST) {
 		hw_regs_t hw;
+		int i;
 
 		memset(&hw, 0, sizeof(hw));
-		ide_std_init_ports(&hw, IDE_ARM_IO, IDE_ARM_IO + 0x206);
-		hw.irq = IDE_ARM_IRQ;
+		for (i=0; i<8; i++)
+		       	hw.io_ports[i] = 0x09000000 + 0x20000*i;
+		hw.io_ports[8] = 0x098C0000; // control
+		hw.irq = IRQ_CART;
 		ide_register_hw(&hw, NULL);
 	}
 }
