@@ -793,7 +793,7 @@ config BLK_DEV_IDEDMA_PMAC_AUTO
 	  Apple machines.
 
 config IDE_ARM
-	def_bool ARM && (ARCH_A5K || ARCH_CLPS7500 || ARCH_RPC || ARCH_SHARK)
+	def_bool ARM && (ARCH_A5K || ARCH_CLPS7500 || ARCH_RPC || ARCH_SHARK || ARCH_NDS)
 
 config BLK_DEV_IDE_ICSIDE
 	tristate "ICS IDE interface support"
