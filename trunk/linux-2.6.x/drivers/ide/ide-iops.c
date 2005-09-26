@@ -61,12 +61,12 @@ static void ide_insl (unsigned long port, void *addr, u32 count)
 
 static void ide_outb (u8 val, unsigned long port)
 {
-	outb(val, port);
+	outw(val, port);
 }
 
 static void ide_outbsync (ide_drive_t *drive, u8 addr, unsigned long port)
 {
-	outb(addr, port);
+	outw(addr, port);
 }
 
 static void ide_outw (u16 val, unsigned long port)
