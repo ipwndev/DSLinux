@@ -59,14 +59,8 @@ static unsigned long setup_timer (void)
 {
 	volatile unsigned short	*tcp;
 
-	/*
-	 *	HSSE: NDS timers are 16 bit wide, reloading automatically at an
-	 *	overflow. So preload with -2^(24-6-10)+1 = -255 at Clk
-	 *	Frequency 2^24 = 16.78 MHz and prescaler 2^-10 = 1/1024 to
-	 *	generate a 2^6 = 64 Hz clock.
-	 */
 	tcp = (volatile unsigned short *) NDS_TIMER0_DATA;
-	*tcp = -(1<<(24-6-10))+1;
+	*tcp = (-0x02000000)/(1024*HZ);
 	tcp = (volatile unsigned short *) NDS_TIMER0_CR;
 	*tcp = (NDS_TCR_CLK1024 | NDS_TCR_ENB | NDS_TCR_IRQ);
 
