@@ -133,6 +133,23 @@ static ide_startstop_t read_intr (ide_drive_t *drive)
 	unsigned long flags;
 	u8 stat;
 	char *to;
+	ide_hwgroup_t *hwgroup      = HWGROUP(drive);
+
+	if ((HWIF(drive)->INB(IDE_STATUS_REG)) & BUSY_STAT) {
+		if (time_before(jiffies, hwgroup->poll_timeout)) {
+			if (hwgroup->handler != NULL)
+				BUG();
+			ide_set_handler(drive, &read_intr,
+					HZ/100, NULL);
+			return ide_started;
+		}
+		hwgroup->poll_timeout = 0;
+		printk(KERN_ERR "%s: read timeout - still busy!\n",
+				drive->name);
+		return DRIVER(drive)->error(drive, "busy timeout",
+				HWIF(drive)->INB(IDE_STATUS_REG));
+	}
+	hwgroup->poll_timeout = 0;
 
 	/* new way for dealing with premature shared PCI interrupts */
 	if (!OK_STAT(stat=hwif->INB(IDE_STATUS_REG),DATA_READY,BAD_R_STAT)) {
@@ -173,7 +190,8 @@ read_next:
 	if (i > 0) {
 		if (msect)
 			goto read_next;
-		ide_set_handler(drive, &read_intr, WAIT_CMD, NULL);
+		hwgroup->poll_timeout = jiffies + WAIT_CMD;
+		ide_set_handler(drive, &read_intr, HZ/100, NULL);
                 return ide_started;
 	}
         return ide_stopped;
@@ -189,6 +207,22 @@ static ide_startstop_t write_intr (ide_drive_t *drive)
 	struct request *rq	= hwgroup->rq;
 	u32 i = 0;
 	u8 stat;
+
+	if ((HWIF(drive)->INB(IDE_STATUS_REG)) & BUSY_STAT) {
+		if (time_before(jiffies, hwgroup->poll_timeout)) {
+			if (hwgroup->handler != NULL)
+				BUG();
+			ide_set_handler(drive, &write_intr,
+					HZ/100, NULL);
+			return ide_started;
+		}
+		hwgroup->poll_timeout = 0;
+		printk(KERN_ERR "%s: write timeout - still busy!\n",
+				drive->name);
+		return DRIVER(drive)->error(drive, "busy timeout",
+				HWIF(drive)->INB(IDE_STATUS_REG));
+	}
+	hwgroup->poll_timeout = 0;
 
 	if (!OK_STAT(stat = hwif->INB(IDE_STATUS_REG),
 			DRIVE_READY, drive->bad_wstat)) {
@@ -212,7 +246,8 @@ static ide_startstop_t write_intr (ide_drive_t *drive)
 				char *to = ide_map_buffer(rq, &flags);
 				taskfile_output_data(drive, to, SECTOR_WORDS);
 				ide_unmap_buffer(rq, to, &flags);
-				ide_set_handler(drive, &write_intr, WAIT_CMD, NULL);
+				HWGROUP(drive)->poll_timeout = jiffies + WAIT_CMD;
+				ide_set_handler(drive, &write_intr, HZ/100, NULL);
                                 return ide_started;
 			}
                         return ide_stopped;
@@ -426,7 +461,8 @@ ide_startstop_t __ide_do_rw_disk (ide_drive_t *drive, struct request *rq, sector
 		command = ((drive->mult_count) ?
 			   ((lba48) ? WIN_MULTREAD_EXT : WIN_MULTREAD) :
 			   ((lba48) ? WIN_READ_EXT : WIN_READ));
-		ide_execute_command(drive, command, &read_intr, WAIT_CMD, NULL);
+		HWGROUP(drive)->poll_timeout = jiffies + WAIT_CMD;
+		ide_execute_command(drive, command, &read_intr, HZ/100, NULL);
 		return ide_started;
 	} else {
 		ide_startstop_t startstop;
@@ -457,7 +493,8 @@ ide_startstop_t __ide_do_rw_disk (ide_drive_t *drive, struct request *rq, sector
 		} else {
 			unsigned long flags;
 			char *to = ide_map_buffer(rq, &flags);
-			ide_set_handler(drive, &write_intr, WAIT_CMD, NULL);
+			HWGROUP(drive)->poll_timeout = jiffies + WAIT_CMD;
+			ide_set_handler(drive, &write_intr, HZ/100, NULL);
 			taskfile_output_data(drive, to, SECTOR_WORDS);
 			ide_unmap_buffer(rq, to, &flags);
 		}
