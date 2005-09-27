@@ -43,6 +43,8 @@
 
 #include <asm/arch/power.h>
 
+#define WAIT_CR (*(volatile u32 *) 0x04000204)
+
 extern void nds_time_init(void);
 
 extern void __init nds_init_irq(void);
@@ -50,6 +52,7 @@ extern void __init nds_init_irq(void);
 extern void nds_machine_init(void)
 {
 	POWER_CR = POWER_2D | POWER_2D_SUB | POWER_LCD_TOP | POWER_LCD_BOTTOM | POWER_SWAP_LCDS ;
+	WAIT_CR &= ~(0x8080);
 }
 
 MACHINE_START(NDS, "Nintendo DS")
