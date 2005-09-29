@@ -1120,6 +1120,7 @@ static ide_startstop_t idedisk_special (ide_drive_t *drive)
 			args.tfRegister[IDE_COMMAND_OFFSET] = WIN_SPECIFY;
 			args.command_type = IDE_DRIVE_TASK_NO_DATA;
 			args.handler	  = &set_geometry_intr;
+			HWGROUP(drive)->poll_timeout = WAIT_WORSTCASE ;
 			do_rw_taskfile(drive, &args);
 		}
 	} else if (s->b.recalibrate) {
@@ -1131,6 +1132,7 @@ static ide_startstop_t idedisk_special (ide_drive_t *drive)
 			args.tfRegister[IDE_COMMAND_OFFSET] = WIN_RESTORE;
 			args.command_type = IDE_DRIVE_TASK_NO_DATA;
 			args.handler	  = &recal_intr;
+			HWGROUP(drive)->poll_timeout = WAIT_WORSTCASE ;
 			do_rw_taskfile(drive, &args);
 		}
 	} else if (s->b.set_multmode) {
@@ -1144,6 +1146,7 @@ static ide_startstop_t idedisk_special (ide_drive_t *drive)
 			args.tfRegister[IDE_COMMAND_OFFSET] = WIN_SETMULT;
 			args.command_type = IDE_DRIVE_TASK_NO_DATA;
 			args.handler	  = &set_multmode_intr;
+			HWGROUP(drive)->poll_timeout = WAIT_WORSTCASE ;
 			do_rw_taskfile(drive, &args);
 		}
 	} else if (s->all) {
