@@ -298,6 +298,23 @@ ide_startstop_t task_no_data_intr (ide_drive_t *drive)
 	ide_task_t *args	= HWGROUP(drive)->rq->special;
 	ide_hwif_t *hwif	= HWIF(drive);
 	u8 stat;
+	ide_hwgroup_t *hwgroup      = HWGROUP(drive);
+
+	if ((HWIF(drive)->INB(IDE_STATUS_REG)) & BUSY_STAT) {
+		if (time_before(jiffies, hwgroup->poll_timeout)) {
+			if (hwgroup->handler != NULL)
+				BUG();
+			ide_set_handler(drive, &task_no_data_intr,
+					HZ/100, NULL);
+			return ide_started;
+		}
+		hwgroup->poll_timeout = 0;
+		printk(KERN_ERR "%s: timeout - still busy!\n",
+				drive->name);
+		return DRIVER(drive)->error(drive, "busy timeout",
+				HWIF(drive)->INB(IDE_STATUS_REG));
+	}
+	hwgroup->poll_timeout = 0;
 
 	local_irq_enable();
 	if (!OK_STAT(stat = hwif->INB(IDE_STATUS_REG),READY_STAT,BAD_STAT)) {
@@ -973,8 +990,15 @@ ide_startstop_t flagged_taskfile (ide_drive_t *drive, ide_task_t *task)
 				ndelay(400);	/* FIXME */
 				return task->prehandler(drive, task->rq);
 			}
-            printk("calling ide_execute_command for %x with handler=%x\n", taskfile->command, task->handler);
-			ide_execute_command(drive, taskfile->command, task->handler, WAIT_WORSTCASE, NULL);
+			if (HWGROUP(drive)->poll_timeout != 0 )
+			{
+				ide_execute_command(drive, taskfile->command, task->handler, HZ/100, NULL);
+			}
+			else
+			{
+				printk("calling ide_execute_command for %x with handler=%x\n", taskfile->command, task->handler);
+				ide_execute_command(drive, taskfile->command, task->handler, WAIT_WORSTCASE, NULL);
+			}
 	}
 
 	return ide_started;
