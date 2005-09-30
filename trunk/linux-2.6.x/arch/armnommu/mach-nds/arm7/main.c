@@ -79,6 +79,21 @@ u16 touchRead(u32 command) {
 	return ((result & 0x7F) << 5) | (SERIAL_DATA >> 3);
 }
 
+void poweroff( void )
+{
+    while (SERIAL_CR & SERIAL_BUSY) swiDelay(1);
+
+	// Write the command and wait for it to complete
+	SERIAL_CR = SERIAL_ENABLE | 0x802;
+    SERIAL_DATA = 0x00;
+    while (SERIAL_CR & SERIAL_BUSY) swiDelay(1);
+
+	// Write the data
+	SERIAL_CR = SERIAL_ENABLE | 0x002;
+    SERIAL_DATA = 0x40;
+
+}
+
 void InterruptHandler(void)
 {
 	u16 buttons;
@@ -89,13 +104,14 @@ void InterruptHandler(void)
 	if ( NDS_IF & IRQ_RECV )
 	{
 		/* Read any FIFO messages */
-#if 0
 		while ( ! ( REG_IPCFIFOCNT & (1<<3) ) )
 		{
 			data = REG_IPCFIFORECV;
-			/* do something */
+            if ( data & FIFO_POWER )
+            {
+                poweroff() ;
+            }
 		}
-#endif
 	}
 	if ( NDS_IF & IRQ_VBLANK )
 	{
