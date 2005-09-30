@@ -24,6 +24,11 @@
 #define FIFO_MIC      (1<<26)
 #define FIFO_WIFI     (1<<27)
 #define FIFO_SOUND    (1<<28)
+#define FIFO_POWER    (1<<29)
+
+#define REG_IPCFIFOSEND (*(volatile u32*) 0x04000188)
+#define REG_IPCFIFORECV (*(volatile u32*) 0x04100000)
+#define REG_IPCFIFOCNT  (*(volatile u16*) 0x04000184)
 
 struct fifo_cb
 {
