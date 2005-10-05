@@ -77,7 +77,7 @@ MATH_LIB	= -lm
 LD		= arm-elf-ld
 LINK		=  $(LIBTOOL_LINK) $(CC) $(CFLAGS)
 
-LDFLAGS		=   -s -Wl,-elf2flt -L$(ROOTDIR)/lib
+LDFLAGS		=   -nostartfiles -nostdinc -s -Wl,-elf2flt -L$(ROOTDIR)/lib $(ROOTDIR)/lib/crt0.o
 
 LDFLAGS_LIBTOOL	= $(LDFLAGS) $(CFLAGS_LIBTOOL)
 LDFLAGS_NORMAL	= $(LDFLAGS) $(CFLAGS_NORMAL)
