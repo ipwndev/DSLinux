@@ -93,7 +93,7 @@ CFLAGS_SHARED	= $(CCFLAGS) unknown
 CFLAGS_DEFAULT	= $(CFLAGS_NORMAL)
 
 LINK		= $(LIBTOOL_LINK) $(CC)
-LDFLAGS		= -s -Wl,-elf2flt -L$(ROOTDIR)lib  
+LDFLAGS		= -s -Wl,-elf2flt -L$(ROOTDIR)/lib  
 
 SHLIB_DIRS	= -L../lib
 SHLIB_LIST	= $(SHLIB_DIRS) -lncurses 
