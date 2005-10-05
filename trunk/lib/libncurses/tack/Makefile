@@ -64,7 +64,7 @@ CFLAGS_DEFAULT	= $(CFLAGS_NORMAL)
 LD		= arm-elf-ld
 LINK		=  $(LIBTOOL_LINK) $(CC)
 LDFLAGS		=  \
-		-L../lib -lncurses -s -Wl,-elf2flt -L$(ROOTDIR)/lib  
+		-L../lib -nostartfiles -nostdinc -lncurses -s -Wl,-elf2flt -L$(ROOTDIR)/lib $(ROOTDIR)/lib/crt0.o
 
 LDFLAGS_LIBTOOL	= $(LDFLAGS) $(CFLAGS_LIBTOOL)
 LDFLAGS_NORMAL	= $(LDFLAGS) $(CFLAGS_NORMAL)
