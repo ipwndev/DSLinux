@@ -65,6 +65,7 @@ MAKEARCH_KERNEL = $(MAKEARCH)
 endif
 
 DIRS    = $(VENDOR_TOPDIRS) include lib include user
+DIRS_ROMFS = user $(VENDOR_TOPDIRS) include lib include 
 VENDDIR = $(ROOTDIR)/vendors/$(CONFIG_VENDOR)/$(CONFIG_PRODUCT)/.
 
 export VENDOR PRODUCT ROOTDIR LINUXDIR HOSTCC CONFIG_SHELL
@@ -226,7 +227,7 @@ oldconfig_uClibc:
 
 .PHONY: romfs
 romfs:
-	for dir in $(DIRS) ; do [ ! -d $$dir ] || $(MAKEARCH) -C $$dir romfs || exit 1 ; done
+	for dir in $(DIRS_ROMFS) ; do [ ! -d $$dir ] || $(MAKEARCH) -C $$dir romfs || exit 1 ; done
 	-find $(ROMFSDIR)/. -name CVS | xargs -r rm -rf
 
 .PHONY: image
