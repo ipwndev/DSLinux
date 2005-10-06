@@ -282,6 +282,7 @@ dir_$(CONFIG_USER_SHUTILS_UNAME)            += shutils
 dir_$(CONFIG_USER_SHUTILS_WHICH)            += shutils
 dir_$(CONFIG_USER_SHUTILS_WHOAMI)           += shutils
 dir_$(CONFIG_USER_SHUTILS_YES)              += shutils
+dir_$(CONFIG_USER_SL_SL)                    += sl
 dir_$(CONFIG_USER_SLATTACH_SLATTACH)        += slattach
 dir_$(CONFIG_USER_SMBMOUNT_SMBMOUNT)        += smbmount
 dir_$(CONFIG_USER_SMBMOUNT_SMBUMOUNT)       += smbmount
