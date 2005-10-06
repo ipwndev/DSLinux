@@ -69,6 +69,7 @@ romfs:
 
 image:
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
+	$(CROSS_COMPILE)flthdr -z $(ROMFSDIR)/bin/*
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
 	if [ "$(CONFIG_NDS_NDS)" = "y" ]; then \
 		BSS=`$(CROSS_COMPILE)objdump --headers $(ROOTDIR)/$(LINUXDIR)/linux | \
