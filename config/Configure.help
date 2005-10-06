@@ -1210,6 +1210,9 @@ CONFIG_USER_TRIPWIRE_TRIPWIRE
 CONFIG_USER_TRIPWIRE_SIGGEN
   Cryptographic file signature utility.
 
+CONFIG_USER_SL_SL
+  Display animations to correct you if you type 'sl' by mistake.
+
 CONFIG_USER_UCDSNMP_SNMPD
   UCD SNMP daemon.
   Approx. binary size: 140k
