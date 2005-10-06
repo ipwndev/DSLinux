@@ -178,6 +178,7 @@ lintlib \
 install.libs \
 uninstall.libs \
 install.test \
+romfs \
 uninstall.test ::
 	cd test && $(MAKE) $(CF_MFLAGS) $@
 
@@ -193,6 +194,4 @@ distclean ::
 	rm -f config.cache config.log config.status Makefile include/ncurses_cfg.h
 	rm -f headers.sh headers.sed
 	rm -rf $(DIRS_TO_MAKE)
-
-romfs:
 
