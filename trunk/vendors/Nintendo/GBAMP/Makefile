@@ -13,7 +13,9 @@ IMAGE    = $(IMAGEDIR)/dslinux.ds.gba
 endif
 
 
-ROMFS_DIRS = bin dev etc home lib mnt proc usr var gbamp
+ROMFS_DIRS = dev etc proc sbin gbamp/linux
+
+FS_DIRS = home lib usr/bin var/tmp
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
@@ -48,6 +50,7 @@ DEVICES = \
 clean:
 
 romfs:
+	rm -r $(ROMFSDIR)
 	[ -d $(ROMFSDIR)/$$i ] || mkdir -p $(ROMFSDIR)
 	for i in $(ROMFS_DIRS); do \
 		[ -d $(ROMFSDIR)/$$i ] || mkdir -p $(ROMFSDIR)/$$i; \
@@ -58,8 +61,15 @@ romfs:
 	# these permissions are needed for openpty and family to work
 	# on non-ptmx ptys
 	chmod 620 $(ROMFSDIR)/dev/@[pt]ty[pqrsPQRS][0-9a-f],*
+	for i in $(FS_DIRS); do \
+		[ -d $(ROMFSDIR)/gbamp/linux/$$i ] || mkdir -p $(ROMFSDIR)/gbamp/linux/$$i; \
+	done
+	$(ROMFSINST) -s gbamp/linux/var /var
+	$(ROMFSINST) -s gbamp/linux/lib /lib
+	$(ROMFSINST) -s gbamp/linux/usr /usr
+	$(ROMFSINST) -s gbamp/linux/usr/bin /bin
+	$(ROMFSINST) -s gbamp/linux/home /home
 	$(ROMFSINST) -s /var/tmp /tmp
-	$(ROMFSINST) -s /bin /sbin
 	$(ROMFSINST) /etc/rc
 	$(ROMFSINST) /etc/inittab
 	$(ROMFSINST) /etc/motd
@@ -69,6 +79,21 @@ romfs:
 
 image:
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
+	[ -d $(IMAGEDIR)/linux ] || mkdir -p $(IMAGEDIR)/linux
+	arm-elf-flthdr -z $(ROMFSDIR)/bin/*
+	rm -r $(ROMFSDIR)/bin
+	mkdir $(ROMFSDIR)/bin
+	-for i in `sort $(ROOTDIR)/user/busybox/busybox.links` ; do\
+		j=`basename $$i` ; \
+		mv $(ROMFSDIR)/gbamp/linux/usr/bin/$$j $(ROMFSDIR)/bin ; \
+	done
+	-mv $(ROMFSDIR)/gbamp/linux/usr/bin/busybox $(ROMFSDIR)/bin ;
+	-mv $(ROMFSDIR)/gbamp/linux/usr/bin/mount $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/gbamp/linux/usr/bin/sh $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/gbamp/linux/usr/bin/login $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/gbamp/linux/usr/bin/init $(ROMFSDIR)/bin
+	( cd $(ROMFSDIR)/gbamp; tar -cvzf $(IMAGEDIR)/linux.tgz . )
+	-rm -r $(ROMFSDIR)/gbamp/linux
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
 	if [ "$(CONFIG_NDS_NDS)" = "y" ]; then \
 		BSS=`$(CROSS_COMPILE)objdump --headers $(ROOTDIR)/$(LINUXDIR)/linux | \
