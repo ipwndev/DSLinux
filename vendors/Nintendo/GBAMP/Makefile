@@ -79,7 +79,7 @@ romfs:
 image:
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
 	[ -d $(IMAGEDIR)/linux ] || mkdir -p $(IMAGEDIR)/linux
-	arm-elf-flthdr -z $(ROMFSDIR)/bin/*
+	$(CROSS_COMPILE)flthdr -z $(ROMFSDIR)/bin/*
 	rm -r $(ROMFSDIR)/bin
 	mkdir $(ROMFSDIR)/bin
 	-for i in `sort $(ROOTDIR)/user/busybox/busybox.links` ; do\
