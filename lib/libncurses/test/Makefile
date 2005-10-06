@@ -723,4 +723,41 @@ clean ::
 depend : $(AUTO_SRC)
 	makedepend -- $(CPPFLAGS) -- $(C_SRC)
 
+romfs :
+	$(ROMFSINST) /bin/background
+	$(ROMFSINST) /bin/blue
+	$(ROMFSINST) /bin/bs
+	$(ROMFSINST) /bin/cardfile
+	$(ROMFSINST) /bin/color_set
+	$(ROMFSINST) /bin/demo_defkey
+	$(ROMFSINST) /bin/demo_forms
+	$(ROMFSINST) /bin/demo_keyok
+	$(ROMFSINST) /bin/demo_menus
+	$(ROMFSINST) /bin/demo_panels
+	$(ROMFSINST) /bin/demo_termcap
+	$(ROMFSINST) /bin/ditto
+	$(ROMFSINST) /bin/dots
+	$(ROMFSINST) /bin/filter
+	$(ROMFSINST) /bin/firework
+	$(ROMFSINST) /bin/firstlast
+	$(ROMFSINST) /bin/gdc
+	$(ROMFSINST) /bin/hanoi
+	$(ROMFSINST) /bin/hashtest
+	$(ROMFSINST) /bin/ins_wide
+	$(ROMFSINST) /bin/inserts
+	$(ROMFSINST) /bin/keynames
+	$(ROMFSINST) /bin/knight
+	$(ROMFSINST) /bin/lrtest
+	$(ROMFSINST) /bin/ncurses
+	$(ROMFSINST) /bin/newdemo
+	$(ROMFSINST) /bin/railroad
+	$(ROMFSINST) /bin/rain
+	$(ROMFSINST) /bin/tclock
+	$(ROMFSINST) /bin/testaddch
+	$(ROMFSINST) /bin/testcurs
+	$(ROMFSINST) /bin/testscanw
+	$(ROMFSINST) /bin/view
+	$(ROMFSINST) /bin/worm
+	$(ROMFSINST) /bin/xmas
+
 # DO NOT DELETE THIS LINE -- make depend depends on it.
