@@ -92,8 +92,8 @@ image:
 	-mv $(ROMFSDIR)/gbamp/linux/usr/bin/sh $(ROMFSDIR)/bin
 	-mv $(ROMFSDIR)/gbamp/linux/usr/bin/login $(ROMFSDIR)/bin
 	-mv $(ROMFSDIR)/gbamp/linux/usr/bin/init $(ROMFSDIR)/bin
-	( cd $(ROMFSDIR)/gbamp; tar -cvzf $(IMAGEDIR)/linux.tgz . )
-	-rm -r $(ROMFSDIR)/gbamp/linux
+	-rm -r $(IMAGEDIR)/linux
+	mv $(ROMFSDIR)/gbamp/linux $(IMAGEDIR)
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
 	if [ "$(CONFIG_NDS_NDS)" = "y" ]; then \
 		BSS=`$(CROSS_COMPILE)objdump --headers $(ROOTDIR)/$(LINUXDIR)/linux | \
@@ -108,11 +108,12 @@ image:
 		--set-section-flags=.romfs=alloc,load,data   \
 		$(ROOTDIR)/$(LINUXDIR)/linux $(ELFIMAGE) 2> /dev/null ; \
 		$(CROSS_COMPILE)objcopy -O binary $(ELFIMAGE) $(IMAGEDIR)/arm9.bin ; \
-		ndstool -c $(IMAGEDIR)/dslinux-gbamp.nds -9 $(IMAGEDIR)/arm9.bin \
+		ndstool -c $(IMAGEDIR)/dslinux.nds -9 $(IMAGEDIR)/arm9.bin \
 			-r9 0x02000000 -e9 0x02000000  \
 			-7 $(ROOTDIR)/$(LINUXDIR)/arch/armnommu/mach-nds/arm7.bin \
 		       	-r7 0x03800000 -e7 0x03800000  \
 			-b tux.bmp "DSLinux;Port of Linux;to the DS!" ; \
+		( cd $(IMAGEDIR); tar -cvzf dslinux-gbamp.tgz linux dslinux.nds ) \
 	else \
 	        $(CROSS_COMPILE)objcopy -O binary \
                         --remove-section=.text --remove-section=.init \
