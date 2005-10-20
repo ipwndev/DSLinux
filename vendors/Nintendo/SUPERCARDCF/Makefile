@@ -113,7 +113,7 @@ image:
 			-7 $(ROOTDIR)/$(LINUXDIR)/arch/armnommu/mach-nds/arm7.bin \
 		       	-r7 0x03800000 -e7 0x03800000  \
 			-b tux.bmp "DSLinux;Port of Linux;to the DS!" ; \
-		( cd $(IMAGEDIR); tar -cvzf dslinux-supercard.tgz linux dslinux.nds ) \
+		( cd $(IMAGEDIR); tar -cvzf dslinux-supercardcf.tgz linux dslinux.nds ) \
 	else \
 	        $(CROSS_COMPILE)objcopy -O binary \
                         --remove-section=.text --remove-section=.init \
