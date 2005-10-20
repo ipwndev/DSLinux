@@ -1,0 +1,126 @@
+#
+#	Makefile -- Build instructions for ATMEL/AT91
+#
+
+include $(LINUX_CONFIG)
+
+ROMFSIMG = $(IMAGEDIR)/romfs.img
+ELFIMAGE = $(IMAGEDIR)/image.elf
+ifdef CONFIG_NDS_NDS
+IMAGE    = $(IMAGEDIR)/dslinux.nds.gba
+else
+IMAGE    = $(IMAGEDIR)/dslinux.ds.gba
+endif
+
+
+ROMFS_DIRS = dev etc proc sbin gbamp/linux
+
+FS_DIRS = home lib usr/bin var/tmp
+
+DEVICES = \
+	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
+	\
+	mem,c,1,1      kmem,c,1,2         null,c,1,3       ram0,b,1,0 \
+	ram1,b,1,1 	   hda,b,3,0          hda1,b,3,1 \
+	\
+	ptyp0,c,2,0    ptyp1,c,2,1        ptyp2,c,2,2      ptyp3,c,2,3 \
+	ptyp4,c,2,4    ptyp5,c,2,5        ptyp6,c,2,6      ptyp7,c,2,7 \
+	ptyp8,c,2,8    ptyp9,c,2,9        ptypa,c,2,10     ptypb,c,2,11 \
+	ptypc,c,2,12   ptypd,c,2,13       ptype,c,2,14     ptypf,c,2,15 \
+	\
+	dsp,c,14,0\
+	\
+	fb0,c,29,0\
+	\
+	rom0,b,31,0    rom1,b,31,1        rom2,b,31,2      rom3,b,31,3 \
+	rom4,b,31,4    rom5,b,31,5        rom6,b,31,6      rom7,b,31,7 \
+	rom8,b,31,8    rom9,b,31,9 \
+	\
+	tty0,c,4,0     tty1,c,4,1         tty2,c,4,2       tty3,c,4,3 \
+	tty4,c,4,4     tty5,c,4,5         tty6,c,4,6       tty7,c,4,7 \
+	\
+	ttyp0,c,3,0    ttyp1,c,3,1        ttyp2,c,3,2      ttyp3,c,3,3 \
+	ttyp4,c,3,4    ttyp5,c,3,5        ttyp6,c,3,6      ttyp7,c,3,7 \
+	ttyp8,c,3,8    ttyp9,c,3,9        ttypa,c,3,10     ttypb,c,3,11 \
+	ttypc,c,3,12   ttypd,c,3,13       ttype,c,3,14     ttypf,c,3,15 \
+	\
+	zero,c,1,5     random,c,1,8       urandom,c,1,9
+
+
+clean:
+
+romfs:
+	-rm -r $(ROMFSDIR)
+	[ -d $(ROMFSDIR)/$$i ] || mkdir -p $(ROMFSDIR)
+	for i in $(ROMFS_DIRS); do \
+		[ -d $(ROMFSDIR)/$$i ] || mkdir -p $(ROMFSDIR)/$$i; \
+	done
+	for i in $(DEVICES); do \
+		touch $(ROMFSDIR)/dev/@$$i; \
+	done
+	# these permissions are needed for openpty and family to work
+	# on non-ptmx ptys
+	chmod 620 $(ROMFSDIR)/dev/@[pt]ty[pqrsPQRS][0-9a-f],*
+	for i in $(FS_DIRS); do \
+		[ -d $(ROMFSDIR)/gbamp/linux/$$i ] || mkdir -p $(ROMFSDIR)/gbamp/linux/$$i; \
+	done
+	$(ROMFSINST) -s gbamp/linux/var /var
+	$(ROMFSINST) -s gbamp/linux/lib /lib
+	$(ROMFSINST) -s gbamp/linux/usr /usr
+	$(ROMFSINST) -s gbamp/linux/usr/bin /bin
+	$(ROMFSINST) -s gbamp/linux/home /home
+	$(ROMFSINST) -s /var/tmp /tmp
+	$(ROMFSINST) /etc/rc
+	$(ROMFSINST) /etc/inittab
+	$(ROMFSINST) /etc/motd
+	$(ROMFSINST) /etc/issue
+	$(ROMFSINST) /etc/passwd
+	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
+
+image:
+	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
+	[ -d $(IMAGEDIR)/linux ] || mkdir -p $(IMAGEDIR)/linux
+	$(CROSS_COMPILE)flthdr -z $(ROMFSDIR)/bin/*
+	rm -r $(ROMFSDIR)/bin
+	mkdir $(ROMFSDIR)/bin
+	-for i in `sort $(ROOTDIR)/user/busybox/busybox.links` ; do\
+		j=`basename $$i` ; \
+		mv $(ROMFSDIR)/gbamp/linux/usr/bin/$$j $(ROMFSDIR)/bin ; \
+	done
+	-mv $(ROMFSDIR)/gbamp/linux/usr/bin/busybox $(ROMFSDIR)/bin ;
+	-mv $(ROMFSDIR)/gbamp/linux/usr/bin/mount $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/gbamp/linux/usr/bin/sh $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/gbamp/linux/usr/bin/login $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/gbamp/linux/usr/bin/init $(ROMFSDIR)/bin
+	-rm -r $(IMAGEDIR)/linux
+	mv $(ROMFSDIR)/gbamp/linux $(IMAGEDIR)
+	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
+	if [ "$(CONFIG_NDS_NDS)" = "y" ]; then \
+		BSS=`$(CROSS_COMPILE)objdump --headers $(ROOTDIR)/$(LINUXDIR)/linux | \
+		grep .bss` ; \
+		BSSADDR=`set -- $${BSS} ; echo 0x$${4}` ; \
+		BSSSIZE=`set -- $${BSS} ; echo 0x$${3}` ; \
+		ADDR=`echo $${BSSADDR} $${BSSSIZE} | \
+		perl -ane 'printf "0x%x\n",hex($$F[0]) + hex($$F[1])' ` ; \
+		echo "BSS=$${BSSADDR},$${BSSSIZE} ADDR=$${ADDR}" ; \
+		$(CROSS_COMPILE)objcopy --add-section=.romfs=$(ROMFSIMG) \
+		--adjust-section-vma=.romfs=$${ADDR} --no-adjust-warnings \
+		--set-section-flags=.romfs=alloc,load,data   \
+		$(ROOTDIR)/$(LINUXDIR)/linux $(ELFIMAGE) 2> /dev/null ; \
+		$(CROSS_COMPILE)objcopy -O binary $(ELFIMAGE) $(IMAGEDIR)/arm9.bin ; \
+		ndstool -c $(IMAGEDIR)/dslinux.nds -9 $(IMAGEDIR)/arm9.bin \
+			-r9 0x02000000 -e9 0x02000000  \
+			-7 $(ROOTDIR)/$(LINUXDIR)/arch/armnommu/mach-nds/arm7.bin \
+		       	-r7 0x03800000 -e7 0x03800000  \
+			-b tux.bmp "DSLinux;Port of Linux;to the DS!" ; \
+		( cd $(IMAGEDIR); tar -cvzf dslinux-gbamp.tgz linux dslinux.nds ) \
+	else \
+	        $(CROSS_COMPILE)objcopy -O binary \
+                        --remove-section=.text --remove-section=.init \
+                        $(ROOTDIR)/$(LINUXDIR)/linux $(IMAGEDIR)/linux.data ; \
+		$(CROSS_COMPILE)objcopy -O binary \
+                        -j .init -j .text \
+                        $(ROOTDIR)/$(LINUXDIR)/linux $(IMAGEDIR)/linux.text ; \
+		cat $(IMAGEDIR)/linux.text $(IMAGEDIR)/linux.data $(ROMFSIMG) > $(IMAGE) ; \
+	fi
+
