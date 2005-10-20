@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.9-uc0
-# Tue Sep 27 09:03:26 2005
+# Thu Oct 20 19:04:22 2005
 #
 CONFIG_ARM=y
 CONFIG_UCLINUX=y
@@ -272,6 +272,9 @@ CONFIG_BLK_DEV_IDEDISK=y
 #
 CONFIG_IDE_GENERIC=y
 CONFIG_IDE_ARM=y
+CONFIG_IDE_NDS_GBAMP=y
+# CONFIG_IDE_NDS_M3 is not set
+# CONFIG_IDE_NDS_SUPERCARD is not set
 # CONFIG_BLK_DEV_IDEDMA is not set
 # CONFIG_IDEDMA_AUTO is not set
 # CONFIG_BLK_DEV_HD is not set
