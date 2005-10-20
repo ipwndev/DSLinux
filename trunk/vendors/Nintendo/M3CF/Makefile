@@ -13,7 +13,7 @@ IMAGE    = $(IMAGEDIR)/dslinux.ds.gba
 endif
 
 
-ROMFS_DIRS = dev etc proc sbin gbamp/linux
+ROMFS_DIRS = dev etc proc sbin m3/linux
 
 FS_DIRS = home lib usr/bin var/tmp
 
@@ -62,13 +62,13 @@ romfs:
 	# on non-ptmx ptys
 	chmod 620 $(ROMFSDIR)/dev/@[pt]ty[pqrsPQRS][0-9a-f],*
 	for i in $(FS_DIRS); do \
-		[ -d $(ROMFSDIR)/gbamp/linux/$$i ] || mkdir -p $(ROMFSDIR)/gbamp/linux/$$i; \
+		[ -d $(ROMFSDIR)/m3/linux/$$i ] || mkdir -p $(ROMFSDIR)/gbamp/linux/$$i; \
 	done
-	$(ROMFSINST) -s gbamp/linux/var /var
-	$(ROMFSINST) -s gbamp/linux/lib /lib
-	$(ROMFSINST) -s gbamp/linux/usr /usr
-	$(ROMFSINST) -s gbamp/linux/usr/bin /bin
-	$(ROMFSINST) -s gbamp/linux/home /home
+	$(ROMFSINST) -s m3/linux/var /var
+	$(ROMFSINST) -s m3/linux/lib /lib
+	$(ROMFSINST) -s m3/linux/usr /usr
+	$(ROMFSINST) -s m3/linux/usr/bin /bin
+	$(ROMFSINST) -s m3/linux/home /home
 	$(ROMFSINST) -s /var/tmp /tmp
 	$(ROMFSINST) /etc/rc
 	$(ROMFSINST) /etc/inittab
@@ -85,15 +85,15 @@ image:
 	mkdir $(ROMFSDIR)/bin
 	-for i in `sort $(ROOTDIR)/user/busybox/busybox.links` ; do\
 		j=`basename $$i` ; \
-		mv $(ROMFSDIR)/gbamp/linux/usr/bin/$$j $(ROMFSDIR)/bin ; \
+		mv $(ROMFSDIR)/m3/linux/usr/bin/$$j $(ROMFSDIR)/bin ; \
 	done
-	-mv $(ROMFSDIR)/gbamp/linux/usr/bin/busybox $(ROMFSDIR)/bin ;
-	-mv $(ROMFSDIR)/gbamp/linux/usr/bin/mount $(ROMFSDIR)/bin
-	-mv $(ROMFSDIR)/gbamp/linux/usr/bin/sh $(ROMFSDIR)/bin
-	-mv $(ROMFSDIR)/gbamp/linux/usr/bin/login $(ROMFSDIR)/bin
-	-mv $(ROMFSDIR)/gbamp/linux/usr/bin/init $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/m3/linux/usr/bin/busybox $(ROMFSDIR)/bin ;
+	-mv $(ROMFSDIR)/m3/linux/usr/bin/mount $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/m3/linux/usr/bin/sh $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/m3/linux/usr/bin/login $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/m3/linux/usr/bin/init $(ROMFSDIR)/bin
 	-rm -r $(IMAGEDIR)/linux
-	mv $(ROMFSDIR)/gbamp/linux $(IMAGEDIR)
+	mv $(ROMFSDIR)/m3/linux $(IMAGEDIR)
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
 	if [ "$(CONFIG_NDS_NDS)" = "y" ]; then \
 		BSS=`$(CROSS_COMPILE)objdump --headers $(ROOTDIR)/$(LINUXDIR)/linux | \
@@ -113,7 +113,7 @@ image:
 			-7 $(ROOTDIR)/$(LINUXDIR)/arch/armnommu/mach-nds/arm7.bin \
 		       	-r7 0x03800000 -e7 0x03800000  \
 			-b tux.bmp "DSLinux;Port of Linux;to the DS!" ; \
-		( cd $(IMAGEDIR); tar -cvzf dslinux-gbamp.tgz linux dslinux.nds ) \
+		( cd $(IMAGEDIR); tar -cvzf dslinux-m3cf.tgz linux dslinux.nds ) \
 	else \
 	        $(CROSS_COMPILE)objcopy -O binary \
                         --remove-section=.text --remove-section=.init \
