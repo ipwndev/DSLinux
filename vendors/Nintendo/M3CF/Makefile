@@ -62,7 +62,7 @@ romfs:
 	# on non-ptmx ptys
 	chmod 620 $(ROMFSDIR)/dev/@[pt]ty[pqrsPQRS][0-9a-f],*
 	for i in $(FS_DIRS); do \
-		[ -d $(ROMFSDIR)/m3/linux/$$i ] || mkdir -p $(ROMFSDIR)/gbamp/linux/$$i; \
+		[ -d $(ROMFSDIR)/m3/linux/$$i ] || mkdir -p $(ROMFSDIR)/m3/linux/$$i; \
 	done
 	$(ROMFSINST) -s m3/linux/var /var
 	$(ROMFSINST) -s m3/linux/lib /lib
