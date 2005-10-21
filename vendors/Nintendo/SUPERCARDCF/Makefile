@@ -62,7 +62,7 @@ romfs:
 	# on non-ptmx ptys
 	chmod 620 $(ROMFSDIR)/dev/@[pt]ty[pqrsPQRS][0-9a-f],*
 	for i in $(FS_DIRS); do \
-		[ -d $(ROMFSDIR)/supercard/linux/$$i ] || mkdir -p $(ROMFSDIR)/gbamp/linux/$$i; \
+		[ -d $(ROMFSDIR)/supercard/linux/$$i ] || mkdir -p $(ROMFSDIR)/supercard/linux/$$i; \
 	done
 	$(ROMFSINST) -s supercard/linux/var /var
 	$(ROMFSINST) -s supercard/linux/lib /lib
