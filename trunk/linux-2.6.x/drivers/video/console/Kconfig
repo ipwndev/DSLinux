@@ -171,6 +171,10 @@ config FONT_MINI_4x6
 	bool "Mini 4x6 font"
 	depends on !SPARC32 && !SPARC64 && FONTS
 
+config FONT_MINI_6x6
+	bool "Mini 6x6 font"
+	depends on !SPARC32 && !SPARC64 && FONTS
+
 config FONT_SUN8x16
 	bool "Sparc console 8x16 font"
 	depends on FRAMEBUFFER_CONSOLE && (!SPARC32 && !SPARC64 && FONTS || SPARC32 || SPARC64)
