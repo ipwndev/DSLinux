@@ -475,6 +475,7 @@ CONFIG_FONTS=y
 # CONFIG_FONT_PEARL_8x8 is not set
 # CONFIG_FONT_ACORN_8x8 is not set
 CONFIG_FONT_MINI_4x6=y
+# CONFIG_FONT_MINI_6x6 is not set
 # CONFIG_FONT_SUN8x16 is not set
 # CONFIG_FONT_SUN12x22 is not set
 
