@@ -22,6 +22,7 @@ DEVICES = \
 	\
 	mem,c,1,1      kmem,c,1,2         null,c,1,3       ram0,b,1,0 \
 	ram1,b,1,1 	   hda,b,3,0          hda1,b,3,1 \
+	hda2,b,3,2     hda3,b,3,3         hda4,b,3,4 \
 	\
 	ptyp0,c,2,0    ptyp1,c,2,1        ptyp2,c,2,2      ptyp3,c,2,3 \
 	ptyp4,c,2,4    ptyp5,c,2,5        ptyp6,c,2,6      ptyp7,c,2,7 \
