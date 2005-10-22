@@ -29,7 +29,7 @@ static short ndsbuttons[] = {
 };
 #else
 static short ndsbuttons[] = { 
-	KEY_ENTER, KEY_ESC, BTN_SELECT, BTN_START,
+	KEY_ENTER, KEY_SPACE, BTN_SELECT, BTN_START,
        	KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN,
 	KEY_RIGHTCTRL, KEY_LEFTSHIFT
 };
