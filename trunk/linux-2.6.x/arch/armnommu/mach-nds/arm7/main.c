@@ -21,6 +21,7 @@ extern void swiWaitForVBlank( void );
 #define IRQ_RECV	(1 << 18)
 
 #define XKEYS		(*(volatile u16*)0x04000136)
+#define TOUCH_RELEASED 0x40
 
 #define TOUCH_CAL_X1 (*(volatile s16*)0x027FFCD8)
 #define TOUCH_CAL_Y1 (*(volatile s16*)0x027FFCDA)
@@ -32,17 +33,17 @@ extern void swiWaitForVBlank( void );
 #define TOUCH_CNTRL_X2   (*(volatile u8*)0x027FFCE2)
 #define TOUCH_CNTRL_Y2   (*(volatile u8*)0x027FFCE3) 
 
-#define SERIAL_CR      (*(volatile u16*)0x040001C0)
-#define SERIAL_DATA    (*(volatile u16*)0x040001C2)
+#define SERIAL_CR	(*(volatile u16*)0x040001C0)
+#define SERIAL_DATA	(*(volatile u16*)0x040001C2)
 
 #define SERIAL_ENABLE   0x8000
-#define SERIAL_BUSY     0x80
+#define SERIAL_BUSY	0x80
 
-#define TSC_MEASURE_Y        0x90
-#define TSC_MEASURE_BATTERY  0xA4
-#define TSC_MEASURE_Z1       0xB0
-#define TSC_MEASURE_Z2       0xC0
-#define TSC_MEASURE_X        0xD0
+#define TSC_MEASURE_Y		0x90
+#define TSC_MEASURE_BATTERY	0xA4
+#define TSC_MEASURE_Z1		0xB0
+#define TSC_MEASURE_Z2		0xC0
+#define TSC_MEASURE_X		0xD0
 
 #define MIN(x,y) ((x)<(y)?(x):(y))
 #define MAX(x,y) ((x)>(y)?(x):(y))
@@ -56,7 +57,8 @@ static s16 touch_height;
 static s16 touch_cal_x1;
 static s16 touch_cal_y1;
 
-u16 touchRead(u32 command) {
+u16 touchRead(u32 command)
+{
 	u16 result;
 	while (SERIAL_CR & SERIAL_BUSY) swiDelay(1);
 
@@ -81,77 +83,84 @@ u16 touchRead(u32 command) {
 
 void poweroff( void )
 {
-    while (SERIAL_CR & SERIAL_BUSY) swiDelay(1);
+	while (SERIAL_CR & SERIAL_BUSY) swiDelay(1);
 
 	// Write the command and wait for it to complete
 	SERIAL_CR = SERIAL_ENABLE | 0x802;
-    SERIAL_DATA = 0x00;
-    while (SERIAL_CR & SERIAL_BUSY) swiDelay(1);
+	SERIAL_DATA = 0x00;
+	while (SERIAL_CR & SERIAL_BUSY) swiDelay(1);
 
 	// Write the data
 	SERIAL_CR = SERIAL_ENABLE | 0x002;
-    SERIAL_DATA = 0x40;
+	SERIAL_DATA = 0x40;
 
+}
+
+/* recieve outstanding FIFO commands from ARM9 */
+static void recieveFIFOCommand(void)
+{
+	u32 data;
+
+	while ( ! ( REG_IPCFIFOCNT & (1<<3) ) )
+	{
+		data = REG_IPCFIFORECV;
+		/* Currently, poweroff is the only command we handle. */
+		if ( data & FIFO_POWER )
+			poweroff() ;
+	}
+}
+
+/* sends touch state to ARM9 */
+static void sendTouchState(u16 buttons)
+{
+	u16 x,y;
+	static u8 lastx = 0, lasty = 0;
+
+	if ( buttons & TOUCH_RELEASED )
+	{
+		lastx = -1 ;
+		lasty = -1 ;
+		REG_IPCFIFOSEND = FIFO_TOUCH ;
+	} else { /* Some dude is smacking his fingerprint on the touchscreen. */
+		x = touchRead(TSC_MEASURE_X);
+		y = touchRead(TSC_MEASURE_Y);
+		x = ( (x - touch_cal_x1) * cntrl_width) /
+			(touch_width) + touch_cntrl_x1;
+		y = ( (y - touch_cal_y1) * cntrl_height) /
+			(touch_height) + touch_cntrl_y1;
+		x = MIN(255,MAX(x,0));
+		y = MIN(191,MAX(y,0));
+
+		if ( lastx + 6 > x && lastx < x + 6 &&
+		     lasty + 6 > y && lasty < y + 6 )
+		{
+			REG_IPCFIFOSEND = FIFO_TOUCH | 1 << 16 | x << 8 | y ;
+		}
+		lastx = x ;
+		lasty = y ;
+	}
 }
 
 void InterruptHandler(void)
 {
 	u16 buttons;
-	u32 data;
-	u16 x,y;
-	static u8 lastx = 0, lasty = 0;
 
 	if ( NDS_IF & IRQ_RECV )
-	{
-		/* Read any FIFO messages */
-		while ( ! ( REG_IPCFIFOCNT & (1<<3) ) )
-		{
-			data = REG_IPCFIFORECV;
-            if ( data & FIFO_POWER )
-            {
-                poweroff() ;
-            }
-		}
-	}
+		recieveFIFOCommand();
+
 	if ( NDS_IF & IRQ_VBLANK )
 	{
-
 		/* read the X, Y and touch buttons */
 		buttons = XKEYS;
 
-		/* send to ARM9 */
+		/* send button state to ARM9 */
 		REG_IPCFIFOSEND = FIFO_BUTTONS | buttons;
 
-		if (! (buttons & 0x40) )
-		{
-			x = touchRead(TSC_MEASURE_X);
-			y = touchRead(TSC_MEASURE_Y);
-			x = ( (x - touch_cal_x1) * cntrl_width) /
-				(touch_width) + touch_cntrl_x1;
-			y = ( (y - touch_cal_y1) * cntrl_height) /
-				(touch_height) + touch_cntrl_y1;
-			x = MIN(255,MAX(x,0));
-			y = MIN(191,MAX(y,0));
-			
-			if ( lastx + 6 > x && lastx < x + 6 &&
-			     lasty + 6 > y && lasty < y + 6 )
-			{
-				REG_IPCFIFOSEND = FIFO_TOUCH | 1 << 16 | x << 8 | y ;
-			}
-			lastx = x ;
-			lasty = y ;
-		}
-		else
-		{
-			lastx = -1 ;
-			lasty = -1 ;
-			REG_IPCFIFOSEND = FIFO_TOUCH ;
-		}
+		sendTouchState(buttons);
 
 		/* clear FIFO errors (just in case) */
 		if ( REG_IPCFIFOCNT & (1<<14) )
 			REG_IPCFIFOCNT |= (1<<15) | (1<<14);
-
 	}
 
 	/* Acknowledge Interrupts */
@@ -192,3 +201,4 @@ int main( void )
 		swiWaitForVBlank();
 	}
 }
+
