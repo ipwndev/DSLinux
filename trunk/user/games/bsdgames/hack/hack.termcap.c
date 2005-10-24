@@ -80,7 +80,7 @@ static char     tbuf[512];
 char           *HO, *CL, *CE, *UP, *CM, *ND, *XD, *BC, *SO, *SE, *TI, *TE;
 static char    *VS, *VE;
 static int      SG;
-char            PC = '\0';
+char            hack_PC = '\0';
 char           *CD;		/* tested in pri.c: docorner() */
 int             CO, LI;		/* used in pri.c and whatis.c */
 
@@ -101,7 +101,7 @@ startup()
 	if (tgetent(tptr, term) < 1)
 		error("Unknown terminal type: %s.", term);
 	if ((pc = tgetstr("pc", &tbufptr)) != NULL)
-		PC = *pc;
+		hack_PC = *pc;
 	if (!(BC = tgetstr("bc", &tbufptr))) {
 		if (!tgetflag("bs"))
 			error("Terminal must backspace.");
@@ -326,7 +326,7 @@ bell()
 }
 
 void
-delay_output()
+hack_delay_output()
 {
 
 	/* delay 50 ms - could also use a 'nap'-system call */
