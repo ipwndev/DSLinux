@@ -171,7 +171,7 @@ tmp_at(x, y)
 		return;
 	}
 	if (prevx >= 0 && cansee(prevx, prevy)) {
-		delay_output();
+		hack_delay_output();
 		prl(prevx, prevy);	/* in case there was a monster */
 		at(prevx, prevy, levl[prevx][prevy].scrsym);
 	}
@@ -218,7 +218,7 @@ Tmp_at(x, y)
 	/* normal call */
 	if (cansee(x, y)) {
 		if (cnt)
-			delay_output();
+			hack_delay_output();
 		at(x, y, let);
 		tc[cnt].x = x;
 		tc[cnt].y = y;
