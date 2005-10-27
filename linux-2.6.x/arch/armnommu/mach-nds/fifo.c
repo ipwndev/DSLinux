@@ -15,6 +15,7 @@
 #include <linux/init.h> 
 #include <linux/interrupt.h> 
 
+#include <asm/semaphore.h>
 #include <asm/irq.h>
 #include <asm/io.h>
 
@@ -25,6 +26,7 @@
 #define REG_IPCFIFOCNT  (*(volatile u16*) 0x04000184)
 
 struct fifo_cb *cbhead = NULL ;
+static DECLARE_MUTEX(cbhead_mtx);
 
 static irqreturn_t ndsfifo_interrupt(int irq, void *dev_id, struct pt_regs *regs)
 {
@@ -58,9 +60,29 @@ static irqreturn_t ndsfifo_interrupt(int irq, void *dev_id, struct pt_regs *regs
 
 int register_fifocb( struct fifo_cb *fifo_cb )
 {
+	down(&cbhead_mtx);
 	fifo_cb->next = cbhead ;
 	cbhead = fifo_cb ;
+	up(&cbhead_mtx);
 	return 0 ;
+}
+
+int unregister_fifocb(struct fifo_cb *fifo_cb)
+{
+	struct fifo_cb *cb;
+
+	down(&cbhead_mtx);
+	for (cb = cbhead; cb; cb = cb->next) {
+		if (cb->next == NULL) { /* fifo_cb not found in list */
+			up(&cbhead_mtx);
+			return -EINVAL;
+		} else if (cb->next == fifo_cb) {
+			cb->next = cb->next->next;
+			break;
+		}
+	}
+	up(&cbhead_mtx);
+	return 0;
 }
 
 static int __init ndsfifo_init(void)

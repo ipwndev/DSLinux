@@ -35,7 +35,7 @@ struct fifo_cb
 	u32 type ;
 	union
 	{
-		void (*button_handler)( u8 state ) ;
+		void (*button_handler)( u32 state ) ;
 		void (*touch_handler)( u8 pressed, u8 x, u8 y ) ;
 		/* ... */
 	} handler ;
@@ -43,5 +43,6 @@ struct fifo_cb
 };
 
 int register_fifocb( struct fifo_cb *fifo_cb ) ;
+int unregister_fifocb( struct fifo_cb *fifo_cb ) ;
 
 #endif /* __ASM_ARM_ARCH_FIFO_H */
