@@ -484,6 +484,9 @@ asmlinkage void __init start_kernel(void)
  * Interrupts are still disabled. Do necessary setups, then
  * enable them
  */
+#if 0
+	nds_console_init();
+#endif
 	lock_kernel();
 	page_address_init();
 	printk(linux_banner);
