@@ -73,6 +73,14 @@ config MTD_SRAM
 
 	  It is based on the phram driver above.
 
+config MTD_FIRMWARE
+	tristate "Firmware"
+	depends on MTD
+	help
+	  This is a driver for the firmware in the nds.
+
+	  It is based on the phram driver above.
+
 config MTD_LART
 	tristate "28F160xx flash driver for LART"
 	depends on SA1100_LART && MTD
