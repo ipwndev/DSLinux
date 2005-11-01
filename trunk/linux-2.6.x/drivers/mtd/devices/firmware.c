@@ -64,7 +64,7 @@ static int register_device(char *name, unsigned long len)
 	ret = -EAGAIN;
 	if (add_mtd_device(mtdinfo)) {
 		ERROR("Failed to register new device\n");
-		goto out3;
+		goto out2;
 	}
 
 	return 0;
