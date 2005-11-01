@@ -12,4 +12,10 @@ SECTIONS
   _stext = .;
   *(.text)
  }
+ .bss : {
+  __bss_start = .; /* BSS               */
+  *(.bss)
+  *(COMMON)
+  _end = . ;
+ }
 }
