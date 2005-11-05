@@ -57,6 +57,8 @@ static s16 touch_height;
 static s16 touch_cal_x1;
 static s16 touch_cal_y1;
 
+extern u32 nds_get_time7(void);
+
 u16 touchRead(u32 command)
 {
 	u16 result;
@@ -100,13 +102,20 @@ void poweroff( void )
 static void recieveFIFOCommand(void)
 {
 	u32 data;
+    u32 seconds = 0;
 
-	while ( ! ( REG_IPCFIFOCNT & (1<<3) ) )
+	while ( ! ( REG_IPCFIFOCNT & (1<<8) ) )
 	{
 		data = REG_IPCFIFORECV;
-		/* Currently, poweroff is the only command we handle. */
+
 		if ( data & FIFO_POWER )
 			poweroff() ;
+		else if ( data & FIFO_TIME )
+		{
+			seconds = nds_get_time7();
+			REG_IPCFIFOSEND = ( FIFO_TIME | FIFO_HIGH_BITS | (seconds>>16)      );
+			REG_IPCFIFOSEND = ( FIFO_TIME | FIFO_LOW_BITS  | (seconds & 0xFFFF) );
+		}
 	}
 }
 

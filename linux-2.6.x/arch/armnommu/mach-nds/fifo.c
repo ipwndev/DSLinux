@@ -48,6 +48,9 @@ static irqreturn_t ndsfifo_interrupt(int irq, void *dev_id, struct pt_regs *regs
 					case FIFO_TOUCH:
 						cb->handler.touch_handler( (data & (1<<16)) >> 16, (data & (0xff<<8)) >> 8, data & 0xff ) ;
 						break;
+                    case FIFO_TIME:
+                        cb->handler.time_handler( data & 0xffffff ) ;
+                        break;
 					default:
 						break;
 				}

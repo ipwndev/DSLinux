@@ -25,6 +25,10 @@
 #define FIFO_WIFI     (1<<27)
 #define FIFO_SOUND    (1<<28)
 #define FIFO_POWER    (1<<29)
+#define FIFO_TIME     (1<<30)
+
+#define FIFO_HIGH_BITS  (1<<16)
+#define FIFO_LOW_BITS   (1<<17)
 
 #define REG_IPCFIFOSEND (*(volatile u32*) 0x04000188)
 #define REG_IPCFIFORECV (*(volatile u32*) 0x04100000)
@@ -37,6 +41,7 @@ struct fifo_cb
 	{
 		void (*button_handler)( u32 state ) ;
 		void (*touch_handler)( u8 pressed, u8 x, u8 y ) ;
+		void (*time_handler)( u32 seconds ) ;
 		/* ... */
 	} handler ;
 	struct fifo_cb *next ;
