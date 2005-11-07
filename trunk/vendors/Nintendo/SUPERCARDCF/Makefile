@@ -13,9 +13,9 @@ IMAGE    = $(IMAGEDIR)/dslinux.ds.gba
 endif
 
 
-ROMFS_DIRS = dev etc proc sbin supercard/linux
+ROMFS_DIRS = bin dev etc lib proc sbin supercard/linux
 
-FS_DIRS = home lib usr/bin var/tmp
+FS_DIRS = home usr/lib usr/bin var/tmp
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
@@ -65,9 +65,7 @@ romfs:
 		[ -d $(ROMFSDIR)/supercard/linux/$$i ] || mkdir -p $(ROMFSDIR)/supercard/linux/$$i; \
 	done
 	$(ROMFSINST) -s supercard/linux/var /var
-	$(ROMFSINST) -s supercard/linux/lib /lib
 	$(ROMFSINST) -s supercard/linux/usr /usr
-	$(ROMFSINST) -s supercard/linux/usr/bin /bin
 	$(ROMFSINST) -s supercard/linux/home /home
 	$(ROMFSINST) -s /var/tmp /tmp
 	$(ROMFSINST) /etc/rc
@@ -81,17 +79,6 @@ image:
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
 	[ -d $(IMAGEDIR)/linux ] || mkdir -p $(IMAGEDIR)/linux
 	$(CROSS_COMPILE)flthdr -z $(ROMFSDIR)/bin/*
-	rm -r $(ROMFSDIR)/bin
-	mkdir $(ROMFSDIR)/bin
-	-for i in `sort $(ROOTDIR)/user/busybox/busybox.links` ; do\
-		j=`basename $$i` ; \
-		mv $(ROMFSDIR)/supercard/linux/usr/bin/$$j $(ROMFSDIR)/bin ; \
-	done
-	-mv $(ROMFSDIR)/supercard/linux/usr/bin/busybox $(ROMFSDIR)/bin ;
-	-mv $(ROMFSDIR)/supercard/linux/usr/bin/mount $(ROMFSDIR)/bin
-	-mv $(ROMFSDIR)/supercard/linux/usr/bin/sh $(ROMFSDIR)/bin
-	-mv $(ROMFSDIR)/supercard/linux/usr/bin/login $(ROMFSDIR)/bin
-	-mv $(ROMFSDIR)/supercard/linux/usr/bin/init $(ROMFSDIR)/bin
 	-rm -r $(IMAGEDIR)/linux
 	mv $(ROMFSDIR)/supercard/linux $(IMAGEDIR)
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
@@ -122,5 +109,6 @@ image:
                         -j .init -j .text \
                         $(ROOTDIR)/$(LINUXDIR)/linux $(IMAGEDIR)/linux.text ; \
 		cat $(IMAGEDIR)/linux.text $(IMAGEDIR)/linux.data $(ROMFSIMG) > $(IMAGE) ; \
+		( cd $(IMAGEDIR); tar -cvzf dslinux-supercardcf.tgz linux dslinux.ds.gba ) \
 	fi
 
