@@ -47,16 +47,6 @@ static void M3_Unlock( void )
 }
 #endif
 
-#ifdef CONFIG_IDE_NDS_SUPERCARD
-static void Supercard_Unlock( void )
-{
-	*(volatile u16 *)0x09fffffe = 0xa55a ;
-	*(volatile u16 *)0x09fffffe = 0xa55a ;
-	*(volatile u16 *)0x09fffffe = 0x3 ;
-	*(volatile u16 *)0x09fffffe = 0x3 ;
-}
-#endif
-
 void __init ide_arm_init(void)
 {
 	if (IDE_ARM_HOST) {
@@ -64,9 +54,6 @@ void __init ide_arm_init(void)
 		int i;
 
 		memset(&hw, 0, sizeof(hw));
-#ifdef CONFIG_IDE_NDS_SUPERCARD
-		Supercard_Unlock();
-#endif
 #ifdef CONFIG_IDE_NDS_M3
 		M3_Unlock();
 		for (i=0; i<8; i++)
