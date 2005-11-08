@@ -9,7 +9,7 @@ ELFIMAGE = $(IMAGEDIR)/image.elf
 ifdef CONFIG_NDS_NDS
 IMAGE    = $(IMAGEDIR)/dslinux.nds.gba
 else
-IMAGE    = $(IMAGEDIR)/dslinux.ds.gba
+IMAGE    = $(IMAGEDIR)/dslinux.ds.nds
 endif
 
 
@@ -109,6 +109,6 @@ image:
                         -j .init -j .text \
                         $(ROOTDIR)/$(LINUXDIR)/linux $(IMAGEDIR)/linux.text ; \
 		cat $(IMAGEDIR)/linux.text $(IMAGEDIR)/linux.data $(ROMFSIMG) > $(IMAGE) ; \
-		( cd $(IMAGEDIR); tar -cvzf dslinux-supercardcf.tgz linux dslinux.ds.gba ) \
+		( cd $(IMAGEDIR); tar -cvzf dslinux-supercardcf.tgz linux dslinux.ds.nds ) \
 	fi
 
