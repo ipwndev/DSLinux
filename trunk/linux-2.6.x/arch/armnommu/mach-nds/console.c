@@ -291,7 +291,7 @@ const struct charmap	nds_console_charmap[] = {
 
 void nds_console_inittext(void)
 {
-	unsigned short	*vp = (unsigned short *) NDS_TILE;
+	volatile unsigned short	*vp = (volatile unsigned short *) NDS_TILE;
 	struct charmap	*cp;
 	unsigned char	bits;
 	int		i, j, r, b;
@@ -372,7 +372,7 @@ void nds_console_console_putc(char c)
 
 /****************************************************************************/
 
-static void nds_console_write(struct console *co, const char *s,
+extern void nds_console_write(struct console *co, const char *s,
 			       unsigned count)
 {
 	unsigned i;
@@ -393,6 +393,10 @@ static int __init nds_console_setup(struct console *co, char *options)
 {
 	volatile unsigned short	*pp;
 	int			i;
+
+	/* VRAM setup */
+	*(volatile u32*)0x04000000 = 0x00010100 ;
+	*(volatile u8*)0x04000240 = 0x81 ;
 
 	/* Enable mode 0 */
 	*((unsigned short *) NDS_DISPCNT) = NDS_DISPCNT_F;	/*MODE0|BG0*/
@@ -446,12 +450,13 @@ static struct console sercons =
  *    Register console.
  */
 
-static int __init nds_console_init(void)
+extern int __init nds_console_init(void)
 {
-	register_console(&sercons);
+//	register_console(&sercons);
+	nds_console_setup(NULL,NULL);
 
 	return 0;
 }
 
-console_initcall(nds_console_init);
+//console_initcall(nds_console_init);
 
