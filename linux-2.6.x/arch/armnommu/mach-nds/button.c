@@ -19,10 +19,10 @@
 #include <asm/io.h>
 #include <asm/arch/fifo.h>
 
+#define REG_KEYINPUT *(volatile u16*) 0x04000130;
 static struct input_dev ndsbutton_dev;
 
 #if 0
-static short ndsbuttons[] = { 
 	BTN_A, BTN_B, BTN_SELECT, BTN_START,
        	BTN_0, BTN_1, BTN_2, BTN_3,
 	BTN_THUMBR, BTN_THUMBL
@@ -41,7 +41,7 @@ static short ndsbuttons2[] = {
 static irqreturn_t ndsbutton_interrupt(int irq, void *dev_id, struct pt_regs *regs)
 {
 	int i;
-	u16 state = *(volatile u16*) 0x04000130 ;
+	u16 state = REG_KEYINPUT;
 
 	for (i = 0 ; i < (sizeof(ndsbuttons)/sizeof(ndsbuttons[0])) ; i++)
 		input_report_key(&ndsbutton_dev, ndsbuttons[i], !((state >> i) & 1));
@@ -59,7 +59,6 @@ static void ndsbutton_xkeys(u32 state)
 		input_report_key(&ndsbutton_dev, ndsbuttons2[i], !((state >> i) & 1));
 	}
         input_sync(&ndsbutton_dev);
-
 }
 
 static struct fifo_cb ndsbutton_fifocb = {
