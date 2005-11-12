@@ -1,52 +1,12 @@
 
 #include "asm/types.h"
 #include "asm/arch/fifo.h"
+#include "asm/arch/ipcsync.h"
+#include "asm/arch/shmemipc.h"
 
-extern void swiDelay( u32 duration );
-extern void swiWaitForVBlank( void );
-
-#define REG_IPCFIFOSEND	(*(volatile u32*) 0x04000188)
-#define REG_IPCFIFORECV	(*(volatile u32*) 0x04100000)
-#define REG_IPCFIFOCNT	(*(volatile u16*) 0x04000184)
-
-#define NDS_IE		(*(volatile u32*)0x04000210)	/* Interrupt mask */
-#define NDS_IF		(*(volatile u32*)0x04000214)	/* Interrup service */
-#define NDS_IME		(*(volatile u32*)0x04000208)	/* Enable/disable */
-
-#define DISP_SR		(*(volatile u16*)0x04000004)
-
-#define DISP_VBLANK_IRQ	(1 << 3)
-
-#define IRQ_VBLANK	(1 << 0)
-#define IRQ_RECV	(1 << 18)
-
-#define XKEYS		(*(volatile u16*)0x04000136)
-#define TOUCH_RELEASED 0x40
-
-#define TOUCH_CAL_X1 (*(volatile s16*)0x027FFCD8)
-#define TOUCH_CAL_Y1 (*(volatile s16*)0x027FFCDA)
-#define TOUCH_CAL_X2 (*(volatile s16*)0x027FFCDE)
-#define TOUCH_CAL_Y2 (*(volatile s16*)0x027FFCE0)
-
-#define TOUCH_CNTRL_X1   (*(volatile u8*)0x027FFCDC)
-#define TOUCH_CNTRL_Y1   (*(volatile u8*)0x027FFCDD)
-#define TOUCH_CNTRL_X2   (*(volatile u8*)0x027FFCE2)
-#define TOUCH_CNTRL_Y2   (*(volatile u8*)0x027FFCE3) 
-
-#define SERIAL_CR	(*(volatile u16*)0x040001C0)
-#define SERIAL_DATA	(*(volatile u16*)0x040001C2)
-
-#define SERIAL_ENABLE   0x8000
-#define SERIAL_BUSY	0x80
-
-#define TSC_MEASURE_Y		0x90
-#define TSC_MEASURE_BATTERY	0xA4
-#define TSC_MEASURE_Z1		0xB0
-#define TSC_MEASURE_Z2		0xC0
-#define TSC_MEASURE_X		0xD0
-
-#define MIN(x,y) ((x)<(y)?(x):(y))
-#define MAX(x,y) ((x)>(y)?(x):(y))
+#include "arm7.h"
+#include "shmemipc-arm7.h"
+#include "spi.h"
 
 static s16 cntrl_width;
 static s16 cntrl_height;
@@ -57,54 +17,13 @@ static s16 touch_height;
 static s16 touch_cal_x1;
 static s16 touch_cal_y1;
 
-extern u32 nds_get_time7(void);
-
-u16 touchRead(u32 command)
-{
-	u16 result;
-	while (SERIAL_CR & SERIAL_BUSY) swiDelay(1);
-
-	// Write the command and wait for it to complete
-	SERIAL_CR = SERIAL_ENABLE | 0xA01;
-	SERIAL_DATA = command;
-	while (SERIAL_CR & SERIAL_BUSY) swiDelay(1);
-
-	// Write the second command and clock in part of the data
-	SERIAL_DATA = 0;
-	while (SERIAL_CR & SERIAL_BUSY) swiDelay(1);
-	result = SERIAL_DATA;
-
-	// Clock in the rest of the data (last transfer)
-	SERIAL_CR = SERIAL_ENABLE | 0x201;
-	SERIAL_DATA = 0;
-	while (SERIAL_CR & SERIAL_BUSY) swiDelay(1);
-
-	// Return the result
-	return ((result & 0x7F) << 5) | (SERIAL_DATA >> 3);
-}
-
-void poweroff( void )
-{
-	while (SERIAL_CR & SERIAL_BUSY) swiDelay(1);
-
-	// Write the command and wait for it to complete
-	SERIAL_CR = SERIAL_ENABLE | 0x802;
-	SERIAL_DATA = 0x00;
-	while (SERIAL_CR & SERIAL_BUSY) swiDelay(1);
-
-	// Write the data
-	SERIAL_CR = SERIAL_ENABLE | 0x002;
-	SERIAL_DATA = 0x40;
-
-}
-
 /* recieve outstanding FIFO commands from ARM9 */
 static void recieveFIFOCommand(void)
 {
 	u32 data;
     u32 seconds = 0;
 
-	while ( ! ( REG_IPCFIFOCNT & (1<<8) ) )
+	while ( ! ( REG_IPCFIFOCNT & (1<<3) ) )
 	{
 		data = REG_IPCFIFORECV;
 
@@ -153,23 +72,38 @@ static void sendTouchState(u16 buttons)
 void InterruptHandler(void)
 {
 	u16 buttons;
+	static u16 oldbuttons;
 
 	if ( NDS_IF & IRQ_RECV )
 		recieveFIFOCommand();
 
 	if ( NDS_IF & IRQ_VBLANK )
 	{
-		/* read the X, Y and touch buttons */
+		/* read X and Y, lid and touchscreen buttons */
 		buttons = XKEYS;
 
 		/* send button state to ARM9 */
-		REG_IPCFIFOSEND = FIFO_BUTTONS | buttons;
+		if (buttons != oldbuttons) {
+			REG_IPCFIFOSEND = FIFO_BUTTONS | buttons;
+			oldbuttons = buttons;
+		}
 
 		sendTouchState(buttons);
 
 		/* clear FIFO errors (just in case) */
 		if ( REG_IPCFIFOCNT & (1<<14) )
 			REG_IPCFIFOCNT |= (1<<15) | (1<<14);
+	}
+
+	if (NDS_IF & IRQ_ARM9) {
+		switch (ipcsync_get_remote_status()) {
+			case SHMEMIPC_REQUEST_FLUSH:
+				shmemipc_serve_flush_request();
+				break;
+			case SHMEMIPC_FLUSH_COMPLETE:
+				shmemipc_flush_complete();
+				break;
+		}
 	}
 
 	/* Acknowledge Interrupts */
@@ -193,10 +127,12 @@ int main( void )
 
 	/* Enable VBLANK Interrupt */
 	DISP_SR = DISP_VBLANK_IRQ;
-	NDS_IE = IRQ_VBLANK;
+	NDS_IE = IRQ_VBLANK | IRQ_RECV | IRQ_ARM9;
 
 	/* Enable FIFO */
 	REG_IPCFIFOCNT = (1<<15) | (1<<3) | (1<<10) | (1<<14);
+
+	ipcsync_allow_local_interrupt();
 
 	/* Set interrupt handler */
 	*(volatile u32*)(0x04000000-4) = (u32)&InterruptHandler;
