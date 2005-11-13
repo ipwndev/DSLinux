@@ -52,8 +52,8 @@ void shmemipc_serve_flush_request(void)
 			shmemipc_lock();
 			read_firmware(SHMEMIPC_BLOCK_ARM9->firmware.from,
 			    /* Linux wants len bytes, we deliver len/2 16-bit words */
-			    (u16*)SHMEMIPC_BLOCK_ARM9->firmware.data,
-			    (int)(SHMEMIPC_BLOCK_ARM9->firmware.len/2));
+			    (u8*)SHMEMIPC_BLOCK_ARM9->firmware.data,
+			    (int)(SHMEMIPC_BLOCK_ARM9->firmware.len));
 			shmemipc_unlock();
 			ipcsync_trigger_remote_interrupt(SHMEMIPC_FLUSH_COMPLETE);
 			break;
