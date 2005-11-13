@@ -22,6 +22,7 @@ DEVICES = \
 	\
 	mem,c,1,1      kmem,c,1,2         null,c,1,3       ram0,b,1,0 \
 	ram1,b,1,1 	   hda,b,3,0          hda1,b,3,1 \
+	hda2,b,3,2     hda3,b,3,3         hda4,b,3,4 \
 	\
 	ptyp0,c,2,0    ptyp1,c,2,1        ptyp2,c,2,2      ptyp3,c,2,3 \
 	ptyp4,c,2,4    ptyp5,c,2,5        ptyp6,c,2,6      ptyp7,c,2,7 \
@@ -34,7 +35,8 @@ DEVICES = \
 	\
 	rom0,b,31,0    rom1,b,31,1        rom2,b,31,2      rom3,b,31,3 \
 	rom4,b,31,4    rom5,b,31,5        rom6,b,31,6      rom7,b,31,7 \
-	rom8,b,31,8    rom9,b,31,9 \
+	\
+	mtd0,c,90,0    firmware,c,90,2 \
 	\
 	tty0,c,4,0     tty1,c,4,1         tty2,c,4,2       tty3,c,4,3 \
 	tty4,c,4,4     tty5,c,4,5         tty6,c,4,6       tty7,c,4,7 \
