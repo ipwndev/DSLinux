@@ -53,7 +53,7 @@ void poweroff( void )
 
 }
 
-void read_firmware( u32 address, u16 * destination, int count )
+void read_firmware( u32 address, u8 * destination, int count )
 {
     int i;
 
