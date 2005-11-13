@@ -23,7 +23,7 @@ static void recieveFIFOCommand(void)
 	u32 data;
     u32 seconds = 0;
 
-	while ( ! ( REG_IPCFIFOCNT & (1<<3) ) )
+	while ( ! ( REG_IPCFIFOCNT & (1<<8) ) )
 	{
 		data = REG_IPCFIFORECV;
 
