@@ -344,6 +344,7 @@ dir_$(CONFIG_USER_ZEBRA_BGPD_BGPD)          += zebra
 dir_$(CONFIG_USER_ZEBRA_OSPFD_OSPFD)        += zebra
 dir_$(CONFIG_USER_ZEBRA_RIPD_RIPD)          += zebra
 dir_$(CONFIG_USER_ZEBRA_ZEBRA_ZEBRA)        += zebra
+dir_y += fwver
 
 dir_y += games
 
