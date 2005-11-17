@@ -4,8 +4,8 @@
 int main( void )
 {
     FILE * firmware ;
-    short data ;
-    int checksum ;
+    unsigned short data ;
+    unsigned short checksum ;
     int version = 0;
 
     firmware = fopen( "/dev/firmware", "r" ) ;
@@ -19,7 +19,7 @@ int main( void )
     fread( &data, sizeof(short), 1, firmware ) ;
 
     fseek( firmware, 0x6 ,SEEK_SET ) ;
-    fread( &checksum, sizeof(int), 1, firmware ) ;
+    fread( &checksum, sizeof(short), 1, firmware ) ;
 
     switch ( checksum )
     {
