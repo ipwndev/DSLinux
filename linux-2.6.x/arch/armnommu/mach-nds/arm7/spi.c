@@ -79,5 +79,6 @@ void read_firmware( u32 address, u8 * destination, int count )
 
         destination[i] = REG_SPI_DATA;
     }
+    REG_SPI_CR = 0x0000;
 }
 
