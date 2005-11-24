@@ -11,6 +11,10 @@
 #define SIO_out (1<<4)
 #define SIO_in  (1)
 
+/* rtc stores hours as bcd in bits 0-5, bit 6 is am/pm */
+#define RTC_PM (1<<6)
+#define HOUR_MASK 0x3f 
+
 #include "asm/types.h"
 #include "linux/timex.h"
 
@@ -65,14 +69,16 @@ static u32 get_nds_seconds(u8 * time)
   u8 hours = 0;
   u8 i;
 
+  hours = BCDToInt(time[4] & HOUR_MASK);
+
+  if((time[4] & RTC_PM) && (hours < 12)) {
+      hours += 12;
+  }
+
   for(i = 0; i < 7; i++) {
       time[i] = BCDToInt(time[i]);
   }
 
-  hours = time[4];
-  if (hours >= 52) {
-      hours -= 52;
-  }
 
   return( mktime(time[0]+2000,
                  time[1],
