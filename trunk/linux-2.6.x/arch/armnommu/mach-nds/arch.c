@@ -58,7 +58,7 @@ static void poweroff(void)
 extern void nds_machine_init(void)
 {
 	POWER_CR = POWER_2D | POWER_2D_SUB | POWER_LCD_TOP | POWER_LCD_BOTTOM | POWER_SWAP_LCDS ;
-	WAIT_CR &= ~(0x8080);
+	WAIT_CR &= ~(0x8880);
 	pm_power_off = poweroff;
 }
 
