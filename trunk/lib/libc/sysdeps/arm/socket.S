@@ -71,11 +71,6 @@ ENTRY (__socket)
         /* Do the system call trap.  */
 	mov a1, $P(SOCKOP_,socket)
 	mov a2, sp
-
-	/* TC!IB! Only the first swi is execute, 
- 	 * the second is just used to get the swi value, not really execute */			
-	swi 0x290000
-	
 	swi SYS_ify(socketcall)
 
 	/* Pop args off the stack */
