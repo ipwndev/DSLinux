@@ -33,7 +33,7 @@ DEVICES = \
 	rom0,b,31,0    rom1,b,31,1        rom2,b,31,2      rom3,b,31,3 \
 	rom4,b,31,4    rom5,b,31,5        rom6,b,31,6      rom7,b,31,7 \
 	\
-	mtd0,c,90,0    mtd1,c,90,2 \
+	mtd0,c,90,0    mtd1,c,90,2        firmware,c,90,4 \
 	\
 	tty0,c,4,0     tty1,c,4,1         tty2,c,4,2       tty3,c,4,3 \
 	tty4,c,4,4     tty5,c,4,5         tty6,c,4,6       tty7,c,4,7 \
