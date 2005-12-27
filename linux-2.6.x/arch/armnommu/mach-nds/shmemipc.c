@@ -142,8 +142,9 @@ int shmemipc_flush(u8 user)
 	 * We want shmemipc_lock() and shmemipc_unlock() to be
 	 * interrupt-safe, so we should actually implement them with spinlocks.
 	 * But we cannot #include <asm/spinlock.h> unless hacking around
-	 * the #ifdef __LINUX_ARM_ARCH__ < 6 that protects it, and unless
-	 * it does use instructions illegal on the DS' processor
+	 * the #ifdef __LINUX_ARM_ARCH__ < 6 that protects it. We must also
+	 * confirm that the code in asm/spinlock.h does not use instructions
+	 * that are illegal on the DS' processor
 	 * (to be investigated). As a last resort, we could also provide our
 	 * own spinlocks (messy, requires careful asm and consideration of
 	 * CONFIG_PREEMPT).
