@@ -126,7 +126,31 @@ int shmemipc_flush(u8 user)
 	block->user = user;
 	map_to_arm7(block);
 	shmemipc_unlock();
+	/* FIXME: This code is racy! Others might try to access the block
+	 * while we are flushing, writing data into nirvana, because the
+	 * block is not mapped to arm9.
+	 * We should actually not unlock the mem block until flushing is
+	 * done. But the situation is a bit of a mess:
+	 * Currently, shmemipc_lock() and shmemipc_unlock() map to
+	 * local_irq_enable() and local_irq_disable().
+	 * We cannot leave interrupts disabled because we need the
+	 * ARM7 interrupt to confirm data transfer completion.
+	 * On top of that we are not the only user of the ARM7 interrupt,
+	 * so masking out all other interrupts won't help much.
+	 * We return to our caller after triggering data transfer,
+	 * so anything can happen until we end up in shmemipc_flush_complete().
+	 * We want shmemipc_lock() and shmemipc_unlock() to be
+	 * interrupt-safe, so we should actually implement them with spinlocks.
+	 * But we cannot #include <asm/spinlock.h> unless hacking around
+	 * the #ifdef __LINUX_ARM_ARCH__ < 6 that protects it, and unless
+	 * it does use instructions illegal on the DS' processor
+	 * (to be investigated). As a last resort, we could also provide our
+	 * own spinlocks (messy, requires careful asm and consideration of
+	 * CONFIG_PREEMPT).
+	 */
 	ipcsync_trigger_remote_interrupt(SHMEMIPC_REQUEST_FLUSH);
+	/* Let's hope no-one touches SHMEMIPC_BLOCK from here until
+	 * shmemipc_flush_complete() :P */
 	
 	return 0;
 }
@@ -160,7 +184,7 @@ static void shmemipc_flush_complete(void)
 	map_to_arm9(SHMEMIPC_BLOCK_ARM9);
 	dispatch_interrupt(SHMEMIPC_FLUSH_COMPLETE);
 	shmemipc_unlock();
-	up(&flush_mtx);
+	up(&flush_mtx); /* taken in shmemipc_flush() */
 }
 
 static void shmemipc_serve_flush_request(void)
