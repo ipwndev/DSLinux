@@ -6,6 +6,7 @@ int main( void )
     FILE * firmware ;
     unsigned short data ;
     unsigned short checksum ;
+    unsigned short flashmever;
     int version = 0;
 
     firmware = fopen( "/dev/firmware", "r" ) ;
@@ -20,6 +21,11 @@ int main( void )
 
     fseek( firmware, 0x6 ,SEEK_SET ) ;
     fread( &checksum, sizeof(short), 1, firmware ) ;
+
+    fseek( firmware, 0x3f7fc ,SEEK_SET ) ;
+    fread( &flashmever, sizeof(short), 1, firmware ) ;
+
+    fclose( firmware ) ;
 
     switch ( checksum )
     {
@@ -36,14 +42,14 @@ int main( void )
             version = 4 ;
             break ;
         case 0xF96D:
-            printf("iQue firmware detected.  You probably can't run Mario Kart.\n");
+            printf("iQue firmware detected.\n");
             version = -1 ;
             break ;
     }
 
     if ( version > 0 )
     {
-        printf("Nintendo firmware v%d detected.  It is safe to run Mario Kart.\n",version);
+        printf("Nintendo firmware v%d detected.  It is safe to run online games.\n",version);
     }
     if ( version >= 4 )
     {
@@ -54,11 +60,11 @@ int main( void )
     {
         if ( data == 1 )
         {
-            printf("Old FlashMe detected.  Upgrade before running Mario Kart.\n");
+            printf("Old FlashMe detected.  Upgrade before running online games.\n");
         }
         else if ( data == 2 )
         {
-            printf("FlashMe v5 detected.  It is safe to run Mario Kart.\n");
+            printf("FlashMe v%d detected.  It is safe to run online games.\n", flashmever + 3);
         }
         else
         {
