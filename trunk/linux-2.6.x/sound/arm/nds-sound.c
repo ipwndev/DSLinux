@@ -29,7 +29,7 @@ struct nds {
 };
 
 /* hardware definition */
-static struct snd_pcm_hardware snd_nds_playback_hw = {
+static snd_pcm_hardware_t snd_nds_playback_hw = {
 	.info = (SNDRV_PCM_INFO_MMAP |
 		 SNDRV_PCM_INFO_NONINTERLEAVED |
 		 SNDRV_PCM_INFO_BLOCK_TRANSFER |
@@ -37,7 +37,7 @@ static struct snd_pcm_hardware snd_nds_playback_hw = {
 	.formats =	    SNDRV_PCM_FMTBIT_S8 |
 			    SNDRV_PCM_FMTBIT_S16_LE |
 			    SNDRV_PCM_FMTBIT_IMA_ADPCM,
-	.rates =	    SNDRV_PCM_RATE_8000_48000|
+	.rates =	    SNDRV_PCM_RATE_8000_48000 |
 			    SNDRV_PCM_RATE_CONTINUOUS,
 	.rate_min =	    8000,
 	.rate_max =	    48000,
@@ -51,13 +51,13 @@ static struct snd_pcm_hardware snd_nds_playback_hw = {
 };
 
 /* hardware definition */
-static struct snd_pcm_hardware snd_nds_capture_hw = {
+static snd_pcm_hardware_t snd_nds_capture_hw = {
 	.info = (SNDRV_PCM_INFO_MMAP |
 		 SNDRV_PCM_INFO_NONINTERLEAVED |
 		 SNDRV_PCM_INFO_BLOCK_TRANSFER |
 		 SNDRV_PCM_INFO_MMAP_VALID),
 	.formats =	    SNDRV_PCM_FMTBIT_U8 |
-			    SNDRV_PCM_FMTBIT_U16_LE
+			    SNDRV_PCM_FMTBIT_U16_LE,
 	.rates =	    SNDRV_PCM_RATE_8000_48000,
 	.rate_min =	    8000,
 	.rate_max =	    48000,
@@ -71,10 +71,10 @@ static struct snd_pcm_hardware snd_nds_capture_hw = {
 };
 
 /* open callback */
-static int snd_nds_playback_open(struct snd_pcm_substream *substream)
+static int snd_nds_playback_open(snd_pcm_substream_t *substream)
 {
 	struct nds *chip = snd_pcm_substream_chip(substream);
-	struct snd_pcm_runtime *runtime = substream->runtime;
+	snd_pcm_runtime_t *runtime = substream->runtime;
 
 	runtime->hw = snd_nds_playback_hw;
 	// more hardware-initialization will be done here
@@ -82,7 +82,7 @@ static int snd_nds_playback_open(struct snd_pcm_substream *substream)
 }
 
 /* close callback */
-static int snd_nds_playback_close(struct snd_pcm_substream *substream)
+static int snd_nds_playback_close(snd_pcm_substream_t *substream)
 {
 	struct nds *chip = snd_pcm_substream_chip(substream);
 	// the hardware-specific codes will be here
@@ -90,17 +90,17 @@ static int snd_nds_playback_close(struct snd_pcm_substream *substream)
 }
 
 /* open callback */
-static int snd_nds_capture_open(struct snd_pcm_substream *substream)
+static int snd_nds_capture_open(snd_pcm_substream_t *substream)
 {
 	struct nds *chip = snd_pcm_substream_chip(substream);
-	struct snd_pcm_runtime *runtime = substream->runtime;
+	snd_pcm_runtime_t *runtime = substream->runtime;
 	runtime->hw = snd_nds_capture_hw;
 	// more hardware-initialization will be done here
 	return 0;
 }
 
 /* close callback */
-static int snd_nds_capture_close(struct snd_pcm_substream *substream)
+static int snd_nds_capture_close(snd_pcm_substream_t *substream)
 {
 	struct nds *chip = snd_pcm_substream_chip(substream);
 	// the hardware-specific codes will be here
@@ -108,24 +108,24 @@ static int snd_nds_capture_close(struct snd_pcm_substream *substream)
 }
 
 /* hw_params callback */
-static int snd_nds_pcm_hw_params(struct snd_pcm_substream *substream,
-			     struct snd_pcm_hw_params *hw_params)
+static int snd_nds_pcm_hw_params(snd_pcm_substream_t *substream,
+			     snd_pcm_hw_params_t *hw_params)
 {
 	return snd_pcm_lib_malloc_pages(substream,
 				   params_buffer_bytes(hw_params));
 }
 
 /* hw_free callback */
-static int snd_nds_pcm_hw_free(struct snd_pcm_substream *substream)
+static int snd_nds_pcm_hw_free(snd_pcm_substream_t *substream)
 {
 	return snd_pcm_lib_free_pages(substream);
 }
 
 /* prepare callback */
-static int snd_nds_pcm_prepare(struct snd_pcm_substream *substream)
+static int snd_nds_pcm_prepare(snd_pcm_substream_t *substream)
 {
 	struct nds *chip = snd_pcm_substream_chip(substream);
-	struct snd_pcm_runtime *runtime = substream->runtime;
+	snd_pcm_runtime_t *runtime = substream->runtime;
 	/* set up the hardware with the current configuration
 	 * for example...
 	 */
@@ -139,7 +139,7 @@ static int snd_nds_pcm_prepare(struct snd_pcm_substream *substream)
 }
 
 /* trigger callback */
-static int snd_nds_pcm_trigger(struct snd_pcm_substream *substream,
+static int snd_nds_pcm_trigger(snd_pcm_substream_t *substream,
 				  int cmd)
 {
 	switch (cmd) {
@@ -156,7 +156,7 @@ static int snd_nds_pcm_trigger(struct snd_pcm_substream *substream,
 
 /* pointer callback */
 static snd_pcm_uframes_t
-snd_nds_pcm_pointer(struct snd_pcm_substream *substream)
+snd_nds_pcm_pointer(snd_pcm_substream_t *substream)
 {
 	struct nds *chip = snd_pcm_substream_chip(substream);
 	unsigned int current_ptr;
@@ -166,7 +166,7 @@ snd_nds_pcm_pointer(struct snd_pcm_substream *substream)
 }
 
 /* operators */
-static struct snd_pcm_ops snd_nds_playback_ops = {
+static snd_pcm_ops_t snd_nds_playback_ops = {
 	.open =	       snd_nds_playback_open,
 	.close =       snd_nds_playback_close,
 	.ioctl =       snd_pcm_lib_ioctl,
@@ -178,7 +178,7 @@ static struct snd_pcm_ops snd_nds_playback_ops = {
 };
 
 /* operators */
-static struct snd_pcm_ops snd_nds_capture_ops = {
+static snd_pcm_ops_t snd_nds_capture_ops = {
 	.open =	       snd_nds_capture_open,
 	.close =       snd_nds_capture_close,
 	.ioctl =       snd_pcm_lib_ioctl,
@@ -195,7 +195,7 @@ static struct snd_pcm_ops snd_nds_capture_ops = {
 /* create a pcm device */
 static int __devinit snd_nds_new_pcm(struct nds *chip)
 {
-	struct snd_pcm *pcm;
+	snd_pcm_t *pcm;
 	int err;
 	if ((err = snd_pcm_new(chip->card, "NDS", 0, 1, 1,
 			       &pcm)) < 0)
@@ -252,19 +252,22 @@ static int snd_nds_dev_free(struct snd_device *device)
 /* chip-specific constructor
  * (see "Management of Cards and Components")
  */
-static int __devinit snd_nds_create(struct snd_card *card,
+static int __devinit snd_nds_create(snd_card_t *card,
 				       struct nds **rchip)
 {
 	struct nds *chip;
 	int err;
-	static struct snd_device_ops ops = {
+	static snd_device_ops_t ops = {
 	       .dev_free = snd_nds_dev_free,
 	};
 
 	*rchip = NULL;
 
 	/* allocate a chip-specific data with zero filled */
+#if 0
 	chip = kzalloc(sizeof(*chip), GFP_KERNEL);
+#endif
+	chip = kcalloc(1,sizeof(*chip), GFP_KERNEL);
 	if (chip == NULL)
 		return -ENOMEM;
 	chip->card = card;
@@ -293,7 +296,7 @@ static int __devinit snd_nds_create(struct snd_card *card,
 static int __init snd_nds_init(void)
 {
 	static int dev;
-	struct snd_card *card;
+	snd_card_t *card;
 	struct nds *chip;
 	int err;
 
@@ -319,8 +322,8 @@ static int __init snd_nds_init(void)
 	}
 	/* (4) */
 	strcpy(card->driver, "nds");
-	strcpy(card->shortname, "nds audio");
-	sprintf(card->longname, "Nintendo DS audio");
+	strcpy(card->shortname, "NDS sound");
+	sprintf(card->longname, "Nintendo DS sound");
 	/* (5) */
 	.... // implemented later
 	/* (6) */
