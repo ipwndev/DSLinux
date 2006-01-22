@@ -541,11 +541,7 @@ source "fs/Kconfig"
 
 source "drivers/video/Kconfig"
 
-if PCI
-
 source "sound/Kconfig"
-
-endif
 
 source "drivers/misc/Kconfig"
 
