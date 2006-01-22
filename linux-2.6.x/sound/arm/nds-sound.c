@@ -34,25 +34,30 @@ static struct snd_pcm_hardware snd_nds_playback_hw = {
                  SNDRV_PCM_INFO_NONINTERLEAVED |
                  SNDRV_PCM_INFO_BLOCK_TRANSFER |
                  SNDRV_PCM_INFO_MMAP_VALID),
-        .formats =          SNDRV_PCM_FMTBIT_S16_LE,
-        .rates =            SNDRV_PCM_RATE_8000_48000,
+        .formats =          SNDRV_PCM_FMTBIT_S8 |
+                            SNDRV_PCM_FMTBIT_S16_LE |
+			    SNDRV_PCM_FMTBIT_IMA_ADPCM,
+        .rates =            SNDRV_PCM_RATE_8000_48000|
+			    SNDRV_PCM_RATE_CONTINUOUS,
         .rate_min =         8000,
         .rate_max =         48000,
-        .channels_min =     2,
+        .channels_min =     1,
         .channels_max =     2,
         .buffer_bytes_max = 32768,
         .period_bytes_min = 4096,
-        .period_bytes_max = 32768,
+        .period_bytes_max = 4096,
         .periods_min =      1,
         .periods_max =      1024,
 };
+
 /* hardware definition */
 static struct snd_pcm_hardware snd_nds_capture_hw = {
         .info = (SNDRV_PCM_INFO_MMAP |
-                 SNDRV_PCM_INFO_INTERLEAVED |
+                 SNDRV_PCM_INFO_NONINTERLEAVED |
                  SNDRV_PCM_INFO_BLOCK_TRANSFER |
                  SNDRV_PCM_INFO_MMAP_VALID),
-        .formats =          SNDRV_PCM_FMTBIT_S16_LE,
+        .formats =          SNDRV_PCM_FMTBIT_U8 |
+			    SNDRV_PCM_FMTBIT_U16_LE
         .rates =            SNDRV_PCM_RATE_8000_48000,
         .rate_min =         8000,
         .rate_max =         48000,
@@ -64,11 +69,13 @@ static struct snd_pcm_hardware snd_nds_capture_hw = {
         .periods_min =      1,
         .periods_max =      1024,
 };
+
 /* open callback */
 static int snd_nds_playback_open(struct snd_pcm_substream *substream)
 {
         struct nds *chip = snd_pcm_substream_chip(substream);
         struct snd_pcm_runtime *runtime = substream->runtime;
+
         runtime->hw = snd_nds_playback_hw;
         // more hardware-initialization will be done here
         return 0;
