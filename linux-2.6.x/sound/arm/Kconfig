@@ -11,5 +11,12 @@ config SND_SA11XX_UDA1341
 	  Say Y or M if you have a Compaq iPaq H3x00 handheld computer and want
 	  to use its Philips UDA 1341 audio chip.
 
+config SND_NDS
+	tristate "NDS sound driver"
+	depends on ARCH_NDS && SND
+	select SND_PCM
+	help
+	  Say Y or M if you have a Nintendo DS and want to use its audio chip.
+
 endmenu
 
