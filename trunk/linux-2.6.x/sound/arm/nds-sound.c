@@ -32,7 +32,8 @@ struct nds {
  */
 static int snd_nds_free(struct nds *chip)
 {
-        .... // will be implemented later...
+	// TODO: stop sound hardware here
+	kfree(chip);
 }
 
 /* component-destructor
@@ -47,7 +48,6 @@ static int snd_nds_dev_free(struct snd_device *device)
  * (see "Management of Cards and Components")
  */
 static int __devinit snd_nds_create(struct snd_card *card,
-                                       struct pci_dev *pci,
                                        struct nds **rchip)
 {
         struct nds *chip;
@@ -57,28 +57,26 @@ static int __devinit snd_nds_create(struct snd_card *card,
         };
 
         *rchip = NULL;
-        // check PCI availability here
-        // (see "PCI Resource Managements")
-        ....
+
         /* allocate a chip-specific data with zero filled */
         chip = kzalloc(sizeof(*chip), GFP_KERNEL);
         if (chip == NULL)
                 return -ENOMEM;
         chip->card = card;
-        // rest of initialization here; will be implemented
-        // later, see "PCI Resource Managements"
-        ....
+
+	// TODO: register with FIFO or IPC here
+
         if ((err = snd_device_new(card, SNDRV_DEV_LOWLEVEL,
                                   chip, &ops)) < 0) {
                 snd_nds_free(chip);
                 return err;
         }
-        snd_card_set_dev(card, &pci->dev);
+
         *rchip = chip;
         return 0;
 }
 /* constructor -- see "Constructor" sub-section */
-static int __init nds_sound_init(void)
+static int __init snd_nds_init(void)
 {
         static int dev;
         struct snd_card *card;
@@ -101,7 +99,7 @@ static int __init nds_sound_init(void)
         if (card == NULL)
                 return -ENOMEM;
         /* (3) */
-        if ((err = snd_nds_create(card, pci, &chip)) < 0) {
+        if ((err = snd_nds_create(card, &chip)) < 0) {
                 snd_card_free(card);
                 return err;
         }
