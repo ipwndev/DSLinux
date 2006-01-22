@@ -4,7 +4,7 @@
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License.
- * 
+ *
  */
 #include <sound/driver.h>
 #include <linux/init.h>
@@ -216,6 +216,21 @@ static int __devinit snd_nds_new_pcm(struct nds *chip)
 	return 0;
 }
 
+static irqreturn_t snd_nds_interrupt(int irq, void *dev_id,
+					struct pt_regs *regs)
+{
+	struct nds *chip = dev_id;
+	spin_lock(&chip->lock);
+	....
+	/* call updater, unlock before it */
+	spin_unlock(&chip->lock);
+	snd_pcm_period_elapsed(chip->substream);
+	spin_lock(&chip->lock);
+	// acknowledge the interrupt if necessary
+	....
+	spin_unlock(&chip->lock);
+	return IRQ_HANDLED;
+}
 
 /* chip-specific destructor
  * (see "PCI Resource Managements")
@@ -256,6 +271,14 @@ static int __devinit snd_nds_create(struct snd_card *card,
 
 	// TODO: register with FIFO or IPC here
 
+	if (request_irq(IRQ_TC1, snd_nds_interrupt,
+			SA_INTERRUPT, "NDS sound", chip)) {
+		printk(KERN_ERR "cannot grab irq %d\n", IRQ_TC1);
+		snd_mychip_free(chip);
+		return -EBUSY;
+	}
+
+
 	if ((err = snd_device_new(card, SNDRV_DEV_LOWLEVEL,
 				  chip, &ops)) < 0) {
 		snd_nds_free(chip);
@@ -265,6 +288,7 @@ static int __devinit snd_nds_create(struct snd_card *card,
 	*rchip = chip;
 	return 0;
 }
+
 /* constructor -- see "Constructor" sub-section */
 static int __init snd_nds_init(void)
 {
