@@ -80,6 +80,7 @@ static int snd_nds_playback_open(struct snd_pcm_substream *substream)
 	// more hardware-initialization will be done here
 	return 0;
 }
+
 /* close callback */
 static int snd_nds_playback_close(struct snd_pcm_substream *substream)
 {
@@ -87,6 +88,7 @@ static int snd_nds_playback_close(struct snd_pcm_substream *substream)
 	// the hardware-specific codes will be here
 	return 0;
 }
+
 /* open callback */
 static int snd_nds_capture_open(struct snd_pcm_substream *substream)
 {
@@ -96,6 +98,7 @@ static int snd_nds_capture_open(struct snd_pcm_substream *substream)
 	// more hardware-initialization will be done here
 	return 0;
 }
+
 /* close callback */
 static int snd_nds_capture_close(struct snd_pcm_substream *substream)
 {
@@ -103,6 +106,7 @@ static int snd_nds_capture_close(struct snd_pcm_substream *substream)
 	// the hardware-specific codes will be here
 	return 0;
 }
+
 /* hw_params callback */
 static int snd_nds_pcm_hw_params(struct snd_pcm_substream *substream,
 			     struct snd_pcm_hw_params *hw_params)
@@ -110,11 +114,13 @@ static int snd_nds_pcm_hw_params(struct snd_pcm_substream *substream,
 	return snd_pcm_lib_malloc_pages(substream,
 				   params_buffer_bytes(hw_params));
 }
+
 /* hw_free callback */
 static int snd_nds_pcm_hw_free(struct snd_pcm_substream *substream)
 {
 	return snd_pcm_lib_free_pages(substream);
 }
+
 /* prepare callback */
 static int snd_nds_pcm_prepare(struct snd_pcm_substream *substream)
 {
@@ -131,6 +137,7 @@ static int snd_nds_pcm_prepare(struct snd_pcm_substream *substream)
 			     chip->period_size);
 	return 0;
 }
+
 /* trigger callback */
 static int snd_nds_pcm_trigger(struct snd_pcm_substream *substream,
 				  int cmd)
@@ -146,6 +153,7 @@ static int snd_nds_pcm_trigger(struct snd_pcm_substream *substream,
 		return -EINVAL;
 	}
 }
+
 /* pointer callback */
 static snd_pcm_uframes_t
 snd_nds_pcm_pointer(struct snd_pcm_substream *substream)
@@ -156,6 +164,7 @@ snd_nds_pcm_pointer(struct snd_pcm_substream *substream)
 	current_ptr = nds_get_hw_pointer(chip);
 	return current_ptr;
 }
+
 /* operators */
 static struct snd_pcm_ops snd_nds_playback_ops = {
 	.open =	       snd_nds_playback_open,
@@ -167,6 +176,7 @@ static struct snd_pcm_ops snd_nds_playback_ops = {
 	.trigger =     snd_nds_pcm_trigger,
 	.pointer =     snd_nds_pcm_pointer,
 };
+
 /* operators */
 static struct snd_pcm_ops snd_nds_capture_ops = {
 	.open =	       snd_nds_capture_open,
@@ -178,6 +188,7 @@ static struct snd_pcm_ops snd_nds_capture_ops = {
 	.trigger =     snd_nds_pcm_trigger,
 	.pointer =     snd_nds_pcm_pointer,
 };
+
 /*
  * definitions of capture are omitted here...
  */
