@@ -9,9 +9,13 @@
 #include <sound/driver.h>
 #include <linux/init.h>
 #include <linux/slab.h>
+#include <linux/interrupt.h>
 #include <sound/core.h>
 #include <sound/initval.h>
 #include <sound/pcm.h>
+#include <asm/mach-types.h>
+
+#include <asm/arch/fifo.h>
 
 /* module parameters (see "Module Parameters") */
 static int index[SNDRV_CARDS] = SNDRV_DEFAULT_IDX;
@@ -23,9 +27,12 @@ MODULE_LICENSE("GPL");
 
 /* definition of the chip-specific record */
 struct nds {
-	struct snd_card *card;
-	// rest of implementation will be in the section
-	// "PCI Resource Managements"
+	snd_card_t *card;
+	spinlock_t lock;
+	snd_pcm_t *pcm;
+	snd_pcm_substream_t *substream;
+	size_t buffer_size;
+	size_t period_size;
 };
 
 /* hardware definition */
@@ -70,6 +77,52 @@ static snd_pcm_hardware_t snd_nds_capture_hw = {
 	.periods_max =      1024,
 };
 
+
+/* Set the sample format */
+void nds_set_sample_format(struct nds *chip, snd_pcm_format_t format )
+{
+	switch ( format ) {
+		case SNDRV_PCM_FORMAT_S8 :
+			REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_FORMAT | 0 ;
+			break ;
+		case SNDRV_PCM_FORMAT_S16_LE :
+			REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_FORMAT | 1 ;
+			break ;
+		case SNDRV_PCM_FORMAT_IMA_ADPCM :
+			REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_FORMAT | 2 ;
+			break ;
+		default:
+			break ;
+	}
+}
+
+/* Set the sample rate */
+void nds_set_sample_rate(struct nds *chip, unsigned int rate )
+{
+	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_RATE | rate ;
+}
+
+/* Set the number of channels */
+void nds_set_channels(struct nds *chip, unsigned int channels )
+{
+	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_CHANNELS | channels ;
+}
+
+/* Setup the DMA */
+void nds_set_dma_setup(struct nds *chip, unsigned char *dma_area,
+		size_t buffer_size, size_t period_size)
+{
+	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_DMA_ADDRESS |
+	       	(((u32)dma_area)&0xffffff) ;
+	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_DMA_SIZE | buffer_size ;
+}
+
+/* Get the hardware pointer */
+unsigned int nds_get_hw_pointer(struct nds *chip)
+{
+	return 0; // TODO
+}
+
 /* open callback */
 static int snd_nds_playback_open(snd_pcm_substream_t *substream)
 {
@@ -77,7 +130,10 @@ static int snd_nds_playback_open(snd_pcm_substream_t *substream)
 	snd_pcm_runtime_t *runtime = substream->runtime;
 
 	runtime->hw = snd_nds_playback_hw;
-	// more hardware-initialization will be done here
+
+	// turn the power on
+	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_POWER | 1 ;
+
 	return 0;
 }
 
@@ -85,7 +141,10 @@ static int snd_nds_playback_open(snd_pcm_substream_t *substream)
 static int snd_nds_playback_close(snd_pcm_substream_t *substream)
 {
 	struct nds *chip = snd_pcm_substream_chip(substream);
-	// the hardware-specific codes will be here
+
+	// turn the power off
+	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_POWER | 0 ;
+
 	return 0;
 }
 
@@ -129,9 +188,9 @@ static int snd_nds_pcm_prepare(snd_pcm_substream_t *substream)
 	/* set up the hardware with the current configuration
 	 * for example...
 	 */
+	nds_set_channels(chip, runtime->channels);
 	nds_set_sample_format(chip, runtime->format);
 	nds_set_sample_rate(chip, runtime->rate);
-	nds_set_channels(chip, runtime->channels);
 	nds_set_dma_setup(chip, runtime->dma_area,
 			     chip->buffer_size,
 			     chip->period_size);
@@ -144,7 +203,8 @@ static int snd_nds_pcm_trigger(snd_pcm_substream_t *substream,
 {
 	switch (cmd) {
 	case SNDRV_PCM_TRIGGER_START:
-		// do something to start the PCM engine
+		// start the PCM engine
+        REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_TRIGGER ;
 		break;
 	case SNDRV_PCM_TRIGGER_STOP:
 		// do something to stop the PCM engine
@@ -221,13 +281,13 @@ static irqreturn_t snd_nds_interrupt(int irq, void *dev_id,
 {
 	struct nds *chip = dev_id;
 	spin_lock(&chip->lock);
-	....
+
 	/* call updater, unlock before it */
 	spin_unlock(&chip->lock);
 	snd_pcm_period_elapsed(chip->substream);
 	spin_lock(&chip->lock);
 	// acknowledge the interrupt if necessary
-	....
+
 	spin_unlock(&chip->lock);
 	return IRQ_HANDLED;
 }
@@ -237,14 +297,15 @@ static irqreturn_t snd_nds_interrupt(int irq, void *dev_id,
  */
 static int snd_nds_free(struct nds *chip)
 {
-	// TODO: stop sound hardware here
+	// turn the power off
+	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_POWER | 0 ;
 	kfree(chip);
 }
 
 /* component-destructor
  * (see "Management of Cards and Components")
  */
-static int snd_nds_dev_free(struct snd_device *device)
+static int snd_nds_dev_free(snd_device_t *device)
 {
 	return snd_nds_free(device->device_data);
 }
@@ -267,7 +328,7 @@ static int __devinit snd_nds_create(snd_card_t *card,
 #if 0
 	chip = kzalloc(sizeof(*chip), GFP_KERNEL);
 #endif
-	chip = kcalloc(1,sizeof(*chip), GFP_KERNEL);
+	chip = kcalloc(1, sizeof(*chip), GFP_KERNEL);
 	if (chip == NULL)
 		return -ENOMEM;
 	chip->card = card;
@@ -277,7 +338,7 @@ static int __devinit snd_nds_create(snd_card_t *card,
 	if (request_irq(IRQ_TC1, snd_nds_interrupt,
 			SA_INTERRUPT, "NDS sound", chip)) {
 		printk(KERN_ERR "cannot grab irq %d\n", IRQ_TC1);
-		snd_mychip_free(chip);
+		snd_nds_free(chip);
 		return -EBUSY;
 	}
 
@@ -325,7 +386,10 @@ static int __init snd_nds_init(void)
 	strcpy(card->shortname, "NDS sound");
 	sprintf(card->longname, "Nintendo DS sound");
 	/* (5) */
-	.... // implemented later
+	if ((err = snd_nds_new_pcm(chip)) < 0) {
+		snd_card_free(card);
+		return err;
+	}
 	/* (6) */
 	if ((err = snd_card_register(card)) < 0) {
 		snd_card_free(card);
@@ -339,7 +403,7 @@ static int __init snd_nds_init(void)
 /* destructor -- see "Destructor" sub-section */
 static void __exit snd_nds_exit(void)
 {
-	snd_card_free(nds_sound->card);
+	//snd_card_free(nds_sound->card);
 }
 
 
