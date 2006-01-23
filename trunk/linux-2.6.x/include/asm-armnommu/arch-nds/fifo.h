@@ -36,6 +36,7 @@
 #define FIFO_SOUND_FORMAT	(4<<24)
 #define FIFO_SOUND_RATE		(5<<24)
 #define FIFO_SOUND_TRIGGER	(6<<24)
+#define FIFO_SOUND_POWER	(7<<24)
 
 #define REG_IPCFIFOSEND (*(volatile u32*) 0x04000188)
 #define REG_IPCFIFORECV (*(volatile u32*) 0x04100000)
