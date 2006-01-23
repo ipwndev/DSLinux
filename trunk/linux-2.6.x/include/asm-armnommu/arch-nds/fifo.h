@@ -19,13 +19,13 @@
 #ifndef __ASM_ARM_ARCH_FIFO_H
 #define __ASM_ARM_ARCH_FIFO_H
 
-#define FIFO_BUTTONS  (1<<24)
-#define FIFO_TOUCH    (1<<25)
-#define FIFO_MIC      (1<<26)
-#define FIFO_WIFI     (1<<27)
-#define FIFO_SOUND    (1<<28)
-#define FIFO_POWER    (1<<29)
-#define FIFO_TIME     (1<<30)
+#define FIFO_BUTTONS  (1<<28)
+#define FIFO_TOUCH    (2<<28)
+#define FIFO_MIC      (3<<28)
+#define FIFO_WIFI     (4<<28)
+#define FIFO_SOUND    (5<<28)
+#define FIFO_POWER    (6<<28)
+#define FIFO_TIME     (7<<28)
 
 #define FIFO_HIGH_BITS  (1<<16)
 #define FIFO_LOW_BITS   (1<<17)

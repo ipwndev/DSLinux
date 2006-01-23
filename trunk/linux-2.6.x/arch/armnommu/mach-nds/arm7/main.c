@@ -28,19 +28,21 @@ static void recieveFIFOCommand(void)
 	{
 		data = REG_IPCFIFORECV;
 
-		if ( data & FIFO_POWER )
-			poweroff() ;
-		else if ( data & FIFO_TIME )
-		{
-			seconds = nds_get_time7();
-			REG_IPCFIFOSEND = ( FIFO_TIME | FIFO_HIGH_BITS | (seconds>>16)      );
-			REG_IPCFIFOSEND = ( FIFO_TIME | FIFO_LOW_BITS  | (seconds & 0xFFFF) );
-		}
-		else if ( data & FIFO_SOUND )
-		{
-			address = data & 0xffffff + 0x02000000 ;
-			playSound(address); 
-		}
+        switch ( data & 0xf0000000 )
+        {
+            case FIFO_POWER :
+                poweroff() ;
+                break ;
+            case FIFO_TIME :
+                seconds = nds_get_time7();
+                REG_IPCFIFOSEND = ( FIFO_TIME | FIFO_HIGH_BITS | (seconds>>16)      );
+                REG_IPCFIFOSEND = ( FIFO_TIME | FIFO_LOW_BITS  | (seconds & 0xFFFF) );
+                break;
+            case FIFO_SOUND :
+                address = data & 0xffffff + 0x02000000 ;
+                playSound(address); 
+                break ;
+        }
 	}
 }
 

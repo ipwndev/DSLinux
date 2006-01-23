@@ -38,7 +38,7 @@ static irqreturn_t ndsfifo_interrupt(int irq, void *dev_id, struct pt_regs *regs
 		data = REG_IPCFIFORECV;
 		for ( cb = cbhead ; cb ; cb = cb->next )
 		{
-			if ( cb->type & data )
+			if ( cb->type == ( data & 0xf000000 ) )
 			{
 				switch ( cb->type )
 				{
