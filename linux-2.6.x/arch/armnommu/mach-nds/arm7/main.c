@@ -1,9 +1,9 @@
-
 #include "asm/types.h"
 #include "asm/arch/fifo.h"
 #include "asm/arch/ipcsync.h"
 #include "asm/arch/shmemipc.h"
 
+#include "sound.h"
 #include "arm7.h"
 #include "shmemipc-arm7.h"
 #include "spi.h"
@@ -22,6 +22,7 @@ static void recieveFIFOCommand(void)
 {
 	u32 data;
     u32 seconds = 0;
+    u32 address;
 
 	while ( ! ( REG_IPCFIFOCNT & (1<<8) ) )
 	{
@@ -34,6 +35,11 @@ static void recieveFIFOCommand(void)
 			seconds = nds_get_time7();
 			REG_IPCFIFOSEND = ( FIFO_TIME | FIFO_HIGH_BITS | (seconds>>16)      );
 			REG_IPCFIFOSEND = ( FIFO_TIME | FIFO_LOW_BITS  | (seconds & 0xFFFF) );
+		}
+		else if ( data & FIFO_SOUND )
+		{
+			address = data & 0xffffff + 0x02000000 ;
+			playSound(address); 
 		}
 	}
 }
@@ -146,4 +152,3 @@ int main( void )
 		swiWaitForVBlank();
 	}
 }
-
