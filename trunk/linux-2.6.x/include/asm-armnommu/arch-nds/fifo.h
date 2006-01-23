@@ -30,6 +30,13 @@
 #define FIFO_HIGH_BITS  (1<<16)
 #define FIFO_LOW_BITS   (1<<17)
 
+#define FIFO_SOUND_CHANNELS	(1<<24)
+#define FIFO_SOUND_DMA_ADDRESS	(2<<24)
+#define FIFO_SOUND_DMA_SIZE	(3<<24)
+#define FIFO_SOUND_FORMAT	(4<<24)
+#define FIFO_SOUND_RATE		(5<<24)
+#define FIFO_SOUND_TRIGGER	(6<<24)
+
 #define REG_IPCFIFOSEND (*(volatile u32*) 0x04000188)
 #define REG_IPCFIFORECV (*(volatile u32*) 0x04100000)
 #define REG_IPCFIFOCNT  (*(volatile u16*) 0x04000184)
