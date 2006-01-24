@@ -300,6 +300,7 @@ static int snd_nds_free(struct nds *chip)
 	// turn the power off
 	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_POWER | 0 ;
 	kfree(chip);
+	return 0;
 }
 
 /* component-destructor
