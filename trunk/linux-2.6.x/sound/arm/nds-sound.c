@@ -41,6 +41,7 @@ struct nds {
 	snd_pcm_substream_t *substream;
 	size_t buffer_size;
 	size_t period_size;
+	u8 period ;
 };
 
 /* hardware definition */
@@ -120,15 +121,16 @@ void nds_set_channels(struct nds *chip, unsigned int channels )
 void nds_set_dma_setup(struct nds *chip, unsigned char *dma_area,
 		size_t buffer_size, size_t period_size)
 {
+	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_DMA_SIZE | buffer_size ;
 	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_DMA_ADDRESS |
 	       	(((u32)dma_area)&0xffffff) ;
-	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_DMA_SIZE | buffer_size ;
+
 }
 
 /* Get the hardware pointer */
 unsigned int nds_get_hw_pointer(struct nds *chip)
 {
-	return 0; // TODO
+	return chip->period ;
 }
 
 /* open callback */
@@ -139,8 +141,14 @@ static int snd_nds_playback_open(snd_pcm_substream_t *substream)
 
 	runtime->hw = snd_nds_playback_hw;
 
+	spin_lock(&chip->lock);
+
+	chip->substream = substream ;
+
 	// turn the power on
 	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_POWER | 1 ;
+
+	spin_unlock(&chip->lock);
 
 	return 0;
 }
@@ -196,27 +204,34 @@ static int snd_nds_pcm_prepare(snd_pcm_substream_t *substream)
 	/* set up the hardware with the current configuration
 	 * for example...
 	 */
-	nds_set_channels(chip, runtime->channels);
-	nds_set_sample_format(chip, runtime->format);
-	nds_set_sample_rate(chip, runtime->rate);
+
+	chip->buffer_size = snd_pcm_lib_buffer_bytes(substream);
+	chip->period_size = snd_pcm_lib_period_bytes(substream);
+
 	TIMER1_DATA = (-0x2000000)/runtime->rate ;
 	switch ( runtime->format )
 	{
 		case SNDRV_PCM_FMTBIT_S8 :
-			TIMER2_DATA = -(4096) ;
+			TIMER2_DATA = -(chip->period_size) ;
 			break;
 		case SNDRV_PCM_FMTBIT_S16_LE :
-			TIMER2_DATA = -(4096/2) ;
+			TIMER2_DATA = -(chip->period_size/2) ;
 			break;
 		case SNDRV_PCM_FMTBIT_IMA_ADPCM :
-			TIMER2_DATA = -(4096*2) ;
+			TIMER2_DATA = -(chip->period_size*2) ;
 			break;
 		default:
 			break;
 	}
+
+	nds_set_channels(chip, runtime->channels);
+	nds_set_sample_format(chip, runtime->format);
+	nds_set_sample_rate(chip, runtime->rate);
 	nds_set_dma_setup(chip, runtime->dma_area,
 			     chip->buffer_size,
 			     chip->period_size);
+	chip->period = 0;
+
 	return 0;
 }
 
@@ -257,26 +272,26 @@ snd_nds_pcm_pointer(snd_pcm_substream_t *substream)
 
 /* operators */
 static snd_pcm_ops_t snd_nds_playback_ops = {
-	.open =	       snd_nds_playback_open,
-	.close =       snd_nds_playback_close,
-	.ioctl =       snd_pcm_lib_ioctl,
-	.hw_params =   snd_nds_pcm_hw_params,
-	.hw_free =     snd_nds_pcm_hw_free,
-	.prepare =     snd_nds_pcm_prepare,
-	.trigger =     snd_nds_pcm_trigger,
-	.pointer =     snd_nds_pcm_pointer,
+	.open =		snd_nds_playback_open,
+	.close =	snd_nds_playback_close,
+	.ioctl =	snd_pcm_lib_ioctl,
+	.hw_params =	snd_nds_pcm_hw_params,
+	.hw_free =	snd_nds_pcm_hw_free,
+	.prepare =	snd_nds_pcm_prepare,
+	.trigger =	snd_nds_pcm_trigger,
+	.pointer =	snd_nds_pcm_pointer,
 };
 
 /* operators */
 static snd_pcm_ops_t snd_nds_capture_ops = {
-	.open =	       snd_nds_capture_open,
-	.close =       snd_nds_capture_close,
-	.ioctl =       snd_pcm_lib_ioctl,
-	.hw_params =   snd_nds_pcm_hw_params,
-	.hw_free =     snd_nds_pcm_hw_free,
-	.prepare =     snd_nds_pcm_prepare,
-	.trigger =     snd_nds_pcm_trigger,
-	.pointer =     snd_nds_pcm_pointer,
+	.open =		snd_nds_capture_open,
+	.close =	snd_nds_capture_close,
+	.ioctl =	snd_pcm_lib_ioctl,
+	.hw_params =	snd_nds_pcm_hw_params,
+	.hw_free =	snd_nds_pcm_hw_free,
+	.prepare =	snd_nds_pcm_prepare,
+	.trigger =	snd_nds_pcm_trigger,
+	.pointer =	snd_nds_pcm_pointer,
 };
 
 /*
@@ -310,15 +325,20 @@ static irqreturn_t snd_nds_interrupt(int irq, void *dev_id,
 					struct pt_regs *regs)
 {
 	struct nds *chip = dev_id;
+	snd_pcm_substream_t *substream = chip->substream;
+	snd_pcm_runtime_t *runtime = substream->runtime;
+
 	spin_lock(&chip->lock);
+
+	chip->period++ ;
+	if ( chip->period == runtime->periods )
+		chip->period = 0 ;
+
+	spin_unlock(&chip->lock);
 
 	/* call updater, unlock before it */
-	spin_unlock(&chip->lock);
 	snd_pcm_period_elapsed(chip->substream);
-	spin_lock(&chip->lock);
-	// acknowledge the interrupt if necessary
 
-	spin_unlock(&chip->lock);
 	return IRQ_HANDLED;
 }
 
