@@ -13,7 +13,7 @@
 
 /* rtc stores hours as bcd in bits 0-5, bit 6 is am/pm */
 #define RTC_PM (1<<6)
-#define HOUR_MASK 0x3f 
+#define HOUR_MASK 0x3f
 
 #include "asm/types.h"
 #include "linux/timex.h"
@@ -21,7 +21,8 @@
 #include "time.h"
 #include "arm7.h"
 
-static void rtcTransaction(u8 * command, u32 commandLen, u8 * result, u32 resultLen)
+static void rtcTransaction(u8 * command, u32 commandLen, u8 * result,
+			   u32 resultLen)
 {
 	u8 bit;
 	u8 i;
@@ -31,19 +32,19 @@ static void rtcTransaction(u8 * command, u32 commandLen, u8 * result, u32 result
 	RTC_CR8 = CS_1 | SCK_1 | SIO_1;
 	swiDelay(RTC_DELAY);
 
-	for(i=0; i < commandLen; i++){
+	for (i = 0; i < commandLen; i++) {
 		for (bit = 0; bit < 8; bit++) {
-			RTC_CR8 = CS_1 | SCK_0 | SIO_out | (command[i]>>7);
+			RTC_CR8 = CS_1 | SCK_0 | SIO_out | (command[i] >> 7);
 			swiDelay(RTC_DELAY);
 
-			RTC_CR8 = CS_1 | SCK_1 | SIO_out | (command[i]>>7);
+			RTC_CR8 = CS_1 | SCK_1 | SIO_out | (command[i] >> 7);
 			swiDelay(RTC_DELAY);
 
 			command[i] = command[i] << 1;
 		}
 	}
 
-	for(i=0; i < resultLen; i++) {
+	for (i = 0; i < resultLen; i++) {
 		result[i] = 0;
 		for (bit = 0; bit < 8; bit++) {
 			RTC_CR8 = CS_1 | SCK_0;
@@ -52,7 +53,8 @@ static void rtcTransaction(u8 * command, u32 commandLen, u8 * result, u32 result
 			RTC_CR8 = CS_1 | SCK_1;
 			swiDelay(RTC_DELAY);
 
-			if (RTC_CR8 & SIO_in) result[i] |= (1 << bit);
+			if (RTC_CR8 & SIO_in)
+				result[i] |= (1 << bit);
 		}
 	}
 
@@ -60,9 +62,9 @@ static void rtcTransaction(u8 * command, u32 commandLen, u8 * result, u32 result
 	swiDelay(RTC_DELAY);
 }
 
-
-static u8 BCDToInt(u8 data) {
-	return((data & 0xF) + ((data & 0xF0)>>4)*10);
+static u8 BCDToInt(u8 data)
+{
+	return ((data & 0xF) + ((data & 0xF0) >> 4) * 10);
 }
 
 static u32 get_nds_seconds(u8 * time)
@@ -72,24 +74,18 @@ static u32 get_nds_seconds(u8 * time)
 
 	hours = BCDToInt(time[4] & HOUR_MASK);
 
-	if((time[4] & RTC_PM) && (hours < 12)) {
+	if ((time[4] & RTC_PM) && (hours < 12)) {
 		hours += 12;
 	}
 
-	for(i = 0; i < 7; i++) {
+	for (i = 0; i < 7; i++) {
 		time[i] = BCDToInt(time[i]);
 	}
 
-
-	return( mktime(time[0]+2000,
-				time[1],
-				time[2],
-				hours,
-				time[5],
-				time[6]));
+	return (mktime(time[0] + 2000,
+		       time[1], time[2], hours, time[5], time[6]));
 
 }
-
 
 u32 nds_get_time7(void)
 {
@@ -108,6 +104,3 @@ u32 nds_get_time7(void)
 	return seconds;
 
 }
-
-
-
