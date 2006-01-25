@@ -37,25 +37,25 @@ void shmemipc_flush_complete(void)
 void shmemipc_serve_flush_request(void)
 {
 	switch (SHMEMIPC_BLOCK_ARM9->user) {
-		case SHMEMIPC_USER_SOUND:
-			/* Handle flush request. */
-			ipcsync_trigger_remote_interrupt(SHMEMIPC_FLUSH_COMPLETE);
-			break;
-		case SHMEMIPC_USER_WIFI:
-			/* Handle flush request. */
-			ipcsync_trigger_remote_interrupt(SHMEMIPC_FLUSH_COMPLETE);
-			break;
-		case SHMEMIPC_USER_FIRMWARE:
-			/* This is a special case. We are not supposed to flush anything.
-			 * Linux wants us to read firmware data into our block and
-			 * send a "flush complete" when we are done. */
-			shmemipc_lock();
-			read_firmware(SHMEMIPC_BLOCK_ARM9->firmware.from,
-			    /* Linux wants len bytes, we deliver len/2 16-bit words */
-			    (u8*)SHMEMIPC_BLOCK_ARM9->firmware.data,
-			    (int)(SHMEMIPC_BLOCK_ARM9->firmware.len));
-			shmemipc_unlock();
-			ipcsync_trigger_remote_interrupt(SHMEMIPC_FLUSH_COMPLETE);
-			break;
+	case SHMEMIPC_USER_SOUND:
+		/* Handle flush request. */
+		ipcsync_trigger_remote_interrupt(SHMEMIPC_FLUSH_COMPLETE);
+		break;
+	case SHMEMIPC_USER_WIFI:
+		/* Handle flush request. */
+		ipcsync_trigger_remote_interrupt(SHMEMIPC_FLUSH_COMPLETE);
+		break;
+	case SHMEMIPC_USER_FIRMWARE:
+		/* This is a special case. We are not supposed to flush anything.
+		 * Linux wants us to read firmware data into our block and
+		 * send a "flush complete" when we are done. */
+		shmemipc_lock();
+		read_firmware(SHMEMIPC_BLOCK_ARM9->firmware.from,
+			      /* Linux wants len bytes, we deliver len/2 16-bit words */
+			      (u8 *) SHMEMIPC_BLOCK_ARM9->firmware.data,
+			      (int)(SHMEMIPC_BLOCK_ARM9->firmware.len));
+		shmemipc_unlock();
+		ipcsync_trigger_remote_interrupt(SHMEMIPC_FLUSH_COMPLETE);
+		break;
 	}
 }
