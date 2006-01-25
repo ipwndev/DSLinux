@@ -57,7 +57,7 @@ static snd_pcm_hardware_t snd_nds_playback_hw = {
 	.channels_min = 1,
 	.channels_max = 2,
 	.buffer_bytes_max = 32768,
-	.period_bytes_min = 4096,
+	.period_bytes_min = 512,
 	.period_bytes_max = 4096,
 	.periods_min = 1,
 	.periods_max = 1024,
@@ -75,8 +75,8 @@ static snd_pcm_hardware_t snd_nds_capture_hw = {
 	.channels_min = 1,
 	.channels_max = 1,
 	.buffer_bytes_max = 32768,
-	.period_bytes_min = 4096,
-	.period_bytes_max = 32768,
+	.period_bytes_min = 512,
+	.period_bytes_max = 4096,
 	.periods_min = 1,
 	.periods_max = 1024,
 };
@@ -154,6 +154,8 @@ static int snd_nds_playback_close(snd_pcm_substream_t * substream)
 
 	// turn the power off
 	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_POWER | 0;
+	TIMER1_CR = 0;
+	TIMER2_CR = 0;
 
 	return 0;
 }
@@ -202,20 +204,24 @@ static int snd_nds_pcm_prepare(snd_pcm_substream_t * substream)
 	chip->buffer_size = snd_pcm_lib_buffer_bytes(substream);
 	chip->period_size = snd_pcm_lib_period_bytes(substream);
 
-	TIMER1_DATA = (-0x2000000) / runtime->rate;
+	TIMER1_CR = 0;
+	TIMER2_CR = 0;
+	TIMER1_DATA = (-0x2000000/ (s32)(runtime->rate));
 	switch (runtime->format) {
-	case SNDRV_PCM_FMTBIT_S8:
+	case SNDRV_PCM_FORMAT_S8:
 		TIMER2_DATA = -(chip->period_size);
 		break;
-	case SNDRV_PCM_FMTBIT_S16_LE:
+	case SNDRV_PCM_FORMAT_S16_LE:
 		TIMER2_DATA = -(chip->period_size / 2);
 		break;
-	case SNDRV_PCM_FMTBIT_IMA_ADPCM:
+	case SNDRV_PCM_FORMAT_IMA_ADPCM:
 		TIMER2_DATA = -(chip->period_size * 2);
 		break;
 	default:
 		break;
 	}
+    printk("TIMER1_DATA=%x\n", TIMER1_DATA);
+    printk("TIMER2_DATA=%x\n", TIMER2_DATA);
 
 	nds_set_channels(chip, runtime->channels);
 	nds_set_sample_format(chip, runtime->format);
@@ -236,7 +242,7 @@ static int snd_nds_pcm_trigger(snd_pcm_substream_t * substream, int cmd)
 		REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_TRIGGER | 1;
 
 		TIMER1_CR = TIMER_ENABLE;
-		TIMER2_CR = TIMER_ENABLE | TIMER_CASCADE | TIMER_IRQ_REQ;
+		TIMER2_CR = TIMER_CASCADE | TIMER_IRQ_REQ;
 		break;
 	case SNDRV_PCM_TRIGGER_STOP:
 		// stop the PCM engine
@@ -302,9 +308,9 @@ static int __devinit snd_nds_new_pcm(struct nds *chip)
 	snd_pcm_set_ops(pcm, SNDRV_PCM_STREAM_CAPTURE, &snd_nds_capture_ops);
 	/* pre-allocation of buffers */
 	/* NOTE: this may fail */
-	snd_pcm_lib_preallocate_pages_for_all(pcm, SNDRV_DMA_TYPE_DEV, snd_dma_isa_data(),	/*pretend to be an ISA device */
-					      64 * 1024, 64 * 1024);
-	return 0;
+	//return snd_pcm_lib_preallocate_pages_for_all(pcm, SNDRV_DMA_TYPE_DEV, snd_dma_isa_data(),	/*pretend to be an ISA device */
+	return snd_pcm_lib_preallocate_pages_for_all(pcm, SNDRV_DMA_TYPE_CONTINUOUS, snd_dma_continuous_data(GFP_KERNEL),
+					      32 * 1024, 64 * 1024);
 }
 
 static irqreturn_t snd_nds_interrupt(int irq, void *dev_id,
@@ -372,7 +378,7 @@ static int __devinit snd_nds_create(snd_card_t * card, struct nds **rchip)
 
 	// TODO: register with FIFO or IPC here
 
-	if (request_irq(IRQ_TC1, snd_nds_interrupt,
+	if (request_irq(IRQ_TC2, snd_nds_interrupt,
 			SA_INTERRUPT, "NDS sound", chip)) {
 		printk(KERN_ERR "cannot grab irq %d\n", IRQ_TC2);
 		snd_nds_free(chip);
