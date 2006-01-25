@@ -1,10 +1,25 @@
 
-/* playSound(u32 address): plays a sound at the specified address */
-void playSound(u32 address);
+/* set the address of the buffer to play from */
+extern void sound_set_address(u32 address);
 
-/* Set the master volume */
-void SetMasterVol(int vol);
+/* set the size of the buffer to play from */
+extern void sound_set_size(u32 size);
 
-/* Turn on/off sound 1 = on 0 = off */
-void PowerSnd(int state);
+/* set the master volume */
+extern void sound_set_volume(u8 vol);
+
+/* set the number of channels */
+extern void sound_set_channels(u8 channels);
+
+/* set the sound format 0=s8, 1=s16, 2=ADPCM */
+extern void sound_set_format(u8 format);
+
+/* set the rate */
+extern void sound_set_rate(u32 rate);
+
+/* turn on/off sound 1 = on 0 = off */
+extern void sound_set_power(u8 state);
+ 
+/* start playing */
+extern void sound_play(void);
  
