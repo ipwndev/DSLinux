@@ -24,7 +24,7 @@ stext:
 
 	mov	r0, #0
 	ldr	r1, =__bss_start
-	ldr	r2, =__end
+	ldr	r2, =_end
 1:	cmp 	r1, r2
 	strcc	r0, [r1],#4
 	bcc	1b
