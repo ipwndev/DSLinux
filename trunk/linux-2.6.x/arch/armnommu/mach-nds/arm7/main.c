@@ -7,6 +7,7 @@
 #include "arm7.h"
 #include "shmemipc-arm7.h"
 #include "spi.h"
+#include "time.h"
 
 static s16 cntrl_width;
 static s16 cntrl_height;
@@ -21,28 +22,48 @@ static s16 touch_cal_y1;
 static void recieveFIFOCommand(void)
 {
 	u32 data;
-    u32 seconds = 0;
-    u32 address;
+	u32 seconds = 0;
 
 	while ( ! ( REG_IPCFIFOCNT & (1<<8) ) )
 	{
 		data = REG_IPCFIFORECV;
 
-        switch ( data & 0xf0000000 )
-        {
-            case FIFO_POWER :
-                poweroff() ;
-                break ;
-            case FIFO_TIME :
-                seconds = nds_get_time7();
-                REG_IPCFIFOSEND = ( FIFO_TIME | FIFO_HIGH_BITS | (seconds>>16)      );
-                REG_IPCFIFOSEND = ( FIFO_TIME | FIFO_LOW_BITS  | (seconds & 0xFFFF) );
-                break;
-            case FIFO_SOUND :
-                address = data & 0xffffff + 0x02000000 ;
-                playSound(address); 
-                break ;
-        }
+		switch ( data & 0xf0000000 )
+		{
+			case FIFO_POWER :
+				poweroff() ;
+				break ;
+			case FIFO_TIME :
+				seconds = nds_get_time7();
+				REG_IPCFIFOSEND = ( FIFO_TIME | FIFO_HIGH_BITS | (seconds>>16)      );
+				REG_IPCFIFOSEND = ( FIFO_TIME | FIFO_LOW_BITS  | (seconds & 0xFFFF) );
+				break;
+			case FIFO_SOUND :
+				switch ( data & 0x0f000000 )
+				{
+					case FIFO_SOUND_FORMAT :
+						sound_set_format( data & 0x3 );
+						break;
+					case FIFO_SOUND_RATE :
+						sound_set_rate( data & 0x00ffffff );
+						break;
+					case FIFO_SOUND_CHANNELS :
+						sound_set_channels( data & 0xff );
+						break;
+					case FIFO_SOUND_DMA_ADDRESS :
+						sound_set_address( ( data & 0x00ffffff ) + 0x02000000 );
+						break;
+					case FIFO_SOUND_DMA_SIZE :
+						sound_set_size( data & 0x00ffffff );
+						break;
+					case FIFO_SOUND_TRIGGER :
+						sound_play();
+						break;
+					case FIFO_SOUND_POWER :
+						sound_set_power( data & 0x1 );
+						break;
+				}
+		}
 	}
 }
 
@@ -54,9 +75,10 @@ static void sendTouchState(u16 buttons)
 
 	if ( buttons & TOUCH_RELEASED )
 	{
-		lastx = -1 ;
-		lasty = -1 ;
-		REG_IPCFIFOSEND = FIFO_TOUCH ;
+		if ( lasty != 255 )
+			REG_IPCFIFOSEND = FIFO_TOUCH ;
+		lastx = 255 ;
+		lasty = 255 ;
 	} else { /* Some dude is smacking his fingerprint on the touchscreen. */
 		x = touchRead(TSC_MEASURE_X);
 		y = touchRead(TSC_MEASURE_Y);
