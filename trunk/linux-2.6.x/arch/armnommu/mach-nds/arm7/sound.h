@@ -6,7 +6,7 @@ extern void sound_set_address(u32 address);
 extern void sound_set_size(u32 size);
 
 /* set the master volume */
-extern void sound_set_volume(u8 vol);
+extern void sound_set_master_volume(u8 vol);
 
 /* set the number of channels */
 extern void sound_set_channels(u8 channels);
