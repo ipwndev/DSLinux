@@ -17,6 +17,14 @@
 
 #include <asm/arch/fifo.h>
 
+#define TIMER1_DATA	(*(volatile u16*)0x04000104)
+#define TIMER2_DATA	(*(volatile u16*)0x04000108)
+#define TIMER1_CR	(*(volatile u16*)0x04000106)
+#define TIMER2_CR	(*(volatile u16*)0x0400010A)
+#define TIMER_ENABLE	(1<<7)
+#define TIMER_IRQ_REQ	(1<<6)
+#define TIMER_CASCADE	(TIMER_ENABLE|(1<<2))
+
 /* module parameters (see "Module Parameters") */
 static int index[SNDRV_CARDS] = SNDRV_DEFAULT_IDX;
 static char *id[SNDRV_CARDS] = SNDRV_DEFAULT_STR;
@@ -191,6 +199,21 @@ static int snd_nds_pcm_prepare(snd_pcm_substream_t *substream)
 	nds_set_channels(chip, runtime->channels);
 	nds_set_sample_format(chip, runtime->format);
 	nds_set_sample_rate(chip, runtime->rate);
+	TIMER1_DATA = (-0x2000000)/runtime->rate ;
+	switch ( runtime->format )
+	{
+		case SNDRV_PCM_FMTBIT_S8 :
+			TIMER2_DATA = -(4096) ;
+			break;
+		case SNDRV_PCM_FMTBIT_S16_LE :
+			TIMER2_DATA = -(4096/2) ;
+			break;
+		case SNDRV_PCM_FMTBIT_IMA_ADPCM :
+			TIMER2_DATA = -(4096*2) ;
+			break;
+		default:
+			break;
+	}
 	nds_set_dma_setup(chip, runtime->dma_area,
 			     chip->buffer_size,
 			     chip->period_size);
@@ -199,19 +222,26 @@ static int snd_nds_pcm_prepare(snd_pcm_substream_t *substream)
 
 /* trigger callback */
 static int snd_nds_pcm_trigger(snd_pcm_substream_t *substream,
-				  int cmd)
+			       int cmd)
 {
 	switch (cmd) {
-	case SNDRV_PCM_TRIGGER_START:
-		// start the PCM engine
-        REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_TRIGGER ;
-		break;
-	case SNDRV_PCM_TRIGGER_STOP:
-		// do something to stop the PCM engine
-		break;
-	default:
-		return -EINVAL;
+		case SNDRV_PCM_TRIGGER_START:
+			// start the PCM engine
+			REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_TRIGGER | 1 ;
+
+			TIMER1_CR = TIMER_ENABLE ;
+			TIMER2_CR = TIMER_ENABLE | TIMER_CASCADE | TIMER_IRQ_REQ ;
+			break;
+		case SNDRV_PCM_TRIGGER_STOP:
+			// stop the PCM engine
+			REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_TRIGGER | 0 ;
+			TIMER1_CR = 0 ;
+			TIMER2_CR = 0 ;
+			break;
+		default:
+			return -EINVAL;
 	}
+	return 0 ;
 }
 
 /* pointer callback */
@@ -333,12 +363,13 @@ static int __devinit snd_nds_create(snd_card_t *card,
 	if (chip == NULL)
 		return -ENOMEM;
 	chip->card = card;
+	spin_lock_init( &chip->lock );
 
 	// TODO: register with FIFO or IPC here
 
 	if (request_irq(IRQ_TC1, snd_nds_interrupt,
 			SA_INTERRUPT, "NDS sound", chip)) {
-		printk(KERN_ERR "cannot grab irq %d\n", IRQ_TC1);
+		printk(KERN_ERR "cannot grab irq %d\n", IRQ_TC2);
 		snd_nds_free(chip);
 		return -EBUSY;
 	}
