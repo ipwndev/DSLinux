@@ -41,100 +41,94 @@ struct nds {
 	snd_pcm_substream_t *substream;
 	size_t buffer_size;
 	size_t period_size;
-	u8 period ;
+	u8 period;
 };
 
 /* hardware definition */
 static snd_pcm_hardware_t snd_nds_playback_hw = {
 	.info = (SNDRV_PCM_INFO_MMAP |
 		 SNDRV_PCM_INFO_NONINTERLEAVED |
-		 SNDRV_PCM_INFO_BLOCK_TRANSFER |
-		 SNDRV_PCM_INFO_MMAP_VALID),
-	.formats =	    SNDRV_PCM_FMTBIT_S8 |
-			    SNDRV_PCM_FMTBIT_S16_LE |
-			    SNDRV_PCM_FMTBIT_IMA_ADPCM,
-	.rates =	    SNDRV_PCM_RATE_8000_48000 |
-			    SNDRV_PCM_RATE_CONTINUOUS,
-	.rate_min =	    8000,
-	.rate_max =	    48000,
-	.channels_min =     1,
-	.channels_max =     2,
+		 SNDRV_PCM_INFO_BLOCK_TRANSFER | SNDRV_PCM_INFO_MMAP_VALID),
+	.formats = SNDRV_PCM_FMTBIT_S8 |
+	    SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_IMA_ADPCM,
+	.rates = SNDRV_PCM_RATE_8000_48000 | SNDRV_PCM_RATE_CONTINUOUS,
+	.rate_min = 8000,
+	.rate_max = 48000,
+	.channels_min = 1,
+	.channels_max = 2,
 	.buffer_bytes_max = 32768,
 	.period_bytes_min = 4096,
 	.period_bytes_max = 4096,
-	.periods_min =      1,
-	.periods_max =      1024,
+	.periods_min = 1,
+	.periods_max = 1024,
 };
 
 /* hardware definition */
 static snd_pcm_hardware_t snd_nds_capture_hw = {
 	.info = (SNDRV_PCM_INFO_MMAP |
 		 SNDRV_PCM_INFO_NONINTERLEAVED |
-		 SNDRV_PCM_INFO_BLOCK_TRANSFER |
-		 SNDRV_PCM_INFO_MMAP_VALID),
-	.formats =	    SNDRV_PCM_FMTBIT_U8 |
-			    SNDRV_PCM_FMTBIT_U16_LE,
-	.rates =	    SNDRV_PCM_RATE_8000_48000,
-	.rate_min =	    8000,
-	.rate_max =	    48000,
-	.channels_min =     1,
-	.channels_max =     1,
+		 SNDRV_PCM_INFO_BLOCK_TRANSFER | SNDRV_PCM_INFO_MMAP_VALID),
+	.formats = SNDRV_PCM_FMTBIT_U8 | SNDRV_PCM_FMTBIT_U16_LE,
+	.rates = SNDRV_PCM_RATE_8000_48000,
+	.rate_min = 8000,
+	.rate_max = 48000,
+	.channels_min = 1,
+	.channels_max = 1,
 	.buffer_bytes_max = 32768,
 	.period_bytes_min = 4096,
 	.period_bytes_max = 32768,
-	.periods_min =      1,
-	.periods_max =      1024,
+	.periods_min = 1,
+	.periods_max = 1024,
 };
 
-
 /* Set the sample format */
-void nds_set_sample_format(struct nds *chip, snd_pcm_format_t format )
+void nds_set_sample_format(struct nds *chip, snd_pcm_format_t format)
 {
-	switch ( format ) {
-		case SNDRV_PCM_FORMAT_S8 :
-			REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_FORMAT | 0 ;
-			break ;
-		case SNDRV_PCM_FORMAT_S16_LE :
-			REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_FORMAT | 1 ;
-			break ;
-		case SNDRV_PCM_FORMAT_IMA_ADPCM :
-			REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_FORMAT | 2 ;
-			break ;
-		default:
-			break ;
+	switch (format) {
+	case SNDRV_PCM_FORMAT_S8:
+		REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_FORMAT | 0;
+		break;
+	case SNDRV_PCM_FORMAT_S16_LE:
+		REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_FORMAT | 1;
+		break;
+	case SNDRV_PCM_FORMAT_IMA_ADPCM:
+		REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_FORMAT | 2;
+		break;
+	default:
+		break;
 	}
 }
 
 /* Set the sample rate */
-void nds_set_sample_rate(struct nds *chip, unsigned int rate )
+void nds_set_sample_rate(struct nds *chip, unsigned int rate)
 {
-	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_RATE | rate ;
+	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_RATE | rate;
 }
 
 /* Set the number of channels */
-void nds_set_channels(struct nds *chip, unsigned int channels )
+void nds_set_channels(struct nds *chip, unsigned int channels)
 {
-	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_CHANNELS | channels ;
+	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_CHANNELS | channels;
 }
 
 /* Setup the DMA */
 void nds_set_dma_setup(struct nds *chip, unsigned char *dma_area,
-		size_t buffer_size, size_t period_size)
+		       size_t buffer_size, size_t period_size)
 {
-	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_DMA_SIZE | buffer_size ;
+	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_DMA_SIZE | buffer_size;
 	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_DMA_ADDRESS |
-	       	(((u32)dma_area)&0xffffff) ;
+	    (((u32) dma_area) & 0xffffff);
 
 }
 
 /* Get the hardware pointer */
 unsigned int nds_get_hw_pointer(struct nds *chip)
 {
-	return chip->period ;
+	return chip->period;
 }
 
 /* open callback */
-static int snd_nds_playback_open(snd_pcm_substream_t *substream)
+static int snd_nds_playback_open(snd_pcm_substream_t * substream)
 {
 	struct nds *chip = snd_pcm_substream_chip(substream);
 	snd_pcm_runtime_t *runtime = substream->runtime;
@@ -143,10 +137,10 @@ static int snd_nds_playback_open(snd_pcm_substream_t *substream)
 
 	spin_lock(&chip->lock);
 
-	chip->substream = substream ;
+	chip->substream = substream;
 
 	// turn the power on
-	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_POWER | 1 ;
+	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_POWER | 1;
 
 	spin_unlock(&chip->lock);
 
@@ -154,18 +148,18 @@ static int snd_nds_playback_open(snd_pcm_substream_t *substream)
 }
 
 /* close callback */
-static int snd_nds_playback_close(snd_pcm_substream_t *substream)
+static int snd_nds_playback_close(snd_pcm_substream_t * substream)
 {
 	struct nds *chip = snd_pcm_substream_chip(substream);
 
 	// turn the power off
-	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_POWER | 0 ;
+	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_POWER | 0;
 
 	return 0;
 }
 
 /* open callback */
-static int snd_nds_capture_open(snd_pcm_substream_t *substream)
+static int snd_nds_capture_open(snd_pcm_substream_t * substream)
 {
 	struct nds *chip = snd_pcm_substream_chip(substream);
 	snd_pcm_runtime_t *runtime = substream->runtime;
@@ -175,7 +169,7 @@ static int snd_nds_capture_open(snd_pcm_substream_t *substream)
 }
 
 /* close callback */
-static int snd_nds_capture_close(snd_pcm_substream_t *substream)
+static int snd_nds_capture_close(snd_pcm_substream_t * substream)
 {
 	struct nds *chip = snd_pcm_substream_chip(substream);
 	// the hardware-specific codes will be here
@@ -183,21 +177,21 @@ static int snd_nds_capture_close(snd_pcm_substream_t *substream)
 }
 
 /* hw_params callback */
-static int snd_nds_pcm_hw_params(snd_pcm_substream_t *substream,
-			     snd_pcm_hw_params_t *hw_params)
+static int snd_nds_pcm_hw_params(snd_pcm_substream_t * substream,
+				 snd_pcm_hw_params_t * hw_params)
 {
 	return snd_pcm_lib_malloc_pages(substream,
-				   params_buffer_bytes(hw_params));
+					params_buffer_bytes(hw_params));
 }
 
 /* hw_free callback */
-static int snd_nds_pcm_hw_free(snd_pcm_substream_t *substream)
+static int snd_nds_pcm_hw_free(snd_pcm_substream_t * substream)
 {
 	return snd_pcm_lib_free_pages(substream);
 }
 
 /* prepare callback */
-static int snd_nds_pcm_prepare(snd_pcm_substream_t *substream)
+static int snd_nds_pcm_prepare(snd_pcm_substream_t * substream)
 {
 	struct nds *chip = snd_pcm_substream_chip(substream);
 	snd_pcm_runtime_t *runtime = substream->runtime;
@@ -208,60 +202,56 @@ static int snd_nds_pcm_prepare(snd_pcm_substream_t *substream)
 	chip->buffer_size = snd_pcm_lib_buffer_bytes(substream);
 	chip->period_size = snd_pcm_lib_period_bytes(substream);
 
-	TIMER1_DATA = (-0x2000000)/runtime->rate ;
-	switch ( runtime->format )
-	{
-		case SNDRV_PCM_FMTBIT_S8 :
-			TIMER2_DATA = -(chip->period_size) ;
-			break;
-		case SNDRV_PCM_FMTBIT_S16_LE :
-			TIMER2_DATA = -(chip->period_size/2) ;
-			break;
-		case SNDRV_PCM_FMTBIT_IMA_ADPCM :
-			TIMER2_DATA = -(chip->period_size*2) ;
-			break;
-		default:
-			break;
+	TIMER1_DATA = (-0x2000000) / runtime->rate;
+	switch (runtime->format) {
+	case SNDRV_PCM_FMTBIT_S8:
+		TIMER2_DATA = -(chip->period_size);
+		break;
+	case SNDRV_PCM_FMTBIT_S16_LE:
+		TIMER2_DATA = -(chip->period_size / 2);
+		break;
+	case SNDRV_PCM_FMTBIT_IMA_ADPCM:
+		TIMER2_DATA = -(chip->period_size * 2);
+		break;
+	default:
+		break;
 	}
 
 	nds_set_channels(chip, runtime->channels);
 	nds_set_sample_format(chip, runtime->format);
 	nds_set_sample_rate(chip, runtime->rate);
 	nds_set_dma_setup(chip, runtime->dma_area,
-			     chip->buffer_size,
-			     chip->period_size);
+			  chip->buffer_size, chip->period_size);
 	chip->period = 0;
 
 	return 0;
 }
 
 /* trigger callback */
-static int snd_nds_pcm_trigger(snd_pcm_substream_t *substream,
-			       int cmd)
+static int snd_nds_pcm_trigger(snd_pcm_substream_t * substream, int cmd)
 {
 	switch (cmd) {
-		case SNDRV_PCM_TRIGGER_START:
-			// start the PCM engine
-			REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_TRIGGER | 1 ;
+	case SNDRV_PCM_TRIGGER_START:
+		// start the PCM engine
+		REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_TRIGGER | 1;
 
-			TIMER1_CR = TIMER_ENABLE ;
-			TIMER2_CR = TIMER_ENABLE | TIMER_CASCADE | TIMER_IRQ_REQ ;
-			break;
-		case SNDRV_PCM_TRIGGER_STOP:
-			// stop the PCM engine
-			REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_TRIGGER | 0 ;
-			TIMER1_CR = 0 ;
-			TIMER2_CR = 0 ;
-			break;
-		default:
-			return -EINVAL;
+		TIMER1_CR = TIMER_ENABLE;
+		TIMER2_CR = TIMER_ENABLE | TIMER_CASCADE | TIMER_IRQ_REQ;
+		break;
+	case SNDRV_PCM_TRIGGER_STOP:
+		// stop the PCM engine
+		REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_TRIGGER | 0;
+		TIMER1_CR = 0;
+		TIMER2_CR = 0;
+		break;
+	default:
+		return -EINVAL;
 	}
-	return 0 ;
+	return 0;
 }
 
 /* pointer callback */
-static snd_pcm_uframes_t
-snd_nds_pcm_pointer(snd_pcm_substream_t *substream)
+static snd_pcm_uframes_t snd_nds_pcm_pointer(snd_pcm_substream_t * substream)
 {
 	struct nds *chip = snd_pcm_substream_chip(substream);
 	unsigned int current_ptr;
@@ -272,26 +262,26 @@ snd_nds_pcm_pointer(snd_pcm_substream_t *substream)
 
 /* operators */
 static snd_pcm_ops_t snd_nds_playback_ops = {
-	.open =		snd_nds_playback_open,
-	.close =	snd_nds_playback_close,
-	.ioctl =	snd_pcm_lib_ioctl,
-	.hw_params =	snd_nds_pcm_hw_params,
-	.hw_free =	snd_nds_pcm_hw_free,
-	.prepare =	snd_nds_pcm_prepare,
-	.trigger =	snd_nds_pcm_trigger,
-	.pointer =	snd_nds_pcm_pointer,
+	.open = snd_nds_playback_open,
+	.close = snd_nds_playback_close,
+	.ioctl = snd_pcm_lib_ioctl,
+	.hw_params = snd_nds_pcm_hw_params,
+	.hw_free = snd_nds_pcm_hw_free,
+	.prepare = snd_nds_pcm_prepare,
+	.trigger = snd_nds_pcm_trigger,
+	.pointer = snd_nds_pcm_pointer,
 };
 
 /* operators */
 static snd_pcm_ops_t snd_nds_capture_ops = {
-	.open =		snd_nds_capture_open,
-	.close =	snd_nds_capture_close,
-	.ioctl =	snd_pcm_lib_ioctl,
-	.hw_params =	snd_nds_pcm_hw_params,
-	.hw_free =	snd_nds_pcm_hw_free,
-	.prepare =	snd_nds_pcm_prepare,
-	.trigger =	snd_nds_pcm_trigger,
-	.pointer =	snd_nds_pcm_pointer,
+	.open = snd_nds_capture_open,
+	.close = snd_nds_capture_close,
+	.ioctl = snd_pcm_lib_ioctl,
+	.hw_params = snd_nds_pcm_hw_params,
+	.hw_free = snd_nds_pcm_hw_free,
+	.prepare = snd_nds_pcm_prepare,
+	.trigger = snd_nds_pcm_trigger,
+	.pointer = snd_nds_pcm_pointer,
 };
 
 /*
@@ -302,27 +292,23 @@ static int __devinit snd_nds_new_pcm(struct nds *chip)
 {
 	snd_pcm_t *pcm;
 	int err;
-	if ((err = snd_pcm_new(chip->card, "NDS", 0, 1, 1,
-			       &pcm)) < 0)
+	if ((err = snd_pcm_new(chip->card, "NDS", 0, 1, 1, &pcm)) < 0)
 		return err;
 	pcm->private_data = chip;
 	strcpy(pcm->name, "NDS");
 	chip->pcm = pcm;
 	/* set operators */
-	snd_pcm_set_ops(pcm, SNDRV_PCM_STREAM_PLAYBACK,
-			&snd_nds_playback_ops);
-	snd_pcm_set_ops(pcm, SNDRV_PCM_STREAM_CAPTURE,
-			&snd_nds_capture_ops);
+	snd_pcm_set_ops(pcm, SNDRV_PCM_STREAM_PLAYBACK, &snd_nds_playback_ops);
+	snd_pcm_set_ops(pcm, SNDRV_PCM_STREAM_CAPTURE, &snd_nds_capture_ops);
 	/* pre-allocation of buffers */
 	/* NOTE: this may fail */
-	snd_pcm_lib_preallocate_pages_for_all(pcm, SNDRV_DMA_TYPE_DEV,
-					      snd_dma_isa_data(),/*pretend to be an ISA device*/
-					      64*1024, 64*1024);
+	snd_pcm_lib_preallocate_pages_for_all(pcm, SNDRV_DMA_TYPE_DEV, snd_dma_isa_data(),	/*pretend to be an ISA device */
+					      64 * 1024, 64 * 1024);
 	return 0;
 }
 
 static irqreturn_t snd_nds_interrupt(int irq, void *dev_id,
-					struct pt_regs *regs)
+				     struct pt_regs *regs)
 {
 	struct nds *chip = dev_id;
 	snd_pcm_substream_t *substream = chip->substream;
@@ -330,9 +316,9 @@ static irqreturn_t snd_nds_interrupt(int irq, void *dev_id,
 
 	spin_lock(&chip->lock);
 
-	chip->period++ ;
-	if ( chip->period == runtime->periods )
-		chip->period = 0 ;
+	chip->period++;
+	if (chip->period == runtime->periods)
+		chip->period = 0;
 
 	spin_unlock(&chip->lock);
 
@@ -348,7 +334,7 @@ static irqreturn_t snd_nds_interrupt(int irq, void *dev_id,
 static int snd_nds_free(struct nds *chip)
 {
 	// turn the power off
-	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_POWER | 0 ;
+	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_POWER | 0;
 	kfree(chip);
 	return 0;
 }
@@ -356,7 +342,7 @@ static int snd_nds_free(struct nds *chip)
 /* component-destructor
  * (see "Management of Cards and Components")
  */
-static int snd_nds_dev_free(snd_device_t *device)
+static int snd_nds_dev_free(snd_device_t * device)
 {
 	return snd_nds_free(device->device_data);
 }
@@ -364,13 +350,12 @@ static int snd_nds_dev_free(snd_device_t *device)
 /* chip-specific constructor
  * (see "Management of Cards and Components")
  */
-static int __devinit snd_nds_create(snd_card_t *card,
-				       struct nds **rchip)
+static int __devinit snd_nds_create(snd_card_t * card, struct nds **rchip)
 {
 	struct nds *chip;
 	int err;
 	static snd_device_ops_t ops = {
-	       .dev_free = snd_nds_dev_free,
+		.dev_free = snd_nds_dev_free,
 	};
 
 	*rchip = NULL;
@@ -383,7 +368,7 @@ static int __devinit snd_nds_create(snd_card_t *card,
 	if (chip == NULL)
 		return -ENOMEM;
 	chip->card = card;
-	spin_lock_init( &chip->lock );
+	spin_lock_init(&chip->lock);
 
 	// TODO: register with FIFO or IPC here
 
@@ -394,9 +379,7 @@ static int __devinit snd_nds_create(snd_card_t *card,
 		return -EBUSY;
 	}
 
-
-	if ((err = snd_device_new(card, SNDRV_DEV_LOWLEVEL,
-				  chip, &ops)) < 0) {
+	if ((err = snd_device_new(card, SNDRV_DEV_LOWLEVEL, chip, &ops)) < 0) {
 		snd_nds_free(chip);
 		return err;
 	}
@@ -458,8 +441,5 @@ static void __exit snd_nds_exit(void)
 	//snd_card_free(nds_sound->card);
 }
 
-
-
 module_init(snd_nds_init);
 module_exit(snd_nds_exit);
-
