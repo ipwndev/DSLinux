@@ -14,20 +14,20 @@ stext:
 	str	r0, [r1]
 #endif
 
-	mov     r0, #0x12			@ Switch to IRQ Mode
-	msr     cpsr, r0
-	ldr     sp, =__sp_irq			@ Set IRQ stack
+	mov	r0, #0x12			@ Switch to IRQ Mode
+	msr	cpsr, r0
+	ldr	sp, =__sp_irq			@ Set IRQ stack
 
-	mov     r0, #0x1F			@ Switch to System Mode
-	msr     cpsr, r0
-	ldr     sp, =__sp_usr			@ Set user stack
+	mov	r0, #0x1F			@ Switch to System Mode
+	msr	cpsr, r0
+	ldr	sp, =__sp_usr			@ Set user stack
 
 	mov	r0, #0
-	mov	r1, =__bss_start
-	mov	r2, =__end
+	ldr	r1, =__bss_start
+	ldr	r2, =__end
 1:	cmp 	r1, r2
-	strcc   r0, [r1],#4
-	bcc 	1b
+	strcc	r0, [r1],#4
+	bcc	1b
 
 	/* Jump to main */
 	b	main
