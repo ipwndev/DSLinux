@@ -19,6 +19,7 @@
 #define SCHANNEL_PAN(n)		(*(volatile u8*)(0x04000402 + ((n)<<4)))
 #define SCHANNEL_SOURCE(n)	(*(volatile u32*)(0x04000404 + ((n)<<4)))
 #define SCHANNEL_LENGTH(n)	(*(volatile u32*)(0x0400040C + ((n)<<4)))
+#define SOUND_CR                (*(volatile u16*)0x04000500)
 #define SOUND_MASTER_VOL	(*(volatile u8*)0x04000500)
 #define POWER_CR		(*(volatile u16*)0x04000304)
 
@@ -40,9 +41,11 @@ void sound_play(void)
 	}
 
 	for (i = 0; i < s_channels; i++) {
-		SCHANNEL_VOL(i) = SOUND_VOL(128);
+		SCHANNEL_VOL(i) = SOUND_VOL(127);
 		SCHANNEL_CR(i) = SOUND_ENABLE | SOUND_REPEAT | s_format;
 	}
+
+	sound_set_master_volume(127);
 }
 
 void sound_set_rate(u32 rate)
@@ -58,7 +61,7 @@ void sound_set_address(u32 buffer)
 	u8 i;
 
 	for (i = 0; i < s_channels; i++)
-		SCHANNEL_SOURCE(i) = buffer + s_size / s_channels;
+		SCHANNEL_SOURCE(i) = buffer + i * (s_size / s_channels);
 };
 
 void sound_set_size(u32 size)
@@ -83,7 +86,7 @@ void sound_set_format(u8 format)
 /* set the master volume */
 void sound_set_master_volume(u8 vol)
 {
-	SOUND_MASTER_VOL = SOUND_VOL(vol);
+	SOUND_CR = SOUND_ENABLE | SOUND_VOL(vol);
 };
 
 /* Turn on/off sound 1 = on 0 = off */
@@ -91,7 +94,9 @@ void sound_set_power(u8 state)
 {
 	if (state) {
 		POWER_CR |= 1;
+		SOUND_CR = SOUND_ENABLE;
 	} else {
 		POWER_CR &= ~1;
+		SOUND_CR = 0;
 	};
 };
