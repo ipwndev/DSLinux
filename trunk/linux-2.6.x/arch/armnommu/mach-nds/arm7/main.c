@@ -24,45 +24,45 @@ static void recieveFIFOCommand(void)
 	u32 data;
 	u32 seconds = 0;
 
-	while ( ! ( REG_IPCFIFOCNT & (1<<8) ) )
-	{
+	while (!(REG_IPCFIFOCNT & (1 << 8))) {
 		data = REG_IPCFIFORECV;
 
-		switch ( data & 0xf0000000 )
-		{
-			case FIFO_POWER :
-				poweroff() ;
-				break ;
-			case FIFO_TIME :
-				seconds = nds_get_time7();
-				REG_IPCFIFOSEND = ( FIFO_TIME | FIFO_HIGH_BITS | (seconds>>16)      );
-				REG_IPCFIFOSEND = ( FIFO_TIME | FIFO_LOW_BITS  | (seconds & 0xFFFF) );
+		switch (data & 0xf0000000) {
+		case FIFO_POWER:
+			poweroff();
+			break;
+		case FIFO_TIME:
+			seconds = nds_get_time7();
+			REG_IPCFIFOSEND =
+			    (FIFO_TIME | FIFO_HIGH_BITS | (seconds >> 16));
+			REG_IPCFIFOSEND =
+			    (FIFO_TIME | FIFO_LOW_BITS | (seconds & 0xFFFF));
+			break;
+		case FIFO_SOUND:
+			switch (data & 0x0f000000) {
+			case FIFO_SOUND_FORMAT:
+				sound_set_format(data & 0x3);
 				break;
-			case FIFO_SOUND :
-				switch ( data & 0x0f000000 )
-				{
-					case FIFO_SOUND_FORMAT :
-						sound_set_format( data & 0x3 );
-						break;
-					case FIFO_SOUND_RATE :
-						sound_set_rate( data & 0x00ffffff );
-						break;
-					case FIFO_SOUND_CHANNELS :
-						sound_set_channels( data & 0xff );
-						break;
-					case FIFO_SOUND_DMA_ADDRESS :
-						sound_set_address( ( data & 0x00ffffff ) + 0x02000000 );
-						break;
-					case FIFO_SOUND_DMA_SIZE :
-						sound_set_size( data & 0x00ffffff );
-						break;
-					case FIFO_SOUND_TRIGGER :
-						sound_play();
-						break;
-					case FIFO_SOUND_POWER :
-						sound_set_power( data & 0x1 );
-						break;
-				}
+			case FIFO_SOUND_RATE:
+				sound_set_rate(data & 0x00ffffff);
+				break;
+			case FIFO_SOUND_CHANNELS:
+				sound_set_channels(data & 0xff);
+				break;
+			case FIFO_SOUND_DMA_ADDRESS:
+				sound_set_address((data & 0x00ffffff) +
+						  0x02000000);
+				break;
+			case FIFO_SOUND_DMA_SIZE:
+				sound_set_size(data & 0x00ffffff);
+				break;
+			case FIFO_SOUND_TRIGGER:
+				sound_play();
+				break;
+			case FIFO_SOUND_POWER:
+				sound_set_power(data & 0x1);
+				break;
+			}
 		}
 	}
 }
@@ -70,32 +70,30 @@ static void recieveFIFOCommand(void)
 /* sends touch state to ARM9 */
 static void sendTouchState(u16 buttons)
 {
-	u16 x,y;
+	u16 x, y;
 	static u8 lastx = 0, lasty = 0;
 
-	if ( buttons & TOUCH_RELEASED )
-	{
-		if ( lasty != 255 )
-			REG_IPCFIFOSEND = FIFO_TOUCH ;
-		lastx = 255 ;
-		lasty = 255 ;
-	} else { /* Some dude is smacking his fingerprint on the touchscreen. */
+	if (buttons & TOUCH_RELEASED) {
+		if (lasty != 255)
+			REG_IPCFIFOSEND = FIFO_TOUCH;
+		lastx = 255;
+		lasty = 255;
+	} else {		/* Some dude is smacking his fingerprint on the touchscreen. */
 		x = touchRead(TSC_MEASURE_X);
 		y = touchRead(TSC_MEASURE_Y);
-		x = ( (x - touch_cal_x1) * cntrl_width) /
-			(touch_width) + touch_cntrl_x1;
-		y = ( (y - touch_cal_y1) * cntrl_height) /
-			(touch_height) + touch_cntrl_y1;
-		x = MIN(255,MAX(x,0));
-		y = MIN(191,MAX(y,0));
+		x = ((x - touch_cal_x1) * cntrl_width) /
+		    (touch_width) + touch_cntrl_x1;
+		y = ((y - touch_cal_y1) * cntrl_height) /
+		    (touch_height) + touch_cntrl_y1;
+		x = MIN(255, MAX(x, 0));
+		y = MIN(191, MAX(y, 0));
 
-		if ( lastx + 6 > x && lastx < x + 6 &&
-		     lasty + 6 > y && lasty < y + 6 )
-		{
-			REG_IPCFIFOSEND = FIFO_TOUCH | 1 << 16 | x << 8 | y ;
+		if (lastx + 6 > x && lastx < x + 6 &&
+		    lasty + 6 > y && lasty < y + 6) {
+			REG_IPCFIFOSEND = FIFO_TOUCH | 1 << 16 | x << 8 | y;
 		}
-		lastx = x ;
-		lasty = y ;
+		lastx = x;
+		lasty = y;
 	}
 }
 
@@ -104,11 +102,10 @@ void InterruptHandler(void)
 	u16 buttons;
 	static u16 oldbuttons;
 
-	if ( NDS_IF & IRQ_RECV )
+	if (NDS_IF & IRQ_RECV)
 		recieveFIFOCommand();
 
-	if ( NDS_IF & IRQ_VBLANK )
-	{
+	if (NDS_IF & IRQ_VBLANK) {
 		/* read X and Y, lid and touchscreen buttons */
 		buttons = XKEYS;
 
@@ -121,18 +118,18 @@ void InterruptHandler(void)
 		sendTouchState(buttons);
 
 		/* clear FIFO errors (just in case) */
-		if ( REG_IPCFIFOCNT & (1<<14) )
-			REG_IPCFIFOCNT |= (1<<15) | (1<<14);
+		if (REG_IPCFIFOCNT & (1 << 14))
+			REG_IPCFIFOCNT |= (1 << 15) | (1 << 14);
 	}
 
 	if (NDS_IF & IRQ_ARM9) {
 		switch (ipcsync_get_remote_status()) {
-			case SHMEMIPC_REQUEST_FLUSH:
-				shmemipc_serve_flush_request();
-				break;
-			case SHMEMIPC_FLUSH_COMPLETE:
-				shmemipc_flush_complete();
-				break;
+		case SHMEMIPC_REQUEST_FLUSH:
+			shmemipc_serve_flush_request();
+			break;
+		case SHMEMIPC_FLUSH_COMPLETE:
+			shmemipc_flush_complete();
+			break;
 		}
 	}
 
@@ -140,17 +137,17 @@ void InterruptHandler(void)
 	NDS_IF = NDS_IF;
 }
 
-int main( void )
+int main(void)
 {
 	/* Disable Interrupts */
 	NDS_IME = 0;
 
 	/* Read calibration values, the arm9 will probably overwrite the originals later */
-	touch_width  = TOUCH_CAL_X2 - TOUCH_CAL_X1;
+	touch_width = TOUCH_CAL_X2 - TOUCH_CAL_X1;
 	touch_height = TOUCH_CAL_Y2 - TOUCH_CAL_Y1;
 	touch_cal_x1 = TOUCH_CAL_X1;
 	touch_cal_y1 = TOUCH_CAL_Y1;
-	cntrl_width  = TOUCH_CNTRL_X2 - TOUCH_CNTRL_X1;
+	cntrl_width = TOUCH_CNTRL_X2 - TOUCH_CNTRL_X1;
 	cntrl_height = TOUCH_CNTRL_Y2 - TOUCH_CNTRL_Y1;
 	touch_cntrl_x1 = TOUCH_CNTRL_X1;
 	touch_cntrl_y1 = TOUCH_CNTRL_Y1;
@@ -160,19 +157,18 @@ int main( void )
 	NDS_IE = IRQ_VBLANK | IRQ_RECV | IRQ_ARM9;
 
 	/* Enable FIFO */
-	REG_IPCFIFOCNT = (1<<15) | (1<<3) | (1<<10) | (1<<14);
+	REG_IPCFIFOCNT = (1 << 15) | (1 << 3) | (1 << 10) | (1 << 14);
 
 	ipcsync_allow_local_interrupt();
 
 	/* Set interrupt handler */
-	*(volatile u32*)(0x04000000-4) = (u32)&InterruptHandler;
+	*(volatile u32 *)(0x04000000 - 4) = (u32) & InterruptHandler;
 
 	/* Enable Interrupts */
 	NDS_IF = ~0;
 	NDS_IME = 1;
 
-	while(1)
-	{
+	while (1) {
 		swiWaitForVBlank();
 	}
 }
