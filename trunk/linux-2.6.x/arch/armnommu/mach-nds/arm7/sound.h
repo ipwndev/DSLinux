@@ -19,7 +19,6 @@ extern void sound_set_rate(u32 rate);
 
 /* turn on/off sound 1 = on 0 = off */
 extern void sound_set_power(u8 state);
- 
+
 /* start playing */
 extern void sound_play(void);
- 
