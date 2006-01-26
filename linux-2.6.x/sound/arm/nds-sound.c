@@ -124,7 +124,7 @@ void nds_set_dma_setup(struct nds *chip, unsigned char *dma_area,
 /* Get the hardware pointer */
 unsigned int nds_get_hw_pointer(struct nds *chip)
 {
-	return chip->period;
+	return chip->period * chip->period_size;
 }
 
 /* open callback */
