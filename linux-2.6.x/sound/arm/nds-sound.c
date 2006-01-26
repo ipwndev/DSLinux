@@ -121,12 +121,6 @@ void nds_set_dma_setup(struct nds *chip, unsigned char *dma_area,
 
 }
 
-/* Get the hardware pointer */
-unsigned int nds_get_hw_pointer(struct nds *chip)
-{
-	return chip->period * chip->period_size;
-}
-
 /* open callback */
 static int snd_nds_playback_open(snd_pcm_substream_t * substream)
 {
@@ -259,9 +253,10 @@ static snd_pcm_uframes_t snd_nds_pcm_pointer(snd_pcm_substream_t * substream)
 {
 	struct nds *chip = snd_pcm_substream_chip(substream);
 	unsigned int current_ptr;
-	/* get the current hardware pointer */
-	current_ptr = nds_get_hw_pointer(chip);
-	return current_ptr;
+	snd_pcm_runtime_t *runtime = substream->runtime;
+
+	/* fake the current hardware pointer */
+	return chip->period * runtime->period_size;
 }
 
 /* operators */
@@ -317,12 +312,14 @@ static irqreturn_t snd_nds_interrupt(int irq, void *dev_id,
 	struct nds *chip = dev_id;
 	snd_pcm_substream_t *substream = chip->substream;
 	snd_pcm_runtime_t *runtime = substream->runtime;
+    u8 period ;
 
 	spin_lock(&chip->lock);
 
-	chip->period++;
-	if (chip->period == runtime->periods)
-		chip->period = 0;
+	period = chip->period + 1;
+	if (period == runtime->periods)
+		period = 0;
+    chip->period = period;
 
 	spin_unlock(&chip->lock);
 
