@@ -9,7 +9,7 @@ AFLAGS_head.o := -DTEXTADDR=$(TEXTADDR)
 
 obj-y		:= compat.o dma.o entry.o entry-common.o irq.o   \
 		   process.o ptrace.o semaphore.o setup.o signal.o sys_arm.o \
-		   time.o traps.o
+		   time.o traps.o io.o
 
 obj-$(CONFIG_APM)		+= apm.o
 obj-$(CONFIG_MODULES)		+= armksyms.o module.o
