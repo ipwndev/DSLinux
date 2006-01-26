@@ -12,6 +12,7 @@
 #define SOUND_FORMAT_16BIT	(1<<29)
 #define SOUND_FORMAT_ADPCM	(2<<29)
 #define SOUND_FORMAT_PSG	(3<<29)
+#define SCHANNEL_ENABLE		(1<<31)
 
 #define SCHANNEL_TIMER(n)	(*(volatile u16*)(0x04000408 + ((n)<<4)))
 #define SCHANNEL_CR(n)		(*(volatile u32*)(0x04000400 + ((n)<<4)))
@@ -19,7 +20,7 @@
 #define SCHANNEL_PAN(n)		(*(volatile u8*)(0x04000402 + ((n)<<4)))
 #define SCHANNEL_SOURCE(n)	(*(volatile u32*)(0x04000404 + ((n)<<4)))
 #define SCHANNEL_LENGTH(n)	(*(volatile u32*)(0x0400040C + ((n)<<4)))
-#define SOUND_CR                (*(volatile u16*)0x04000500)
+#define SOUND_CR		(*(volatile u16*)0x04000500)
 #define SOUND_MASTER_VOL	(*(volatile u8*)0x04000500)
 #define POWER_CR		(*(volatile u16*)0x04000304)
 
@@ -32,17 +33,14 @@ void sound_play(void)
 {
 	u8 i;
 
-	if (s_channels == 1) {
-		SCHANNEL_PAN(0) = 64;
-	} else {
-		for (i = 0; i < s_channels; i++) {
-			SCHANNEL_PAN(i) = (i % 2) ? 128 : 0;
-		}
+	for (i = 0; i < s_channels; i++) {
+		SCHANNEL_CR(i) = SCHANNEL_ENABLE | SOUND_REPEAT | s_format;
+		SCHANNEL_VOL(i) = SOUND_VOL(127);
+		SCHANNEL_PAN(i) = (i % 2) ? 128 : 0;
 	}
 
-	for (i = 0; i < s_channels; i++) {
-		SCHANNEL_VOL(i) = SOUND_VOL(127);
-		SCHANNEL_CR(i) = SOUND_ENABLE | SOUND_REPEAT | s_format;
+	if (s_channels == 1) {
+		SCHANNEL_PAN(0) = 64;
 	}
 
 	sound_set_master_volume(127);
@@ -70,7 +68,7 @@ void sound_set_size(u32 size)
 
 	s_size = size;
 	for (i = 0; i < s_channels; i++)
-		SCHANNEL_LENGTH(i) = s_size / s_channels;
+		SCHANNEL_LENGTH(i) = (s_size / s_channels) >> 2;
 };
 
 void sound_set_channels(u8 channels)
