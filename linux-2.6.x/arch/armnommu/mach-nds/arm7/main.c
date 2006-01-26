@@ -57,7 +57,10 @@ static void recieveFIFOCommand(void)
 				sound_set_size(data & 0x00ffffff);
 				break;
 			case FIFO_SOUND_TRIGGER:
-				sound_play();
+                if ( data & 1 )
+                    sound_play();
+                else
+                    sound_stop();
 				break;
 			case FIFO_SOUND_POWER:
 				sound_set_power(data & 0x1);

@@ -46,13 +46,21 @@ void sound_play(void)
 	sound_set_master_volume(127);
 }
 
+void sound_stop(void)
+{
+	u8 i;
+
+	for (i = 0; i < s_channels; i++)
+		SCHANNEL_CR(i) = 0;
+}
+
 void sound_set_rate(u32 rate)
 {
 	u8 i;
 
 	for (i = 0; i < s_channels; i++)
 		SCHANNEL_TIMER(i) = SOUND_FREQ(rate);
-};
+}
 
 void sound_set_address(u32 buffer)
 {
@@ -60,7 +68,7 @@ void sound_set_address(u32 buffer)
 
 	for (i = 0; i < s_channels; i++)
 		SCHANNEL_SOURCE(i) = buffer + i * (s_size / s_channels);
-};
+}
 
 void sound_set_size(u32 size)
 {
@@ -69,7 +77,7 @@ void sound_set_size(u32 size)
 	s_size = size;
 	for (i = 0; i < s_channels; i++)
 		SCHANNEL_LENGTH(i) = (s_size / s_channels) >> 2;
-};
+}
 
 void sound_set_channels(u8 channels)
 {
@@ -85,7 +93,7 @@ void sound_set_format(u8 format)
 void sound_set_master_volume(u8 vol)
 {
 	SOUND_CR = SOUND_ENABLE | SOUND_VOL(vol);
-};
+}
 
 /* Turn on/off sound 1 = on 0 = off */
 void sound_set_power(u8 state)
@@ -94,7 +102,7 @@ void sound_set_power(u8 state)
 		POWER_CR |= 1;
 		SOUND_CR = SOUND_ENABLE;
 	} else {
-		POWER_CR &= ~1;
+		//POWER_CR &= ~1;
 		SOUND_CR = 0;
-	};
-};
+	}
+}

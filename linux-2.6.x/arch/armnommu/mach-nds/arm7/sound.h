@@ -22,3 +22,6 @@ extern void sound_set_power(u8 state);
 
 /* start playing */
 extern void sound_play(void);
+
+/* stop playing */
+extern void sound_stop(void);
