@@ -220,8 +220,6 @@ static int snd_nds_pcm_prepare(snd_pcm_substream_t * substream)
 	default:
 		break;
 	}
-    printk("TIMER1_DATA=%x\n", TIMER1_DATA);
-    printk("TIMER2_DATA=%x\n", TIMER2_DATA);
 
 	nds_set_channels(chip, runtime->channels);
 	nds_set_sample_format(chip, runtime->format);
