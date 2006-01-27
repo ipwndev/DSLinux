@@ -57,10 +57,10 @@ static void recieveFIFOCommand(void)
 				sound_set_size(data & 0x00ffffff);
 				break;
 			case FIFO_SOUND_TRIGGER:
-                if ( data & 1 )
-                    sound_play();
-                else
-                    sound_stop();
+				if (data & 1)
+					sound_play();
+				else
+					sound_stop();
 				break;
 			case FIFO_SOUND_POWER:
 				sound_set_power(data & 0x1);
@@ -105,8 +105,12 @@ void InterruptHandler(void)
 	u16 buttons;
 	static u16 oldbuttons;
 
-	if (NDS_IF & IRQ_RECV)
+	if (NDS_IF & IRQ_RECV) {
+		/* Acknowledge Interrupt */
+		NDS_IF = IRQ_RECV;
+
 		recieveFIFOCommand();
+	}
 
 	if (NDS_IF & IRQ_VBLANK) {
 		/* read X and Y, lid and touchscreen buttons */
@@ -123,9 +127,15 @@ void InterruptHandler(void)
 		/* clear FIFO errors (just in case) */
 		if (REG_IPCFIFOCNT & (1 << 14))
 			REG_IPCFIFOCNT |= (1 << 15) | (1 << 14);
+
+		/* Acknowledge Interrupts */
+		NDS_IF = IRQ_VBLANK;
 	}
 
 	if (NDS_IF & IRQ_ARM9) {
+		/* Acknowledge Interrupts */
+		NDS_IF = IRQ_ARM9;
+
 		switch (ipcsync_get_remote_status()) {
 		case SHMEMIPC_REQUEST_FLUSH:
 			shmemipc_serve_flush_request();
@@ -134,10 +144,8 @@ void InterruptHandler(void)
 			shmemipc_flush_complete();
 			break;
 		}
-	}
 
-	/* Acknowledge Interrupts */
-	NDS_IF = NDS_IF;
+	}
 }
 
 int main(void)
