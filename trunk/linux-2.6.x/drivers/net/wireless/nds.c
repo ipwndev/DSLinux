@@ -49,7 +49,7 @@ MODULE_AUTHOR("Bret Thaeler <bthaeler@aol.com>");
 MODULE_DESCRIPTION("Nintendo DS wireless LAN driver");
 MODULE_LICENSE("GPL");
 
-static int pc_debug = 9;
+static int pc_debug = 0;
 MODULE_PARM(pc_debug, "i");
 #define DEBUG(n, args...) if (pc_debug>(n)) printk(args)
 
