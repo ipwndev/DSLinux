@@ -41,3 +41,4 @@
 #define shmemipc_unlock() NDS_IE |= IRQ_ARM9
 
 void shmemipc_serve_flush_request(void);
+void shmemipc_flush_complete(void);

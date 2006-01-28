@@ -30,6 +30,8 @@
 #define FIFO_HIGH_BITS  (1<<16)
 #define FIFO_LOW_BITS   (1<<17)
 
+#define FIFO_WIFI_CMD(c, d) (FIFO_WIFI | ((c & 0x3f) << 18) | (d & 0x0003ffff))
+
 #define FIFO_SOUND_CHANNELS	(1<<24)
 #define FIFO_SOUND_DMA_ADDRESS	(2<<24)
 #define FIFO_SOUND_DMA_SIZE	(3<<24)
@@ -50,6 +52,7 @@ struct fifo_cb
 		void (*button_handler)( u32 state ) ;
 		void (*touch_handler)( u8 pressed, u8 x, u8 y ) ;
 		void (*time_handler)( u32 seconds ) ;
+		void (*wifi_handler)( u8 cmd, u8 offset, u16 data) ;
 		/* ... */
 	} handler ;
 	struct fifo_cb *next ;

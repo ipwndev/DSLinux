@@ -156,12 +156,9 @@ int shmemipc_flush(u8 user)
 	return 0;
 }
 
-static void dispatch_interrupt(u8 type)
+static void dispatch_interrupt(u8 type, struct shmemipc_block *block)
 {
-	struct shmemipc_block* block = NULL;
 	struct shmemipc_cb *cb;
-
-	block = SHMEMIPC_BLOCK;
 
 	//printk("shmemipc: dispatching interrupt type %i for user %i\n", (int)type, (int)block->user);
 
@@ -170,6 +167,7 @@ static void dispatch_interrupt(u8 type)
 			case SHMEMIPC_USER_SOUND:
 				break;
 			case SHMEMIPC_USER_WIFI:
+				cb->handler.wifi_callback(type);
 				break;
 			case SHMEMIPC_USER_FIRMWARE:
 				cb->handler.firmware_callback(type);
@@ -183,7 +181,7 @@ static void shmemipc_flush_complete(void)
 	/* The ARM7 is done flushing our block. */
 	shmemipc_lock();
 	map_to_arm9(SHMEMIPC_BLOCK_ARM9);
-	dispatch_interrupt(SHMEMIPC_FLUSH_COMPLETE);
+	dispatch_interrupt(SHMEMIPC_FLUSH_COMPLETE, SHMEMIPC_BLOCK_ARM9);
 	shmemipc_unlock();
 	up(&flush_mtx); /* taken in shmemipc_flush() */
 }
@@ -193,7 +191,7 @@ static void shmemipc_serve_flush_request(void)
 	/* The ARM7 wants us to flush its block */
 	shmemipc_lock();
 	map_to_arm9(SHMEMIPC_BLOCK_ARM7);
-	dispatch_interrupt(SHMEMIPC_REQUEST_FLUSH);
+	dispatch_interrupt(SHMEMIPC_REQUEST_FLUSH, SHMEMIPC_BLOCK_ARM7);
 	map_to_arm7(SHMEMIPC_BLOCK_ARM7);
 	shmemipc_unlock();
 	ipcsync_trigger_remote_interrupt(SHMEMIPC_FLUSH_COMPLETE);

@@ -15,7 +15,7 @@ endif
 
 ROMFS_DIRS = bin dev etc lib proc sbin supercard/linux
 
-FS_DIRS = home usr/lib usr/bin var/tmp
+FS_DIRS = home usr/lib usr/bin usr/share/udhcpc var/tmp
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
@@ -70,11 +70,13 @@ romfs:
 	$(ROMFSINST) -s supercard/linux/usr /usr
 	$(ROMFSINST) -s supercard/linux/home /home
 	$(ROMFSINST) -s /var/tmp /tmp
+	$(ROMFSINST) -s /usr/share/udhcpc/resolv.conf /etc/resolv.conf
 	$(ROMFSINST) /etc/rc
 	$(ROMFSINST) /etc/inittab
 	$(ROMFSINST) /etc/motd
 	$(ROMFSINST) /etc/issue
 	$(ROMFSINST) /etc/passwd
+	$(ROMFSINST) /usr/share/udhcpc/default.script
 	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
 
 image:
