@@ -128,12 +128,12 @@ void InterruptHandler(void)
 		if (REG_IPCFIFOCNT & (1 << 14))
 			REG_IPCFIFOCNT |= (1 << 15) | (1 << 14);
 
-		/* Acknowledge Interrupts */
+		/* Acknowledge Interrupt */
 		NDS_IF = IRQ_VBLANK;
 	}
 
 	if (NDS_IF & IRQ_ARM9) {
-		/* Acknowledge Interrupts */
+		/* Acknowledge Interrupt */
 		NDS_IF = IRQ_ARM9;
 
 		switch (ipcsync_get_remote_status()) {
