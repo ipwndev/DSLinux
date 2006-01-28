@@ -11,9 +11,10 @@ IMAGE    = $(IMAGEDIR)/dslinux.nds.gba
 else
 IMAGE    = $(IMAGEDIR)/dslinux.ds.nds
 endif
+FATFS	 = supercard
 
 
-ROMFS_DIRS = bin dev etc lib proc sbin supercard/linux
+ROMFS_DIRS = bin dev etc lib proc sbin $(FATFS)/linux
 
 FS_DIRS = home usr/lib usr/bin usr/share/udhcpc var/tmp
 
@@ -64,11 +65,11 @@ romfs:
 	# on non-ptmx ptys
 	chmod 620 $(ROMFSDIR)/dev/@[pt]ty[pqrsPQRS][0-9a-f],*
 	for i in $(FS_DIRS); do \
-		[ -d $(ROMFSDIR)/supercard/linux/$$i ] || mkdir -p $(ROMFSDIR)/supercard/linux/$$i; \
+		[ -d $(ROMFSDIR)/$(FATFS)/linux/$$i ] || mkdir -p $(ROMFSDIR)/$(FATFS)/linux/$$i; \
 	done
-	$(ROMFSINST) -s supercard/linux/var /var
-	$(ROMFSINST) -s supercard/linux/usr /usr
-	$(ROMFSINST) -s supercard/linux/home /home
+	$(ROMFSINST) -s $(FATFS)/linux/var /var
+	$(ROMFSINST) -s $(FATFS)/linux/usr /usr
+	$(ROMFSINST) -s $(FATFS)/linux/home /home
 	$(ROMFSINST) -s /var/tmp /tmp
 	$(ROMFSINST) -s /usr/share/udhcpc/resolv.conf /etc/resolv.conf
 	$(ROMFSINST) /etc/rc
@@ -84,7 +85,7 @@ image:
 	[ -d $(IMAGEDIR)/linux ] || mkdir -p $(IMAGEDIR)/linux
 	$(CROSS_COMPILE)flthdr -z $(ROMFSDIR)/bin/*
 	-rm -r $(IMAGEDIR)/linux
-	mv $(ROMFSDIR)/supercard/linux $(IMAGEDIR)
+	mv $(ROMFSDIR)/$(FATFS)/linux $(IMAGEDIR)
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
 	if [ "$(CONFIG_NDS_NDS)" = "y" ]; then \
 		BSS=`$(CROSS_COMPILE)objdump --headers $(ROOTDIR)/$(LINUXDIR)/linux | \
@@ -104,7 +105,7 @@ image:
 			-7 $(ROOTDIR)/$(LINUXDIR)/arch/armnommu/mach-nds/arm7.bin \
 		       	-r7 0x03800000 -e7 0x03800000  \
 			-b tux.bmp "DSLinux;Port of Linux;to the DS!" ; \
-		( cd $(IMAGEDIR); tar -cvzf dslinux-supercardcf.tgz linux dslinux.nds ) \
+		( cd $(IMAGEDIR); tar -cvzf dslinux-$(FATFS)cf.tgz linux dslinux.nds ) \
 	else \
 	        $(CROSS_COMPILE)objcopy -O binary \
                         --remove-section=.text --remove-section=.init \
@@ -113,6 +114,6 @@ image:
                         -j .init -j .text \
                         $(ROOTDIR)/$(LINUXDIR)/linux $(IMAGEDIR)/linux.text ; \
 		cat $(IMAGEDIR)/linux.text $(IMAGEDIR)/linux.data $(ROMFSIMG) > $(IMAGE) ; \
-		( cd $(IMAGEDIR); tar -cvzf dslinux-supercardcf.tgz linux dslinux.ds.nds ) \
+		( cd $(IMAGEDIR); tar -cvzf dslinux-$(FATFS)cf.tgz linux dslinux.ds.nds ) \
 	fi
 
