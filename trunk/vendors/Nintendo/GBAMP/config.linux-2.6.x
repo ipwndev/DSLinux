@@ -206,15 +206,17 @@ CONFIG_MTD_FIRMWARE=y
 # Networking support
 #
 CONFIG_NET=y
+CONFIG_NET_WIRELESS=y
 
 #
 # Networking options
 #
-# CONFIG_PACKET is not set
+CONFIG_PACKET=y
+# CONFIG_PACKET_MMAP is not set
 # CONFIG_NETLINK_DEV is not set
 CONFIG_UNIX=y
 # CONFIG_NET_KEY is not set
-# CONFIG_INET is not set
+CONFIG_INET=y
 # CONFIG_INET_AH is not set
 # CONFIG_INET_ESP is not set
 # CONFIG_INET_IPCOMP is not set
@@ -232,6 +234,42 @@ CONFIG_UNIX=y
 # CONFIG_NET_DIVERT is not set
 # CONFIG_WAN_ROUTER is not set
 # CONFIG_NET_HW_FLOWCONTROL is not set
+CONFIG_NETDEVICES=y
+CONFIG_NET_RADIO=y
+CONFIG_NDS_WIFI=y
+
+# CONFIG_IP_MULTICAST is not set
+# CONFIG_IP_ADVANCED_ROUTER is not set
+# CONFIG_IP_PNP is not set
+# CONFIG_NET_IPIP is not set
+# CONFIG_NET_IPGRE is not set
+# CONFIG_ARPD is not set
+# CONFIG_SYN_COOKIES is not set
+# CONFIG_IPV6 is not set
+# CONFIG_IP_SCTP is not set
+# CONFIG_ECONET is not set
+# CONFIG_DUMMY is not set
+# CONFIG_BONDING is not set
+# CONFIG_EQUALIZER is not set
+# CONFIG_TUN is not set
+# CONFIG_NET_ETHERNET is not set
+# CONFIG_NE2000 is not set
+# CONFIG_STRIP is not set
+# CONFIG_ATMEL is not set
+# CONFIG_WAN is not set
+# CONFIG_PPP is not set
+# CONFIG_SLIP is not set
+# CONFIG_SHAPER is not set
+# CONFIG_NETCONSOLE is not set
+# CONFIG_DVB is not set
+# CONFIG_NFS_FS is not set
+# CONFIG_NFSD is not set
+# CONFIG_SMB_FS is not set
+# CONFIG_CIFS is not set
+# CONFIG_NCP_FS is not set
+# CONFIG_CODA_FS is not set
+# CONFIG_AFS_FS is not set
+
 
 #
 # QoS and/or fair queueing
@@ -248,7 +286,6 @@ CONFIG_UNIX=y
 # CONFIG_HAMRADIO is not set
 # CONFIG_IRDA is not set
 # CONFIG_BT is not set
-# CONFIG_NETDEVICES is not set
 
 #
 # ATA/ATAPI/MFM/RLL support
