@@ -146,6 +146,13 @@ struct shmemipc_firmware_block {
 	u_char data[SHMEMIPC_FIRMWARE_DATA_SIZE];
 };
 
+
+struct shmemipc_wifi_block {
+	u16 type;
+	u16 length;
+	u_char data[1600];
+};
+
 /* Drivers _must_ use these macros to lock the memory block for access!
  * Unfortunately, we cannot use spinlocks because spinlock.h will bail
  * when we include it ("SMP not supported").  */
@@ -162,6 +169,7 @@ struct shmemipc_firmware_block {
 struct shmemipc_block {
 	u8 user;
 	struct shmemipc_firmware_block firmware;
+	struct shmemipc_wifi_block wifi;
 };
 
 /* Callbacks will be called on ARM7 interrupts if their user
@@ -175,6 +183,7 @@ struct shmemipc_cb {
 	{
 		/* ... */
 		void (*firmware_callback)(u8 type);
+		void (*wifi_callback)(u8 type);
 	} handler;
 	struct shmemipc_cb *next;
 };

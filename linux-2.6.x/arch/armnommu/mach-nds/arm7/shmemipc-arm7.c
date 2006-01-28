@@ -29,9 +29,22 @@
 
 #include "shmemipc-arm7.h"
 #include "spi.h"
+#include "wifi.h"
 
 void shmemipc_flush_complete(void)
 {
+	switch (SHMEMIPC_BLOCK_ARM7->user) {
+		case SHMEMIPC_USER_WIFI:
+			if (SHMEMIPC_BLOCK_ARM7->wifi.type == 1)
+				wifi_tx_q_complete();
+			else
+			if (SHMEMIPC_BLOCK_ARM7->wifi.type == 2)
+				wifi_stats_query_complete();
+			else
+			if (SHMEMIPC_BLOCK_ARM7->wifi.type == 3)
+				wifi_ap_query_complete();
+			break;
+	}
 }
 
 void shmemipc_serve_flush_request(void)
@@ -43,6 +56,12 @@ void shmemipc_serve_flush_request(void)
 		break;
 	case SHMEMIPC_USER_WIFI:
 		/* Handle flush request. */
+		shmemipc_lock();
+		if (SHMEMIPC_BLOCK_ARM9->wifi.type == 1) {
+			wifi_send_ether_packet(SHMEMIPC_BLOCK_ARM9->wifi.length,
+			  SHMEMIPC_BLOCK_ARM9->wifi.data);
+		}
+		shmemipc_unlock();
 		ipcsync_trigger_remote_interrupt(SHMEMIPC_FLUSH_COMPLETE);
 		break;
 	case SHMEMIPC_USER_FIRMWARE:

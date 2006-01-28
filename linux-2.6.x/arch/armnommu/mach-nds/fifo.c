@@ -51,6 +51,12 @@ static irqreturn_t ndsfifo_interrupt(int irq, void *dev_id, struct pt_regs *regs
                     case FIFO_TIME:
                         cb->handler.time_handler( data & 0xffffff ) ;
                         break;
+					case FIFO_WIFI:
+						cb->handler.wifi_handler(
+						  (data >> 18) & 0x3f,
+						  (data >> 16) & 0x03,
+						  data & 0xffff);
+						break;
 					default:
 						break;
 				}

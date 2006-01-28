@@ -11,11 +11,41 @@ extern void swiWaitForVBlank(void);
 
 #define DISP_SR		(*(volatile u16*)0x04000004)
 
+#define POWERCNT7   (*(volatile u16*)0x04000304)
+
+// Wifi regs
+#define WIFI_REG(ofs)   (*(volatile u16*)(0x04800000+(ofs)))
+#define WIFI_WEPKEY0    ( (volatile u16*)0x04805F80)
+#define WIFI_WEPKEY1    ( (volatile u16*)0x04805FA0)
+#define WIFI_WEPKEY2    ( (volatile u16*)0x04805FC0)
+#define WIFI_WEPKEY3    ( (volatile u16*)0x04805FE0)
+
+#define WIFI_MODE_RST   (*(volatile u16*)0x04800004)
+#define WIFI_MODE_WEP   (*(volatile u16*)0x04800006)
+#define WIFI_IF         (*(volatile u16*)0x04800010)
+#define WIFI_IE         (*(volatile u16*)0x04800012)
+#define WIFI_MACADDR    ( (volatile u16*)0x04800018)
+#define WIFI_BSSID      ( (volatile u16*)0x04800020)
+#define WIFI_AIDS       (*(volatile u16*)0x04800028)
+#define WIFI_RETRLIMIT  (*(volatile u16*)0x0480002C)
+#define WIFI_POWERSTATE (*(volatile u16*)0x0480003C)
+#define WIFI_RANDOM     (*(volatile u16*)0x04800044)
+
+#define WIFI_BBSIOCNT   (*(volatile u16*)0x04800158)
+#define WIFI_BBSIOWRITE (*(volatile u16*)0x0480015A)
+#define WIFI_BBSIOREAD  (*(volatile u16*)0x0480015C)
+#define WIFI_BBSIOBUSY  (*(volatile u16*)0x0480015E)
+#define WIFI_RFSIODATA2 (*(volatile u16*)0x0480017C)
+#define WIFI_RFSIODATA1 (*(volatile u16*)0x0480017E)
+#define WIFI_RFSIOBUSY  (*(volatile u16*)0x04800180)
+
+
 #define DISP_VBLANK_IRQ	(1 << 3)
 
 #define IRQ_VBLANK	(1 << 0)
 #define IRQ_ARM9	(1 << 16)
 #define IRQ_RECV	(1 << 18)
+#define IRQ_WIFI	(1 << 24)
 
 #define XKEYS		(*(volatile u16*)0x04000136)
 #define TOUCH_RELEASED  0x40

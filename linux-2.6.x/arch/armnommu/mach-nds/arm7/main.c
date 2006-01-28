@@ -7,6 +7,7 @@
 #include "arm7.h"
 #include "shmemipc-arm7.h"
 #include "spi.h"
+#include "wifi.h"
 #include "time.h"
 
 static s16 cntrl_width;
@@ -18,11 +19,14 @@ static s16 touch_height;
 static s16 touch_cal_x1;
 static s16 touch_cal_y1;
 
+extern u32 nds_get_time7(void);
+
 /* recieve outstanding FIFO commands from ARM9 */
 static void recieveFIFOCommand(void)
 {
 	u32 data;
 	u32 seconds = 0;
+	int cmd;
 
 	while (!(REG_IPCFIFOCNT & (1 << 8))) {
 		data = REG_IPCFIFORECV;
@@ -66,6 +70,86 @@ static void recieveFIFOCommand(void)
 				sound_set_power(data & 0x1);
 				break;
 			}
+			break;
+		case FIFO_WIFI:
+			cmd = (data >> 18) & 0x3f;
+			switch (cmd) {
+			case WIFI_CMD_UP:
+				wifi_open();
+				break;
+			case WIFI_CMD_DOWN:
+				wifi_close();
+				break;
+			case WIFI_CMD_MAC_QUERY:
+				wifi_mac_query();
+				break;
+			case WIFI_CMD_STATS_QUERY:
+				wifi_stats_query();
+				break;
+			case WIFI_CMD_SET_ESSID1:
+				Wifi_SetSSID(((data >> 16) & 0x3),
+					     (data >> 8) & 0xff, data & 0xff);
+				break;
+			case WIFI_CMD_SET_ESSID2:
+				Wifi_SetSSID(4 + ((data >> 16) & 0x3),
+					     (data >> 8) & 0xff, data & 0xff);
+				break;
+			case WIFI_CMD_SET_ESSID3:
+				Wifi_SetSSID(8 + ((data >> 16) & 0x3),
+					     (data >> 8) & 0xff, data & 0xff);
+				break;
+			case WIFI_CMD_SET_ESSID4:
+				Wifi_SetSSID(12 + ((data >> 16) & 0x3),
+					     (data >> 8) & 0xff, data & 0xff);
+				break;
+			case WIFI_CMD_SET_CHANNEL:
+				Wifi_SetChannel(data & 0xff);
+				break;
+			case WIFI_CMD_SET_WEPKEY0:
+				Wifi_SetWepKey(0, ((data >> 16) & 0x3),
+					       (data >> 8) & 0xff, data & 0xff);
+				break;
+			case WIFI_CMD_SET_WEPKEY0A:
+				Wifi_SetWepKey(0, 4 + ((data >> 16) & 0x3),
+					       (data >> 8) & 0xff, data & 0xff);
+				break;
+			case WIFI_CMD_SET_WEPKEY1:
+				Wifi_SetWepKey(1, ((data >> 16) & 0x3),
+					       (data >> 8) & 0xff, data & 0xff);
+				break;
+			case WIFI_CMD_SET_WEPKEY1A:
+				Wifi_SetWepKey(1, 4 + ((data >> 16) & 0x3),
+					       (data >> 8) & 0xff, data & 0xff);
+				break;
+			case WIFI_CMD_SET_WEPKEY2:
+				Wifi_SetWepKey(2, ((data >> 16) & 0x3),
+					       (data >> 8) & 0xff, data & 0xff);
+				break;
+			case WIFI_CMD_SET_WEPKEY2A:
+				Wifi_SetWepKey(2, 4 + ((data >> 16) & 0x3),
+					       (data >> 8) & 0xff, data & 0xff);
+				break;
+			case WIFI_CMD_SET_WEPKEY3:
+				Wifi_SetWepKey(3, ((data >> 16) & 0x3),
+					       (data >> 8) & 0xff, data & 0xff);
+				break;
+			case WIFI_CMD_SET_WEPKEY3A:
+				Wifi_SetWepKey(3, 4 + ((data >> 16) & 0x3),
+					       (data >> 8) & 0xff, data & 0xff);
+				break;
+			case WIFI_CMD_SET_WEPKEYID:
+				Wifi_SetWepKeyID(data & 0xff);
+				break;
+			case WIFI_CMD_SET_WEPMODE:
+				Wifi_SetWepMode(data & 0xff);
+				break;
+			case WIFI_CMD_AP_QUERY:
+				wifi_ap_query(data & 0xffff);
+				break;
+			case WIFI_CMD_SCAN:
+				wifi_start_scan();
+				break;
+			}
 		}
 	}
 }
@@ -104,15 +188,19 @@ void InterruptHandler(void)
 {
 	u16 buttons;
 	static u16 oldbuttons;
+	u32 wif;
 
-	if (NDS_IF & IRQ_RECV) {
+	wif = NDS_IF;
+
+	if (wif & IRQ_RECV) {
 		/* Acknowledge Interrupt */
 		NDS_IF = IRQ_RECV;
+		wif &= ~IRQ_RECV;
 
 		recieveFIFOCommand();
 	}
 
-	if (NDS_IF & IRQ_VBLANK) {
+	if (wif & IRQ_VBLANK) {
 		/* read X and Y, lid and touchscreen buttons */
 		buttons = XKEYS;
 
@@ -132,9 +220,10 @@ void InterruptHandler(void)
 		NDS_IF = IRQ_VBLANK;
 	}
 
-	if (NDS_IF & IRQ_ARM9) {
+	if (wif & IRQ_ARM9) {
 		/* Acknowledge Interrupt */
 		NDS_IF = IRQ_ARM9;
+		wif &= ~IRQ_ARM9;
 
 		switch (ipcsync_get_remote_status()) {
 		case SHMEMIPC_REQUEST_FLUSH:
@@ -146,6 +235,16 @@ void InterruptHandler(void)
 		}
 
 	}
+
+	if (wif & IRQ_WIFI) {
+		NDS_IF = IRQ_WIFI;
+		wif &= ~IRQ_WIFI;
+
+		wifi_interupt();
+	}
+
+	/* Acknowledge Interrupts */
+	NDS_IF = wif;
 }
 
 int main(void)
@@ -165,7 +264,7 @@ int main(void)
 
 	/* Enable VBLANK Interrupt */
 	DISP_SR = DISP_VBLANK_IRQ;
-	NDS_IE = IRQ_VBLANK | IRQ_RECV | IRQ_ARM9;
+	NDS_IE = IRQ_VBLANK | IRQ_RECV | IRQ_ARM9 | IRQ_WIFI;
 
 	/* Enable FIFO */
 	REG_IPCFIFOCNT = (1 << 15) | (1 << 3) | (1 << 10) | (1 << 14);
@@ -174,6 +273,9 @@ int main(void)
 
 	/* Set interrupt handler */
 	*(volatile u32 *)(0x04000000 - 4) = (u32) & InterruptHandler;
+
+	/* init the wifi stuff */
+	wifi_init();
 
 	/* Enable Interrupts */
 	NDS_IF = ~0;
