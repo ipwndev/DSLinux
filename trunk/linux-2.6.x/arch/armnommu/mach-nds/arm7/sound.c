@@ -19,6 +19,7 @@
 #define SCHANNEL_VOL(n)		(*(volatile u8*)(0x04000400 + ((n)<<4)))
 #define SCHANNEL_PAN(n)		(*(volatile u8*)(0x04000402 + ((n)<<4)))
 #define SCHANNEL_SOURCE(n)	(*(volatile u32*)(0x04000404 + ((n)<<4)))
+#define SCHANNEL_REPEAT_POINT(n)	(*(volatile u16*)(0x0400040A + ((n)<<4)))
 #define SCHANNEL_LENGTH(n)	(*(volatile u32*)(0x0400040C + ((n)<<4)))
 #define SOUND_CR		(*(volatile u16*)0x04000500)
 #define SOUND_MASTER_VOL	(*(volatile u8*)0x04000500)
@@ -37,6 +38,7 @@ void sound_play(void)
 		SCHANNEL_CR(i) = SCHANNEL_ENABLE | SOUND_REPEAT | s_format;
 		SCHANNEL_VOL(i) = SOUND_VOL(127);
 		SCHANNEL_PAN(i) = (i % 2) ? 128 : 0;
+		SCHANNEL_REPEAT_POINT(i) = 0;
 	}
 
 	if (s_channels == 1) {
