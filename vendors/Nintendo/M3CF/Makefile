@@ -11,11 +11,12 @@ IMAGE    = $(IMAGEDIR)/dslinux.nds.gba
 else
 IMAGE    = $(IMAGEDIR)/dslinux.ds.gba
 endif
+FATFS	 = m3
 
 
-ROMFS_DIRS = dev etc proc sbin m3/linux
+ROMFS_DIRS = dev etc proc sbin $(FATFS)/linux
 
-FS_DIRS = home lib usr/bin var/tmp
+FS_DIRS = home lib usr/bin usr/share/udhcpc var/tmp
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
@@ -64,19 +65,21 @@ romfs:
 	# on non-ptmx ptys
 	chmod 620 $(ROMFSDIR)/dev/@[pt]ty[pqrsPQRS][0-9a-f],*
 	for i in $(FS_DIRS); do \
-		[ -d $(ROMFSDIR)/m3/linux/$$i ] || mkdir -p $(ROMFSDIR)/m3/linux/$$i; \
+		[ -d $(ROMFSDIR)/$(FATFS)/linux/$$i ] || mkdir -p $(ROMFSDIR)/$(FATFS)/linux/$$i; \
 	done
-	$(ROMFSINST) -s m3/linux/var /var
-	$(ROMFSINST) -s m3/linux/lib /lib
-	$(ROMFSINST) -s m3/linux/usr /usr
-	$(ROMFSINST) -s m3/linux/usr/bin /bin
-	$(ROMFSINST) -s m3/linux/home /home
+	$(ROMFSINST) -s $(FATFS)/linux/var /var
+	$(ROMFSINST) -s $(FATFS)/linux/lib /lib
+	$(ROMFSINST) -s $(FATFS)/linux/usr /usr
+	$(ROMFSINST) -s $(FATFS)/linux/usr/bin /bin
+	$(ROMFSINST) -s $(FATFS)/linux/home /home
 	$(ROMFSINST) -s /var/tmp /tmp
+	$(ROMFSINST) -s /usr/share/udhcpc/resolv.conf /etc/resolv.conf
 	$(ROMFSINST) /etc/rc
 	$(ROMFSINST) /etc/inittab
 	$(ROMFSINST) /etc/motd
 	$(ROMFSINST) /etc/issue
 	$(ROMFSINST) /etc/passwd
+	$(ROMFSINST) /usr/share/udhcpc/default.script
 	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
 
 image:
@@ -87,15 +90,15 @@ image:
 	mkdir $(ROMFSDIR)/bin
 	-for i in `sort $(ROOTDIR)/user/busybox/busybox.links` ; do\
 		j=`basename $$i` ; \
-		mv $(ROMFSDIR)/m3/linux/usr/bin/$$j $(ROMFSDIR)/bin ; \
+		mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/$$j $(ROMFSDIR)/bin ; \
 	done
-	-mv $(ROMFSDIR)/m3/linux/usr/bin/busybox $(ROMFSDIR)/bin ;
-	-mv $(ROMFSDIR)/m3/linux/usr/bin/mount $(ROMFSDIR)/bin
-	-mv $(ROMFSDIR)/m3/linux/usr/bin/sh $(ROMFSDIR)/bin
-	-mv $(ROMFSDIR)/m3/linux/usr/bin/login $(ROMFSDIR)/bin
-	-mv $(ROMFSDIR)/m3/linux/usr/bin/init $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/busybox $(ROMFSDIR)/bin ;
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/mount $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/sh $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/login $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/init $(ROMFSDIR)/bin
 	-rm -r $(IMAGEDIR)/linux
-	mv $(ROMFSDIR)/m3/linux $(IMAGEDIR)
+	mv $(ROMFSDIR)/$(FATFS)/linux $(IMAGEDIR)
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
 	if [ "$(CONFIG_NDS_NDS)" = "y" ]; then \
 		BSS=`$(CROSS_COMPILE)objdump --headers $(ROOTDIR)/$(LINUXDIR)/linux | \
@@ -115,7 +118,7 @@ image:
 			-7 $(ROOTDIR)/$(LINUXDIR)/arch/armnommu/mach-nds/arm7.bin \
 		       	-r7 0x03800000 -e7 0x03800000  \
 			-b tux.bmp "DSLinux;Port of Linux;to the DS!" ; \
-		( cd $(IMAGEDIR); tar -cvzf dslinux-m3cf.tgz linux dslinux.nds ) \
+		( cd $(IMAGEDIR); tar -cvzf dslinux-$(FATFS)cf.tgz linux dslinux.nds ) \
 	else \
 	        $(CROSS_COMPILE)objcopy -O binary \
                         --remove-section=.text --remove-section=.init \
@@ -124,5 +127,6 @@ image:
                         -j .init -j .text \
                         $(ROOTDIR)/$(LINUXDIR)/linux $(IMAGEDIR)/linux.text ; \
 		cat $(IMAGEDIR)/linux.text $(IMAGEDIR)/linux.data $(ROMFSIMG) > $(IMAGE) ; \
+		( cd $(IMAGEDIR); tar -cvzf dslinux-$(FATFS)cf.tgz linux dslinux.ds.nds ) \
 	fi
 
