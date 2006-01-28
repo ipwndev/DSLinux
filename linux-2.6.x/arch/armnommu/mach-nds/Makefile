@@ -10,7 +10,7 @@ obj-y                += arch.o irq.o time.o button.o fifo.o rtc.o ipcsync.o shme
 
 obj-$(CONFIG_NDS_TEXT_CONSOLE) += console.o
 
-extra-y += arm7/head.o arm7/main.o arm7/time.o arm7/shmemipc-arm7.o arm7/spi.o arm7/sound.o arm7.bin
+extra-y += arm7/head.o arm7/main.o arm7/time.o arm7/shmemipc-arm7.o arm7/spi.o arm7/sound.o arm7/wifi.o arm7.bin
 
 $(obj)/arm7.bin: $(obj)/arm7.elf
 	$(OBJCOPY) -O binary $(obj)/arm7.elf $(obj)/arm7.bin
