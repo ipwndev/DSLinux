@@ -19,8 +19,6 @@ static s16 touch_height;
 static s16 touch_cal_x1;
 static s16 touch_cal_y1;
 
-extern u32 nds_get_time7(void);
-
 /* recieve outstanding FIFO commands from ARM9 */
 static void recieveFIFOCommand(void)
 {
