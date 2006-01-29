@@ -528,6 +528,11 @@ CONFIG_LOGO=y
 CONFIG_LOGO_NDS_BIG_CLUT224=y
 
 #
+# Sound
+#
+# CONFIG_SOUND is not set
+
+#
 # Misc devices
 #
 
