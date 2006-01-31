@@ -333,8 +333,8 @@ static void wifi_try_to_associate(void)
 	if (wifi_data.curChannel != wifi_data.aplist[i].channel) {
 		Wifi_SetChannel(wifi_data.aplist[i].channel);
 	}
-	for (i = 0; i < 16; i++)
-		wifi_data.baserates[i] = wifi_data.aplist[i].base_rates[i];
+	for (j = 0; j < 16; j++)
+		wifi_data.baserates[j] = wifi_data.aplist[i].base_rates[j];
 	WIFI_BSSID[0] = ((u16 *) wifi_data.bssid)[0];
 	WIFI_BSSID[1] = ((u16 *) wifi_data.bssid)[1];
 	WIFI_BSSID[2] = ((u16 *) wifi_data.bssid)[2];
@@ -443,7 +443,8 @@ static void Wifi_WakeUp(void)
 
 static int RF_Reglist[] =
     { 0x146, 0x148, 0x14A, 0x14C, 0x120, 0x122, 0x154, 0x144, 0x130, 0x132,
-0x140, 0x142, 0x38, 0x124, 0x128, 0x150 };
+	0x140, 0x142, 0x38, 0x124, 0x128, 0x150
+};
 
 static void Wifi_RFInit(void)
 {
@@ -484,10 +485,12 @@ static void Wifi_BBInit(void)
 // 22 entry list
 static int MAC_Reglist[] =
     { 0x04, 0x08, 0x0A, 0x12, 0x10, 0x254, 0xB4, 0x80, 0x2A, 0x28, 0xE8, 0xEA,
-0xEE, 0xEC, 0x1A2, 0x1A0, 0x110, 0xBC, 0xD4, 0xD8, 0xDA, 0x76 };
+	0xEE, 0xEC, 0x1A2, 0x1A0, 0x110, 0xBC, 0xD4, 0xD8, 0xDA, 0x76
+};
 static int MAC_Vallist[] =
     { 0, 0, 0, 0, 0xffff, 0, 0xffff, 0, 0, 0, 0, 0, 1, 0x3F03, 1, 0, 0x0800, 1,
-3, 4, 0x0602, 0 };
+	3, 4, 0x0602, 0
+};
 
 static void Wifi_MacInit(void)
 {
@@ -746,6 +749,15 @@ static void Wifi_MACWriteTX(u16 * src, u32 MAC_Base, u32 MAC_Offset, u32 length)
 		else
 			length -= 2;
 	}
+#ifdef PAD_WITH_JUNK
+	{
+		int i;
+		for (i = 0; i < 6; i += 2) {
+			WIFI_REG(MAC_Base) = ((255 - i) << 8) | ((254 - i));
+			MAC_Base += 2;
+		}
+	}
+#endif
 }
 
 void Wifi_MACCopy(u16 * dest, u32 MAC_Base, u32 MAC_Offset, u32 length)
@@ -1378,7 +1390,7 @@ void wifi_tx_q_complete(void)
 #define CNT_STAT_NUM 18
 u16 count_ofs_list[CNT_STAT_NUM] = {
 	0x1B0, 0x1B2, 0x1B4, 0x1B6, 0x1B8, 0x1BA, 0x1BC, 0x1BE, 0x1C0, 0x1C4,
-	    0x1D0, 0x1D2, 0x1D4, 0x1D6, 0x1D8, 0x1DA, 0x1DC, 0x1DE
+	0x1D0, 0x1D2, 0x1D4, 0x1D6, 0x1D8, 0x1DA, 0x1DC, 0x1DE
 };
 static void Wifi_Intr_CntOverflow(void)
 {
@@ -1545,20 +1557,29 @@ void wifi_send_ether_packet(u16 length, u_char * data)
 	if (wifi_data.curWepmode != WEPMODE_NONE) {
 		framehdr[6] |= 0x4000;
 		hdrlen = 20;
-		framehdr[12] =
+		framehdr[18] =
 		    (WIFI_RANDOM ^ (WIFI_RANDOM << 7) ^ (WIFI_RANDOM << 15)) &
 		    0xFFFF;
-		framehdr[13] =
+		framehdr[19] =
 		    ((WIFI_RANDOM ^ (WIFI_RANDOM >> 7)) & 0xFF) | (wifi_data.
 								   wepkeyid <<
 								   14);
 	}
 
 	framehdr[17] = 0;
-	framehdr[18] = 0;	// wep IV, will be filled in if needed on the arm7 side.
-	framehdr[19] = 0;
 
-	packetlen = framehdr[5] = framelen + hdrlen * 2 - 12 + 4;
+	/*
+	 * framelen = 8 byte LLC header + data len
+	 * hdrlen = tx header (6 words) + ieee header (12 or 14 (wep) words)
+	 * 
+	 * If wep, add 4 bytes to end of body for IVC
+	 * Add 4 bytes to end of everything for CRC
+	 */
+	packetlen = framelen + hdrlen * 2 - 12 + 4;
+	if (wifi_data.curWepmode != WEPMODE_NONE) {
+		packetlen += 4;
+	}
+	framehdr[5] = packetlen;
 
 	Wifi_MACWriteTX(framehdr, TX1_MAC_START, 0, hdrlen * 2);
 
@@ -1670,7 +1691,7 @@ static void Wifi_SendAssocPacket(void)
 
 	if ((wifi_data.baserates[0] & 0x7f) != 2) {
 		for (j = 1; j < 16; j++)
-			wifi_data.baserates[i] = wifi_data.baserates[j - 1];
+			wifi_data.baserates[j] = wifi_data.baserates[j - 1];
 	}
 	wifi_data.baserates[0] = 0x82;
 	if ((wifi_data.baserates[1] & 0x7f) != 4) {
