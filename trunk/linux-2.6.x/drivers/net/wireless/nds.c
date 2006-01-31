@@ -1042,7 +1042,7 @@ static void nds_wifi_shmemipc_isr(u8 type)
 						    (skb =
 						     dev_alloc_skb(14 + len -
 								   8 -
-								   hdrlen))) {
+								   hdrlen + 2))) {
 							/* priv->stats.rx_dropped++; */
 							return;
 						}
