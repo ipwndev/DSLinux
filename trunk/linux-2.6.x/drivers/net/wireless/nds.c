@@ -87,6 +87,15 @@ static int nds_start_xmit11(struct sk_buff *skb, struct net_device *dev)
 	shmemipc_lock();
 	SHMEMIPC_BLOCK_ARM9->wifi.type = 1;
 	memcpy(SHMEMIPC_BLOCK_ARM9->wifi.data, skb->data, skb->len);
+#ifdef PAD_WITH_JUNK
+	{
+		int i;
+		for (i = 0; i < 6; i++) {
+			((u8 *) SHMEMIPC_BLOCK_ARM9->wifi.data)[skb->len + i] =
+			    50 + i;
+		}
+	}
+#endif
 	SHMEMIPC_BLOCK_ARM9->wifi.length = skb->len;
 	shmemipc_unlock();
 
@@ -697,7 +706,10 @@ static int nds_set_encode(struct net_device *dev,
 				for (j = 0; j < 4; j++) {
 					tmp = *(k++) << 8;
 					tmp |= *(k++);
-					REG_IPCFIFOSEND = FIFO_WIFI_CMD((WIFI_CMD_SET_WEPKEY0 + (index * 2) + i), ((j << 16) | tmp));
+					REG_IPCFIFOSEND =
+					    FIFO_WIFI_CMD((WIFI_CMD_SET_WEPKEY0
+							   + (index * 2) + i),
+							  ((j << 16) | tmp));
 					if ((k - local->key_key[index]) >=
 					    key_len) {
 						i = 2;
@@ -760,11 +772,11 @@ static int nds_get_encode(struct net_device *dev,
 	dwrq->flags |= (local->current_index + 1) & IW_ENCODE_INDEX;
 
 	if (local->key_size == WEPMODE_128BIT) {
-		dwrq->length = 8;
+		dwrq->length = MAX_KEY_SIZE;
 		memcpy(extra, local->key_key[local->current_index],
 		       dwrq->length);
 	} else if (local->key_size == WEPMODE_40BIT) {
-		dwrq->length = 4;
+		dwrq->length = MIN_KEY_SIZE;
 		memcpy(extra, local->key_key[local->current_index],
 		       dwrq->length);
 	}
@@ -1006,14 +1018,9 @@ static void nds_wifi_shmemipc_isr(u8 type)
 					0xFFFF)) {
 					/* hdrlen == 802.11 header length  bytes */
 					int base2, hdrlen;
-					if (hdr_80211->
-					    frame_ctl & IEEE802_11_FCTL_WEP) {
-						base2 = 24;
-						hdrlen = 28;	// base2+=[wifi hdr 12byte]+[802 header hdrlen]+[slip hdr 8byte]
-					} else {
-						base2 = 22;
-						hdrlen = 24;
-					}
+					base2 = 22;
+					hdrlen = 24;
+					// looks like WEP IV and IVC are removed from RX packets
 
 					// check for LLC/SLIP header...
 					if (((u16 *) rx_hdr)[base2 - 4 + 0] ==
@@ -1024,6 +1031,12 @@ static void nds_wifi_shmemipc_isr(u8 type)
 								2] == 0) {
 						// mb = sgIP_memblock_allocHW(14,len-8-hdrlen);
 						// Wifi_RxRawReadPacket(base2,(len-8-hdrlen)&(~1),((u16 *)mb->datastart)+7);^M
+						/*
+						 * 14 (ether header) 
+						 * + byte_length
+						 *  - (ieee hdr 24 bytes) 
+						 *  - 8 bytes LLC
+						 */
 						int len = rx_hdr->byteLength;
 						if (!
 						    (skb =
@@ -1039,9 +1052,9 @@ static void nds_wifi_shmemipc_isr(u8 type)
 						    skb_put(skb,
 							    14 + len - 8 -
 							    hdrlen);
-						memcpy(skbp + 14,
-						       &(((u16 *)
-							  rx_hdr)[base2]),
+						memcpy(skbp + 14, &(((u16 *)
+								     rx_hdr)
+								    [base2]),
 						       (len - 8 - hdrlen));
 						memcpy(skbp, hdr_80211->addr1, ETH_ALEN);	// copy dest
 
@@ -1056,10 +1069,8 @@ static void nds_wifi_shmemipc_isr(u8 type)
 							       hdr_80211->addr2,
 							       ETH_ALEN);
 						}
-						((u16 *) skbp)[6] =
-						    ((u16 *)
-						     rx_hdr)[(hdrlen / 2) + 6 +
-							     3];
+						((u16 *) skbp)[6] = ((u16 *)
+								     rx_hdr)[(hdrlen / 2) + 6 + 3];
 
 						skb->protocol =
 						    eth_type_trans(skb,
