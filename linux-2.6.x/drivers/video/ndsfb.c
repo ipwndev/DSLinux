@@ -118,14 +118,13 @@
 
 #define VRAM_OFFSET(n)  ((n)<<3)
 
-typedef enum
-{
+typedef enum {
 	VRAM_A_LCD = 0,
-	VRAM_A_MAIN_BG  = 1,
-	VRAM_A_MAIN_BG_0x6000000  = 1 | VRAM_OFFSET(0),
-	VRAM_A_MAIN_BG_0x6020000  = 1 | VRAM_OFFSET(1),
-	VRAM_A_MAIN_BG_0x6040000  = 1 | VRAM_OFFSET(2),
-	VRAM_A_MAIN_BG_0x6060000  = 1 | VRAM_OFFSET(3),
+	VRAM_A_MAIN_BG = 1,
+	VRAM_A_MAIN_BG_0x6000000 = 1 | VRAM_OFFSET(0),
+	VRAM_A_MAIN_BG_0x6020000 = 1 | VRAM_OFFSET(1),
+	VRAM_A_MAIN_BG_0x6040000 = 1 | VRAM_OFFSET(2),
+	VRAM_A_MAIN_BG_0x6060000 = 1 | VRAM_OFFSET(3),
 	VRAM_A_MAIN_SPRITE = 2,
 	VRAM_A_TEXTURE = 3,
 	VRAM_A_TEXTURE_SLOT0 = 3 | VRAM_OFFSET(0),
@@ -133,16 +132,15 @@ typedef enum
 	VRAM_A_TEXTURE_SLOT2 = 3 | VRAM_OFFSET(2),
 	VRAM_A_TEXTURE_SLOT3 = 3 | VRAM_OFFSET(3)
 
-}VRAM_A_TYPE;
+} VRAM_A_TYPE;
 
-typedef enum
-{
+typedef enum {
 	VRAM_B_LCD = 0,
-	VRAM_B_MAIN_BG  = 1 | VRAM_OFFSET(1),
-	VRAM_B_MAIN_BG_0x6000000  = 1 | VRAM_OFFSET(0),
-	VRAM_B_MAIN_BG_0x6020000  = 1 | VRAM_OFFSET(1),
-	VRAM_B_MAIN_BG_0x6040000  = 1 | VRAM_OFFSET(2),
-	VRAM_B_MAIN_BG_0x6060000  = 1 | VRAM_OFFSET(3),
+	VRAM_B_MAIN_BG = 1 | VRAM_OFFSET(1),
+	VRAM_B_MAIN_BG_0x6000000 = 1 | VRAM_OFFSET(0),
+	VRAM_B_MAIN_BG_0x6020000 = 1 | VRAM_OFFSET(1),
+	VRAM_B_MAIN_BG_0x6040000 = 1 | VRAM_OFFSET(2),
+	VRAM_B_MAIN_BG_0x6060000 = 1 | VRAM_OFFSET(3),
 	VRAM_B_MAIN_SPRITE = 2,
 	VRAM_B_TEXTURE = 3 | VRAM_OFFSET(1),
 	VRAM_B_TEXTURE_SLOT0 = 3 | VRAM_OFFSET(0),
@@ -150,61 +148,60 @@ typedef enum
 	VRAM_B_TEXTURE_SLOT2 = 3 | VRAM_OFFSET(2),
 	VRAM_B_TEXTURE_SLOT3 = 3 | VRAM_OFFSET(3)
 
-}VRAM_B_TYPE;
+} VRAM_B_TYPE;
 
-typedef enum
-{
+typedef enum {
 	VRAM_C_LCD = 0,
-	VRAM_C_MAIN_BG  = 1 | VRAM_OFFSET(2),
-	VRAM_C_MAIN_BG_0x6000000  = 1 | VRAM_OFFSET(0),
-	VRAM_C_MAIN_BG_0x6020000  = 1 | VRAM_OFFSET(1),
-	VRAM_C_MAIN_BG_0x6040000  = 1 | VRAM_OFFSET(2),
-	VRAM_C_MAIN_BG_0x6060000  = 1 | VRAM_OFFSET(3),
+	VRAM_C_MAIN_BG = 1 | VRAM_OFFSET(2),
+	VRAM_C_MAIN_BG_0x6000000 = 1 | VRAM_OFFSET(0),
+	VRAM_C_MAIN_BG_0x6020000 = 1 | VRAM_OFFSET(1),
+	VRAM_C_MAIN_BG_0x6040000 = 1 | VRAM_OFFSET(2),
+	VRAM_C_MAIN_BG_0x6060000 = 1 | VRAM_OFFSET(3),
 	VRAM_C_ARM7 = 2,
-	VRAM_C_SUB_BG  = 4,
-	VRAM_C_SUB_BG_0x6200000  = 4 | VRAM_OFFSET(0),
-	VRAM_C_SUB_BG_0x6220000  = 4 | VRAM_OFFSET(1),
-	VRAM_C_SUB_BG_0x6240000  = 4 | VRAM_OFFSET(2),
-	VRAM_C_SUB_BG_0x6260000  = 4 | VRAM_OFFSET(3),
+	VRAM_C_SUB_BG = 4,
+	VRAM_C_SUB_BG_0x6200000 = 4 | VRAM_OFFSET(0),
+	VRAM_C_SUB_BG_0x6220000 = 4 | VRAM_OFFSET(1),
+	VRAM_C_SUB_BG_0x6240000 = 4 | VRAM_OFFSET(2),
+	VRAM_C_SUB_BG_0x6260000 = 4 | VRAM_OFFSET(3),
 	VRAM_C_TEXTURE = 3 | VRAM_OFFSET(2),
 	VRAM_C_TEXTURE_SLOT0 = 3 | VRAM_OFFSET(0),
 	VRAM_C_TEXTURE_SLOT1 = 3 | VRAM_OFFSET(1),
 	VRAM_C_TEXTURE_SLOT2 = 3 | VRAM_OFFSET(2),
 	VRAM_C_TEXTURE_SLOT3 = 3 | VRAM_OFFSET(3)
 
-}VRAM_C_TYPE;
+} VRAM_C_TYPE;
 
 static struct fb_var_screeninfo ndsfb_default __initdata = {
-	.xres =		256,
-	.yres =		192,
-	.xres_virtual =	256,
-	.yres_virtual =	512,
+	.xres = 256,
+	.yres = 192,
+	.xres_virtual = 256,
+	.yres_virtual = 512,
 	.bits_per_pixel = 8,
-	.red =		{ 0, 5, 0 },
-	.green =	{ 5, 5, 0 },
-	.blue =		{ 10, 5, 0 },
-	.transp =	{ 15, 1, 0 },
-	.activate =	FB_ACTIVATE_NOW | FB_ACTIVATE_FORCE,
-	.height =	-1,
-	.width =	-1,
-	.pixclock =	20000,
-	.left_margin =	64,
-	.right_margin =	64,
-	.upper_margin =	32,
-	.lower_margin =	32,
-	.hsync_len =	64,
-	.vsync_len =	2,
-	.vmode =	FB_VMODE_NONINTERLACED,
+	.red = {0, 5, 0},
+	.green = {5, 5, 0},
+	.blue = {10, 5, 0},
+	.transp = {15, 1, 0},
+	.activate = FB_ACTIVATE_NOW | FB_ACTIVATE_FORCE,
+	.height = -1,
+	.width = -1,
+	.pixclock = 20000,
+	.left_margin = 64,
+	.right_margin = 64,
+	.upper_margin = 32,
+	.lower_margin = 32,
+	.hsync_len = 64,
+	.vsync_len = 2,
+	.vmode = FB_VMODE_NONINTERLACED,
 };
 
 static struct fb_fix_screeninfo ndsfb_fix __initdata = {
-	.id =		"Nintendo DS FB",
-	.type =		FB_TYPE_PACKED_PIXELS,
-	.visual =	FB_VISUAL_PSEUDOCOLOR,
-	.xpanstep =	1,
-	.ypanstep =	1,
-	.ywrapstep =	1,
-	.accel =	FB_ACCEL_NONE,
+	.id = "Nintendo DS FB",
+	.type = FB_TYPE_PACKED_PIXELS,
+	.visual = FB_VISUAL_PSEUDOCOLOR,
+	.xpanstep = 1,
+	.ypanstep = 1,
+	.ywrapstep = 1,
+	.accel = FB_ACCEL_NONE,
 };
 
 static int ndsfb_enable __initdata = 1;	/* enabled by default */
@@ -215,40 +212,38 @@ static int ndsfb_enable __initdata = 1;	/* enabled by default */
 int ndsfb_init(void);
 int ndsfb_setup(char *);
 
-static int ndsfb_check_var(struct fb_var_screeninfo *var,
-			 struct fb_info *info);
+static int ndsfb_check_var(struct fb_var_screeninfo *var, struct fb_info *info);
 static int ndsfb_set_par(struct fb_info *info);
 static int ndsfb_setcolreg(u_int regno, u_int red, u_int green, u_int blue,
-			 u_int transp, struct fb_info *info);
+			   u_int transp, struct fb_info *info);
 static int ndsfb_pan_display(struct fb_var_screeninfo *var,
-			   struct fb_info *info);
+			     struct fb_info *info);
 static int ndsfb_mmap(struct fb_info *info, struct file *file,
-		    struct vm_area_struct *vma);
+		      struct vm_area_struct *vma);
 static int ndsfb_blank(int blank_mode, const struct fb_info *info);
 
 static struct fb_ops ndsfb_ops = {
-	.fb_check_var	= ndsfb_check_var,
-	.fb_set_par	= ndsfb_set_par,
-	.fb_setcolreg	= ndsfb_setcolreg,
-	.fb_pan_display	= ndsfb_pan_display,
-	.fb_fillrect	= cfb_fillrect,
-	.fb_copyarea	= cfb_copyarea,
-	.fb_imageblit	= cfb_imageblit,
-	.fb_cursor	= soft_cursor,
-	.fb_mmap	= ndsfb_mmap,
-	.fb_blank	= ndsfb_blank
+	.fb_check_var = ndsfb_check_var,
+	.fb_set_par = ndsfb_set_par,
+	.fb_setcolreg = ndsfb_setcolreg,
+	.fb_pan_display = ndsfb_pan_display,
+	.fb_fillrect = cfb_fillrect,
+	.fb_copyarea = cfb_copyarea,
+	.fb_imageblit = cfb_imageblit,
+	.fb_cursor = soft_cursor,
+	.fb_mmap = ndsfb_mmap,
+	.fb_blank = ndsfb_blank
 };
 
 static irqreturn_t ndsfb_interrupt(int irq, void *dev_id, struct pt_regs *regs)
 {
 	struct fb_info *info = dev_get_drvdata(dev_id);
 
-	if ( 1 )
-	{
-		ndsfb_set_par( info ) ;
+	if (1) {
+		ndsfb_set_par(info);
 	}
 
-        return IRQ_HANDLED ;
+	return IRQ_HANDLED;
 }
 
     /*
@@ -263,81 +258,73 @@ static irqreturn_t ndsfb_interrupt(int irq, void *dev_id, struct pt_regs *regs)
      *  data from it to check this var. 
      */
 
-static int ndsfb_check_var(struct fb_var_screeninfo *var,
-			 struct fb_info *info)
+static int ndsfb_check_var(struct fb_var_screeninfo *var, struct fb_info *info)
 {
-        /*
-         *  FB_VMODE_CONUPDATE and FB_VMODE_SMOOTH_XPAN are equal!
-         *  as FB_VMODE_SMOOTH_XPAN is only used internally
-         */
+	/*
+	 *  FB_VMODE_CONUPDATE and FB_VMODE_SMOOTH_XPAN are equal!
+	 *  as FB_VMODE_SMOOTH_XPAN is only used internally
+	 */
 
-        if (var->vmode & FB_VMODE_CONUPDATE) {
-                var->vmode |= FB_VMODE_YWRAP;
-                var->xoffset = info->var.xoffset;
-                var->yoffset = info->var.yoffset;
-        }
+	if (var->vmode & FB_VMODE_CONUPDATE) {
+		var->vmode |= FB_VMODE_YWRAP;
+		var->xoffset = info->var.xoffset;
+		var->yoffset = info->var.yoffset;
+	}
 
-        /*
-         *  Some very basic checks
-         */
-        if ( var->xres != 256 )
-                return -EINVAL;
-        if ( var->yres != 192 )
-                return -EINVAL;
+	/*
+	 *  Some very basic checks
+	 */
+	if (var->xres != 256)
+		return -EINVAL;
+	if (var->yres != 192)
+		return -EINVAL;
 
-        if ( var->bits_per_pixel != 16 &&
-	     var->bits_per_pixel != 8 )
-                return -EINVAL;
+	if (var->bits_per_pixel != 16 && var->bits_per_pixel != 8)
+		return -EINVAL;
 
-	if (info->par != 0)
-	{
+	if (info->par != 0) {
 		var->xres_virtual = 256;
 		var->yres_virtual = 256;
-	}
-	else
-	{
-		if ( var->xres_virtual > 256 )
-		{
+	} else {
+		if (var->xres_virtual > 256) {
 			var->xres_virtual = 512;
 			var->yres_virtual = 256;
-		}
-		else
-		{
+		} else {
 			var->xres_virtual = 256;
-			var->yres_virtual = var->yres_virtual > 256 ? 512 : 256 ;
+			var->yres_virtual = var->yres_virtual > 256 ? 512 : 256;
 		}
 	}
 
-        if (var->xres_virtual < var->xoffset + var->xres)
-                return -EINVAL;
-        if (var->yres_virtual < var->yoffset + var->yres)
-                return -EINVAL;
+	if (var->xres_virtual < var->xoffset + var->xres)
+		return -EINVAL;
+	if (var->yres_virtual < var->yoffset + var->yres)
+		return -EINVAL;
 
-        switch (var->bits_per_pixel) {
-		case 8:
-			var->red.length = 5;
-			var->green.length = 5;
-			var->blue.length = 5;
-			var->transp.length = 0;
-                case 16:		/* RGBA 5551 */
-                        var->red.offset = 0;
-                        var->red.length = 5;
-                        var->green.offset = 5;
-                        var->green.length = 5;
-                        var->blue.offset = 10;
-                        var->blue.length = 5;
-                        var->transp.offset = 15;
-                        var->transp.length = 1;
-                        break;
-                default:
-                        return -EINVAL;
-        }
-        var->red.msb_right = 0;
-        var->green.msb_right = 0;
-        var->blue.msb_right = 0;
-        var->transp.msb_right = 0;
+	switch (var->bits_per_pixel) {
+	case 8:
+		var->red.length = 5;
+		var->green.length = 5;
+		var->blue.length = 5;
+		var->transp.length = 0;
+	case 16:		/* RGBA 5551 */
+		var->red.offset = 0;
+		var->red.length = 5;
+		var->green.offset = 5;
+		var->green.length = 5;
+		var->blue.offset = 10;
+		var->blue.length = 5;
+		var->transp.offset = 15;
+		var->transp.length = 1;
+		break;
+	default:
+		return -EINVAL;
+	}
+	var->red.msb_right = 0;
+	var->green.msb_right = 0;
+	var->blue.msb_right = 0;
+	var->transp.msb_right = 0;
 
-        return 0;
+	return 0;
 }
 
 /* This routine actually sets the video mode. It's in here where we
@@ -346,95 +333,86 @@ static int ndsfb_check_var(struct fb_var_screeninfo *var,
  */
 static int ndsfb_set_par(struct fb_info *info)
 {
-	if ( info->var.bits_per_pixel == 16 )
-		info->fix.visual = FB_VISUAL_TRUECOLOR ;
+	if (info->var.bits_per_pixel == 16)
+		info->fix.visual = FB_VISUAL_TRUECOLOR;
 	else
-		info->fix.visual = FB_VISUAL_PSEUDOCOLOR ;
+		info->fix.visual = FB_VISUAL_PSEUDOCOLOR;
 
-	info->fix.line_length = info->var.xres_virtual * (info->var.bits_per_pixel / 8 );
-	info->fix.smem_start = info->screen_base ;
-	info->fix.smem_len = info->var.xres_virtual * info->var.yres_virtual * 
-		(info->var.bits_per_pixel / 8) ;
+	info->fix.line_length =
+	    info->var.xres_virtual * (info->var.bits_per_pixel / 8);
+	info->fix.smem_start = info->screen_base;
+	info->fix.smem_len = info->var.xres_virtual * info->var.yres_virtual *
+	    (info->var.bits_per_pixel / 8);
 
-	if (info->par == 0)
-	{
-		if ( info->var.yres_virtual == 512 )
-		{
-			DISPLAY_CR = MODE_5_2D | DISPLAY_BG2_ACTIVE | DISPLAY_BG3_ACTIVE ;
-			if (info->fix.visual == FB_VISUAL_TRUECOLOR)
-			{
-				VRAM_B_CR = VRAM_ENABLE | VRAM_B_MAIN_BG_0x6020000 ;
-				BG3_CR = BG_BMP16_256x256 | BG_BMP_BASE(8) ;
-			}
-			else
-			{
-				BG3_CR = BG_BMP8_256x256 | BG_BMP_BASE(4) ;
+	if (info->par == 0) {
+		if (info->var.yres_virtual == 512) {
+			DISPLAY_CR =
+			    MODE_5_2D | DISPLAY_BG2_ACTIVE | DISPLAY_BG3_ACTIVE;
+			if (info->fix.visual == FB_VISUAL_TRUECOLOR) {
+				VRAM_B_CR =
+				    VRAM_ENABLE | VRAM_B_MAIN_BG_0x6020000;
+				BG3_CR = BG_BMP16_256x256 | BG_BMP_BASE(8);
+			} else {
+				BG3_CR = BG_BMP8_256x256 | BG_BMP_BASE(4);
 			}
 
 			BG3_XDX = 1 << 8;
 			BG3_XDY = 0;
 			BG3_YDX = 0;
 			BG3_YDY = 1 << 8;
-			BG3_CX  = (info->var.xoffset) << 8;
-			BG3_CY  = (info->var.yoffset-256) << 8;
+			BG3_CX = (info->var.xoffset) << 8;
+			BG3_CY = (info->var.yoffset - 256) << 8;
+		} else {
+			DISPLAY_CR = MODE_5_2D | DISPLAY_BG2_ACTIVE;
 		}
-		else
-		{
-			DISPLAY_CR = MODE_5_2D | DISPLAY_BG2_ACTIVE ;
-		}
-		VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG_0x6000000 ;
-		if ( info->var.xres_virtual == 512 )
+		VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG_0x6000000;
+		if (info->var.xres_virtual == 512)
 			if (info->fix.visual == FB_VISUAL_TRUECOLOR)
-				BG2_CR = BG_BMP16_512x256 | BG_BMP_BASE(0) ;
+				BG2_CR = BG_BMP16_512x256 | BG_BMP_BASE(0);
 			else
-				BG2_CR = BG_BMP8_512x256 | BG_BMP_BASE(0) ;
+				BG2_CR = BG_BMP8_512x256 | BG_BMP_BASE(0);
+		else if (info->fix.visual == FB_VISUAL_TRUECOLOR)
+			BG2_CR = BG_BMP16_256x256 | BG_BMP_BASE(0);
 		else
-			if (info->fix.visual == FB_VISUAL_TRUECOLOR)
-				BG2_CR = BG_BMP16_256x256 | BG_BMP_BASE(0) ;
-			else
-				BG2_CR = BG_BMP8_256x256 | BG_BMP_BASE(0) ;
+			BG2_CR = BG_BMP8_256x256 | BG_BMP_BASE(0);
 
 		BG2_XDX = 1 << 8;
 		BG2_XDY = 0;
 		BG2_YDX = 0;
 		BG2_YDY = 1 << 8;
-		BG2_CX  = (info->var.xoffset) << 8;
-		BG2_CY  = (info->var.yoffset) << 8;
-	}
-	else
-	{
+		BG2_CX = (info->var.xoffset) << 8;
+		BG2_CY = (info->var.yoffset) << 8;
+	} else {
 		SUB_DISPLAY_CR = MODE_5_2D | DISPLAY_BG3_ACTIVE;
-		VRAM_C_CR = VRAM_ENABLE | VRAM_C_SUB_BG_0x6200000 ;
+		VRAM_C_CR = VRAM_ENABLE | VRAM_C_SUB_BG_0x6200000;
 
 		if (info->fix.visual == FB_VISUAL_TRUECOLOR)
-			SUB_BG3_CR = BG_BMP16_256x256 ;
+			SUB_BG3_CR = BG_BMP16_256x256;
 		else
-			SUB_BG3_CR = BG_BMP8_256x256 ;
+			SUB_BG3_CR = BG_BMP8_256x256;
 
 		if (info->var.vmode & FB_VMODE_YWRAP)
-			SUB_BG3_CR |= BG_WRAP_ON ;
+			SUB_BG3_CR |= BG_WRAP_ON;
 
 		SUB_BG3_XDX = 1 << 8;
 		SUB_BG3_XDY = 0;
 		SUB_BG3_YDX = 0;
 		SUB_BG3_YDY = 1 << 8;
-		SUB_BG3_CX  = (info->var.xoffset) << 8;
-		SUB_BG3_CY  = (info->var.yoffset) << 8;
+		SUB_BG3_CX = (info->var.xoffset) << 8;
+		SUB_BG3_CY = (info->var.yoffset) << 8;
 	}
 
-        return 0;
+	return 0;
 }
 
 static int ndsfb_blank(int blank_mode, const struct fb_info *info)
 {
-	if ( blank_mode )
-	{
+	if (blank_mode) {
 		//POWER_CR &= ~ ( POWER_2D | POWER_2D_SUB | POWER_LCD_TOP | POWER_LCD_TOP ) ;
-		POWER_CR &= ~ ( POWER_LCD_TOP | POWER_LCD_TOP ) ;
-	}
-	else
-	{
-		POWER_CR |= ( POWER_2D | POWER_2D_SUB | POWER_LCD_TOP | POWER_LCD_TOP ) ;
+		POWER_CR &= ~(POWER_LCD_TOP | POWER_LCD_TOP);
+	} else {
+		POWER_CR |=
+		    (POWER_2D | POWER_2D_SUB | POWER_LCD_TOP | POWER_LCD_TOP);
 	}
 	return 0;
 }
@@ -446,7 +424,7 @@ static int ndsfb_blank(int blank_mode, const struct fb_info *info)
      */
 
 static int ndsfb_setcolreg(u_int regno, u_int red, u_int green, u_int blue,
-			 u_int transp, struct fb_info *info)
+			   u_int transp, struct fb_info *info)
 {
 	u32 v;
 
@@ -462,8 +440,7 @@ static int ndsfb_setcolreg(u_int regno, u_int red, u_int green, u_int blue,
 
 	/* Truecolor has hardware independent palette */
 
-	if (info->fix.visual == FB_VISUAL_TRUECOLOR)
-	{
+	if (info->fix.visual == FB_VISUAL_TRUECOLOR) {
 		if (regno >= 16)
 			return 1;
 		v = (red << info->var.red.offset) |
@@ -471,17 +448,15 @@ static int ndsfb_setcolreg(u_int regno, u_int red, u_int green, u_int blue,
 		    (blue << info->var.blue.offset) |
 		    (1 << info->var.transp.offset);
 		((u32 *) (info->pseudo_palette))[regno] = v;
-	}
-	else
-	{
+	} else {
 		v = (red << info->var.red.offset) |
 		    (green << info->var.green.offset) |
 		    (blue << info->var.blue.offset);
 
 		if (info->par == 0)
-			PALETTE[regno] = v ;
+			PALETTE[regno] = v;
 		else
-			PALETTE_SUB[regno] = v ;
+			PALETTE_SUB[regno] = v;
 	}
 
 	return 0;
@@ -494,12 +469,11 @@ static int ndsfb_setcolreg(u_int regno, u_int red, u_int green, u_int blue,
      */
 
 static int ndsfb_pan_display(struct fb_var_screeninfo *var,
-			   struct fb_info *info)
+			     struct fb_info *info)
 {
 	if (var->vmode & FB_VMODE_YWRAP) {
 		if (var->yoffset < 0
-		    || var->yoffset >= info->var.yres_virtual
-		    || var->xoffset)
+		    || var->yoffset >= info->var.yres_virtual || var->xoffset)
 			return -EINVAL;
 	} else {
 		if (var->xoffset + var->xres > info->var.xres_virtual ||
@@ -513,7 +487,7 @@ static int ndsfb_pan_display(struct fb_var_screeninfo *var,
 	else
 		info->var.vmode &= ~FB_VMODE_YWRAP;
 
-	ndsfb_set_par( info );
+	ndsfb_set_par(info);
 
 	return 0;
 }
@@ -524,9 +498,9 @@ static int ndsfb_pan_display(struct fb_var_screeninfo *var,
      */
 
 static int ndsfb_mmap(struct fb_info *info, struct file *file,
-		    struct vm_area_struct *vma)
+		      struct vm_area_struct *vma)
 {
-	vma->vm_start = info->fix.smem_start ;
+	vma->vm_start = info->fix.smem_start;
 
 	return 0;
 }
@@ -568,22 +542,20 @@ static int __init ndsfb_probe(struct device *device)
 	if (!info)
 		goto err;
 
-	info->screen_base = dev->id == 0 ? (void*)0x06000000 : (void*)0x06200000 ;
+	info->screen_base =
+	    dev->id == 0 ? (void *)0x06000000 : (void *)0x06200000;
 	info->fbops = &ndsfb_ops;
 
-	retval = fb_find_mode(&info->var, info, NULL,
-			      NULL, 0, NULL, 16);
+	retval = fb_find_mode(&info->var, info, NULL, NULL, 0, NULL, 16);
 
 	if (!retval || (retval == 4))
 		info->var = ndsfb_default;
 	info->fix = ndsfb_fix;
 	info->pseudo_palette = info->par;
-	info->par = (void*)dev->id;
+	info->par = (void *)dev->id;
 	info->flags = FBINFO_FLAG_DEFAULT
-		| FBINFO_PARTIAL_PAN_OK
-		| FBINFO_HWACCEL_XPAN
-		| FBINFO_HWACCEL_YPAN
-		| FBINFO_HWACCEL_YWRAP ;
+	    | FBINFO_PARTIAL_PAN_OK
+	    | FBINFO_HWACCEL_XPAN | FBINFO_HWACCEL_YPAN | FBINFO_HWACCEL_YWRAP;
 
 	retval = fb_alloc_cmap(&info->cmap, 256, 0);
 	if (retval < 0)
@@ -596,15 +568,13 @@ static int __init ndsfb_probe(struct device *device)
 
 	//request_irq(IRQ_VBLANK, ndsfb_interrupt, SA_SHIRQ, "ndsfb", device);
 
-	printk(KERN_INFO
-	       "fb%d: Nintendo DS frame buffer device\n",
-	       info->node);
+	printk(KERN_INFO "fb%d: Nintendo DS frame buffer device\n", info->node);
 	return 0;
-err2:
+      err2:
 	fb_dealloc_cmap(&info->cmap);
-err1:
+      err1:
 	framebuffer_release(info);
-err:
+      err:
 	return retval;
 }
 
@@ -621,26 +591,26 @@ static int ndsfb_remove(struct device *device)
 }
 
 static struct device_driver ndsfb_driver = {
-	.name	= "ndsfb",
-	.bus	= &platform_bus_type,
-	.probe	= ndsfb_probe,
+	.name = "ndsfb",
+	.bus = &platform_bus_type,
+	.probe = ndsfb_probe,
 	.remove = ndsfb_remove,
 };
 
 static struct platform_device ndsfb_device0 = {
-	.name	= "ndsfb",
-	.id	= 0,
-	.dev	= {
+	.name = "ndsfb",
+	.id = 0,
+	.dev = {
 		.release = ndsfb_platform_release,
-	}
+		}
 };
 
 static struct platform_device ndsfb_device1 = {
-	.name	= "ndsfb",
-	.id	= 1,
-	.dev	= {
+	.name = "ndsfb",
+	.id = 1,
+	.dev = {
 		.release = ndsfb_platform_release,
-	}
+		}
 };
 
 int __init ndsfb_init(void)
@@ -670,7 +640,7 @@ int __init ndsfb_init(void)
 	}
 
 	if (!ret) {
-		info = dev_get_drvdata( &ndsfb_device1.dev );
+		info = dev_get_drvdata(&ndsfb_device1.dev);
 		fb_set_var(info, &info->var);
 		fb_prepare_logo(info);
 		fb_show_logo(info);
@@ -680,4 +650,3 @@ int __init ndsfb_init(void)
 }
 
 module_init(ndsfb_init);
-
