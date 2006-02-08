@@ -23,7 +23,7 @@
 #include <asm/io.h>
 
 extern const unsigned short master_Palette[16];
-extern const unsigned char keyboard_Tiles[6016];
+extern const unsigned char keyboard_Tiles[6048];
 extern const unsigned short keyboard_Map_Unpressed[480];
 extern const unsigned short keyboard_Map_Pressed[480];
 extern const unsigned short keyboard_Map_Qwerty_Lower[480];
