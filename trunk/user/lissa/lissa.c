@@ -28,7 +28,8 @@ int screen_height;
 
 inline void draw_pixel(int x, int y, int color)
 {
-	unsigned short * loc = screen_ptr + (y * screen_width ) + x;
+	unsigned short * loc = screen_ptr + ((y + screeninfo.yoffset) * screen_width ) +
+                                          x + screeninfo.xoffset;
 	
 	if ((x<0) || (x>=screen_width) || (y<0) || (y>=screen_height))
 		return;
