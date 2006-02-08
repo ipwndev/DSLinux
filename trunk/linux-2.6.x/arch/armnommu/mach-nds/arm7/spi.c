@@ -40,7 +40,7 @@ u16 touchRead(u32 command)
 		swiDelay(1);
 
 	// Return the result
-	return ((result & 0x7F) << 5) | (REG_SPI_DATA >> 3);
+	return ((result & 0x7F) << 5) | (0x1f & (REG_SPI_DATA >> 3));
 }
 
 void poweroff(void)

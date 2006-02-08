@@ -2,6 +2,7 @@
 #include "asm/arch/fifo.h"
 #include "asm/arch/ipcsync.h"
 #include "asm/arch/shmemipc.h"
+#include "asm/arch/wifi.h"
 
 #include "sound.h"
 #include "arm7.h"
@@ -72,79 +73,79 @@ static void recieveFIFOCommand(void)
 		case FIFO_WIFI:
 			cmd = (data >> 18) & 0x3f;
 			switch (cmd) {
-			case WIFI_CMD_UP:
+			case FIFO_WIFI_CMD_UP:
 				wifi_open();
 				break;
-			case WIFI_CMD_DOWN:
+			case FIFO_WIFI_CMD_DOWN:
 				wifi_close();
 				break;
-			case WIFI_CMD_MAC_QUERY:
+			case FIFO_WIFI_CMD_MAC_QUERY:
 				wifi_mac_query();
 				break;
-			case WIFI_CMD_STATS_QUERY:
+			case FIFO_WIFI_CMD_STATS_QUERY:
 				wifi_stats_query();
 				break;
-			case WIFI_CMD_SET_ESSID1:
+			case FIFO_WIFI_CMD_SET_ESSID1:
 				Wifi_SetSSID(((data >> 16) & 0x3),
 					     (data >> 8) & 0xff, data & 0xff);
 				break;
-			case WIFI_CMD_SET_ESSID2:
+			case FIFO_WIFI_CMD_SET_ESSID2:
 				Wifi_SetSSID(4 + ((data >> 16) & 0x3),
 					     (data >> 8) & 0xff, data & 0xff);
 				break;
-			case WIFI_CMD_SET_ESSID3:
+			case FIFO_WIFI_CMD_SET_ESSID3:
 				Wifi_SetSSID(8 + ((data >> 16) & 0x3),
 					     (data >> 8) & 0xff, data & 0xff);
 				break;
-			case WIFI_CMD_SET_ESSID4:
+			case FIFO_WIFI_CMD_SET_ESSID4:
 				Wifi_SetSSID(12 + ((data >> 16) & 0x3),
 					     (data >> 8) & 0xff, data & 0xff);
 				break;
-			case WIFI_CMD_SET_CHANNEL:
+			case FIFO_WIFI_CMD_SET_CHANNEL:
 				Wifi_SetChannel(data & 0xff);
 				break;
-			case WIFI_CMD_SET_WEPKEY0:
+			case FIFO_WIFI_CMD_SET_WEPKEY0:
 				Wifi_SetWepKey(0, ((data >> 16) & 0x3),
 					       (data >> 8) & 0xff, data & 0xff);
 				break;
-			case WIFI_CMD_SET_WEPKEY0A:
+			case FIFO_WIFI_CMD_SET_WEPKEY0A:
 				Wifi_SetWepKey(0, 4 + ((data >> 16) & 0x3),
 					       (data >> 8) & 0xff, data & 0xff);
 				break;
-			case WIFI_CMD_SET_WEPKEY1:
+			case FIFO_WIFI_CMD_SET_WEPKEY1:
 				Wifi_SetWepKey(1, ((data >> 16) & 0x3),
 					       (data >> 8) & 0xff, data & 0xff);
 				break;
-			case WIFI_CMD_SET_WEPKEY1A:
+			case FIFO_WIFI_CMD_SET_WEPKEY1A:
 				Wifi_SetWepKey(1, 4 + ((data >> 16) & 0x3),
 					       (data >> 8) & 0xff, data & 0xff);
 				break;
-			case WIFI_CMD_SET_WEPKEY2:
+			case FIFO_WIFI_CMD_SET_WEPKEY2:
 				Wifi_SetWepKey(2, ((data >> 16) & 0x3),
 					       (data >> 8) & 0xff, data & 0xff);
 				break;
-			case WIFI_CMD_SET_WEPKEY2A:
+			case FIFO_WIFI_CMD_SET_WEPKEY2A:
 				Wifi_SetWepKey(2, 4 + ((data >> 16) & 0x3),
 					       (data >> 8) & 0xff, data & 0xff);
 				break;
-			case WIFI_CMD_SET_WEPKEY3:
+			case FIFO_WIFI_CMD_SET_WEPKEY3:
 				Wifi_SetWepKey(3, ((data >> 16) & 0x3),
 					       (data >> 8) & 0xff, data & 0xff);
 				break;
-			case WIFI_CMD_SET_WEPKEY3A:
+			case FIFO_WIFI_CMD_SET_WEPKEY3A:
 				Wifi_SetWepKey(3, 4 + ((data >> 16) & 0x3),
 					       (data >> 8) & 0xff, data & 0xff);
 				break;
-			case WIFI_CMD_SET_WEPKEYID:
+			case FIFO_WIFI_CMD_SET_WEPKEYID:
 				Wifi_SetWepKeyID(data & 0xff);
 				break;
-			case WIFI_CMD_SET_WEPMODE:
+			case FIFO_WIFI_CMD_SET_WEPMODE:
 				Wifi_SetWepMode(data & 0xff);
 				break;
-			case WIFI_CMD_AP_QUERY:
+			case FIFO_WIFI_CMD_AP_QUERY:
 				wifi_ap_query(data & 0xffff);
 				break;
-			case WIFI_CMD_SCAN:
+			case FIFO_WIFI_CMD_SCAN:
 				wifi_start_scan();
 				break;
 			}
