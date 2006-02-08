@@ -147,6 +147,12 @@ struct shmemipc_firmware_block {
 };
 
 
+enum SHMEMIPC_WIFI_TYPE {
+	SHMEMIPC_WIFI_TYPE_PACKET = 1,
+	SHMEMIPC_WIFI_TYPE_STATS,
+	SHMEMIPC_WIFI_TYPE_AP_LIST
+};
+
 struct shmemipc_wifi_block {
 	u16 type;
 	u16 length;

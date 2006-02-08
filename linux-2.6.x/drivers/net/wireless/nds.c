@@ -39,6 +39,7 @@
 
 #include <asm/arch/fifo.h>
 #include <asm/arch/shmemipc.h>
+#include <asm/arch/wifi.h>
 
 #include "ieee802_11.h"
 #include "nds.h"
@@ -51,7 +52,7 @@ MODULE_LICENSE("GPL");
 
 static int pc_debug = 0;
 MODULE_PARM(pc_debug, "i");
-#define DEBUG(n, args...) if (pc_debug>(n)) printk(args)
+#define DEBUG(n, args...) if (pc_debug>=(n)) printk(args)
 
 #define DUMP_INPUT_PACKETS
 #define DUMP_OUTPUT_PACKETS
@@ -85,7 +86,7 @@ static int nds_start_xmit11(struct sk_buff *skb, struct net_device *dev)
 	netif_stop_queue(dev);
 
 	shmemipc_lock();
-	SHMEMIPC_BLOCK_ARM9->wifi.type = 1;
+	SHMEMIPC_BLOCK_ARM9->wifi.type = SHMEMIPC_WIFI_TYPE_PACKET;
 	memcpy(SHMEMIPC_BLOCK_ARM9->wifi.data, skb->data, skb->len);
 #ifdef PAD_WITH_JUNK
 	{
@@ -114,7 +115,7 @@ static struct net_device_stats *nds_get_stats(struct net_device *dev)
 
 	stats_query_complete = 0;
 	stats_query_output = (void *)&local->stats;
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(WIFI_CMD_STATS_QUERY, 0);
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_STATS_QUERY, 0);
 	wait_event_interruptible(ndswifi_wait, stats_query_complete != 0);
 
 	return &local->stats;
@@ -149,14 +150,18 @@ static int nds_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 static int nds_change_mtu(struct net_device *dev, int new_mtu)
 {
 	DEBUG(7, "Called: %s\n", __func__);
-	return -ENETDOWN;
+
+	if(new_mtu < ETH_ZLEN || new_mtu > ETH_DATA_LEN)
+		return -EINVAL;
+	dev->mtu = new_mtu;
+	return 0;
 }
 
 static int nds_open(struct net_device *dev)
 {
 	DEBUG(7, "Called: %s\n", __func__);
 
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(WIFI_CMD_UP, 0);
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_UP, 0);
 
 	netif_start_queue(dev);
 
@@ -167,7 +172,9 @@ static int nds_close(struct net_device *dev)
 {
 	DEBUG(7, "Called: %s\n", __func__);
 
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(WIFI_CMD_DOWN, 0);
+	netif_stop_queue(dev);
+
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_DOWN, 0);
 
 	return 0;
 }
@@ -190,7 +197,7 @@ static int nds_dev_init(struct net_device *dev)
 	/* get the mac addr */
 	mac_query_complete = 0;
 	mac_query_output = (void *)dev->dev_addr;
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(WIFI_CMD_MAC_QUERY, 0);
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_MAC_QUERY, 0);
 	wait_event_interruptible(ndswifi_wait, mac_query_complete != 0);
 
 	return 0;
@@ -241,7 +248,7 @@ static int nds_set_freq(struct net_device *dev,
 		return -EINVAL;	/* not allowed */
 	if (fwrq->m < 1 || fwrq->m > 13)
 		return -EINVAL;	/* not allowed */
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(WIFI_CMD_SET_CHANNEL, (fwrq->m));
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_CHANNEL, (fwrq->m));
 	return 0;
 }
 
@@ -366,7 +373,7 @@ static int nds_set_scan(struct net_device *dev,
 	DEBUG(7, "Called: %s\n", __func__);
 
 	scan_complete = 0;
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(WIFI_CMD_SCAN, 0);
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_SCAN, 0);
 	wait_event_interruptible(ndswifi_wait, scan_complete != 0);
 
 	return 0;
@@ -390,7 +397,7 @@ static int nds_get_scan(struct net_device *dev,
 	for (j = 0; j < 2; j++) {
 		ap_query_complete = 0;
 		ap_query_output = (void *)aplist;
-		REG_IPCFIFOSEND = FIFO_WIFI_CMD(WIFI_CMD_AP_QUERY, j);
+		REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY, j);
 		wait_event_interruptible(ndswifi_wait, ap_query_complete != 0);
 
 		for (i = 0; i < 16; i++) {
@@ -478,7 +485,7 @@ static int nds_set_essid(struct net_device *dev,
 
 			tmp = *(c++) << 8;
 			tmp |= *(c++);
-			REG_IPCFIFOSEND = FIFO_WIFI_CMD((WIFI_CMD_SET_ESSID1 +
+			REG_IPCFIFOSEND = FIFO_WIFI_CMD((FIFO_WIFI_CMD_SET_ESSID1 +
 							 i), ((j << 16) | tmp));
 			if (!*(c - 1) || !*(c - 2)) {
 				i = 4;
@@ -707,7 +714,7 @@ static int nds_set_encode(struct net_device *dev,
 					tmp = *(k++) << 8;
 					tmp |= *(k++);
 					REG_IPCFIFOSEND =
-					    FIFO_WIFI_CMD((WIFI_CMD_SET_WEPKEY0
+					    FIFO_WIFI_CMD((FIFO_WIFI_CMD_SET_WEPKEY0
 							   + (index * 2) + i),
 							  ((j << 16) | tmp));
 					if ((k - local->key_key[index]) >=
@@ -734,19 +741,19 @@ static int nds_set_encode(struct net_device *dev,
 	index = (dwrq->flags & IW_ENCODE_INDEX) - 1;
 	if ((index >= 0) && index < 4) {
 		local->current_index = index;
-		REG_IPCFIFOSEND = FIFO_WIFI_CMD(WIFI_CMD_SET_WEPKEYID, index);
+		REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_WEPKEYID, index);
 	}
 
 	/* Read the flags */
 	if ((dwrq->flags & IW_ENCODE_MODE) == IW_ENCODE_DISABLED) {
 		local->enable = 0;
 		REG_IPCFIFOSEND =
-		    FIFO_WIFI_CMD(WIFI_CMD_SET_WEPMODE, WEPMODE_NONE);
+		    FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_WEPMODE, WEPMODE_NONE);
 	}
 	if ((dwrq->flags & IW_ENCODE_MODE) == IW_ENCODE_ENABLED) {
 		local->enable = 1;
 		REG_IPCFIFOSEND =
-		    FIFO_WIFI_CMD(WIFI_CMD_SET_WEPMODE, local->key_size);
+		    FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_WEPMODE, local->key_size);
 	}
 	return 0;		/* Call commit handler */
 }
@@ -930,18 +937,18 @@ static void nds_cmd_from_arm7(u8 cmd, u8 offset, u16 data)
 	      offset, data);
 
 	switch (cmd) {
-	case WIFI_CMD_MAC_QUERY:
+	case FIFO_WIFI_CMD_MAC_QUERY:
 		((u16 *) mac_query_output)[offset] = data;
 		if (offset == 2) {
 			mac_query_complete = 1;
 			wake_up_interruptible(&ndswifi_wait);
 		}
 		break;
-	case WIFI_CMD_TX_COMPLETE:
+	case FIFO_WIFI_CMD_TX_COMPLETE:
 		if (global_dev)
-			netif_start_queue(global_dev);
+			netif_wake_queue(global_dev);
 		break;
-	case WIFI_CMD_SCAN:
+	case FIFO_WIFI_CMD_SCAN:
 		scan_complete = 1;
 		wake_up_interruptible(&ndswifi_wait);
 		break;
@@ -956,7 +963,7 @@ static void nds_wifi_shmemipc_isr(u8 type)
 
 	switch (type) {
 	case SHMEMIPC_REQUEST_FLUSH:
-		if (SHMEMIPC_BLOCK_ARM7->wifi.type == 1 && global_dev) {
+		if (SHMEMIPC_BLOCK_ARM7->wifi.type == SHMEMIPC_WIFI_TYPE_PACKET && global_dev) {
 			/* packet recieved */
 			struct sk_buff *skb;
 			unsigned char *skbp;
@@ -965,7 +972,7 @@ static void nds_wifi_shmemipc_isr(u8 type)
 			int rc;
 
 #ifdef DUMP_INPUT_PACKETS
-			if (pc_debug > 8) {
+			if (pc_debug >= 9) {
 				u8 *c;
 				char buff[2024], *c2;
 
@@ -991,7 +998,7 @@ static void nds_wifi_shmemipc_isr(u8 type)
 						*(c2++) = ' ';
 				}
 				*c2 = '\0';
-				DEBUG(8, "len(%d): %s\n",
+				DEBUG(9, "len(%d): %s\n",
 				      SHMEMIPC_BLOCK_ARM7->wifi.length, buff);
 			}
 #endif
@@ -1077,7 +1084,7 @@ static void nds_wifi_shmemipc_isr(u8 type)
 								   global_dev);
 
 #ifdef DUMP_OUTPUT_PACKETS
-						if (pc_debug > 8) {
+						if (pc_debug >= 9) {
 							u8 *c;
 							char buff[300], *c2;
 							int l =
@@ -1117,7 +1124,7 @@ static void nds_wifi_shmemipc_isr(u8 type)
 									    ' ';
 							}
 							*c2 = '\0';
-							DEBUG(8,
+							DEBUG(9,
 							      "len(%d): proto(%d) %s\n",
 							      (14 + len - 8 -
 							       hdrlen),
@@ -1128,14 +1135,14 @@ static void nds_wifi_shmemipc_isr(u8 type)
 #endif
 						rc = netif_rx(skb);
 						if (rc != NET_RX_SUCCESS)
-							DEBUG(8,
+							DEBUG(3,
 							      "netif_rx return(%d)\n",
 							      rc);
 					}
 				}
 
 			}
-		} else if (SHMEMIPC_BLOCK_ARM7->wifi.type == 2) {
+		} else if (SHMEMIPC_BLOCK_ARM7->wifi.type == SHMEMIPC_WIFI_TYPE_STATS) {
 			/* stats recieved */
 			struct net_device_stats *s =
 			    (struct net_device_stats *)stats_query_output;
@@ -1175,7 +1182,7 @@ static void nds_wifi_shmemipc_isr(u8 type)
 
 			stats_query_complete = 1;
 			wake_up_interruptible(&ndswifi_wait);
-		} else if (SHMEMIPC_BLOCK_ARM7->wifi.type == 3) {
+		} else if (SHMEMIPC_BLOCK_ARM7->wifi.type == SHMEMIPC_WIFI_TYPE_AP_LIST) {
 			memcpy(ap_query_output, SHMEMIPC_BLOCK_ARM7->wifi.data,
 			       16 * sizeof(Wifi_AccessPoint));
 			ap_query_complete = 1;
@@ -1183,7 +1190,7 @@ static void nds_wifi_shmemipc_isr(u8 type)
 		}
 		break;
 	case SHMEMIPC_FLUSH_COMPLETE:
-		if (SHMEMIPC_BLOCK_ARM9->wifi.type == 1) {
+		if (SHMEMIPC_BLOCK_ARM9->wifi.type == SHMEMIPC_WIFI_TYPE_PACKET) {
 			/* TX copy complete, do nothing */
 		}
 		break;
@@ -1220,6 +1227,8 @@ static int __init init_nds(void)
 	/* Allocate space for private device-specific data */
 	dev = alloc_etherdev(sizeof(struct nds_net_priv));
 	strcpy(dev->name, "nds");
+	/* my router needs 1492 */
+	dev->mtu = 1492;
 	wifi_setup(dev);
 
 	if (!dev)
