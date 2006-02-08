@@ -18,32 +18,6 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/* match with drivers/net/wireless/nds.h */
-enum WIFI_CMDS {
-	WIFI_CMD_UP,
-	WIFI_CMD_DOWN,
-	WIFI_CMD_MAC_QUERY,
-	WIFI_CMD_TX_COMPLETE,
-	WIFI_CMD_STATS_QUERY,
-	WIFI_CMD_SET_ESSID1,
-	WIFI_CMD_SET_ESSID2,
-	WIFI_CMD_SET_ESSID3,
-	WIFI_CMD_SET_ESSID4,
-	WIFI_CMD_SET_CHANNEL,
-	WIFI_CMD_SET_WEPKEY0,
-	WIFI_CMD_SET_WEPKEY0A,
-	WIFI_CMD_SET_WEPKEY1,
-	WIFI_CMD_SET_WEPKEY1A,
-	WIFI_CMD_SET_WEPKEY2,
-	WIFI_CMD_SET_WEPKEY2A,
-	WIFI_CMD_SET_WEPKEY3,
-	WIFI_CMD_SET_WEPKEY3A,
-	WIFI_CMD_SET_WEPKEYID,
-	WIFI_CMD_SET_WEPMODE,
-	WIFI_CMD_AP_QUERY,
-	WIFI_CMD_SCAN,
-};
-
 enum WIFI_AP_MODE {
 	WIFI_AP_INFRA,
 	WIFI_AP_ADHOC,
@@ -71,65 +45,36 @@ enum WIFI_STATE {
 	WIFI_STATE_STATSQUERYSEND = 0x2000,
 };
 
-/* match with drivers/net/wireless/nds.h */
-enum {
-	WIFI_STATS_RXPACKETS = 0,
-	WIFI_STATS_RXBYTES,
-	WIFI_STATS_RXDATABYTES,
-
-	WIFI_STATS_TXPACKETS,
-	WIFI_STATS_TXBYTES,
-	WIFI_STATS_TXDATABYTES,
-	WIFI_STATS_TXQREJECT,
-
-	WIFI_STATS_TXRAWPACKETS,
-	WIFI_STATS_RXRAWPACKETS,
-	WIFI_STATS_RXOVERRUN,
-
-	WIFI_STATS_DEBUG1,
-	WIFI_STATS_DEBUG2,
-	WIFI_STATS_DEBUG3,
-	WIFI_STATS_DEBUG4,
-	WIFI_STATS_DEBUG5,
-	WIFI_STATS_DEBUG6,
-
-	WIFI_STATS_HW_1B0,
-	WIFI_STATS_HW_1B4,
-	WIFI_STATS_HW_1B8,
-	WIFI_STATS_HW_1BC,
-	WIFI_STATS_HW_1C0,
-	WIFI_STATS_HW_1D0,
-	WIFI_STATS_HW_1D4,
-	WIFI_STATS_HW_1D8,
-	WIFI_STATS_HW_1DC,
-
-	WIFI_STATS_MAX
-};
-
 /*
  * Memory layout
  *
  * 0x4000 - 0x5FFF (8192 bytes)
  *
- * Recieve buffer 0x4C20 -- 0x5F5F  (4928 bytes)
+ * Recieve buffer 0x4C28 -- 0x5F5F  (4920 bytes)
  *
- * Our MTU 1500 bytes
- * 802.11 headers: 48 bytes (40 + 8)
+ * Our MTU 1556 bytes
+ *    Tx header:      12 bytes
+ *    802.11 headers: 24 bytes
+ *    Wep keys info:   4 bytes
+ *    LLC header:      8 bytes
+ *    1500 data:    1500 bytes
+ *    WEP IVC:         4 bytes
+ *    CRC:             4 bytes
  * 
- * Transmit buffers 0x4000 - 0x4C1F (3104 bytes)
- * Each transmit buffer, 1552
+ * Transmit buffers 0x4000 - 0x4C27 (3112 bytes)
+ * Each transmit buffer, 1556
  *
- * Transmit buffer1 0x4000 - 0x460F
- * Transmit buffer2 0x4610 - 0x4C1F
+ * Transmit buffer1 0x4000 - 0x4613
+ * Transmit buffer2 0x4614 - 0x4C27
  */
-#define RX_START_SETUP 0x4C20
+#define RX_START_SETUP 0x4C28
 #define RX_END_SETUP   0x5F60
-#define RX_CSR_SETUP   0x0610
-#define TX_MTU_BYTES   1500
-#define TX1_SETUP_VAL  (0x8000 | ((0x4000 - 0x4000) >> 1))
+#define RX_CSR_SETUP   ((RX_START_SETUP - 0x4000) >> 1)
+#define TX_MTU_BYTES   1556
 #define TX1_MAC_START  0x4000
-#define TX2_SETUP_VAL  (0x8000 | ((0x44DC - 0x4000) >> 1))
-#define TX2_MAC_START  0x44DC
+#define TX1_SETUP_VAL  (0x8000 | ((TX1_MAC_START - 0x4000) >> 1))
+#define TX2_MAC_START  0x4614
+#define TX2_SETUP_VAL  (0x8000 | ((TX2_MAC_START - 0x4000) >> 1))
 
 #define MAX_KEY_SIZE 13		// 128 (?) bits
 

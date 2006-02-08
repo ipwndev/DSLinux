@@ -1,3 +1,6 @@
+#ifndef _mach_nds_arm7_arm7_h_
+#define _mach_nds_arm7_arm7_h_
+
 extern void swiDelay(u32 duration);
 extern void swiWaitForVBlank(void);
 
@@ -74,3 +77,5 @@ extern void swiWaitForVBlank(void);
 
 #define MIN(x,y) ((x)<(y)?(x):(y))
 #define MAX(x,y) ((x)>(y)?(x):(y))
+
+#endif

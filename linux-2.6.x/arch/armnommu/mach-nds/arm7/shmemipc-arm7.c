@@ -27,6 +27,8 @@
  * shmemipc should implement the ARM7 part of their driver in this file.
  */
 
+#include <asm/arch/wifi.h>
+
 #include "shmemipc-arm7.h"
 #include "spi.h"
 #include "wifi.h"
