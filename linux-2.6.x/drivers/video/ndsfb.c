@@ -352,8 +352,9 @@ static int ndsfb_set_par(struct fb_info *info)
 		info->fix.visual = FB_VISUAL_PSEUDOCOLOR ;
 
 	info->fix.line_length = info->var.xres_virtual * (info->var.bits_per_pixel / 8 );
-	//info->fix.smem_start = info->screen_base ;
-	//info->fix.smem_len = info->var->xres_virtual * info->var->yres_virtual * 2 ;
+	info->fix.smem_start = info->screen_base ;
+	info->fix.smem_len = info->var.xres_virtual * info->var.yres_virtual * 
+		(info->var.bits_per_pixel / 8) ;
 
 	if (info->par == 0)
 	{
@@ -518,13 +519,16 @@ static int ndsfb_pan_display(struct fb_var_screeninfo *var,
 }
 
     /*
-     *  Most drivers don't need their own mmap function 
+     *  We can't do a proper mmap without an mmu, so just give
+     *  a pointer to the vram.
      */
 
 static int ndsfb_mmap(struct fb_info *info, struct file *file,
 		    struct vm_area_struct *vma)
 {
-	return -EINVAL;
+	vma->vm_start = info->fix.smem_start ;
+
+	return 0;
 }
 
 int __init ndsfb_setup(char *options)
