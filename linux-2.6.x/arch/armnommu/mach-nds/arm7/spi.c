@@ -40,8 +40,32 @@ u16 touchRead(u32 command)
 		swiDelay(1);
 
 	// Return the result
-	return ((result & 0x7F) << 5) | (0x1f & (REG_SPI_DATA >> 3));
+	return ((result & 0x7F) << 5) | (REG_SPI_DATA >> 3);
 }
+
+// Code from devkitpro/libnds/source/arm7/touch.c
+//---------------------------------------------------------------------------------
+s32 readTouchValue(int measure, int retry , int range) {
+//---------------------------------------------------------------------------------
+        int i;
+        s32 this_value=0, this_range;
+
+        s32 last_value = touchRead(measure | 1);
+
+        for ( i=0; i < retry; i++) {
+                this_value = touchRead(measure | 1);
+                if ((last_value - this_value) > 0)
+			this_range = last_value - this_value;
+                else
+			this_range = this_value - last_value;
+                if (this_range <= range) break;
+        }
+
+        if ( i == range) this_value = 0;
+        return this_value;
+
+}
+
 
 void poweroff(void)
 {
