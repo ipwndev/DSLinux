@@ -53,15 +53,47 @@ extern void swiWaitForVBlank(void);
 #define XKEYS		(*(volatile u16*)0x04000136)
 #define TOUCH_RELEASED  0x40
 
-#define TOUCH_CAL_X1 (*(volatile s16*)0x027FFCD8)
-#define TOUCH_CAL_Y1 (*(volatile s16*)0x027FFCDA)
-#define TOUCH_CAL_X2 (*(volatile s16*)0x027FFCDE)
-#define TOUCH_CAL_Y2 (*(volatile s16*)0x027FFCE0)
+// Code from devkitpro/libnds/include/nds/system.h
+typedef struct tPERSONAL_DATA {
+  u8  RESERVED0[2];           //0x023FFC80  05 00 ?
 
-#define TOUCH_CNTRL_X1   (*(volatile u8*)0x027FFCDC)
-#define TOUCH_CNTRL_Y1   (*(volatile u8*)0x027FFCDD)
-#define TOUCH_CNTRL_X2   (*(volatile u8*)0x027FFCE2)
-#define TOUCH_CNTRL_Y2   (*(volatile u8*)0x027FFCE3)
+  u8  theme;                  //0x027FFC82  favorite color (0-15)
+  u8  birthMonth;             //0x027FFC83  birthday month (1-12)
+  u8  birthDay;               //0x027FFC84  birthday day (1-31)
+
+  u8  RESERVED1[1];           //0x027FFC85  ???
+
+  s16 name[10];               //0x027FFC86  name, UTF-16?
+  u16 nameLen;                //0x027FFC9A  length of name in characters
+
+  s16 message[26];            //0x027FFC9C  message, UTF-16?
+  u16 messageLen;             //0x027FFCD0  length of message in characters
+
+  u8  alarmHour;              //0x027FFCD2  alarm hour
+  u8  alarmMinute;            //0x027FFCD3  alarm minute
+
+  u8  RESERVED2[4];           //0x027FFCD4  ??
+
+  //calibration information
+  u16 calX1;                  //0x027FFCD8
+  u16 calY1;                  //0x027FFCDA
+  u8  calX1px;                //0x027FFCDC
+  u8  calY1px;                //0x027FFCDD
+
+  u16 calX2;                  //0x027FFCDE
+  u16 calY2;                  //0x027FFCE0
+  u8  calX2px;                //0x027FFCE2
+  u8  calY2px;                //0x027FFCE3
+
+                              //0x027FFCE4
+    unsigned language    : 3; //            language
+    unsigned gbaScreen   : 1; //            GBA mode screen selection. 0=upper, 1=lower
+    unsigned RESERVED3   : 2; //            ??
+    unsigned autoMode    : 1; //            auto/manual mode. 0=manual, 1=auto
+    unsigned RESERVED4   : 1; //            ??
+} __attribute__ ((__packed__)) PERSONAL_DATA ;
+
+#define PersonalData ((PERSONAL_DATA*)0x27FFC80)
 
 #define SERIAL_CR	(*(volatile u16*)0x040001C0)
 #define SERIAL_DATA	(*(volatile u16*)0x040001C2)

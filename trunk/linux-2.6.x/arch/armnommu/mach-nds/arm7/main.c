@@ -11,14 +11,8 @@
 #include "wifi.h"
 #include "time.h"
 
-static s16 cntrl_width;
-static s16 cntrl_height;
-static s16 touch_cntrl_x1;
-static s16 touch_cntrl_y1;
-static s16 touch_width;
-static s16 touch_height;
-static s16 touch_cal_x1;
-static s16 touch_cal_y1;
+static s32 xscale, yscale;
+static s32 xoffset, yoffset;
 
 /* recieve outstanding FIFO commands from ARM9 */
 static void recieveFIFOCommand(void)
@@ -153,10 +147,13 @@ static void recieveFIFOCommand(void)
 	}
 }
 
+#define _MaxRetry 5
+#define _MaxRange 30
+
 /* sends touch state to ARM9 */
 static void sendTouchState(u16 buttons)
 {
-	u16 x, y;
+	s16 x, y, px, py;
 	static u8 lastx = 0, lasty = 0;
 
 	if (buttons & TOUCH_RELEASED) {
@@ -165,14 +162,20 @@ static void sendTouchState(u16 buttons)
 		lastx = 255;
 		lasty = 255;
 	} else {		/* Some dude is smacking his fingerprint on the touchscreen. */
-		x = touchRead(TSC_MEASURE_X);
-		y = touchRead(TSC_MEASURE_Y);
-		x = ((x - touch_cal_x1) * cntrl_width) /
-		    (touch_width) + touch_cntrl_x1;
-		y = ((y - touch_cal_y1) * cntrl_height) /
-		    (touch_height) + touch_cntrl_y1;
-		x = MIN(255, MAX(x, 0));
-		y = MIN(191, MAX(y, 0));
+                // Code from devkitpro/libnds/source/arm7/touch.c
+                x = readTouchValue(TSC_MEASURE_X, _MaxRetry, _MaxRange);
+                y = readTouchValue(TSC_MEASURE_Y, _MaxRetry, _MaxRange);
+
+                px = ( x * xscale - xoffset + xscale/2 ) >>19;
+                py = ( y * yscale - yoffset + yscale/2 ) >>19;
+
+                if ( px < 0) px = 0;
+                if ( py < 0) py = 0;
+                if ( px > (256 -1)) px = 256 -1;
+                if ( py > (192 -1)) py = 192 -1;
+
+                x = px;
+                y = py;
 
 		if (lastx + 6 > x && lastx < x + 6 &&
 		    lasty + 6 > y && lasty < y + 6) {
@@ -252,14 +255,12 @@ int main(void)
 	NDS_IME = 0;
 
 	/* Read calibration values, the arm9 will probably overwrite the originals later */
-	touch_width = TOUCH_CAL_X2 - TOUCH_CAL_X1;
-	touch_height = TOUCH_CAL_Y2 - TOUCH_CAL_Y1;
-	touch_cal_x1 = TOUCH_CAL_X1;
-	touch_cal_y1 = TOUCH_CAL_Y1;
-	cntrl_width = TOUCH_CNTRL_X2 - TOUCH_CNTRL_X1;
-	cntrl_height = TOUCH_CNTRL_Y2 - TOUCH_CNTRL_Y1;
-	touch_cntrl_x1 = TOUCH_CNTRL_X1;
-	touch_cntrl_y1 = TOUCH_CNTRL_Y1;
+	// Code from devkitpro/libnds/source/arm7/touch.c
+	xscale = ((PersonalData->calX2px - PersonalData->calX1px) << 19) / ((PersonalData->calX2) - (PersonalData->calX1));
+	yscale = ((PersonalData->calY2px - PersonalData->calY1px) << 19) / ((PersonalData->calY2) - (PersonalData->calY1));
+                
+	xoffset = ((PersonalData->calX1 + PersonalData->calX2) * xscale  - ((PersonalData->calX1px + PersonalData->calX2px) << 19) ) / 2;
+	yoffset = ((PersonalData->calY1 + PersonalData->calY2) * yscale  - ((PersonalData->calY1px + PersonalData->calY2px) << 19) ) / 2;
 
 	/* Enable VBLANK Interrupt */
 	DISP_SR = DISP_VBLANK_IRQ;
