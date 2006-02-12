@@ -306,6 +306,9 @@ static void wifi_try_to_associate(void)
 
 	wifi_data.state &= ~(WIFI_STATE_ASSOCIATED | WIFI_STATE_ASSOCIATING);
 
+	/* Slow LED flash when not associated */
+	power_write( ( power_read() & ~0x20 ) | 0x10 );
+
 	for (i = 0; i < WIFI_MAX_AP; i++) {
 		if (wifi_data.ssid[0] != wifi_data.aplist[i].ssid_len)
 			continue;
@@ -344,6 +347,9 @@ static void wifi_try_to_associate(void)
 
 	if (wifi_data.curMode == WIFI_AP_ADHOC) {
 		wifi_data.state |= WIFI_STATE_ASSOCIATED;
+
+		/* Fast LED flash when associated */
+		power_write( power_read() | 0x30 );
 	} else {
 		wifi_data.state &= ~WIFI_STATE_AUTHENTICATED;
 		Wifi_SendOpenSystemAuthPacket();
@@ -565,6 +571,9 @@ void wifi_open(void)
 	wifi_data.state |= WIFI_STATE_UP;
 	wifi_data.state &= ~(WIFI_STATE_ASSOCIATED | WIFI_STATE_ASSOCIATING);
 
+	/* Slow LED flash when not associated */
+	power_write( ( power_read() & ~0x20 ) | 0x10 );
+
 	POWERCNT7 |= 2;		// enable power for the wifi
 	*((volatile u16 *)0x04000206) = 0x30;	// ???
 
@@ -628,6 +637,9 @@ void wifi_close(void)
 
 	Wifi_Stop();
 	POWERCNT7 &= ~2;
+
+	/* Stop flashing */
+	power_write( power_read() & ~0x30 );
 }
 
 /* handle a query from kerney for wifi address */
@@ -1174,6 +1186,10 @@ static int Wifi_ProcessReassocResponse(int macbase, int framelen)
 				}
 				wifi_data.state |=
 				    WIFI_STATE_ASSOCIATED;
+
+				/* Fast LED flash when associated */
+				power_write( power_read() | 0x30 );
+
 				wifi_data.state &=
 				    ~(WIFI_STATE_ASSOCIATING |
 				      WIFI_STATE_CANNOTASSOCIATE);
@@ -1255,11 +1271,19 @@ static int Wifi_ProcessDeAuthenticationFrame(int macbase, int framelen)
 				    WIFI_STATE_AUTHENTICATED;
 				wifi_data.state &=
 				    ~(WIFI_STATE_ASSOCIATED);
+
+				/* Slow LED flash when not associated */
+				power_write( ( power_read() & ~0x20 ) | 0x10 );
+
 				Wifi_SendAssocPacket();
 			} else {
 				wifi_data.state &=
 				    ~(WIFI_STATE_ASSOCIATED |
 				      WIFI_STATE_AUTHENTICATED);
+
+				/* Slow LED flash when not associated */
+				power_write( ( power_read() & ~0x20 ) | 0x10 );
+
 				Wifi_SendOpenSystemAuthPacket();
 			}
 		}
