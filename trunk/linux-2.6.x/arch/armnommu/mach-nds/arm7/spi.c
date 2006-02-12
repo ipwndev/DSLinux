@@ -46,42 +46,69 @@ u16 touchRead(u32 command)
 // Code from devkitpro/libnds/source/arm7/touch.c
 //---------------------------------------------------------------------------------
 s32 readTouchValue(int measure, int retry , int range) {
-//---------------------------------------------------------------------------------
-        int i;
-        s32 this_value=0, this_range;
+	//---------------------------------------------------------------------------------
+	int i;
+	s32 this_value=0, this_range;
 
-        s32 last_value = touchRead(measure | 1);
+	s32 last_value = touchRead(measure | 1);
 
-        for ( i=0; i < retry; i++) {
-                this_value = touchRead(measure | 1);
-                if ((last_value - this_value) > 0)
+	for ( i=0; i < retry; i++) {
+		this_value = touchRead(measure | 1);
+		if ((last_value - this_value) > 0)
 			this_range = last_value - this_value;
-                else
+		else
 			this_range = this_value - last_value;
-                if (this_range <= range) break;
-        }
+		if (this_range <= range) break;
+	}
 
-        if ( i == range) this_value = 0;
-        return this_value;
+	if ( i == range) this_value = 0;
+	return this_value;
 
 }
 
+u8 power_read(void)
+{
+	u8 val;
 
-void poweroff(void)
+	while (REG_SPI_CR & SPI_BUSY)
+		swiDelay(1);
+
+	REG_SPI_CR = REG_SPI_ENABLE | (1<<1) | (1<<11) ;
+	REG_SPI_DATA = 0x80;
+
+	while (REG_SPI_CR & SPI_BUSY)
+		swiDelay(1);
+
+	REG_SPI_CR = REG_SPI_ENABLE | (1<<1) ;
+	REG_SPI_DATA = 0x0;
+
+	while (REG_SPI_CR & SPI_BUSY)
+		swiDelay(1);
+
+	val = REG_SPI_DATA ;
+
+	REG_SPI_CR = 0 ;
+
+	return val;
+}
+
+void power_write( u8 val )
 {
 	while (REG_SPI_CR & SPI_BUSY)
 		swiDelay(1);
 
 	// Write the command and wait for it to complete
-	REG_SPI_CR = REG_SPI_ENABLE | 0x802;
+	REG_SPI_CR = REG_SPI_ENABLE | (1<<1) | (1<<11) ;
 	REG_SPI_DATA = 0x00;
+
 	while (REG_SPI_CR & SPI_BUSY)
 		swiDelay(1);
 
 	// Write the data
-	REG_SPI_CR = REG_SPI_ENABLE | 0x002;
-	REG_SPI_DATA = 0x40;
+	REG_SPI_CR = REG_SPI_ENABLE | (1<<1) ;
+	REG_SPI_DATA = val;
 
+	REG_SPI_CR = 0 ;
 }
 
 void read_firmware(u32 address, u8 * destination, int count)

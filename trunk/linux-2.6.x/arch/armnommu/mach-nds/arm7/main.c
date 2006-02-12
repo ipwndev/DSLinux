@@ -26,7 +26,7 @@ static void recieveFIFOCommand(void)
 
 		switch (data & 0xf0000000) {
 		case FIFO_POWER:
-			poweroff();
+			power_write(0x40);
 			break;
 		case FIFO_TIME:
 			seconds = nds_get_time7();
