@@ -34,7 +34,7 @@ static short ndsbuttons[] = {
 	KEY_RIGHTCTRL, KEY_LEFTSHIFT
 };
 static short ndsbuttons2[] = { 
-	KEY_X, KEY_Y
+	KEY_PAGEUP, KEY_PAGEDOWN
 };
 #endif
 
