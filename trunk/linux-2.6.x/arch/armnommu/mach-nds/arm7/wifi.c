@@ -307,7 +307,7 @@ static void wifi_try_to_associate(void)
 	wifi_data.state &= ~(WIFI_STATE_ASSOCIATED | WIFI_STATE_ASSOCIATING);
 
 	/* Slow LED flash when not associated */
-	power_write( ( power_read() & ~0x20 ) | 0x10 );
+	power_write( POWER_CONTROL, ( power_read(POWER_CONTROL) & ~POWER0_LED_FAST) | POWER0_LED_BLINK );
 
 	for (i = 0; i < WIFI_MAX_AP; i++) {
 		if (wifi_data.ssid[0] != wifi_data.aplist[i].ssid_len)
@@ -349,7 +349,7 @@ static void wifi_try_to_associate(void)
 		wifi_data.state |= WIFI_STATE_ASSOCIATED;
 
 		/* Fast LED flash when associated */
-		power_write( power_read() | 0x30 );
+		power_write( POWER_CONTROL, power_read( POWER_CONTROL ) | POWER0_LED_BLINK | POWER0_LED_FAST );
 	} else {
 		wifi_data.state &= ~WIFI_STATE_AUTHENTICATED;
 		Wifi_SendOpenSystemAuthPacket();
@@ -572,7 +572,7 @@ void wifi_open(void)
 	wifi_data.state &= ~(WIFI_STATE_ASSOCIATED | WIFI_STATE_ASSOCIATING);
 
 	/* Slow LED flash when not associated */
-	power_write( ( power_read() & ~0x20 ) | 0x10 );
+	power_write( POWER_CONTROL, ( power_read( POWER_CONTROL ) & ~POWER0_LED_FAST ) | POWER0_LED_BLINK );
 
 	POWERCNT7 |= 2;		// enable power for the wifi
 	*((volatile u16 *)0x04000206) = 0x30;	// ???
@@ -639,7 +639,7 @@ void wifi_close(void)
 	POWERCNT7 &= ~2;
 
 	/* Stop flashing */
-	power_write( power_read() & ~0x30 );
+	power_write( POWER_CONTROL, power_read( POWER_CONTROL ) & ~( POWER0_LED_BLINK | POWER0_LED_FAST ) );
 }
 
 /* handle a query from kerney for wifi address */
@@ -1188,7 +1188,7 @@ static int Wifi_ProcessReassocResponse(int macbase, int framelen)
 				    WIFI_STATE_ASSOCIATED;
 
 				/* Fast LED flash when associated */
-				power_write( power_read() | 0x30 );
+				power_write( POWER_CONTROL, power_read( POWER_CONTROL ) | POWER0_LED_BLINK | POWER0_LED_FAST );
 
 				wifi_data.state &=
 				    ~(WIFI_STATE_ASSOCIATING |
@@ -1273,7 +1273,7 @@ static int Wifi_ProcessDeAuthenticationFrame(int macbase, int framelen)
 				    ~(WIFI_STATE_ASSOCIATED);
 
 				/* Slow LED flash when not associated */
-				power_write( ( power_read() & ~0x20 ) | 0x10 );
+				power_write( POWER_CONTROL, ( power_read( POWER_CONTROL ) & ~POWER0_LED_FAST ) | POWER0_LED_BLINK );
 
 				Wifi_SendAssocPacket();
 			} else {
@@ -1282,7 +1282,7 @@ static int Wifi_ProcessDeAuthenticationFrame(int macbase, int framelen)
 				      WIFI_STATE_AUTHENTICATED);
 
 				/* Slow LED flash when not associated */
-				power_write( ( power_read() & ~0x20 ) | 0x10 );
+				power_write( POWER_CONTROL, ( power_read( POWER_CONTROL ) & ~POWER0_LED_FAST ) | POWER0_LED_BLINK );
 
 				Wifi_SendOpenSystemAuthPacket();
 			}

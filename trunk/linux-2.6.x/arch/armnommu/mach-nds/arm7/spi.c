@@ -1,6 +1,7 @@
 
 #include "asm/types.h"
 #include "asm/arch/fifo.h"
+#include "spi.h"
 
 extern void swiDelay(u32 duration);
 
@@ -19,11 +20,11 @@ extern void swiDelay(u32 duration);
 #define SPI_16CLOCKS	(1<<10)
 #define SPI_SINGLE	(0<<11)
 #define SPI_CONTINUOUS	(1<<11)
-#define SPI_INTERRUPT   (1<<14)
+#define SPI_INTERRUPT	(1<<14)
 #define SPI_ENABLE	(1<<15)
 
-#define POWER_READ      (1<<7)
-#define POWER_WRITE     (0<<7)
+#define POWER_READ	(1<<7)
+#define POWER_WRITE	(0<<7)
 #define POWER_REG(n)	(n)
 
 #define WAIT_FOR_NOT_BUSY() {while (REG_SPI_CR & SPI_BUSY) swiDelay(1);}
@@ -79,14 +80,14 @@ s32 touch_read_value(int measure, int retry , int range) {
 	return this_value;
 }
 
-u8 power_read(void)
+u8 power_read(enum power_reg reg)
 {
 	u8 val;
 
 	WAIT_FOR_NOT_BUSY();
 
 	REG_SPI_CR = SPI_ENABLE | SPI_CONTINUOUS | SPI_POWER | SPI_8CLOCKS | SPI_1MHZ ;
-	REG_SPI_DATA = POWER_READ | POWER_REG(0) ;
+	REG_SPI_DATA = POWER_READ | reg ;
 
 	WAIT_FOR_NOT_BUSY();
 
@@ -102,13 +103,13 @@ u8 power_read(void)
 	return val;
 }
 
-void power_write( u8 val )
+void power_write( enum power_reg reg, u8 val )
 {
 	WAIT_FOR_NOT_BUSY();
 
 	// Write the command and wait for it to complete
 	REG_SPI_CR = SPI_ENABLE | SPI_CONTINUOUS | SPI_POWER | SPI_8CLOCKS | SPI_1MHZ ;
-	REG_SPI_DATA = POWER_WRITE | POWER_REG(0) ;
+	REG_SPI_DATA = POWER_WRITE | reg ;
 
 	WAIT_FOR_NOT_BUSY();
 
@@ -144,5 +145,6 @@ void read_firmware(u32 address, u8 * destination, int count)
 
 		destination[i] = REG_SPI_DATA;
 	}
+
 	REG_SPI_CR = 0;
 }
