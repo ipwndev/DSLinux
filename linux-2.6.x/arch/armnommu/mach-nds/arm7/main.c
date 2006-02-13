@@ -163,8 +163,8 @@ static void sendTouchState(u16 buttons)
 		lasty = 255;
 	} else {		/* Some dude is smacking his fingerprint on the touchscreen. */
                 // Code from devkitpro/libnds/source/arm7/touch.c
-                x = readTouchValue(TSC_MEASURE_X, _MaxRetry, _MaxRange);
-                y = readTouchValue(TSC_MEASURE_Y, _MaxRetry, _MaxRange);
+                x = touch_read_value(TSC_MEASURE_X, _MaxRetry, _MaxRange);
+                y = touch_read_value(TSC_MEASURE_Y, _MaxRetry, _MaxRange);
 
                 px = ( x * xscale - xoffset + xscale/2 ) >>19;
                 py = ( y * yscale - yoffset + yscale/2 ) >>19;
