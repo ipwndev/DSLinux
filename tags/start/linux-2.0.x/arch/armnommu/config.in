@@ -1,0 +1,273 @@
+#
+# For a description of the syntax of this configuration file,
+# see the Configure script.
+#
+mainmenu_name "Linux kernel configuration"
+
+define_bool CONFIG_ARM y
+define_bool CONFIG_UCLINUX y
+define_bool MAGIC_ROM_PTR y
+
+mainmenu_option next_comment
+comment 'Code maturity level options'
+bool 'Prompt for development and/or incomplete code/drivers' CONFIG_EXPERIMENTAL
+endmenu
+
+mainmenu_option next_comment
+comment 'Loadable module support'
+bool 'Enable loadable module support' CONFIG_MODULES
+if [ "$CONFIG_MODULES" = "y" ]; then
+  bool 'Set version information on all symbols for modules' CONFIG_MODVERSIONS
+  bool 'Kernel daemon support (e.g. autoload of modules)' CONFIG_KERNELD
+fi
+endmenu
+
+mainmenu_option next_comment
+comment 'General setup'
+choice 'ARM system type'	\
+	"AplioTrio		CONFIG_ARCH_TRIO \
+	 Atmel-AT91		CONFIG_ARCH_AT91 \
+	 NetSilicon-NET+ARM	CONFIG_ARCH_NETARM \
+	 Archimedes		CONFIG_ARCH_ARC \
+	 A5000			CONFIG_ARCH_A5K \
+	 RiscPC			CONFIG_ARCH_RPC \
+	 EBSA-110		CONFIG_ARCH_EBSA110 \
+	 NexusPCI		CONFIG_ARCH_NEXUSPCI \
+	 GameBoyAdvance		CONFIG_ARCH_GBA" AplioTrio
+if [ "$CONFIG_ARCH_ARC" = "y" -o "$CONFIG_ARCH_A5K" = "y" -o "$CONFIG_ARCH_RPC" = "y" ]; then
+  define_bool CONFIG_ARCH_ACORN y
+else
+  define_bool CONFIG_ARCH_ACORN n
+fi
+if [ "$CONFIG_ARCH_NEXUSPCI" = "y" ]; then
+  define_bool CONFIG_PCI y
+else
+  define_bool CONFIG_PCI n
+fi
+if [ "$CONFIG_ARCH_NEXUSPCI" = "y" -o "$CONFIG_ARCH_EBSA110" = "y" ]; then
+  define_bool CONFIG_CPU_SA110 y
+else
+  if [ "$CONFIG_ARCH_TRIO" = "y" -o "$CONFIG_ARCH_GBA" = "y" ]; then
+	 define_bool CONFIG_CPU_ARM7 y
+  else
+    if [ "$CONFIG_ARCH_AT91" = "y" ]; then
+      define_bool CONFIG_ARCH_ATMEL y
+      define_bool CONFIG_CPU_ARM7 y
+      int 'Asyncronous Clock Frequency' CONFIG_ARM_CLK 32768000
+      hex 'Base Address for DRAM' DRAM_BASE 0x02000000
+      hex 'Amount of DRAM present' DRAM_SIZE 0x00100000
+      hex 'Base Address for Flash Memory' FLASH_MEM_BASE 0x01000000
+      hex 'Amount of FLASH present' FLASH_SIZE 0x00100000
+      bool 'Use EBI to configure system addresses' CONFIG_EBI y
+      bool 'AT91M55800A Processor (Atmel EB55 Board)' CONFIG_ARCH_ATMEL_EB55 n
+      bool 'System will boot from flash' CONFIG_WILL_BOOT_FROM_FLASH y
+    else
+      if [ "$CONFIG_ARCH_NETARM" = "y" ]; then
+         define_bool CONFIG_CPU_ARM7 y
+      else
+	if [ "$CONFIG_ARCH_A5K" = "y" ]; then
+           define_bool CONFIG_CPU_ARM6 y
+	else
+	 choice 'ARM cpu type'		\
+	    "ARM2			CONFIG_CPU_ARM2 \
+	     ARM3			CONFIG_CPU_ARM3 \
+	     ARM6/7		CONFIG_CPU_ARM6 \
+	     StrongARM		CONFIG_CPU_SA110" StrongARM
+	fi
+      fi
+    fi
+  fi
+fi
+
+if [ "$CONFIG_ARCH_NETARM" = "y" ]; then
+  bool 'NET+ARM NET+40 Rev2' CONFIG_NETARM_NET40_REV2
+  if [ "$CONFIG_NETARM_NET40_REV2" = "n" ]; then
+    bool 'NET+ARM NET+40 Rev4' CONFIG_NETARM_NET40_REV4
+    if [ "$CONFIG_NETARM_NET40_REV4" = "n" ]; then
+      bool 'NET+ARM NET+50' CONFIG_NETARM_NET50
+    fi
+  fi
+fi
+
+if [ "$CONFIG_ARCH_NETARM" = "y" ]; then
+  if [ "$CONFIG_NETARM_NET40_REV2" = "y" ]; then
+    define_hex DRAM_BASE 0x00000000
+    define_hex DRAM_SIZE 0x01000000
+    define_hex FLASH_MEM_BASE 0x10000000
+    define_hex FLASH_SIZE 0x00400000
+  else
+    define_hex DRAM_BASE 0x00000000
+    define_hex DRAM_SIZE 0x02000000
+    define_hex FLASH_MEM_BASE 0x10000000
+    define_hex FLASH_SIZE 0x00800000
+  fi
+fi
+
+if [ "$CONFIG_ARCH_NETARM" = "y" ]; then
+  bool 'NET+ARM EEPROM' CONFIG_NETARM_EEPROM
+fi
+
+if [ "$CONFIG_ARCH_GBA" = "y" ]; then
+  bool 'GBA TEXT console support' CONFIG_GBATXT
+  define_int CONFIG_ARM_CLK 167800000
+  define_hex DRAM_BASE 0x02000000
+  define_hex DRAM_SIZE 0x00040000
+  define_hex FLASH_MEM_BASE 0x08000000
+  define_hex FLASH_SIZE 0x02000000
+fi
+
+bool 'Compile kernel with frame pointer (for useful debugging)' CONFIG_FRAME_POINTER
+bool 'Use new compilation options (for GCC 2.8)' CONFIG_BINUTILS_NEW
+bool 'Debug kernel errors' CONFIG_DEBUG_ERRORS
+bool 'Networking support' CONFIG_NET
+bool 'System V IPC' CONFIG_SYSVIPC
+bool 'Reduced memory footprint' CONFIG_REDUCED_MEMORY
+#tristate 'Kernel support for a.out binaries' CONFIG_BINFMT_AOUT
+#tristate 'Kernel support for ELF binaries' CONFIG_BINFMT_ELF
+define_bool CONFIG_BINFMT_FLAT y
+define_bool CONFIG_KERNEL_ELF y
+
+if [ "$CONFIG_ARCH_ATMEL" != "y" ]; then
+    bool 'Console support' CONFIG_CONSOLE
+    if [ "$CONFIG_CONSOLE" = "y" ]; then
+	    bool 'Frame buffer' CONFIG_FRAMEBUFFER
+	    if [ "$CONFIG_PILOT" = "y" -a "$CONFIG_FRAMEBUFFER" = "y" ]; then
+		    bool 'Pilot console' CONFIG_PILOT_CONSOLE
+	    fi
+    fi
+fi
+
+if [ "$CONFIG_EXPERIMENTAL" = "y" ]; then
+#  tristate 'Kernel support for JAVA binaries' CONFIG_BINFMT_JAVA
+  define_bool CONFIG_BINFMT_JAVA n
+fi
+endmenu
+
+#
+# Block device driver configuration
+#
+mainmenu_option next_comment
+comment 'Floppy, IDE, and other block devices'
+
+tristate 'ROM disk memory block device' CONFIG_BLK_DEV_BLKMEM
+# tristate 'Normal floppy disk support' CONFIG_BLK_DEV_FD
+bool 'IDE harddisk support' CONFIG_BLK_DEV_IDE
+if [ "$CONFIG_BLK_DEV_IDE" = "y" ]; then
+  bool '   Include IDE/ATAPI CDROM support' CONFIG_BLK_DEV_IDECD
+  bool '   Include IDE/ATAPI TAPE support' CONFIG_BLK_DEV_IDETAPE
+  bool '   Include IDE/ATAPI FLOPPY support (new)' CONFIG_BLK_DEV_IDEFLOPPY
+fi
+
+comment 'Additional Block/FLASH Devices'
+
+tristate 'Loopback device support' CONFIG_BLK_DEV_LOOP
+bool 'Multiple devices driver support' CONFIG_BLK_DEV_MD
+if [ "$CONFIG_BLK_DEV_MD" = "y" ]; then
+  tristate '   Linear (append) mode' CONFIG_MD_LINEAR
+  tristate '   RAID-0 (striping) mode' CONFIG_MD_STRIPED
+fi
+tristate 'RAM disk support' CONFIG_BLK_DEV_RAM
+if [ "$CONFIG_BLK_DEV_RAM" = "y" ]; then
+  bool '   Release empty RAM disk blocks' CONFIG_RD_RELEASE_BLOCKS
+#  bool '   Initial RAM disk (initrd) support' CONFIG_BLK_DEV_INITRD
+  if [ "$CONFIG_ARCH_NETARM" = "y" ]; then
+    bool '   Ramdisk load from ROM Blkmem' CONFIG_BLK_DEV_RAMDISK_BLKMEM
+    if [ "$CONFIG_BLK_DEV_RAMDISK_BLKMEM" = "y" ]; then
+      bool '   Blkmem ramdisk compiled in' CONFIG_BLK_DEV_RAMDISK_COMPILED_IN
+    fi
+  fi
+fi
+tristate 'FLASH device support' CONFIG_DEV_FLASH
+if [ "$CONFIG_DEV_FLASH" = "y" ]; then
+  bool '   FLASH Block device' CONFIG_BLK_DEV_FLASH
+  bool '   FLASH Character device' CONFIG_CHR_DEV_FLASH
+fi
+endmenu
+
+mainmenu_option next_comment
+comment 'Character devices'
+
+if [ "$CONFIG_ARCH_ATMEL" = "y" ]; then
+  bool 'Atmel AT91 serial support' CONFIG_SERIAL_ATMEL
+  if [ "$CONFIG_SERIAL_ATMEL" = "y" ]; then 
+    bool 'Console on Atmel AT91 serial port' CONFIG_CONSOLE_ON_ATMEL
+  fi
+  if [ "$CONFIG_ARCH_ATMEL_EB55" != "y" ]; then 
+    bool 'Swap ports (i.e. USART1 on /dev/ttyS0)' CONFIG_SWAP_ATMEL_PORTS
+    hex 'USART0 base address' USART0_BASE 0xFFFD0000
+    hex 'USART1 base address' USART1_BASE 0xFFFCC000
+    bool 'Philips SC28L91 UART serial support' CONFIG_SC28L91
+    if [ "$CONFIG_SC28L91" = "y" ]; then
+      if [ "$CONFIG_CONSOLE_ON_ATMEL" != "y" ]; then 
+        bool 'Console on Philips SC28L91 UART' CONFIG_CONSOLE_ON_SC28L91
+      fi
+      hex 'Base Address for Philips SC28L91 UART' CONFIG_SC28L91_UART_BASE 0x03000000
+    fi
+    bool 'Atmel AT91 serial BlueT support' CONFIG_SERIAL_ATMEL_BT
+    bool 'blip LED support' CONFIG_LED_ATMEL
+  fi
+fi
+
+if [ "$CONFIG_ARCH_NETARM" = "y" ]; then
+  bool 'NET+ARM serial support' CONFIG_SERIAL_NETARM
+  bool 'NET+ARM parallel printer support' CONFIG_PRINTER_NETARM
+fi
+endmenu
+
+if [ "$CONFIG_NET" = "y" ]; then
+  source net/Config.in
+fi
+
+if [ "$CONFIG_NET" = "y" ]; then
+
+mainmenu_option next_comment
+comment 'Network device support'
+
+bool 'Network device support' CONFIG_NETDEVICES
+if [ "$CONFIG_NETDEVICES" = "y" ]; then
+#
+# Network device configuration
+#
+tristate 'Dummy net driver support' CONFIG_DUMMY
+tristate 'SLIP (serial line) support' CONFIG_SLIP
+if [ "$CONFIG_SLIP" != "n" ]; then
+  bool ' CSLIP compressed headers' CONFIG_SLIP_COMPRESSED
+  bool ' Keepalive and linefill' CONFIG_SLIP_SMART
+  bool ' Six bit SLIP encapsulation' CONFIG_SLIP_MODE_SLIP6
+fi
+tristate 'PPP (point-to-point) support' CONFIG_PPP
+if [ ! "$CONFIG_PPP" = "n" ]; then
+  comment 'CCP compressors for PPP are only built as modules.'
+fi
+tristate 'EQL (serial line load balancing) support' CONFIG_EQUALIZER
+bool 'Cirrus Logic Crystal LAN cs8900 ethernet' CONFIG_UCCS8900
+if [ "$CONFIG_UCCS8900" != "n" ]; then
+	hex 'Base Address for cs8900 ethernet' CS8900_BASE 0x04000000
+	if [ "$CONFIG_ARCH_ATMEL" = "y" ]; then
+	    if [ "$CONFIG_ALFONS" != "y" ]; then
+		bool 'driver is connected via PIO lines' CONFIG_UCARM
+	    fi
+	    if [ "$CONFIG_UCARM" != "y" ]; then
+		bool 'driver is connected directly' CONFIG_ALFONS
+	    fi
+	fi
+fi
+bool 'SMC 9194 ethernet' CONFIG_SMC9194
+bool 'NE2000/NE1000 ISA ethernet' CONFIG_NE2000
+
+fi
+endmenu
+fi
+
+source fs/Config.in
+
+mainmenu_option next_comment
+comment 'Kernel hacking'
+
+#bool 'Debug kmalloc/kfree' CONFIG_DEBUG_MALLOC
+bool 'Kernel profiling support' CONFIG_PROFILE
+if [ "$CONFIG_PROFILE" = "y" ]; then
+  int ' Profile shift count' CONFIG_PROFILE_SHIFT 2
+fi
+endmenu
+
