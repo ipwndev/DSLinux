@@ -499,7 +499,7 @@ static int load_flat_file(struct linux_binprm * bprm,
 			return result;
 
 		/* OK, This is the point of no return */
-		set_personality(PER_LINUX);
+		set_personality(PER_LINUX_32BIT);
 	}
 
 	/*
