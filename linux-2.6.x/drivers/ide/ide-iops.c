@@ -30,151 +30,63 @@
 #include <asm/io.h>
 #include <asm/bitops.h>
 
-#ifdef CONFIG_IDE_NDS_SUPERCARD
-
-#define NDS_IME     (*(volatile u32*)0x04000208)
-
-#define unlock() supercard_unlock()
-#define lock() supercard_lock()
-
-void supercard_unlock( void )
-{
-	NDS_IME = 0;
-	*(volatile u16 *)0x09fffffe = 0xa55a ;
-	*(volatile u16 *)0x09fffffe = 0xa55a ;
-	*(volatile u16 *)0x09fffffe = 0x3 ;
-	*(volatile u16 *)0x09fffffe = 0x3 ;
-}
-
-void supercard_lock()
-{
-	*(volatile u16 *)0x09fffffe = 0xa55a ;
-	*(volatile u16 *)0x09fffffe = 0xa55a ;
-	*(volatile u16 *)0x09fffffe = 0x1 ;
-	*(volatile u16 *)0x09fffffe = 0x1 ;
-	NDS_IME = 1;
-}
-
-#else
-
-#define unlock()  /* nothing */
-#define lock()    /* nothing */
-
-#endif
-
 /*
  *	Conventional PIO operations for ATA devices
  */
 
 static u8 ide_inb (unsigned long port)
 {
-	u8 val ;
-
-	unlock() ;
-
-	val = (u8) inb(port);
-
-	lock() ;
-
-	return val ;
+	return (u8) inb(port);
 }
 
 static u16 ide_inw (unsigned long port)
 {
-	u16 val ;
-
-	unlock() ;
-
-	val = (u16) inw(port);
-
-	lock() ;
-
-	return val ;
+	return (u16) inw(port);
 }
 
 static void ide_insw (unsigned long port, void *addr, u32 count)
 {
-	unlock() ;
-
 	insw(port, addr, count);
-
-	lock() ;
 }
 
 static u32 ide_inl (unsigned long port)
 {
-	u32 val ;
-
-	unlock() ;
-
-	val = (u32) inl(port);
-
-	lock() ;
-
-	return val ;
+	return (u32) inl(port);
 }
 
 static void ide_insl (unsigned long port, void *addr, u32 count)
 {
-	unlock() ;
-
 	insl(port, addr, count);
-
-	lock() ;
 }
 
 static void ide_outb (u8 val, unsigned long port)
 {
-	unlock() ;
-
-	outw(val, port);
-
-	lock() ;
+	outb(val, port);
 }
 
 static void ide_outbsync (ide_drive_t *drive, u8 addr, unsigned long port)
 {
-	unlock() ;
-
-	outw(addr, port);
-
-	lock() ;
+	outb(addr, port);
 }
 
 static void ide_outw (u16 val, unsigned long port)
 {
-	unlock() ;
-
 	outw(val, port);
-
-	lock() ;
 }
 
 static void ide_outsw (unsigned long port, void *addr, u32 count)
 {
-	unlock() ;
-
 	outsw(port, addr, count);
-
-	lock() ;
 }
 
 static void ide_outl (u32 val, unsigned long port)
 {
-	unlock() ;
-
 	outl(val, port);
-
-	lock() ;
 }
 
 static void ide_outsl (unsigned long port, void *addr, u32 count)
 {
-	unlock() ;
-
 	outsl(port, addr, count);
-
-	lock() ;
 }
 
 void default_hwif_iops (ide_hwif_t *hwif)

@@ -431,10 +431,6 @@ else
   endif
 endif  
 
-ifdef CONFIG_ARCH_GBA
-L_OBJS += gba_audio.o
-endif
-
 ifdef CONFIG_DACI2S
 L_OBJS += daci2s.o
 endif

@@ -151,11 +151,6 @@ config ARCH_P2001
 	  The LPEC P2001 evaluation board has an P2001 processor from
 	  MAZ Brandenburg GmbH, which is based an ARM9TDMI processor core.
 
-config ARCH_NDS
-	bool "Nintendo DS"
-	help
-	  The Nintendo DS.
-
 endchoice
 
 config SET_MEM_PARAM
@@ -172,7 +167,6 @@ config DRAM_BASE
 	default 0x00000000 if ARCH_S5C7375
 	default 0x00000000 if ARCH_ESPD_4510B
 	default 0x10000000 if ARCH_S3C24A0 
-	default 0x02000000 if ARCH_NDS
 	default 0x00800000
 
 config DRAM_SIZE
@@ -183,7 +177,6 @@ config DRAM_SIZE
 	default 0x00400000 if ARCH_S5C7375
 	default 0x00800000 if ARCH_ESPD_4510B
 	default 0x04000000 if ARCH_S3C24A0 
-	default 0x00400000 if ARCH_NDS
 	default 0x00800000
 
 config FLASH_MEM_BASE
@@ -192,7 +185,6 @@ config FLASH_MEM_BASE
 	default 0x00000000 if ARCH_S3C3410
 	default 0x00000000 if ARCH_S3C44B0
 	default 0x08000000 if ARCH_S5C7375
-	default 0x08000000 if ARCH_NDS
 	default 0x01000000 if ARCH_ESPD_4510B
 	default 0x00400000
 
@@ -211,7 +203,6 @@ source "arch/armnommu/mach-s3c44b0x/Kconfig"
 source "arch/armnommu/mach-s5c7375/Kconfig"
 source "arch/armnommu/mach-espd_4510b/Kconfig"
 source "arch/armnommu/mach-s3c24a0/Kconfig" 
-source "arch/armnommu/mach-nds/Kconfig" 
 source arch/armnommu/mm/Kconfig
 
 endmenu
@@ -541,7 +532,11 @@ source "fs/Kconfig"
 
 source "drivers/video/Kconfig"
 
+if PCI
+
 source "sound/Kconfig"
+
+endif
 
 source "drivers/misc/Kconfig"
 

@@ -49,7 +49,6 @@ ifdef BUILD_SHARED
 else
   IWLIB=$(STATIC)
 endif
-IWLIB=$(STATIC)
 
 # Standard name for dynamic library so that the dynamic linker can pick it.
 # We will just create a symbolic link to the real thing.
@@ -90,7 +89,7 @@ endif
 XCFLAGS=$(CFLAGS) $(WARN) $(HEADERS) $(WEXT_FLAG) $(WELIB_FLAG) $(KERNEL_INCLUDES)
 PICFLAG=-fPIC
 
-all:: $(STATIC) $(PROGS)
+all:: $(STATIC) $(DYNAMIC) $(PROGS)
 
 %: %.o
 	$(CC) $(LDFLAGS) $(XCFLAGS) -o $@ $^ $(LIBS) $(LDLIBS$(LDLIBS_$@))

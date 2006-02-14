@@ -36,7 +36,7 @@
 #include <asm/mach/arch.h>
 #include <asm/mach/map.h>
 
-extern char _stext, _text, _etext, _end, __init_begin, __init_end, __data_start;
+extern char _stext, _text, _etext, _end, __init_begin, __init_end;
 extern unsigned long phys_initrd_start;
 extern unsigned long phys_initrd_size;
 
@@ -118,12 +118,7 @@ find_bootmap_pfn(int node, struct meminfo *mi, unsigned int bootmap_pages)
 {
 	unsigned int start_pfn, bank, bootmap_pfn;
 
-#ifdef CONFIG_NDS_NDS
-        unsigned int rootfs_len = ntohl(((unsigned int *)&_end)[2]);
-	start_pfn   = V_PFN_UP(((char*)&_end) + rootfs_len);
-#else
 	start_pfn   = V_PFN_UP(&_end);
-#endif
 	bootmap_pfn = 0;
 
 	for (bank = 0; bank < mi->nr_banks; bank ++) {
@@ -292,11 +287,7 @@ static __init void reserve_node_zero(unsigned int bootmap_pfn, unsigned int boot
 	 * Register the kernel text and data with bootmem.
 	 * Note that this can only be in node 0.
 	 */
-#ifdef CONFIG_NDS_DSGBA
-	reserve_bootmem_node(pgdat, __pa(&__data_start), &_end - &__data_start);
-#else
 	reserve_bootmem_node(pgdat, __pa(&_stext), &_end - &_stext);
-#endif
 
 #if defined (PA_SDRAM_BASE) && !defined(CONFIG_MMU)
 	/*
@@ -535,7 +526,7 @@ void __init mem_init(void)
 	int i, node;
 
 	codepages = &_etext - &_text;
-	datapages = &_end - &__data_start;
+	datapages = &_end - &_etext;
 	initpages = &__init_end - &__init_begin;
 
 #ifndef CONFIG_DISCONTIGMEM

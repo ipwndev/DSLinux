@@ -306,7 +306,6 @@ main(argc, argv)
 			 /*(int)seconds / 60, (int)seconds % 60,*/
 			 l ? psbuf : name);
 	next:
-		;
 	}
 	
 	closedir(d);

@@ -5,7 +5,6 @@
  */
 
 #include <asm-generic/vmlinux.lds.h>
-#include <linux/config.h>
 	
 ENTRY(stext)
 #ifndef __ARMEB__
@@ -18,9 +17,7 @@ SECTIONS
 	. = TEXTADDR;
 	.init : {			/* Init code and data		*/
 		_stext = .;
-#ifndef CONFIG_NDS_DSGBA
 		__init_begin = .;
-#endif
 			_sinittext = .;
 			*(.init.text)
 			_einittext = .;
@@ -33,9 +30,7 @@ SECTIONS
 		__tagtable_begin = .;
 			*(.taglist)
 		__tagtable_end = .;
-#ifndef CONFIG_NDS_DSGBA
 			*(.init.data)
-#endif
 		. = ALIGN(16);
 		__setup_start = .;
 			*(.init.setup)
@@ -63,9 +58,7 @@ SECTIONS
 			usr/built-in.o(.init.ramfs)
 		__initramfs_end = .;
 		. = ALIGN(4096);
-#ifndef CONFIG_NDS_DSGBA
 		__init_end = .;
-#endif
 	}
 
 	/DISCARD/ : {			/* Exit code and data		*/
@@ -90,9 +83,7 @@ SECTIONS
 		_etext = .;		/* End of text section		*/
 	}
 
-	. = DATAADDR;
 	. = ALIGN(16);
-	__data_start = .;
 	__ex_table : {			/* Exception table		*/
 		__start___ex_table = .;
 			*(__ex_table)
@@ -111,14 +102,6 @@ SECTIONS
 		*(.init.task)
 
 		. = ALIGN(4096);
-#ifdef CONFIG_NDS_DSGBA
-		__init_begin = .;
-		*(.init.data)
-		. = ALIGN(4096);
-		__init_end = .;
-
-		. = ALIGN(4096);
-#endif
 		__nosave_begin = .;
 		*(.data.nosave)
 		. = ALIGN(4096);

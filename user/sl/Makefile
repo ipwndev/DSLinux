@@ -7,7 +7,9 @@
 #         1999/ 6/14
 #==========================================
 
-CFLAGS+= -I$(ROOTDIR)/lib/libncurses/include
+CC=cc
+CFLAGS=-Wall -O # -DDEBUG
+LDFLAGS= -lcurses # -ltermcap
 
 PREFIX=$(DESTDIR)/usr
 BINDIR=$(PREFIX)/bin
@@ -17,10 +19,10 @@ INSTALL=install
 all: sl sl-h
 
 sl: sl.c sl.h
-	$(CC) $(CFLAGS) -o sl sl.c $(LDFLAGS) -lncurses
+	$(CC) $(CFLAGS) -o sl sl.c $(LDFLAGS)
 
 sl-h: sl-h.c sl-h.h header.h
-	$(CC) $(CFLAGS) -o sl-h sl-h.c $(LDFLAGS) -lncurses
+	$(CC) $(CFLAGS) -o sl-h sl-h.c $(LDFLAGS)
 
 clean::
 	rm -f sl sl-h
@@ -35,8 +37,4 @@ install::
 	$(INSTALL) -m 644 sl.6j $(MANDIR)/ja/man6/sl.6
 	$(INSTALL) -m 644 sl.6de $(MANDIR)/de/man6/sl.6
 	$(INSTALL) -m 644 sl-h.6de $(MANDIR)/de/man6/sl-h.6
-
-romfs:
-	$(ROMFSINST) /bin/sl
-	$(ROMFSINST) /bin/sl-h
 

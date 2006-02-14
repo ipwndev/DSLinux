@@ -133,23 +133,6 @@ static ide_startstop_t read_intr (ide_drive_t *drive)
 	unsigned long flags;
 	u8 stat;
 	char *to;
-	ide_hwgroup_t *hwgroup      = HWGROUP(drive);
-
-	if ((HWIF(drive)->INB(IDE_STATUS_REG)) & BUSY_STAT) {
-		if (time_before(jiffies, hwgroup->poll_timeout)) {
-			if (hwgroup->handler != NULL)
-				BUG();
-			ide_set_handler(drive, &read_intr,
-					HZ/100, NULL);
-			return ide_started;
-		}
-		hwgroup->poll_timeout = 0;
-		printk(KERN_ERR "%s: read timeout - still busy!\n",
-				drive->name);
-		return DRIVER(drive)->error(drive, "busy timeout",
-				HWIF(drive)->INB(IDE_STATUS_REG));
-	}
-	hwgroup->poll_timeout = 0;
 
 	/* new way for dealing with premature shared PCI interrupts */
 	if (!OK_STAT(stat=hwif->INB(IDE_STATUS_REG),DATA_READY,BAD_R_STAT)) {
@@ -190,8 +173,7 @@ read_next:
 	if (i > 0) {
 		if (msect)
 			goto read_next;
-		hwgroup->poll_timeout = jiffies + WAIT_CMD;
-		ide_set_handler(drive, &read_intr, HZ/100, NULL);
+		ide_set_handler(drive, &read_intr, WAIT_CMD, NULL);
                 return ide_started;
 	}
         return ide_stopped;
@@ -207,22 +189,6 @@ static ide_startstop_t write_intr (ide_drive_t *drive)
 	struct request *rq	= hwgroup->rq;
 	u32 i = 0;
 	u8 stat;
-
-	if ((HWIF(drive)->INB(IDE_STATUS_REG)) & BUSY_STAT) {
-		if (time_before(jiffies, hwgroup->poll_timeout)) {
-			if (hwgroup->handler != NULL)
-				BUG();
-			ide_set_handler(drive, &write_intr,
-					HZ/100, NULL);
-			return ide_started;
-		}
-		hwgroup->poll_timeout = 0;
-		printk(KERN_ERR "%s: write timeout - still busy!\n",
-				drive->name);
-		return DRIVER(drive)->error(drive, "busy timeout",
-				HWIF(drive)->INB(IDE_STATUS_REG));
-	}
-	hwgroup->poll_timeout = 0;
 
 	if (!OK_STAT(stat = hwif->INB(IDE_STATUS_REG),
 			DRIVE_READY, drive->bad_wstat)) {
@@ -246,8 +212,7 @@ static ide_startstop_t write_intr (ide_drive_t *drive)
 				char *to = ide_map_buffer(rq, &flags);
 				taskfile_output_data(drive, to, SECTOR_WORDS);
 				ide_unmap_buffer(rq, to, &flags);
-				HWGROUP(drive)->poll_timeout = jiffies + WAIT_CMD;
-				ide_set_handler(drive, &write_intr, HZ/100, NULL);
+				ide_set_handler(drive, &write_intr, WAIT_CMD, NULL);
                                 return ide_started;
 			}
                         return ide_stopped;
@@ -461,8 +426,7 @@ ide_startstop_t __ide_do_rw_disk (ide_drive_t *drive, struct request *rq, sector
 		command = ((drive->mult_count) ?
 			   ((lba48) ? WIN_MULTREAD_EXT : WIN_MULTREAD) :
 			   ((lba48) ? WIN_READ_EXT : WIN_READ));
-		HWGROUP(drive)->poll_timeout = jiffies + WAIT_CMD;
-		ide_execute_command(drive, command, &read_intr, HZ/100, NULL);
+		ide_execute_command(drive, command, &read_intr, WAIT_CMD, NULL);
 		return ide_started;
 	} else {
 		ide_startstop_t startstop;
@@ -493,8 +457,7 @@ ide_startstop_t __ide_do_rw_disk (ide_drive_t *drive, struct request *rq, sector
 		} else {
 			unsigned long flags;
 			char *to = ide_map_buffer(rq, &flags);
-			HWGROUP(drive)->poll_timeout = jiffies + WAIT_CMD;
-			ide_set_handler(drive, &write_intr, HZ/100, NULL);
+			ide_set_handler(drive, &write_intr, WAIT_CMD, NULL);
 			taskfile_output_data(drive, to, SECTOR_WORDS);
 			ide_unmap_buffer(rq, to, &flags);
 		}
@@ -885,7 +848,6 @@ static unsigned long idedisk_read_native_max_address(ide_drive_t *drive)
 	args.tfRegister[IDE_COMMAND_OFFSET]	= WIN_READ_NATIVE_MAX;
 	args.command_type			= IDE_DRIVE_TASK_NO_DATA;
 	args.handler				= &task_no_data_intr;
-	HWGROUP(drive)->poll_timeout = jiffies + WAIT_WORSTCASE;
 	/* submit command request */
 	ide_raw_taskfile(drive, &args, NULL);
 
@@ -912,7 +874,6 @@ static unsigned long long idedisk_read_native_max_address_ext(ide_drive_t *drive
 	args.tfRegister[IDE_COMMAND_OFFSET]	= WIN_READ_NATIVE_MAX_EXT;
 	args.command_type			= IDE_DRIVE_TASK_NO_DATA;
 	args.handler				= &task_no_data_intr;
-	HWGROUP(drive)->poll_timeout = jiffies + WAIT_WORSTCASE;
         /* submit command request */
         ide_raw_taskfile(drive, &args, NULL);
 
@@ -949,7 +910,6 @@ static unsigned long idedisk_set_max_address(ide_drive_t *drive, unsigned long a
 	args.tfRegister[IDE_COMMAND_OFFSET]	= WIN_SET_MAX;
 	args.command_type			= IDE_DRIVE_TASK_NO_DATA;
 	args.handler				= &task_no_data_intr;
-	HWGROUP(drive)->poll_timeout = jiffies + WAIT_WORSTCASE;
 	/* submit command request */
 	ide_raw_taskfile(drive, &args, NULL);
 	/* if OK, read new maximum address value */
@@ -983,7 +943,6 @@ static unsigned long long idedisk_set_max_address_ext(ide_drive_t *drive, unsign
 	args.hobRegister[IDE_CONTROL_OFFSET_HOB]= (drive->ctl|0x80);
 	args.command_type			= IDE_DRIVE_TASK_NO_DATA;
 	args.handler				= &task_no_data_intr;
-	HWGROUP(drive)->poll_timeout = jiffies + WAIT_WORSTCASE;
 	/* submit command request */
 	ide_raw_taskfile(drive, &args, NULL);
 	/* if OK, compute maximum address value */
@@ -1124,7 +1083,6 @@ static ide_startstop_t idedisk_special (ide_drive_t *drive)
 			args.tfRegister[IDE_COMMAND_OFFSET] = WIN_SPECIFY;
 			args.command_type = IDE_DRIVE_TASK_NO_DATA;
 			args.handler	  = &set_geometry_intr;
-			HWGROUP(drive)->poll_timeout = jiffies + WAIT_WORSTCASE ;
 			do_rw_taskfile(drive, &args);
 		}
 	} else if (s->b.recalibrate) {
@@ -1136,7 +1094,6 @@ static ide_startstop_t idedisk_special (ide_drive_t *drive)
 			args.tfRegister[IDE_COMMAND_OFFSET] = WIN_RESTORE;
 			args.command_type = IDE_DRIVE_TASK_NO_DATA;
 			args.handler	  = &recal_intr;
-			HWGROUP(drive)->poll_timeout = jiffies + WAIT_WORSTCASE ;
 			do_rw_taskfile(drive, &args);
 		}
 	} else if (s->b.set_multmode) {
@@ -1150,7 +1107,6 @@ static ide_startstop_t idedisk_special (ide_drive_t *drive)
 			args.tfRegister[IDE_COMMAND_OFFSET] = WIN_SETMULT;
 			args.command_type = IDE_DRIVE_TASK_NO_DATA;
 			args.handler	  = &set_multmode_intr;
-			HWGROUP(drive)->poll_timeout = WAIT_WORSTCASE ;
 			do_rw_taskfile(drive, &args);
 		}
 	} else if (s->all) {
@@ -1190,7 +1146,6 @@ static int smart_enable(ide_drive_t *drive)
 	args.tfRegister[IDE_COMMAND_OFFSET]	= WIN_SMART;
 	args.command_type			= IDE_DRIVE_TASK_NO_DATA;
 	args.handler				= &task_no_data_intr;
-	HWGROUP(drive)->poll_timeout = jiffies + WAIT_WORSTCASE;
 	return ide_raw_taskfile(drive, &args, NULL);
 }
 
@@ -1370,7 +1325,6 @@ static int write_cache(ide_drive_t *drive, int arg)
 	args.tfRegister[IDE_COMMAND_OFFSET]	= WIN_SETFEATURES;
 	args.command_type			= IDE_DRIVE_TASK_NO_DATA;
 	args.handler				= &task_no_data_intr;
-	HWGROUP(drive)->poll_timeout = jiffies + WAIT_WORSTCASE;
 
 	err = ide_raw_taskfile(drive, &args, NULL);
 	if (err)
@@ -1391,7 +1345,6 @@ static int do_idedisk_flushcache (ide_drive_t *drive)
 		args.tfRegister[IDE_COMMAND_OFFSET]	= WIN_FLUSH_CACHE;
 	args.command_type			= IDE_DRIVE_TASK_NO_DATA;
 	args.handler				= &task_no_data_intr;
-	HWGROUP(drive)->poll_timeout = jiffies + WAIT_WORSTCASE ;
 	return ide_raw_taskfile(drive, &args, NULL);
 }
 
@@ -1406,7 +1359,6 @@ static int set_acoustic (ide_drive_t *drive, int arg)
 	args.tfRegister[IDE_COMMAND_OFFSET]	= WIN_SETFEATURES;
 	args.command_type = IDE_DRIVE_TASK_NO_DATA;
 	args.handler	  = &task_no_data_intr;
-	HWGROUP(drive)->poll_timeout = jiffies + WAIT_WORSTCASE ;
 	ide_raw_taskfile(drive, &args, NULL);
 	drive->acoustic = arg;
 	return 0;
@@ -1500,21 +1452,18 @@ static ide_startstop_t idedisk_start_power_step (ide_drive_t *drive, struct requ
 			args->tfRegister[IDE_COMMAND_OFFSET] = WIN_FLUSH_CACHE;
 		args->command_type = IDE_DRIVE_TASK_NO_DATA;
 		args->handler	   = &task_no_data_intr;
-		HWGROUP(drive)->poll_timeout = jiffies + WAIT_WORSTCASE ;
 		return do_rw_taskfile(drive, args);
 
 	case idedisk_pm_standby:	/* Suspend step 2 (standby) */
 		args->tfRegister[IDE_COMMAND_OFFSET] = WIN_STANDBYNOW1;
 		args->command_type = IDE_DRIVE_TASK_NO_DATA;
 		args->handler	   = &task_no_data_intr;
-		HWGROUP(drive)->poll_timeout = jiffies + WAIT_WORSTCASE ;
 		return do_rw_taskfile(drive, args);
 
 	case idedisk_pm_idle:		/* Resume step 1 (idle) */
 		args->tfRegister[IDE_COMMAND_OFFSET] = WIN_IDLEIMMEDIATE;
 		args->command_type = IDE_DRIVE_TASK_NO_DATA;
 		args->handler = task_no_data_intr;
-		HWGROUP(drive)->poll_timeout = jiffies + WAIT_WORSTCASE ;
 		return do_rw_taskfile(drive, args);
 
 	case idedisk_pm_restore_dma:	/* Resume step 2 (restore DMA) */
@@ -1795,7 +1744,6 @@ static int idedisk_open(struct inode *inode, struct file *filp)
 		args.tfRegister[IDE_COMMAND_OFFSET] = WIN_DOORLOCK;
 		args.command_type = IDE_DRIVE_TASK_NO_DATA;
 		args.handler	  = &task_no_data_intr;
-		HWGROUP(drive)->poll_timeout = jiffies + WAIT_WORSTCASE ;
 		check_disk_change(inode->i_bdev);
 		/*
 		 * Ignore the return code from door_lock,
@@ -1819,7 +1767,6 @@ static int idedisk_release(struct inode *inode, struct file *filp)
 		args.tfRegister[IDE_COMMAND_OFFSET] = WIN_DOORUNLOCK;
 		args.command_type = IDE_DRIVE_TASK_NO_DATA;
 		args.handler	  = &task_no_data_intr;
-		HWGROUP(drive)->poll_timeout = jiffies + WAIT_WORSTCASE ;
 		if (drive->doorlocking && ide_raw_taskfile(drive, &args, NULL))
 			drive->doorlocking = 0;
 	}

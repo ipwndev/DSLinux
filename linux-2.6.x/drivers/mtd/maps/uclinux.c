@@ -56,17 +56,12 @@ int __init uclinux_mtd_init(void)
 {
 	struct mtd_info *mtd;
 	struct map_info *mapp;
-#ifdef CONFIG_NDS_DSGBA
-	extern char _etext, _edata, __data_start;
-	unsigned long addr = (unsigned long) (&_etext + ( &_edata - &__data_start ) );
-#else
-	extern char _end;
-	unsigned long addr = (unsigned long) &_end ;
-#endif
+	extern char _ebss;
+	unsigned long addr = (unsigned long) &_ebss;
 
 	mapp = &uclinux_ram_map;
 	mapp->phys = addr;
-	mapp->size = PAGE_ALIGN(ntohl(*((unsigned long *)(addr + 8))));
+	mapp->size = PAGE_ALIGN(*((unsigned long *)(addr + 8)));
 	mapp->bankwidth = 4;
 
 	printk("uclinux[mtd]: RAM probe address=0x%x size=0x%x\n",
@@ -81,7 +76,7 @@ int __init uclinux_mtd_init(void)
 
 	simple_map_init(mapp);
 
-	mtd = do_map_probe("map_rom", mapp);
+	mtd = do_map_probe("map_ram", mapp);
 	if (!mtd) {
 		printk("uclinux[mtd]: failed to find a mapping?\n");
 		iounmap(mapp->virt);
