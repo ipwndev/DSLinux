@@ -1062,39 +1062,51 @@ static int Wifi_ProcessReassocResponse(int macbase, int framelen)
 	Wifi_RxHeader packetheader;
 	int datalen, i;
 	u8 data[64];
+	u16 *fixed_params = data + 24;
+	u8 *tagged_params = data + 30;
+	u16 status;
 
 	Wifi_MACCopy((u16 *) & packetheader, macbase, 0, 12);
 
 	datalen = packetheader.byteLength;
 	if (datalen > 64)
 		datalen = 64;
+
 	Wifi_MACCopy((u16 *) data, macbase, 12, (datalen + 1) & ~1);
 
-	if (Wifi_CmpMacAddr(data + 4, wifi_data.MacAddr)) {	// packet is indeed sent to us.
-		if (Wifi_CmpMacAddr(data + 16, wifi_data.bssid)) {	// packet is indeed from the base station we're trying to associate to.
-			if (((u16 *) (data + 24))[1] == 0) {	// status code, 0==success
-				WIFI_AIDS = ((u16 *) (data + 24))[2];
-				WIFI_REG(0x2A) = ((u16 *) (data + 24))[2];
-				// set max rate
-				wifi_data.maxrate = 0xA;
-				for (i = 0; i < ((u8 *) (data + 24))[7]; i++) {
-					if (((u8 *) (data + 24))[8 + i] == 0x84
-					    ||
-					    ((u8 *) (data + 24))[8 + i] ==
-					    0x04) {
-						wifi_data.maxrate = 0x14;
-					}
-				}
-				wifi_data.state |= WIFI_STATE_ASSOCIATED;
+	// if packet is not sent to us.
+	if (!Wifi_CmpMacAddr(data + 4, wifi_data.MacAddr)) {
+		goto out;
+	}
+	// if packet is not from the base station we're trying to associate to.
+	if (!Wifi_CmpMacAddr(data + 16, wifi_data.bssid)) {
+		goto out;
+	}
 
-				/* Fast LED flash when associated */
-				power_write(POWER_CONTROL,
-					    power_read(POWER_CONTROL) |
-					    POWER0_LED_BLINK | POWER0_LED_FAST);
+	status = fixed_params[1];
+	if (status == 0) {	// status code, 0==success
+		WIFI_AIDS = fixed_params[2];
+		WIFI_REG(0x2A) = fixed_params[2];
+		// set max rate
+		wifi_data.maxrate = 0xA;	// 1Mbit
 
-				wifi_data.state &=
-				    ~(WIFI_STATE_ASSOCIATING |
-				      WIFI_STATE_CANNOTASSOCIATE);
+		assert(tagged_params[1] == 1);
+		tag_length = tagged_params[1];
+		for (i = 0; i < tag_length; i++) {
+			u8 rate = tagged_params[2 + i];
+			if (rate == 0x84 || rate == 0x04) {
+				wifi_data.maxrate = 0x14;	// 2Mbit
+			}
+		}
+		wifi_data.state |= WIFI_STATE_ASSOCIATED;
+
+		/* Fast LED flash when associated */
+		power_write(POWER_CONTROL,
+			    power_read(POWER_CONTROL) |
+			    POWER0_LED_BLINK | POWER0_LED_FAST);
+
+		wifi_data.state &=
+		    ~(WIFI_STATE_ASSOCIATING | WIFI_STATE_CANNOTASSOCIATE);
 /*
 					if(wifi_data.authlevel==WIFI_AUTHLEVEL_AUTHENTICATED || wifi_data.authlevel==WIFI_AUTHLEVEL_DEASSOCIATED) {
 						wifi_data.authlevel=WIFI_AUTHLEVEL_ASSOCIATED;
@@ -1104,11 +1116,10 @@ static int Wifi_ProcessReassocResponse(int macbase, int framelen)
 						
 					}
 */
-			} else {	// status code = failure!
-				wifi_data.state |= WIFI_STATE_CANNOTASSOCIATE;
-			}
-		}
+	} else {		// status code = failure!
+		wifi_data.state |= WIFI_STATE_CANNOTASSOCIATE;
 	}
+      out:
 
 	return WFLAG_PACKET_MGT;
 }
@@ -1118,7 +1129,7 @@ static int Wifi_ProcessAuthenticationFrame(int macbase, int framelen)
 	Wifi_RxHeader packetheader;
 	int datalen;
 	u8 data[164];
-	u16 *fixed_params = data + 24 ;
+	u16 *fixed_params = data + 24;
 	u16 auth_algorithm;
 	u16 auth_sequence;
 	u16 status;
@@ -1153,7 +1164,7 @@ static int Wifi_ProcessAuthenticationFrame(int macbase, int framelen)
 				Wifi_SendAssocPacket();
 			}
 		}
-	} 
+	}
 	// shared key
 	else if (auth_algorithm == 1) {
 		// Challenge text received
@@ -1185,41 +1196,44 @@ static int Wifi_ProcessDeAuthenticationFrame(int macbase, int framelen)
 	Wifi_MACCopy((u16 *) & packetheader, macbase, 0, 12);
 
 	datalen = packetheader.byteLength;
-
 	if (datalen > 64)
 		datalen = 64;
+
 	Wifi_MACCopy((u16 *) data, macbase, 12, (datalen + 1) & ~1);
 
-	if (Wifi_CmpMacAddr(data + 4, wifi_data.MacAddr)) {	// packet is indeed sent to us.
-		if (Wifi_CmpMacAddr(data + 16, wifi_data.bssid)) {	// packet is indeed from the base station we're trying to associate to.
-			// bad things! they booted us!.
-			// back to square 1.
-			if (wifi_data.curMode == WIFI_AP_ADHOC) {
-				wifi_data.state |= WIFI_STATE_AUTHENTICATED;
-				wifi_data.state &= ~(WIFI_STATE_ASSOCIATED);
-
-				/* Slow LED flash when not associated */
-				power_write(POWER_CONTROL,
-					    (power_read(POWER_CONTROL) &
-					     ~POWER0_LED_FAST) |
-					    POWER0_LED_BLINK);
-
-				Wifi_SendAssocPacket();
-			} else {
-				wifi_data.state &=
-				    ~(WIFI_STATE_ASSOCIATED |
-				      WIFI_STATE_AUTHENTICATED);
-
-				/* Slow LED flash when not associated */
-				power_write(POWER_CONTROL,
-					    (power_read(POWER_CONTROL) &
-					     ~POWER0_LED_FAST) |
-					    POWER0_LED_BLINK);
-
-				Wifi_SendAuthPacket();
-			}
-		}
+	// if packet is not sent to us.
+	if (!Wifi_CmpMacAddr(data + 4, wifi_data.MacAddr)) {
+		goto out;
 	}
+	// if packet is not from the base station we're trying to associate to.
+	if (!Wifi_CmpMacAddr(data + 16, wifi_data.bssid)) {
+		goto out;
+	}
+	// bad things! they booted us!.
+	// back to square 1.
+	if (wifi_data.curMode == WIFI_AP_ADHOC) {
+		wifi_data.state |= WIFI_STATE_AUTHENTICATED;
+		wifi_data.state &= ~(WIFI_STATE_ASSOCIATED);
+
+		/* Slow LED flash when not associated */
+		power_write(POWER_CONTROL,
+			    (power_read(POWER_CONTROL) &
+			     ~POWER0_LED_FAST) | POWER0_LED_BLINK);
+
+		Wifi_SendAssocPacket();
+	} else {
+		wifi_data.state &=
+		    ~(WIFI_STATE_ASSOCIATED | WIFI_STATE_AUTHENTICATED);
+
+		/* Slow LED flash when not associated */
+		power_write(POWER_CONTROL,
+			    (power_read(POWER_CONTROL) &
+			     ~POWER0_LED_FAST) | POWER0_LED_BLINK);
+
+		Wifi_SendAuthPacket();
+	}
+
+      out:
 	return WFLAG_PACKET_MGT;
 }
 
