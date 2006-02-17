@@ -51,6 +51,7 @@ static void Wifi_RxSetup(void);
 static void Wifi_TxSetup(void);
 static void Wifi_CopyMacAddr(volatile void *dest, volatile void *src);
 static void Wifi_SendAuthPacket(void);
+static void Wifi_SendBackChallengeText(u8 * challenge);
 static void Wifi_SendAssocPacket(void);
 static void Wifi_Intr_RxEnd(void);
 
@@ -126,7 +127,7 @@ void wifi_init(void)
 	wifi_data.reqChannel = 1;
 	wifi_data.curWepmode = WEPMODE_NONE;
 	wifi_data.state = 0;
-	wifi_data.wepkeyid = 1;
+	wifi_data.wepkeyid = 0;
 	for (i = 0; i < sizeof(wifi_data.ssid); i++)
 		wifi_data.ssid[i] = '\0';
 	for (i = 0; i < sizeof(wifi_data.wepkey); i++)
@@ -1062,9 +1063,10 @@ static int Wifi_ProcessReassocResponse(int macbase, int framelen)
 	Wifi_RxHeader packetheader;
 	int datalen, i;
 	u8 data[64];
-	u16 *fixed_params = data + 24;
+	u16 *fixed_params = (u16 *) (data + 24);
 	u8 *tagged_params = data + 30;
 	u16 status;
+	u8 tag_length;
 
 	Wifi_MACCopy((u16 *) & packetheader, macbase, 0, 12);
 
@@ -1090,7 +1092,7 @@ static int Wifi_ProcessReassocResponse(int macbase, int framelen)
 		// set max rate
 		wifi_data.maxrate = 0xA;	// 1Mbit
 
-		assert(tagged_params[1] == 1);
+		//assert(tagged_params[1] == 1);
 		tag_length = tagged_params[1];
 		for (i = 0; i < tag_length; i++) {
 			u8 rate = tagged_params[2 + i];
@@ -1128,8 +1130,10 @@ static int Wifi_ProcessAuthenticationFrame(int macbase, int framelen)
 {
 	Wifi_RxHeader packetheader;
 	int datalen;
-	u8 data[164];
-	u16 *fixed_params = data + 24;
+	// size = 24+6+130
+	u8 data[160];
+	u16 *fixed_params = (u16 *) (data + 24);
+	u8 *tagged_params = data + 30;
 	u16 auth_algorithm;
 	u16 auth_sequence;
 	u16 status;
@@ -1137,8 +1141,8 @@ static int Wifi_ProcessAuthenticationFrame(int macbase, int framelen)
 	Wifi_MACCopy((u16 *) & packetheader, macbase, 0, 12);
 
 	datalen = packetheader.byteLength;
-	if (datalen > 164)
-		datalen = 164;
+	if (datalen > 160)
+		datalen = 160;
 
 	Wifi_MACCopy((u16 *) data, macbase, 12, (datalen + 1) & ~1);
 
@@ -1170,7 +1174,7 @@ static int Wifi_ProcessAuthenticationFrame(int macbase, int framelen)
 		// Challenge text received
 		if (auth_sequence == 2 && status == 0) {
 			if (!(wifi_data.state & WIFI_STATE_AUTHENTICATED)) {
-				//Wifi_SendBackChallengeText( data ) ;
+				Wifi_SendBackChallengeText(tagged_params);
 			}
 		}
 		// Challenge successful
@@ -1639,6 +1643,7 @@ static int Wifi_GenMgtHeader(u8 * data, u16 headerflags)
 	((u16 *) data)[4] = 0;
 	((u16 *) data)[5] = 0;
 	// fill in most header fields
+	((u16 *) data)[6] = headerflags;
 	((u16 *) data)[7] = 0x0000;
 	Wifi_CopyMacAddr(data + 16, wifi_data.apmac);
 	Wifi_CopyMacAddr(data + 22, wifi_data.MacAddr);
@@ -1646,14 +1651,12 @@ static int Wifi_GenMgtHeader(u8 * data, u16 headerflags)
 	((u16 *) data)[17] = 0;
 
 	// fill in wep-specific stuff
-//      if(wifi_data.wepmode7!=0) {
-//              ((u32 *)data)[9]=(W_RANDOM ^ (W_RANDOM<<7) ^ (W_RANDOM<<15))&0x0FFF | (wifi_data.wepkeyid7<<30); // I'm lazy and certainly haven't done this to spec.
-//              ((u16 *)data)[6]=0x4000 | headerflags;
-//              return 28+12;
-//      } else {
-	((u16 *) data)[6] = headerflags;
-	return 24 + 12;
-//      }
+	if (headerflags & 0x4000) {
+		((u32 *) data)[9] = (WIFI_RANDOM ^ (WIFI_RANDOM << 7) ^ (WIFI_RANDOM << 15)) & 0x0FFF | (wifi_data.wepkeyid << 30);	// I'm lazy and certainly haven't done this to spec.
+		return 28 + 12;
+	} else {
+		return 24 + 12;
+	}
 }
 
 static void Wifi_SendAuthPacket(void)
@@ -1661,20 +1664,54 @@ static void Wifi_SendAuthPacket(void)
 	// max size is 12+24+4+6 = 46
 	u8 data[64];
 	int i;
-	i = Wifi_GenMgtHeader(data, 0x00B0);
+	u16 *fixed_params;
+
+	i = Wifi_GenMgtHeader(data, 0x00B0);	// Auth
+
+	fixed_params = (u16 *) (data + i);
 
 	if (wifi_data.curWepmode == WEPMODE_NONE) {
-		((u16 *) (data + i))[0] = 0;	// Authentication algorithm number (0=open system)
+		fixed_params[0] = 0;	// Authentication algorithm number (0=open system)
 	} else {
-		((u16 *) (data + i))[0] = 1;	// Authentication algorithm number (1=shared key)
+		fixed_params[0] = 1;	// Authentication algorithm number (1=shared key)
 	}
-	((u16 *) (data + i))[1] = 1;	// Authentication sequence number
-	((u16 *) (data + i))[2] = 0;	// Authentication status code (reserved for this message, =0)
+	fixed_params[1] = 1;	// Authentication sequence number
+	fixed_params[2] = 0;	// Authentication status code (reserved for this message, =0)
 
-	((u16 *) data)[4] = 0x000A;
-	((u16 *) data)[5] = i + 6 - 12 + 4;
+	((u16 *) data)[4] = 0x000A;	// 1Mbit
+	((u16 *) data)[5] = i + 6 - 12 + 4;	// length
 
 	wifi_send_raw(i + 6, data);
+}
+
+static void Wifi_SendBackChallengeText(u8 * challenge)
+{
+	// size is 12+28+4+6+130
+	u8 data[180];
+	int i;
+	int j;
+	u16 *fixed_params;
+	u8 *tagged_params;
+
+	i = Wifi_GenMgtHeader(data, 0x40B0);	// Auth + WEP
+
+	fixed_params = (u16 *) (data + i);
+
+	fixed_params[0] = 1;	// Authentication algorithm number (1=shared key)
+	fixed_params[1] = 3;	// Authentication sequence number
+	fixed_params[2] = 0;	// Authentication status code (reserved for this message, =0)
+
+	tagged_params = data + i + 6;
+
+	// send back the challenge text
+	for (j = 0; j < challenge[1] + 2; j++) {
+		tagged_params[j] = challenge[j];
+	}
+
+	((u16 *) data)[4] = 0x000A;	// 1Mbit
+	((u16 *) data)[5] = i + 6 - 12 + 4 + 130 + 4;	// length
+
+	wifi_send_raw(i + 6 + 130, data);
 }
 
 static void Wifi_SendAssocPacket(void)
