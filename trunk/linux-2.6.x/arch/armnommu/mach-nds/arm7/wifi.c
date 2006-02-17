@@ -50,7 +50,7 @@ static void Wifi_RFInit(void);
 static void Wifi_RxSetup(void);
 static void Wifi_TxSetup(void);
 static void Wifi_CopyMacAddr(volatile void *dest, volatile void *src);
-static void Wifi_SendOpenSystemAuthPacket(void);
+static void Wifi_SendAuthPacket(void);
 static void Wifi_SendAssocPacket(void);
 static void Wifi_Intr_RxEnd(void);
 
@@ -307,7 +307,9 @@ static void wifi_try_to_associate(void)
 	wifi_data.state &= ~(WIFI_STATE_ASSOCIATED | WIFI_STATE_ASSOCIATING);
 
 	/* Slow LED flash when not associated */
-	power_write( POWER_CONTROL, ( power_read(POWER_CONTROL) & ~POWER0_LED_FAST) | POWER0_LED_BLINK );
+	power_write(POWER_CONTROL,
+		    (power_read(POWER_CONTROL) & ~POWER0_LED_FAST) |
+		    POWER0_LED_BLINK);
 
 	for (i = 0; i < WIFI_MAX_AP; i++) {
 		if (wifi_data.ssid[0] != wifi_data.aplist[i].ssid_len)
@@ -349,10 +351,12 @@ static void wifi_try_to_associate(void)
 		wifi_data.state |= WIFI_STATE_ASSOCIATED;
 
 		/* Fast LED flash when associated */
-		power_write( POWER_CONTROL, power_read( POWER_CONTROL ) | POWER0_LED_BLINK | POWER0_LED_FAST );
+		power_write(POWER_CONTROL,
+			    power_read(POWER_CONTROL) | POWER0_LED_BLINK |
+			    POWER0_LED_FAST);
 	} else {
 		wifi_data.state &= ~WIFI_STATE_AUTHENTICATED;
-		Wifi_SendOpenSystemAuthPacket();
+		Wifi_SendAuthPacket();
 	}
 }
 
@@ -572,7 +576,9 @@ void wifi_open(void)
 	wifi_data.state &= ~(WIFI_STATE_ASSOCIATED | WIFI_STATE_ASSOCIATING);
 
 	/* Slow LED flash when not associated */
-	power_write( POWER_CONTROL, ( power_read( POWER_CONTROL ) & ~POWER0_LED_FAST ) | POWER0_LED_BLINK );
+	power_write(POWER_CONTROL,
+		    (power_read(POWER_CONTROL) & ~POWER0_LED_FAST) |
+		    POWER0_LED_BLINK);
 
 	POWERCNT7 |= 2;		// enable power for the wifi
 	*((volatile u16 *)0x04000206) = 0x30;	// ???
@@ -639,7 +645,9 @@ void wifi_close(void)
 	POWERCNT7 &= ~2;
 
 	/* Stop flashing */
-	power_write( POWER_CONTROL, power_read( POWER_CONTROL ) & ~( POWER0_LED_BLINK | POWER0_LED_FAST ) );
+	power_write(POWER_CONTROL,
+		    power_read(POWER_CONTROL) & ~(POWER0_LED_BLINK |
+						  POWER0_LED_FAST));
 }
 
 /* handle a query from kerney for wifi address */
@@ -831,8 +839,7 @@ static int Wifi_ProcessBeaconFrame(int macbase, int framelen)
 
 	if (datalen > 512)
 		datalen = 512;
-	Wifi_MACCopy((u16 *) data, macbase, 12,
-		     (datalen + 1) & ~1);
+	Wifi_MACCopy((u16 *) data, macbase, 12, (datalen + 1) & ~1);
 	wepmode = 0;
 	if (((u16 *) data)[5 + 12] & 0x0010) {	// capability info, WEP bit
 		wepmode = 1;
@@ -858,28 +865,19 @@ static int Wifi_ProcessBeaconFrame(int macbase, int framelen)
 			maxrate = 0;
 			j = 0;
 			for (i = 0; i < seglen; i++) {
-				if ((data[curloc + i] & 0x7F) >
-				    maxrate)
-					maxrate =
-					    data[curloc +
-						 i] & 0x7F;
-				if (j < 15
-				    && (data[curloc + i] &
-					0x80))
-					rateset[j++] =
-					    data[curloc + i];
+				if ((data[curloc + i] & 0x7F) > maxrate)
+					maxrate = data[curloc + i] & 0x7F;
+				if (j < 15 && (data[curloc + i] & 0x80))
+					rateset[j++] = data[curloc + i];
 			}
 			for (i = 0; i < seglen; i++) {
 				if (data[curloc + i] == 0x82
 				    || data[curloc + i] == 0x84)
 					compatible = 1;	// 1-2mbit, fully compatible
 				else if (data[curloc + i] ==
-					 0x8B
-					 || data[curloc + i] ==
-					 0x96)
+					 0x8B || data[curloc + i] == 0x96)
 					compatible = 2;	// 5.5,11mbit, have to fake our way in.
-				else if (data[curloc + i] &
-					 0x80) {
+				else if (data[curloc + i] & 0x80) {
 					compatible = 0;
 					break;
 				}
@@ -893,7 +891,7 @@ static int Wifi_ProcessBeaconFrame(int macbase, int framelen)
 			wpamode = 1;
 			break;
 
-		}	// don't care about the others.
+		}		// don't care about the others.
 		curloc += seglen;
 	} while (curloc < datalen);
 	if (wpamode == 1)
@@ -904,9 +902,7 @@ static int Wifi_ProcessBeaconFrame(int macbase, int framelen)
 	seglen = 0;
 	segtype = 255;
 	for (i = 0; i < WIFI_MAX_AP; i++) {
-		if (Wifi_CmpMacAddr
-		    (wifi_data.aplist[i].bssid,
-		     data + 16)) {
+		if (Wifi_CmpMacAddr(wifi_data.aplist[i].bssid, data + 16)) {
 			seglen++;
 /*
 				if(Spinlock_Acquire(wifi_data.aplist[i])==SPINLOCK_OK) {
@@ -915,116 +911,56 @@ static int Wifi_ProcessBeaconFrame(int macbase, int framelen)
 			wifi_data.aplist[i].flags =
 			    WFLAG_APDATA_ACTIVE |
 			    (wepmode ? WFLAG_APDATA_WEP
-			     : 0) | (fromsta ? 0 :
-				     WFLAG_APDATA_ADHOC);
+			     : 0) | (fromsta ? 0 : WFLAG_APDATA_ADHOC);
 			if (compatible == 1)
 				wifi_data.aplist[i].
-				    flags |=
-				    WFLAG_APDATA_COMPATIBLE;
+				    flags |= WFLAG_APDATA_COMPATIBLE;
 			if (compatible == 2)
 				wifi_data.aplist[i].
-				    flags |=
-				    WFLAG_APDATA_EXTCOMPATIBLE;
+				    flags |= WFLAG_APDATA_EXTCOMPATIBLE;
 			if (wpamode == 1)
-				wifi_data.aplist[i].
-				    flags |=
-				    WFLAG_APDATA_WPA;
-			wifi_data.aplist[i].maxrate =
-			    maxrate;
+				wifi_data.aplist[i].flags |= WFLAG_APDATA_WPA;
+			wifi_data.aplist[i].maxrate = maxrate;
 
 			Wifi_CopyMacAddr(wifi_data.aplist[i].macaddr, data + 10);	// src: +10
 			if (ptr_ssid) {
 				wifi_data.aplist[i].
-				    ssid_len =
-				    data[ptr_ssid + 1];
-				if (wifi_data.aplist[i].
-				    ssid_len > 32)
-					wifi_data.
-					    aplist[i].
-					    ssid_len =
-					    32;
+				    ssid_len = data[ptr_ssid + 1];
+				if (wifi_data.aplist[i].ssid_len > 32)
+					wifi_data.aplist[i].ssid_len = 32;
 				for (j = 0;
-				     j <
-				     wifi_data.
-				     aplist[i].ssid_len;
-				     j++) {
+				     j < wifi_data.aplist[i].ssid_len; j++) {
 					wifi_data.
 					    aplist[i].
-					    ssid[j] =
-					    data
-					    [ptr_ssid +
-					     2 + j];
+					    ssid[j] = data[ptr_ssid + 2 + j];
 				}
-				wifi_data.aplist[i].
-				    ssid[j] = 0;
+				wifi_data.aplist[i].ssid[j] = 0;
 			}
 			if (wifi_data.curChannel == channel) {	// only use RSSI when we're on the right channel
 				if (wifi_data.aplist[i].rssi_past[0] == 0) {	// min rssi is 2, heh.
-					wifi_data.
-					    aplist[i].
-					    rssi_past[0]
-					    =
-					    wifi_data.
-					    aplist[i].
-					    rssi_past[1]
-					    =
-					    wifi_data.
-					    aplist[i].
-					    rssi_past[2]
-					    =
-					    wifi_data.
-					    aplist[i].
-					    rssi_past[3]
-					    =
-					    wifi_data.
-					    aplist[i].
-					    rssi_past[4]
-					    =
-					    wifi_data.
-					    aplist[i].
-					    rssi_past[5]
-					    =
-					    wifi_data.
-					    aplist[i].
-					    rssi_past[6]
-					    =
-					    wifi_data.
-					    aplist[i].
-					    rssi_past[7]
-					    =
-					    packetheader.
-					    rssi_ & 255;
+					wifi_data.aplist[i].rssi_past[0]
+					    = wifi_data.aplist[i].rssi_past[1]
+					    = wifi_data.aplist[i].rssi_past[2]
+					    = wifi_data.aplist[i].rssi_past[3]
+					    = wifi_data.aplist[i].rssi_past[4]
+					    = wifi_data.aplist[i].rssi_past[5]
+					    = wifi_data.aplist[i].rssi_past[6]
+					    = wifi_data.aplist[i].rssi_past[7]
+					    = packetheader.rssi_ & 255;
 				} else {
-					for (j = 0;
-					     j < 7;
-					     j++) {
-						wifi_data.
-						    aplist
-						    [i].
-						    rssi_past
-						    [j]
+					for (j = 0; j < 7; j++) {
+						wifi_data.aplist[i].rssi_past[j]
 						    =
 						    wifi_data.
-						    aplist
-						    [i].
-						    rssi_past
-						    [j +
-						     1];
+						    aplist[i].rssi_past[j + 1];
 					}
-					wifi_data.
-					    aplist[i].
-					    rssi_past[7]
-					    =
-					    packetheader.
-					    rssi_ & 255;
+					wifi_data.aplist[i].rssi_past[7]
+					    = packetheader.rssi_ & 255;
 				}
 			}
-			wifi_data.aplist[i].channel =
-			    channel;
+			wifi_data.aplist[i].channel = channel;
 			for (j = 0; j < 16; j++)
-				wifi_data.aplist[i].
-				    base_rates[j] =
-				    rateset[j];
+				wifi_data.aplist[i].base_rates[j] = rateset[j];
 /*
 					Spinlock_Release(wifi_data.aplist[i]);
 				} else {
@@ -1032,11 +968,8 @@ static int Wifi_ProcessBeaconFrame(int macbase, int framelen)
 				}
 */
 		} else {
-			if (wifi_data.aplist[i].
-			    flags & WFLAG_APDATA_ACTIVE)
-			{
-				wifi_data.aplist[i].
-				    timectr++;
+			if (wifi_data.aplist[i].flags & WFLAG_APDATA_ACTIVE) {
+				wifi_data.aplist[i].timectr++;
 			} else {
 				if (segtype == 255)
 					segtype = i;
@@ -1046,13 +979,9 @@ static int Wifi_ProcessBeaconFrame(int macbase, int framelen)
 	if (seglen == 0) {	// we couldn't find an existing record
 		if (segtype == 255) {
 			j = 0;
-			for (i = 0; i < WIFI_MAX_AP;
-			     i++) {
-				if (wifi_data.aplist[i].
-				    timectr > j) {
-					j = wifi_data.
-					    aplist[i].
-					    timectr;
+			for (i = 0; i < WIFI_MAX_AP; i++) {
+				if (wifi_data.aplist[i].timectr > j) {
+					j = wifi_data.aplist[i].timectr;
 					segtype = i;
 				}
 			}
@@ -1071,31 +1000,20 @@ static int Wifi_ProcessBeaconFrame(int macbase, int framelen)
 					   : 0) |
 		    (fromsta ? 0 : WFLAG_APDATA_ADHOC);
 		if (compatible == 1)
-			wifi_data.aplist[i].flags |=
-			    WFLAG_APDATA_COMPATIBLE;
+			wifi_data.aplist[i].flags |= WFLAG_APDATA_COMPATIBLE;
 		if (compatible == 2)
-			wifi_data.aplist[i].flags |=
-			    WFLAG_APDATA_EXTCOMPATIBLE;
+			wifi_data.aplist[i].flags |= WFLAG_APDATA_EXTCOMPATIBLE;
 		if (wpamode == 1)
-			wifi_data.aplist[i].flags |=
-			    WFLAG_APDATA_WPA;
+			wifi_data.aplist[i].flags |= WFLAG_APDATA_WPA;
 		wifi_data.aplist[i].maxrate = maxrate;
 
 		if (ptr_ssid) {
-			wifi_data.aplist[i].ssid_len =
-			    data[ptr_ssid + 1];
-			if (wifi_data.aplist[i].
-			    ssid_len > 32)
+			wifi_data.aplist[i].ssid_len = data[ptr_ssid + 1];
+			if (wifi_data.aplist[i].ssid_len > 32)
+				wifi_data.aplist[i].ssid_len = 32;
+			for (j = 0; j < wifi_data.aplist[i].ssid_len; j++) {
 				wifi_data.aplist[i].
-				    ssid_len = 32;
-			for (j = 0;
-			     j <
-			     wifi_data.aplist[i].
-			     ssid_len; j++) {
-				wifi_data.aplist[i].
-				    ssid[j] =
-				    data[ptr_ssid + 2 +
-					 j];
+				    ssid[j] = data[ptr_ssid + 2 + j];
 			}
 			wifi_data.aplist[i].ssid[j] = 0;
 		}
@@ -1115,18 +1033,15 @@ static int Wifi_ProcessBeaconFrame(int macbase, int framelen)
 			    wifi_data.aplist[i].
 			    rssi_past[6] =
 			    wifi_data.aplist[i].
-			    rssi_past[7] =
-			    packetheader.rssi_ & 255;
+			    rssi_past[7] = packetheader.rssi_ & 255;
 		} else {
 			wifi_data.aplist[i].rssi_past[0] = wifi_data.aplist[i].rssi_past[1] = wifi_data.aplist[i].rssi_past[2] = wifi_data.aplist[i].rssi_past[3] = wifi_data.aplist[i].rssi_past[4] = wifi_data.aplist[i].rssi_past[5] = wifi_data.aplist[i].rssi_past[6] = wifi_data.aplist[i].rssi_past[7] = 0;	// update rssi later.
 		}
 		wifi_data.aplist[i].channel = channel;
 		for (j = 0; j < 16; j++)
-			wifi_data.aplist[i].
-			    base_rates[j] = rateset[j];
+			wifi_data.aplist[i].base_rates[j] = rateset[j];
 
-		if (wifi_data.
-		    state & WIFI_STATE_ASSOCIATING)
+		if (wifi_data.state & WIFI_STATE_ASSOCIATING)
 			wifi_try_to_associate();
 
 /*
@@ -1142,7 +1057,6 @@ static int Wifi_ProcessBeaconFrame(int macbase, int framelen)
 	return WFLAG_PACKET_BEACON;
 }
 
-
 static int Wifi_ProcessReassocResponse(int macbase, int framelen)
 {
 	Wifi_RxHeader packetheader;
@@ -1154,41 +1068,29 @@ static int Wifi_ProcessReassocResponse(int macbase, int framelen)
 	datalen = packetheader.byteLength;
 	if (datalen > 64)
 		datalen = 64;
-	Wifi_MACCopy((u16 *) data, macbase, 12,
-		     (datalen + 1) & ~1);
+	Wifi_MACCopy((u16 *) data, macbase, 12, (datalen + 1) & ~1);
 
 	if (Wifi_CmpMacAddr(data + 4, wifi_data.MacAddr)) {	// packet is indeed sent to us.
 		if (Wifi_CmpMacAddr(data + 16, wifi_data.bssid)) {	// packet is indeed from the base station we're trying to associate to.
 			if (((u16 *) (data + 24))[1] == 0) {	// status code, 0==success
-				WIFI_AIDS =
-				    ((u16 *) (data + 24))[2];
-				WIFI_REG(0x2A) =
-				    ((u16 *) (data + 24))[2];
+				WIFI_AIDS = ((u16 *) (data + 24))[2];
+				WIFI_REG(0x2A) = ((u16 *) (data + 24))[2];
 				// set max rate
 				wifi_data.maxrate = 0xA;
-				for (i = 0;
-				     i <
-				     ((u8 *) (data + 24))[7];
-				     i++) {
-					if (((u8 *) (data +
-						     24))[8 +
-							  i] ==
-					    0x84
+				for (i = 0; i < ((u8 *) (data + 24))[7]; i++) {
+					if (((u8 *) (data + 24))[8 + i] == 0x84
 					    ||
-					    ((u8 *) (data +
-						     24))[8 +
-							  i] ==
+					    ((u8 *) (data + 24))[8 + i] ==
 					    0x04) {
-						wifi_data.
-						    maxrate =
-						    0x14;
+						wifi_data.maxrate = 0x14;
 					}
 				}
-				wifi_data.state |=
-				    WIFI_STATE_ASSOCIATED;
+				wifi_data.state |= WIFI_STATE_ASSOCIATED;
 
 				/* Fast LED flash when associated */
-				power_write( POWER_CONTROL, power_read( POWER_CONTROL ) | POWER0_LED_BLINK | POWER0_LED_FAST );
+				power_write(POWER_CONTROL,
+					    power_read(POWER_CONTROL) |
+					    POWER0_LED_BLINK | POWER0_LED_FAST);
 
 				wifi_data.state &=
 				    ~(WIFI_STATE_ASSOCIATING |
@@ -1203,49 +1105,76 @@ static int Wifi_ProcessReassocResponse(int macbase, int framelen)
 					}
 */
 			} else {	// status code = failure!
-				wifi_data.state |=
-				    WIFI_STATE_CANNOTASSOCIATE;
+				wifi_data.state |= WIFI_STATE_CANNOTASSOCIATE;
 			}
 		}
 	}
 
 	return WFLAG_PACKET_MGT;
 }
-
 
 static int Wifi_ProcessAuthenticationFrame(int macbase, int framelen)
 {
 	Wifi_RxHeader packetheader;
 	int datalen;
-	u8 data[64];
+	u8 data[164];
+	u16 *fixed_params = data + 24 ;
+	u16 auth_algorithm;
+	u16 auth_sequence;
+	u16 status;
 
 	Wifi_MACCopy((u16 *) & packetheader, macbase, 0, 12);
 
 	datalen = packetheader.byteLength;
-	if (datalen > 64)
-		datalen = 64;
-	Wifi_MACCopy((u16 *) data, macbase, 12,
-		     (datalen + 1) & ~1);
+	if (datalen > 164)
+		datalen = 164;
 
-	if (Wifi_CmpMacAddr(data + 4, wifi_data.MacAddr)) {	// packet is indeed sent to us.
-		if (Wifi_CmpMacAddr(data + 16, wifi_data.bssid)) {	// packet is indeed from the base station we're trying to associate to.
-			if (((u16 *) (data + 24))[0] == 0 && ((u16 *) (data + 24))[1] == 2 && (((u16 *) (data + 24))[2] == 0)) {	// a good response
-				if (!
-				    (wifi_data.
-				     state &
-				     WIFI_STATE_AUTHENTICATED))
-				{
-					wifi_data.state |=
-					    WIFI_STATE_AUTHENTICATED;
-					wifi_data.authctr = 0;
-					Wifi_SendAssocPacket();
-				}
+	Wifi_MACCopy((u16 *) data, macbase, 12, (datalen + 1) & ~1);
+
+	// if packet is not sent to us.
+	if (!Wifi_CmpMacAddr(data + 4, wifi_data.MacAddr)) {
+		goto out;
+	}
+	// if packet is not from the base station we're trying to associate to.
+	if (!Wifi_CmpMacAddr(data + 16, wifi_data.bssid)) {
+		goto out;
+	}
+
+	auth_algorithm = fixed_params[0];
+	auth_sequence = fixed_params[1];
+	status = fixed_params[2];
+	// open system
+	if (auth_algorithm == 0) {
+		// a good response
+		if (auth_sequence == 2 && status == 0) {
+			if (!(wifi_data.state & WIFI_STATE_AUTHENTICATED)) {
+				wifi_data.state |= WIFI_STATE_AUTHENTICATED;
+				wifi_data.authctr = 0;
+				Wifi_SendAssocPacket();
 			}
 		}
+	} 
+	// shared key
+	else if (auth_algorithm == 1) {
+		// Challenge text received
+		if (auth_sequence == 2 && status == 0) {
+			if (!(wifi_data.state & WIFI_STATE_AUTHENTICATED)) {
+				//Wifi_SendBackChallengeText( data ) ;
+			}
+		}
+		// Challenge successful
+		else if (auth_sequence == 4 && status == 0) {
+			if (!(wifi_data.state & WIFI_STATE_AUTHENTICATED)) {
+				wifi_data.state |= WIFI_STATE_AUTHENTICATED;
+				wifi_data.authctr = 0;
+				Wifi_SendAssocPacket();
+			}
+		}
+		// else tell the user?
 	}
+      out:
 	return WFLAG_PACKET_MGT;
 }
-
 
 static int Wifi_ProcessDeAuthenticationFrame(int macbase, int framelen)
 {
@@ -1259,21 +1188,21 @@ static int Wifi_ProcessDeAuthenticationFrame(int macbase, int framelen)
 
 	if (datalen > 64)
 		datalen = 64;
-	Wifi_MACCopy((u16 *) data, macbase, 12,
-		     (datalen + 1) & ~1);
+	Wifi_MACCopy((u16 *) data, macbase, 12, (datalen + 1) & ~1);
 
 	if (Wifi_CmpMacAddr(data + 4, wifi_data.MacAddr)) {	// packet is indeed sent to us.
 		if (Wifi_CmpMacAddr(data + 16, wifi_data.bssid)) {	// packet is indeed from the base station we're trying to associate to.
 			// bad things! they booted us!.
 			// back to square 1.
 			if (wifi_data.curMode == WIFI_AP_ADHOC) {
-				wifi_data.state |=
-				    WIFI_STATE_AUTHENTICATED;
-				wifi_data.state &=
-				    ~(WIFI_STATE_ASSOCIATED);
+				wifi_data.state |= WIFI_STATE_AUTHENTICATED;
+				wifi_data.state &= ~(WIFI_STATE_ASSOCIATED);
 
 				/* Slow LED flash when not associated */
-				power_write( POWER_CONTROL, ( power_read( POWER_CONTROL ) & ~POWER0_LED_FAST ) | POWER0_LED_BLINK );
+				power_write(POWER_CONTROL,
+					    (power_read(POWER_CONTROL) &
+					     ~POWER0_LED_FAST) |
+					    POWER0_LED_BLINK);
 
 				Wifi_SendAssocPacket();
 			} else {
@@ -1282,15 +1211,17 @@ static int Wifi_ProcessDeAuthenticationFrame(int macbase, int framelen)
 				      WIFI_STATE_AUTHENTICATED);
 
 				/* Slow LED flash when not associated */
-				power_write( POWER_CONTROL, ( power_read( POWER_CONTROL ) & ~POWER0_LED_FAST ) | POWER0_LED_BLINK );
+				power_write(POWER_CONTROL,
+					    (power_read(POWER_CONTROL) &
+					     ~POWER0_LED_FAST) |
+					    POWER0_LED_BLINK);
 
-				Wifi_SendOpenSystemAuthPacket();
+				Wifi_SendAuthPacket();
 			}
 		}
 	}
 	return WFLAG_PACKET_MGT;
 }
-
 
 static int Wifi_ProcessReceivedFrame(int macbase, int framelen)
 {
@@ -1711,14 +1642,18 @@ static int Wifi_GenMgtHeader(u8 * data, u16 headerflags)
 //      }
 }
 
-static void Wifi_SendOpenSystemAuthPacket(void)
+static void Wifi_SendAuthPacket(void)
 {
 	// max size is 12+24+4+6 = 46
 	u8 data[64];
 	int i;
 	i = Wifi_GenMgtHeader(data, 0x00B0);
 
-	((u16 *) (data + i))[0] = 0;	// Authentication algorithm number (0=open system)
+	if (wifi_data.curWepmode == WEPMODE_NONE) {
+		((u16 *) (data + i))[0] = 0;	// Authentication algorithm number (0=open system)
+	} else {
+		((u16 *) (data + i))[0] = 1;	// Authentication algorithm number (1=shared key)
+	}
 	((u16 *) (data + i))[1] = 1;	// Authentication sequence number
 	((u16 *) (data + i))[2] = 0;	// Authentication status code (reserved for this message, =0)
 
