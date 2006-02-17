@@ -1,0 +1,53 @@
+# Makefrag - makefile fragment for atc
+#
+# Copyright (c) 1997, 1998 Joseph Samuel Myers.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+# 3. The name of the author may not be used to endorse or promote products
+#    derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+# IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+# AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+# OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+
+atc_CLEANFILES := grammar.c grammar.h y.tab.* lex.c lex.yy.c
+atc_DEFS := -DBSD -DYY_NO_UNPUT
+atc_DIRS := $(GAMESDIR) $(MAN6DIR)
+
+atc_all:	atc/atc atc/atc.6
+
+atc/grammar.c:	atc/grammar.y
+	cd atc && $(YACC) -d grammar.y
+	mv atc/y.tab.c $@
+	mv atc/y.tab.h atc/grammar.h
+	touch atc/grammar.h
+
+atc/grammar.h:	atc/grammar.c
+
+atc/lex.d:	atc/grammar.h
+
+atc/lex.c:	atc/lex.l
+	cd atc && $(LEX) lex.l
+	mv atc/lex.yy.c $@
+
+atc_install:	atc_all
+	$(INSTALL_SCORE_GAME) atc/atc $(INSTALL_PREFIX)$(GAMESDIR)/atc
+	$(HIDE_GAME) atc
+	$(INSTALL_SCORE_FILE) $(ATC_SCOREFILE)
+	$(INSTALL_MANUAL) atc/atc.6
