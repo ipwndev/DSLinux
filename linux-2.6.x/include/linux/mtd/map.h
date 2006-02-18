@@ -8,6 +8,7 @@
 #include <linux/config.h>
 #include <linux/types.h>
 #include <linux/list.h>
+#include <linux/mtd/compatmac.h>
 #include <asm/unaligned.h>
 #include <asm/system.h>
 #include <asm/io.h>
@@ -55,6 +56,11 @@
 #define map_bankwidth_is_4(map) (0)
 #endif
 
+/* ensure we never evaluate anything shorted than an unsigned long
+ * to zero, and ensure we'll never miss the end of an comparison (bjd) */
+
+#define map_calc_words(map) ((map_bankwidth(map) + (sizeof(unsigned long)-1))/ sizeof(unsigned long))
+
 #ifdef CONFIG_MTD_MAP_BANK_WIDTH_8
 # ifdef map_bankwidth
 #  undef map_bankwidth
@@ -63,12 +69,12 @@
 #   undef map_bankwidth_is_large
 #   define map_bankwidth_is_large(map) (map_bankwidth(map) > BITS_PER_LONG/8)
 #   undef map_words
-#   define map_words(map) (map_bankwidth(map) / sizeof(unsigned long))
+#   define map_words(map) map_calc_words(map)
 #  endif
 # else
 #  define map_bankwidth(map) 8
 #  define map_bankwidth_is_large(map) (BITS_PER_LONG < 64)
-#  define map_words(map) (map_bankwidth(map) / sizeof(unsigned long))
+#  define map_words(map) map_calc_words(map)
 # endif
 #define map_bankwidth_is_8(map) (map_bankwidth(map) == 8)
 #undef MAX_MAP_BANKWIDTH
@@ -84,11 +90,11 @@
 #  undef map_bankwidth_is_large
 #  define map_bankwidth_is_large(map) (map_bankwidth(map) > BITS_PER_LONG/8)
 #  undef map_words
-#  define map_words(map) (map_bankwidth(map) / sizeof(unsigned long))
+#  define map_words(map) map_calc_words(map)
 # else
 #  define map_bankwidth(map) 16
 #  define map_bankwidth_is_large(map) (1)
-#  define map_words(map) (map_bankwidth(map) / sizeof(unsigned long))
+#  define map_words(map) map_calc_words(map)
 # endif
 #define map_bankwidth_is_16(map) (map_bankwidth(map) == 16)
 #undef MAX_MAP_BANKWIDTH
@@ -104,11 +110,11 @@
 #  undef map_bankwidth_is_large
 #  define map_bankwidth_is_large(map) (map_bankwidth(map) > BITS_PER_LONG/8)
 #  undef map_words
-#  define map_words(map) (map_bankwidth(map) / sizeof(unsigned long))
+#  define map_words(map) map_calc_words(map)
 # else
 #  define map_bankwidth(map) 32
 #  define map_bankwidth_is_large(map) (1)
-#  define map_words(map) (map_bankwidth(map) / sizeof(unsigned long))
+#  define map_words(map) map_calc_words(map)
 # endif
 #define map_bankwidth_is_32(map) (map_bankwidth(map) == 32)
 #undef MAX_MAP_BANKWIDTH
@@ -257,6 +263,17 @@ static inline map_word map_word_and(struct map_info *map, map_word val1, map_wor
 	return r;
 }
 
+static inline map_word map_word_clr(struct map_info *map, map_word val1, map_word val2)
+{
+	map_word r;
+	int i;
+
+	for (i=0; i<map_words(map); i++) {
+		r.x[i] = val1.x[i] & ~val2.x[i];
+	}
+	return r;
+}
+
 static inline map_word map_word_or(struct map_info *map, map_word val1, map_word val2)
 {
 	map_word r;
@@ -267,6 +284,7 @@ static inline map_word map_word_or(struct map_info *map, map_word val1, map_word
 	}
 	return r;
 }
+
 #define map_word_andequal(m, a, b, z) map_word_equal(m, z, map_word_and(m, a, b))
 
 static inline int map_word_bitsset(struct map_info *map, map_word val1, map_word val2)
@@ -316,22 +334,33 @@ static inline map_word map_word_load_partial(struct map_info *map, map_word orig
 			bitpos = (map_bankwidth(map)-1-i)*8;
 #endif
 			orig.x[0] &= ~(0xff << bitpos);
-			orig.x[0] |= buf[i] << bitpos;
+			orig.x[0] |= buf[i-start] << bitpos;
 		}
 	}
 	return orig;
 }
 
+#if BITS_PER_LONG < 64
+#define MAP_FF_LIMIT 4
+#else
+#define MAP_FF_LIMIT 8
+#endif
+
 static inline map_word map_word_ff(struct map_info *map)
 {
 	map_word r;
 	int i;
-
-	for (i=0; i<map_words(map); i++) {
-		r.x[i] = ~0UL;
+	
+	if (map_bankwidth(map) < MAP_FF_LIMIT) {
+		int bw = 8 * map_bankwidth(map);
+		r.x[0] = (1 << bw) - 1;
+	} else {
+		for (i=0; i<map_words(map); i++)
+			r.x[i] = ~0UL;
 	}
 	return r;
 }
+
 static inline map_word inline_map_read(struct map_info *map, unsigned long ofs)
 {
 	map_word r;
@@ -374,12 +403,12 @@ static inline void inline_map_copy_from(struct map_info *map, void *to, unsigned
 	if (map->cached)
 		memcpy(to, (char *)map->cached + from, len);
 	else
-		memcpy(to, map->virt + from, len);
+		memcpy_fromio(to, map->virt + from, len);
 }
 
 static inline void inline_map_copy_to(struct map_info *map, unsigned long to, const void *from, ssize_t len)
 {
-	memcpy(map->virt + to, from, len);
+	memcpy_toio(map->virt + to, from, len);
 }
 
 #ifdef CONFIG_MTD_COMPLEX_MAPPINGS
@@ -399,7 +428,7 @@ extern void simple_map_init(struct map_info *);
 
 
 #define simple_map_init(map) BUG_ON(!map_bankwidth_supported((map)->bankwidth))
-#define map_is_linear(map) (1)
+#define map_is_linear(map) ({ (void)(map); 1; })
 
 #endif /* !CONFIG_MTD_COMPLEX_MAPPINGS */
 
