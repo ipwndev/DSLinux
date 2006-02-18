@@ -1,0 +1,22 @@
+# When importing a new uClinux-dist version on uclinux_branch,
+# please note that last time, these directories from the
+# uClinux-dist CVS have been omitted on purpose:
+
+Documentation
+glibc
+lib/libc
+lib/libldap
+freeswan
+openswan
+user/gdb
+user/mysql
+user/samba
+user/bind
+user/snort
+user/asterisk
+user/squid
+user/net-snmp
+user/lilo
+user/camserv
+user/lpr
+user/pop3proxy
