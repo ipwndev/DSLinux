@@ -91,8 +91,14 @@ CONFIG_USER_CGI_CUSTOM_HTML
 CONFIG_USER_CGI_DMZ
   Enable DMZ support in the CGI's
 
+CONFIG_USER_CGI_GUEST
+  Enable support for Guest network interfaces in the CGI's
+
 CONFIG_USER_CGI_LOAD_BALANCING
   Enable load balancing support in the CGI's
+
+CONFIG_USER_CGI_HIGHAVAIL
+  Enable high availability support in the CGI's
 
 CONFIG_USER_CGI_ETH1_BRIDGE
   Allow the user to securely bridge eth0 with eth1.
@@ -177,13 +183,24 @@ CONFIG_USER_DEMO_BUTTON
   it changes.
   Approx. binary size: 1k
 
+CONFIG_USER_DROPBEAR_DROPBEAR
+  Dropbear-SSH ist a small sshd-replacement, that does not depend on
+  foreign Libraries. It is configured to be statically linked, without
+  zlib and most features disabled. It is configured to be invoked from
+  inetd and may therefore need a few seconds to answer a connection.
+  Approx. binary size: 100k
+
 CONFIG_USER_SASH_SH
   Select one of the following shells:
     Sash - The SASH Shell. (Approx. binary size: 44k)
     nwsh - The NEW shell (Approx. binary size: 25k)
     minix-shell - The Minix Shell. (Approx. binary size: 108k)
+    msh - A little linux shell (small)
     bash - The Bourne-Again Shell. (large)
     Other - You will select a shell from somewhere else in the configuration.
+
+  CONFIG_USER_OTHER_SH
+    You will select a shell from somewhere else in the configuration.
 
 CONFIG_USER_SASH_HISTORY
   Support simple command history in SASH.
@@ -221,6 +238,12 @@ CONFIG_USER_CHAT_CHAT
 CONFIG_USER_E2FSPROGS_E2FSCK_E2FSCK
   Filesystem fsck,  for checking damaged filesystems.
   Approx. binary size: 121k
+
+CONFIG_USER_DOSFSTOOLS_MKDOSFS
+  MSDOS filesystem creation utility for FAT12, FAT16 & FAT32
+
+CONFIG_USER_DOSFSTOOLS_DOSFSCK
+  MSDOS filesystem checking utility for FAT12, FAT16 & FAT32
 
 CONFIG_USER_GRE_GRE
   Program for starting, stopping and configuring GRE interfaces.
@@ -329,6 +352,16 @@ CONFIG_USER_VERSION_VERSION
   Print the version of the system software.
   Approx. binary size: 6k
 
+CONFIG_USER_QSPITEST_RX
+  A small testbed for receiving data from an MCP3202 device (a small
+  two-channel ADC) on the qspi bus of a Motorola Coldfire 5272 using
+  the mcf_qspi kernel driver.
+
+CONFIG_USER_QSPITEST_TEST
+  A small testbed for receiving data from an MCP3202 device (a small
+  two-channel ADC) on the qspi bus of a Motorola Coldfire 5272 to
+  determine whether data is being correctly received on the qspi bus.
+
 CONFIG_USER_LEVEE_VI
   A small version of 'vi' for editing files.
 
@@ -391,21 +424,19 @@ CONFIG_USER_DISCARD_INETD_ECHO
 CONFIG_USER_DISCARD_ECHO_NO_INSTALL
   Stop echo from installing an entry into inetd.conf
 
+CONFIG_USER_GDB_GDBSERVER
+  gdbserver is used to remotely debug user applications running on the
+  server. (also builds entire gdb suite for host)
+  ** NEED TO ENABLE 'PTHREADS_DEBUG_SUPPORT' in uClibc config **
+
+CONFIG_USER_GDB_GDBREPLAY
+  install gdbreplay onto target. (also builds entire gdb suite for host).
+  ** NEED TO ENABLE 'PTHREADS_DEBUG_SUPPORT' in uClibc config ** 
+
 CONFIG_USER_GDBSERVER_GDBSERVER
   gdbserver is used to remotely debug user applications running on the
-  server.
+  server. (old version - mk68k targets only)
   Approx. binary size: 14k
-
-CONFIG_USER_GDSD_GDSD
-  gdsd is a database for storing name value pairs associated with a key.  A
-  key is a value like config.network.eth0, with dots seperating the 
-  elements of the key.
-
-CONFIG_USER_GDSD_GDSD_INET
-  By default the gdsd listens for client requrests on an AF_UNIX socket.
-  Sometimes this is inconvenient for debugging.  Selecting this option
-  allows you to use telnet to send commands to the gdsd.  Something like:
-  telnet groovy.whatever.funkmeup 1034 should do the trick.
 
 CONFIG_USER_GREP_GREP
   GNU grep, egrep and fgrep
@@ -417,7 +448,12 @@ CONFIG_USER_ROUTE_IFCONFIG
 CONFIG_USER_INETD_INETD
   Starts network daemons as required.
   Approx. binary size: 11k
-  
+
+CONFIG_USER_IPSENTINEL_IPSENTINEL
+  Tool that attempts to prevent unauthorised use of "dead" address
+  space on a network by providing invalid MAC addresses in response to
+  ARP requests.
+
 CONFIG_USER_IPFWADM_IPFWADM
   Tool for configuring forwarding/masquerading rules.
   Approx. binary size: 38k
@@ -497,6 +533,9 @@ CONFIG_USER_OPENSSL_APPS
    o  SSL/TLS Client and Server Tests
    o  Handling of S/MIME signed or encrypted mail
 
+CONFIG_USER_OPENSWAN
+  The Openswan tools and applications
+
 CONFIG_USER_PING_PING
   Diagnostic tool for testing network connections.
   Approx. binary size: 27k
@@ -534,6 +573,13 @@ CONFIG_USER_PERL_PERL
 
 CONFIG_USER_PYTHON_PYTHON
   The Python scripting language.
+
+CONFIG_USER_RADVD_RADVD
+  The router advertisement daemon (radvd) is run by Linux or BSD systems acting
+  as IPv6 routers. It sends Router Advertisement messages, specified by RFC 2461,
+  to a local Ethernet LAN periodically and when requested by a node sending a 
+  Router Solicitation message. These messages are required for IPv6 stateless 
+  autoconfiguration.
 
 CONFIG_USER_ROUTE_ROUTE
   Configure routes to networks.
@@ -617,7 +663,23 @@ CONFIG_LIB_LIBLDAP_FORCE
   Only enable this if you want to force the library to be built.  The
   Config will make sure this library is built if it is needed.
 
+CONFIG_LIB_LIBPCRE_FORCE
+  Perl Compatible Regular Expressions library.
+  Only enable this if you want to force the library to be built.  The
+  Config will make sure this library is built if it is needed.
+
+CONFIG_LIB_LIBNET_FORCE
+  Archaic version of libnet required for snort inline operation.
+  See: http://www.packetfactory.net/libnet/
+  Only enable this if you want to force the library to be built.  The
+  Config will make sure this library is built if it is needed.
+
 CONFIG_LIB_ZLIB_FORCE
+  Data compression library.
+  Only enable this if you want to force the library to be built.  The
+  Config will make sure this library is built if it is needed.
+
+CONFIG_LIB_LIBBZ2_FORCE
   Data compression library.
   Only enable this if you want to force the library to be built.  The
   Config will make sure this library is built if it is needed.
@@ -651,6 +713,16 @@ CONFIG_LIB_EXPAT_FORCE
 
 CONFIG_LIB_ADNS_FORCE
   An asyncrhonous resolver with more features than the uClibc resolver.
+
+CONFIG_LIB_ARES_FORCE
+  An asynchronous resolver with more features than the uClibc resolver.
+
+CONFIG_LIB_LIBIDN_FORCE
+  GNU libidn the internationalised domain name resolver.
+
+CONFIG_LIB_LIBCURL_FORCE
+  The curl library for resolving URLs.
+  This library requires (and enables) SSL, zlib and libidn.
 
 CONFIG_LIB_UC_LIBC_TIMEZONE
   Enable this if you want simpleinit to set the time zone environment
@@ -748,6 +820,10 @@ CONFIG_USER_CAL_CAL
 CONFIG_USER_CAL_DATE
   Print the date
   Approx. binary size: 5k
+
+CONFIG_USER_CAMSERV
+  Webcam daemon & cgi for serving streaming images off a V4L webcam.
+  see http://cserv.sourceforge.net/
 
 CONFIG_USER_CLOCK_CLOCK
   Some kind of clock
@@ -897,7 +973,7 @@ CONFIG_USER_FTP_FTP_FTP
   Approx. binary size: 8k
 
 CONFIG_USER_GDBSERVER_GDBREPLAY
-  The gdbserver replay client.
+  The gdbserver replay client. (old version - mk68k targets only)
   Approx. binary size: 13k
 
 CONFIG_USER_HTTPD_HTTPD
@@ -1041,6 +1117,9 @@ CONFIG_USER_PLUG_PLUG
   on a separate host.
   Approx. binary size: 23k
 
+CONFIG_USER_POP3PROXY_POP3PROXY
+  Simple transparent pop3 proxy server.
+
 CONFIG_USER_READPROFILE_READPROFILE
   Tools for use with kernel profiling
   Approx. binary size: 16k
@@ -1162,6 +1241,9 @@ CONFIG_USER_SLATTACH_SLATTACH
 CONFIG_USER_SMTP_SMTPCLIENT
   Client which allows mail to be sent to other hosts that support SMTP
 
+CONFIG_USER_SMTP_SMTPFILTER
+  Simple inline SMTP proxy
+
 CONFIG_USER_SNMPD_SNMPD
   SNMP daemon
   Approx. binary size: 20k with no modules
@@ -1210,12 +1292,131 @@ CONFIG_USER_TRIPWIRE_TRIPWIRE
 CONFIG_USER_TRIPWIRE_SIGGEN
   Cryptographic file signature utility.
 
-CONFIG_USER_SL_SL
-  Display animations to correct you if you type 'sl' by mistake.
-
 CONFIG_USER_UCDSNMP_SNMPD
-  UCD SNMP daemon.
-  Approx. binary size: 140k
+  net-snmp (www.net-snmp.org) Simple Network Management Protocol implementation.
+  Build/Install the agent (snmpd).
+
+CONFIG_USER_NETSNMP_SNMPD
+  Build/Install the agent (snmpd).
+
+CONFIG_USER_NETSNMP_SNMPD_MINI
+  Build a minimal agent.
+
+CONFIG_USER_NETSNMP_APPS
+  Build the applications (snmpget, ...)
+
+CONFIG_USER_NETSNMP_APPS_BULKGET
+  Install snmpbulkget.
+
+CONFIG_USER_NETSNMP_APPS_BULKWALK
+  Install snmpbulkwalk.
+
+CONFIG_USER_NETSNMP_APPS_DELTA
+  Install snmpdelta.
+
+CONFIG_USER_NETSNMP_APPS_DF
+  Install snmpdf.
+
+CONFIG_USER_NETSNMP_APPS_GET
+  Install snmpget.
+
+CONFIG_USER_NETSNMP_APPS_GETNEXT
+  Install snmpgetnext.
+
+CONFIG_USER_NETSNMP_APPS_SET
+  Install snmpset.
+
+CONFIG_USER_NETSNMP_APPS_STATUS
+  Install snmpstatus.
+
+CONFIG_USER_NETSNMP_APPS_TABLE
+  Install snmptable.
+
+CONFIG_USER_NETSNMP_APPS_TEST
+  Install snmptest.
+
+CONFIG_USER_NETSNMP_APPS_TRANSLATE
+  Install snmptranslate.
+
+CONFIG_USER_NETSNMP_APPS_TRAP
+  Install snmptrap.
+
+CONFIG_USER_NETSNMP_APPS_TRAPD
+  Install snmptrapd.
+
+CONFIG_USER_NETSNMP_APPS_USM
+  Install snmpusm.
+
+CONFIG_USER_NETSNMP_APPS_VACM
+  Install snmpvacm.
+
+CONFIG_USER_NETSNMP_APPS_WALK
+  Install snmpwalk.
+
+CONFIG_USER_NETSNMP_APPS_NETSTAT
+  Install snmpnetstat.
+
+CONFIG_USER_NETSNMP_BUILDSTATIC
+  Link with static libraries.
+
+CONFIG_USER_NETSNMP_MANUALS
+  Install the manuals.
+
+CONFIG_USER_NETSNMP_SCRIPTS
+  Install the scripts (mib2c, ...).
+
+CONFIG_USER_NETSNMP_MIBS
+  Install the mib files.
+
+CONFIG_USER_NETSNMP_MIBLOADING
+  Include code that parses and manipulates the mib files.
+
+CONFIG_USER_NETSNMP_NOV1
+  Do not include code that implements SNMPv1.
+
+CONFIG_USER_NETSNMP_NOV2C
+  Do not include code that implements SNMPv2c.
+
+CONFIG_USER_NETSNMP_IPV6
+  Generate IPv6 ready version.
+
+CONFIG_USER_NETSNMP_NOTRANSPORTS
+  Exclude listed SNMP transports.
+  (UDP UDPIPv6 TCPIPv6 TCP Unix Callback AAL5PVC IPX)
+
+CONFIG_USER_NETSNMP_EXTRANSPORTS
+  Transports to exclude (space separated list).
+
+CONFIG_USER_NETSNMP_OPENSSL
+  Look for openssl in PATH/lib.
+
+CONFIG_USER_NETSNMP_OVRDEFAULTS
+  Override defaults for prompted values.
+
+CONFIG_USER_NETSNMP_DEFVERSION
+  Default version of SNMP to use.
+
+CONFIG_USER_NETSNMP_DEFSYSCONTACT
+  Default system contact.
+
+CONFIG_USER_NETSNMP_DEFSYSLOCATION
+  Default system location.
+
+CONFIG_USER_NETSNMP_DEFLOGFILE
+  Default log file location.
+
+CONFIG_USER_NETSNMP_DEFPERSISDIR
+  Default directory for persistent data storage.
+
+CONFIG_USER_NETSNMP_DEFENTERPRISEOID
+  The enterprise number assigned by IANA
+  (Warning: this should be used with caution.)
+
+CONFIG_USER_NETSNMP_ADDMIBS
+  Compile with additional MIB modules.
+
+CONFIG_USER_NETSNMP_ADDITIONALMIBS
+  Additional MIB modules (space spearated list).
 
 CONFIG_USER_VPNLED_VPNLED
   Control the VPN led.
@@ -1241,6 +1442,11 @@ CONFIG_USER_EMCTEST_EMCECHO
 CONFIG_USER_EMCTEST_EMCTEST
   A utility only used for EMC and similar testing.
   Approx. binary size: NA
+
+CONFIG_PROP_EMCRALINK_EMCRALINK
+  A test application specifically designed to work with the ralink card to get
+  CE certification.  If you don't know you need this app it is *very* unlikely
+  that you will want it.
 
 CONFIG_USER_MATH_TEST
   A number of programs used to test the proper functioning of the maths
@@ -1269,6 +1475,9 @@ CONFIG_USER_SNORT_SNORT
   buffer overflows, stealth port scans, CGI attacks, SMB probes,
   OS fingerprinting attempts and much more.
   Approx. binary size: 800k
+
+CONFIG_USER_SPEEDTOUCH_MODEM_RUN
+  Utility to configure Speed Touch USB ADSL modems.
 
 CONFIG_USER_SSH_SSHD
   A secure shell server.  This one is the openssh variant and supports ssh
@@ -1339,6 +1548,9 @@ CONFIG_USER_PPPD_WITH_RADIUS
 
 CONFIG_USER_PPPD_WITH_PPPOE
   Allow kernel mode PPPOE support.
+
+CONFIG_USER_PPPD_WITH_PPPOA
+  Allow kernel mode PPPOATM support.
 
 CONFIG_USER_PALMBOT_PALMBOT
   A half-baked app to drive the Palm Pilot robot.
@@ -1817,7 +2029,7 @@ CONFIG_USER_BUSYBOX_UUENCODE
 CONFIG_USER_BUSYBOX_VI
   Visual file editor.
 
-CONFIG_USER_BUSYBOX_WATCHDOG
+CONFIG_USER_BUSYBOX_WATCHDOGD
   Periodically write to watchdog device.
 
 CONFIG_USER_BUSYBOX_WC
@@ -2086,6 +2298,9 @@ CONFIG_USER_BUSYBOX_LOCALE_SUPPORT
 
 CONFIG_USER_BUSYBOX_TELNET_TTYPE
   Support for TELNET to pass TERM type to remote host.
+ 
+CONFIG_USER_BUSYBOX_CPU_USAGE_PERCENTAGE
+  Make top display CPU usage.
 
 CONFIG_USER_BUSYBOX_PASSWD
   passwd changes passwords for user and group accounts.  A normal user
@@ -2799,6 +3014,30 @@ CONFIG_USER_IPTABLES_IPTABLES
 CONFIG_USER_CKSUM_CKSUM
   Checksumming utility
 
+CONFIG_USER_CLAMAV_CLAMAV
+  Clam anti-virus checker.  This option builds the clam library but does not
+  install any of the executables.
+
+CONFIG_USER_CLAMAV_CLAMD
+  Build and install the clamd daemon.  This daemon accepts requests via a
+  socket and scans files based on these.
+
+CONFIG_USER_CLAMAV_CLAMDSCAN
+  Build a simple wrapper program that scans files and directories using clamd.
+
+CONFIG_USER_CLAMAV_CLAMSCAN
+  Build a standalone program that scans files and directories using libclamav.
+
+CONFIG_USER_CLAMAV_FRESHCLAM
+  Build the clamav database update program which downloads the latest signature
+  files from the Internet automatically.
+
+CONFIG_USER_CLAMAV_SIGTOOL
+  Tool to help generate virus signatures.
+
+CONFIG_USER_CLAMAV_TESTS
+  Install the supplied clamav test files into the romfs at /etc/clamav/test/
+
 CONFIG_USER_PCMCIA_CS
   PCMCIA Card Services package and all associated bits
 
@@ -2843,11 +3082,20 @@ CONFIG_USER_INIT_CONSOLE_SH
 CONFIG_USER_INIT_RUN_FIREWALL
   Init will automatically run the firewall script on start up.
 
-CONFIG_USER_BOOTTOOLS_FLASHLOADER
-  The uCsimm/uCdimm flashloader
+CONFIG_USER_BOOTTOOLS_LOADER
+  The uCsimm/uCdimm flash/ram loader.
 
 CONFIG_USER_BOOTTOOLS_HIMEMLOADER
-  The uCsimm/uCdimm himem-loader
+  The uCsimm/uCdimm himem loader.
+
+CONFIG_USER_BOOTTOOLS_PRINTBENV
+  The uCsimm/uCdimm tools.
+
+CONFIG_USER_BOOTTOOLS_SETBENV
+  The uCsimm/uCdimm tools.
+
+CONFIG_USER_BOOTTOOLS_RESET
+  The uCsimm/uCdimm tools.
 
 CONFIG_USER_TINYLOGIN_ADDUSER
   Add a user to the system
@@ -2978,6 +3226,10 @@ CONFIG_USER_NET_TOOLS_SLATTACH
 CONFIG_USER_NET_TOOLS_MII_TOOL
   Manipulate media-independent interface status.
 
+CONFIG_USER_NET_TOOLS_MII_TOOL_FEC
+   Manipulate media-independent interface status.
+   Specific to extensions for 5272 FEC driver
+
 CONFIG_USER_SSLWRAP_SSLWRAP
   Allows plain services to be accessed via SSL.
   Smaller and simpler than stunnel.
@@ -3044,6 +3296,30 @@ CONFIG_USER_LANG_A60_TEST
   A small test suite for the Algol 60 interpreter.
   These will be installed into /home/a60-test.  This
   represents about 45k of text files.
+
+CONFIG_USER_BZIP2_BZIP2
+  The bzip2 data compression program.
+  Features high compression rate but slower performance than
+  gzip and compress.
+
+CONFIG_USER_UNRAR_UNRAR
+  The unrar archive extraction program.
+
+CONFIG_USER_UNZIP_UNZIP
+  The unzip archive decompression and extraction program.
+
+CONFIG_USER_UNZIP_FUNZIP
+  Filter for extracting from a ZIP archive in a pipe.
+
+CONFIG_USER_UNZOO_UNZOO
+  The unzoo archive decompression and extraction program.
+  Can only extract and view contents of zoo archives.
+  
+CONFIG_USER_LHA_LHA
+  The lha archiving program for dealing with .lzh archives.
+
+CONFIG_USER_ARJ_ARJ
+  THe arj archiving program for dealing with .arj archives.
 
 CONFIG_USER_TCSH_TCSH
   Enhanced C shell (csh).
@@ -3175,6 +3451,9 @@ CONFIG_USER_CRYPTO_TOOLS_CRYPTOTEST
 CONFIG_USER_CRYPTO_TOOLS_CRYPTOKEYTEST
   OpenBSD's cryptokeytest program for testing OCF
 
+CONFIG_USER_ASTERISK
+  Asterisk is a software-based PBX
+
 #
 # END of user config help
 #
@@ -3184,39 +3463,11 @@ CONFIG_PROP_AUTHD_AUTHD
   to limit or restrict network connectivity based on a number of
   authentication mechanisms.
 
-CONFIG_PROP_AUTHD_LOCALHOST
-  Setting this option adds a failsafe check that always allows network
-  traffic originating from or destined for a local interface to pass
-  unmolested.  Properly configured firewall rules make this option
-  redundant.
-
-CONFIG_PROP_AUTHD_BWLIST
-  Support the use of source and destination address based access right.
-  
-CONFIG_PROP_AUTHD_P2P
-  Support point to point access controls.
-
 CONFIG_PROP_AUTHD_WWWLIST
   Support the use of destination site web access right.
 
-CONFIG_PROP_AUTHD_NASL
-  Use the NASL scripting language to probe for security policy
-  conformance before allowing Internet access.
-
 CONFIG_PROP_AUTHD_CERBERIAN
   Use the Cerberian content rating service to determine access rights.
-
-CONFIG_PROP_AUTHD_ZONELABS
-  Require the presence of the ZoneAlarm Pro software to allow Internet access.
-
-CONFIG_PROP_AUTHD_ZLAV
-  Require the presence of ZoneLabs antivirus to allow Internet access.
-
-CONFIG_PROP_AUTHD_DIRECT
-  When a client on a different subnet attempts to access the Internet,
-  it will be directly queried as to is ZoneAlarm Pro software status
-  then and there instead of relying on broadcasts. This allows gateway
-  enforcement across routers and tunnels where broadcasts will not reach.
 
 CONFIG_PROP_AUTHD_USER
   Enable support for Proxy authentication to determine the current user.
@@ -3306,8 +3557,15 @@ CONFIG_PROP_SGSNMPD_FULLMIB2
 CONFIG_USER_SWTEST_SWTEST
   Tool for testing the functionality of the switch.
 
-CONFIG_USER_SWTEST_RTL8305
-  Support 4 port RTL8305 switch rather than 8 port RTL8309 switch.
+CONFIG_USER_SWTEST_SWCONFIG
+  Tool for configuring switches.
+
+CONFIG_USER_SWTEST_SWITCH_NUM
+  The number of switch interfaces.  These are assumed to be named
+  starting with eth0, etc.
+
+CONFIG_USER_SWTEST_RTL8305SB
+  Select the type of switch to support for swconfig and swtest.
 
 CONFIG_PROP_REPORTD_REPORTD
   SnapGear Reporting Daemon
@@ -3332,10 +3590,6 @@ CONFIG_PROP_GCCMAPPING_LIBGCCMAPPING
 CONFIG_PROP_LIBSNAPGEAR
   Build libsnapgear which contains many low level utility routines used by prop/
   applications. This should be automatically selected if needed.
-
-CONFIG_PROP_UBERCONFIG_LIBUBERCONFIG
-  Build the libuberconfig library which provides utility functions for
-  working with the configuration. This should be automatically selected if needed.
 
 CONFIG_PROP_SMGRD_SMGRD
   CyberGuard Global Command Center (GCC) connector daemon.
@@ -3396,6 +3650,16 @@ CONFIG_USER_BRCFG_BRCFG
 CONFIG_PROP_FLASHPROG
   This application is used in the SnapGear flash programming device
   (SH4 based) to create flash images at/for the factory.
+
+CONFIG_PROP_USB_TOOLS
+  A set of utilities to perform actions on usb devices based
+  on configured settings. (i.e. mount usb storage devices)
+  can be used with hotplug scripts or run manually.
+
+CONFIG_PROP_CLAMAV_HELPER
+  A small utility that copies the clam virus database files to their
+  correct location.  Also, optionally, runs freshclam to bring the
+  databases up to date.  Will make the database directory if required.
 
 #
 # END of proprietary config help
