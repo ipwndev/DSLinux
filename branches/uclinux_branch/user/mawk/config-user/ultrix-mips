@@ -1,0 +1,24 @@
+# ultrix4.2 mips
+# prefer to use cc or no gcc
+
+# $Log$
+# Revision 1.1.2.1  2006/02/18 16:47:50  stsp2
+# adding uClinux-dist CVS snapshot from 2005-10-14
+#
+# Revision 1.1  1994/12/14  00:11:06  mike
+# initial ci
+#
+
+############
+
+CC=cc
+
+CFLAGS='-O -Olimit 700'
+
+# where to put the binary
+BINDIR=/usr/local/bin
+
+# where to put the man pages and man page extension
+MANDIR=/usr/local/man/man1
+MANEXT=1
+

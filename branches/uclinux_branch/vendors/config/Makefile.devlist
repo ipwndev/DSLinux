@@ -1,0 +1,15 @@
+# Generate a list of devices for a product
+# Example usage (from toplevel):
+# PRODUCTDIR=vendors/CyberGuard/SG300 make -f vendors/config/Makefile.devlist
+
+ROOTDIR=$(PRODUCTDIR)/../../..
+CONFIG_CONFIG=$(PRODUCTDIR)/config.device
+LINUX_CONFIG=$(PRODUCTDIR)/config.linux-2.4.x
+MODULES_CONFIG=$(PRODUCTDIR)/config.modules
+ARCH_CONFIG=$(PRODUCTDIR)/config.arch
+
+.PHONY: devlist
+devlist:
+	@echo $(sort $(DEVICES)) | sed 's/ /\n/g'
+
+include $(PRODUCTDIR)/Makefile
