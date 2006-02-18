@@ -1,0 +1,16 @@
+all: build/build
+	$(MAKE) -C build
+
+build/build: Makefile
+	rm -rf build
+	mkdir build
+	(cd build; sh ../configure --host=$(CROSS_COMPILE:-=))
+	touch build/build
+
+clean:
+	rm -rf build
+
+romfs:
+	$(ROMFSINST) etc /etc
+	$(ROMFSINST) -e CONFIG_USER_RADVD_RADVD build/radvd /bin/radvd
+	$(ROMFSINST) -e CONFIG_USER_RADVD_RADVD build/radvdump /bin/radvdump
