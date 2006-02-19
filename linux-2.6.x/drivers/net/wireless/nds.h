@@ -21,7 +21,7 @@
 enum WEPMODES {
 	WEPMODE_NONE = 0,
 	WEPMODE_40BIT = 1,
-	WEPMODE_128BIT = 3
+	WEPMODE_128BIT = 2
 };
 
 #define MAX_KEY_SIZE 13		// 128 (?) bits
