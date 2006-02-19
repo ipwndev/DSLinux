@@ -1652,7 +1652,13 @@ static int Wifi_GenMgtHeader(u8 * data, u16 headerflags)
 
 	// fill in wep-specific stuff
 	if (headerflags & 0x4000) {
-		((u32 *) data)[9] = (WIFI_RANDOM ^ (WIFI_RANDOM << 7) ^ (WIFI_RANDOM << 15)) & 0x0FFF | (wifi_data.wepkeyid << 30);	// I'm lazy and certainly haven't done this to spec.
+		data[36] =
+		    (WIFI_RANDOM ^ (WIFI_RANDOM << 7) ^ (WIFI_RANDOM << 15)) &
+		    0xFFFF;
+		data[38] =
+		    ((WIFI_RANDOM ^ (WIFI_RANDOM >> 7)) & 0xFF) | (wifi_data.
+								   wepkeyid <<
+								   14);
 		return 28 + 12;
 	} else {
 		return 24 + 12;
