@@ -20,4 +20,26 @@ UOPT := -Os
 
 include $(ROOTDIR)/vendors/config/arm/config.arch
 
+# default cross-compile is arm-linux-, but devkitarm uses arm-elf-
+CROSS_COMPILE = arm-elf-
+CROSS         = $(CROSS_COMPILE)
+
+CC        = $(ucfront_cc) $(CROSS_COMPILE)gcc $(CPUFLAGS)
+AS        = $(CROSS_COMPILE)as $(CPUFLAGS)
+CXX       = $(ucfront_cxx) $(CROSS_COMPILE)g++ $(CPUFLAGS)
+AR        = $(CROSS_COMPILE)ar
+LD        = $(CROSS_COMPILE)ld $(CPULDFLAGS)
+OBJCOPY   = $(CROSS_COMPILE)objcopy
+RANLIB    = $(CROSS_COMPILE)ranlib
+STRIPTOOL = $(CROSS_COMPILE)strip
+ELF2FLT   = $(CROSS_COMPILE)elf2flt
+
+ifdef UCLINUX_BUILD_LIB
+LDFLAGS   += -Wl,-elf2flt
+endif
+
+ifdef UCLINUX_BUILD_USER
+LDFLAGS   += -Wl,-elf2flt
+endif
+
 ############################################################################
