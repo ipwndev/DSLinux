@@ -18,6 +18,6 @@ UOPT := -Os
 
 ############################################################################
 
-include $(ROOTDIR)/vendors/config/armnommu/config.arch
+include $(ROOTDIR)/vendors/config/arm/config.arch
 
 ############################################################################
