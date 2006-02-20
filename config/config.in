@@ -26,10 +26,12 @@ choice 'Shell Program'	"Sash		CONFIG_USER_SASH_SH \
 			 minix-shell	CONFIG_USER_SH_SH \
 			 nwsh		CONFIG_USER_NWSH_SH \
 			 bash		CONFIG_USER_BASH_BASH \
+			 msh		CONFIG_USER_MSH_SH \
 			 Other		CONFIG_USER_OTHER_SH \
 			" Sash
 if [ "$CONFIG_USER_SASH_SH" = "y" ]; then
 	bool 'simple history (sash)'		CONFIG_USER_SASH_HISTORY
+	bool 'sash ps'						CONFIG_USER_SASH_PS
 fi
 bool 'reboot (sash)'		CONFIG_USER_SASH_REBOOT
 if [ "$CONFIG_USER_BUSYBOX_BUSYBOX" = "y" -a \
@@ -86,9 +88,12 @@ bool 'Build libSSL'		CONFIG_LIB_LIBSSL_FORCE
 bool 'Build libGMP'		CONFIG_LIB_LIBGMP_FORCE
 bool 'Build libG'		CONFIG_LIB_LIBG_FORCE
 bool 'Build libldap'		CONFIG_LIB_LIBLDAP_FORCE
+bool 'Build libnet'		CONFIG_LIB_LIBNET_FORCE
 bool 'Build libPAM'		CONFIG_LIB_LIBPAM_FORCE
 bool 'Build libPCAP'		CONFIG_LIB_LIBPCAP_FORCE
+bool 'Build libPCRE'		CONFIG_LIB_LIBPCRE_FORCE
 bool 'Build libZ'		CONFIG_LIB_ZLIB_FORCE
+bool 'Build libBZIP2'		CONFIG_LIB_LIBBZ2_FORCE
 bool 'Build libATM'		CONFIG_LIB_LIBATM_FORCE
 bool 'Build libpng'		CONFIG_LIB_LIBPNG_FORCE
 bool 'Build libjpeg'		CONFIG_LIB_LIBJPEG_FORCE
@@ -98,6 +103,15 @@ bool 'Build STLport'		CONFIG_LIB_STLPORT
 dep_bool '  Build STLport as shared'	CONFIG_LIB_STLPORT_SHARED $CONFIG_LIB_STLPORT
 bool 'Build expat'		CONFIG_LIB_EXPAT_FORCE
 bool 'Build adns'		CONFIG_LIB_ADNS_FORCE
+bool 'Build libares'		CONFIG_LIB_ARES_FORCE
+bool 'Build libidn'		CONFIG_LIB_LIBIDN_FORCE
+bool 'Build curl'		CONFIG_LIB_LIBCURL_FORCE
+if [ "$CONFIG_LIB_LIBCURL_FORCE" = "y" ]; then
+	define_bool CONFIG_LIB_LIBIDN y
+	define_bool CONFIG_LIB_ZLIB y
+	define_bool CONFIG_LIB_LIBBZ2 y
+	define_bool CONFIG_LIB_LIBSSL y
+fi
 bool 'Build libcrypt_old'	CONFIG_LIB_LIBCRYPT_OLD_FORCE
 
 comment 'Library Configuration'
@@ -158,9 +172,14 @@ if [ "$CONFIG_USER_RECOVER_RECOVER" = "y" ]; then
 	bool '  recover preserves existing config'	CONFIG_USER_RECOVER_PRESERVE_CONFIG_FS
 fi
 
-bool 'flashloader'		CONFIG_USER_BOOTTOOLS_FLASHLOADER
-bool 'himemloader'		CONFIG_USER_BOOTTOOLS_HIMEMLOADER
 bool 'setmac'			CONFIG_USER_SETMAC_SETMAC
+
+comment 'uCbootloader utils'
+bool 'flashloader / ramloader'  CONFIG_USER_BOOTTOOLS_LOADER
+bool 'himemloader'              CONFIG_USER_BOOTTOOLS_HIMEMLOADER
+bool 'printbenv'                CONFIG_USER_BOOTTOOLS_PRINTBENV
+bool 'setbenv'                  CONFIG_USER_BOOTTOOLS_SETBENV
+bool 'reset'                    CONFIG_USER_BOOTTOOLS_RESET
 
 comment 'MTD utils'
 bool 'mtd-utils'		CONFIG_USER_MTDUTILS
@@ -239,6 +258,10 @@ if [ "$CONFIG_USER_CRAMFS_CRAMFSCK" = "y" -o "$CONFIG_USER_CRAMFS_CRAMFSCK" = "y
 	define_bool CONFIG_LIB_ZLIB y
 fi
 
+comment 'MSDOS'
+bool 'mkdosfs'			CONFIG_USER_DOSFSTOOLS_MKDOSFS
+bool 'dosfsck'			CONFIG_USER_DOSFSTOOLS_DOSFSCK
+
 endmenu
 
 #############################################################################
@@ -259,7 +282,7 @@ if [ "$CONFIG_USER_APPWEB_APPWEB" = "y" ]; then
 	bool '  AppWeb is multithreaded'	CONFIG_USER_APPWEB_MULTITHREAD
 	bool '  AppWeb can dynamically load AppWeb modules'	CONFIG_USER_APPWEB_DYNAMIC
 fi
-bool 'arp'			CONFIG_USER_ROUTE_ARP
+bool 'asterisk PBX'			CONFIG_USER_ASTERISK
 bool 'fnord web server'		CONFIG_USER_FNORD_HTTPD
 if [ "$CONFIG_USER_FNORD_HTTPD" = "y" ]; then
 	bool '  fnord does not do auth'		CONFIG_USER_FNORD_NOAUTH
@@ -271,6 +294,7 @@ else
 			define_bool	CONFIG_LIB_LIBSSL y
 		fi
 		bool '  emergency syslog' CONFIG_USER_BOA_EMERG
+		bool '  enable log files' CONFIG_USER_BOA_LOGGING
 	fi
 fi
 bool 'bpalogin'			CONFIG_USER_BPALOGIN_BPALOGIN
@@ -298,10 +322,17 @@ if [ "$CONFIG_USER_DISCARD_INETD_ECHO" = "y" ]; then
 fi
 
 bool 'dnsmasq'			CONFIG_USER_DNSMASQ_DNSMASQ
+if [ "$CONFIG_USER_INETD_INETD" = "y" ]; then
+	bool 'dropbear'			CONFIG_USER_DROPBEAR_DROPBEAR
+fi
 bool 'ethattach'		CONFIG_USER_ETHATTACH_ETHATTACH
+if [ "$CONFIG_USER_ETHATTACH_ETHATTACH" = "y" ]; then
+	define_bool	CONFIG_LIB_LIBNETOLD y
+fi
 bool 'ethtool'			CONFIG_USER_ETHTOOL_ETHTOOL
 bool 'ez-ipupdate'		CONFIG_USER_EZIPUPDATE_EZIPUPDATE
 bool 'fakeidentd'		CONFIG_USER_FAKEIDENTD_IDENTD
+bool 'ddns3 client'		CONFIG_USER_DDNS3_CLIENT_DDNS3
 bool 'ftp'			CONFIG_USER_FTP_FTP_FTP
 bool 'ftpd'			CONFIG_USER_FTPD_FTPD
 
@@ -330,11 +361,33 @@ if [ "$CONFIG_USER_FREESWAN" = "y" ]; then
  	fi
 fi
 
+bool 'openswan-apps'  CONFIG_USER_OPENSWAN
+if [ "$CONFIG_USER_OPENSWAN" = "y" ]; then
+      bool '  pluto'	      CONFIG_USER_OPENSWAN_PLUTO_PLUTO
+      if [ "$CONFIG_USER_OPENSWAN_PLUTO_PLUTO" = "y" ]; then
+	      define_bool     CONFIG_LIB_LIBGMP y
+	      define_bool     CONFIG_LIB_LIBDES y
+      fi
+      bool '  whack'	      CONFIG_USER_OPENSWAN_PLUTO_WHACK
+      bool '  ranbits'        CONFIG_USER_OPENSWAN_UTILS_RANBITS
+      bool '  rsasigkey'      CONFIG_USER_OPENSWAN_UTILS_RSASIGKEY
+      if [ "$CONFIG_USER_OPENSWAN_UTILS_RSASIGKEY" = "y" ]; then
+	      define_bool     CONFIG_LIB_LIBGMP y
+      fi
+      bool '  eroute'	      CONFIG_USER_OPENSWAN_KLIPS_EROUTE
+      bool '  klipsdebug'     CONFIG_USER_OPENSWAN_KLIPS_KLIPSDEBUG
+      bool '  spi'	      CONFIG_USER_OPENSWAN_KLIPS_SPI
+      bool '  spigrp'	      CONFIG_USER_OPENSWAN_KLIPS_SPIGRP
+      bool '  tncfg'	      CONFIG_USER_OPENSWAN_KLIPS_TNCFG
+fi
+
 bool 'httpd'			CONFIG_USER_HTTPD_HTTPD
 bool 'http tunnel client'	CONFIG_USER_HTTPTUNNEL_CLIENT
 bool 'http tunnel server'	CONFIG_USER_HTTPTUNNEL_SERVER
 bool 'ifattach'			CONFIG_USER_IFATTACH_IFATTACH
-bool 'ifconfig'			CONFIG_USER_ROUTE_IFCONFIG
+if [ "$CONFIG_USER_IFATTACH_IFATTACH" = "y" ]; then
+	define_bool	CONFIG_LIB_LIBNETOLD y
+fi
 
 bool 'inetd'			CONFIG_USER_INETD_INETD
 bool 'ipchains'			CONFIG_USER_IPCHAINS_IPCHAINS
@@ -358,7 +411,9 @@ if [ "$CONFIG_USER_IPROUTE2" = "y" ]; then
 	fi
 fi
 
+bool 'ipsentinel'		CONFIG_USER_IPSENTINEL_IPSENTINEL
 bool 'iptables'			CONFIG_USER_IPTABLES_IPTABLES
+bool 'ip6tables'		CONFIG_USER_IPTABLES_IP6TABLES
 bool 'iputils apps'		CONFIG_USER_IPUTILS_IPUTILS
 if [ "$CONFIG_USER_IPUTILS_IPUTILS" = "y" ]; then
 	bool '  ping'		CONFIG_USER_IPUTILS_PING
@@ -397,6 +452,9 @@ if [ "$CONFIG_USER_LINUXIGD_LINUXIGD" = "y" ]; then
 fi
 
 bool 'loattach'			CONFIG_USER_LOATTACH_LOATTACH
+if [ "$CONFIG_USER_LOATTACH_LOATTACH" = "y" ]; then
+	define_bool	CONFIG_LIB_LIBNETOLD y
+fi
 
 bool 'lrpstat'			CONFIG_USER_LRPSTAT_LRPSTAT
 bool 'mail' 			CONFIG_USER_SMTP_SMTPCLIENT
@@ -414,10 +472,8 @@ fi
 bool 'msntp'			CONFIG_USER_MSNTP_MSNTP
 bool 'nasl'			CONFIG_USER_NESSUS_NASL
 bool 'netcat'			CONFIG_USER_NETCAT_NETCAT
-bool 'netstat'			CONFIG_USER_ROUTE_NETSTAT
 bool 'netstat-nat'		CONFIG_USER_NETSTAT_NAT_NETSTAT_NAT
 
-bool 'mii-tool'			CONFIG_USER_ROUTE_MIITOOL
 
 bool 'ntpclient: ntpclient'		CONFIG_USER_NTPCLIENT_NTPCLIENT
 bool 'ntpclient: adjtimex'		CONFIG_USER_NTPCLIENT_ADJTIMEX
@@ -435,6 +491,7 @@ fi
 
 bool 'ping'			CONFIG_USER_PING_PING
 bool 'plugdaemon'		CONFIG_USER_PLUG_PLUG
+bool 'pop3proxy'		CONFIG_USER_POP3PROXY_POP3PROXY
 bool 'portmap'			CONFIG_USER_PORTMAP_PORTMAP
 
 bool 'pppd'			CONFIG_USER_PPPD_PPPD_PPPD
@@ -446,6 +503,7 @@ if [ "$CONFIG_USER_PPPD_PPPD_PPPD" = "y" ]; then
 
 
 	bool '  enable PPPOE'	CONFIG_USER_PPPD_WITH_PPPOE
+	bool '  enable PPPOA'	CONFIG_USER_PPPD_WITH_PPPOA
 	if [ "$CONFIG_USER_PPPD_WITH_PPPOE"  = "y" ]; then
 		int '    default number of PPPOE retries' CONFIG_USER_PPPD_PPPOE_RETRIES 6
 	fi
@@ -456,8 +514,12 @@ bool 'pptpctrl'			CONFIG_USER_PPTPD_PPTPCTRL
 bool 'pptpd'			CONFIG_USER_PPTPD_PPTPD
 bool 'pptp'			CONFIG_USER_PPTP_CLIENT_PPTP
 bool 'pptp_callmgr'		CONFIG_USER_PPTP_CLIENT_PPTP_CALLMGR
+bool 'proftpd'			CONFIG_USER_PROFTPD_PROFTPD
+bool 'radvd'			CONFIG_USER_RADVD_RADVD
+if [ "$CONFIG_USER_RADVD_RADVD"  = "y" ]; then
+	define_bool CONFIG_LIB_FLEX y
+fi
 bool 'rdate'			CONFIG_USER_RDATE_RDATE
-bool 'route'			CONFIG_USER_ROUTE_ROUTE
 bool 'routed'			CONFIG_USER_ROUTED_ROUTED
 bool 'rp-pppoe'			CONFIG_USER_RP_PPPOE_PPPOE
 dep_bool '  rp-pppoe server'	CONFIG_USER_RP_PPPOE_PPPOE_SERVER $CONFIG_USER_RP_PPPOE_PPPOE
@@ -468,8 +530,16 @@ if [ "$CONFIG_USER_SER_SER" = "y" ]; then
 fi
 bool 'sethdlc'			CONFIG_USER_SETHDLC_SETHDLC
 bool 'slattach'			CONFIG_USER_SLATTACH_SLATTACH
+if [ "$CONFIG_USER_SLATTACH_SLATTACH" = "y" ]; then
+	define_bool	CONFIG_LIB_LIBNETOLD y
+fi
+bool 'smtp filter'		CONFIG_USER_SMTP_SMTPFILTER
 bool 'snmpd'			CONFIG_USER_SNMPD_SNMPD
 bool 'snort'			CONFIG_USER_SNORT_SNORT
+if [ "$CONFIG_USER_SNORT_SNORT" = "y" ]; then
+	define_bool CONFIG_LIB_LIBPCRE y
+	define_bool CONFIG_LIB_LIBNET y
+fi
 bool 'speedtouch modem_run'	CONFIG_USER_SPEEDTOUCH_MODEM_RUN
 bool 'stunnel'			CONFIG_USER_STUNNEL_STUNNEL
 bool 'sslwrap'			CONFIG_USER_SSLWRAP_SSLWRAP
@@ -520,7 +590,7 @@ if [ "$CONFIG_USER_TFTPD_TFTPD" = "y" ]; then
 fi
 bool 'thttpd'			CONFIG_USER_THTTPD_THTTPD
 bool 'traceroute'		CONFIG_USER_TRACEROUTE_TRACEROUTE
-bool 'net-snmp snmpd'		CONFIG_USER_UCDSNMP_SNMPD
+
 bool 'vconfig'			CONFIG_USER_VCONFIG_VCONFIG
 bool 'vpnled'			CONFIG_USER_VPNLED_VPNLED
 bool 'wget'			CONFIG_USER_WGET
@@ -543,6 +613,7 @@ bool 'rarp'			CONFIG_USER_NET_TOOLS_RARP
 bool 'route'			CONFIG_USER_NET_TOOLS_ROUTE
 bool 'slattach'			CONFIG_USER_NET_TOOLS_SLATTACH
 bool 'mii-tool'			CONFIG_USER_NET_TOOLS_MII_TOOL
+bool 'mii-tool-fec'		CONFIG_USER_NET_TOOLS_MII_TOOL_FEC
 
 comment 'Wireless-tools'
 bool 'wireless_tools support'	CONFIG_USER_WIRELESS_TOOLS
@@ -571,6 +642,66 @@ comment '  wlan-ng drivers'
 	bool '    Prism2 USB'	CONFIG_USER_WLAN_NG_USB
 fi
 
+comment 'net-snmp'
+bool 'net-snmp snmpd'		CONFIG_USER_UCDSNMP_SNMPD
+if [ "$CONFIG_USER_UCDSNMP_SNMPD" = "y" ]; then
+	define_bool 	CONFIG_USER_NETSNMP_SNMPD y
+	comment 'Agent'
+	if [ "$CONFIG_USER_NETSNMP_SNMPD" = "y" ]; then
+		bool 'Build mini agent'	CONFIG_USER_NETSNMP_SNMPD_MINI
+	fi
+	comment 'Applications'
+	bool 'Build Applications'	CONFIG_USER_NETSNMP_APPS
+	if [ "$CONFIG_USER_NETSNMP_APPS" = "y" ]; then
+		bool '  snmpbulkget'	CONFIG_USER_NETSNMP_APPS_BULKGET
+		bool '  snmpbulkwalk'	CONFIG_USER_NETSNMP_APPS_BULKWALK
+		bool '  snmpdelta'	CONFIG_USER_NETSNMP_APPS_DELTA
+		bool '  snmpdf'		CONFIG_USER_NETSNMP_APPS_DF
+		bool '  snmpget'	CONFIG_USER_NETSNMP_APPS_GET
+		bool '  snmpgetnext'	CONFIG_USER_NETSNMP_APPS_GETNEXT
+		bool '  snmpset'	CONFIG_USER_NETSNMP_APPS_SET
+		bool '  snmpstatus'	CONFIG_USER_NETSNMP_APPS_STATUS
+		bool '  snmptable'	CONFIG_USER_NETSNMP_APPS_TABLE
+		bool '  snmptest'	CONFIG_USER_NETSNMP_APPS_TEST
+		bool '  snmptranslate'	CONFIG_USER_NETSNMP_APPS_TRANSLATE
+		bool '  snmptrap'	CONFIG_USER_NETSNMP_APPS_TRAP
+		bool '  snmptrapd'	CONFIG_USER_NETSNMP_APPS_TRAPD
+		bool '  snmpusm'	CONFIG_USER_NETSNMP_APPS_USM
+		bool '  snmpvacm'	CONFIG_USER_NETSNMP_APPS_VACM
+		bool '  snmpwalk'	CONFIG_USER_NETSNMP_APPS_WALK
+		bool '  snmpnetstat'	CONFIG_USER_NETSNMP_APPS_NETSTAT
+	fi
+	comment 'Configuration'
+	bool 'Build static'		CONFIG_USER_NETSNMP_BUILDSTATIC
+	bool 'Install manuals'		CONFIG_USER_NETSNMP_MANUALS
+	bool 'Install scripts'		CONFIG_USER_NETSNMP_SCRIPTS
+	bool 'Install MIBs'		CONFIG_USER_NETSNMP_MIBS
+	if [ "$CONFIG_USER_NETSNMP_MIBS" = "y" ]; then
+		bool '  Enable MIB loading'	CONFIG_USER_NETSNMP_MIBLOADING
+	fi
+	bool 'Disable SNMP v1'	CONFIG_USER_NETSNMP_NOV1
+	bool 'Disable SNMP v2c'	CONFIG_USER_NETSNMP_NOV2C
+	bool 'IPv6 support'		CONFIG_USER_NETSNMP_IPV6
+	bool 'Exclude transports'	CONFIG_USER_NETSNMP_NOTRANSPORTS
+	if [ "$CONFIG_USER_NETSNMP_NOTRANSPORTS" = "y" ]; then
+		string '  Exclude Transports' CONFIG_USER_NETSNMP_EXTRANSPORTS "TCP"
+	fi
+	bool 'With OpenSSL'	CONFIG_USER_NETSNMP_OPENSSL
+	bool 'Override defaults'	CONFIG_USER_NETSNMP_OVRDEFAULTS
+	if [ "$CONFIG_USER_NETSNMP_OVRDEFAULTS" = "y" ]; then
+		string '  Default version'	CONFIG_USER_NETSNMP_DEFVERSION "3"
+		string '  Default Sys Contact'	CONFIG_USER_NETSNMP_DEFSYSCONTACT "unknown"
+		string '  Default Sys Location'	CONFIG_USER_NETSNMP_DEFSYSLOCATION "unknown"
+		string '  Default Log file'	CONFIG_USER_NETSNMP_DEFLOGFILE "/var/log/snmp.log"
+		string '  Default Persistent Directory '	CONFIG_USER_NETSNMP_DEFPERSISDIR "/var/net-snmp"
+		string '  Enterprise OID'	CONFIG_USER_NETSNMP_DEFENTERPRISEOID "8072"
+	fi
+	bool 'Additional MIBS'	CONFIG_USER_NETSNMP_ADDMIBS
+	if [ "$CONFIG_USER_NETSNMP_ADDMIBS" = "y" ]; then
+		string '  Additional MIBS'	CONFIG_USER_NETSNMP_ADDITIONALMIBS ""
+	fi
+fi
+
 endmenu
 
 #############################################################################
@@ -583,12 +714,30 @@ if [ "$CONFIG_USER_LANG_A60" = "y" ]; then
 	bool '  examples'	CONFIG_USER_LANG_A60_EGS
 	bool '  tests'		CONFIG_USER_LANG_A60_TEST
 fi
+bool 'arj'			CONFIG_USER_ARJ_ARJ
+bool 'bzip2'			CONFIG_USER_BZIP2_BZIP2
+if [ "$CONFIG_USER_BZIP2_BZIP2" = "y" ]; then
+	define_bool CONFIG_LIB_LIBBZ2 y
+fi
 bool 'cal'			CONFIG_USER_CAL_CAL
 bool 'chat'			CONFIG_USER_CHAT_CHAT
 if [ "$CONFIG_USER_CHAT_CHAT" = "y" ]; then
 	bool '  chat network/telnet support' CONFIG_USER_CHAT_CHAT_NETWORK
 fi
 bool 'cksum'			CONFIG_USER_CKSUM_CKSUM
+bool 'clamav'			CONFIG_USER_CLAMAV_CLAMAV
+if [ "$CONFIG_USER_CLAMAV_CLAMAV" = "y" ]; then
+	bool 'clamd'		CONFIG_USER_CLAMAV_CLAMD
+	bool 'clamdscan'	CONFIG_USER_CLAMAV_CLAMDSCAN
+	bool 'clamscan'		CONFIG_USER_CLAMAV_CLAMSCAN
+	bool 'freshclam'	CONFIG_USER_CLAMAV_FRESHCLAM
+	bool 'sigtool'		CONFIG_USER_CLAMAV_SIGTOOL
+	bool 'clamav tests'	CONFIG_USER_CLAMAV_TESTS
+	define_bool CONFIG_LIB_LIBBZ2 y
+	define_bool CONFIG_LIB_ZLIB y
+	define_bool CONFIG_LIB_LIBSSL y
+	define_bool CONFIG_LIB_PTHREAD y
+fi
 bool 'clock'			CONFIG_USER_CLOCK_CLOCK
 bool 'cpu'			CONFIG_USER_CPU_CPU
 bool 'cryptotest'		CONFIG_USER_CRYPTO_TOOLS_CRYPTOTEST
@@ -601,12 +750,15 @@ if [ "$CONFIG_USER_EXPAT_EXAMPLES" = "y" ]; then
 	define_bool CONFIG_LIB_EXPAT y
 fi
 bool 'frob-led'			CONFIG_USER_FROB_LED_FROB_LED
-bool 'gdbreplay'		CONFIG_USER_GDBSERVER_GDBREPLAY
-bool 'gdbserver'		CONFIG_USER_GDBSERVER_GDBSERVER
+bool 'gdbreplay'		CONFIG_USER_GDB_GDBREPLAY
+bool 'gdbserver'		CONFIG_USER_GDB_GDBSERVER
+bool 'gdbreplay (old)'		CONFIG_USER_GDBSERVER_GDBREPLAY
+bool 'gdbserver (old)'		CONFIG_USER_GDBSERVER_GDBSERVER
 bool 'grep'			CONFIG_USER_GREP_GREP
 bool 'hd'			CONFIG_USER_HD_HD
 bool 'lcd'			CONFIG_USER_LCD_LCD
 bool 'ledcon'			CONFIG_USER_LEDCON_LEDCON
+bool 'lha'			CONFIG_USER_LHA_LHA
 bool 'lilo'			CONFIG_USER_LILO_LILO
 bool 'lissa'			CONFIG_USER_LISSA_LISSA
 bool 'lpr'				CONFIG_USER_LPR
@@ -627,7 +779,6 @@ bool 'readprofile'		CONFIG_USER_READPROFILE_READPROFILE
 bool 'rootloader'		CONFIG_USER_ROOTLOADER_ROOTLOADER
 bool 'setserial'		CONFIG_USER_SETSERIAL_SETSERIAL
 bool 'siggen'			CONFIG_USER_TRIPWIRE_SIGGEN
-bool 'sl'	        	CONFIG_USER_SL_SL
 bool 'strace'			CONFIG_USER_STRACE_STRACE
 bool 'stty'			CONFIG_USER_STTY_STTY
 bool 'tcsh'			CONFIG_USER_TCSH_TCSH
@@ -641,6 +792,12 @@ fi
 bool 'pThreads threaddemos'	CONFIG_USER_THREADDEMOS_THREADDEMOS
 bool 'tip'			CONFIG_USER_TIP_TIP
 bool 'tripwire'			CONFIG_USER_TRIPWIRE_TRIPWIRE
+bool 'unrar'			CONFIG_USER_UNRAR_UNRAR
+bool 'unzip'			CONFIG_USER_UNZIP_UNZIP
+if [ "$CONFIG_USER_UNZIP_UNZIP" = "y" ]; then
+	bool '    funzip'		CONFIG_USER_UNZIP_FUNZIP
+fi
+bool 'unzoo'			CONFIG_USER_UNZOO_UNZOO
 bool 'zmodem utils'		CONFIG_USER_LRZSZ_LRZSZ
 
 if [ "$CONFIG_USER_LRZSZ_LRZSZ" = "y" ]; then
@@ -656,6 +813,11 @@ dep_bool '  lircmd'		CONFIG_USER_LIRC_LIRCMD   $CONFIG_USER_LIRC
 dep_bool '  irexec'		CONFIG_USER_LIRC_IREXEC   $CONFIG_USER_LIRC
 dep_bool '  irw'		CONFIG_USER_LIRC_IRW      $CONFIG_USER_LIRC
 dep_bool '  mode2'		CONFIG_USER_LIRC_MODE2    $CONFIG_USER_LIRC
+
+comment 'QSPI'
+bool 'Enable Coldfire QSPI test programs'	CONFIG_MCF_QSPI
+dep_bool 'qspitest'                 CONFIG_USER_QSPITEST_TEST	$CONFIG_MCF_QSPI
+dep_bool 'qspirx'                   CONFIG_USER_QSPITEST_RX	$CONFIG_MCF_QSPI
 
 comment 'Editors'
 bool 'vi (leevee)'		CONFIG_USER_LEVEE_VI
@@ -681,7 +843,9 @@ bool 'camserv'			CONFIG_USER_CAMSERV
 bool 'vidcat'			CONFIG_USER_W3CAM_VIDCAT
 bool 'w3camd'			CONFIG_USER_W3CAM_W3CAMD
 
-if [ "$CONFIG_USER_W3CAM_VIDCAT" = "y" ]; then
+if [ "$CONFIG_USER_W3CAM_VIDCAT" = "y" -o \
+	"$CONFIG_USER_CAMSERV" = "y" -o \
+	"$CONFIG_USER_W3CAM_W3CAMD" = "y" ]; then
 	define_bool CONFIG_LIB_LIBPNG y
 	define_bool CONFIG_LIB_LIBJPEG y
 fi
@@ -1233,7 +1397,7 @@ if [ "$CONFIG_USER_BUSYBOX_BUSYBOX" = "y" ]; then
 	if [ "$CONFIG_USER_BUSYBOX_ADDUSER" = "y" -o "$CONFIG_USER_BUSYBOX_DELUSER" = "y" -o "$CONFIG_USER_BUSYBOX_LOGIN" = "y" -o "$CONFIG_USER_BUSYBOX_SU" = "y" ]; then
 		bool 'vlock' CONFIG_USER_BUSYBOX_VLOCK
 	fi
-	bool 'watchdog' CONFIG_USER_BUSYBOX_WATCHDOG
+	bool 'watchdog' CONFIG_USER_BUSYBOX_WATCHDOGD
 	bool 'wc' CONFIG_USER_BUSYBOX_WC
 	bool 'wget' CONFIG_USER_BUSYBOX_WGET
 	if [ "$CONFIG_USER_BUSYBOX_WGET" = "y" ]; then
@@ -1295,6 +1459,9 @@ if [ "$CONFIG_USER_BUSYBOX_BUSYBOX" = "y" ]; then
 	bool 'Clean up' CONFIG_USER_BUSYBOX_CLEAN_UP
 	bool 'Readable sizes' CONFIG_USER_BUSYBOX_HUMAN_READABLE
 	bool 'Locale Support' CONFIG_USER_BUSYBOX_LOCALE_SUPPORT
+	if [ "$CONFIG_USER_BUSYBOX_TOP" = "y" ]; then
+		bool 'Top CPU usage' CONFIG_USER_BUSYBOX_CPU_USAGE_PERCENTAGE
+	fi
 fi
 endmenu
 

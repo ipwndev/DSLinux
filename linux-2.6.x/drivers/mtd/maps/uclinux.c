@@ -44,7 +44,7 @@ struct mtd_partition uclinux_romfs[] = {
 int uclinux_point(struct mtd_info *mtd, loff_t from, size_t len,
 	size_t *retlen, u_char **mtdbuf)
 {
-	struct map_info *map = (struct map_info *) mtd->priv;
+	struct map_info *map = mtd->priv;
 	*mtdbuf = (u_char *) (map->virt + ((int) from));
 	*retlen = len;
 	return(0);
@@ -56,13 +56,8 @@ int __init uclinux_mtd_init(void)
 {
 	struct mtd_info *mtd;
 	struct map_info *mapp;
-#ifdef CONFIG_NDS_DSGBA
-	extern char _etext, _edata, __data_start;
-	unsigned long addr = (unsigned long) (&_etext + ( &_edata - &__data_start ) );
-#else
-	extern char _end;
-	unsigned long addr = (unsigned long) &_end ;
-#endif
+	extern char _ebss;
+	unsigned long addr = (unsigned long) &_ebss;
 
 	mapp = &uclinux_ram_map;
 	mapp->phys = addr;
@@ -74,14 +69,14 @@ int __init uclinux_mtd_init(void)
 
 	mapp->virt = ioremap_nocache(mapp->phys, mapp->size);
 
-	if (!mapp->virt) {
+	if (mapp->virt == 0) {
 		printk("uclinux[mtd]: ioremap_nocache() failed\n");
 		return(-EIO);
 	}
 
 	simple_map_init(mapp);
 
-	mtd = do_map_probe("map_rom", mapp);
+	mtd = do_map_probe("map_ram", mapp);
 	if (!mtd) {
 		printk("uclinux[mtd]: failed to find a mapping?\n");
 		iounmap(mapp->virt);
