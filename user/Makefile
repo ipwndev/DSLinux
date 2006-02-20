@@ -306,6 +306,7 @@ dir_$(CONFIG_USER_SHUTILS_UNAME)            += shutils
 dir_$(CONFIG_USER_SHUTILS_WHICH)            += shutils
 dir_$(CONFIG_USER_SHUTILS_WHOAMI)           += shutils
 dir_$(CONFIG_USER_SHUTILS_YES)              += shutils
+dir_$(CONFIG_USER_SL_SL)                    += sl
 dir_$(CONFIG_USER_SLATTACH_SLATTACH)        += slattach
 dir_$(CONFIG_USER_SMBMOUNT_SMBMOUNT)        += smbmount
 dir_$(CONFIG_USER_SMBMOUNT_SMBUMOUNT)       += smbmount
@@ -371,6 +372,8 @@ dir_$(CONFIG_USER_ZEBRA_BGPD_BGPD)          += zebra
 dir_$(CONFIG_USER_ZEBRA_OSPFD_OSPFD)        += zebra
 dir_$(CONFIG_USER_ZEBRA_RIPD_RIPD)          += zebra
 dir_$(CONFIG_USER_ZEBRA_ZEBRA_ZEBRA)        += zebra
+
+dir_y += fwver
 
 dir_y += games
 
