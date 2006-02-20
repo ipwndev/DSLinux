@@ -112,7 +112,16 @@ find_bootmap_pfn(int node, struct meminfo *mi, unsigned int bootmap_pages)
 {
 	unsigned int start_pfn, bank, bootmap_pfn;
 
+#ifdef CONFIG_ARCH_NDS
+#ifndef CONFIG_XIP_KERNEL
+        unsigned int rootfs_len = ntohl(((unsigned int *)&_end)[2]);
+	start_pfn   = O_PFN_UP(__pa(((char*)&_end) + rootfs_len));
+#else
 	start_pfn   = O_PFN_UP(__pa(&_end));
+#endif /* !CONFIG_XIP_KERNEL */
+#else
+	start_pfn   = O_PFN_UP(__pa(&_end));
+#endif /* CONFIG_ARCH_NDS */
 	bootmap_pfn = 0;
 
 	for (bank = 0; bank < mi->nr_banks; bank ++) {
@@ -702,7 +711,7 @@ void free_initmem(void)
 #else
 	/*
 	 * machine depend decision, if initmem is safe to free.
-	 * it is defiened in hardware.h by default, true.
+	 * it is defined in hardware.h by default, true.
 	 */
 	if (DO_FREE_INITMEM()) {
 #endif
