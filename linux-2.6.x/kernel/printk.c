@@ -599,7 +599,17 @@ asmlinkage int vprintk(const char *fmt, va_list args)
 		if (*p == '\n')
 			log_level_unknown = 1;
 	}
+#ifdef CONFIG_NDS_TEXT_CONSOLE
+    	/* Enable for early-boot debugging of dslinux.
+	 * With the nds console we can see messages printed before
+	 * the framebuffer comes up. */
+	nds_console_write(NULL,printk_buf,strlen(printk_buf));
 
+	/* The step-by-step code that was here once has been moved
+	 * to arch/arm/mach-nds/console.c in order to make one little step
+	 * into the direction of having a slight change to ever getting this
+	 * accepted upstream... (stsp) */
+#endif
 	if (!cpu_online(smp_processor_id())) {
 		/*
 		 * Some console drivers may assume that per-cpu resources have
