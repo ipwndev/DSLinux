@@ -82,6 +82,8 @@ dir_$(CONFIG_LIB_LIBCURL)      += libcurl
 dir_$(CONFIG_LIB_LIBCURL_FORCE)+= libcurl
 dir_$(CONFIG_LIB_LIBCRYPT_OLD) += libcrypt_old
 dir_$(CONFIG_LIB_LIBCRYPT_OLD_FORCE) += libcrypt_old
+dir_$(CONFIG_LIB_NCURSES)       += libncurses
+dir_$(CONFIG_LIB_NCURSES_FORCE) += libncurses
 dir_$(CONFIG_LIB_LIBPCRE)	+= pcre
 dir_$(CONFIG_LIB_LIBPCRE_FORCE) += pcre
 
@@ -94,8 +96,13 @@ dir_y += $(ROOTDIR)/prop
 all:
 	for i in $(dir_y) ; do \
 		if [ -d $$i ]; then \
-			touch $$i/.sgbuilt_lib; \
-			make -C $$i || exit $$? ; \
+			if [ "$$i" = "libncurses" ]; then \
+				touch $$i/.sgbuilt_lib; \
+				make -C $$i AWK=awk || exit $$?; \
+			else \
+				touch $$i/.sgbuilt_lib; \
+				make -C $$i || exit $$? ; \
+			fi; \
 		fi; \
 		$(MAKE) make_links || exit $? ; \
 	done
@@ -137,6 +144,7 @@ LINKLIBS=\
 	$(ROOTDIR)/lib/libdes/*.a \
 	$(ROOTDIR)/lib/libaes/*.a \
 	$(ROOTDIR)/lib/libpcap/build/*.a \
+	$(ROOTDIR)/lib/libncurses/lib/*.a \
 	$(ROOTDIR)/lib/libnet/*.a \
 	$(ROOTDIR)/lib/libares/build/*.a \
 	$(ROOTDIR)/lib/libidn/build/lib/.libs/libidn.a \
