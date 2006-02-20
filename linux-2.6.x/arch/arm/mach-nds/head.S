@@ -32,6 +32,7 @@
 #include <asm/mach-types.h>
 #include <asm/procinfo.h>
 #include <asm/ptrace.h>
+#include <asm/system.h>
 #include <asm/mach/arch.h>
 #include <asm/thread_info.h>
 
@@ -261,8 +262,10 @@ _entry:
 	and	r0,r0,r1
 	mcr	p15, 0, r0, c1, c0, 0
 
-	adr	r5, LC0
-	ldmia	r5, {r5, r6, r8, r9, sp}			@ Setup stack
+	adr	r5, __LC0_init_data
+	ldmia	r5, {r5, r6, r8, r9, r10, sp}			@ Setup stack
+	bic	r4, r0, #CR_A
+	stmia	r10, {r0, r4}
 
 #ifdef CONFIG_XIP_KERNEL
 	/*  Copy data sections to their new home.  */
@@ -292,14 +295,14 @@ _copydata:
 	mov fp, #0
 	b	start_kernel
 
-LC0:	.long	__bss_start
-	.long	processor_id
-	.long	_end
-	.long   __machine_arch_type
-	.long	init_thread_union+THREAD_START_SP
-
-L_AT91_SF_CIDR:
-	.long	0xfff00000
+	.type	__LC0_init_data, %object
+__LC0_init_data:
+	.long	__bss_start			@ r5
+	.long	processor_id			@ r6
+	.long	_end				@ r8
+	.long   __machine_arch_type		@ r9
+	.long	cr_alignment			@ r10
+	.long	init_thread_union+THREAD_START_SP @ sp
 
 /****************************************************************************/
 
