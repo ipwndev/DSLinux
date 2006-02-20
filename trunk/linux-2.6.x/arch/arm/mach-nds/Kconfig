@@ -1,26 +1,26 @@
 menu "Nintendo DS Options"
 
 config NDS_TEXT_CONSOLE
-   bool "Nintendo DS text console"
-   depends on ARCH_NDS
-   default n
-   help
-    Saying Y here allows for early-boot debugging of dslinux.
-    With the nds console you can see messages printed before
-    the framebuffer comes up. This is mostly used by dslinux
-    developers for debugging.
-    If unsure, say N.
+	bool "Nintendo DS text console"
+	depends on ARCH_NDS
+	default n
+	help
+	 Saying Y here allows for early-boot debugging of dslinux.
+	 With the nds console you can see messages printed before
+	 the framebuffer comes up. This is mostly used by dslinux
+	 developers for debugging.
+	 If unsure, say N.
 
 config NDS_TEXT_CONSOLE_STEP_BY_STEP
-   bool "Step-by-step debugging of the dslinux boot process"
-   depends on NDS_TEXT_CONSOLE
-   default n
-   help
-    Saying yes here will enable code that busy-waits for the A key
-    to be pressed after printing a line to the console.
-    This allows for step-by-step debugging of the dslinux boot
-    process. You really only want this if you are debugging a
-    boot problem.
-    If in doubt, say N.
+	bool "Step-by-step debugging of the dslinux boot process"
+	depends on NDS_TEXT_CONSOLE
+	default n
+	help
+	 Saying yes here will enable code that busy-waits for the A key
+	 to be pressed after printing a line to the console.
+	 This allows for step-by-step debugging of the dslinux boot
+	 process. You really only want this if you are debugging a
+	 boot problem.
+	 If in doubt, say N.
 
 endmenu
