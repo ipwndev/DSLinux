@@ -96,7 +96,7 @@ static void recieveFIFOCommand(void)
 					     (data >> 8) & 0xff, data & 0xff);
 				break;
 			case FIFO_WIFI_CMD_SET_CHANNEL:
-				Wifi_SetChannel(data & 0xff);
+				Wifi_RequestChannel(data & 0xff);
 				break;
 			case FIFO_WIFI_CMD_SET_WEPKEY0:
 				Wifi_SetWepKey(0, ((data >> 16) & 0x3),
@@ -141,6 +141,12 @@ static void recieveFIFOCommand(void)
 				break;
 			case FIFO_WIFI_CMD_SCAN:
 				wifi_start_scan();
+				break;
+			case FIFO_WIFI_CMD_SET_AP_MODE:
+				Wifi_SetAPMode(data);
+				break;
+			case FIFO_WIFI_CMD_GET_AP_MODE:
+				Wifi_GetAPMode();
 				break;
 			}
 		}
@@ -220,6 +226,13 @@ void InterruptHandler(void)
 
 		/* Acknowledge Interrupt */
 		NDS_IF = IRQ_VBLANK;
+	}
+
+	if (wif & IRQ_TIMER0) {
+		/* Acknowledge Interrupt */
+		NDS_IF = IRQ_TIMER0;
+		wif &= ~IRQ_TIMER0;
+		wifi_timer_handler();
 	}
 
 	if (wif & IRQ_ARM9) {

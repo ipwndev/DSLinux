@@ -36,6 +36,7 @@ SOFTWARE.
 #include "asm/arch/ipcsync.h"
 #include "asm/arch/shmemipc.h"
 #include "asm/arch/wifi.h"
+#include "asm/arch/time.h"
 
 #include "arm7.h"
 #include "shmemipc-arm7.h"
@@ -253,7 +254,7 @@ static void Wifi_Stop(void)
 	NDS_IME = tIME;
 }
 
-void Wifi_SetChannel(int channel)
+static void Wifi_SetChannel(int channel)
 {
 	int i;
 
@@ -271,6 +272,14 @@ void Wifi_SetChannel(int channel)
 	for (i = 0; i < 20000; i++)
 		i++;
 	Wifi_BBWrite(0x1E, ReadFlashByte(0x146 + channel));
+}
+
+
+void Wifi_RequestChannel(int channel)
+{
+	wifi_data.reqChannel = channel;
+	if (!(wifi_data.state & WIFI_STATE_CHANNEL_SCANNING))
+		Wifi_SetChannel(channel);
 }
 
 void Wifi_SetWepKey(int key, int off, u8 b1, u8 b2)
@@ -337,8 +346,8 @@ static void wifi_try_to_associate(void)
 	else
 		wifi_data.curMode = WIFI_AP_INFRA;
 
-	if (wifi_data.curChannel != wifi_data.aplist[i].channel) {
-		Wifi_SetChannel(wifi_data.aplist[i].channel);
+	if (wifi_data.reqChannel != wifi_data.aplist[i].channel) {
+		Wifi_RequestChannel(wifi_data.aplist[i].channel);
 	}
 	for (j = 0; j < 16; j++)
 		wifi_data.baserates[j] = wifi_data.aplist[i].base_rates[j];
@@ -619,7 +628,7 @@ void wifi_open(void)
 		WIFI_WEPKEY3[i] = ((u16 *) wifi_data.wepkey[3])[i];
 	}
 
-	Wifi_SetChannel(wifi_data.curChannel);
+	Wifi_SetChannel(wifi_data.reqChannel);
 
 	Wifi_BBWrite(0x13, 0x00);
 	Wifi_BBWrite(0x35, 0x1F);
@@ -1036,7 +1045,15 @@ static int Wifi_ProcessBeaconFrame(int macbase, int framelen)
 			    wifi_data.aplist[i].
 			    rssi_past[7] = packetheader.rssi_ & 255;
 		} else {
-			wifi_data.aplist[i].rssi_past[0] = wifi_data.aplist[i].rssi_past[1] = wifi_data.aplist[i].rssi_past[2] = wifi_data.aplist[i].rssi_past[3] = wifi_data.aplist[i].rssi_past[4] = wifi_data.aplist[i].rssi_past[5] = wifi_data.aplist[i].rssi_past[6] = wifi_data.aplist[i].rssi_past[7] = 0;	// update rssi later.
+			wifi_data.aplist[i].rssi_past[0] =
+			wifi_data.aplist[i].rssi_past[1] =
+			wifi_data.aplist[i].rssi_past[2] =
+			wifi_data.aplist[i].rssi_past[3] =
+			wifi_data.aplist[i].rssi_past[4] =
+			wifi_data.aplist[i].rssi_past[5] =
+			wifi_data.aplist[i].rssi_past[6] =
+			wifi_data.aplist[i].rssi_past[7] =
+			  0;	// update rssi later.
 		}
 		wifi_data.aplist[i].channel = channel;
 		for (j = 0; j < 16; j++)
@@ -1830,8 +1847,50 @@ void wifi_ap_query_complete(void)
 		Wifi_Intr_RxEnd();
 }
 
-void wifi_start_scan()
+void wifi_start_scan(void)
 {
-	/* XOXOXO for now do nothing */
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_SCAN, 1);
+	wifi_data.state |= WIFI_STATE_CHANNEL_SCANNING;
+	wifi_data.scanChannel = 1;
+	Wifi_SetChannel(1);
+
+	REG_TM0CNT_L = (-0x02000000)/(1024 * (1000/WIFI_CHANNEL_SCAN_DWEL));
+	REG_TM0CNT_H = NDS_TCR_CLK1024 | NDS_TCR_ENB | NDS_TCR_IRQ;
+	NDS_IE |= IRQ_TIMER0;
+}
+
+
+static void wifi_bump_scan(void)
+{
+	if (wifi_data.scanChannel == 13) {
+		NDS_IE &= ~IRQ_TIMER0;
+		wifi_data.state &= ~WIFI_STATE_CHANNEL_SCANNING;
+		REG_TM0CNT_H = 0;
+		Wifi_SetChannel(wifi_data.reqChannel);
+		REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_SCAN, 1);
+	} else {
+		wifi_data.scanChannel++;
+		Wifi_SetChannel(wifi_data.scanChannel);
+	}
+}
+
+
+void wifi_timer_handler(void)
+{
+	if (wifi_data.state & WIFI_STATE_CHANNEL_SCANNING) {
+		wifi_bump_scan();
+	} else {
+		NDS_IE &= ~IRQ_TIMER0;
+		REG_TM0CNT_H = 0;
+	}
+}
+
+
+void Wifi_SetAPMode(enum WIFI_AP_MODE mode)
+{
+	wifi_data.curMode = mode;
+}
+
+void Wifi_GetAPMode()
+{
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_GET_AP_MODE, wifi_data.curMode);
 }

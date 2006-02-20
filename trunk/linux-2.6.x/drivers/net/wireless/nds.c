@@ -56,15 +56,18 @@ MODULE_PARM(pc_debug, "i");
 
 #define DUMP_INPUT_PACKETS
 #define DUMP_OUTPUT_PACKETS
+#define REPORT_RAW_PACKET_STATS
 
 static struct net_device *global_dev;
 static u8 mac_query_complete;
 static u8 stats_query_complete;
 static u8 ap_query_complete;
 static u8 scan_complete;
+static u8 get_mode_completed;
 static void *mac_query_output;
 static void *stats_query_output;
 static void *ap_query_output;
+static u8 mode_query_output;
 static DECLARE_WAIT_QUEUE_HEAD(ndswifi_wait);
 
 static int wll_header_parse(struct sk_buff *skb, unsigned char *haddr)
@@ -151,7 +154,7 @@ static int nds_change_mtu(struct net_device *dev, int new_mtu)
 {
 	DEBUG(7, "Called: %s\n", __func__);
 
-	if(new_mtu < ETH_ZLEN || new_mtu > ETH_DATA_LEN)
+	if (new_mtu < ETH_ZLEN || new_mtu > ETH_DATA_LEN)
 		return -EINVAL;
 	dev->mtu = new_mtu;
 	return 0;
@@ -272,7 +275,15 @@ static int nds_set_mode(struct net_device *dev,
 			struct iw_request_info *info, __u32 * uwrq, char *extra)
 {
 	DEBUG(7, "Called: %s\n", __func__);
-	return -ENETDOWN;
+
+	if (*uwrq != IW_MODE_ADHOC && *uwrq != IW_MODE_INFRA)
+		return -EINVAL;
+
+	REG_IPCFIFOSEND =
+	    FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_AP_MODE,
+			  (*uwrq ==
+			   IW_MODE_ADHOC) ? WIFI_AP_ADHOC : WIFI_AP_INFRA);
+	return 0;
 }
 
 /*------------------------------------------------------------------*/
@@ -283,7 +294,14 @@ static int nds_get_mode(struct net_device *dev,
 			struct iw_request_info *info, __u32 * uwrq, char *extra)
 {
 	DEBUG(7, "Called: %s\n", __func__);
-	return -ENETDOWN;
+
+	get_mode_completed = 0;
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_GET_AP_MODE, 0);
+	wait_event_interruptible(ndswifi_wait, get_mode_completed != 0);
+	*uwrq =
+	    (mode_query_output ==
+	     WIFI_AP_ADHOC) ? IW_MODE_ADHOC : IW_MODE_INFRA;
+	return 0;
 }
 
 /*------------------------------------------------------------------*/
@@ -485,8 +503,9 @@ static int nds_set_essid(struct net_device *dev,
 
 			tmp = *(c++) << 8;
 			tmp |= *(c++);
-			REG_IPCFIFOSEND = FIFO_WIFI_CMD((FIFO_WIFI_CMD_SET_ESSID1 +
-							 i), ((j << 16) | tmp));
+			REG_IPCFIFOSEND =
+			    FIFO_WIFI_CMD((FIFO_WIFI_CMD_SET_ESSID1 + i),
+					  ((j << 16) | tmp));
 			if (!*(c - 1) || !*(c - 2)) {
 				i = 4;
 				break;
@@ -714,9 +733,7 @@ static int nds_set_encode(struct net_device *dev,
 					tmp = *(k++) << 8;
 					tmp |= *(k++);
 					REG_IPCFIFOSEND =
-					    FIFO_WIFI_CMD((FIFO_WIFI_CMD_SET_WEPKEY0
-							   + (index * 2) + i),
-							  ((j << 16) | tmp));
+					    FIFO_WIFI_CMD((FIFO_WIFI_CMD_SET_WEPKEY0 + (index * 2) + i), ((j << 16) | tmp));
 					if ((k - local->key_key[index]) >=
 					    key_len) {
 						i = 2;
@@ -741,7 +758,8 @@ static int nds_set_encode(struct net_device *dev,
 	index = (dwrq->flags & IW_ENCODE_INDEX) - 1;
 	if ((index >= 0) && index < 4) {
 		local->current_index = index;
-		REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_WEPKEYID, index);
+		REG_IPCFIFOSEND =
+		    FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_WEPKEYID, index);
 	}
 
 	/* Read the flags */
@@ -952,7 +970,200 @@ static void nds_cmd_from_arm7(u8 cmd, u8 offset, u16 data)
 		scan_complete = 1;
 		wake_up_interruptible(&ndswifi_wait);
 		break;
+	case FIFO_WIFI_CMD_GET_AP_MODE:
+		mode_query_output = data;
+		get_mode_completed = 1;
+		break;
 	}
+}
+
+static void nds_wifi_ipc_packet(void)
+{
+	/* packet recieved */
+	struct sk_buff *skb;
+	unsigned char *skbp;
+	Wifi_RxHeader *rx_hdr;
+	struct ieee802_11_hdr *hdr_80211;
+	int rc;
+
+#ifdef DUMP_INPUT_PACKETS
+	if (pc_debug >= 9) {
+		u8 *c;
+		char buff[2024], *c2;
+
+		c = SHMEMIPC_BLOCK_ARM7->wifi.data;
+		c2 = buff;
+		while ((c - SHMEMIPC_BLOCK_ARM7->wifi.data) <
+		       SHMEMIPC_BLOCK_ARM7->wifi.length) {
+			if (((*c) >> 4) > 9)
+				*(c2++) = ((*c) >> 4) - 10 + 'A';
+			else
+				*(c2++) = ((*c) >> 4) + '0';
+
+			if (((*c) & 0x0f) > 9)
+				*(c2++) = ((*c) & 0x0f) - 10 + 'A';
+			else
+				*(c2++) = ((*c) & 0x0f) + '0';
+			c++;
+			if ((c - SHMEMIPC_BLOCK_ARM7->wifi.data) % 2 == 0)
+				*(c2++) = ' ';
+		}
+		*c2 = '\0';
+		DEBUG(9, "len(%d): %s\n",
+		      SHMEMIPC_BLOCK_ARM7->wifi.length, buff);
+	}
+#endif
+
+	rx_hdr = (Wifi_RxHeader *) SHMEMIPC_BLOCK_ARM7->wifi.data;
+	hdr_80211 =
+	    (struct ieee802_11_hdr *)(SHMEMIPC_BLOCK_ARM7->wifi.
+				      data + sizeof(Wifi_RxHeader));
+
+	if ((hdr_80211->frame_ctl & 0x01CF) == IEEE802_11_FTYPE_DATA) {
+		if ((((u16 *) global_dev->dev_addr)[0] ==
+		     ((u16 *) hdr_80211->addr1)[0]
+		     && ((u16 *) global_dev->dev_addr)[1] ==
+		     ((u16 *) hdr_80211->addr1)[1]
+		     && ((u16 *) global_dev->dev_addr)[2] ==
+		     ((u16 *) hdr_80211->addr1)[2])
+		    || (((u16 *) hdr_80211->addr1)[0] == 0xFFFF
+			&& ((u16 *) hdr_80211->addr1)[1] ==
+			0xFFFF && ((u16 *) hdr_80211->addr1)[2] == 0xFFFF)) {
+			/* hdrlen == 802.11 header length  bytes */
+			int base2, hdrlen;
+			base2 = 22;
+			hdrlen = 24;
+			// looks like WEP IV and IVC are removed from RX packets
+
+			// check for LLC/SLIP header...
+			if (((u16 *) rx_hdr)[base2 - 4 + 0] ==
+			    0xAAAA
+			    && ((u16 *) rx_hdr)[base2 - 4 +
+						1] == 0x0003
+			    && ((u16 *) rx_hdr)[base2 - 4 + 2] == 0) {
+				// mb = sgIP_memblock_allocHW(14,len-8-hdrlen);
+				// Wifi_RxRawReadPacket(base2,(len-8-hdrlen)&(~1),((u16 *)mb->datastart)+7);^M
+				/*
+				 * 14 (ether header) 
+				 * + byte_length
+				 *  - (ieee hdr 24 bytes) 
+				 *  - 8 bytes LLC
+				 */
+				int len = rx_hdr->byteLength;
+				if (!
+				    (skb =
+				     dev_alloc_skb(14 + len -
+						   8 - hdrlen + 2))) {
+					/* priv->stats.rx_dropped++; */
+					return;
+				}
+				skb->dev = global_dev;
+				skb_reserve(skb, 2);
+				skbp = skb_put(skb, 14 + len - 8 - hdrlen);
+				memcpy(skbp + 14, &(((u16 *)
+						     rx_hdr)
+						    [base2]),
+				       (len - 8 - hdrlen));
+				memcpy(skbp, hdr_80211->addr1, ETH_ALEN);	// copy dest
+
+				if (hdr_80211->
+				    frame_ctl & IEEE802_11_FCTL_FROMDS) {
+					memcpy(skbp + ETH_ALEN,
+					       hdr_80211->addr3, ETH_ALEN);
+				} else {
+					memcpy(skbp + ETH_ALEN,
+					       hdr_80211->addr2, ETH_ALEN);
+				}
+				((u16 *) skbp)[6] = ((u16 *)
+						     rx_hdr)[(hdrlen / 2) + 6 +
+							     3];
+
+				skb->protocol = eth_type_trans(skb, global_dev);
+
+#ifdef DUMP_OUTPUT_PACKETS
+				if (pc_debug >= 9) {
+					u8 *c;
+					char buff[300], *c2;
+					int l = (14 + len - 8 - hdrlen);
+					if (l > 80)
+						l = 80;
+
+					c = skbp;
+					c2 = buff;
+					while ((c - skbp) < l) {
+						if (((*c) >> 4) > 9)
+							*(c2++)
+							    =
+							    ((*c) >> 4) - 10 +
+							    'A';
+						else
+							*(c2++)
+							    = ((*c) >> 4) + '0';
+
+						if (((*c) & 0x0f) > 9)
+							*(c2++)
+							    =
+							    ((*c) & 0x0f) - 10 +
+							    'A';
+						else
+							*(c2++)
+							    =
+							    ((*c) & 0x0f) + '0';
+						c++;
+						if ((c - skbp) % 2 == 0)
+							*(c2++)
+							    = ' ';
+					}
+					*c2 = '\0';
+					DEBUG(9,
+					      "len(%d): proto(%d) %s\n",
+					      (14 + len - 8 -
+					       hdrlen),
+					      ntohs(skb->protocol), buff);
+				}
+#endif
+				rc = netif_rx(skb);
+				if (rc != NET_RX_SUCCESS)
+					DEBUG(3, "netif_rx return(%d)\n", rc);
+			}
+		}
+
+	}
+}
+
+void nds_wifi_ipc_stats(void)
+{
+	/* stats recieved */
+	struct net_device_stats *s =
+	    (struct net_device_stats *)stats_query_output;
+	u32 *arm7_stats = (u32 *) SHMEMIPC_BLOCK_ARM7->wifi.data;
+
+#ifdef REPORT_RAW_PACKET_STATS
+	s->rx_packets = arm7_stats[WIFI_STATS_RXRAWPACKETS];
+	s->tx_packets = arm7_stats[WIFI_STATS_TXRAWPACKETS];
+	s->rx_bytes = arm7_stats[WIFI_STATS_RXBYTES];
+	s->tx_bytes = arm7_stats[WIFI_STATS_TXBYTES];
+	s->tx_dropped = arm7_stats[WIFI_STATS_TXQREJECT];
+#else
+	s->rx_packets = arm7_stats[WIFI_STATS_RXPACKETS];
+	s->tx_packets = arm7_stats[WIFI_STATS_TXPACKETS];
+	s->rx_bytes = arm7_stats[WIFI_STATS_RXDATABYTES];
+	s->tx_bytes = arm7_stats[WIFI_STATS_TXDATABYTES];
+	s->tx_dropped = arm7_stats[WIFI_STATS_TXQREJECT];
+#endif
+	DEBUG(8, "WIFI_IE: 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG1]);
+	DEBUG(8, "WIFI_IF: 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG2]);
+/*
+	DEBUG(8, "WIFI_REG(0x54): 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG3]);
+	DEBUG(8, "WIFI_REG(0x5A): 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG4]);
+*/
+	DEBUG(8, "WIFI_REG(0xA0): 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG3]);
+	DEBUG(8, "WIFI_REG(0xB8): 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG4]);
+	DEBUG(8, "wifi state: 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG5]);
+	DEBUG(8, "Num interupts: 0x%08X\n", arm7_stats[WIFI_STATS_DEBUG6]);
+
+	stats_query_complete = 1;
+	wake_up_interruptible(&ndswifi_wait);
 }
 
 static void nds_wifi_shmemipc_isr(u8 type)
@@ -963,226 +1174,14 @@ static void nds_wifi_shmemipc_isr(u8 type)
 
 	switch (type) {
 	case SHMEMIPC_REQUEST_FLUSH:
-		if (SHMEMIPC_BLOCK_ARM7->wifi.type == SHMEMIPC_WIFI_TYPE_PACKET && global_dev) {
-			/* packet recieved */
-			struct sk_buff *skb;
-			unsigned char *skbp;
-			Wifi_RxHeader *rx_hdr;
-			struct ieee802_11_hdr *hdr_80211;
-			int rc;
-
-#ifdef DUMP_INPUT_PACKETS
-			if (pc_debug >= 9) {
-				u8 *c;
-				char buff[2024], *c2;
-
-				c = SHMEMIPC_BLOCK_ARM7->wifi.data;
-				c2 = buff;
-				while ((c - SHMEMIPC_BLOCK_ARM7->wifi.data) <
-				       SHMEMIPC_BLOCK_ARM7->wifi.length) {
-					if (((*c) >> 4) > 9)
-						*(c2++) =
-						    ((*c) >> 4) - 10 + 'A';
-					else
-						*(c2++) = ((*c) >> 4) + '0';
-
-					if (((*c) & 0x0f) > 9)
-						*(c2++) =
-						    ((*c) & 0x0f) - 10 + 'A';
-					else
-						*(c2++) = ((*c) & 0x0f) + '0';
-					c++;
-					if ((c -
-					     SHMEMIPC_BLOCK_ARM7->wifi.data) %
-					    2 == 0)
-						*(c2++) = ' ';
-				}
-				*c2 = '\0';
-				DEBUG(9, "len(%d): %s\n",
-				      SHMEMIPC_BLOCK_ARM7->wifi.length, buff);
-			}
-#endif
-
-			rx_hdr =
-			    (Wifi_RxHeader *) SHMEMIPC_BLOCK_ARM7->wifi.data;
-			hdr_80211 =
-			    (struct ieee802_11_hdr *)(SHMEMIPC_BLOCK_ARM7->wifi.
-						      data +
-						      sizeof(Wifi_RxHeader));
-
-			if ((hdr_80211->frame_ctl & 0x01CF) ==
-			    IEEE802_11_FTYPE_DATA) {
-				if ((((u16 *) global_dev->dev_addr)[0] ==
-				     ((u16 *) hdr_80211->addr1)[0]
-				     && ((u16 *) global_dev->dev_addr)[1] ==
-				     ((u16 *) hdr_80211->addr1)[1]
-				     && ((u16 *) global_dev->dev_addr)[2] ==
-				     ((u16 *) hdr_80211->addr1)[2])
-				    || (((u16 *) hdr_80211->addr1)[0] == 0xFFFF
-					&& ((u16 *) hdr_80211->addr1)[1] ==
-					0xFFFF
-					&& ((u16 *) hdr_80211->addr1)[2] ==
-					0xFFFF)) {
-					/* hdrlen == 802.11 header length  bytes */
-					int base2, hdrlen;
-					base2 = 22;
-					hdrlen = 24;
-					// looks like WEP IV and IVC are removed from RX packets
-
-					// check for LLC/SLIP header...
-					if (((u16 *) rx_hdr)[base2 - 4 + 0] ==
-					    0xAAAA
-					    && ((u16 *) rx_hdr)[base2 - 4 +
-								1] == 0x0003
-					    && ((u16 *) rx_hdr)[base2 - 4 +
-								2] == 0) {
-						// mb = sgIP_memblock_allocHW(14,len-8-hdrlen);
-						// Wifi_RxRawReadPacket(base2,(len-8-hdrlen)&(~1),((u16 *)mb->datastart)+7);^M
-						/*
-						 * 14 (ether header) 
-						 * + byte_length
-						 *  - (ieee hdr 24 bytes) 
-						 *  - 8 bytes LLC
-						 */
-						int len = rx_hdr->byteLength;
-						if (!
-						    (skb =
-						     dev_alloc_skb(14 + len -
-								   8 -
-								   hdrlen + 2))) {
-							/* priv->stats.rx_dropped++; */
-							return;
-						}
-						skb->dev = global_dev;
-						skb_reserve(skb, 2);
-						skbp =
-						    skb_put(skb,
-							    14 + len - 8 -
-							    hdrlen);
-						memcpy(skbp + 14, &(((u16 *)
-								     rx_hdr)
-								    [base2]),
-						       (len - 8 - hdrlen));
-						memcpy(skbp, hdr_80211->addr1, ETH_ALEN);	// copy dest
-
-						if (hdr_80211->
-						    frame_ctl &
-						    IEEE802_11_FCTL_FROMDS) {
-							memcpy(skbp + ETH_ALEN,
-							       hdr_80211->addr3,
-							       ETH_ALEN);
-						} else {
-							memcpy(skbp + ETH_ALEN,
-							       hdr_80211->addr2,
-							       ETH_ALEN);
-						}
-						((u16 *) skbp)[6] = ((u16 *)
-								     rx_hdr)[(hdrlen / 2) + 6 + 3];
-
-						skb->protocol =
-						    eth_type_trans(skb,
-								   global_dev);
-
-#ifdef DUMP_OUTPUT_PACKETS
-						if (pc_debug >= 9) {
-							u8 *c;
-							char buff[300], *c2;
-							int l =
-							    (14 + len - 8 -
-							     hdrlen);
-							if (l > 80)
-								l = 80;
-
-							c = skbp;
-							c2 = buff;
-							while ((c - skbp) < l) {
-								if (((*c) >> 4)
-								    > 9)
-									*(c2++)
-									    =
-									    ((*c) >> 4) - 10 + 'A';
-								else
-									*(c2++)
-									    =
-									    ((*c) >> 4) + '0';
-
-								if (((*c) &
-								     0x0f) > 9)
-									*(c2++)
-									    =
-									    ((*c) & 0x0f) - 10 + 'A';
-								else
-									*(c2++)
-									    =
-									    ((*c) & 0x0f) + '0';
-								c++;
-								if ((c -
-								     skbp) %
-								    2 == 0)
-									*(c2++)
-									    =
-									    ' ';
-							}
-							*c2 = '\0';
-							DEBUG(9,
-							      "len(%d): proto(%d) %s\n",
-							      (14 + len - 8 -
-							       hdrlen),
-							      ntohs(skb->
-								    protocol),
-							      buff);
-						}
-#endif
-						rc = netif_rx(skb);
-						if (rc != NET_RX_SUCCESS)
-							DEBUG(3,
-							      "netif_rx return(%d)\n",
-							      rc);
-					}
-				}
-
-			}
-		} else if (SHMEMIPC_BLOCK_ARM7->wifi.type == SHMEMIPC_WIFI_TYPE_STATS) {
-			/* stats recieved */
-			struct net_device_stats *s =
-			    (struct net_device_stats *)stats_query_output;
-			u32 *arm7_stats =
-			    (u32 *) SHMEMIPC_BLOCK_ARM7->wifi.data;
-
-// #define REPORT_RAW_PACKET_STATS
-#ifdef REPORT_RAW_PACKET_STATS
-			s->rx_packets = arm7_stats[WIFI_STATS_RXRAWPACKETS];
-			s->tx_packets = arm7_stats[WIFI_STATS_TXRAWPACKETS];
-			s->rx_bytes = arm7_stats[WIFI_STATS_RXBYTES];
-			s->tx_bytes = arm7_stats[WIFI_STATS_TXBYTES];
-			s->tx_dropped = arm7_stats[WIFI_STATS_TXQREJECT];
-#else
-			s->rx_packets = arm7_stats[WIFI_STATS_RXPACKETS];
-			s->tx_packets = arm7_stats[WIFI_STATS_TXPACKETS];
-			s->rx_bytes = arm7_stats[WIFI_STATS_RXDATABYTES];
-			s->tx_bytes = arm7_stats[WIFI_STATS_TXDATABYTES];
-			s->tx_dropped = arm7_stats[WIFI_STATS_TXQREJECT];
-#endif
-			DEBUG(8, "WIFI_IE: 0x%04X\n",
-			      arm7_stats[WIFI_STATS_DEBUG1]);
-			DEBUG(8, "WIFI_IF: 0x%04X\n",
-			      arm7_stats[WIFI_STATS_DEBUG2]);
-/*
-			DEBUG(8, "WIFI_REG(0x54): 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG3]);
-			DEBUG(8, "WIFI_REG(0x5A): 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG4]);
-*/
-			DEBUG(8, "WIFI_REG(0xA0): 0x%04X\n",
-			      arm7_stats[WIFI_STATS_DEBUG3]);
-			DEBUG(8, "WIFI_REG(0xB8): 0x%04X\n",
-			      arm7_stats[WIFI_STATS_DEBUG4]);
-			DEBUG(8, "wifi state: 0x%04X\n",
-			      arm7_stats[WIFI_STATS_DEBUG5]);
-			DEBUG(8, "Num interupts: 0x%08X\n",
-			      arm7_stats[WIFI_STATS_DEBUG6]);
-
-			stats_query_complete = 1;
-			wake_up_interruptible(&ndswifi_wait);
-		} else if (SHMEMIPC_BLOCK_ARM7->wifi.type == SHMEMIPC_WIFI_TYPE_AP_LIST) {
+		if (SHMEMIPC_BLOCK_ARM7->wifi.type == SHMEMIPC_WIFI_TYPE_PACKET
+		    && global_dev) {
+			nds_wifi_ipc_packet();
+		} else if (SHMEMIPC_BLOCK_ARM7->wifi.type ==
+			   SHMEMIPC_WIFI_TYPE_STATS) {
+			nds_wifi_ipc_stats();
+		} else if (SHMEMIPC_BLOCK_ARM7->wifi.type ==
+			   SHMEMIPC_WIFI_TYPE_AP_LIST) {
 			memcpy(ap_query_output, SHMEMIPC_BLOCK_ARM7->wifi.data,
 			       16 * sizeof(Wifi_AccessPoint));
 			ap_query_complete = 1;
