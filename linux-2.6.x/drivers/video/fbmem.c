@@ -225,9 +225,17 @@ static void  fb_set_logo_truepalette(struct fb_info *info,
 	blueshift  = info->var.blue.offset  - (8 - info->var.blue.length);
 
 	for ( i = 0; i < logo->clutsize; i++) {
+#ifdef CONFIG_ARCH_NDS
+		palette[i+32] = (safe_shift((clut[0] & redmask), redshift) |
+				 safe_shift((clut[1] & greenmask), greenshift) |
+				 safe_shift((clut[2] & bluemask), blueshift) |
+				 1 << 15);
+#else
+
 		palette[i+32] = (safe_shift((clut[0] & redmask), redshift) |
 				 safe_shift((clut[1] & greenmask), greenshift) |
 				 safe_shift((clut[2] & bluemask), blueshift));
+#endif
 		clut += 3;
 	}
 }
