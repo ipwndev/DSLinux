@@ -17,6 +17,7 @@ config DRAM_BASE
 	default 0x10000000 if ARCH_S3C24A0 
 	default 0x40000000 if ARCH_P2001
 	default 0x00000000 if ARCH_INTEGRATOR
+	default	0x02000000 if ARCH_NDS
 	default 0x00800000
 
 config DRAM_SIZE
@@ -29,6 +30,7 @@ config DRAM_SIZE
 	default 0x04000000 if ARCH_S3C24A0 
 	default 0x04000000 if ARCH_P2001
 	default 0x08000000 if ARCH_INTEGRATOR
+	default	0x00400000 if ARCH_NDS
 	default 0x00800000
 
 config FLASH_MEM_BASE
@@ -40,6 +42,7 @@ config FLASH_MEM_BASE
 	default 0x01000000 if ARCH_ESPD_4510B
 	default 0x02000000 if ARCH_P2001
 	default 0x24000000 if ARCH_INTEGRATOR
+	default	0x08000000 if ARCH_NDS
 	default 0x00400000
 
 config FLASH_SIZE
