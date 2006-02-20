@@ -2150,7 +2150,7 @@ static unsigned char fontdata_mini_6x6[FONTDATAMAX] = {
 	/*}*/
 };
 
-struct font_desc font_mini_6x6 = {
+const struct font_desc font_mini_6x6 = {
 	MINI6x6_IDX,
 	"MINI6x6",
 	6,
