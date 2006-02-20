@@ -68,7 +68,7 @@ tune-$(CONFIG_CPU_XSCALE)	:=$(call cc-option,-mtune=xscale,-mtune=strongarm110) 
 tune-$(CONFIG_CPU_V6)		:=$(call cc-option,-mtune=arm1136j-s,-mtune=strongarm)
 
 # Need -Uarm for gcc < 3.x
-CFLAGS_ABI	:=$(call cc-option,-mapcs-32,-mabi=apcs-gnu) $(call cc-option,-mno-thumb-interwork,)
+CFLAGS_ABI	:=$(call cc-option,-mapcs-32) $(call cc-option,-mno-thumb-interwork,)
 CFLAGS		+=$(CFLAGS_ABI) $(arch-y) $(tune-y) $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -msoft-float -Uarm
 AFLAGS		+=$(CFLAGS_ABI) $(arch-y) $(tune-y) -msoft-float
 
@@ -131,6 +131,8 @@ textaddr-$(CONFIG_ARCH_S3C24A0)	   := 0x10008000
 endif
  machine-$(CONFIG_ARCH_P2001)	   := p2001
 textaddr-$(CONFIG_ARCH_P2001)	   := 0x40100000
+machine-$(CONFIG_ARCH_NDS)	   := nds
+textaddr-$(CONFIG_ARCH_NDS)	   := 0x02000000
 
 ifeq ($(CONFIG_ARCH_EBSA110),y)
 # This is what happens if you forget the IOCS16 line.
@@ -143,6 +145,7 @@ TEXTADDR := $(textaddr-y)
 ifeq ($(CONFIG_XIP_KERNEL),y)
   DATAADDR := $(TEXTADDR)
   xipaddr-$(CONFIG_ARCH_CO285) := 0x5f000000
+  xipaddr-$(CONFIG_ARCH_NDS) := 0x08000000
   xipaddr-y ?= 0xbf000000
   # Replace phys addr with virt addr while keeping offset from base.
   TEXTADDR := $(shell echo $(CONFIG_XIP_PHYS_ADDR) $(xipaddr-y) | \
@@ -179,8 +182,8 @@ FASTFPE_OBJ	:=$(FASTFPE)/
 endif
 
 # If we have a machine-specific directory, then include it in the build.
-core-y				+= arch/arm/kernel/ arch/arm/mm/ arch/arm/common/
 core-y				+= $(MACHINE)
+core-y				+= arch/arm/kernel/ arch/arm/mm/ arch/arm/common/
 core-$(CONFIG_FPE_NWFPE)	+= arch/arm/nwfpe/
 core-$(CONFIG_FPE_FASTFPE)	+= $(FASTFPE_OBJ)
 core-$(CONFIG_VFP)		+= arch/arm/vfp/
