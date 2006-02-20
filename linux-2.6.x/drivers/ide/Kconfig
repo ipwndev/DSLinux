@@ -779,7 +779,23 @@ config BLK_DEV_IDE_PMAC_BLINK
 	  activity LED.
 
 config IDE_ARM
-	def_bool ARM && (ARCH_A5K || ARCH_CLPS7500 || ARCH_RPC || ARCH_SHARK)
+	def_bool ARM && (ARCH_A5K || ARCH_CLPS7500 || ARCH_RPC || ARCH_SHARK || ARCH_NDS)
+
+choice
+    prompt "NDS Storage Device Type"
+    depends on ARM && ARCH_NDS
+    default NDS_GBAMP
+
+config IDE_NDS_GBAMP
+    bool "GBA Movie Player"
+
+config IDE_NDS_M3
+    bool "M3 CF"
+
+config IDE_NDS_SUPERCARD
+    bool "SUPERCARD CF"
+
+endchoice
 
 config BLK_DEV_IDE_ICSIDE
 	tristate "ICS IDE interface support"
