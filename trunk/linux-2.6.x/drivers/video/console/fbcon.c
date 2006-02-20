@@ -932,6 +932,9 @@ static void fbcon_init(struct vc_data *vc, int init)
 	    (info->fix.type == FB_TYPE_TEXT))
 		logo = 0;
 
+#ifdef CONFIG_ARCH_NDS
+	logo = 0;
+#endif
 	info->var.xoffset = info->var.yoffset = p->yscroll = 0;	/* reset wrap/pan */
 
 	if (var_to_display(p, &info->var, info))
@@ -2024,7 +2027,9 @@ static int fbcon_switch(struct vc_data *vc)
 
 	if (logo_shown == FBCON_LOGO_DRAW) {
 
+#ifndef CONFIG_ARCH_NDS
 		logo_shown = fg_console;
+#endif
 		/* This is protected above by initmem_freed */
 		fb_show_logo(info);
 		update_region(vc,
