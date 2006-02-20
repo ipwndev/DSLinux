@@ -403,12 +403,20 @@ static inline void inline_map_copy_from(struct map_info *map, void *to, unsigned
 	if (map->cached)
 		memcpy(to, (char *)map->cached + from, len);
 	else
+#ifdef CONFIG_ARCH_NDS
+		memcpy(to, map->virt + from, len);
+#else
 		memcpy_fromio(to, map->virt + from, len);
+#endif
 }
 
 static inline void inline_map_copy_to(struct map_info *map, unsigned long to, const void *from, ssize_t len)
 {
+#ifdef CONFIG_ARCH_NDS
+	memcpy(map->virt + to, from, len);
+#else
 	memcpy_toio(map->virt + to, from, len);
+#endif
 }
 
 #ifdef CONFIG_MTD_COMPLEX_MAPPINGS
