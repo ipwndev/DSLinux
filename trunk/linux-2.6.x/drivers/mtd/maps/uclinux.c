@@ -56,8 +56,13 @@ int __init uclinux_mtd_init(void)
 {
 	struct mtd_info *mtd;
 	struct map_info *mapp;
-	extern char _ebss;
-	unsigned long addr = (unsigned long) &_ebss;
+#ifdef CONFIG_XIP_KERNEL
+	extern char _etext, _edata, __data_start;
+	unsigned long addr = (unsigned long) (&_etext + ( &_edata - &__data_start ) );
+#else
+	extern char _end;
+	unsigned long addr = (unsigned long) &_end ;
+#endif
 
 	mapp = &uclinux_ram_map;
 	mapp->phys = addr;
@@ -76,7 +81,7 @@ int __init uclinux_mtd_init(void)
 
 	simple_map_init(mapp);
 
-	mtd = do_map_probe("map_ram", mapp);
+	mtd = do_map_probe("map_rom", mapp);
 	if (!mtd) {
 		printk("uclinux[mtd]: failed to find a mapping?\n");
 		iounmap(mapp->virt);
