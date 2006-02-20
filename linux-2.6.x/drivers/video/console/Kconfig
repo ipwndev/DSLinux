@@ -181,6 +181,14 @@ config FONT_MINI_4x6
 	bool "Mini 4x6 font"
 	depends on !SPARC32 && !SPARC64 && FONTS
 
+config FONT_MINI_6x6
+	bool "Mini 6x6 font"
+	depends on !SPARC32 && !SPARC64 && FONTS
+	help
+	  This font has been made with the small screen of the Nintendo DS
+	  in mind. It is much more legible than the 4x6 font above, but
+	  less characters will fit on the screen.
+
 config FONT_SUN8x16
 	bool "Sparc console 8x16 font"
 	depends on FRAMEBUFFER_CONSOLE && (!SPARC32 && !SPARC64 && FONTS || SPARC32 || SPARC64)
