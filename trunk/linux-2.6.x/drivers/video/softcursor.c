@@ -34,7 +34,13 @@ int soft_cursor(struct fb_info *info, struct fb_cursor *cursor)
 	src = kmalloc(dsize + sizeof(struct fb_image), GFP_ATOMIC);
 	if (!src)
 		return -ENOMEM;
-
+#ifdef CONFIG_ARCH_NDS
+	/* XXX: We need to align the image pointer on a four-byte boundary
+	 * for 4x6 and 6x6 fonts to work. */
+	if ((dsize % 4) != 0)
+		/* assume dsize is 6 (not greater 8 anyway) */
+		dsize = 8;
+#endif
 	image = (struct fb_image *) (src + dsize);
 	*image = cursor->image;
 	d_pitch = (s_pitch + scan_align) & ~scan_align;
