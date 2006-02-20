@@ -185,13 +185,13 @@ cpu_elf_name:
 
 	.type	cpu_arm946_name, #object
 cpu_arm946_name:
-	.ascii	"ARM946E"
+	.asciz	"ARM946E"
 	.size	cpu_arm946_name, . - cpu_arm946_name
 
 	.align
 
 
-	.section ".proc.info", #alloc, #execinstr
+	.section ".proc.info.init", #alloc, #execinstr
 	.type	__arm946_proc_info,#object
 __arm946_proc_info:
 	.long	0x41009460
