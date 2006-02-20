@@ -65,6 +65,22 @@ config MTD_PHRAM
 	  doesn't have access to, memory beyond the mem=xxx limit, nvram,
 	  memory on the video card, etc...
 
+config MTD_SRAM
+	tristate "SRAM"
+	depends on MTD
+	help
+	  This is a driver for the SRAM on GBA flash cards.
+
+	  It is based on the phram driver above.
+
+config MTD_FIRMWARE
+	tristate "Firmware"
+	depends on MTD
+	help
+	  This is a driver for dumping the firmware of the NDS.
+
+	  It is based on the phram driver above.
+
 config MTD_LART
 	tristate "28F160xx flash driver for LART"
 	depends on SA1100_LART && MTD
