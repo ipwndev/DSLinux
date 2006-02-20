@@ -16,6 +16,18 @@ extern void swiWaitForVBlank(void);
 
 #define POWERCNT7   (*(volatile u16*)0x04000304)
 
+// Timer registers
+#define REG_TM0CNT_L    (*(volatile u16*)0x04000100)
+#define REG_TM1CNT_L    (*(volatile u16*)0x04000104)
+#define REG_TM2CNT_L    (*(volatile u16*)0x04000108)
+#define REG_TM3CNT_L    (*(volatile u16*)0x0400010C)
+
+#define REG_TM0CNT_H    (*(volatile u16*)0x04000102)
+#define REG_TM1CNT_H    (*(volatile u16*)0x04000106)
+#define REG_TM2CNT_H    (*(volatile u16*)0x0400010A)
+#define REG_TM3CNT_H    (*(volatile u16*)0x0400010E)
+
+
 // Wifi regs
 #define WIFI_REG(ofs)   (*(volatile u16*)(0x04800000+(ofs)))
 #define WIFI_WEPKEY0    ( (volatile u16*)0x04805F80)
@@ -46,6 +58,10 @@ extern void swiWaitForVBlank(void);
 #define DISP_VBLANK_IRQ	(1 << 3)
 
 #define IRQ_VBLANK	(1 << 0)
+#define IRQ_TIMER0	(1 << 3)
+#define IRQ_TIMER1	(1 << 4)
+#define IRQ_TIMER2	(1 << 5)
+#define IRQ_TIMER3	(1 << 6)
 #define IRQ_ARM9	(1 << 16)
 #define IRQ_RECV	(1 << 18)
 #define IRQ_WIFI	(1 << 24)

@@ -18,11 +18,6 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-enum WIFI_AP_MODE {
-	WIFI_AP_INFRA,
-	WIFI_AP_ADHOC,
-};
-
 enum WEPMODES {
 	WEPMODE_NONE = 0,
 	WEPMODE_40BIT = 1,
@@ -36,6 +31,7 @@ enum WIFI_STATE {
 	WIFI_STATE_CANNOTASSOCIATE = 0x0008,
 	WIFI_STATE_AUTHENTICATED = 0x0010,
 	WIFI_STATE_SAW_TX_ERR = 0x0020,
+	WIFI_STATE_CHANNEL_SCANNING = 0x0040,
 
 	WIFI_STATE_TXPENDING = 0x0100,
 	WIFI_STATE_RXPENDING = 0x0200,
@@ -95,6 +91,9 @@ enum WIFI_STATE {
 #define WFLAG_APDATA_SHORTPREAMBLE	0x0020
 #define WFLAG_APDATA_ACTIVE			0x8000
 
+
+#define WIFI_CHANNEL_SCAN_DWEL 150 // 150 micro seconds
+
 typedef struct WIFI_TXHEADER {
 	u16 enable_flags;
 	u16 unknown;
@@ -139,6 +138,8 @@ typedef struct Wifi_Data_Struct {
 	char ssid[34];
 	u8 baserates[16];
 
+	u16 scanChannel;
+
 	u16 state;
 	u16 ap_query_bank;
 
@@ -164,14 +165,17 @@ void wifi_interupt(void);
 void wifi_send_ether_packet(u16 length, u_char * data);
 void wifi_stats_query(void);
 
-void Wifi_SetChannel(int channel);
+void Wifi_RequestChannel(int channel);
 void Wifi_SetWepKey(int key, int off, u8 b1, u8 b2);
 void Wifi_SetWepKeyID(int key);
 void Wifi_SetWepMode(int wepmode);
 void Wifi_SetSSID(int off, char b1, char b2);
+void Wifi_SetAPMode(enum WIFI_AP_MODE mode);
+void Wifi_GetAPMode(void);
 
 void wifi_ap_query(u16 bank);
 void wifi_start_scan(void);
+void wifi_timer_handler(void);
 void wifi_tx_q_complete(void);
 void wifi_stats_query_complete(void);
 void wifi_ap_query_complete(void);
