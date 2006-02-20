@@ -193,6 +193,21 @@ config CPU_ARM926T
 	  Say Y if you want support for the ARM926T processor.
 	  Otherwise, say N.
 
+# ARM946E
+config CPU_ARM946E
+	bool "Support ARM946E processor"
+	depends on ARCH_ST501X0 || ARCH_NDS
+	select CPU_32v5
+	select CPU_ABRT_EV5T
+	select CPU_CACHE_V4WT
+	help
+	  ARM946E-S is a synthesizable macrocell combining an ARM
+	  process. It is a member of the ARM9 Thumb family of
+	  high-performance, 32-bit system-on-chip processor solutions.
+	
+	  Say Y if you want support for the ARM946E-S processor.
+	  Otherwise, say N.
+
 # ARM1020 - needs validating
 config CPU_ARM1020
 	bool "Support ARM1020T (rev 0) processor"
