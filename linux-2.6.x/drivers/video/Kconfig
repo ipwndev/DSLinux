@@ -1455,6 +1455,13 @@ config FB_68328
 	  Say Y here if you want to support the built-in frame buffer of
 	  the Motorola 68328 CPU family.
 
+config FB_NDS
+	bool "Nintendo DS frame buffer support"
+	depends on FB && ARCH_NDS
+	select FB_SOFT_CURSOR
+	help
+	   Say Y here if you want to support the 2 NDS LCD displays.
+
 config FB_PXA
 	tristate "PXA LCD framebuffer support"
 	depends on FB && ARCH_PXA
