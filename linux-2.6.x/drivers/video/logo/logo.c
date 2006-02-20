@@ -34,7 +34,8 @@ extern const struct linux_logo logo_superh_mono;
 extern const struct linux_logo logo_superh_vga16;
 extern const struct linux_logo logo_superh_clut224;
 extern const struct linux_logo logo_m32r_clut224;
-
+extern const struct linux_logo logo_nds_big_clut224;
+extern const struct linux_logo logo_nds_clut224;
 
 const struct linux_logo *fb_find_logo(int depth)
 {
@@ -78,6 +79,14 @@ const struct linux_logo *fb_find_logo(int depth)
 		/* Macintosh Linux logo on m68k */
 		if (MACH_IS_MAC)
 			logo = &logo_mac_clut224;
+#endif
+#ifdef CONFIG_LOGO_NDS_CLUT224
+		/* Nintendo Linux logo */
+		logo = &logo_nds_clut224;
+#endif
+#ifdef CONFIG_LOGO_NDS_BIG_CLUT224
+		/* Big Nintendo Linux logo */
+		logo = &logo_nds_big_clut224;
 #endif
 #ifdef CONFIG_LOGO_PARISC_CLUT224
 		/* PA-RISC Linux logo */
