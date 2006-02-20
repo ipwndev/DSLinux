@@ -284,6 +284,10 @@ config ARCH_S3C2500
 	help
 	  Samsung's S3C2500 SOC(ARM940T).
 
+config ARCH_NDS
+	bool "Nintendo DS"
+	help
+	  The Nintendo DS.
 endif
 
 if !MMU && !MPU
@@ -384,6 +388,8 @@ source "arch/arm/mach-espd_4510b/Kconfig"
 source "arch/arm/mach-s3c24a0/Kconfig" 
 
 source "arch/arm/mach-p2001/Kconfig"
+
+source "arch/arm/mach-nds/Kconfig"
 
 # Definitions to make life easier
 config ARCH_ACORN
