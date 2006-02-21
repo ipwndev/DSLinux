@@ -22,7 +22,6 @@
 #include <asm/arch/fifo.h>
 
 
-#include <asm/arch/time.h>
 
 static u32 ndshwtime = 0;
 static u8  timeavail = 0;
