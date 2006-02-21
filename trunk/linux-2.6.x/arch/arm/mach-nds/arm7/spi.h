@@ -1,7 +1,6 @@
 #ifndef SPI_H
 #define SPI_H
 
-u16 touch_read(u32 command);
 s32 touch_read_value(int measure, int retry , int range);
 
 #define POWER0_SOUND_AMP	(1<<0)
