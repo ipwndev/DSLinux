@@ -56,7 +56,7 @@ LIBTOOL_LINK	=
 CC		= arm-elf-gcc
 CPP		= arm-elf-gcc -E
 
-CFLAGS		= -Wall -pipe -W -mtune=arm9tdmi -mcpu=arm9tdmi -malignment-traps -mapcs-32 -ansi -Wstrict-prototypes -Wno-trigraphs -Os -fno-strict-aliasing -DNO_MM -I$(ROOTDIR)/uClibc/include
+CFLAGS		= -Wall -pipe -W -mtune=arm9tdmi -mcpu=arm9tdmi -ansi -Wstrict-prototypes -Wno-trigraphs -Os -fno-strict-aliasing -DNO_MM -I$(ROOTDIR)/uClibc/include
 CPPFLAGS	=  -I../test -I$(srcdir) -DHAVE_CONFIG_H -I. -I../include -I$(ROOTDIR)/uClibc/include -U_XOPEN_SOURCE -D_XOPEN_SOURCE=500 -U_POSIX_C_SOURCE -D_POSIX_C_SOURCE=199506L -DNDEBUG
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
@@ -77,7 +77,7 @@ MATH_LIB	= -lm
 LD		= arm-elf-ld
 LINK		=  $(LIBTOOL_LINK) $(CC) $(CFLAGS)
 
-LDFLAGS		=   -nostartfiles -nostdinc -s -Wl,-elf2flt -L$(ROOTDIR)/lib $(ROOTDIR)/lib/crt0.o
+LDFLAGS		=   -nostartfiles -nostdinc -s -Wl,-elf2flt -L$(ROOTDIR)/uClibc/lib $(ROOTDIR)/uClibc/lib/crt0.o
 
 LDFLAGS_LIBTOOL	= $(LDFLAGS) $(CFLAGS_LIBTOOL)
 LDFLAGS_NORMAL	= $(LDFLAGS) $(CFLAGS_NORMAL)
