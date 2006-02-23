@@ -27,6 +27,17 @@ extern void swiWaitForVBlank(void);
 #define REG_TM2CNT_H    (*(volatile u16*)0x0400010A)
 #define REG_TM3CNT_H    (*(volatile u16*)0x0400010E)
 
+/**
+ **  Timer control register flags.
+ **/
+#define NDS_TCR_CLK 0x0000          /* Use clock freq */
+#define NDS_TCR_CLK64   0x0001          /* Use clock/64 freq */
+#define NDS_TCR_CLK256  0x0002          /* Use clock/256 freq */
+#define NDS_TCR_CLK1024 0x0003          /* Use clock/1024 freq */
+#define NDS_TCR_CASCADE 0x0004          /* Cascade timer */
+#define NDS_TCR_IRQ 0x0040          /* Generate IRQ */
+#define NDS_TCR_ENB 0x0080          /* Enable timer */
+
 
 // Wifi regs
 #define WIFI_REG(ofs)   (*(volatile u16*)(0x04800000+(ofs)))
