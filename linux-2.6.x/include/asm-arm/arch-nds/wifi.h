@@ -51,3 +51,9 @@ enum WIFI_STATS {
 
 	WIFI_STATS_MAX
 };
+
+
+enum WIFI_AP_MODE {
+	WIFI_AP_INFRA,
+	WIFI_AP_ADHOC,
+};
