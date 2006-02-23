@@ -279,7 +279,9 @@ static ide_startstop_t __ide_do_rw_disk(ide_drive_t *drive, struct request *rq, 
 			command = lba48 ? WIN_READ_EXT : WIN_READ;
 		}
 
-		ide_execute_command(drive, command, &task_in_intr, WAIT_CMD, NULL);
+		HWGROUP(drive)->polling = 1;
+		HWGROUP(drive)->poll_timeout = jiffies + WAIT_CMD;
+		ide_execute_command(drive, command, &task_in_intr, HZ/100, NULL);
 		return ide_started;
 	} else {
 		if (drive->mult_count) {
