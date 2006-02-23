@@ -36,7 +36,6 @@ SOFTWARE.
 #include "asm/arch/ipcsync.h"
 #include "asm/arch/shmemipc.h"
 #include "asm/arch/wifi.h"
-#include "asm/arch/time.h"
 
 #include "arm7.h"
 #include "shmemipc-arm7.h"
