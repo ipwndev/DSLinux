@@ -385,8 +385,25 @@ static void task_end_request(ide_drive_t *drive, struct request *rq, u8 stat)
 ide_startstop_t task_in_intr (ide_drive_t *drive)
 {
 	ide_hwif_t *hwif = drive->hwif;
+	ide_hwgroup_t *hwgroup      = HWGROUP(drive);
 	struct request *rq = HWGROUP(drive)->rq;
 	u8 stat = hwif->INB(IDE_STATUS_REG);
+
+	if ( hwgroup->polling && (HWIF(drive)->INB(IDE_STATUS_REG)) & BUSY_STAT) {
+		if (time_before(jiffies, hwgroup->poll_timeout)) {
+			if (hwgroup->handler != NULL)
+				BUG();
+			ide_set_handler(drive, &task_in_intr,
+					HZ/100, NULL);
+			return ide_started;
+		}
+		hwgroup->polling = 0;
+		printk(KERN_ERR "%s: read timeout - still busy!\n",
+				drive->name);
+		return ide_error(drive, "busy timeout",
+				HWIF(drive)->INB(IDE_STATUS_REG));
+	}
+	hwgroup->polling = 0;
 
 	/* new way for dealing with premature shared PCI interrupts */
 	if (!OK_STAT(stat, DATA_READY, BAD_R_STAT)) {
@@ -409,7 +426,9 @@ ide_startstop_t task_in_intr (ide_drive_t *drive)
 	}
 
 	/* Still data left to transfer. */
-	ide_set_handler(drive, &task_in_intr, WAIT_WORSTCASE, NULL);
+	hwgroup->polling = 1;
+	HWGROUP(drive)->poll_timeout = jiffies + WAIT_WORSTCASE;
+	ide_set_handler(drive, &task_in_intr, HZ/100, NULL);
 
 	return ide_started;
 }
@@ -421,8 +440,25 @@ EXPORT_SYMBOL(task_in_intr);
 static ide_startstop_t task_out_intr (ide_drive_t *drive)
 {
 	ide_hwif_t *hwif = drive->hwif;
+	ide_hwgroup_t *hwgroup      = HWGROUP(drive);
 	struct request *rq = HWGROUP(drive)->rq;
 	u8 stat = hwif->INB(IDE_STATUS_REG);
+
+	if ( hwgroup->polling && (HWIF(drive)->INB(IDE_STATUS_REG)) & BUSY_STAT) {
+		if (time_before(jiffies, hwgroup->poll_timeout)) {
+			if (hwgroup->handler != NULL)
+				BUG();
+			ide_set_handler(drive, &task_out_intr,
+					HZ/100, NULL);
+			return ide_started;
+		}
+		hwgroup->polling = 0;
+		printk(KERN_ERR "%s: write timeout - still busy!\n",
+				drive->name);
+		return ide_error(drive, "busy timeout",
+				HWIF(drive)->INB(IDE_STATUS_REG));
+	}
+	hwgroup->polling = 0;
 
 	if (!OK_STAT(stat, DRIVE_READY, drive->bad_wstat))
 		return task_error(drive, rq, __FUNCTION__, stat);
@@ -438,7 +474,9 @@ static ide_startstop_t task_out_intr (ide_drive_t *drive)
 
 	/* Still data left to transfer. */
 	ide_pio_datablock(drive, rq, 1);
-	ide_set_handler(drive, &task_out_intr, WAIT_WORSTCASE, NULL);
+	hwgroup->polling = 1;
+	HWGROUP(drive)->poll_timeout = jiffies + WAIT_WORSTCASE;
+	ide_set_handler(drive, &task_out_intr, HZ/100, NULL);
 
 	return ide_started;
 }
