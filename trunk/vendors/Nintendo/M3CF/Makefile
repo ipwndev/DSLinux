@@ -6,10 +6,10 @@ include $(LINUX_CONFIG)
 
 ROMFSIMG = $(IMAGEDIR)/romfs.img
 ELFIMAGE = $(IMAGEDIR)/image.elf
-ifdef CONFIG_NDS_NDS
-IMAGE    = $(IMAGEDIR)/dslinux.nds.gba
-else
+ifdef CONFIG_XIP_KERNEL
 IMAGE    = $(IMAGEDIR)/dslinux.ds.gba
+else
+IMAGE    = $(IMAGEDIR)/dslinux.nds.gba
 endif
 FATFS	 = m3
 
@@ -100,7 +100,7 @@ image:
 	-rm -r $(IMAGEDIR)/linux
 	mv $(ROMFSDIR)/$(FATFS)/linux $(IMAGEDIR)
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
-	if [ "$(CONFIG_NDS_NDS)" = "y" ]; then \
+	if [ "$(CONFIG_XIP_KERNEL)" != "y" ]; then \
 		BSS=`$(CROSS_COMPILE)objdump --headers $(ROOTDIR)/$(LINUXDIR)/linux | \
 		grep .bss` ; \
 		BSSADDR=`set -- $${BSS} ; echo 0x$${4}` ; \
