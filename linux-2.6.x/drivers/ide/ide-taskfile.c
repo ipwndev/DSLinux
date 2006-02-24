@@ -98,6 +98,7 @@ int taskfile_lib_get_identify (ide_drive_t *drive, u8 *buf)
 
 ide_startstop_t do_rw_taskfile (ide_drive_t *drive, ide_task_t *task)
 {
+	ide_hwgroup_t *hwgroup  = HWGROUP(drive);
 	ide_hwif_t *hwif	= HWIF(drive);
 	task_struct_t *taskfile	= (task_struct_t *) task->tfRegister;
 	hob_struct_t *hobfile	= (hob_struct_t *) task->hobRegister;
@@ -132,7 +133,10 @@ ide_startstop_t do_rw_taskfile (ide_drive_t *drive, ide_task_t *task)
 			ndelay(400);	/* FIXME */
 			return task->prehandler(drive, task->rq);
 		}
-		ide_execute_command(drive, taskfile->command, task->handler, WAIT_WORSTCASE, NULL);
+		if (hwgroup->polling)
+			ide_execute_command(drive, taskfile->command, task->handler, HZ/100, NULL);
+		else
+			ide_execute_command(drive, taskfile->command, task->handler, WAIT_WORSTCASE, NULL);
 		return ide_started;
 	}
 
@@ -169,7 +173,24 @@ EXPORT_SYMBOL(do_rw_taskfile);
 ide_startstop_t set_multmode_intr (ide_drive_t *drive)
 {
 	ide_hwif_t *hwif = HWIF(drive);
+	ide_hwgroup_t *hwgroup      = HWGROUP(drive);
 	u8 stat;
+
+	if ( hwgroup->polling && (HWIF(drive)->INB(IDE_STATUS_REG)) & BUSY_STAT) {
+		if (time_before(jiffies, hwgroup->poll_timeout)) {
+			if (hwgroup->handler != NULL)
+				BUG();
+			ide_set_handler(drive, &set_multmode_intr,
+					HZ/100, NULL);
+			return ide_started;
+		}
+		hwgroup->polling = 0;
+		printk(KERN_ERR "%s: read timeout - still busy!\n",
+				drive->name);
+		return ide_error(drive, "set_multmode_intr",
+				HWIF(drive)->INB(IDE_STATUS_REG));
+	}
+	hwgroup->polling = 0;
 
 	if (OK_STAT(stat = hwif->INB(IDE_STATUS_REG),READY_STAT,BAD_STAT)) {
 		drive->mult_count = drive->mult_req;
@@ -187,8 +208,25 @@ ide_startstop_t set_multmode_intr (ide_drive_t *drive)
 ide_startstop_t set_geometry_intr (ide_drive_t *drive)
 {
 	ide_hwif_t *hwif = HWIF(drive);
+	ide_hwgroup_t *hwgroup      = HWGROUP(drive);
 	int retries = 5;
 	u8 stat;
+
+	if ( hwgroup->polling && (HWIF(drive)->INB(IDE_STATUS_REG)) & BUSY_STAT) {
+		if (time_before(jiffies, hwgroup->poll_timeout)) {
+			if (hwgroup->handler != NULL)
+				BUG();
+			ide_set_handler(drive, &set_geometry_intr,
+					HZ/100, NULL);
+			return ide_started;
+		}
+		hwgroup->polling = 0;
+		printk(KERN_ERR "%s: read timeout - still busy!\n",
+				drive->name);
+		return ide_error(drive, "set_geometry_intr",
+				HWIF(drive)->INB(IDE_STATUS_REG));
+	}
+	hwgroup->polling = 0;
 
 	while (((stat = hwif->INB(IDE_STATUS_REG)) & BUSY_STAT) && retries--)
 		udelay(10);
@@ -211,7 +249,24 @@ ide_startstop_t set_geometry_intr (ide_drive_t *drive)
 ide_startstop_t recal_intr (ide_drive_t *drive)
 {
 	ide_hwif_t *hwif = HWIF(drive);
+	ide_hwgroup_t *hwgroup      = HWGROUP(drive);
 	u8 stat;
+
+	if ( hwgroup->polling && (HWIF(drive)->INB(IDE_STATUS_REG)) & BUSY_STAT) {
+		if (time_before(jiffies, hwgroup->poll_timeout)) {
+			if (hwgroup->handler != NULL)
+				BUG();
+			ide_set_handler(drive, &recal_intr,
+					HZ/100, NULL);
+			return ide_started;
+		}
+		hwgroup->polling = 0;
+		printk(KERN_ERR "%s: read timeout - still busy!\n",
+				drive->name);
+		return ide_error(drive, "recal_intr",
+				HWIF(drive)->INB(IDE_STATUS_REG));
+	}
+	hwgroup->polling = 0;
 
 	if (!OK_STAT(stat = hwif->INB(IDE_STATUS_REG), READY_STAT, BAD_STAT))
 		return ide_error(drive, "recal_intr", stat);
@@ -225,9 +280,27 @@ ide_startstop_t task_no_data_intr (ide_drive_t *drive)
 {
 	ide_task_t *args	= HWGROUP(drive)->rq->special;
 	ide_hwif_t *hwif	= HWIF(drive);
+	ide_hwgroup_t *hwgroup      = HWGROUP(drive);
 	u8 stat;
 
 	local_irq_enable();
+
+	if ( hwgroup->polling && (HWIF(drive)->INB(IDE_STATUS_REG)) & BUSY_STAT) {
+		if (time_before(jiffies, hwgroup->poll_timeout)) {
+			if (hwgroup->handler != NULL)
+				BUG();
+			ide_set_handler(drive, &task_no_data_intr,
+					HZ/100, NULL);
+			return ide_started;
+		}
+		hwgroup->polling = 0;
+		printk(KERN_ERR "%s: read timeout - still busy!\n",
+				drive->name);
+		return ide_error(drive, "task_no_data_intr",
+				HWIF(drive)->INB(IDE_STATUS_REG));
+	}
+	hwgroup->polling = 0;
+
 	if (!OK_STAT(stat = hwif->INB(IDE_STATUS_REG),READY_STAT,BAD_STAT)) {
 		return ide_error(drive, "task_no_data_intr", stat);
 		/* calls ide_end_drive_cmd */
@@ -484,6 +557,7 @@ static ide_startstop_t task_out_intr (ide_drive_t *drive)
 ide_startstop_t pre_task_out_intr (ide_drive_t *drive, struct request *rq)
 {
 	ide_startstop_t startstop;
+	ide_hwgroup_t *hwgroup      = HWGROUP(drive);
 
 	if (ide_wait_stat(&startstop, drive, DATA_READY,
 			  drive->bad_wstat, WAIT_DRQ)) {
@@ -497,7 +571,9 @@ ide_startstop_t pre_task_out_intr (ide_drive_t *drive, struct request *rq)
 	if (!drive->unmask)
 		local_irq_disable();
 
-	ide_set_handler(drive, &task_out_intr, WAIT_WORSTCASE, NULL);
+	hwgroup->polling = 1;
+	hwgroup->poll_timeout = jiffies + WAIT_WORSTCASE;
+	ide_set_handler(drive, &task_out_intr, HZ/100, NULL);
 	ide_pio_datablock(drive, rq, 1);
 
 	return ide_started;

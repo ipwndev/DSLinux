@@ -655,6 +655,8 @@ static ide_startstop_t drive_cmd_intr (ide_drive_t *drive)
 
 static void ide_init_specify_cmd(ide_drive_t *drive, ide_task_t *task)
 {
+	ide_hwgroup_t *hwgroup      = HWGROUP(drive);
+
 	task->tfRegister[IDE_NSECTOR_OFFSET] = drive->sect;
 	task->tfRegister[IDE_SECTOR_OFFSET]  = drive->sect;
 	task->tfRegister[IDE_LCYL_OFFSET]    = drive->cyl;
@@ -662,21 +664,34 @@ static void ide_init_specify_cmd(ide_drive_t *drive, ide_task_t *task)
 	task->tfRegister[IDE_SELECT_OFFSET]  = ((drive->head-1)|drive->select.all)&0xBF;
 	task->tfRegister[IDE_COMMAND_OFFSET] = WIN_SPECIFY;
 
+	hwgroup->polling = 1;
+	hwgroup->poll_timeout = jiffies + WAIT_WORSTCASE;
+
 	task->handler = &set_geometry_intr;
 }
 
 static void ide_init_restore_cmd(ide_drive_t *drive, ide_task_t *task)
 {
+	ide_hwgroup_t *hwgroup      = HWGROUP(drive);
+
 	task->tfRegister[IDE_NSECTOR_OFFSET] = drive->sect;
 	task->tfRegister[IDE_COMMAND_OFFSET] = WIN_RESTORE;
+
+	hwgroup->polling = 1;
+	hwgroup->poll_timeout = jiffies + WAIT_WORSTCASE;
 
 	task->handler = &recal_intr;
 }
 
 static void ide_init_setmult_cmd(ide_drive_t *drive, ide_task_t *task)
 {
+	ide_hwgroup_t *hwgroup      = HWGROUP(drive);
+
 	task->tfRegister[IDE_NSECTOR_OFFSET] = drive->mult_req;
 	task->tfRegister[IDE_COMMAND_OFFSET] = WIN_SETMULT;
+
+	hwgroup->polling = 1;
+	hwgroup->poll_timeout = jiffies + WAIT_WORSTCASE;
 
 	task->handler = &set_multmode_intr;
 }
