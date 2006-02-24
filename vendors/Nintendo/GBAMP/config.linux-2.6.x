@@ -442,6 +442,11 @@ CONFIG_NET_RADIO=y
 # CONFIG_STRIP is not set
 # CONFIG_AIRO is not set
 # CONFIG_ATMEL is not set
+
+#
+# Nintendo DS Wireless interface (802.11)
+#
+CONFIG_NDS_WIFI=y
 # CONFIG_HOSTAP is not set
 
 #
