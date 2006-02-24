@@ -22,22 +22,24 @@ char * device = "/dev/fb0";
 
 struct fb_var_screeninfo screeninfo;
 int screen_fd;
-unsigned char * screen_ptr;
+unsigned short * screen_ptr;
 int screen_width;
 int screen_height;
 
 inline void draw_pixel(int x, int y, int color)
 {
-	int mask = 1 << (7-(x % 8));
-	unsigned char * loc = screen_ptr + (y * screen_width / 8) + x / 8;
+	unsigned short * loc = screen_ptr + ((y + screeninfo.yoffset) * screen_width ) +
+                                          x + screeninfo.xoffset;
 	
 	if ((x<0) || (x>=screen_width) || (y<0) || (y>=screen_height))
 		return;
 	
 	if (color)
-		*loc |= mask;
+		*loc = 0xffff; 
 	else
-		*loc &= ~mask;
+		*loc = 0; 
+
+	*loc |= 1 << 15;
 }
 
 /* Abrash's take on the simplest Bresenham line-drawing algorithm. 
@@ -237,7 +239,7 @@ void draw_lissajous(void)
 	d = 0.1;
 	
 	ap = screen_width/2;
-	bp = screen_width/2;
+	bp = screen_height/2;
 	a = screen_width / M_PIf;
 	b = screen_height / M_PIf;
 	
@@ -276,8 +278,9 @@ int main(int argc, char *argv[])
 		perror("Unable to retrieve framebuffer information");
 		exit(0);
 	}
-	screen_width = screeninfo.xres_virtual;
-	screen_height = screeninfo.yres_virtual;
+
+	screen_width = screeninfo.xres;
+	screen_height = screeninfo.yres;
 	
 	screen_ptr = mmap(0, screen_height * screen_width / 8, PROT_READ|PROT_WRITE, 0, screen_fd, 0);
 	
