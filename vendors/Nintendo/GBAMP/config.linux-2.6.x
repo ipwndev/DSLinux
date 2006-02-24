@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
-# Thu Feb 23 21:48:02 2006
+# Fri Feb 24 18:15:16 2006
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
@@ -143,7 +143,7 @@ CONFIG_ALIGNMENT_TRAP=y
 #
 CONFIG_ZBOOT_ROM_TEXT=0x0
 CONFIG_ZBOOT_ROM_BSS=0x0
-CONFIG_CMDLINE="rootfstype=romfs init=/bin/sh"
+CONFIG_CMDLINE="rootfstype=romfs "
 # CONFIG_XIP_KERNEL is not set
 
 #
