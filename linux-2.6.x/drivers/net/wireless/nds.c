@@ -41,7 +41,7 @@
 #include <asm/arch/shmemipc.h>
 #include <asm/arch/wifi.h>
 
-#include "ieee802_11.h"
+#include <net/ieee80211.h>
 #include "nds.h"
 
 static char rcsid[] = "NDS Wireless <bthaeler@aol.com>";
@@ -916,12 +916,7 @@ static const struct iw_handler_def nds_handler_def = {
 	.standard = (iw_handler *) nds_handler,
 	.private = (iw_handler *) nds_private_handler,
 	.private_args = (struct iw_priv_args *)nds_private_args,
-	.spy_offset = 0,
-/*
-	.spy_offset	= ((void *) (&((struct airo_info *) NULL)->spy_data) -
-			   (void *) NULL),
-*/
-
+	
 };
 #endif
 
@@ -983,7 +978,7 @@ static void nds_wifi_ipc_packet(void)
 	struct sk_buff *skb;
 	unsigned char *skbp;
 	Wifi_RxHeader *rx_hdr;
-	struct ieee802_11_hdr *hdr_80211;
+	struct ieee80211_hdr *hdr_80211;
 	int rc;
 
 #ifdef DUMP_INPUT_PACKETS
@@ -1016,10 +1011,10 @@ static void nds_wifi_ipc_packet(void)
 
 	rx_hdr = (Wifi_RxHeader *) SHMEMIPC_BLOCK_ARM7->wifi.data;
 	hdr_80211 =
-	    (struct ieee802_11_hdr *)(SHMEMIPC_BLOCK_ARM7->wifi.
+	    (struct ieee80211_hdr *)(SHMEMIPC_BLOCK_ARM7->wifi.
 				      data + sizeof(Wifi_RxHeader));
 
-	if ((hdr_80211->frame_ctl & 0x01CF) == IEEE802_11_FTYPE_DATA) {
+	if ((hdr_80211->frame_ctl & 0x01CF) == IEEE80211_FTYPE_DATA) {
 		if ((((u16 *) global_dev->dev_addr)[0] ==
 		     ((u16 *) hdr_80211->addr1)[0]
 		     && ((u16 *) global_dev->dev_addr)[1] ==
@@ -1067,7 +1062,7 @@ static void nds_wifi_ipc_packet(void)
 				memcpy(skbp, hdr_80211->addr1, ETH_ALEN);	// copy dest
 
 				if (hdr_80211->
-				    frame_ctl & IEEE802_11_FCTL_FROMDS) {
+				    frame_ctl & IEEE80211_FCTL_FROMDS) {
 					memcpy(skbp + ETH_ALEN,
 					       hdr_80211->addr3, ETH_ALEN);
 				} else {
