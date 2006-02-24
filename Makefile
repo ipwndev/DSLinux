@@ -17,7 +17,7 @@ VERSIONSTR = $(CONFIG_VENDOR)/$(CONFIG_PRODUCT) Version $(VERSIONPKG)
 ifeq (.config,$(wildcard .config))
 include .config
 
-all: ucfront subdirs romfs modules modules_install image
+all: subdirs romfs modules modules_install image
 else
 all: config_error
 endif
@@ -38,8 +38,6 @@ ROMFSDIR = $(ROOTDIR)/romfs
 ROMFSINST= romfs-inst.sh
 SCRIPTSDIR = $(ROOTDIR)/config/scripts
 TFTPDIR    = /tftpboot
-BUILD_START_STRING = $(shell date)
-BUILD_START_UNIX = $(shell date +%s)
 
 
 LINUX_CONFIG  = $(ROOTDIR)/$(LINUXDIR)/.config
@@ -52,11 +50,9 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 	  else echo sh; fi ; fi)
 
 ifeq (config.arch,$(wildcard config.arch))
-ifeq ($(filter %_default, $(MAKECMDGOALS)),)
 include config.arch
 ARCH_CONFIG = $(ROOTDIR)/config.arch
 export ARCH_CONFIG
-endif
 endif
 
 ifneq ($(SUBARCH),)
@@ -69,17 +65,12 @@ MAKEARCH_KERNEL = $(MAKEARCH)
 endif
 
 DIRS    = $(VENDOR_TOPDIRS) include lib include user
+DIRS_ROMFS = user $(VENDOR_TOPDIRS) include lib include 
+VENDDIR = $(ROOTDIR)/vendors/$(CONFIG_VENDOR)/$(CONFIG_PRODUCT)/.
 
 export VENDOR PRODUCT ROOTDIR LINUXDIR HOSTCC CONFIG_SHELL
 export CONFIG_CONFIG LINUX_CONFIG MODULES_CONFIG ROMFSDIR SCRIPTSDIR
 export VERSIONPKG VERSIONSTR ROMFSINST PATH IMAGEDIR RELDIR RELFILES TFTPDIR
-export BUILD_START_STRING BUILD_START_UNIX
-
-.PHONY: ucfront
-ucfront: tools/ucfront/*.c
-	$(MAKE) -C tools/ucfront
-	ln -sf $(ROOTDIR)/tools/ucfront/ucfront tools/ucfront-gcc
-	ln -sf $(ROOTDIR)/tools/ucfront/ucfront tools/ucfront-g++
 
 ############################################################################
 
@@ -195,9 +186,9 @@ modules:
 modules_install:
 	. $(LINUXDIR)/.config; if [ "$$CONFIG_MODULES" = "y" ]; then \
 		[ -d $(ROMFSDIR)/lib/modules ] || mkdir -p $(ROMFSDIR)/lib/modules; \
-		$(MAKEARCH_KERNEL) -C $(LINUXDIR) INSTALL_MOD_PATH=$(ROMFSDIR) DEPMOD="../user/busybox/examples/depmod.pl -k vmlinux" modules_install; \
+		$(MAKEARCH_KERNEL) -C $(LINUXDIR) INSTALL_MOD_PATH=$(ROMFSDIR) DEPMOD=true modules_install; \
 		rm -f $(ROMFSDIR)/lib/modules/*/build; \
-		find $(ROMFSDIR)/lib/modules -type f -name "*o" | xargs -r $(STRIP) -R .comment -R .note -g; \
+		find $(ROMFSDIR)/lib/modules -type f -name "*o" | xargs -r $(STRIP) -g; \
 	fi
 
 linux_xconfig:
@@ -236,19 +227,17 @@ oldconfig_uClibc:
 
 .PHONY: romfs
 romfs:
-	for dir in vendors $(DIRS) ; do [ ! -d $$dir ] || $(MAKEARCH) -C $$dir romfs || exit 1 ; done
+	for dir in $(DIRS_ROMFS) ; do [ ! -d $$dir ] || $(MAKEARCH) -C $$dir romfs || exit 1 ; done
 	-find $(ROMFSDIR)/. -name CVS | xargs -r rm -rf
 
 .PHONY: image
 image:
 	[ -d $(IMAGEDIR) ] || mkdir $(IMAGEDIR)
-	$(MAKEARCH) -C vendors image
+	$(MAKEARCH) -C $(VENDDIR) image
 
 .PHONY: netflash
 netflash netflash_only:
-ifeq ($(NO_NETFLASH_EXE),)
 	make -C prop/mstools CONFIG_PROP_MSTOOLS_NETFLASH_NETFLASH=y
-endif
 
 .PHONY: release
 release:
@@ -265,7 +254,7 @@ release:
 #
 
 vendor_%:
-	$(MAKEARCH) -C vendors $@
+	$(MAKEARCH) -C $(VENDDIR) $@
 
 .PHONY: linux
 linux linux%_only:
@@ -280,8 +269,6 @@ linux linux%_only:
 
 .PHONY: subdirs
 subdirs: linux
-	echo "Build start unix"
-	echo $(BUILD_START_UNIX)
 	for dir in $(DIRS) ; do [ ! -d $$dir ] || $(MAKEARCH_KERNEL) -C $$dir || exit 1 ; done
 
 dep:
@@ -294,12 +281,14 @@ dep:
 # This one removes all executables from the tree and forces their relinking
 .PHONY: relink
 relink:
-	find user prop vendors -type f -name '*.gdb' | sed 's/^\(.*\)\.gdb/\1 \1.gdb/' | xargs rm -f
+	find user -name '*.gdb' | sed 's/^\(.*\)\.gdb/\1 \1.gdb/' | xargs rm -f
+	find prop -name '*.gdb' | sed 's/^\(.*\)\.gdb/\1 \1.gdb/' | xargs rm -f
+	find $(VENDDIR) -name '*.gdb' | sed 's/^\(.*\)\.gdb/\1 \1.gdb/' | xargs rm -f
 
 clean: modules_clean
 	for dir in $(LINUXDIR) $(DIRS); do [ ! -d $$dir ] || $(MAKEARCH) -C $$dir clean ; done
 	rm -rf $(ROMFSDIR)/*
-	rm -rf $(IMAGEDIR)/*
+	rm -f $(IMAGEDIR)/*
 	rm -f config.tk
 	rm -f $(LINUXDIR)/linux
 	rm -rf $(LINUXDIR)/net/ipsec/alg/libaes $(LINUXDIR)/net/ipsec/alg/perlasm
@@ -322,19 +311,6 @@ distclean: mrproper
 
 %_clean:
 	[ ! -d "$(@:_clean=)" ] || $(MAKEARCH) -C $(@:_clean=) clean
-
-%_default:
-	@if [ ! -f "vendors/$(@:_default=)/config.device" ]; then \
-		echo "vendors/$(@:_default=)/config.device must exist first"; \
-		exit 1; \
-	 fi
-	-make clean > /dev/null 2>&1
-	cp vendors/$(@:_default=)/config.device .config
-	chmod u+x config/setconfig
-	yes "" | config/setconfig defaults
-	config/setconfig final
-	make dep
-	make
 
 config_error:
 	@echo "*************************************************"

@@ -30,7 +30,6 @@
 # define IDE_ARM_IRQ	IRQ_HARDDISK
 #endif
 
-
 #ifdef CONFIG_IDE_NDS_M3
 static void M3_Unlock( void )
 {

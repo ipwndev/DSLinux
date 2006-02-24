@@ -44,7 +44,7 @@ struct mtd_partition uclinux_romfs[] = {
 int uclinux_point(struct mtd_info *mtd, loff_t from, size_t len,
 	size_t *retlen, u_char **mtdbuf)
 {
-	struct map_info *map = mtd->priv;
+	struct map_info *map = (struct map_info *) mtd->priv;
 	*mtdbuf = (u_char *) (map->virt + ((int) from));
 	*retlen = len;
 	return(0);
@@ -56,7 +56,7 @@ int __init uclinux_mtd_init(void)
 {
 	struct mtd_info *mtd;
 	struct map_info *mapp;
-#ifdef CONFIG_XIP_KERNEL
+#ifdef CONFIG_NDS_DSGBA
 	extern char _etext, _edata, __data_start;
 	unsigned long addr = (unsigned long) (&_etext + ( &_edata - &__data_start ) );
 #else
@@ -74,7 +74,7 @@ int __init uclinux_mtd_init(void)
 
 	mapp->virt = ioremap_nocache(mapp->phys, mapp->size);
 
-	if (mapp->virt == 0) {
+	if (!mapp->virt) {
 		printk("uclinux[mtd]: ioremap_nocache() failed\n");
 		return(-EIO);
 	}
