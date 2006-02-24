@@ -475,6 +475,16 @@ config PRISM54
 	  say M here and read <file:Documentation/modules.txt>.  The module
 	  will be called prism54.ko.
 
+# NDS Stuff
+comment "Nintendo DS Wireless interface (802.11)"
+       depends on NET_RADIO && ARCH_NDS
+
+config NDS_WIFI
+       bool "Nintendo DS WIFI support"
+       depends on NET_RADIO && ARCH_NDS
+       help
+         Say Y here if you want to support the NDS wifi device.
+
 source "drivers/net/wireless/hostap/Kconfig"
 
 # yes, this works even when no drivers are selected
