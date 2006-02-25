@@ -165,7 +165,7 @@ romfs: $(INSTALLER) busybox.links
 			sed "s:^:$$ROMFSDIR/bin/:" | env -i xargs rm -f; \
 	fi
 	$(ROMFSINST) /bin/$(PROG)
-	$(SHELL) $< $(TARGETDIR) --hardlinks
+	$(SHELL) $< $(TARGETDIR)/bin/ --hardlinks --nosubdir
 
 check: busybox
 	bindir=$(top_builddir) srcdir=$(top_srcdir)/testsuite \
