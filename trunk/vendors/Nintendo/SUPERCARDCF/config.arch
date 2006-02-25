@@ -15,6 +15,7 @@ DISABLE_MOVE_RODATA := 1
 DISABLE_SHARED_LIBS := 1
 LOPT := -Os
 UOPT := -Os
+LINUXTARGET := xipImage
 
 ############################################################################
 
