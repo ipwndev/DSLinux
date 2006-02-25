@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
-# Sat Feb 25 10:57:46 2006
+# Sat Feb 25 15:17:12 2006
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
@@ -264,7 +264,7 @@ CONFIG_MTD_PARTITIONS=y
 #
 CONFIG_MTD_CHAR=y
 # CONFIG_MTD_BLOCK is not set
-CONFIG_MTD_BLOCK_RO=y
+# CONFIG_MTD_BLOCK_RO is not set
 # CONFIG_FTL is not set
 # CONFIG_NFTL is not set
 # CONFIG_INFTL is not set
@@ -285,7 +285,7 @@ CONFIG_MTD_CFI_I2=y
 # CONFIG_MTD_CFI_I4 is not set
 # CONFIG_MTD_CFI_I8 is not set
 # CONFIG_MTD_RAM is not set
-CONFIG_MTD_ROM=y
+# CONFIG_MTD_ROM is not set
 # CONFIG_MTD_ABSENT is not set
 # CONFIG_MTD_OBSOLETE_CHIPS is not set
 
@@ -293,7 +293,7 @@ CONFIG_MTD_ROM=y
 # Mapping drivers for chip access
 #
 # CONFIG_MTD_COMPLEX_MAPPINGS is not set
-CONFIG_MTD_UCLINUX=y
+# CONFIG_MTD_UCLINUX is not set
 # CONFIG_MTD_PLATRAM is not set
 
 #
@@ -631,7 +631,29 @@ CONFIG_SOUND=y
 #
 # Advanced Linux Sound Architecture
 #
-# CONFIG_SND is not set
+CONFIG_SND=y
+CONFIG_SND_TIMER=y
+CONFIG_SND_PCM=y
+# CONFIG_SND_SEQUENCER is not set
+CONFIG_SND_OSSEMUL=y
+CONFIG_SND_MIXER_OSS=y
+CONFIG_SND_PCM_OSS=y
+# CONFIG_SND_RTCTIMER is not set
+# CONFIG_SND_VERBOSE_PRINTK is not set
+# CONFIG_SND_DEBUG is not set
+
+#
+# Generic devices
+#
+# CONFIG_SND_DUMMY is not set
+# CONFIG_SND_MTPAV is not set
+# CONFIG_SND_SERIAL_U16550 is not set
+# CONFIG_SND_MPU401 is not set
+
+#
+# ALSA ARM devices
+#
+CONFIG_SND_NDS=y
 
 #
 # Open Sound System
