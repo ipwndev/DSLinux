@@ -1,24 +1,2 @@
-.EXPORT_ALL_VARIABLES:
-############################################################################
-#
-# Vendor specific settings
-#
-
-CONSOLE_BAUD_RATE = 115200
-
-############################################################################
-
-CPUFLAGS :=
-VENDOR_CFLAGS :=
-DISABLE_XIP := 1
-DISABLE_MOVE_RODATA := 1
-DISABLE_SHARED_LIBS := 1
-LOPT := -Os
-UOPT := -Os
 LINUXTARGET := xipImage
-
-############################################################################
-
-include $(ROOTDIR)/vendors/config/armnommu/config.arch
-
-############################################################################
+include $(ROOTDIR)/vendors/Nintendo/common/common-config.arch
