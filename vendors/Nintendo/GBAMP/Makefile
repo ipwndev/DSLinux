@@ -92,7 +92,7 @@ image:
 		j=`basename $$i` ; \
 		mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/$$j $(ROMFSDIR)/bin ; \
 	done
-	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/busybox $(ROMFSDIR)/bin ;
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/busybox $(ROMFSDIR)/bin
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/mount $(ROMFSDIR)/bin
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/sh $(ROMFSDIR)/bin
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/login $(ROMFSDIR)/bin
