@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
-# Fri Feb 24 18:15:16 2006
+# Sat Feb 25 15:57:40 2006
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
@@ -622,6 +622,7 @@ CONFIG_LOGO=y
 # CONFIG_LOGO_LINUX_CLUT224 is not set
 # CONFIG_LOGO_NDS_CLUT224 is not set
 CONFIG_LOGO_NDS_BIG_CLUT224=y
+# CONFIG_BACKLIGHT_LCD_SUPPORT is not set
 
 #
 # Sound
@@ -631,7 +632,29 @@ CONFIG_SOUND=y
 #
 # Advanced Linux Sound Architecture
 #
-# CONFIG_SND is not set
+CONFIG_SND=y
+CONFIG_SND_TIMER=y
+CONFIG_SND_PCM=y
+# CONFIG_SND_SEQUENCER is not set
+CONFIG_SND_OSSEMUL=y
+CONFIG_SND_MIXER_OSS=y
+CONFIG_SND_PCM_OSS=y
+# CONFIG_SND_RTCTIMER is not set
+# CONFIG_SND_VERBOSE_PRINTK is not set
+# CONFIG_SND_DEBUG is not set
+
+#
+# Generic devices
+#
+# CONFIG_SND_DUMMY is not set
+# CONFIG_SND_MTPAV is not set
+# CONFIG_SND_SERIAL_U16550 is not set
+# CONFIG_SND_MPU401 is not set
+
+#
+# ALSA ARM devices
+#
+CONFIG_SND_NDS=y
 
 #
 # Open Sound System
@@ -814,6 +837,7 @@ CONFIG_FRAME_POINTER=y
 # Security options
 #
 # CONFIG_KEYS is not set
+# CONFIG_SECURITY is not set
 
 #
 # Cryptographic options
