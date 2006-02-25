@@ -1270,6 +1270,7 @@ if [ "$CONFIG_USER_BUSYBOX_BUSYBOX" = "y" ]; then
 				bool 'sh: username completion' CONFIG_USER_BUSYBOX_COMMAND_USERNAME_COMPLETION
 			fi
 		fi
+		bool 'sh: extra quiet' CONFIG_FEATURE_SH_EXTRA_QUIET
 		bool 'sh: tab completion' CONFIG_USER_BUSYBOX_TAB_COMPLETION
 		bool 'sh: username completion' CONFIG_USER_BUSYBOX_USERNAME_COMPLETION
 		bool 'sh: stand alone' CONFIG_USER_BUSYBOX_SH_STANDALONE_SHELL
