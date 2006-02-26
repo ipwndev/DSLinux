@@ -1,0 +1,23 @@
+Begin4
+Title:          retawq
+Version:        0.2.6b
+Entered-date:   2005-03-19
+Description:    retawq is an interactive, multi-threaded network client (web
+                browser) for text terminals on computers with Unix-like
+                operating systems. It is written in C, fast, small, nicely
+                configurable, and comfortable; e.g. the low-level network
+                communications are performed in a non-blocking way, and you can
+                keep open as many "virtual windows" as you want and work
+                simultaneously in two of them in a split-screen mode. The
+                project home page is <http://retawq.sourceforge.net/>.
+Keywords:       network, Internet, client, browser, user agent, interactive,
+                multi-threaded, web, WWW, HTML, HTTP, https, FTP, ftps, news,
+                NNTP, finger, CGI, TLS, SSL, IPv6, i18n, l10n, French, German,
+                Spanish, Brazilian Portuguese
+Author:         arne@arne-thomassen.de (Arne Thomassen)
+Maintained-by:  arne@arne-thomassen.de (Arne Thomassen)
+Primary-site:   ftp.sourceforge.net /pub/sourceforge/retawq/
+                373 KB retawq-0.2.6b.tar.gz
+Platforms:      Unix-like operating systems (Posix standard)
+Copying-policy: GPL 2.0
+End

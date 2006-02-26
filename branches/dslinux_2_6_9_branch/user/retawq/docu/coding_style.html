@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html version="4.01"><head><title>[retawq] Coding Style</title></head>
+<body text="#000000" bgcolor="#cccccc" link="#0000ff" vlink="#551a8b"
+alink="#551a8b" lang="en">
+<center><b><font size="+2">retawq Documentation</font><br><font
+size="+1">Coding Style</font></b></center>
+
+<p><a name="id"></a><b>Identifiers</b></p>
+
+<p><b>Type</b> identifiers consist of a lowercase "t" and meaningful, mixedcase
+notions. <b>Variable</b> identifiers are normally written in lowercase letters,
+their parts (if any) are separated by underscore ("_") characters.
+<b>Constant</b> identifiers often consist of a lowercase prefix formed by
+uppercase letters from the corresponding type identifier (if that's
+non-trivial), followed by a mixedcase, meaningful notion; a few constant
+identifiers are instead implemented using preprocessor defines, especially
+concerning "hard limits" for variables and some constants the values of which
+have to be accessible by the preprocessor for build-time error checking.
+<b>Function</b> identifiers are written like variable identifiers;
+additionally, their first part often refers to the source code file (or
+conceptual project part) they belong to.</p>
+
+<p><a name="type"></a><b>Using Types</b></p>
+
+<p>If a type is needed in several parts of the program, we define a new type
+identifier using "typedef". This way, we only have to change one place when we
+see that the original choice for that type wasn't "optimal".</p>
+
+<p>Enumeration types are <i>not</i> defined with "typedef enum"; variables of
+such a type would waste much memory because they're "int"s. Instead, we define
+the constants using "enum" and define the type itself using "typedef unsigned
+char ...." or whatever might be appropriate. Additionally, we don't rely on the
+compiler assigning certain numbers to enumeration identifiers, instead we
+assign the numbers ourselves.</p>
+
+<p>We don't rely on the "fact" that e.g. a <i>char</i> declaration is always
+interpreted as <i>unsigned char</i> by the compiler - some compilers interpret
+it as <i>signed char</i>. So we explicitly say <i>signed char</i> resp.
+<i>unsigned char</i> (unless we're actually using the <i>char</i> type for
+characters, and of course except for cases where e.g. a curses library header
+file simply says "short"...).</p>
+
+<p><a name="mark"></a><b>Marks</b></p>
+
+<p>The source code contains lots of comments. Some of them are tagged with
+special "marks", so that their purpose becomes obvious at first glance and they
+can easily be recovered with "search" or "grep" commands. The following marks
+are used:</p>
+
+<p><ul>
+<li><b>NOTE:</b> a comment which is important for understanding the source
+code</li>
+<li><b>IMPORTANT:</b> a non-obvious fact which is important to know of for
+getting the program behavior right</li>
+<li><b>FIXME:</b> a known bug or unintended program behavior; public releases
+shouldn't contain such marks, but there might be some "unimportant" bugs which
+shouldn't delay a release...</li>
+<li><b>CHECKME:</b> code which should be revised or re-checked some time; this
+mostly concerns program design decisions which seem to be not satisfying or
+have some flaws.</li>
+<li><b>IMPLEMENTME:</b> a feature idea which might be interesting and should be
+implemented some time</li>
+<li><b>IMPROVEME:</b> code which is known to run slower than it could, but
+often the performance improvement will make the code much more complicated;
+since retawq is already pretty fast, such little performance problems aren't
+very interesting...</li>
+<li><b>REMOVEME:</b> commented-out code which has been replaced by better code
+or isn't needed any longer for other reasons, e.g. old debugging messages;
+should be removed some time</li>
+<li><b>detach:</b> we didn't forget to deallocate memory, we intentionally only
+detached a pointer.</li>
+<li><b>"should not happen":</b> conditions which won't be true during normal
+program execution but might become true due to bugs; such code is only there in
+order to prevent the program from crashing (or other bad behavior) in case of
+bugs.</li>
+<li><b>"can't happen":</b> conditions which are much less likely than the
+"should not happen" stuff; probably paranoid code</li>
+<li><b>#if 0:</b> code which has been disabled because it isn't needed any
+longer or doesn't yet work as it should or requires changes somewhere else
+before it can work</li>
+</ul></p>
+
+<p>Now if you still don't understand the source code, I give up... :-)</p>
+
+<p><hr>This documentation file is part of version 0.2.6b of <a
+href="http://retawq.sourceforge.net/">retawq</a>, a network client created by
+<span lang="de">Arne Thoma&szlig;en</span>. retawq is basically released under
+certain versions of the GNU General Public License and WITHOUT ANY WARRANTY.
+Copyright (C) 2001-2005 <a href="mailto:arne@arne-thomassen.de"><span
+lang="de">Arne Thoma&szlig;en</span></a>.</p>
+</body></html>
