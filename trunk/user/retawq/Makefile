@@ -12,7 +12,7 @@
 OPTION_TG = ncurses
 
 # text-mode mouse
-OPTION_TEXTMODEMOUSE = 1
+OPTION_TEXTMODEMOUSE = 0
 
 # i18n (internationalization)
 OPTION_I18N = 0
@@ -24,7 +24,7 @@ OPTION_CED = 1
 OPTION_COOKIES = 1
 
 # News/NNTP schemes
-OPTION_NEWS = 1
+OPTION_NEWS = 0
 
 # local CGI scheme
 OPTION_LOCAL_CGI = 0
@@ -41,7 +41,7 @@ OPTION_IPV6 = 0
 # threading: 0 means none (DNS hostname lookups will "block" the whole
 # program so that it will seem to hang), 1 means OS-independent pthreads
 # library, 2 means Linux-specific clone() syscall
-OPTION_THREADING = 1
+OPTION_THREADING = 0
 
 # whether a built-in run-time configuration file shall be used
 OPTION_BIRTCFG = 0
@@ -54,14 +54,18 @@ PATH_INSTALL_DOC = $(PATH_INSTALL_PREFIX)/doc/retawq
 PATH_INSTALL_LOCALE = $(PATH_INSTALL_PREFIX)/share/locale
 
 # put your favourite C compiler here; mine is "gcc"
-CC = gcc
+#CC = gcc
 
 # compiler flags; "-O2" is the code optimization level for gcc
-ifeq ($(CC), gcc)
-CFLAGS = -O2
-else
-CFLAGS =
-endif
+#ifeq ($(CC), gcc)
+#CFLAGS = -O2
+#else
+CFLAGS = -Os
+#endif
+
+# add include and link paths for ncurses in dslinux
+CFLAGS += -I../../lib/libncurses/include
+LDFLAGS += -L../../lib/libncurses/lib -lncurses
 
 # flags for multi-threading
 ifeq ($(OPTION_THREADING), 0)
@@ -276,6 +280,7 @@ msgpost:
 	@echo "Now try to start the program with \"./retawq\"."
 
 install:
+	exit 1
 	rm -f $(PATH_INSTALL_BIN)/retawq
 	cp retawq $(PATH_INSTALL_BIN)/retawq-$(RETAWQ_VERSION)
 	cd $(PATH_INSTALL_BIN); ln -s retawq-$(RETAWQ_VERSION) retawq
@@ -308,4 +313,8 @@ report: config
 clean:
 	rm -f .config tgmode.inc birtcfg.inc *.o retawq
 
-.PHONY: build_binary clean config devel install msgpost msgpre report retawqbin stripsyms
+.PHONY: build_binary clean config devel install msgpost msgpre report retawqbin stripsyms romfs
+
+romfs:
+	$(ROMFSINST) /bin/retawq
+
