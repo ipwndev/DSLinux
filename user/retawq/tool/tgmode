@@ -40,7 +40,7 @@ case "A$option_tg" in
     liblink='-lcurses'; rszt='curses'; headinc='<curses.h>';
     config_tg=3 ;; # TG_CURSES
   Ancurses)
-    liblink='-lncurses'; rszt='ncurses'; headinc='<ncurses.h>';
+    liblink='-lncurses'; rszt='ncurses'; headinc='<curses.h>';
     config_tg=4 ;; # TG_NCURSES
   Axcurses)
     liblink='-L/usr/X11R6/lib -lX11'; headinc='"cursesx.h"'; objs='cursesx.o';
