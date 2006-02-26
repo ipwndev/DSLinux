@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html version="4.01"><head><title>[retawq] Messages</title></head>
+<body text="#000000" bgcolor="#cccccc" link="#0000ff" vlink="#551a8b"
+alink="#551a8b" lang="en">
+<center><b><font size="+2">retawq Documentation</font><br><font
+size="+1">Messages</font></b></center>
+
+<p>As mentioned in the <a href="user_guide.html">user guide</a>, the bottom
+line of the screen might be used to display messages. This documentation page
+details a few of them and suggests solutions for errors.</p>
+
+<p><a name="normsg"></a><b>Normal Messages</b></p>
+
+<p>"Saving": you started saving something in a local file, and no error
+occurred so far; the message won't disappear by itself, so don't wait for this
+to happen; unless you save a very big chunk at once (say, more than one
+megabyte) or on a very slow medium, you can just continue your work
+immediately.</p>
+
+<p><a name="errmsg"></a><b>Error Messages</b></p>
+
+<p>"Keyboard command not handled": you pressed a key which represents a <a
+href="key.html">keyboard command</a>, but it wasn't handled because you used it
+in the wrong "context", e.g. for the wrong <a href="wk.html">window
+kind</a>.</p>
+<p>"Key not handled": you pressed a key which doesn't represent a <a
+href="key.html">keyboard command</a> and also can't be handled in any other way
+in the given situation.</p>
+<p>"This element is disabled": you tried to use an element of an HTML form, but
+the element has been disabled by the web page author and presumably shouldn't
+be used; if you want to use it anyway, apply the <a href="key.html">keyboard
+command</a> "E".</p>
+<p>"Redirection problem": there are basically the following kinds of problems.
+1. Too many automatic redirections occur in a row; you might be able to solve
+this problem by setting the <a href="rtconfig.html">run-time configuration
+option</a> "redirections" to a high value. 2. A server tries to redirect retawq
+to the same URL which was originally accessed; this would cause an infinite
+loop of redirections.</p>
+<p>"Feature ... was disabled at compile-time", "Scheme/protocol disabled":
+retawq might "generally" be able to do what you tried, but the respective <a
+href="ctconfig.html">compile-time configuration option</a> was disabled. To
+solve this problem, rebuild the program with the option enabled and try
+again.</p>
+<p>"Can't lookup hostname": the libraries on your computer were unable to
+transform a server hostname to a numerical IP (Internet Protocol) address. The
+most likely reason is that the hostname contains a slight typographical error -
+check the name. Or maybe your DNS (Domain Name System) database nameservers are
+currently down or temporarily "forgot" the hostname due to technical problems -
+try again later. Depending on the networking setup of your computer, you might
+try to change the nameservers in /etc/resolv.conf (but do this only if you know
+what you do).</p>
+<p>"Connection refused": you tried to access a server/portnumber where no
+server program is "listening"; maybe the server is currently "too busy" or down
+for maintenance or due to a crash, try again later; or maybe you used a service
+(e.g. wrong portnumber) which is never offered by the server.</p>
+<p>"Server response invalid": the server sent a "syntactically malformed"
+response. This might happen due to server bugs, or maybe you tried to access
+e.g. an FTP service on an HTTP portnumber.</p>
+<p>"Server closed connection", "Connection reset by peer": the server program
+seems to have closed the connection prematurely, or a problem occurred
+somewhere in the network; try again if you think that you e.g. didn't receive a
+complete document.</p>
+<p>"TLS-related error": you tried to access a URL using <a
+href="tls.html">TLS/SSL</a>, but e.g. the library couldn't be initialized
+(maybe it wasn't installed/configured correctly) or the TLS handshake failed.
+In many cases, further error information is presented in the message line,
+especially when you use the GnuTLS library; for example: "ciphers" can mean
+that client and server couldn't negotiate a common cryptographic algorithm
+(maybe it helps if you enable more ciphers in the library); "packet" means that
+a malformed or unexpected packet was received (might be a server or library
+bug; or maybe you tried to access an "ftps" service on an "ftp" portnumber,
+e.g. because you used the TLS method specifier "tls" with the <a
+href="rtconfig.html">run-time configuration option</a> "ftps-method" for the
+wrong server or portnumber); "handshake" means that the TLS handshake didn't
+succeed (maybe due to a TLS packet of an unexpected kind).</p>
+<p>"Forbidden by configuration": you tried to do something which has not been
+explicitly allowed in the <a href="rtconfig.html">run-time configuration</a>.
+This might occur when you try to do something which might cause security
+problems, e.g. the execution of a local CGI script.</p>
+<p>"Hostname missing": you entered a URL which 1. doesn't contain a hostname
+but 2. uses a <a href="scheme.html">scheme</a> which requires a hostname. To
+solve this problem with the schemes "news"/"nntp", you can use the <a
+href="rtconfig.html">run-time configuration option</a> "news-server-default";
+for other schemes, correct the URL and try again.</p>
+<p>"Can't execute program": you tried to execute a program (e.g. a local CGI
+script) from within retawq, but this failed; check whether you actually have
+the necessary filesystem permissions for execution of the program and whether
+you can launch it from a shell.</p>
+</ul>
+
+<p><hr>This documentation file is part of version 0.2.6b of <a
+href="http://retawq.sourceforge.net/">retawq</a>, a network client created by
+<span lang="de">Arne Thoma&szlig;en</span>. retawq is basically released under
+certain versions of the GNU General Public License and WITHOUT ANY WARRANTY.
+Copyright (C) 2001-2005 <a href="mailto:arne@arne-thomassen.de"><span
+lang="de">Arne Thoma&szlig;en</span></a>.</p>
+</body></html>
