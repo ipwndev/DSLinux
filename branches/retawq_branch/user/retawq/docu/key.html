@@ -1,0 +1,322 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html version="4.01"><head><title>[retawq] Keyboard Handling</title></head>
+<body text="#000000" bgcolor="#cccccc" link="#0000ff" vlink="#551a8b"
+alink="#551a8b" lang="en">
+<center><b><font size="+2">retawq Documentation</font><br><font
+size="+1">Keyboard Handling</font></b></center>
+
+<p>(This documentation file is only relevant in curses-like <a
+href="runmode.html">runmode</a>.)</p>
+
+<p><a name="intro"></a><b>Introduction</b></p>
+
+<p>You use retawq by entering keyboard commands. Most commands consist of a
+single key. The keys usually have been chosen so that you can remember them
+easily, e.g. "n" for "<i>n</i>ew window", "h" for "<i>h</i>ome URL" and "l" for
+"scroll down one <i>l</i>ine".</p>
+
+<p>Some commands require additional input like a URL you want to visit or an
+explicit confirmation for a possibly "dangerous" command. This is explained in
+the section "Line Input" below.</p>
+
+<p>The Escape key can be used to cancel several operations, e.g. all commands
+which require additional input and all menus.</p>
+
+<p>Certain special keys like "Home" or "Page Up" don't work on all kinds of
+terminals. If you encounter this problem, please read about the <a
+href="rtconfig.html">run-time configuration option</a> "keymap" which makes it
+possible to use different keys.</p>
+
+<p>Some rather special commands have not been bound to keys by default because
+retawq is slowly "running out of keys" already due to the high number of
+commands. If you miss a command here, take a look at the full list of available
+<a href="keymap.html">actions</a>, especially those which are marked "no
+default key".</p>
+
+<p><a name="key"></a><b>Commands</b></p>
+
+<p><b>Window Handling:</b></p>
+
+<p><ul>
+
+<li><b>n</b> - create a new browser window; the old window in which you were
+working is not removed (and activities running there aren't stopped), you can
+get back to it with the commands "w", "W" and "ctrl-w".</li>
+
+<li><b>N</b> - open the current browser document in a new browser window</li>
+
+<li><b>C</b> - close the current window</li>
+
+<li><b>1</b> - un-split the screen</li>
+
+<li><b>2</b> - split the screen</li>
+
+<li><b>Tab</b> (tabulator) - switch between visible windows when the screen is
+split</li>
+
+<li><b>w/W</b> - go to the next/previous virtual window in the list of all
+virtual windows; for higher comfort, you probably want to use the command
+"ctrl-w" instead.</li>
+
+<li><b>ctrl-w</b> - show a list of all currently existing windows in a
+menu</li>
+
+</ul></p>
+
+<p><b>Document Handling:</b></p>
+
+<p><ul>
+
+<li><b>Page-down/Space</b> - scroll down one screenfull of lines in the current
+document</li>
+
+<li><b>Page-up</b> - scroll up one screenfull of lines in the current
+document</li>
+
+<li><b>l/L</b> (and <b>Delete/Insert</b>) - scroll down/up one line in the
+current document</li>
+
+<li><b>Home</b> - scroll up to the top of the current document</li>
+
+<li><b>End</b> - scroll down to the bottom of the current document</li>
+
+<li><b>/</b> (slash) - search for a string in the current document in a
+case-insensitive way; you're asked for the string; the search starts in the
+line right below the topmost line which is currently shown; if the string is
+found, the document is scrolled so that the respective line becomes topmost.
+This command currently finds a string only if it is completely contained in one
+rendered line; so, if a string isn't found although "it should be there", try
+to search for a single word to avoid line break boundaries.</li>
+
+<li><b>?</b> - like the command "/", but searches <i>backward</i></li>
+
+<li><b>s</b> - save the current document (its original, unmodified, unlayouted
+contents) in a file; you're asked for a filename. Saving automatically proceeds
+"in the background" until the whole document has been received or until
+reception is stopped.</li>
+
+<li><b>d</b> - dump the current document (layouted) into a file; you're asked
+for a filename. The document is only dumped as far as it has already been
+received. To dump the <i>source code</i> of an HTML document in a browser
+window, view the source code with the keyboard command "\" and dump from
+there.</li>
+
+</ul></p>
+
+<p><b>Web Browsing:</b></p>
+
+<p><ul>
+
+<li><b>Cursor-left</b> - go back to the previous view in the series of views in
+the current browser window</li>
+
+<li><b>Cursor-right</b> - go to the next view in the series of views in the
+current browser window; note: to follow a link, use the Return/Enter/o key
+instead (described below) - here retawq differs from other browsers.</li>
+
+<li><b>Cursor-down</b> - go to the next link (or HTML form element) in the
+current web page</li>
+
+<li><b>Cursor-up</b> - go to the previous link (or HTML form element) in the
+current web page</li>
+
+<li><b>Return/Enter/o</b> - open the current link in the current browser
+window, or activate the current HTML form element; note that you can't activate
+form elements which are marked disabled or read-only in the HTML source code
+(but check the keyboard command "E"). Before you submit a form, make sure that
+it has been received completely and that you've scrolled down to its end at
+least once; otherwise the form data might be sent incompletely.</li>
+
+<li><b>O</b> - open the current link in a new window</li>
+
+<li><b>ctrl-o</b> - like "O", but the screen is split and the new window is
+shown in the other part of the screen; this way, you can read the contents of
+the current and the new window simultaneously. This command is especially
+useful for getting an index of news articles in one window and opening the
+articles in a new window without losing sight of the index.</li>
+
+<li><b>r</b> - reload the current browser window document without looking into
+retawq's internal cache</li>
+
+<li><b>R</b> - like "r", but additionally tries to bypass <i>external</i>
+caches ("enforced reload"); it also tries again to lookup the hostname if that
+failed previously</li>
+
+<li><b>g</b> - go to a new URL; you can enter the new URL at the bottom of the
+screen; read <a href="scheme.html">URL Schemes</a> for information about
+currently supported URLs.</li>
+
+<li><b>G</b> - like "g", but the new URL is preset to the URL of the current
+document so you can edit it</li>
+
+<li><b>.</b> (period) - stop any ongoing network/disk activity for the current
+document, e.g. stop receiving a web page</li>
+
+<li><b>\</b> (backslash) - show the HTML source code of the current browser
+window web page; to get back to the web page, use Cursor-left</li>
+
+<li><b>i</b> - show information about the current link (or HTML form element)
+in the message line at the bottom of the screen</li>
+
+<li><b>I</b> - show information about the current browser window view, e.g.
+about the links, images and forms which exist in a web page; the information is
+shown in a newly created window of <a href="wk.html">window kind</a>
+"information window".</li>
+
+<li><b>h</b> - go to the "home" URL; by default, this is the retawq project
+home page; you can change this or turn it off completely with the <a
+href="rtconfig.html">run-time configuration option</a> "home".</li>
+
+<li><b>e</b> - go to your favorite search engine URL; you can set this with the
+<a href="rtconfig.html">run-time configuration option</a>
+"search-engine".</li>
+
+<li><b>b</b> - go to the bookmarks document URL; you can set this with the <a
+href="rtconfig.html">run-time configuration option</a> "bookmarks".</li>
+
+<li><b>j</b> - "jump" to a URL; you just enter a shortcut, and retawq goes to
+the associated URL as configured with the <a href="rtconfig.html">run-time
+configuration option</a> "jumps". This is useful if you visit several URLs
+regularly and don't want to re-type the whole URLs each time, or if you want to
+"insert arguments" into often-used URL <i>patterns</i>, e.g. when using search
+engines.</li>
+
+<li><b>J</b> - like "j", but the new jump shortcut is preset to the previously
+entered shortcut so you can edit it</li>
+
+<li><b>E</b> - enable a disabled HTML form element; some wannabe-clever web
+page authors e.g. mark a submit button as disabled and let the browser enable
+it with a Javascript statement when the user fills in a certain text field;
+these authors ignore all the browsers which can't deal with Javascript - that's
+why you might need this command some time...</li>
+
+</ul></p>
+
+<p><b>Other Commands:</b></p>
+
+<p><ul>
+
+<li><b>m</b> - show the contextual menu</li>
+
+<li><b>u</b> - show the URL history (a list of the most recently used URLs) in
+a menu</li>
+
+<li><b>D</b> - download something from the URL which is given by the current
+link and save it in a file; you're asked for a filename; cf. "ctrl-d" for more
+information</li>
+
+<li><b>ctrl-d</b> - download something from a URL and save it in a file; you're
+asked for the URL from which something shall be downloaded and for a filename;
+you can download from arbitrary <a href="scheme.html">URLs</a> with the
+exception of local regular files - "downloading" them would be pointless
+anyway... The downloaded content isn't stored in retawq's internal caches, it
+is just saved in the file and "forgotten"; this way, you can receive very large
+contents without filling the RAM of your computer. Downloading happens "in the
+background", so it doesn't display any messages. It can't yet be paused/resumed
+and doesn't yet have a nice user interface - you can get some raw information
+about the progress by visiting (and reloading) the <a
+href="scheme.html">URL</a> "about:activity" or by using the shell command "ls"
+for the file.</li>
+
+<li><b>!</b> (exclamation mark) - execute a shell command; for security
+reasons, this only works if the respective feature has been enabled with the <a
+href="ctconfig.html">compile-time configuration option</a> OPTION_EXECEXT; you
+should additionally specify an explicit shell program with the <a
+href="rtconfig.html">run-time configuration option</a> "execext-shell".
+<br>With this keyboard command, you can execute any normal shell command from
+inside retawq like e.g. from inside textual console FTP clients. But retawq
+enables you to do more - you can prepend the command with a list of options;
+options are introduced with a colon (":") and end with a space character, after
+which the actual command is given, so the general format is ":<i>options</i>
+<i>command</i>"; the options are a sequence of letters with the following
+meaning:
+<ul>
+<li>o: read the output of the command (technobabble: from the "standard output"
+stream)</li>
+<li>e: read any error messages of the command (technobabble: from the "standard
+error" stream)</li>
+<li>H: interpret all received output as HTML source code</li>
+<li>h: write a little header as input for the shell command; each header line
+is terminated by a line feed character ("\n"), and the header is terminated by
+an empty line; currently, the header only contains information about the retawq
+version number; later versions will contain more; the header might be useful if
+you execute special commands</li>
+<li>c: write the content of the current document as input for the shell
+command; for example, this is useful if you want to convert the current
+document from a strange format to something which can be nicely displayed by
+retawq</li>
+<li>i: interpret special "percent markers" in the shell command before
+executing it; for now, this only replaces the first occurrence of "%U" with the
+URL of the current document</li>
+</ul>
+Please note that special shell characters aren't automatically escaped; this
+way you get more flexibility, but you should be aware of possible security
+implications.
+<br>If you don't use any of the "read" options, the shell command is executed
+"in the background" and its output is discarded. This is useful for shell
+commands like "mkdir foo"; but for shell commands like "ls", you should at
+least use the option "o" to get the resulting directory listing, like so: ":oe
+ls".
+<br>If you use any of the "read" options, the resulting output is shown in a
+window of <a href="wk.html">window kind</a> "information window".</li>
+
+<li><b>&amp;</b> - switch the shell command configuration which is used with
+the keyboard command "!"; this flips between a customized configuration which
+was given with the <a href="rtconfig.html">run-time configuration option</a>
+"execext-shell" and the built-in standard configuration "/bin/sh -c".</li>
+
+<li><b>S</b> - save the current <a href="session.html">session</a> in a
+file</li>
+
+<li><b>M</b> - resume a <a href="session.html">session</a> from a file</li>
+
+<li><b>H</b> - interpret the current document as HTML code; use this command if
+retawq can't determine the document kind automatically, e.g. when the name of a
+local HTML file doesn't end with ".htm" or ".html". - Please be careful to use
+this command only if the document really consists of HTML code; otherwise
+you'll get some mess on the screen because e.g. line breaks are shown as space
+characters and anything after a "&lt;" is interpreted as an (invalid) HTML tag
+and probably not be displayed.</li>
+
+<li><b>Y</b> - When you've enabled the mouse support (cf. the <a
+href="ctconfig.html">compile-time configuration option</a>
+OPTION_TEXTMODEMOUSE), you can use this command to switch the terminal between
+the following two modes: "register mouse clicks on links and HTML form
+elements" and "allow copy-paste".</li>
+
+<li><b>Q</b> - quit retawq</li>
+
+</ul></p>
+
+<p><a name="lineinput"></a><b>Line Input</b></p>
+
+<p>Sometimes you are asked for additional information for a command: a message
+is displayed at the bottom line of the screen, and you have to input something
+there (or cancel). This is called "line input mode". There are basically two
+cases:</p>
+
+<ul>
+<li>You have to enter a single key, e.g. in order to confirm a question like:
+"Really close this window?" If the message is so long that it isn't completely
+visible, you can scroll it with the cursor keys, page up/down and home/end
+keys.</li>
+<li>You have to enter/edit some text, e.g. a URL (keyboard command "g") or a
+text field of an HTML form. You can edit it with the usual cursor, backspace,
+delete and return keys. If the message is so long that it isn't completely
+visible, you can use the key "ctrl-a" to switch into the message area, use keys
+to scroll it as explained above and then use "ctrl-a" again to get back into
+the edit area.</li>
+</ul>
+
+<p>There's one special case: when you are asked for an FTP login password and
+suddenly realize that the <i>username</i> was wrong, you can use the key
+"ctrl-u" ("u" as in "username") to go one step back and enter a new username
+first.</p>
+
+<p><hr>This documentation file is part of version 0.2.6b of <a
+href="http://retawq.sourceforge.net/">retawq</a>, a network client created by
+<span lang="de">Arne Thoma&szlig;en</span>. retawq is basically released under
+certain versions of the GNU General Public License and WITHOUT ANY WARRANTY.
+Copyright (C) 2001-2005 <a href="mailto:arne@arne-thomassen.de"><span
+lang="de">Arne Thoma&szlig;en</span></a>.</p>
+</body></html>
