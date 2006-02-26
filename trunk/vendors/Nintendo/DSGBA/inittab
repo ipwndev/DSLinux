@@ -1,6 +1,3 @@
 
 tty1::linux:/bin/agetty 38400 tty1
-tty2::linux:/bin/agetty 38400 tty2
-tty3::linux:/bin/agetty 38400 tty3
-tty4::linux:/bin/agetty 38400 tty4
 
