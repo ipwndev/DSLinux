@@ -1,4 +1,7 @@
 .EXPORT_ALL_VARIABLES:
+
+NDS_COMMON = $(ROOTDIR)/vendors/Nintendo/common
+
 ############################################################################
 #
 # Vendor specific settings
