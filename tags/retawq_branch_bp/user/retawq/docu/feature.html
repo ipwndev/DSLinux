@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html version="4.01"><head><title>[retawq] Features Overview</title></head>
+<body text="#000000" bgcolor="#cccccc" link="#0000ff" vlink="#551a8b"
+alink="#551a8b" lang="en">
+<center><b><font size="+2">retawq Documentation</font><br><font
+size="+1">Features Overview</font></b></center>
+
+<p><a name="ui"></a><b>User Interface Features</b></p>
+
+<ul>
+<li><b>multi-window</b> - you can open as many "virtual windows" as you like
+and work simultaneously in two of them in a split-screen mode</li>
+<li><b>multi-view</b> - you can view a long series of documents within each
+browser window and easily go back and forth</li>
+<li><b>internationalization (i18n)</b> - optional support for several natural
+languages (currently English, French, German, Spanish and Brazilian
+Portuguese); cf. the <a href="ctconfig.html">compile-time configuration
+option</a> OPTION_I18N</li>
+<li><b>mouse</b> - optional mouse support for higher comfort; cf. the <a
+href="ctconfig.html">compile-time configuration option</a>
+OPTION_TEXTMODEMOUSE</li>
+<li><b>contextual menus</b> - so you need not remember all those boring <a
+href="key.html">keyboard commands</a> :-)</li>
+<li><b>sessions</b> - you can save current <a href="session.html">sessions</a>
+and resume them at any later time</li>
+<li><b>keymaps</b> - for the flexible association of keys with program
+actions</li>
+<li><b>incremental display</b> - content is displayed as soon as it is received
+from the server; you need not twiddle thumbs until the whole document (or a
+large portion of it) has been received</li>
+<li><b>resizable terminals</b> - retawq tries to utilize the extents of your
+terminal optimally; and when you resize it, the visible documents are
+immediately re-layouted within the new boundaries (if the libraries on your
+computer support this); any terminal size from 30x10 to 250x250 characters
+(width x height) is supported.</li>
+<li><b>several interfaces</b> - there's more than just a web browser: you can
+start the program in different <a href="runmode.html">runmodes</a>, e.g. to
+download a file "in the background" or to get a shell-like FTP client</li>
+</ul>
+
+<p><a name="tech"></a><b>Technical Features</b></p>
+
+<ul>
+<li><b>configurability</b> - many <a href="ctconfig.html">compile-time</a>, <a
+href="arg.html">command-line</a> and <a href="rtconfig.html">run-time</a>
+configuration options are provided; additionally, you can choose the
+classical-style Makefile or the more modern/portable configure script</li>
+<li><b>multi-threading</b> - retawq optionally uses (moderate) multi-threading
+in order to make fast, responsive use possible</li>
+<li><b>network protocols</b> - several access methods are supported: HTTP/1.1
+and 1.0 (including proxies and cookies), https (ditto), FTP, ftps, news/NNTP,
+finger, local files and directories, local CGI scripts; cf. <a
+href="scheme.html">URL Schemes</a> for more information; other protocols will
+follow</li>
+<li><b>HTML renderer</b> - more than 60 tags are known; the form support is
+quite complete (except file upload); more than 130 character entities are
+known, many others can be guessed; preliminary (little) support for tables and
+framesets exists</li>
+<li><b>IPv6</b> - optional support for the "next generation" Internet Protocol
+version; cf. the <a href="ctconfig.html">compile-time configuration option</a>
+OPTION_IPV6</li>
+<li><b>fast, small, portable and stable</b> - a special emphasis is put on
+keeping the program very fast and small but making it comfortable, nicely
+configurable and standards-compliant nevertheless</li>
+<li><b>low requirements</b> - runs nicely even on slow computers with little
+memory; also doesn't require much from its environment: only a standard C
+library with rather little functionality is needed, anything else can be either
+disabled or configured to use existing libraries or to fall back on built-in
+replacements</li>
+</ul>
+
+<p><hr>This documentation file is part of version 0.2.6b of <a
+href="http://retawq.sourceforge.net/">retawq</a>, a network client created by
+<span lang="de">Arne Thoma&szlig;en</span>. retawq is basically released under
+certain versions of the GNU General Public License and WITHOUT ANY WARRANTY.
+Copyright (C) 2001-2005 <a href="mailto:arne@arne-thomassen.de"><span
+lang="de">Arne Thoma&szlig;en</span></a>.</p>
+</body></html>
