@@ -456,6 +456,7 @@ bool 'pptpctrl'			CONFIG_USER_PPTPD_PPTPCTRL
 bool 'pptpd'			CONFIG_USER_PPTPD_PPTPD
 bool 'pptp'			CONFIG_USER_PPTP_CLIENT_PPTP
 bool 'pptp_callmgr'		CONFIG_USER_PPTP_CLIENT_PPTP_CALLMGR
+bool 'retawq'                   CONFIG_USER_RETAWQ_RETAWQ
 bool 'rdate'			CONFIG_USER_RDATE_RDATE
 bool 'route'			CONFIG_USER_ROUTE_ROUTE
 bool 'routed'			CONFIG_USER_ROUTED_ROUTED

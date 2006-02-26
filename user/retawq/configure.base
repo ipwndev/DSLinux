@@ -1,0 +1,161 @@
+# retawq/configure.base - package configuration base
+# This file is part of retawq (<http://retawq.sourceforge.net/>), a network
+# client created by Arne Thomassen; retawq is basically released under certain
+# versions of the GNU General Public License and WITHOUT ANY WARRANTY.
+# Read the file COPYING for license details, README for program information.
+# Copyright (C) 2002-2005 Arne Thomassen <arne@arne-thomassen.de>
+
+# Run this file through itchconfig (<http://itchconfig.sourceforge.net/>) to
+# generate a configure script.
+
+IC_META_REQUIRE_VERSION(0.0.4)
+IC_BEGIN(retawq, [0.2.6b], 24, Makefile, .config)
+IC_ENSURE_LAUNCHDIR([parser.c])
+IC_MAKEFILE_PRESERVE
+
+IC_BINARY_CREATE(retawq)
+IC_BINARY_ADD_SOURCE(retawq, C, [init.c init.h main.c parser.c parser.h resource.c resource.h stuff.c stuff.h])
+
+IC_EMIT_SH([case "x$ic_option_threading" in
+  x0) ;;
+  *)])
+IC_BINARY_REENTRANT(retawq)
+IC_EMIT_SH([;;
+esac])
+
+IC_SUBSTITUTE_BEGIN
+
+IC_SUBSTITUTE(USING_CONFIGURE, 1)
+
+IC_OPTION_SET(tg, [ncurses], [text/graphics mode (curses, ncurses, ...)])
+IC_OPTION_ENABLE(textmodemouse, 1, [text-mode mouse])
+IC_OPTION_ENABLE(i18n, 0, [internationalization])
+IC_OPTION_ENABLE(news, 1, [news/NNTP support])
+IC_OPTION_ENABLE(cookies, 1, [HTTP cookies])
+IC_OPTION_ENABLE(local-cgi, 0, [local CGI scripts])
+IC_OPTION_ENABLE(ipv6, 0, [IPv6 support])
+IC_OPTION_ENABLE(birtcfg, 0, [built-in run-time configuration file])
+IC_OPTION_SET(tls, 0, [TLS support (0=none, 1=GnuTLS, 2=OpenSSL)])
+IC_OPTION_SET(execext, 0, [execution of "external" programs])
+IC_OPTION_SET(ced, 1, [quality of character entity display (0..1)])
+IC_OPTION_SET(threading, 1, [threading (0=none, 1=pthreads, 2=Linux clone())])
+
+IC_SUBSTITUTE(CONFIG_KEYMAPS, 1)
+IC_SUBSTITUTE(OPTION_POP, 0)
+IC_SUBSTITUTE(OPTION_IMAP, 0)
+IC_SUBSTITUTE(OPTION_SMTP, 0)
+IC_SUBSTITUTE(OPTION_TRAP, 0)
+IC_SUBSTITUTE(OPTION_BUILTIN_DNS, 0)
+IC_SUBSTITUTE(OPTION_EXECINT, 0)
+IC_SUBSTITUTE(OPTION_POLL, 0)
+IC_SUBSTITUTE(CONFIG_MENUS, 32767)
+IC_SUBSTITUTE(CONFIG_LOCALDIR, 2)
+IC_SUBSTITUTE(CONFIG_FTPDIR, 1)
+IC_SUBSTITUTE(CONFIG_RTCONFIG, 1)
+IC_SUBSTITUTE(CONFIG_SESSIONS, 1)
+IC_SUBSTITUTE(CONFIG_JUMPS, 1)
+IC_SUBSTITUTE(CONFIG_CONSOLE, 1)
+IC_SUBSTITUTE(CONFIG_HTTP, 32767)
+IC_SUBSTITUTE(CONFIG_FTP, 1)
+IC_SUBSTITUTE(CONFIG_FINGER, 1)
+IC_SUBSTITUTE(CONFIG_GOPHER, 0)
+IC_SUBSTITUTE(CONFIG_ABOUT, 32767)
+IC_SUBSTITUTE(CONFIG_USER_QUERY, 1)
+IC_SUBSTITUTE(CONFIG_BLOAT, 32767)
+IC_SUBSTITUTE(CONFIG_EXTRA, 32767)
+IC_SUBSTITUTE(CONFIG_WK, 32767)
+IC_SUBSTITUTE(CONFIG_DISK_CACHE, 0)
+IC_SUBSTITUTE(CONFIG_HTML, 32767)
+IC_SUBSTITUTE(CONFIG_PLATFORM, 0)
+IC_SUBSTITUTE(CONFIG_JAVASCRIPT, 0)
+IC_SUBSTITUTE(CONFIG_CSS, 0)
+IC_SUBSTITUTE(CONFIG_DEBUG, 0)
+
+IC_SUBSTITUTE_END
+
+IC_EMIT_SH([{ tool/tgmode --init $ic_option_tg ||])
+IC_MESSAGE_ERROR([bad OPTION_TG])
+IC_EMIT_SH([}
+cftg=`tool/tgmode --cftg $ic_option_tg`])
+IC_EMIT_CONFIG_H([[#]define CONFIG_TG $cftg])
+# CHECKME!
+
+IC_BINARY_ADD_SOURCE(retawq, C, [`tool/tgmode --objs $ic_option_tg | sed \'s,\.o,\.c,\'`])
+IC_BINARY_ADD_LIBRARY(retawq, [`tool/tgmode --libs $ic_option_tg`])
+
+# CHECKME: this is unclean!
+IC_EMIT_SH([case "x$ic_option_tls" in
+  x0) ;;
+  *) ic_binary_retawq_cflags="$ic_binary_retawq_cflags `tool/tlsmode --cflags $ic_option_tls`"])
+IC_BINARY_ADD_LIBRARY(retawq, [`tool/tlsmode --libs $ic_option_tls`])
+IC_EMIT_SH([  ;;
+esac
+])
+
+# Check for header files
+IC_C_HEADERS_STDC
+IC_C_HEADERS([arpa/inet.h dirent.h errno.h fcntl.h libintl.h limits.h memory.h ndir.h netdb.h netinet/in.h stdarg.h stdlib.h string.h strings.h sys/dir.h sys/ioctl.h sys/ndir.h sys/poll.h sys/select.h sys/socket.h sys/stat.h sys/time.h sys/types.h sys/wait.h termios.h unistd.h varargs.h])
+
+# Check for typedefs, structures and compiler characteristics
+IC_C_CONST
+IC_C_INLINE
+IC_C_TYPES([gid_t mode_t off_t pid_t size_t])
+
+# Check for library functions
+IC_PROGRAM_GCC_TRADITIONAL
+IC_C_FUNCTION_MMAP
+IC_C_FUNCTIONS([bcopy bzero dup2 getcwd gettimeofday memcpy memset putenv setenv sigaction sigdelset sigfillset sigprocmask strcasecmp strchr strerror strncasecmp strrchr strstr uname wait3 waitpid])
+
+# Solaris boxes have vital stuff scattered everywhere but pthreads in libc...
+IC_EMIT_SH([case "x$ic_option_threading" in
+  x1)])
+IC_C_FUNCTIONS_OPTLIB(pthread, [0 pthread_create])
+IC_EMIT_SH([  ;;
+esac
+])
+IC_IF_OPTION_ENABLED(i18n)
+  IC_C_FUNCTIONS_OPTLIB(intl, [0 gettext])
+IC_ENDIF_OPTION_ENABLED
+IC_C_FUNCTIONS_OPTLIB(socket, [getaddrinfo getnameinfo 0 connect endservent freeaddrinfo gai_strerror getprotobyname getsockopt htonl htons ntohs setservent setsockopt socket])
+IC_C_FUNCTIONS_OPTLIB(nsl, [getipnodebyname inet_addr inet_ntop inet_pton 0 endhostent freehostent gethostbyname gethostent sethostent])
+
+# Special tests for the curses library
+IC_EMIT_SH([rszt=`tool/tgmode --rszt $ic_option_tg`
+case "x$rszt" in
+  x) ICV_has_resizeterm=1 ;;
+  *)])
+IC_C_LINK(ICV_has_resizeterm, 1, $rszt, [
+[#]include "int_config.h"
+[#]include <assert.h>
+[#]ifdef __cplusplus
+extern "C"
+[#]endif
+char resizeterm();
+char (*f)();
+
+int main()
+{
+[#]if defined(__stub_resizeterm) || defined(__stub___resizeterm)
+  choke me
+[#]else
+  f=resizeterm;
+[#]endif
+  return(0);
+}])
+IC_EMIT_SH([;;
+esac])
+IC_EMIT_CONFIG_H([[#]define HAVE_CURSES_RESIZETERM $ICV_has_resizeterm])
+
+# What to install with "make install"
+IC_INSTALL_CREATE(bin, , [retawq])
+IC_INSTALL_CREATE(man, , [docu/retawq.1])
+
+IC_INSTALL_CREATE(doc, doc/retawq, [README], [HTML documentation], , 8, [tool/instdocu $path
+break])
+# CHECKME: this is unclean!
+
+IC_IF_OPTION_ENABLED(i18n)
+  IC_INSTALL_CREATE(locale, , [i18n/de.mo i18n/es.mo i18n/fr.mo i18n/pt_BR.mo], , , 8)
+IC_ENDIF_OPTION_ENABLED
+
+IC_END

@@ -1,0 +1,174 @@
+# This is a run-time configuration example for the web browser retawq
+# (<http://retawq.sourceforge.net/>).
+#
+# To make use of it, enter commands like the following:
+# - mkdir /home/your_home/.retawq/
+# - cp example-config /home/your_home/.retawq/config
+# After that, edit the new file.
+#
+# Note that this file contains alternative variants for some sections (marked
+# with "OR:"); in a real config file, each section should appear at most once,
+# so you'll have to remove (or combine) parts of this exemplary file if you
+# actually want to use it. If you don't need/like a setting, you can just
+# leave it out; retawq then applies a default behavior.
+#
+# Also note that some of these options only work if the respective compile-time
+# configuration options have been enabled (cf. retawq/docu/ctconfig.html), some
+# of which are disabled by default. You might get warning messages otherwise.
+#
+# All run-time configuration options are explained in the documentation file
+# retawq/docu/rtconfig.html.
+
+
+# Options Part I: User Interface
+
+# A bookmarks document; we use a local file:
+bookmarks local:~/bookmarks.html
+
+# We don't like colors:
+colors off
+
+# OR: we want black-on-white colors:
+colors reverse
+
+# We are experts and don't wanna be asked for confirmation of certain
+# "dangerous" commands:
+dont-confirm quit close overwrite form-submit
+
+# We want to execute a normal shell program with the keyboard command "!":
+execext-shell /bin/sh -c
+
+# Our home page:
+home http://my-domain.org/
+
+# OR: nah, we don't have a home page, and the keyboard command "h" shall not
+# have any effect:
+home off
+
+# Jump shortcuts with "constant" URLs; we use three search engines and two home
+# pages, so the keyboard commands "e" and "h" wouldn't be enough:
+jumps:
+ s1 www.foo-search.com
+ s2 http://www.bar-search.com/
+ s3 www.baz-search.com:42/cgi-bin/special-search.cgi
+ h1 www.my-private-home.name
+ h2 www.home-of-employer.com
+ 0 local:~/nothing.html
+ 3la local:/usr/three-letter-acronyms/
+ help local:/usr/local/doc/retawq/index.html
+
+# OR: an example with a URL _pattern_ for a search engine which allows to
+# specify the search string within the URL (technobabble: the search engine
+# uses the "GET" method for form submission, not the "POST" method):
+jumps:
+ s http://www.foo-search.com/cgi-bin/search.cgi?what=!1&matchnum=42 !1
+# When you enter "s blah" with the keyboard command "j" then, retawq replaces
+# the marker "!1" with "blah" and thus opens the URL
+# http://www.foo-search.com/cgi-bin/search.cgi?what=blah&matchnum=42
+# which could result in a match list from the search engine that contains up to
+# 42 entries without the need to use the search engine's HTML form. - The
+# actual URL pattern depends on the search engine you use, of course; this is
+# just a fictitious example.
+
+# A keymap list for mapping some keys to command actions; for simplicity, the
+# following rules show some default mappings as documented in docu/key.html and
+# docu/keymap.html; this example shall just give an idea how this option could
+# be used:
+keymap command
+ Q quit
+ l line-down
+ r document-reload
+ home document-top
+ cursor-left view-back
+
+# A keymap list for mapping keys to line input mode actions; for simplicity,
+# the following rules show some default mappings as documented in docu/key.html
+# and docu/keymap.html; this example shall just give an idea how this option
+# could be used:
+keymap line-input
+ cursor-left to-left
+ cursor-up to-start
+ ctrl-a area-switch
+
+# Sorting options for local directory listings:
+local-dir-sort
+ /bin/* S # list larger programs first ("s" = "size"; uppercase = descending)
+ /home/my_home/* tn # list directories before files and sort by name otherwise
+ * n # sort by name ("n" = "name"; rule superfluous - retawq's default)
+
+# Don't want scroll bars; currently this is only relevant for OPTION_TG=xcurses
+scroll-bars off
+
+# Our favorite search engine:
+search-engine http://www.foo-search.com/
+
+# Set the terminal window title
+termwintitle 1
+
+
+# Options Part II: Technical
+
+# FTP login; we use a rather silly configuration example here, just to show
+# what's possible.
+ftp-login
+ anonymous true-address@my-domain.org *.org:21 # for any .org server, port 21
+ pub fake-address@foo.org ftp.stupid-server.com:7077 # for explicit server/port
+ anonymous fake@foo.org *.com # for any .com server, any port
+ anonymous guest * # (rule superfluous - retawq's default)
+
+# OR: FTP login; if you get "login failed" messages when you try to access
+# public FTP servers, use a default rule like the following:
+ftp-login
+ anonymous mail-address@foo.org *
+
+# ftps TLS negotiation method
+ftps-method
+ ftp.foo.org authtls-dataclear # use TLS only for commands, not for data
+ bar.baz.org autodetect # bar.baz.org has a good server program...
+ *.baz.org authtls-dataclear # ...but other servers there are less smart
+
+# HTTP cookies
+http-cookies
+ allow foo.org # we need cookies for an important service on this server
+ deny * # deny everything else (rule superfluous - retawq's default)
+
+# OR: we love cookies and want'em all (deprecated)
+http-cookies
+ allow *
+
+# HTTP proxy configuration; we use a rather silly configuration example here,
+# just to show what's possible.
+http-proxies
+ none *my-domain.org # no proxy for servers in my-domain.org (local network)
+ firewall.my-domain.org *linux.org # proxy for any port on linux.org servers
+ my-cache.my-domain.org *.org:80 # proxy for port 80 on any other .org servers
+ my-proxy.foo.org:42 *.com # proxy for .com servers
+ none * # no proxy for any other server (rule superfluous - retawq's default)
+
+# define HTTP protocol versions for certain servers
+http-version
+ foo.org 1.1 # foo.org uses a good server program, so let's try HTTP/1.1
+
+# When downloading something from an HTTP server, we prefer the French
+# language, but would also accept English; note that there must not be
+# whitespace between the single languages.
+languages fr,en
+
+# local CGI scripts
+local-cgi
+ allow /usr/cgi-bin/special-script.cgi # only allow this specific script
+ deny * # deny everything else (rule superfluous - retawq's default)
+
+# OR: local CGI scripts - more permissive
+local-cgi
+ allow /usr/cgi-bin/* # allow any ("*") scripts in this directory
+
+# default server for "news:" and "nntp:" URLs
+news-server-default news.foo.org
+
+# Maximum number of automatic redirections; we need to access a completely
+# screwed server which requires more than 10 redirections.
+redirections 15
+
+# Tell HTTP servers about our operating system
+user-agent 1
