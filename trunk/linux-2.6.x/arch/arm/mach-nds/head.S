@@ -262,22 +262,22 @@ _entry:
 	and	r0,r0,r1
 	mcr	p15, 0, r0, c1, c0, 0
 
+#ifdef CONFIG_XIP_KERNEL
+	/*  Copy data sections to their new home.  */
+	ldr	r1, =_etext			/* Addr of data in FLASH */
+	ldr	r2, =__data_start		/* Addr of real RAM data */
+	ldr	r3, =_edata			/* Addr of end of data */
+_copydata:
+	cmp	r2, r3				/* All copied? */
+	ldrcc	r4, [r1], #4
+	strcc   r4, [r2], #4			/* Copy next word */
+	bcc	_copydata			/* Keep going till done */
+#endif
+
 	adr	r5, __LC0_init_data
 	ldmia	r5, {r5, r6, r8, r9, r10, sp}			@ Setup stack
 	bic	r4, r0, #CR_A
 	stmia	r10, {r0, r4}
-
-#ifdef CONFIG_XIP_KERNEL
-	/*  Copy data sections to their new home.  */
-	ldr	r0, =_etext			/* Addr of data in FLASH */
-	ldr	r1, =__data_start		/* Addr of real RAM data */
-	ldr	r2, =_edata			/* Addr of end of data */
-_copydata:
-	cmp	r1, r2				/* All copied? */
-	ldrcc	r3, [r0], #4
-	strcc   r3, [r1], #4			/* Copy next word */
-	bcc	_copydata			/* Keep going till done */
-#endif
 
 	/*  Clear BSS */
 	mov	r4, #0
