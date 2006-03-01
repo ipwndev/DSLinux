@@ -45,6 +45,10 @@
 #include <ctype.h>
 #include <sys/syslog.h>
 
+#ifdef __uClinux__
+#define syslog(a, b) printf("telnetd: %s\n", b)
+#endif
+
 #include "busybox.h"
 
 #define BUFSIZE 4000
@@ -290,7 +294,11 @@ make_new_session(int sockfd)
 	send_iac(ts, WILL, TELOPT_SGA);
 
 
+#ifdef __uClinux__
+	if ((pid = vfork()) < 0) {
+#else
 	if ((pid = fork()) < 0) {
+#endif
 		syslog(LOG_ERR, "Can`t forking");
 	}
 	if (pid == 0) {
@@ -451,8 +459,37 @@ telnetd_main(int argc, char **argv)
 		bb_perror_msg_and_die("listen");
 	}
 
+/* Not sure how to figure this out... */
+#ifdef __uClinux__
+	{ int fd;
+/*
+	switch(fork()) {
+	case 0:
+		break;
+	case -1:
+		bb_perror_msg_and_die("vfork");
+		break;
+	default:
+		exit(0);
+	}
+*/
+
+	setsid();
+
+	chdir("/");
+	fd = open("/dev/null", O_RDWR, 0);
+	dup2(fd, STDIN_FILENO);
+/*
+	dup2(fd, STDOUT_FILENO);
+	dup2(fd, STDERR_FILENO);
+*/
+	if (fd > 2)
+	    close(fd);
+	}
+#else /* __uClinux__ */
 	if (daemon(0, 0) < 0)
 		bb_perror_msg_and_die("daemon");
+#endif /* __uClinux__ */
 
 
 	maxfd = master_fd;
