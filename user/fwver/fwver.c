@@ -41,8 +41,17 @@ int main( void )
         case 0xDFC7:
             version = 4 ;
             break ;
+#if 0
+        case 0xUNKNOWN:
+            version = 5 ;
+            break ;
+#endif
         case 0xF96D:
             printf("iQue firmware detected.\n");
+            version = -1 ;
+            break ;
+        case 0xE843:
+            printf("DS Lite firmware detected.  It is safe to run online games.\n");
             version = -1 ;
             break ;
     }
