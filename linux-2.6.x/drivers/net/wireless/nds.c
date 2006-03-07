@@ -81,10 +81,13 @@ static int nds_start_xmit11(struct sk_buff *skb, struct net_device *dev)
 {
 	DEBUG(7, "Called: %s len(%d)\n", __func__, skb->len);
 
+	shmemipc_lock();
 	if (skb->len > sizeof(SHMEMIPC_BLOCK_ARM9->wifi.data)) {
+		shmemipc_unlock();
 		DEBUG(2, "Packet too big to send, dropping\n");
 		return -E2BIG;
 	}
+	shmemipc_unlock();
 
 	netif_stop_queue(dev);
 
@@ -103,6 +106,8 @@ static int nds_start_xmit11(struct sk_buff *skb, struct net_device *dev)
 	SHMEMIPC_BLOCK_ARM9->wifi.length = skb->len;
 	shmemipc_unlock();
 
+	/* FIXME: this call seems to produce a "schediling while atomic"
+	 * error. shmemipc_flush() may sleep! */
 	shmemipc_flush(SHMEMIPC_USER_WIFI);
 
 	dev_kfree_skb(skb);
@@ -1133,6 +1138,8 @@ void nds_wifi_ipc_stats(void)
 	    (struct net_device_stats *)stats_query_output;
 	u32 *arm7_stats = (u32 *) SHMEMIPC_BLOCK_ARM7->wifi.data;
 
+	DEBUG(7, "Called: %s\n", __func__);
+
 #ifdef REPORT_RAW_PACKET_STATS
 	s->rx_packets = arm7_stats[WIFI_STATS_RXRAWPACKETS];
 	s->tx_packets = arm7_stats[WIFI_STATS_TXRAWPACKETS];
@@ -1163,6 +1170,7 @@ void nds_wifi_ipc_stats(void)
 
 static void nds_wifi_shmemipc_isr(u8 type)
 {
+	shmemipc_lock();
 	DEBUG(7, "Called: %s type(%s) wifi_type(%d)\n", __func__,
 	      type == SHMEMIPC_REQUEST_FLUSH ? "flush" : "complete",
 	      SHMEMIPC_BLOCK_ARM7->wifi.type);
@@ -1189,6 +1197,7 @@ static void nds_wifi_shmemipc_isr(u8 type)
 		}
 		break;
 	}
+	shmemipc_unlock();
 }
 
 static struct fifo_cb nds_cmd_fifocb = {
