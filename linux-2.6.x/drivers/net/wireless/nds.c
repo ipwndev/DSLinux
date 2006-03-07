@@ -389,9 +389,15 @@ static int nds_get_aplist(struct net_device *dev,
 /*
  * Wireless Handler : Initiate Scan
  */
+#if WIRELESS_EXT > 17
+static int nds_set_scan(struct net_device *dev,
+			struct iw_request_info *info,
+			struct iw_point *vwrq, char *extra)
+#else
 static int nds_set_scan(struct net_device *dev,
 			struct iw_request_info *info,
 			struct iw_param *vwrq, char *extra)
+#endif
 {
 	DEBUG(7, "Called: %s\n", __func__);
 
