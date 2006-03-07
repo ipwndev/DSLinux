@@ -33,13 +33,49 @@
 #include <asm/errno.h>
 #include <asm/semaphore.h>
 #include <asm/arch/shmemipc.h>
+#include <linux/completion.h>
 
-static struct shmemipc_cb *cbhead = NULL;
+#define SHMEMIPC_VERSION_CODE KERNEL_VERSION(0, 2, 0)
+/* 
+ * Version history:
+ * 0.2.0: use completion object to wait until flush is complete
+ *        use linux lists
+ * 0.1.0: initial version
+ */
 
-static DECLARE_MUTEX(cbhead_mtx);
+static int shmemipc_debug = 0;
+#define DEBUG(args...) if (shmemipc_debug) printk(args)
+
+/* A flush request times out after SHMEMIPC_FLUSH_TIMEOUT jiffies */
+#define SHMEMIPC_FLUSH_TIMEOUT 500
+
+static LIST_HEAD(cblist);
+static DECLARE_MUTEX(cblist_mtx);
 static DECLARE_MUTEX(flush_mtx);
+static DECLARE_COMPLETION(shmemipc_flush_completed);
 
-struct shmemipc_cb;
+spinlock_t shmemipc_lock = SPIN_LOCK_UNLOCKED;
+unsigned long shmemipc_irq_flags;
+
+static void map_to_arm7(struct shmemipc_block *block);
+static void map_to_arm9(struct shmemipc_block *block);
+
+static inline u8 shmemipc_get_block_state(void)
+{
+	return (REG_WRAMCNT & 0x03);
+}
+
+static inline void shmemipc_set_block_state(u8 state)
+{
+	REG_WRAMCNT &= ~0x03;
+	REG_WRAMCNT |= (state & 0x03);
+}
+
+#define SHMEMIPC_BLOCK_MAP_BOTH_ARM9	0
+#define SHMEMIPC_BLOCK_MAP_NORMAL	1 /* ARM7: block 0, ARM9: block 1 */
+#define SHMEMIPC_BLOCK_MAP_REVERSE	2 /* ARM7: block 1, ARM9: block 0 */
+#define SHMEMIPC_BLOCK_MAP_BOTH_ARM7	3
+
 
 static inline int is_block_arm7(struct shmemipc_block *block)
 {
@@ -51,11 +87,11 @@ static inline int is_block_arm9(struct shmemipc_block *block)
 	return block == SHMEMIPC_BLOCK_ARM9;
 }
 
-/* Map the specified block to the ARM7, if it isn't mapped to it already. */
-void map_to_arm7(struct shmemipc_block *block)
+/* Map the specified block to the ARM7, if it isn't mapped to it already.
+ * Must be called with shmemipc_lock held. */
+static void map_to_arm7(struct shmemipc_block *block)
 {
-	//printk("map_to_arm7(%p): before: %i\n", block, (int)shmemipc_get_block_state());
-	shmemipc_lock();
+	DEBUG("map_to_arm7(%p): before: %i\n", block, (int)shmemipc_get_block_state());
 	switch (shmemipc_get_block_state()) {
 		case SHMEMIPC_BLOCK_MAP_BOTH_ARM9:
 			if (is_block_arm7(block))
@@ -74,15 +110,14 @@ void map_to_arm7(struct shmemipc_block *block)
 		case SHMEMIPC_BLOCK_MAP_BOTH_ARM7:
 			break;	
 	}
-	shmemipc_unlock();
-	//printk("map_to_arm7(%p): after: %i\n", block, (int)shmemipc_get_block_state());
+	DEBUG("map_to_arm7(%p): after: %i\n", block, (int)shmemipc_get_block_state());
 }
 
-/* Map the specified block to the ARM9, if it isn't mapped to it already. */
-void map_to_arm9(struct shmemipc_block *block)
+/* Map the specified block to the ARM9, if it isn't mapped to it already.
+ * Must be called with shmemipc_lock held. */
+static void map_to_arm9(struct shmemipc_block *block)
 {
-	//printk("map_to_arm9(%p): before: %i\n", block, (int)shmemipc_get_block_state());
-	shmemipc_lock();
+	DEBUG("map_to_arm9(%p): before: %i\n", block, (int)shmemipc_get_block_state());
 	switch (shmemipc_get_block_state()) {
 		case SHMEMIPC_BLOCK_MAP_BOTH_ARM7:
 			if (is_block_arm9(block))
@@ -101,8 +136,7 @@ void map_to_arm9(struct shmemipc_block *block)
 		case SHMEMIPC_BLOCK_MAP_BOTH_ARM9:
 			break;	
 	}
-	shmemipc_unlock();
-	//printk("map_to_arm9(%p): after: %i\n", block, (int)shmemipc_get_block_state());
+	DEBUG("map_to_arm9(%p): after: %i\n", block, (int)shmemipc_get_block_state());
 }
 
 static inline int is_valid(u8 user)
@@ -119,50 +153,34 @@ int shmemipc_flush(u8 user)
 	if (!is_valid(user))
 		return -EINVAL;
 
-	//printk("shmemipc_flush(): called by user %i\n", (int)user);
+	DEBUG("shmemipc_flush(): called by user %i\n", (int)user);
 	
 	down(&flush_mtx); /* released in shmemipc_flush_complete() */
 	shmemipc_lock();
 	block->user = user;
 	map_to_arm7(block);
+	DEBUG("shmemipc: requesting flush and waiting for completion\n");
 	shmemipc_unlock();
-	/* FIXME: This code is racy! Others might try to access the block
-	 * while we are flushing, writing data into nirvana, because the
-	 * block is not mapped to arm9.
-	 * We should actually not unlock the mem block until flushing is
-	 * done. But the situation is a bit of a mess:
-	 * Currently, shmemipc_lock() and shmemipc_unlock() map to
-	 * local_irq_enable() and local_irq_disable().
-	 * We cannot leave interrupts disabled because we need the
-	 * ARM7 interrupt to confirm data transfer completion.
-	 * On top of that we are not the only user of the ARM7 interrupt,
-	 * so masking out all other interrupts won't help much.
-	 * We return to our caller after triggering data transfer,
-	 * so anything can happen until we end up in shmemipc_flush_complete().
-	 * We want shmemipc_lock() and shmemipc_unlock() to be
-	 * interrupt-safe, so we should actually implement them with spinlocks.
-	 * But we cannot #include <asm/spinlock.h> unless hacking around
-	 * the #ifdef __LINUX_ARM_ARCH__ < 6 that protects it. We must also
-	 * confirm that the code in asm/spinlock.h does not use instructions
-	 * that are illegal on the DS' processor
-	 * (to be investigated). As a last resort, we could also provide our
-	 * own spinlocks (messy, requires careful asm and consideration of
-	 * CONFIG_PREEMPT).
-	 */
+
 	ipcsync_trigger_remote_interrupt(SHMEMIPC_REQUEST_FLUSH);
-	/* Let's hope no-one touches SHMEMIPC_BLOCK from here until
-	 * shmemipc_flush_complete() :P */
+	/* This is dodgy... we may get the reply from ARM7 before we sleep. */
+	if (wait_for_completion_interruptible_timeout(
+	    &shmemipc_flush_completed, SHMEMIPC_FLUSH_TIMEOUT) == 0) {
+		printk(KERN_WARNING "shmemipc: flush request timed out\n");
+	}
 	
 	return 0;
 }
 
 static void dispatch_interrupt(u8 type, struct shmemipc_block *block)
 {
+	struct list_head *p;
 	struct shmemipc_cb *cb;
 
-	//printk("shmemipc: dispatching interrupt type %i for user %i\n", (int)type, (int)block->user);
+	DEBUG("shmemipc: dispatching interrupt type %i for user %i\n", (int)type, (int)block->user);
 
-	for (cb = cbhead; cb; cb = cb->next) {
+	list_for_each(p, &cblist) {
+		cb = list_entry(p, struct shmemipc_cb, list);
 		switch (block->user) {
 			case SHMEMIPC_USER_SOUND:
 				break;
@@ -178,16 +196,21 @@ static void dispatch_interrupt(u8 type, struct shmemipc_block *block)
 
 static void shmemipc_flush_complete(void)
 {
+	DEBUG("%s called\n", __func__);
 	/* The ARM7 is done flushing our block. */
 	shmemipc_lock();
 	map_to_arm9(SHMEMIPC_BLOCK_ARM9);
 	dispatch_interrupt(SHMEMIPC_FLUSH_COMPLETE, SHMEMIPC_BLOCK_ARM9);
 	shmemipc_unlock();
-	up(&flush_mtx); /* taken in shmemipc_flush() */
+	complete(&shmemipc_flush_completed);
+	DEBUG("shmemipc: flush completed\n");
+	up(&flush_mtx);		/* taken in shmemipc_flush() */
 }
 
 static void shmemipc_serve_flush_request(void)
 {
+	DEBUG("shmemipc: serving flush request for ARM7\n");
+
 	/* The ARM7 wants us to flush its block */
 	shmemipc_lock();
 	map_to_arm9(SHMEMIPC_BLOCK_ARM7);
@@ -209,32 +232,20 @@ static struct ipcsync_cb flush_complete_callback = {
 
 int register_shmemipc_cb(struct shmemipc_cb *cb)
 {
-	down(&cbhead_mtx);
-	cb->next = cbhead;
-	cbhead = cb;
-	up(&cbhead_mtx);
+	down(&cblist_mtx);
+	list_add(&cb->list, &cblist);
+	up(&cblist_mtx);
 	return 0;
 }
 
-int unregister_shmemipc_cb(struct shmemipc_cb *shmemipc_cb)
+int unregister_shmemipc_cb(struct shmemipc_cb *cb)
 {
-	struct shmemipc_cb *cb;
-
-	down(&cbhead_mtx);
-	for (cb = cbhead; cb; cb = cb->next) {
-		if (cb->next == NULL) { /* shmemipc_cb not found in list */
-			up(&cbhead_mtx);
-			return -EINVAL;
-		} else if (cb->next == shmemipc_cb) {
-			cb->next = cb->next->next;
-			break;
-		}
-	}
-	up(&cbhead_mtx);
+	down(&cblist_mtx);
+	list_del(&cb->list);
+	up(&cblist_mtx);
 	return 0;
 }
 
-#define SHMEMIPC_VERSION_CODE KERNEL_VERSION(0, 1, 0)
 static int __init shmemipc_init(void)
 {
 	char *b;
@@ -244,9 +255,6 @@ static int __init shmemipc_init(void)
 	    (SHMEMIPC_VERSION_CODE >>  8) & 0xff,
 	    (SHMEMIPC_VERSION_CODE      ) & 0xff);
 	
-	register_ipcsync_cb(&request_flush_callback);
-	register_ipcsync_cb(&flush_complete_callback);
-
 	/* Initialize the whole shared memory area to zero. */
 	map_to_arm9(SHMEMIPC_BLOCK_0);
 	map_to_arm9(SHMEMIPC_BLOCK_1);
@@ -256,6 +264,9 @@ static int __init shmemipc_init(void)
 
 	map_to_arm7(SHMEMIPC_BLOCK_ARM7);
 	map_to_arm9(SHMEMIPC_BLOCK_ARM9);
+
+	register_ipcsync_cb(&request_flush_callback);
+	register_ipcsync_cb(&flush_complete_callback);
 
 	return 0;
 }

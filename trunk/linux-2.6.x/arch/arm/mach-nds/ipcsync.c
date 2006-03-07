@@ -27,26 +27,33 @@
 #include <asm/irq.h>
 #include <asm/io.h>
 #include <asm/semaphore.h>
-
 #include <asm/arch/ipcsync.h>
 
-static struct ipcsync_cb *cbhead = NULL;
-static DECLARE_MUTEX(cbhead_mtx);
+#define SHMEMIPC_VERSION_CODE KERNEL_VERSION(0, 2, 0)
+/* 
+ * Version history:
+ * 0.2.0: use linux lists
+ * 0.1.0: initial version
+ */
+
+
+static LIST_HEAD(cblist);
+static DECLARE_MUTEX(cblist_mtx);
 
 static irqreturn_t ipcsync_isr(int irq, void *dev_id, struct pt_regs *regs)
 {
 	u8 type;
+	struct list_head *p;
 	struct ipcsync_cb *cb;
 
 	type = ipcsync_get_remote_status();
 
 	//printk("ipcsync: interrupt type %i\n", (int)type);
 	
-	for (cb = cbhead; cb; cb = cb->next) {
-		
+	list_for_each(p, &cblist) {
+		cb = list_entry(p, struct ipcsync_cb, list);
 		if (cb->type != type)
 			continue;
-		
 		switch (type) {
 			case SHMEMIPC_REQUEST_FLUSH:
 				cb->handler.shmemipc_serve_flush_request();
@@ -63,32 +70,20 @@ static irqreturn_t ipcsync_isr(int irq, void *dev_id, struct pt_regs *regs)
 
 int register_ipcsync_cb(struct ipcsync_cb *cb)
 {
-	down(&cbhead_mtx);
-	cb->next = cbhead;
-	cbhead = cb;
-	up(&cbhead_mtx);
+	down(&cblist_mtx);
+	list_add(&cb->list, &cblist);
+	up(&cblist_mtx);
 	return 0;
 }
 
-int unregister_ipcsync_cb(struct ipcsync_cb *ipcsync_cb)
+int unregister_ipcsync_cb(struct ipcsync_cb *cb)
 {
-	struct ipcsync_cb *cb;
-
-	down(&cbhead_mtx);
-	for (cb = cbhead; cb; cb = cb->next) {
-		if (cb->next == NULL) { /* ipcsync_cb not found in list */
-			up(&cbhead_mtx);
-			return -EINVAL;
-		} else if (cb->next == ipcsync_cb) {
-			cb->next = cb->next->next;
-			break;
-		}
-	}
-	up(&cbhead_mtx);
+	down(&cblist_mtx);
+	list_del(&cb->list);
+	up(&cblist_mtx);
 	return 0;
 }
 
-#define SHMEMIPC_VERSION_CODE KERNEL_VERSION(0, 1, 0)
 static int __init ipcsync_init(void)
 {
 	printk("ipcsync: Driver version %d.%d.%d loaded\n",

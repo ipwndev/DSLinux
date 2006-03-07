@@ -14,6 +14,7 @@
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/interrupt.h>
+#include <linux/list.h>
 
 #include <asm/semaphore.h>
 #include <asm/irq.h>
@@ -25,18 +26,20 @@
 #define REG_IPCFIFORECV (*(volatile u32*) 0x04100000)
 #define REG_IPCFIFOCNT  (*(volatile u16*) 0x04000184)
 
-struct fifo_cb *cbhead = NULL;
-static DECLARE_MUTEX(cbhead_mtx);
+static LIST_HEAD(cblist);
+static DECLARE_MUTEX(cblist_mtx);
 
 static irqreturn_t ndsfifo_interrupt(int irq, void *dev_id,
 				     struct pt_regs *regs)
 {
 	u32 data;
+	struct list_head *p;
 	struct fifo_cb *cb;
 
 	while (!(REG_IPCFIFOCNT & (1 << 8))) {
 		data = REG_IPCFIFORECV;
-		for (cb = cbhead; cb; cb = cb->next) {
+		list_for_each(p, &cblist) {
+			cb = list_entry(p, struct fifo_cb, list);
 			if (cb->type == (data & 0xf0000000)) {
 				switch (cb->type) {
 				case FIFO_BUTTONS:
@@ -70,30 +73,19 @@ static irqreturn_t ndsfifo_interrupt(int irq, void *dev_id,
 	return IRQ_HANDLED;
 }
 
-int register_fifocb(struct fifo_cb *fifo_cb)
+int register_fifocb(struct fifo_cb *cb)
 {
-	down(&cbhead_mtx);
-	fifo_cb->next = cbhead;
-	cbhead = fifo_cb;
-	up(&cbhead_mtx);
+	down(&cblist_mtx);
+	list_add(&cb->list, &cblist);
+	up(&cblist_mtx);
 	return 0;
 }
 
-int unregister_fifocb(struct fifo_cb *fifo_cb)
+int unregister_fifocb(struct fifo_cb *cb)
 {
-	struct fifo_cb *cb;
-
-	down(&cbhead_mtx);
-	for (cb = cbhead; cb; cb = cb->next) {
-		if (cb->next == NULL) {	/* fifo_cb not found in list */
-			up(&cbhead_mtx);
-			return -EINVAL;
-		} else if (cb->next == fifo_cb) {
-			cb->next = cb->next->next;
-			break;
-		}
-	}
-	up(&cbhead_mtx);
+	down(&cblist_mtx);
+	list_del(&cb->list);
+	up(&cblist_mtx);
 	return 0;
 }
 

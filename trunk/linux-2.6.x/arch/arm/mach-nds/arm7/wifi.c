@@ -694,12 +694,14 @@ void wifi_stats_query(void)
 
 	wifi_data.state &= ~WIFI_STATE_SAW_TX_ERR;
 
+	shmemipc_lock();
 	SHMEMIPC_BLOCK_ARM7->user = SHMEMIPC_USER_WIFI;
 	SHMEMIPC_BLOCK_ARM7->wifi.type = SHMEMIPC_WIFI_TYPE_STATS;
 	SHMEMIPC_BLOCK_ARM7->wifi.length = (WIFI_STATS_MAX * sizeof(u32));
 	for (i = 0; i < (WIFI_STATS_MAX * sizeof(u32)); i++) {
 		SHMEMIPC_BLOCK_ARM7->wifi.data[i] = ((u8 *) wifi_data.stats)[i];
 	}
+	shmemipc_unlock();
 	ipcsync_trigger_remote_interrupt(SHMEMIPC_REQUEST_FLUSH);
 }
 
@@ -1824,6 +1826,7 @@ void wifi_ap_query(u16 bank)
 
 	wifi_data.state |= WIFI_STATE_APQUERYSENDING;
 
+	shmemipc_lock();
 	SHMEMIPC_BLOCK_ARM7->user = SHMEMIPC_USER_WIFI;
 	SHMEMIPC_BLOCK_ARM7->wifi.type = SHMEMIPC_WIFI_TYPE_AP_LIST;
 	SHMEMIPC_BLOCK_ARM7->wifi.length = (16 * sizeof(Wifi_AccessPoint));
@@ -1832,6 +1835,7 @@ void wifi_ap_query(u16 bank)
 	for (i = 0; i < (16 * sizeof(Wifi_AccessPoint)); i++) {
 		SHMEMIPC_BLOCK_ARM7->wifi.data[i] = *(c++);
 	}
+	shmemipc_unlock();
 	ipcsync_trigger_remote_interrupt(SHMEMIPC_REQUEST_FLUSH);
 }
 
