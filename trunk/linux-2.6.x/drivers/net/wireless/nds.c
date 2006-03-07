@@ -106,7 +106,7 @@ static int nds_start_xmit11(struct sk_buff *skb, struct net_device *dev)
 	SHMEMIPC_BLOCK_ARM9->wifi.length = skb->len;
 	shmemipc_unlock();
 
-	/* FIXME: this call seems to produce a "schediling while atomic"
+	/* FIXME: this call seems to produce a "scheduling while atomic"
 	 * error. shmemipc_flush() may sleep! */
 	shmemipc_flush(SHMEMIPC_USER_WIFI);
 
