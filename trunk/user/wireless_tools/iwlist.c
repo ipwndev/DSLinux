@@ -848,12 +848,20 @@ print_scanning_info(int		skfd,
   tv.tv_sec = 0;
   tv.tv_usec = 250000;
 
+#if WIRELESS_EXT > 17
+  /* no scan params for now, fix latter */
+  /* pass in struct iw_scan_req */
+  wrq.u.data.pointer = 0;
+  wrq.u.data.flags = 0;
+  wrq.u.data.length = 0;
+#else
   /*
    * Here we should look at the command line args and set the IW_SCAN_ flags
    * properly
    */
   wrq.u.param.flags = IW_SCAN_DEFAULT;
   wrq.u.param.value = 0;		/* Later */
+#endif
 
   /* Initiate Scanning */
   if(iw_set_ext(skfd, ifname, SIOCSIWSCAN, &wrq) < 0)
