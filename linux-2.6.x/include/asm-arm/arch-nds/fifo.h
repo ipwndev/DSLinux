@@ -19,6 +19,8 @@
 #ifndef __ASM_ARM_ARCH_FIFO_H
 #define __ASM_ARM_ARCH_FIFO_H
 
+#include <linux/list.h>
+
 #define FIFO_BUTTONS  (1<<28)
 #define FIFO_TOUCH    (2<<28)
 #define FIFO_MIC      (3<<28)
@@ -72,6 +74,7 @@ enum FIFO_WIFI_CMDS {
 
 struct fifo_cb
 {
+	struct list_head list;
 	u32 type ;
 	union
 	{
@@ -81,7 +84,6 @@ struct fifo_cb
 		void (*wifi_handler)( u8 cmd, u8 offset, u16 data) ;
 		/* ... */
 	} handler ;
-	struct fifo_cb *next ;
 };
 
 int register_fifocb( struct fifo_cb *fifo_cb ) ;

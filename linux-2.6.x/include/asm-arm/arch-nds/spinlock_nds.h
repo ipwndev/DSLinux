@@ -30,9 +30,18 @@
  * for safe locking in interrupt-context on the kernel (ARM9) side.
  *
  * We cannot use the "real" Linux spinlock API, as it is all no-ops
- * on UP, but we try to emulate it via crude macro overrides.
- * Needless to say, including <linux/spinlock.h> and this
- * file at the same time does not make sense at all.
+ * on UP, but we try to emulate it without overriding definitions
+ * from the standard API.
+ * 
+ * Note that only a subset of the Linux spinlock API is emulated,
+ * namely:
+ *
+ *	SPIN_LOCK_UNLOCKED	-->	NDS_SPIN_LOCK_UNLOCKED
+ * 	spin_lock_init()	-->	nds_spin_lock_init()
+ * 	spin_lock()		-->	nds_spin_lock()
+ * 	spin_unlock()		-->	nds_spin_unlock()
+ *
+ * That's all. We don't really need anything else for dslinux.
  */
 
 #ifndef __ASM_ARM_ARCH_SPINLOCK_NDS_H
@@ -40,59 +49,74 @@
 
 typedef struct {
 	volatile unsigned int lock;
-} __nds_spinlock_t;
+} nds_spinlock_t;
 
-#define NDS_SPINLOCK_UNLOCKED	0
-#define NDS_SPINLOCK_LOCKED	1
+/* do not change these values! the asm code below relies on them! */
+#define __NDS_SPINLOCK_STATE_UNLOCKED	0
+#define __NDS_SPINLOCK_STATE_LOCKED	1
+
+/* Initialize a spin lock dynamically */
+static inline void nds_spin_lock_init(nds_spinlock_t *lock)
+{
+	lock->lock = __NDS_SPINLOCK_STATE_UNLOCKED;
+}
 
 /*
  * Acquire a spin lock.
  *
- * We read the old value.  If it is zero, we may have
- * won the lock, so we try exclusively storing it by atomically
- * swapping the lock with the constant NDS_SPINLOCK_LOCKED.
- * If we get back NDS_SPINLOCK_UNLOCKED from memory during the
+ * We try exclusively storing it by atomically swapping the lock with
+ * the constant __NDS_SPINLOCK_STATE_LOCKED.
+ * If we get back __NDS_SPINLOCK_STATE_UNLOCKED from memory during the
  * swap operation, we got the lock.
  *
  * This routine returns when the caller has got the lock.
  */
-static inline void __spin_lock_nds(nds_spinlock_t *lock)
+static inline void nds_spin_lock(nds_spinlock_t *lock)
 {
-	unsigned long tmp;
+	/* we assign this here to shut the compiler up about
+	 * tmp not being initialised. */
+	unsigned long tmp = __NDS_SPINLOCK_STATE_LOCKED;
+
+	printk("locking...");
+
+	/* we assign this here to shut the compiler up about
+	 * tmp not being initialised. */
+	__asm__ __volatile__(
+"1:	ldr	%[tmp], =1\n"
+"	swp	%[tmp], %[tmp], [%[lock]]\n"	/* atomic */
+"	cmp	%[tmp], #0\n"
+"	bne	1b"
+	:
+	: [lock] "r" (&lock->lock), [tmp] "r" (tmp), "r" (1)
+	: "cc" );
+
+	printk(" done\n");
+}
+
+/* We hold the lock exclusively, so just set it to
+ * __NDS_SPINLOCK_STATE_UNLOCKED */
+static inline void nds_spin_unlock(nds_spinlock_t *lock)
+{
+	/* we assign this here to shut the compiler up about
+	 * tmp not being initialised. */
+	unsigned long tmp = __NDS_SPINLOCK_STATE_UNLOCKED;
+
+	printk("unlocking...");
 
 	__asm__ __volatile__(
-"spin:	ldr	%[tmp], [%[lock]]\n"
-"	cmp	%[tmp], #NDS_SPINLOCK_UNLOCKED\n"
-"	bne	spin\n"
-"	ldr	%[tmp], #NDS_SPINLOCK_LOCKED\n"
+"	ldr	%[tmp], =0\n"
 "	swp	%[tmp], %[tmp], [%[lock]]\n"	/* atomic */
-"	cmp	%[tmp], #NDS_SPINLOCK_UNLOCKED\n"
-"	bne	spin\n"
 	:
-	: [lock] "r" (&lock->lock), [tmp] "r" (tmp));
+	: [lock] "r" (&lock->lock), [tmp] "r" (tmp)
+	: "cc");
+
+	printk(" done\n");
 }
 
-/* We hold the lock exclusively, so just set it to NDS_SPINLOCK_UNLOCKED */
-static inline void __spin_unlock_nds(nds_spinlock_t *lock)
-{
-	lock->lock = NDS_SPINLOCK_UNLOCKED;
-}
-
-/* Override Linux spinlock API */
-
-#ifdef spin_lock
-#undef spin_lock
-#endif
-#define spin_lock(x)	__spin_lock_nds(x)
-
-#ifdef spin_unlock
-#undef spin_unlock
-#endif
-#define spin_unlock(x)	__spin_unlock_nds(x)
-
-#ifdef spinlock_t
-#undef spinlock_t
-#endif
-#define spinlock_t	__nds_spinlock_t
+/* Linux spinlock API overrides */
+#define NDS_SPIN_LOCK_UNLOCKED \
+	(nds_spinlock_t) { \
+		.lock = __NDS_SPINLOCK_STATE_UNLOCKED, \
+	}
 
 #endif /* __ASM_ARM_ARCH_SPINLOCK_NDS_H */

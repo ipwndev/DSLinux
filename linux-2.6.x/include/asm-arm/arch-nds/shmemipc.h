@@ -88,7 +88,9 @@
 #ifndef __ASM_ARM_ARCH_SHMEMIPC_H
 #define __ASM_ARM_ARCH_SHMEMIPC_H
 
+#include <linux/list.h>
 #include <asm/arch/ipcsync.h>
+#include <linux/spinlock.h>
 
 struct shmemipc_block;
 
@@ -115,22 +117,6 @@ struct shmemipc_block;
  */
 #define REG_WRAMCNT			(*(u8*)0x04000247)
 
-static inline u8 shmemipc_get_block_state(void)
-{
-	return (REG_WRAMCNT & 0x03);
-}
-
-static inline void shmemipc_set_block_state(u8 state)
-{
-	REG_WRAMCNT &= ~0x03;
-	REG_WRAMCNT |= (state & 0x03);
-}
-
-#define SHMEMIPC_BLOCK_MAP_BOTH_ARM9	0
-#define SHMEMIPC_BLOCK_MAP_NORMAL	1 /* ARM7: block 0, ARM9: block 1 */
-#define SHMEMIPC_BLOCK_MAP_REVERSE	2 /* ARM7: block 1, ARM9: block 0 */
-#define SHMEMIPC_BLOCK_MAP_BOTH_ARM7	3
-
 #if 0
 /* Data structure for sound data user. */
 struct shmemipc_sound_block {
@@ -146,7 +132,6 @@ struct shmemipc_firmware_block {
 	u_char data[SHMEMIPC_FIRMWARE_DATA_SIZE];
 };
 
-
 enum SHMEMIPC_WIFI_TYPE {
 	SHMEMIPC_WIFI_TYPE_PACKET = 1,
 	SHMEMIPC_WIFI_TYPE_STATS,
@@ -160,11 +145,11 @@ struct shmemipc_wifi_block {
 	u_char data[1600];
 };
 
-/* Drivers _must_ use these macros to lock the memory block for access!
- * Unfortunately, we cannot use spinlocks because spinlock.h will bail
- * when we include it ("SMP not supported").  */
-#define shmemipc_lock()		local_irq_disable()
-#define shmemipc_unlock()	local_irq_enable()
+/* Drivers _must_ use these macros to lock the ARM9 memory block for access! */
+extern spinlock_t shmemipc_lock;
+extern unsigned long shmemipc_irq_flags;
+#define shmemipc_lock()		spin_lock_irqsave(&shmemipc_lock, shmemipc_irq_flags)
+#define shmemipc_unlock()	spin_unlock_irqrestore(&shmemipc_lock, shmemipc_irq_flags)
 
 /* The user ID is used to tell the other side who is responsible
  * for flushing data. Every driver using the shared memory framework
@@ -185,6 +170,7 @@ struct shmemipc_block {
  * occurred (SHEMEMIPC_FLUSHREQUEST or SHMEMIPC_FLUSH_COMPLETE,
  * defined in ipcsync.h) */
 struct shmemipc_cb {
+	struct list_head list;
 	u8 user; /* One of the users defined above. */
 	union
 	{
@@ -192,17 +178,13 @@ struct shmemipc_cb {
 		void (*firmware_callback)(u8 type);
 		void (*wifi_callback)(u8 type);
 	} handler;
-	struct shmemipc_cb *next;
 };
 
-
 int register_shmemipc_cb(struct shmemipc_cb *callback);
+int unregister_shmemipc_cb(struct shmemipc_cb *shmemipc_cb);
 
-/* This function may sleep. Don't call in interrupt! 
+/* This function may sleep. Don't call in interrupt!
  * Don't call with interrupts disabled! */
 int shmemipc_flush(u8 user);
-
-void map_to_arm7(struct shmemipc_block *block);
-void map_to_arm9(struct shmemipc_block *block);
 
 #endif /* __ASM_ARM_ARCH_SHMEMIPC_H */
