@@ -27,6 +27,7 @@
 #define __ASM_ARM_ARCH_IPCSYNC_H
 
 #include <linux/types.h>
+#include <linux/list.h>
 
 /* You should never need to touch this register directly. */
 #define REG_IPCSYNC	(*(u16*)0x04000180)
@@ -79,6 +80,7 @@ static inline void ipcsync_trigger_remote_interrupt(u8 status)
 /* Callbacks will be called on ARM7 interrupt if their type matches the
  * one specified by the ARM7 in REG_IPCSYNC. */
 struct ipcsync_cb {
+	struct list_head list;
 	u8 type; /* One of the types defined above. */
 	union
 	{
@@ -86,7 +88,6 @@ struct ipcsync_cb {
 		void (*shmemipc_flush_complete)(void);
 		/* ... */
 	} handler;
-	struct ipcsync_cb *next;
 };
 
 int register_ipcsync_cb(struct ipcsync_cb *callback);
