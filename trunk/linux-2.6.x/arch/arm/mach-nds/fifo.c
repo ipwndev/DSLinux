@@ -32,36 +32,36 @@ static DECLARE_MUTEX(cblist_mtx);
 static irqreturn_t ndsfifo_interrupt(int irq, void *dev_id,
 				     struct pt_regs *regs)
 {
+	u32 fifo_recv;
 	u32 data;
 	struct list_head *p;
 	struct fifo_cb *cb;
 
-	while (!(REG_IPCFIFOCNT & (1 << 8))) {
-		data = REG_IPCFIFORECV;
+
+	while (!(REG_IPCFIFOCNT & FIFO_EMPTY)) {
+		fifo_recv = REG_IPCFIFORECV;
 		list_for_each(p, &cblist) {
 			cb = list_entry(p, struct fifo_cb, list);
-			if (cb->type == (data & 0xf0000000)) {
+			if (cb->type == FIFO_GET_TYPE(fifo_recv)) {
+				data = FIFO_GET_TYPE_DATA(fifo_recv);
 				switch (cb->type) {
 				case FIFO_BUTTONS:
 					cb->handler.button_handler(data & 0xff);
 					break;
 				case FIFO_TOUCH:
-					cb->handler.
-					    touch_handler((data & (1 << 16)) >>
-							  16,
-							  (data & (0xff << 8))
-							  >> 8, data & 0xff);
+					cb->handler.touch_handler(
+					    (data & (1 << 16)) >> 16,
+					    (data & (0xff << 8))
+						>> 8, data & 0xff);
 					break;
 				case FIFO_TIME:
-					cb->handler.
-					    time_handler(data & 0xffffff);
+					cb->handler.time_handler(
+					    data & 0xffffff);
 					break;
 				case FIFO_WIFI:
-					cb->handler.wifi_handler((data >> 18) &
-								 0x3f,
-								 (data >> 16) &
-								 0x03,
-								 data & 0xffff);
+					cb->handler.wifi_handler(
+					    FIFO_WIFI_GET_CMD(data),
+					    FIFO_WIFI_GET_DATA(data));
 					break;
 				default:
 					break;
@@ -91,13 +91,14 @@ int unregister_fifocb(struct fifo_cb *cb)
 
 static int __init ndsfifo_init(void)
 {
+	printk("NDS FIFO driver\n");
+
 	if (request_irq(IRQ_RECV, ndsfifo_interrupt, 0, "fifo", NULL)) {
 		printk(KERN_ERR "fifo.c: Can't allocate irq %d\n", IRQ_RECV);
 		return -EBUSY;
 	}
 
-	REG_IPCFIFOCNT = (1 << 15) | (1 << 10) | (1 << 3) | (1 << 14);
-
+	REG_IPCFIFOCNT = FIFO_ENABLE | FIFO_IRQ_ENABLE | FIFO_CLEAR | FIFO_ERROR;
 	return 0;
 }
 

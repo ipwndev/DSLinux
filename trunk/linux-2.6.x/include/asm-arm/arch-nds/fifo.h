@@ -21,37 +21,54 @@
 
 #include <linux/list.h>
 
-#define FIFO_BUTTONS  (1<<28)
-#define FIFO_TOUCH    (2<<28)
-#define FIFO_MIC      (3<<28)
-#define FIFO_WIFI     (4<<28)
-#define FIFO_SOUND    (5<<28)
-#define FIFO_POWER    (6<<28)
-#define FIFO_TIME     (7<<28)
+/* 
+ * Fifo commands are encoded as follows:
+ * +--------------------------------------------------------------+
+ * |3 bits FIFO_TYPE | 29 bits type data (subcommands, data, ...) |
+ * +--------------------------------------------------------------+
+ */
+#define FIFO_BUTTONS  (1 << 29)
+#define FIFO_TOUCH    (2 << 29)
+#define FIFO_MIC      (3 << 29)
+#define FIFO_WIFI     (4 << 29)
+#define FIFO_SOUND    (5 << 29)
+#define FIFO_POWER    (6 << 29)
+#define FIFO_TIME     (7 << 29)
+#define FIFO_GET_TYPE(x) (((x)) & 0xe0000000)
+#define FIFO_GET_TYPE_DATA(x) ((x) & 0x1fffffff)
 
 #define FIFO_HIGH_BITS  (1<<16)
 #define FIFO_LOW_BITS   (1<<17)
 
-#define FIFO_WIFI_CMD(c, d) (FIFO_WIFI | ((c & 0x3f) << 18) | (d & 0x0003ffff))
+/* 
+ * Fifo wifi commands are encoded as follows:
+ * +-----------------------------------------------------------------+
+ * |3 bits FIFO_WIFI | 5 bits FIFO_CMD_WIFI_x | 24 bits command data |
+ * +-----------------------------------------------------------------+
+ *  
+ *  How command data is used depends on the command.
+ *  Some commands, like recieve and transmit, send offsets into 0x02 RAM
+ *  telling the other side where to read packet data from.
+ *  Other commands, like those for setting WEP keys or the essid, further
+ *  divide the command data into flags and actual data.
+ */
+#define FIFO_WIFI_CMD(c, d) (FIFO_WIFI | ((c & 0x1f) << 24) | (d & 0x00ffffff))
+#define FIFO_WIFI_GET_CMD(c) ((c >> 24) & 0x1f)
+#define FIFO_WIFI_GET_DATA(d) (d & 0x00ffffff)
+#define FIFO_WIFI_DECODE_ADDRESS(a) ((a) + 0x02000000)
+
 enum FIFO_WIFI_CMDS {
 	FIFO_WIFI_CMD_UP,
 	FIFO_WIFI_CMD_DOWN,
 	FIFO_WIFI_CMD_MAC_QUERY,
+	FIFO_WIFI_CMD_TX,
 	FIFO_WIFI_CMD_TX_COMPLETE,
+	FIFO_WIFI_CMD_RX,
+	FIFO_WIFI_CMD_RX_COMPLETE,
 	FIFO_WIFI_CMD_STATS_QUERY,
-	FIFO_WIFI_CMD_SET_ESSID1,
-	FIFO_WIFI_CMD_SET_ESSID2,
-	FIFO_WIFI_CMD_SET_ESSID3,
-	FIFO_WIFI_CMD_SET_ESSID4,
+	FIFO_WIFI_CMD_SET_ESSID,
 	FIFO_WIFI_CMD_SET_CHANNEL,
-	FIFO_WIFI_CMD_SET_WEPKEY0,
-	FIFO_WIFI_CMD_SET_WEPKEY0A,
-	FIFO_WIFI_CMD_SET_WEPKEY1,
-	FIFO_WIFI_CMD_SET_WEPKEY1A,
-	FIFO_WIFI_CMD_SET_WEPKEY2,
-	FIFO_WIFI_CMD_SET_WEPKEY2A,
-	FIFO_WIFI_CMD_SET_WEPKEY3,
-	FIFO_WIFI_CMD_SET_WEPKEY3A,
+	FIFO_WIFI_CMD_SET_WEPKEY,
 	FIFO_WIFI_CMD_SET_WEPKEYID,
 	FIFO_WIFI_CMD_SET_WEPMODE,
 	FIFO_WIFI_CMD_AP_QUERY,
@@ -60,7 +77,13 @@ enum FIFO_WIFI_CMDS {
 	FIFO_WIFI_CMD_GET_AP_MODE,
 };
 
-#define FIFO_SOUND_CHANNELS	(1<<24)
+/* 
+ * Sound driver commands
+ * +-------------------------------------------------------+
+ * |3 bits FIFO_SOUND | 1bit unused | 28 bits command data |
+ * +-------------------------------------------------------+
+ */
+ #define FIFO_SOUND_CHANNELS	(1<<24)
 #define FIFO_SOUND_DMA_ADDRESS	(2<<24)
 #define FIFO_SOUND_DMA_SIZE	(3<<24)
 #define FIFO_SOUND_FORMAT	(4<<24)
@@ -68,25 +91,32 @@ enum FIFO_WIFI_CMDS {
 #define FIFO_SOUND_TRIGGER	(6<<24)
 #define FIFO_SOUND_POWER	(7<<24)
 
+/* FIFO registers */
 #define REG_IPCFIFOSEND (*(volatile u32*) 0x04000188)
 #define REG_IPCFIFORECV (*(volatile u32*) 0x04100000)
 #define REG_IPCFIFOCNT  (*(volatile u16*) 0x04000184)
+#define FIFO_CLEAR	(1 << 3)
+#define FIFO_EMPTY	(1 << 8)
+#define FIFO_IRQ_ENABLE (1 << 10)
+#define FIFO_ERROR	(1 << 14)
+#define FIFO_ENABLE	(1 << 15)
 
+/* FIFO callback functions. */
 struct fifo_cb
 {
 	struct list_head list;
 	u32 type ;
-	union
-	{
-		void (*button_handler)( u32 state ) ;
-		void (*touch_handler)( u8 pressed, u8 x, u8 y ) ;
-		void (*time_handler)( u32 seconds ) ;
-		void (*wifi_handler)( u8 cmd, u8 offset, u16 data) ;
+	union {
+		void (*button_handler)(u32 state);
+		void (*touch_handler)(u8 pressed, u8 x, u8 y);
+		void (*time_handler)(u32 seconds);
+		void (*wifi_handler)(u8 cmd, u32 data);
 		/* ... */
-	} handler ;
+	} handler;
 };
 
-int register_fifocb( struct fifo_cb *fifo_cb ) ;
-int unregister_fifocb( struct fifo_cb *fifo_cb ) ;
+/* Callback register functions. */
+int register_fifocb(struct fifo_cb *fifo_cb);
+int unregister_fifocb(struct fifo_cb *fifo_cb);
 
 #endif /* __ASM_ARM_ARCH_FIFO_H */

@@ -215,7 +215,6 @@ int ndstouch_output_event(struct input_dev *dev, unsigned int type, unsigned int
 
 static void ndstouch_input_event(u8 touched, u8 x, u8 y)
 {
-	int i = 0;
 	struct input_dev* dev = &ndstouch_dev;
 	static int wasTouched = FALSE ;
 	static u16 currentKey = KEY_RESERVED ;

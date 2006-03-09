@@ -44,6 +44,9 @@ SOFTWARE.
 
 Wifi_Data wifi_data;
 
+struct nds_rx_packet *rx_packet = NULL;
+int sending_packet = 0;
+
 static void Wifi_Stop(void);
 static void Wifi_DisableTempPowerSave(void);
 static void Wifi_RFInit(void);
@@ -404,12 +407,14 @@ void Wifi_SetWepKeyID(int key)
 	wifi_data.wepkeyid = key;
 }
 
+#if 0
 static void Wifi_SetBeaconPeriod(int beacon_period)
 {
 	if (beacon_period < 0x10 || beacon_period > 0x3E7)
 		return;
 	WIFI_REG(0x8C) = beacon_period;
 }
+#endif
 
 static void Wifi_SetMode(int wifimode)
 {
@@ -418,12 +423,14 @@ static void Wifi_SetMode(int wifimode)
 	WIFI_MODE_WEP = (WIFI_MODE_WEP & 0xfff8) | wifimode;
 }
 
+#if 0
 static void Wifi_SetPreambleType(int preamble_type)
 {
 	if (preamble_type > 1 || preamble_type < 0)
 		return;
 	WIFI_REG(0x80BC) = (WIFI_REG(0x80BC) & 0xFFBF) | (preamble_type << 6);
 }
+#endif
 
 static void Wifi_DisableTempPowerSave(void)
 {
@@ -732,6 +739,7 @@ u16 inline Wifi_MACReadRx(u32 MAC_Base, u32 MAC_Offset)
 	return WIFI_REG(0x4000 + MAC_Base);
 }
 
+#if 0
 static void Wifi_MACCopyRx(u16 * dest, u32 MAC_Base, u32 MAC_Offset, u32 length)
 {
 	int endrange, subval;
@@ -760,6 +768,7 @@ static void Wifi_MACCopyRx(u16 * dest, u32 MAC_Base, u32 MAC_Offset, u32 length)
 		MAC_Base -= subval;
 	}
 }
+#endif
 
 static void Wifi_MACWriteTX(u16 * src, u32 MAC_Base, u32 MAC_Offset, u32 length)
 {
@@ -1318,18 +1327,24 @@ int Wifi_QueueRxMacData(u32 base, u32 len)
 
 	macofs = 0;
 
-	if (len > sizeof(SHMEMIPC_BLOCK_ARM7->wifi.data)) {
+	/* If we don't know where to buffer recieved data yet, or if
+	 * the buffer is currently in use, we throw the packet away. */
+	if (!rx_packet || sending_packet)
+		return 0;
+
+	if (len > sizeof(rx_packet->data)) {
 		wifi_data.stats[WIFI_STATS_RXOVERRUN]++;
 		return 0;
 	}
+	
+	sending_packet = 1;
+
 	wifi_data.stats[WIFI_STATS_RXPACKETS]++;
 	wifi_data.stats[WIFI_STATS_RXDATABYTES] += len;
 
-	SHMEMIPC_BLOCK_ARM7->user = SHMEMIPC_USER_WIFI;
-	SHMEMIPC_BLOCK_ARM7->wifi.type = SHMEMIPC_WIFI_TYPE_PACKET;
-	Wifi_MACCopy((u16 *) SHMEMIPC_BLOCK_ARM7->wifi.data, base, macofs, len);
-	SHMEMIPC_BLOCK_ARM7->wifi.length = len;
-	ipcsync_trigger_remote_interrupt(SHMEMIPC_REQUEST_FLUSH);
+	Wifi_MACCopy((u16*)rx_packet->data, base, macofs, len);
+	rx_packet->len = len;
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_RX, 0);
 
 	/* XOXOXO Disable rx interupts */
 
@@ -1437,7 +1452,7 @@ static void Wifi_Intr_StartTx(void)
 
 static void Wifi_Intr_TxEnd(void)
 {
-	/* signal that a TX buffer is now free */
+	/* signal that current packet has been transmitted */
 	if ((wifi_data.state & WIFI_STATE_TXPENDING)
 	    && !(WIFI_REG(0xA0) & 0x8000)) {
 		wifi_data.state &= ~WIFI_STATE_TXPENDING;
@@ -1790,6 +1805,7 @@ static void Wifi_SendAssocPacket(void)
 	wifi_send_raw(i, data);
 }
 
+#if 0
 static int Wifi_SendPSPollFrame(void)
 {
 	// max size is 12+16 = 28
@@ -1810,6 +1826,7 @@ static int Wifi_SendPSPollFrame(void)
 
 	wifi_send_raw(28, data);
 }
+#endif
 
 void wifi_ap_query(u16 bank)
 {
