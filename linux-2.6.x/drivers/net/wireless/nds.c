@@ -73,6 +73,33 @@ static DECLARE_WAIT_QUEUE_HEAD(ndswifi_wait);
 static struct nds_tx_packet tx_packet = {0,0,0};
 static struct nds_rx_packet rx_packet;
 
+#if defined(DUMP_INPUT_PACKETS) || defined(DUMP_OUTPUT_PACKETS)
+static void nds_dump_packet(u8 *data, u16 len)
+{
+	u8 *c;
+	char buff[2024], *c2;
+
+	c = data;
+	c2 = buff;
+	while ((c - data) < len) {
+		if (((*c) >> 4) > 9)
+			*(c2++) = ((*c) >> 4) - 10 + 'A';
+		else
+			*(c2++) = ((*c) >> 4) + '0';
+
+		if (((*c) & 0x0f) > 9)
+			*(c2++) = ((*c) & 0x0f) - 10 + 'A';
+		else
+			*(c2++) = ((*c) & 0x0f) + '0';
+		c++;
+		if ((c - data) % 2 == 0)
+			*(c2++) = ' ';
+	}
+	*c2 = '\0';
+	printk("len(%d) %s\n", len, buff);
+}
+#endif
+
 static inline void nds_init_rx_packet(struct nds_rx_packet *rx_packet)
 {
 	int i;
@@ -103,6 +130,12 @@ static int nds_start_xmit11(struct sk_buff *skb, struct net_device *dev)
 	/* only transmit one packet at a time */
 	netif_stop_queue(dev);
 
+#ifdef DUMP_OUTPUT_PACKETS
+	if (pc_debug >= 9) {
+		printk("output packet: ");
+		nds_dump_packet(tx_packet.data, tx_packet.len);
+	}
+#endif
 	/* wrap up packet information and send it to arm7 */
 	tx_packet.len = skb->len;
 	tx_packet.data = skb->data;
@@ -967,27 +1000,8 @@ static void nds_wifi_recieve_packet(void)
 
 #ifdef DUMP_INPUT_PACKETS
 	if (pc_debug >= 9) {
-		u8 *c;
-		char buff[2024], *c2;
-
-		c = rx_packet.data;
-		c2 = buff;
-		while ((c - rx_packet.data) < rx_packet.len) {
-			if (((*c) >> 4) > 9)
-				*(c2++) = ((*c) >> 4) - 10 + 'A';
-			else
-				*(c2++) = ((*c) >> 4) + '0';
-
-			if (((*c) & 0x0f) > 9)
-				*(c2++) = ((*c) & 0x0f) - 10 + 'A';
-			else
-				*(c2++) = ((*c) & 0x0f) + '0';
-			c++;
-			if ((c - rx_packet.data) % 2 == 0)
-				*(c2++) = ' ';
-		}
-		*c2 = '\0';
-		DEBUG(9, "input packet: len(%d) %s\n", rx_packet.len, buff);
+		printk("input packet: ");
+		nds_dump_packet(rx_packet.data, rx_packet.len);
 	}
 #endif
 	rx_hdr = (Wifi_RxHeader*)(u32)&rx_packet.data;
@@ -1055,48 +1069,6 @@ static void nds_wifi_recieve_packet(void)
 
 				skb->protocol = eth_type_trans(skb, global_dev);
 
-#ifdef DUMP_OUTPUT_PACKETS
-				if (pc_debug >= 9) {
-					u8 *c;
-					char buff[300], *c2;
-					int l = (14 + len - 8 - hdrlen);
-					if (l > 80)
-						l = 80;
-
-					c = skbp;
-					c2 = buff;
-					while ((c - skbp) < l) {
-						if (((*c) >> 4) > 9)
-							*(c2++)
-							    =
-							    ((*c) >> 4) - 10 +
-							    'A';
-						else
-							*(c2++)
-							    = ((*c) >> 4) + '0';
-
-						if (((*c) & 0x0f) > 9)
-							*(c2++)
-							    =
-							    ((*c) & 0x0f) - 10 +
-							    'A';
-						else
-							*(c2++)
-							    =
-							    ((*c) & 0x0f) + '0';
-						c++;
-						if ((c - skbp) % 2 == 0)
-							*(c2++)
-							    = ' ';
-					}
-					*c2 = '\0';
-					DEBUG(9,
-					      "output packet: len(%d) proto(%d) %s\n",
-					      (14 + len - 8 -
-					       hdrlen),
-					      ntohs(skb->protocol), buff);
-				}
-#endif
 				rc = netif_rx(skb);
 				if (rc != NET_RX_SUCCESS)
 					DEBUG(3, "netif_rx return(%d)\n", rc);
