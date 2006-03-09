@@ -271,6 +271,7 @@ dir_$(CONFIG_USER_RAMIMAGE_RAMFS2048)       += ramimage
 dir_$(CONFIG_USER_RAMIMAGE_RAMFS8192)       += ramimage
 dir_$(CONFIG_USER_READPROFILE_READPROFILE)  += readprofile
 dir_$(CONFIG_USER_RECOVER_RECOVER)          += recover
+dir_$(CONFIG_USER_RETAWQ_RETAWQ)            += retawq
 dir_$(CONFIG_USER_REISERFSPROGS)            += reiserfsprogs
 dir_$(CONFIG_USER_ROOTLOADER_ROOTLOADER)    += rootloader
 dir_$(CONFIG_USER_ROUTED_ROUTED)            += routed
