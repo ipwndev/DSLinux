@@ -987,7 +987,7 @@ static void nds_wifi_recieve_packet(void)
 				*(c2++) = ' ';
 		}
 		*c2 = '\0';
-		DEBUG(9, "len(%d): %s\n", rx_packet.len, buff);
+		DEBUG(9, "input packet: len(%d) %s\n", rx_packet.len, buff);
 	}
 #endif
 	rx_hdr = (Wifi_RxHeader*)(u32)&rx_packet.data;
@@ -1091,7 +1091,7 @@ static void nds_wifi_recieve_packet(void)
 					}
 					*c2 = '\0';
 					DEBUG(9,
-					      "len(%d): proto(%d) %s\n",
+					      "output packet: len(%d) proto(%d) %s\n",
 					      (14 + len - 8 -
 					       hdrlen),
 					      ntohs(skb->protocol), buff);
