@@ -519,6 +519,7 @@ bool 'radvd'			CONFIG_USER_RADVD_RADVD
 if [ "$CONFIG_USER_RADVD_RADVD"  = "y" ]; then
 	define_bool CONFIG_LIB_FLEX y
 fi
+bool 'retawq'			CONFIG_USER_RETAWQ_RETAWQ
 bool 'rdate'			CONFIG_USER_RDATE_RDATE
 bool 'routed'			CONFIG_USER_ROUTED_ROUTED
 bool 'rp-pppoe'			CONFIG_USER_RP_PPPOE_PPPOE
@@ -1270,7 +1271,7 @@ if [ "$CONFIG_USER_BUSYBOX_BUSYBOX" = "y" ]; then
 				bool 'sh: username completion' CONFIG_USER_BUSYBOX_COMMAND_USERNAME_COMPLETION
 			fi
 		fi
-		bool 'sh: extra quiet' CONFIG_FEATURE_SH_EXTRA_QUIET
+		bool 'sh: extra quiet' CONFIG_USER_BUSYBOX_FEATURE_SH_EXTRA_QUIET
 		bool 'sh: tab completion' CONFIG_USER_BUSYBOX_TAB_COMPLETION
 		bool 'sh: username completion' CONFIG_USER_BUSYBOX_USERNAME_COMPLETION
 		bool 'sh: stand alone' CONFIG_USER_BUSYBOX_SH_STANDALONE_SHELL

@@ -565,6 +565,9 @@ CONFIG_USER_PPTP_CLIENT_PPTP_CALLMGR
   PPTP Call manager for the PPTP client.
   Approx. binary size: 30k
 
+CONFIG_USER_RETAWQ_RETAWQ
+  Small web browser.
+
 CONFIG_USER_RDATE_RDATE
   Remote date print/set program.  Conforms to RFC 868.
 
