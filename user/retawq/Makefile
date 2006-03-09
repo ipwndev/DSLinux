@@ -60,7 +60,7 @@ PATH_INSTALL_LOCALE = $(PATH_INSTALL_PREFIX)/share/locale
 #ifeq ($(CC), gcc)
 #CFLAGS = -O2
 #else
-CFLAGS = -Os
+CFLAGS = -Os -trigraphs
 #endif
 
 # add include and link paths for ncurses in dslinux
@@ -146,6 +146,8 @@ endif
 
 RETAWQ_VERSION = 0.2.6b
 
+all: retawq
+retawq: build_binary
 build_binary: msgpre clean config retawqbin stripsyms msgpost
 
 devel: clean config retawqbin
@@ -313,7 +315,7 @@ report: config
 clean:
 	rm -f .config tgmode.inc birtcfg.inc *.o retawq
 
-.PHONY: build_binary clean config devel install msgpost msgpre report retawqbin stripsyms romfs
+.PHONY: all build_binary clean config devel install msgpost msgpre report retawqbin stripsyms romfs
 
 romfs:
 	$(ROMFSINST) /bin/retawq
