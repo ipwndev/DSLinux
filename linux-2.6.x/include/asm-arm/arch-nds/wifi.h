@@ -18,6 +18,17 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <linux/types.h>
+
+#if 0
+enum SHMEMIPC_WIFI_TYPE {
+	SHMEMIPC_WIFI_TYPE_PACKET = 1,
+	SHMEMIPC_WIFI_TYPE_STATS,
+	SHMEMIPC_WIFI_TYPE_AP_LIST,
+	SHMEMIPC_WIFI_TYPE_PACKET_RAW
+};
+#endif
+
 enum WIFI_STATS {
 	WIFI_STATS_RXPACKETS = 0,
 	WIFI_STATS_RXBYTES,
@@ -52,8 +63,21 @@ enum WIFI_STATS {
 	WIFI_STATS_MAX
 };
 
-
 enum WIFI_AP_MODE {
 	WIFI_AP_INFRA,
 	WIFI_AP_ADHOC,
+};
+
+/* Ethernet MTU is 1500 */
+#define NDS_WIFI_MAX_PACKET_SIZE 1600
+
+/* Used for transmission to arm7 */
+struct nds_tx_packet {
+	u16 len;	
+	u_char *data;
+	void *skb;
+};
+struct nds_rx_packet {
+	u16 len;	
+	u_char data[NDS_WIFI_MAX_PACKET_SIZE];
 };

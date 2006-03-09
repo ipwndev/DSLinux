@@ -18,6 +18,9 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#ifndef WIFI_H
+#define WIFI_H
+
 enum WEPMODES {
 	WEPMODE_NONE = 0,
 	WEPMODE_40BIT = 1,
@@ -179,3 +182,10 @@ void wifi_timer_handler(void);
 void wifi_tx_q_complete(void);
 void wifi_stats_query_complete(void);
 void wifi_ap_query_complete(void);
+
+/* Pointer to buffer used to send incoming packets to ARM9 */
+extern struct nds_rx_packet *rx_packet;
+/* We can only send one packet to ARM9 at a time */
+extern int sending_packet;
+
+#endif /* WIFI_H */

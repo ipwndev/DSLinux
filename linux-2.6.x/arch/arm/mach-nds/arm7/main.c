@@ -17,14 +17,16 @@ static s32 xoffset, yoffset;
 /* recieve outstanding FIFO commands from ARM9 */
 static void recieveFIFOCommand(void)
 {
+	u32 fifo_recv;
 	u32 data;
 	u32 seconds = 0;
 	int cmd;
+	struct nds_tx_packet *tx_packet = NULL;
 
-	while (!(REG_IPCFIFOCNT & (1 << 8))) {
-		data = REG_IPCFIFORECV;
-
-		switch (data & 0xf0000000) {
+	while (!(REG_IPCFIFOCNT & FIFO_EMPTY)) {
+		fifo_recv = REG_IPCFIFORECV;
+		data = FIFO_GET_TYPE_DATA(fifo_recv);
+		switch (FIFO_GET_TYPE(fifo_recv)) {
 		case FIFO_POWER:
 			power_write(POWER_CONTROL, POWER0_SYSTEM_POWER);
 			break;
@@ -33,7 +35,7 @@ static void recieveFIFOCommand(void)
 			REG_IPCFIFOSEND =
 			    (FIFO_TIME | FIFO_HIGH_BITS | (seconds >> 16));
 			REG_IPCFIFOSEND =
-			    (FIFO_TIME | FIFO_LOW_BITS | (seconds & 0xFFFF));
+			    (FIFO_TIME | FIFO_LOW_BITS | (seconds & 0xffff));
 			break;
 		case FIFO_SOUND:
 			switch (data & 0x0f000000) {
@@ -65,7 +67,7 @@ static void recieveFIFOCommand(void)
 			}
 			break;
 		case FIFO_WIFI:
-			cmd = (data >> 18) & 0x3f;
+			cmd = FIFO_WIFI_GET_CMD(data);
 			switch (cmd) {
 			case FIFO_WIFI_CMD_UP:
 				wifi_open();
@@ -76,58 +78,40 @@ static void recieveFIFOCommand(void)
 			case FIFO_WIFI_CMD_MAC_QUERY:
 				wifi_mac_query();
 				break;
+			case FIFO_WIFI_CMD_TX:
+				tx_packet = (struct nds_tx_packet*)FIFO_WIFI_DECODE_ADDRESS(FIFO_WIFI_GET_DATA(data));
+				wifi_send_ether_packet(tx_packet->len, tx_packet->data);
+				tx_packet = NULL;
+				break;
+			case FIFO_WIFI_CMD_RX:
+				/* ARM9 wants to tell us the address of a
+				 * recieve buffer we can use. */
+				rx_packet = (struct nds_rx_packet*)FIFO_WIFI_DECODE_ADDRESS(FIFO_WIFI_GET_DATA(data));
+				break;	
+			case FIFO_WIFI_CMD_RX_COMPLETE:
+				sending_packet = 0;
+				break;
 			case FIFO_WIFI_CMD_STATS_QUERY:
 				wifi_stats_query();
 				break;
-			case FIFO_WIFI_CMD_SET_ESSID1:
-				Wifi_SetSSID(((data >> 16) & 0x3),
-					     (data >> 8) & 0xff, data & 0xff);
-				break;
-			case FIFO_WIFI_CMD_SET_ESSID2:
-				Wifi_SetSSID(4 + ((data >> 16) & 0x3),
-					     (data >> 8) & 0xff, data & 0xff);
-				break;
-			case FIFO_WIFI_CMD_SET_ESSID3:
-				Wifi_SetSSID(8 + ((data >> 16) & 0x3),
-					     (data >> 8) & 0xff, data & 0xff);
-				break;
-			case FIFO_WIFI_CMD_SET_ESSID4:
-				Wifi_SetSSID(12 + ((data >> 16) & 0x3),
+			case FIFO_WIFI_CMD_SET_ESSID:
+				Wifi_SetSSID(/* #essid (0 - 3) */
+					     4 * ((data >> 20) & 0x3)
+					     /* offset */
+					     + ((data >> 16) & 0x3),
+					     /* 2 chars */
 					     (data >> 8) & 0xff, data & 0xff);
 				break;
 			case FIFO_WIFI_CMD_SET_CHANNEL:
 				Wifi_RequestChannel(data & 0xff);
 				break;
-			case FIFO_WIFI_CMD_SET_WEPKEY0:
-				Wifi_SetWepKey(0, ((data >> 16) & 0x3),
-					       (data >> 8) & 0xff, data & 0xff);
-				break;
-			case FIFO_WIFI_CMD_SET_WEPKEY0A:
-				Wifi_SetWepKey(0, 4 + ((data >> 16) & 0x3),
-					       (data >> 8) & 0xff, data & 0xff);
-				break;
-			case FIFO_WIFI_CMD_SET_WEPKEY1:
-				Wifi_SetWepKey(1, ((data >> 16) & 0x3),
-					       (data >> 8) & 0xff, data & 0xff);
-				break;
-			case FIFO_WIFI_CMD_SET_WEPKEY1A:
-				Wifi_SetWepKey(1, 4 + ((data >> 16) & 0x3),
-					       (data >> 8) & 0xff, data & 0xff);
-				break;
-			case FIFO_WIFI_CMD_SET_WEPKEY2:
-				Wifi_SetWepKey(2, ((data >> 16) & 0x3),
-					       (data >> 8) & 0xff, data & 0xff);
-				break;
-			case FIFO_WIFI_CMD_SET_WEPKEY2A:
-				Wifi_SetWepKey(2, 4 + ((data >> 16) & 0x3),
-					       (data >> 8) & 0xff, data & 0xff);
-				break;
-			case FIFO_WIFI_CMD_SET_WEPKEY3:
-				Wifi_SetWepKey(3, ((data >> 16) & 0x3),
-					       (data >> 8) & 0xff, data & 0xff);
-				break;
-			case FIFO_WIFI_CMD_SET_WEPKEY3A:
-				Wifi_SetWepKey(3, 4 + ((data >> 16) & 0x3),
+			case FIFO_WIFI_CMD_SET_WEPKEY:
+				Wifi_SetWepKey( /* #key */
+						((data >> 20) & 0x3),
+						/* offset */
+						4 * ((data >> 18) & 0x3)
+						+ ((data >> 16) & 0x3),
+						/* 2 chars */
 					       (data >> 8) & 0xff, data & 0xff);
 				break;
 			case FIFO_WIFI_CMD_SET_WEPKEYID:
@@ -167,8 +151,10 @@ static void sendTouchState(u16 buttons)
 			REG_IPCFIFOSEND = FIFO_TOUCH;
 		lastx = 255;
 		lasty = 255;
-	} else {		/* Some dude is smacking his fingerprint on the touchscreen. */
-                // Code from devkitpro/libnds/source/arm7/touch.c
+	} else {
+		/* Some dude is smacking his fingerprint on the touchscreen. */
+                
+		/* Code from devkitpro/libnds/source/arm7/touch.c */
                 x = touch_read_value(TSC_MEASURE_X, _MaxRetry, _MaxRange);
                 y = touch_read_value(TSC_MEASURE_Y, _MaxRetry, _MaxRange);
 
@@ -280,7 +266,7 @@ int main(void)
 	NDS_IE = IRQ_VBLANK | IRQ_RECV | IRQ_ARM9 | IRQ_WIFI;
 
 	/* Enable FIFO */
-	REG_IPCFIFOCNT = (1 << 15) | (1 << 3) | (1 << 10) | (1 << 14);
+	REG_IPCFIFOCNT = FIFO_ENABLE | FIFO_IRQ_ENABLE | FIFO_CLEAR | FIFO_ERROR ;
 
 	ipcsync_allow_local_interrupt();
 

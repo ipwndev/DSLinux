@@ -27,6 +27,9 @@
  * shmemipc should implement the ARM7 part of their driver in this file.
  */
 
+#ifndef SHMEMIPC_ARM7_H
+#define SHMEMIPC_ARM7_H
+
 #include "asm/arch/ipcsync.h"
 #include "asm/arch/shmemipc.h"
 #include "arm7.h"
@@ -42,3 +45,4 @@
 
 void shmemipc_serve_flush_request(void);
 void shmemipc_flush_complete(void);
+#endif /* SHMEMIPC_ARM7_H */

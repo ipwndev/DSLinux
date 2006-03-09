@@ -70,48 +70,44 @@ static void *ap_query_output;
 static u8 mode_query_output;
 static DECLARE_WAIT_QUEUE_HEAD(ndswifi_wait);
 
+static struct nds_tx_packet tx_packet = {0,0,0};
+static struct nds_rx_packet rx_packet;
+
+static inline void nds_init_rx_packet(struct nds_rx_packet *rx_packet)
+{
+	int i;
+	rx_packet->len = 0;
+	for (i = 0; i < sizeof(rx_packet->data); i++)
+		rx_packet->data[i] = 0;
+}
+
+#if 0
 static int wll_header_parse(struct sk_buff *skb, unsigned char *haddr)
 {
 	DEBUG(7, "Called: %s\n", __func__);
 	memcpy(haddr, skb->mac.raw + 10, ETH_ALEN);
 	return ETH_ALEN;
 }
+#endif
 
 static int nds_start_xmit11(struct sk_buff *skb, struct net_device *dev)
 {
 	DEBUG(7, "Called: %s len(%d)\n", __func__, skb->len);
 
-	shmemipc_lock();
-	if (skb->len > sizeof(SHMEMIPC_BLOCK_ARM9->wifi.data)) {
-		shmemipc_unlock();
-		DEBUG(2, "Packet too big to send, dropping\n");
+	if (skb->len > NDS_WIFI_MAX_PACKET_SIZE) {
+		printk(KERN_WARNING "%s: Packet too big to send, dropping\n",
+		    dev->name);
 		return -E2BIG;
 	}
-	shmemipc_unlock();
 
+	/* only transmit one packet at a time */
 	netif_stop_queue(dev);
 
-	shmemipc_lock();
-	SHMEMIPC_BLOCK_ARM9->wifi.type = SHMEMIPC_WIFI_TYPE_PACKET;
-	memcpy(SHMEMIPC_BLOCK_ARM9->wifi.data, skb->data, skb->len);
-#ifdef PAD_WITH_JUNK
-	{
-		int i;
-		for (i = 0; i < 6; i++) {
-			((u8 *) SHMEMIPC_BLOCK_ARM9->wifi.data)[skb->len + i] =
-			    50 + i;
-		}
-	}
-#endif
-	SHMEMIPC_BLOCK_ARM9->wifi.length = skb->len;
-	shmemipc_unlock();
-
-	/* FIXME: this call seems to produce a "scheduling while atomic"
-	 * error. shmemipc_flush() may sleep! */
-	shmemipc_flush(SHMEMIPC_USER_WIFI);
-
-	dev_kfree_skb(skb);
-
+	/* wrap up packet information and send it to arm7 */
+	tx_packet.len = skb->len;
+	tx_packet.data = skb->data;
+	tx_packet.skb = (void*)skb;
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_TX, (u32)(&tx_packet));
 	return 0;
 }
 
@@ -515,8 +511,11 @@ static int nds_set_essid(struct net_device *dev,
 			tmp = *(c++) << 8;
 			tmp |= *(c++);
 			REG_IPCFIFOSEND =
-			    FIFO_WIFI_CMD((FIFO_WIFI_CMD_SET_ESSID1 + i),
-					  ((j << 16) | tmp));
+			    FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_ESSID,
+				/* Send the essid in pieces of 2 chars each.
+				 * Encoded as follows:
+				 *          #essid      offset     2 chars */
+					  ((i << 20) | (j << 16) | tmp));
 			if (!*(c - 1) || !*(c - 2)) {
 				i = 4;
 				break;
@@ -744,7 +743,7 @@ static int nds_set_encode(struct net_device *dev,
 					tmp = *(k++) << 8;
 					tmp |= *(k++);
 					REG_IPCFIFOSEND =
-					    FIFO_WIFI_CMD((FIFO_WIFI_CMD_SET_WEPKEY0 + (index * 2) + i), ((j << 16) | tmp));
+					    FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_WEPKEY, ((index << 20) | (i << 18) | (j << 16) | tmp));
 					if ((k - local->key_key[index]) >=
 					    key_len) {
 						i = 2;
@@ -955,52 +954,25 @@ static void wifi_setup(struct net_device *dev)
 	dev->stop = &nds_close;
 }
 
-static void nds_cmd_from_arm7(u8 cmd, u8 offset, u16 data)
+static void nds_wifi_recieve_packet(void)
 {
-	DEBUG(7, "Called: %s cmd(%d) offset(%d) data(0x%x)\n", __func__, cmd,
-	      offset, data);
-
-	switch (cmd) {
-	case FIFO_WIFI_CMD_MAC_QUERY:
-		((u16 *) mac_query_output)[offset] = data;
-		if (offset == 2) {
-			mac_query_complete = 1;
-			wake_up_interruptible(&ndswifi_wait);
-		}
-		break;
-	case FIFO_WIFI_CMD_TX_COMPLETE:
-		if (global_dev)
-			netif_wake_queue(global_dev);
-		break;
-	case FIFO_WIFI_CMD_SCAN:
-		scan_complete = 1;
-		wake_up_interruptible(&ndswifi_wait);
-		break;
-	case FIFO_WIFI_CMD_GET_AP_MODE:
-		mode_query_output = data;
-		get_mode_completed = 1;
-		break;
-	}
-}
-
-static void nds_wifi_ipc_packet(void)
-{
-	/* packet recieved */
 	struct sk_buff *skb;
 	unsigned char *skbp;
 	Wifi_RxHeader *rx_hdr;
 	struct ieee80211_hdr *hdr_80211;
 	int rc;
 
+	if (!global_dev)
+		return;
+
 #ifdef DUMP_INPUT_PACKETS
 	if (pc_debug >= 9) {
 		u8 *c;
 		char buff[2024], *c2;
 
-		c = SHMEMIPC_BLOCK_ARM7->wifi.data;
+		c = rx_packet.data;
 		c2 = buff;
-		while ((c - SHMEMIPC_BLOCK_ARM7->wifi.data) <
-		       SHMEMIPC_BLOCK_ARM7->wifi.length) {
+		while ((c - rx_packet.data) < rx_packet.len) {
 			if (((*c) >> 4) > 9)
 				*(c2++) = ((*c) >> 4) - 10 + 'A';
 			else
@@ -1011,19 +983,16 @@ static void nds_wifi_ipc_packet(void)
 			else
 				*(c2++) = ((*c) & 0x0f) + '0';
 			c++;
-			if ((c - SHMEMIPC_BLOCK_ARM7->wifi.data) % 2 == 0)
+			if ((c - rx_packet.data) % 2 == 0)
 				*(c2++) = ' ';
 		}
 		*c2 = '\0';
-		DEBUG(9, "len(%d): %s\n",
-		      SHMEMIPC_BLOCK_ARM7->wifi.length, buff);
+		DEBUG(9, "len(%d): %s\n", rx_packet.len, buff);
 	}
 #endif
-
-	rx_hdr = (Wifi_RxHeader *) SHMEMIPC_BLOCK_ARM7->wifi.data;
-	hdr_80211 =
-	    (struct ieee80211_hdr *)(SHMEMIPC_BLOCK_ARM7->wifi.
-				      data + sizeof(Wifi_RxHeader));
+	rx_hdr = (Wifi_RxHeader*)(u32)&rx_packet.data;
+	hdr_80211 = (struct ieee80211_hdr *)((u32)&rx_packet.data
+			+ sizeof(Wifi_RxHeader));
 
 	if ((hdr_80211->frame_ctl & 0x01CF) == IEEE80211_FTYPE_DATA) {
 		if ((((u16 *) global_dev->dev_addr)[0] ==
@@ -1135,6 +1104,46 @@ static void nds_wifi_ipc_packet(void)
 		}
 
 	}
+
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_RX_COMPLETE, 0); 	
+}
+
+
+static void nds_cmd_from_arm7(u8 cmd, u32 data)
+{
+	u8 offset;
+
+	DEBUG(7, "Called: %s cmd(%d)  data(0x%x)\n", __func__, cmd, data);
+
+	switch (cmd) {
+	case FIFO_WIFI_CMD_MAC_QUERY:
+		offset = (data >> 16) & 0x03;
+		((u16 *) mac_query_output)[offset] = (data & 0xffff);
+		if (offset == 2) {
+			mac_query_complete = 1;
+			wake_up_interruptible(&ndswifi_wait);
+		}
+		break;
+	case FIFO_WIFI_CMD_TX_COMPLETE:
+		if (tx_packet.skb) {
+			dev_kfree_skb((struct sk_buff*)tx_packet.skb);
+			tx_packet.skb = NULL;
+		}
+		if (global_dev)
+			netif_wake_queue(global_dev);
+		break;
+	case FIFO_WIFI_CMD_RX:
+		nds_wifi_recieve_packet();
+		break;
+	case FIFO_WIFI_CMD_SCAN:
+		scan_complete = 1;
+		wake_up_interruptible(&ndswifi_wait);
+		break;
+	case FIFO_WIFI_CMD_GET_AP_MODE:
+		mode_query_output = data;
+		get_mode_completed = 1;
+		break;
+	}
 }
 
 void nds_wifi_ipc_stats(void)
@@ -1183,10 +1192,7 @@ static void nds_wifi_shmemipc_isr(u8 type)
 
 	switch (type) {
 	case SHMEMIPC_REQUEST_FLUSH:
-		if (SHMEMIPC_BLOCK_ARM7->wifi.type == SHMEMIPC_WIFI_TYPE_PACKET
-		    && global_dev) {
-			nds_wifi_ipc_packet();
-		} else if (SHMEMIPC_BLOCK_ARM7->wifi.type ==
+		if (SHMEMIPC_BLOCK_ARM7->wifi.type ==
 			   SHMEMIPC_WIFI_TYPE_STATS) {
 			nds_wifi_ipc_stats();
 		} else if (SHMEMIPC_BLOCK_ARM7->wifi.type ==
@@ -1198,9 +1204,6 @@ static void nds_wifi_shmemipc_isr(u8 type)
 		}
 		break;
 	case SHMEMIPC_FLUSH_COMPLETE:
-		if (SHMEMIPC_BLOCK_ARM9->wifi.type == SHMEMIPC_WIFI_TYPE_PACKET) {
-			/* TX copy complete, do nothing */
-		}
 		break;
 	}
 	shmemipc_unlock();
@@ -1223,8 +1226,7 @@ static int __init init_nds(void)
 	struct nds_net_priv *local;
 
 	DEBUG(7, "Called: %s\n", __func__);
-
-	DEBUG(1, "%s\n", rcsid);
+	printk(KERN_INFO "%s\n", rcsid);
 	DEBUG(1, "NDS wireless  init_module \n");
 
 	/* need to talk to the device, to set it up */
@@ -1256,6 +1258,10 @@ static int __init init_nds(void)
 	}
 
 	global_dev = dev;
+
+	/* Initialise packet recieve buffer and send address to ARM7 */
+	nds_init_rx_packet(&rx_packet);
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_RX, (u32)&rx_packet);
 
 	return 0;
 
