@@ -167,6 +167,7 @@ static void ide_complete_power_step(ide_drive_t *drive, struct request *rq, u8 s
 static ide_startstop_t ide_start_power_step(ide_drive_t *drive, struct request *rq)
 {
 	ide_task_t *args = rq->special;
+	ide_hwgroup_t *hwgroup = HWGROUP(drive);
 
 	memset(args, 0, sizeof(*args));
 
@@ -191,18 +192,24 @@ static ide_startstop_t ide_start_power_step(ide_drive_t *drive, struct request *
 			args->tfRegister[IDE_COMMAND_OFFSET] = WIN_FLUSH_CACHE;
 		args->command_type = IDE_DRIVE_TASK_NO_DATA;
 		args->handler	   = &task_no_data_intr;
+		hwgroup->polling = 1;
+		hwgroup->poll_timeout = jiffies + WAIT_WORSTCASE;
 		return do_rw_taskfile(drive, args);
 
 	case idedisk_pm_standby:	/* Suspend step 2 (standby) */
 		args->tfRegister[IDE_COMMAND_OFFSET] = WIN_STANDBYNOW1;
 		args->command_type = IDE_DRIVE_TASK_NO_DATA;
 		args->handler	   = &task_no_data_intr;
+		hwgroup->polling = 1;
+		hwgroup->poll_timeout = jiffies + WAIT_WORSTCASE;
 		return do_rw_taskfile(drive, args);
 
 	case idedisk_pm_idle:		/* Resume step 1 (idle) */
 		args->tfRegister[IDE_COMMAND_OFFSET] = WIN_IDLEIMMEDIATE;
 		args->command_type = IDE_DRIVE_TASK_NO_DATA;
 		args->handler = task_no_data_intr;
+		hwgroup->polling = 1;
+		hwgroup->poll_timeout = jiffies + WAIT_WORSTCASE;
 		return do_rw_taskfile(drive, args);
 
 	case ide_pm_restore_dma:	/* Resume step 2 (restore DMA) */
