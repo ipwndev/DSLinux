@@ -35,12 +35,12 @@
 
 void shmemipc_flush_complete(void)
 {
+#if 0
 	switch (SHMEMIPC_BLOCK_ARM7->user) {
 		case SHMEMIPC_USER_WIFI:
-			if (SHMEMIPC_BLOCK_ARM7->wifi.type == 3)
-				wifi_ap_query_complete();
 			break;
 	}
+#endif
 }
 
 void shmemipc_serve_flush_request(void)
@@ -52,12 +52,6 @@ void shmemipc_serve_flush_request(void)
 		break;
 	case SHMEMIPC_USER_WIFI:
 		/* Handle flush request. */
-		shmemipc_lock();
-		if (SHMEMIPC_BLOCK_ARM9->wifi.type == 1) {
-			wifi_send_ether_packet(SHMEMIPC_BLOCK_ARM9->wifi.length,
-			  SHMEMIPC_BLOCK_ARM9->wifi.data);
-		}
-		shmemipc_unlock();
 		ipcsync_trigger_remote_interrupt(SHMEMIPC_FLUSH_COMPLETE);
 		break;
 	case SHMEMIPC_USER_FIRMWARE:

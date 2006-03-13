@@ -92,8 +92,7 @@ static void recieveFIFOCommand(void)
 				wifi_rx_q_complete();
 				break;
 			case FIFO_WIFI_CMD_STATS_QUERY:
-				if (FIFO_WIFI_GET_DATA(data) != 0
-				    && wifi_data.stats == NULL) {
+				if (FIFO_WIFI_GET_DATA(data) != 0) {
 					/* ARM9 gives us stats buffer address */
 					wifi_data.stats = (u32*) \
 					    FIFO_WIFI_DECODE_ADDRESS( \
@@ -133,7 +132,19 @@ static void recieveFIFOCommand(void)
 				Wifi_SetWepMode(data & 0xff);
 				break;
 			case FIFO_WIFI_CMD_AP_QUERY:
-				wifi_ap_query(data & 0xffff);
+				if (data > 1) {
+					/* Getting the address of the ap query
+					 * buffer*/
+					wifi_data.aplist = \
+					    (Wifi_AccessPoint*) \
+					    FIFO_WIFI_DECODE_ADDRESS( \
+						FIFO_WIFI_GET_DATA(data));
+				} else if (wifi_data.aplist) {
+					wifi_ap_query(data & 0xffff);
+				}
+				break;
+			case FIFO_WIFI_CMD_AP_QUERY_COMPLETE:
+				wifi_ap_query_complete();
 				break;
 			case FIFO_WIFI_CMD_SCAN:
 				wifi_start_scan();

@@ -34,11 +34,9 @@ SOFTWARE.
 #include "asm/types.h"
 #include "asm/arch/fifo.h"
 #include "asm/arch/ipcsync.h"
-#include "asm/arch/shmemipc.h"
 #include "asm/arch/wifi.h"
 
 #include "arm7.h"
-#include "shmemipc-arm7.h"
 #include "spi.h"
 #include "wifi.h"
 
@@ -140,6 +138,7 @@ void wifi_init(void)
 	// for(i=0;i<6;i++)  wifi_data.MacAddr[i]=i+1;
 
 	wifi_data.stats = NULL;
+	wifi_data.aplist = NULL;
 }
 
 /* second half of device startup, this gets it broadcasting */
@@ -1819,9 +1818,6 @@ static int Wifi_SendPSPollFrame(void)
 
 void wifi_ap_query(u16 bank)
 {
-	int i;
-	u8 *c;
-
 	wifi_data.state |= WIFI_STATE_APQUERYPEND;
 	wifi_data.ap_query_bank = bank;
 
@@ -1831,18 +1827,7 @@ void wifi_ap_query(u16 bank)
 		return;
 
 	wifi_data.state |= WIFI_STATE_APQUERYSENDING;
-
-	shmemipc_lock();
-	SHMEMIPC_BLOCK_ARM7->user = SHMEMIPC_USER_WIFI;
-	SHMEMIPC_BLOCK_ARM7->wifi.type = SHMEMIPC_WIFI_TYPE_AP_LIST;
-	SHMEMIPC_BLOCK_ARM7->wifi.length = (16 * sizeof(Wifi_AccessPoint));
-
-	c = ((u8 *) & wifi_data.aplist[bank ? 16 : 0]);
-	for (i = 0; i < (16 * sizeof(Wifi_AccessPoint)); i++) {
-		SHMEMIPC_BLOCK_ARM7->wifi.data[i] = *(c++);
-	}
-	shmemipc_unlock();
-	ipcsync_trigger_remote_interrupt(SHMEMIPC_REQUEST_FLUSH);
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY_COMPLETE, 0);
 }
 
 void wifi_ap_query_complete(void)
