@@ -22,8 +22,7 @@ then
 	/etc/rc.d/telnetd start
 fi
 
-# provide a default hostname in case someone screws up
-[ -z "$hostname" ] && hostname=NintendoDS
+# set hostname
 hostname $hostname
 
 # show firmware version if configured
