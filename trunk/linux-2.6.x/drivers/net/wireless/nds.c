@@ -153,7 +153,10 @@ static struct net_device_stats *nds_get_stats(struct net_device *dev)
 	stats_query_complete = 0;
 	stats_query_output = (void *)&local->stats;
 	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_STATS_QUERY, 0);
-	wait_event_interruptible(ndswifi_wait, stats_query_complete != 0);
+	if(wait_event_interruptible_timeout(ndswifi_wait,
+	    stats_query_complete != 0, WIFI_ARM7_TIMEOUT) == 0) {
+		printk(KERN_WARNING "%s: timed out waiting for ARM7\n", __func__);
+	}
 
 	return &local->stats;
 }

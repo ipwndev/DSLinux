@@ -71,6 +71,8 @@ enum WIFI_AP_MODE {
 /* Ethernet MTU is 1500 */
 #define NDS_WIFI_MAX_PACKET_SIZE 1600
 
+#define WIFI_ARM7_TIMEOUT	100
+
 /* Used for transmission to arm7 */
 struct nds_tx_packet {
 	u16 len;	
