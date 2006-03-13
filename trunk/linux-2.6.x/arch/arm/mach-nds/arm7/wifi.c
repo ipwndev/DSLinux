@@ -1479,74 +1479,75 @@ static void Wifi_Intr_TxErr(void)
 void wifi_interrupt(void)
 {
 	int wIF;
-	wIF = WIFI_IE & WIFI_IF;
-	wifi_data.stats[WIFI_STATS_DEBUG6]++;
-	wifi_data.stats[WIFI_STATS_DEBUG1] = WIFI_IE;
-	wifi_data.stats[WIFI_STATS_DEBUG2] = WIFI_IF;
-	if (wIF & 0x0001) {
-		WIFI_IF = 0x0001;
-		Wifi_Intr_RxEnd();
-	}			// 0) Rx End
-	if (wIF & 0x0002) {
-		WIFI_IF = 0x0002;
-		Wifi_Intr_TxEnd();
-	}			// 1) Tx End
-	if (wIF & 0x0004) {
-		WIFI_IF = 0x0004;
-		Wifi_Intr_DoNothing();
-	}			// 2) Rx Cntup
-	if (wIF & 0x0008) {
-		WIFI_IF = 0x0008;
-		Wifi_Intr_TxErr();
-	}			// 3) Tx Err
-	if (wIF & 0x0010) {
-		WIFI_IF = 0x0010;
-		Wifi_Intr_CntOverflow();
-	}			// 4) Count Overflow
-	if (wIF & 0x0020) {
-		WIFI_IF = 0x0020;
-		Wifi_Intr_CntOverflow();
-	}			// 5) AckCount Overflow
-	if (wIF & 0x0040) {
-		WIFI_IF = 0x0040;
-		Wifi_Intr_DoNothing();
-	}			// 6) Start Rx
-	if (wIF & 0x0080) {
-		WIFI_IF = 0x0080;
-		Wifi_Intr_StartTx();
-	}			// 7) Start Tx
-	if (wIF & 0x0100) {
-		WIFI_IF = 0x0100;
-		Wifi_Intr_DoNothing();
-	}			// 8) 
-	if (wIF & 0x0200) {
-		WIFI_IF = 0x0200;
-		Wifi_Intr_DoNothing();
-	}			// 9)
-	if (wIF & 0x0400) {
-		WIFI_IF = 0x0400;
-		Wifi_Intr_DoNothing();
-	}			//10)
-	if (wIF & 0x0800) {
-		WIFI_IF = 0x0800;
-		Wifi_Intr_DoNothing();
-	}			//11) RF Wakeup
-	if (wIF & 0x1000) {
-		WIFI_IF = 0x1000;
-		Wifi_Intr_DoNothing();
-	}			//12) MP End
-	if (wIF & 0x2000) {
-		WIFI_IF = 0x2000;
-		Wifi_Intr_DoNothing();
-	}			//13) ACT End
-	if (wIF & 0x4000) {
-		WIFI_IF = 0x4000;
-		Wifi_Intr_TBTT();
-	}			//14) TBTT
-	if (wIF & 0x8000) {
-		WIFI_IF = 0x8000;
-		Wifi_Intr_DoNothing();
-	}			//15) PreTBTT
+	while ((wIF = WIFI_IE & WIFI_IF) != 0) {
+		wifi_data.stats[WIFI_STATS_DEBUG6]++;
+		wifi_data.stats[WIFI_STATS_DEBUG1] = WIFI_IE;
+		wifi_data.stats[WIFI_STATS_DEBUG2] = WIFI_IF;
+		if (wIF & 0x0001) {
+			WIFI_IF = 0x0001;
+			Wifi_Intr_RxEnd();
+		}			// 0) Rx End
+		if (wIF & 0x0002) {
+			WIFI_IF = 0x0002;
+			Wifi_Intr_TxEnd();
+		}			// 1) Tx End
+		if (wIF & 0x0004) {
+			WIFI_IF = 0x0004;
+			Wifi_Intr_DoNothing();
+		}			// 2) Rx Cntup
+		if (wIF & 0x0008) {
+			WIFI_IF = 0x0008;
+			Wifi_Intr_TxErr();
+		}			// 3) Tx Err
+		if (wIF & 0x0010) {
+			WIFI_IF = 0x0010;
+			Wifi_Intr_CntOverflow();
+		}			// 4) Count Overflow
+		if (wIF & 0x0020) {
+			WIFI_IF = 0x0020;
+			Wifi_Intr_CntOverflow();
+		}			// 5) AckCount Overflow
+		if (wIF & 0x0040) {
+			WIFI_IF = 0x0040;
+			Wifi_Intr_DoNothing();
+		}			// 6) Start Rx
+		if (wIF & 0x0080) {
+			WIFI_IF = 0x0080;
+			Wifi_Intr_StartTx();
+		}			// 7) Start Tx
+		if (wIF & 0x0100) {
+			WIFI_IF = 0x0100;
+			Wifi_Intr_DoNothing();
+		}			// 8) 
+		if (wIF & 0x0200) {
+			WIFI_IF = 0x0200;
+			Wifi_Intr_DoNothing();
+		}			// 9)
+		if (wIF & 0x0400) {
+			WIFI_IF = 0x0400;
+			Wifi_Intr_DoNothing();
+		}			//10)
+		if (wIF & 0x0800) {
+			WIFI_IF = 0x0800;
+			Wifi_Intr_DoNothing();
+		}			//11) RF Wakeup
+		if (wIF & 0x1000) {
+			WIFI_IF = 0x1000;
+			Wifi_Intr_DoNothing();
+		}			//12) MP End
+		if (wIF & 0x2000) {
+			WIFI_IF = 0x2000;
+			Wifi_Intr_DoNothing();
+		}			//13) ACT End
+		if (wIF & 0x4000) {
+			WIFI_IF = 0x4000;
+			Wifi_Intr_TBTT();
+		}			//14) TBTT
+		if (wIF & 0x8000) {
+			WIFI_IF = 0x8000;
+			Wifi_Intr_DoNothing();
+		}			//15) PreTBTT
+	}
 }
 
 /*
