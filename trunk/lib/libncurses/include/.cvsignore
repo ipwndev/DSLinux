@@ -1,0 +1,11 @@
+curses.h
+eti.h
+form.h
+hashsize.h
+menu.h
+mf_common.h
+ncurses_def.h
+nomacros.h
+panel.h
+parametrized.h
+term.h
