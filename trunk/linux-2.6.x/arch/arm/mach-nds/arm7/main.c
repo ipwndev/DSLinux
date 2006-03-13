@@ -89,10 +89,22 @@ static void recieveFIFOCommand(void)
 				rx_packet = (struct nds_rx_packet*)FIFO_WIFI_DECODE_ADDRESS(FIFO_WIFI_GET_DATA(data));
 				break;	
 			case FIFO_WIFI_CMD_RX_COMPLETE:
-				sending_packet = 0;
+				wifi_rx_q_complete();
 				break;
 			case FIFO_WIFI_CMD_STATS_QUERY:
-				wifi_stats_query();
+				if (FIFO_WIFI_GET_DATA(data) != 0
+				    && wifi_data.stats == NULL) {
+					/* ARM9 gives us stats buffer address */
+					wifi_data.stats = (u32*) \
+					    FIFO_WIFI_DECODE_ADDRESS( \
+						FIFO_WIFI_GET_DATA(data));
+				} else if (wifi_data.stats) {
+					/* stats requested */
+					wifi_stats_query();
+				}
+				break;
+			case FIFO_WIFI_CMD_STATS_QUERY_COMPLETE:
+				wifi_stats_query_complete();
 				break;
 			case FIFO_WIFI_CMD_SET_ESSID:
 				Wifi_SetSSID(/* #essid (0 - 3) */
@@ -237,7 +249,7 @@ void InterruptHandler(void)
 
 	}
 
-	if (wif & IRQ_WIFI) {
+	if ((wif & IRQ_WIFI) || WIFI_IF)  {
 		NDS_IF = IRQ_WIFI;
 		wif &= ~IRQ_WIFI;
 

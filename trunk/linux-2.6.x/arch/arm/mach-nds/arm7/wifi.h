@@ -155,10 +155,12 @@ typedef struct Wifi_Data_Struct {
 
 	u8 FlashData[512];
 
-	u32 stats[WIFI_STATS_MAX];
+	volatile u32 *stats;
 
 	Wifi_AccessPoint aplist[WIFI_MAX_AP];
 } Wifi_Data;
+
+extern Wifi_Data wifi_data;
 
 void wifi_init(void);
 void wifi_open(void);
@@ -179,7 +181,7 @@ void Wifi_GetAPMode(void);
 void wifi_ap_query(u16 bank);
 void wifi_start_scan(void);
 void wifi_timer_handler(void);
-void wifi_tx_q_complete(void);
+void wifi_rx_q_complete(void);
 void wifi_stats_query_complete(void);
 void wifi_ap_query_complete(void);
 
