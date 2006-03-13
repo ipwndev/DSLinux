@@ -1,0 +1,64 @@
+# This file provides default settings for the DSLinux boot process.
+
+# It can be used as an example configuration file.
+# Copy it to linux/etc/rc.conf on your CF card (for GBAMP, M3 CF
+# and SC CF). Then edit the copy with vi.
+# If you have never used vi before, see:
+# 	http://www.dslinux.org/wiki/index.php/Using_DSLinux
+# There is an introduction to vi on that page.
+
+# Note that every line in this file starting with a '#' character
+# is a comment. Comments are simply ignored by DSLinux.
+
+# The settings you define in this file can be either set or empty.
+# If a setting is empty, it will not affect the system.
+# Most settings below are empty by default, like this:
+# 	setting=""
+# To set a setting, change it so there is text inside the quotes,
+# like this:
+#	setting="sometext"
+# See the examples given in the comments for each setting to get
+# an idea of what to set a setting to.
+
+# This sets the hostname. You can set this to whatever you want.
+hostname="NintendoDS"
+
+# Set the essid and channel of your wireless router here.
+# Example settings are:
+# 	essid="eXampLeEsSiD"
+# 	channel="11"
+# Note that these settings are required for wireless networking.
+# You cannot use wireless networking if these settings are empty.
+essid=""
+channel=""
+
+# Here you can set a wepkey. Both 64bit and 128bit keys are
+# supported. For hex keys, just enter the key without any prefix:
+#	wepkey="9923829ea8923"
+# For ascii keys, make sure you use an 's:' prefix:
+# 	wepkey="s:mysecretkey"
+wepkey=""
+
+# Set use_dhcp to "YES" if you want to use DHCP to configure
+# your IP address and gateway address.
+use_dhcp="NO"
+
+# Here you can also assign a static IP and gateway instead:
+#	ip="192.168.1.42"
+#	gateway="192.168.1.1"
+# Note that these values are ignored if use_dhcp is set to "YES".
+ip=""
+gateway=""
+
+# If you want to start telnetd on boot, so you can login into your
+# DS from your PC, set start_telnetd to "YES".
+# Note that telnet sends passwords unencrypted over the network,
+# and makes it easy to crack into your DS from outside. You should
+# therefore not enable this if you use public wifi hotspots.
+start_telnetd="NO"
+
+# If you want to see your DS firmware version on boot,
+# set this to "YES". By default, the firmware version is shown.
+show_firmware_version="YES"
+
+# End of file.

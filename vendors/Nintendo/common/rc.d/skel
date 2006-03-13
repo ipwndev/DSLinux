@@ -1,0 +1,28 @@
+#!/bin/sh
+# this init script can be used as a skeleton for other init scripts.
+
+[ -e /etc/rc.defaults ] && . /etc/rc.defaults
+[ -e /etc/rc.conf ] && . /etc/rc.conf
+
+DAEMON=daemon
+
+case "$1" in
+	start)
+		echo "Starting $DAEMON"
+		$DAEMON &
+	;;
+	stop)
+		echo "Stopping $DAEMON"
+		kill `pidof $DEAMON`
+	;;	
+	restart)
+		# no need to change this
+		$0 stop
+		$0 start
+	;;
+	*)
+		echo "Usage: $0 <start|stop|restart>"
+		exit 1
+	;;
+esac
+
