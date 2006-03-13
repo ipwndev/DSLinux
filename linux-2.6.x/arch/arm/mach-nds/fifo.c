@@ -37,7 +37,6 @@ static irqreturn_t ndsfifo_interrupt(int irq, void *dev_id,
 	struct list_head *p;
 	struct fifo_cb *cb;
 
-
 	while (!(REG_IPCFIFOCNT & FIFO_EMPTY)) {
 		fifo_recv = REG_IPCFIFORECV;
 		list_for_each(p, &cblist) {

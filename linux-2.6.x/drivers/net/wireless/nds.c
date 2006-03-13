@@ -70,8 +70,9 @@ static void *ap_query_output;
 static u8 mode_query_output;
 static DECLARE_WAIT_QUEUE_HEAD(ndswifi_wait);
 
-static struct nds_tx_packet tx_packet = {0,0,0};
-static struct nds_rx_packet rx_packet;
+static volatile struct nds_tx_packet tx_packet = {0,0,0};
+static volatile struct nds_rx_packet rx_packet;
+static volatile u32 arm7_stats[WIFI_STATS_MAX];
 
 #if defined(DUMP_INPUT_PACKETS) || defined(DUMP_OUTPUT_PACKETS)
 static void nds_dump_packet(u8 *data, u16 len)
@@ -100,7 +101,7 @@ static void nds_dump_packet(u8 *data, u16 len)
 }
 #endif
 
-static inline void nds_init_rx_packet(struct nds_rx_packet *rx_packet)
+static inline void nds_init_rx_packet(volatile struct nds_rx_packet *rx_packet)
 {
 	int i;
 	rx_packet->len = 0;
@@ -133,7 +134,7 @@ static int nds_start_xmit11(struct sk_buff *skb, struct net_device *dev)
 #ifdef DUMP_OUTPUT_PACKETS
 	if (pc_debug >= 9) {
 		printk("output packet: ");
-		nds_dump_packet(tx_packet.data, tx_packet.len);
+		nds_dump_packet((u8*)tx_packet.data, tx_packet.len);
 	}
 #endif
 	/* wrap up packet information and send it to arm7 */
@@ -1004,7 +1005,7 @@ static void nds_wifi_recieve_packet(void)
 #ifdef DUMP_INPUT_PACKETS
 	if (pc_debug >= 9) {
 		printk("input packet: ");
-		nds_dump_packet(rx_packet.data, rx_packet.len);
+		nds_dump_packet((u8*)rx_packet.data, rx_packet.len);
 	}
 #endif
 	rx_hdr = (Wifi_RxHeader*)(u32)&rx_packet.data;
@@ -1083,6 +1084,43 @@ static void nds_wifi_recieve_packet(void)
 	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_RX_COMPLETE, 0); 	
 }
 
+void nds_wifi_recieve_stats(void)
+{
+	/* stats recieved */
+	struct net_device_stats *s =
+	    (struct net_device_stats *)stats_query_output;
+
+	DEBUG(7, "Called: %s\n", __func__);
+
+#ifdef REPORT_RAW_PACKET_STATS
+	s->rx_packets = arm7_stats[WIFI_STATS_RXRAWPACKETS];
+	s->tx_packets = arm7_stats[WIFI_STATS_TXRAWPACKETS];
+	s->rx_bytes = arm7_stats[WIFI_STATS_RXBYTES];
+	s->tx_bytes = arm7_stats[WIFI_STATS_TXBYTES];
+	s->tx_dropped = arm7_stats[WIFI_STATS_TXQREJECT];
+#else
+	s->rx_packets = arm7_stats[WIFI_STATS_RXPACKETS];
+	s->tx_packets = arm7_stats[WIFI_STATS_TXPACKETS];
+	s->rx_bytes = arm7_stats[WIFI_STATS_RXDATABYTES];
+	s->tx_bytes = arm7_stats[WIFI_STATS_TXDATABYTES];
+	s->tx_dropped = arm7_stats[WIFI_STATS_TXQREJECT];
+#endif
+	DEBUG(8, "WIFI_IE: 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG1]);
+	DEBUG(8, "WIFI_IF: 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG2]);
+/*
+	DEBUG(8, "WIFI_REG(0x54): 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG3]);
+	DEBUG(8, "WIFI_REG(0x5A): 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG4]);
+*/
+	DEBUG(8, "WIFI_REG(0xA0): 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG3]);
+	DEBUG(8, "WIFI_REG(0xB8): 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG4]);
+	DEBUG(8, "wifi state: 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG5]);
+	DEBUG(8, "Num interupts: 0x%08X\n", arm7_stats[WIFI_STATS_DEBUG6]);
+
+	stats_query_complete = 1;
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_STATS_QUERY_COMPLETE, 0);
+	wake_up_interruptible(&ndswifi_wait);
+}
+
 
 static void nds_cmd_from_arm7(u8 cmd, u32 data)
 {
@@ -1118,44 +1156,10 @@ static void nds_cmd_from_arm7(u8 cmd, u32 data)
 		mode_query_output = data;
 		get_mode_completed = 1;
 		break;
+	case FIFO_WIFI_CMD_STATS_QUERY:
+		nds_wifi_recieve_stats();
+		break;
 	}
-}
-
-void nds_wifi_ipc_stats(void)
-{
-	/* stats recieved */
-	struct net_device_stats *s =
-	    (struct net_device_stats *)stats_query_output;
-	u32 *arm7_stats = (u32 *) SHMEMIPC_BLOCK_ARM7->wifi.data;
-
-	DEBUG(7, "Called: %s\n", __func__);
-
-#ifdef REPORT_RAW_PACKET_STATS
-	s->rx_packets = arm7_stats[WIFI_STATS_RXRAWPACKETS];
-	s->tx_packets = arm7_stats[WIFI_STATS_TXRAWPACKETS];
-	s->rx_bytes = arm7_stats[WIFI_STATS_RXBYTES];
-	s->tx_bytes = arm7_stats[WIFI_STATS_TXBYTES];
-	s->tx_dropped = arm7_stats[WIFI_STATS_TXQREJECT];
-#else
-	s->rx_packets = arm7_stats[WIFI_STATS_RXPACKETS];
-	s->tx_packets = arm7_stats[WIFI_STATS_TXPACKETS];
-	s->rx_bytes = arm7_stats[WIFI_STATS_RXDATABYTES];
-	s->tx_bytes = arm7_stats[WIFI_STATS_TXDATABYTES];
-	s->tx_dropped = arm7_stats[WIFI_STATS_TXQREJECT];
-#endif
-	DEBUG(8, "WIFI_IE: 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG1]);
-	DEBUG(8, "WIFI_IF: 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG2]);
-/*
-	DEBUG(8, "WIFI_REG(0x54): 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG3]);
-	DEBUG(8, "WIFI_REG(0x5A): 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG4]);
-*/
-	DEBUG(8, "WIFI_REG(0xA0): 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG3]);
-	DEBUG(8, "WIFI_REG(0xB8): 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG4]);
-	DEBUG(8, "wifi state: 0x%04X\n", arm7_stats[WIFI_STATS_DEBUG5]);
-	DEBUG(8, "Num interupts: 0x%08X\n", arm7_stats[WIFI_STATS_DEBUG6]);
-
-	stats_query_complete = 1;
-	wake_up_interruptible(&ndswifi_wait);
 }
 
 static void nds_wifi_shmemipc_isr(u8 type)
@@ -1168,9 +1172,6 @@ static void nds_wifi_shmemipc_isr(u8 type)
 	switch (type) {
 	case SHMEMIPC_REQUEST_FLUSH:
 		if (SHMEMIPC_BLOCK_ARM7->wifi.type ==
-			   SHMEMIPC_WIFI_TYPE_STATS) {
-			nds_wifi_ipc_stats();
-		} else if (SHMEMIPC_BLOCK_ARM7->wifi.type ==
 			   SHMEMIPC_WIFI_TYPE_AP_LIST) {
 			memcpy(ap_query_output, SHMEMIPC_BLOCK_ARM7->wifi.data,
 			       16 * sizeof(Wifi_AccessPoint));
@@ -1196,6 +1197,7 @@ static struct shmemipc_cb nds_shmem_cb = {
 
 static int __init init_nds(void)
 {
+	int i;
 	int rc;
 	struct net_device *dev;
 	struct nds_net_priv *local;
@@ -1206,6 +1208,12 @@ static int __init init_nds(void)
 
 	/* need to talk to the device, to set it up */
 	register_fifocb(&nds_cmd_fifocb);
+
+	/* Initialise stats buffer and send address to ARM7 */
+	DEBUG(5, "%s: sending stats buffer address 0x%p\n", __func__, arm7_stats);
+	for (i = 0; i < WIFI_STATS_MAX; i++)
+		arm7_stats[i] = 0;
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_STATS_QUERY, (u32)arm7_stats);
 
 	/* setup shmem so we can get blocks back from arm7 */
 	register_shmemipc_cb(&nds_shmem_cb);
@@ -1235,9 +1243,10 @@ static int __init init_nds(void)
 	global_dev = dev;
 
 	/* Initialise packet recieve buffer and send address to ARM7 */
+	DEBUG(5, "%s: sending rx buffer address 0x%p\n", __func__, &rx_packet);
 	nds_init_rx_packet(&rx_packet);
 	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_RX, (u32)&rx_packet);
-
+	
 	return 0;
 
       fail_alloc_dev:

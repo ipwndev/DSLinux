@@ -37,12 +37,6 @@ void shmemipc_flush_complete(void)
 {
 	switch (SHMEMIPC_BLOCK_ARM7->user) {
 		case SHMEMIPC_USER_WIFI:
-			if (SHMEMIPC_BLOCK_ARM7->wifi.type == 1)
-				wifi_tx_q_complete();
-			else
-			if (SHMEMIPC_BLOCK_ARM7->wifi.type == 2)
-				wifi_stats_query_complete();
-			else
 			if (SHMEMIPC_BLOCK_ARM7->wifi.type == 3)
 				wifi_ap_query_complete();
 			break;

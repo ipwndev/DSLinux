@@ -45,7 +45,6 @@ SOFTWARE.
 Wifi_Data wifi_data;
 
 struct nds_rx_packet *rx_packet = NULL;
-int sending_packet = 0;
 
 static void Wifi_Stop(void);
 static void Wifi_DisableTempPowerSave(void);
@@ -140,8 +139,7 @@ void wifi_init(void)
 		wifi_data.MacAddr[i] = ReadFlashByte(0x36 + i);
 	// for(i=0;i<6;i++)  wifi_data.MacAddr[i]=i+1;
 
-	for (i = 0; i < WIFI_STATS_MAX; i++)
-		wifi_data.stats[i] = 0;
+	wifi_data.stats = NULL;
 }
 
 /* second half of device startup, this gets it broadcasting */
@@ -683,14 +681,14 @@ void wifi_mac_query(void)
 /* handle a query from kerney for wifi address */
 void wifi_stats_query(void)
 {
-	int i;
-
 	wifi_data.state |= WIFI_STATE_STATSQUERYPEND;
 
 	if (wifi_data.
 	    state & (WIFI_STATE_STATSQUERYSEND | WIFI_STATE_RXPENDING |
-		     WIFI_STATE_APQUERYSENDING | WIFI_STATE_APQUERYPEND))
+		     WIFI_STATE_APQUERYSENDING | WIFI_STATE_APQUERYPEND)) {
+		REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_STATS_QUERY, 0);
 		return;
+	}
 
 	wifi_data.state |= WIFI_STATE_STATSQUERYSEND;
 
@@ -701,15 +699,7 @@ void wifi_stats_query(void)
 
 	wifi_data.state &= ~WIFI_STATE_SAW_TX_ERR;
 
-	shmemipc_lock();
-	SHMEMIPC_BLOCK_ARM7->user = SHMEMIPC_USER_WIFI;
-	SHMEMIPC_BLOCK_ARM7->wifi.type = SHMEMIPC_WIFI_TYPE_STATS;
-	SHMEMIPC_BLOCK_ARM7->wifi.length = (WIFI_STATS_MAX * sizeof(u32));
-	for (i = 0; i < (WIFI_STATS_MAX * sizeof(u32)); i++) {
-		SHMEMIPC_BLOCK_ARM7->wifi.data[i] = ((u8 *) wifi_data.stats)[i];
-	}
-	shmemipc_unlock();
-	ipcsync_trigger_remote_interrupt(SHMEMIPC_REQUEST_FLUSH);
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_STATS_QUERY, 0);
 }
 
 void wifi_stats_query_complete(void)
@@ -1327,9 +1317,9 @@ int Wifi_QueueRxMacData(u32 base, u32 len)
 
 	macofs = 0;
 
-	/* If we don't know where to buffer recieved data yet, or if
-	 * the buffer is currently in use, we throw the packet away. */
-	if (!rx_packet || sending_packet)
+	/* If we don't know where to buffer recieved data yet
+	 * we have no choice but to throw the packet away :( */
+	if (!rx_packet)
 		return 0;
 
 	if (len > sizeof(rx_packet->data)) {
@@ -1337,8 +1327,6 @@ int Wifi_QueueRxMacData(u32 base, u32 len)
 		return 0;
 	}
 	
-	sending_packet = 1;
-
 	wifi_data.stats[WIFI_STATS_RXPACKETS]++;
 	wifi_data.stats[WIFI_STATS_RXDATABYTES] += len;
 
@@ -1413,7 +1401,7 @@ static void Wifi_Intr_RxEnd(void)
 	NDS_IME = tIME;
 }
 
-void wifi_tx_q_complete(void)
+void wifi_rx_q_complete(void)
 {
 	wifi_data.state &= ~WIFI_STATE_RXPENDING;
 
