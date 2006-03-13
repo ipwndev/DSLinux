@@ -1,0 +1,50 @@
+#!/bin/sh
+
+[ -e /etc/rc.defaults ] && . /etc/rc.defaults
+[ -e /etc/rc.conf ] && . /etc/rc.conf
+
+case "$1" in
+	start)
+		# set wireless parameters
+		if [ -n "$essid" ] && [ -n "$channel" ]
+		then
+			iwconfig nds essid $essid channel $channel
+			[ -n "$wepkey" ] && iwconfig nds key $webkey
+		else
+			echo "Not configuring network."
+			echo "No essid or channel defined."
+			exit 1
+		fi
+
+		# configure the interface
+		ifconfig nds down
+		if [ "$use_dhcp" = "YES" ]
+		then
+			# XXX: other args are needed here?
+			udhcpc -i nds
+		elif [ -n "$ip" ] && [ -n "$gateway" ]
+		then
+			ifconfig nds $ip up
+			route add default gw $gateway
+		else
+			echo "Not configuring network."
+			echo "No static configuration found and DHCP is disabled."
+			exit 1
+		fi
+
+		exit 0
+	;;
+	stop)
+		echo "Stopping network"
+		ifconfig nds down
+	;;	
+	restart)
+		$0 stop
+		$0 start
+	;;
+	*)
+		echo "Usage: $0 <start|stop|restart>"
+		exit 1
+	;;
+esac
+

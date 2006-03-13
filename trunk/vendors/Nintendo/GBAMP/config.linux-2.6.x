@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
-# Sat Feb 25 23:09:53 2006
+# Mon Mar 13 19:35:50 2006
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
@@ -525,7 +525,8 @@ CONFIG_HW_CONSOLE=y
 #
 # CONFIG_SERIAL_DCC is not set
 # CONFIG_UNIX98_PTYS is not set
-# CONFIG_LEGACY_PTYS is not set
+CONFIG_LEGACY_PTYS=y
+CONFIG_LEGACY_PTY_COUNT=10
 
 #
 # IPMI

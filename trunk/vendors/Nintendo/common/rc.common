@@ -1,0 +1,36 @@
+
+# set defaults
+[ -e /etc/rc.defaults ] && . /etc/rc.defaults
+
+# include overrides
+[ -e /etc/rc.conf ] && . /etc/rc.conf
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+export PATH
+
+# setup networking
+if /etc/rc.d/network start
+then
+	__network_up="YES"
+else
+	__network_up="NO"
+fi
+
+# start telnetd if configured
+if [ "$start_telnetd" = "YES" ] && [ "$__network_up" = "YES" ]
+then
+	/etc/rc.d/telnetd start
+fi
+
+# provide a default hostname in case someone screws up
+[ -z "$hostname" ] && hostname=NintendoDS
+hostname $hostname
+
+# show firmware version if configured
+[ "$show_firmware_version" = "YES" ] && fwver
+
+# run local startup script if it exists
+[ -e /etc/rc.local ] && . /etc/rc.local
+
+# this is here so that we will get a login prompt in any case
+exit 0
