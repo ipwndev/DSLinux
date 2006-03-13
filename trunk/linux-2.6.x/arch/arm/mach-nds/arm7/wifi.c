@@ -1346,7 +1346,7 @@ int Wifi_QueueRxMacData(u32 base, u32 len)
 	rx_packet->len = len;
 	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_RX, 0);
 
-	/* XOXOXO Disable rx interupts */
+	/* XOXOXO Disable rx interrupts */
 
 	return 1;
 }
@@ -1488,7 +1488,7 @@ static void Wifi_Intr_TxErr(void)
 	wifi_data.state |= WIFI_STATE_SAW_TX_ERR;
 }
 
-void wifi_interupt(void)
+void wifi_interrupt(void)
 {
 	int wIF;
 	wIF = WIFI_IE & WIFI_IF;

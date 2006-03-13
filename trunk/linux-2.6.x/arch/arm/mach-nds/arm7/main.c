@@ -241,7 +241,7 @@ void InterruptHandler(void)
 		NDS_IF = IRQ_WIFI;
 		wif &= ~IRQ_WIFI;
 
-		wifi_interupt();
+		wifi_interrupt();
 	}
 
 	/* Acknowledge Interrupts */

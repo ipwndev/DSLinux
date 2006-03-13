@@ -164,7 +164,7 @@ void wifi_init(void);
 void wifi_open(void);
 void wifi_close(void);
 void wifi_mac_query(void);
-void wifi_interupt(void);
+void wifi_interrupt(void);
 void wifi_send_ether_packet(u16 length, u_char * data);
 void wifi_stats_query(void);
 
