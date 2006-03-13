@@ -38,7 +38,6 @@
 #include <net/iw_handler.h>
 
 #include <asm/arch/fifo.h>
-#include <asm/arch/shmemipc.h>
 #include <asm/arch/wifi.h>
 
 #include <net/ieee80211.h>
@@ -66,13 +65,13 @@ static u8 scan_complete;
 static u8 get_mode_completed;
 static void *mac_query_output;
 static void *stats_query_output;
-static void *ap_query_output;
 static u8 mode_query_output;
 static DECLARE_WAIT_QUEUE_HEAD(ndswifi_wait);
 
 static volatile struct nds_tx_packet tx_packet = {0,0,0};
 static volatile struct nds_rx_packet rx_packet;
 static volatile u32 arm7_stats[WIFI_STATS_MAX];
+static volatile Wifi_AccessPoint aplist[WIFI_MAX_AP];
 
 #if defined(DUMP_INPUT_PACKETS) || defined(DUMP_OUTPUT_PACKETS)
 static void nds_dump_packet(u8 *data, u16 len)
@@ -449,26 +448,24 @@ static int nds_get_scan(struct net_device *dev,
 			struct iw_request_info *info,
 			struct iw_point *dwrq, char *extra)
 {
-	Wifi_AccessPoint aplist[16];
-	int i, j;
+	int i, bank;
 	char *current_ev = extra;
 	struct iw_event iwe;
 
 	DEBUG(7, "Called: %s\n", __func__);
 
-	for (j = 0; j < 2; j++) {
+	for (bank = 0; bank < 2; bank++) {
 		ap_query_complete = 0;
-		ap_query_output = (void *)aplist;
-		REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY, j);
+		REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY, bank);
 		wait_event_interruptible(ndswifi_wait, ap_query_complete != 0);
 
-		for (i = 0; i < 16; i++) {
+		for (i = 0; i < WIFI_MAX_AP; i++) {
 			if (!aplist[i].channel)
 				continue;
 
 			iwe.cmd = SIOCGIWAP;
 			iwe.u.ap_addr.sa_family = ARPHRD_ETHER;
-			memcpy(iwe.u.ap_addr.sa_data, aplist[i].bssid,
+			memcpy(iwe.u.ap_addr.sa_data, (void*)aplist[i].bssid,
 			       ETH_ALEN);
 			current_ev =
 			    iwe_stream_add_event(current_ev,
@@ -481,7 +478,7 @@ static int nds_get_scan(struct net_device *dev,
 			current_ev = iwe_stream_add_point(current_ev,
 							  extra +
 							  IW_SCAN_MAX_DATA,
-							  &iwe, aplist[i].ssid);
+							  &iwe, (char*)aplist[i].ssid);
 
 			iwe.cmd = SIOCGIWMODE;
 			iwe.u.mode =
@@ -511,11 +508,14 @@ static int nds_get_scan(struct net_device *dev,
 							  IW_SCAN_MAX_DATA,
 							  &iwe, NULL);
 		}
+
+		REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY_COMPLETE, 0);
 	}
 
 	/* Length of data */
 	dwrq->length = (current_ev - extra);
 	dwrq->flags = 0;	/* FIXME: set properly these flags */
+
 	return 0;
 }
 
@@ -1152,6 +1152,10 @@ static void nds_cmd_from_arm7(u8 cmd, u32 data)
 		scan_complete = 1;
 		wake_up_interruptible(&ndswifi_wait);
 		break;
+	case FIFO_WIFI_CMD_AP_QUERY_COMPLETE:
+		ap_query_complete = 1;
+		wake_up_interruptible(&ndswifi_wait);
+		break;
 	case FIFO_WIFI_CMD_GET_AP_MODE:
 		mode_query_output = data;
 		get_mode_completed = 1;
@@ -1162,41 +1166,14 @@ static void nds_cmd_from_arm7(u8 cmd, u32 data)
 	}
 }
 
-static void nds_wifi_shmemipc_isr(u8 type)
-{
-	shmemipc_lock();
-	DEBUG(7, "Called: %s type(%s) wifi_type(%d)\n", __func__,
-	      type == SHMEMIPC_REQUEST_FLUSH ? "flush" : "complete",
-	      SHMEMIPC_BLOCK_ARM7->wifi.type);
-
-	switch (type) {
-	case SHMEMIPC_REQUEST_FLUSH:
-		if (SHMEMIPC_BLOCK_ARM7->wifi.type ==
-			   SHMEMIPC_WIFI_TYPE_AP_LIST) {
-			memcpy(ap_query_output, SHMEMIPC_BLOCK_ARM7->wifi.data,
-			       16 * sizeof(Wifi_AccessPoint));
-			ap_query_complete = 1;
-			wake_up_interruptible(&ndswifi_wait);
-		}
-		break;
-	case SHMEMIPC_FLUSH_COMPLETE:
-		break;
-	}
-	shmemipc_unlock();
-}
-
 static struct fifo_cb nds_cmd_fifocb = {
 	.type = FIFO_WIFI,
 	.handler.wifi_handler = nds_cmd_from_arm7
 };
 
-static struct shmemipc_cb nds_shmem_cb = {
-	.user = SHMEMIPC_USER_WIFI,
-	.handler.wifi_callback = nds_wifi_shmemipc_isr
-};
-
 static int __init init_nds(void)
 {
+	u8 *p = NULL;
 	int i;
 	int rc;
 	struct net_device *dev;
@@ -1210,13 +1187,18 @@ static int __init init_nds(void)
 	register_fifocb(&nds_cmd_fifocb);
 
 	/* Initialise stats buffer and send address to ARM7 */
-	DEBUG(5, "%s: sending stats buffer address 0x%p\n", __func__, arm7_stats);
 	for (i = 0; i < WIFI_STATS_MAX; i++)
 		arm7_stats[i] = 0;
+	DEBUG(5, "%s: sending stats buffer address 0x%p\n", __func__, arm7_stats);
 	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_STATS_QUERY, (u32)arm7_stats);
 
-	/* setup shmem so we can get blocks back from arm7 */
-	register_shmemipc_cb(&nds_shmem_cb);
+	/* Initialise AP list buffer and send address to ARM7 */
+	p = (u8*)aplist;
+	for (i = 0; i < (sizeof(Wifi_AccessPoint) * WIFI_MAX_AP); i++)
+		*p++ = 0;
+	p = NULL;
+	DEBUG(5, "%s: sending aplist buffer address 0x%p\n", __func__, aplist);
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY, (u32)aplist);
 
 	/* Allocate space for private device-specific data */
 	dev = alloc_etherdev(sizeof(struct nds_net_priv));
@@ -1243,8 +1225,8 @@ static int __init init_nds(void)
 	global_dev = dev;
 
 	/* Initialise packet recieve buffer and send address to ARM7 */
-	DEBUG(5, "%s: sending rx buffer address 0x%p\n", __func__, &rx_packet);
 	nds_init_rx_packet(&rx_packet);
+	DEBUG(5, "%s: sending rx buffer address 0x%p\n", __func__, &rx_packet);
 	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_RX, (u32)&rx_packet);
 	
 	return 0;

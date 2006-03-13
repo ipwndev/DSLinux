@@ -77,7 +77,6 @@ enum WIFI_STATE {
 
 #define MAX_KEY_SIZE 13		// 128 (?) bits
 
-#define WIFI_MAX_AP			32
 
 #define WFLAG_PACKET_DATA		0x0001
 #define WFLAG_PACKET_MGT		0x0002
@@ -155,9 +154,10 @@ typedef struct Wifi_Data_Struct {
 
 	u8 FlashData[512];
 
+	/* pointers to buffers we get handed from ARM9 */
 	volatile u32 *stats;
+	Wifi_AccessPoint *aplist;
 
-	Wifi_AccessPoint aplist[WIFI_MAX_AP];
 } Wifi_Data;
 
 extern Wifi_Data wifi_data;
