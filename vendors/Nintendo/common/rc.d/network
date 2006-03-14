@@ -17,8 +17,8 @@ case "$1" in
 				iwconfig nds key $webkey
 			fi
 		else
-			echo "Not configuring network."
-			echo "No essid or channel defined."
+			echo "Not configuring network:"
+			echo "No ESSID or channel defined. See /etc/rc.defaults!"
 			exit 1
 		fi
 
@@ -37,7 +37,7 @@ case "$1" in
 			ifconfig nds $ip up
 			route add default gw $gateway
 		else
-			echo "Not configuring network."
+			echo "Not configuring network:"
 			echo "No static configuration found and DHCP is disabled."
 			exit 1
 		fi
