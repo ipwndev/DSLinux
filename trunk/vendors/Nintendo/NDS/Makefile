@@ -66,7 +66,7 @@ romfs:
 	$(ROMFSINST) /etc/inittab
 	$(ROMFSINST) /etc/motd
 	$(ROMFSINST) /etc/issue
-	$(ROMFSINST) /etc/passwd
+	$(ROMFSINST) $(NDS_COMMON)/passwd /etc/passwd
 	$(ROMFSINST) /usr/share/udhcpc/default.script
 	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
 
