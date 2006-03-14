@@ -5,11 +5,17 @@
 
 case "$1" in
 	start)
-		# set wireless parameters
 		if [ -n "$essid" ] && [ -n "$channel" ]
 		then
+			echo "Configuring wireless interface:"
+			echo "ESSID:    $essid"
+			echo "Channel:  $channel"
 			iwconfig nds essid $essid channel $channel
-			[ -n "$wepkey" ] && iwconfig nds key $webkey
+			if [ -n "$wepkey" ]
+			then
+				echo "Setting wepkey."
+				iwconfig nds key $webkey
+			fi
 		else
 			echo "Not configuring network."
 			echo "No essid or channel defined."
@@ -20,10 +26,14 @@ case "$1" in
 		ifconfig nds down
 		if [ "$use_dhcp" = "YES" ]
 		then
+			echo "Configuring network via DHCP."
 			# XXX: other args are needed here?
 			udhcpc -i nds
 		elif [ -n "$ip" ] && [ -n "$gateway" ]
 		then
+			echo "Configuring network:"
+			echo "IP:       $ip"
+			echo "Gateway:  $gateway"
 			ifconfig nds $ip up
 			route add default gw $gateway
 		else
@@ -35,7 +45,7 @@ case "$1" in
 		exit 0
 	;;
 	stop)
-		echo "Stopping network"
+		echo "Stopping network."
 		ifconfig nds down
 	;;	
 	restart)
