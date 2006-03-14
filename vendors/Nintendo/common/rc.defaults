@@ -7,18 +7,8 @@
 # 	http://www.dslinux.org/wiki/index.php/Using_DSLinux
 # There is an introduction to vi on that page.
 
-# Note that every line in this file starting with a '#' character
-# is a comment. Comments are simply ignored by DSLinux.
-
-# The settings you define in this file can be either set or empty.
+# The settings defined in this file can be either set or empty.
 # If a setting is empty, it will not affect the system.
-# Most settings below are empty by default, like this:
-# 	setting=""
-# To set a setting, change it so there is text inside the quotes,
-# like this:
-#	setting="sometext"
-# See the examples given in the comments for each setting to get
-# an idea of what to set a setting to.
 
 # This sets the hostname. You can set this to whatever you want.
 hostname="NintendoDS"
@@ -37,13 +27,15 @@ channel=""
 #	wepkey="9923829ea8923"
 # For ascii keys, make sure you use an 's:' prefix:
 # 	wepkey="s:mysecretkey"
+# If you do not want to use WEP, just leave this setting empty.
 wepkey=""
 
 # Set use_dhcp to "YES" if you want to use DHCP to configure
 # your IP address and gateway address.
 use_dhcp="NO"
 
-# Here you can also assign a static IP and gateway instead:
+# You can also assign a static IP and gateway instead of DHCP.
+# For example:
 #	ip="192.168.1.42"
 #	gateway="192.168.1.1"
 # Note that these values are ignored if use_dhcp is set to "YES".
