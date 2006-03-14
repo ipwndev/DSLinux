@@ -34,7 +34,7 @@ wepkey=""
 # your IP address and gateway address.
 use_dhcp="NO"
 
-# You can also assign a static IP and gateway instead of DHCP.
+# You can also assign a static IP and gateway instead of using DHCP.
 # For example:
 #	ip="192.168.1.42"
 #	gateway="192.168.1.1"
