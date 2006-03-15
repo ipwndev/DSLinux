@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
-# Sat Feb 25 18:19:23 2006
+# Tue Mar 14 22:25:27 2006
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
@@ -337,8 +337,8 @@ CONFIG_MTD_FIRMWARE=y
 # CONFIG_BLK_DEV_NBD is not set
 # CONFIG_BLK_DEV_RAM is not set
 CONFIG_BLK_DEV_RAM_COUNT=16
-# CONFIG_CDROM_PKTCDVD is not set
 # CONFIG_NDS_SUPERCARDSD is not set
+# CONFIG_CDROM_PKTCDVD is not set
 
 #
 # IO Schedulers
@@ -526,8 +526,6 @@ CONFIG_HW_CONSOLE=y
 #
 # CONFIG_SERIAL_DCC is not set
 # CONFIG_UNIX98_PTYS is not set
-# CONFIG_DEVPTS_FS is not set
-# DEVPTS_FS_XATTR is not set
 CONFIG_LEGACY_PTYS=y
 CONFIG_LEGACY_PTY_COUNT=16
 
