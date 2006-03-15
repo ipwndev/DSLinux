@@ -201,6 +201,8 @@ if [ "$PASS" != "final" ]; then
 			cp .config .config.save
 			cp .oldconfig .config
 			echo; echo; echo; echo
+			# don't clean the tree for dslinux - saves much time
+			NO_CLEAN=true
 			if [ $NO_CLEAN ]
 			then
 				echo "**** Not cleaning tree ****"
