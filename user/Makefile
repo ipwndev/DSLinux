@@ -144,6 +144,7 @@ dir_$(CONFIG_USER_GETTYD_GETTYD)            += gettyd
 dir_$(CONFIG_USER_GREP_GREP)                += grep
 dir_$(CONFIG_USER_HD_HD)                    += hd
 dir_$(CONFIG_USER_HOSTAP_HOSTAP)            += hostap
+dir_$(CONFIG_USER_HEXEDIT_HEXEDIT)          += hexedit
 dir_$(CONFIG_USER_HOSTAP_HOSTAP)            += hostap/utils
 dir_$(CONFIG_USER_HOSTAP_HOSTAPD)           += hostap/hostapd
 dir_$(CONFIG_USER_HTTPD_HTTPD)              += httpd

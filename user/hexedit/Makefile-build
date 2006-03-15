@@ -1,0 +1,59 @@
+# Makefile-build for hexedit
+
+PRODUCT = hexedit
+VERSION = 1.2.12
+
+prefix = /usr/local
+exec_prefix = ${prefix}
+mandir = ${prefix}/man/man1
+bindir = ${exec_prefix}/bin
+srcdir = .
+
+INCL = hexedit.h
+SRCS = hexedit.c display.c mark.c page.c file.c interact.c misc.c search.c
+OTHER = COPYING Changes TODO install-sh configure config.h.in hexedit.1 hexedit-1.2.12.lsm Makefile.in configure.in Makefile-build.in
+ALL = $(INCL) $(SRCS) $(OTHER)
+TARSOURCE = $(PRODUCT)-$(VERSION).src.tgz
+DYNAMICBIN = $(PRODUCT)-$(VERSION).bin.i386.dynamic.tgz
+HTMLSITE = $(PRODUCT)-html-site.tar
+HTMLFILES = $(PRODUCT).html
+TMPFILES = $(DYNAMICBIN) $(TARSOURCE) $(HTMLFILES)
+FROMINFILES = hexedit-$(VERSION).lsm hexedit.1
+
+dynamic:
+	$(MAKE) $(PRODUCT)
+	install -d -m 755 usr/bin
+	install -s -m 755 $(PRODUCT) usr/bin
+	install -d -m 755 usr/man/man1
+	install -m 644 $(PRODUCT).1 usr/man/man1
+	tar cfz $(DYNAMICBIN) usr
+	rm -rf usr
+
+tar: $(ALL)
+	cd .. ; tar cfz $(PRODUCT)/$(TARSOURCE) $(ALL:%=$(PRODUCT)/%)
+
+docs:
+	man2html $(PRODUCT).1
+
+hexedit-$(VERSION).lsm: hexedit.lsm.in
+	m4 -DVERSION=$(VERSION) $< > $@
+
+hexedit.1: hexedit.1.in
+	m4 -DVERSION=$(VERSION) $< > $@
+
+html-site: tar dynamic docs
+	tar cf $(HTMLSITE) $(TMPFILES)
+
+clean:
+	[ ! -e Makefile ] || $(MAKE) clean
+	rm -f $(TMPFILES) $(HTMLSITE) TAGS $(FROMINFILES)
+
+distclean: clean
+	[ ! -e Makefile ] || $(MAKE) distclean
+	rm -f Makefile-build configure config.h.in
+
+ci: clean
+	ci -l -mdefault *
+
+TAGS:
+	etags *.[hc]
