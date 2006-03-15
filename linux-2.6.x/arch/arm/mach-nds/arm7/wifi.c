@@ -680,17 +680,6 @@ void wifi_mac_query(void)
 /* handle a query from kerney for wifi address */
 void wifi_stats_query(void)
 {
-	wifi_data.state |= WIFI_STATE_STATSQUERYPEND;
-
-	if (wifi_data.
-	    state & (WIFI_STATE_STATSQUERYSEND | WIFI_STATE_RXPENDING |
-		     WIFI_STATE_APQUERYSENDING | WIFI_STATE_APQUERYPEND)) {
-		REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_STATS_QUERY, 0);
-		return;
-	}
-
-	wifi_data.state |= WIFI_STATE_STATSQUERYSEND;
-
 	wifi_data.stats[WIFI_STATS_DEBUG3] = WIFI_REG(0xA0);
 	wifi_data.stats[WIFI_STATS_DEBUG4] = WIFI_REG(0xB8);
 
@@ -699,17 +688,6 @@ void wifi_stats_query(void)
 	wifi_data.state &= ~WIFI_STATE_SAW_TX_ERR;
 
 	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_STATS_QUERY, 0);
-}
-
-void wifi_stats_query_complete(void)
-{
-	wifi_data.state &=
-	    ~(WIFI_STATE_STATSQUERYSEND | WIFI_STATE_STATSQUERYPEND);
-
-	if (wifi_data.state & WIFI_STATE_APQUERYPEND)
-		wifi_ap_query(wifi_data.ap_query_bank);
-	else if (wifi_data.state & WIFI_STATE_UP)
-		Wifi_Intr_RxEnd();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -841,6 +819,10 @@ static int Wifi_ProcessBeaconFrame(int macbase, int framelen)
 	u16 curloc;
 	u32 datalen;
 	u16 i, j, compatible;
+
+	/* is ap_list locked? */
+	if (wifi_data.state & WIFI_STATE_APQUERYPEND)
+		return WFLAG_PACKET_BEACON;
 
 	Wifi_MACCopy((u16 *) & packetheader, macbase, 0, 12);
 
@@ -1372,11 +1354,7 @@ static void Wifi_Intr_RxEnd(void)
 		// process packet here
 		temp = Wifi_ProcessReceivedFrame(base, full_packetlen);	// returns packet type
 		if ((wifi_data.state & WIFI_STATE_ASSOCIATED) && temp == WFLAG_PACKET_DATA) {	// if packet type is requested, forward it to the rx queue
-			if (wifi_data.state & (WIFI_STATE_RXPENDING |
-					       WIFI_STATE_APQUERYPEND |
-					       WIFI_STATE_APQUERYSENDING |
-					       WIFI_STATE_STATSQUERYPEND |
-					       WIFI_STATE_STATSQUERYSEND))
+			if (wifi_data.state & (WIFI_STATE_RXPENDING))
 				break;
 			if (!Wifi_QueueRxMacData(base, full_packetlen)) {
 				wifi_data.state |= WIFI_STATE_RXPENDING;
@@ -1404,14 +1382,7 @@ void wifi_rx_q_complete(void)
 {
 	wifi_data.state &= ~WIFI_STATE_RXPENDING;
 
-	if ((wifi_data.state & WIFI_STATE_APQUERYPEND) &&
-	    !(wifi_data.state & WIFI_STATE_APQUERYSENDING)) {
-		wifi_ap_query(wifi_data.ap_query_bank);
-	} else
-	    if ((wifi_data.state & WIFI_STATE_STATSQUERYPEND) &&
-		!(wifi_data.state & WIFI_STATE_STATSQUERYSEND)) {
-		wifi_stats_query();
-	} else if (wifi_data.state & WIFI_STATE_UP)
+	if (wifi_data.state & WIFI_STATE_UP)
 		Wifi_Intr_RxEnd();
 }
 
@@ -1816,29 +1787,14 @@ static int Wifi_SendPSPollFrame(void)
 }
 #endif
 
-void wifi_ap_query(u16 bank)
+void wifi_ap_query(u16 start_stop)
 {
-	wifi_data.state |= WIFI_STATE_APQUERYPEND;
-	wifi_data.ap_query_bank = bank;
+	if (start_stop)
+		wifi_data.state |= WIFI_STATE_APQUERYPEND;
+	else
+		wifi_data.state &= ~WIFI_STATE_APQUERYPEND;
 
-	if (wifi_data.
-	    state & (WIFI_STATE_APQUERYSENDING | WIFI_STATE_RXPENDING |
-		     WIFI_STATE_STATSQUERYPEND | WIFI_STATE_STATSQUERYSEND))
-		return;
-
-	wifi_data.state |= WIFI_STATE_APQUERYSENDING;
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY_COMPLETE, 0);
-}
-
-void wifi_ap_query_complete(void)
-{
-	wifi_data.state &=
-	    ~(WIFI_STATE_APQUERYPEND | WIFI_STATE_APQUERYSENDING);
-
-	if (wifi_data.state & WIFI_STATE_STATSQUERYPEND)
-		wifi_stats_query();
-	else if (wifi_data.state & WIFI_STATE_UP)
-		Wifi_Intr_RxEnd();
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY, 0);
 }
 
 void wifi_start_scan(void)

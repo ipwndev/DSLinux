@@ -39,9 +39,6 @@ enum WIFI_STATE {
 	WIFI_STATE_TXPENDING = 0x0100,
 	WIFI_STATE_RXPENDING = 0x0200,
 	WIFI_STATE_APQUERYPEND = 0x0400,
-	WIFI_STATE_APQUERYSENDING = 0x0800,
-	WIFI_STATE_STATSQUERYPEND = 0x1000,
-	WIFI_STATE_STATSQUERYSEND = 0x2000,
 };
 
 /*
@@ -143,7 +140,6 @@ typedef struct Wifi_Data_Struct {
 	u16 scanChannel;
 
 	u16 state;
-	u16 ap_query_bank;
 
 	u8 MacAddr[6];
 	u8 bssid[6];
@@ -178,12 +174,10 @@ void Wifi_SetSSID(int off, char b1, char b2);
 void Wifi_SetAPMode(enum WIFI_AP_MODE mode);
 void Wifi_GetAPMode(void);
 
-void wifi_ap_query(u16 bank);
+void wifi_ap_query(u16 start_stop);
 void wifi_start_scan(void);
 void wifi_timer_handler(void);
 void wifi_rx_q_complete(void);
-void wifi_stats_query_complete(void);
-void wifi_ap_query_complete(void);
 
 /* Pointer to buffer used to send incoming packets to ARM9 */
 extern struct nds_rx_packet *rx_packet;

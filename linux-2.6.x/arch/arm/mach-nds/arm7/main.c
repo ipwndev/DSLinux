@@ -102,9 +102,6 @@ static void recieveFIFOCommand(void)
 					wifi_stats_query();
 				}
 				break;
-			case FIFO_WIFI_CMD_STATS_QUERY_COMPLETE:
-				wifi_stats_query_complete();
-				break;
 			case FIFO_WIFI_CMD_SET_ESSID:
 				Wifi_SetSSID(/* #essid (0 - 3) */
 					     4 * ((data >> 20) & 0x3)
@@ -132,7 +129,7 @@ static void recieveFIFOCommand(void)
 				Wifi_SetWepMode(data & 0xff);
 				break;
 			case FIFO_WIFI_CMD_AP_QUERY:
-				if (data > 1) {
+				if (FIFO_WIFI_GET_DATA(data) > 1) {
 					/* Getting the address of the ap query
 					 * buffer*/
 					wifi_data.aplist = \
@@ -143,14 +140,11 @@ static void recieveFIFOCommand(void)
 					wifi_ap_query(data & 0xffff);
 				}
 				break;
-			case FIFO_WIFI_CMD_AP_QUERY_COMPLETE:
-				wifi_ap_query_complete();
-				break;
 			case FIFO_WIFI_CMD_SCAN:
 				wifi_start_scan();
 				break;
 			case FIFO_WIFI_CMD_SET_AP_MODE:
-				Wifi_SetAPMode(data);
+				Wifi_SetAPMode(FIFO_WIFI_GET_DATA(data));
 				break;
 			case FIFO_WIFI_CMD_GET_AP_MODE:
 				Wifi_GetAPMode();
