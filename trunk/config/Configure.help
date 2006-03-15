@@ -441,6 +441,9 @@ CONFIG_USER_GDBSERVER_GDBSERVER
 CONFIG_USER_GREP_GREP
   GNU grep, egrep and fgrep
 
+CONFIG_USER_HEXEDIT_HEXEDIT
+  A nice hex editor
+
 CONFIG_USER_ROUTE_IFCONFIG
   Required to configure network interfaces.
   Approx. binary size: 28k
