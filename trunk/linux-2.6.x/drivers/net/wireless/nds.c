@@ -49,7 +49,7 @@ MODULE_AUTHOR("Bret Thaeler <bthaeler@aol.com>");
 MODULE_DESCRIPTION("Nintendo DS wireless LAN driver");
 MODULE_LICENSE("GPL");
 
-static int pc_debug = 0;
+static int pc_debug = 9;
 MODULE_PARM(pc_debug, "i");
 #define DEBUG(n, args...) if (pc_debug>=(n)) printk(args)
 
@@ -371,10 +371,24 @@ static int nds_get_sens(struct net_device *dev,
  */
 static int nds_get_range(struct net_device *dev,
 			 struct iw_request_info *info,
-			 struct iw_point *dwrq, char *extra)
+		         union iwreq_data *wrqu, char *extra)
 {
+	struct iw_range *range = (struct iw_range *)extra;
+
 	DEBUG(7, "Called: %s\n", __func__);
-	return -ENETDOWN;
+
+	/* Set the length (very important for backward compatibility) */
+	wrqu->data.length = sizeof(*range);
+
+	/* Set all the info we don't care or don't know about to zero */
+	memset(range, 0, sizeof(*range));
+
+	/* Set the Wireless Extension versions */
+	range->we_version_compiled	= WIRELESS_EXT;
+	range->we_version_source	= 1;
+	range->throughput		= 2 * 1000 * 1000;     /* ~2 Mb/s */
+	/* FIXME: study the code to fill in more fields... */
+	return 0;
 }
 
 /*------------------------------------------------------------------*/
@@ -448,69 +462,71 @@ static int nds_get_scan(struct net_device *dev,
 			struct iw_request_info *info,
 			struct iw_point *dwrq, char *extra)
 {
-	int i, bank;
+	int i;
 	char *current_ev = extra;
 	struct iw_event iwe;
 
 	DEBUG(7, "Called: %s\n", __func__);
 
-	for (bank = 0; bank < 2; bank++) {
-		ap_query_complete = 0;
-		REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY, bank);
-		wait_event_interruptible(ndswifi_wait, ap_query_complete != 0);
+	/* stop ap list updates */
+	ap_query_complete = 0;
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY, 1);
+	wait_event_interruptible(ndswifi_wait, ap_query_complete != 0);
 
-		for (i = 0; i < WIFI_MAX_AP; i++) {
-			if (!aplist[i].channel)
-				continue;
+	for (i = 0; i < WIFI_MAX_AP; i++) {
+		if (!aplist[i].channel)
+			continue;
 
-			iwe.cmd = SIOCGIWAP;
-			iwe.u.ap_addr.sa_family = ARPHRD_ETHER;
-			memcpy(iwe.u.ap_addr.sa_data, (void*)aplist[i].bssid,
-			       ETH_ALEN);
-			current_ev =
-			    iwe_stream_add_event(current_ev,
-						 extra + IW_SCAN_MAX_DATA, &iwe,
-						 IW_EV_ADDR_LEN);
+		iwe.cmd = SIOCGIWAP;
+		iwe.u.ap_addr.sa_family = ARPHRD_ETHER;
+		memcpy(iwe.u.ap_addr.sa_data, (void*)aplist[i].bssid,
+		       ETH_ALEN);
+		current_ev =
+		    iwe_stream_add_event(current_ev,
+					 extra + IW_SCAN_MAX_DATA, &iwe,
+					 IW_EV_ADDR_LEN);
 
-			iwe.cmd = SIOCGIWESSID;
-			iwe.u.data.flags = 1;
-			iwe.u.data.length = aplist[i].ssid_len;
-			current_ev = iwe_stream_add_point(current_ev,
-							  extra +
-							  IW_SCAN_MAX_DATA,
-							  &iwe, (char*)aplist[i].ssid);
+		iwe.cmd = SIOCGIWESSID;
+		iwe.u.data.flags = 1;
+		iwe.u.data.length = aplist[i].ssid_len;
+		current_ev = iwe_stream_add_point(current_ev,
+						  extra +
+						  IW_SCAN_MAX_DATA,
+						  &iwe, (char*)aplist[i].ssid);
 
-			iwe.cmd = SIOCGIWMODE;
-			iwe.u.mode =
-			    (aplist[i].flags & WFLAG_APDATA_ADHOC) ? 1 : 2;
-			current_ev =
-			    iwe_stream_add_event(current_ev,
-						 extra + IW_SCAN_MAX_DATA, &iwe,
-						 IW_EV_UINT_LEN);
+		iwe.cmd = SIOCGIWMODE;
+		iwe.u.mode =
+		    (aplist[i].flags & WFLAG_APDATA_ADHOC) ? 1 : 2;
+		current_ev =
+		    iwe_stream_add_event(current_ev,
+					 extra + IW_SCAN_MAX_DATA, &iwe,
+					 IW_EV_UINT_LEN);
 
-			iwe.cmd = SIOCGIWFREQ;
-			iwe.u.freq.m = aplist[i].channel;
-			iwe.u.freq.e = 0;
-			current_ev = iwe_stream_add_event(current_ev,
-							  extra +
-							  IW_SCAN_MAX_DATA,
-							  &iwe, IW_EV_FREQ_LEN);
+		iwe.cmd = SIOCGIWFREQ;
+		iwe.u.freq.m = aplist[i].channel;
+		iwe.u.freq.e = 0;
+		current_ev = iwe_stream_add_event(current_ev,
+						  extra +
+						  IW_SCAN_MAX_DATA,
+						  &iwe, IW_EV_FREQ_LEN);
 
-			iwe.cmd = SIOCGIWENCODE;
-			if (aplist[i].flags & WFLAG_APDATA_WEP)
-				iwe.u.data.flags =
-				    IW_ENCODE_ENABLED | IW_ENCODE_NOKEY;
-			else
-				iwe.u.data.flags = IW_ENCODE_DISABLED;
-			iwe.u.data.length = 0;
-			current_ev = iwe_stream_add_point(current_ev,
-							  extra +
-							  IW_SCAN_MAX_DATA,
-							  &iwe, NULL);
-		}
-
-		REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY_COMPLETE, 0);
+		iwe.cmd = SIOCGIWENCODE;
+		if (aplist[i].flags & WFLAG_APDATA_WEP)
+			iwe.u.data.flags =
+			    IW_ENCODE_ENABLED | IW_ENCODE_NOKEY;
+		else
+			iwe.u.data.flags = IW_ENCODE_DISABLED;
+		iwe.u.data.length = 0;
+		current_ev = iwe_stream_add_point(current_ev,
+						  extra +
+						  IW_SCAN_MAX_DATA,
+						  &iwe, NULL);
 	}
+
+	/* restart aplist updates */
+	ap_query_complete = 0;
+	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY, 0);
+	wait_event_interruptible(ndswifi_wait, ap_query_complete != 0);
 
 	/* Length of data */
 	dwrq->length = (current_ev - extra);
@@ -1117,7 +1133,6 @@ void nds_wifi_recieve_stats(void)
 	DEBUG(8, "Num interupts: 0x%08X\n", arm7_stats[WIFI_STATS_DEBUG6]);
 
 	stats_query_complete = 1;
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_STATS_QUERY_COMPLETE, 0);
 	wake_up_interruptible(&ndswifi_wait);
 }
 
@@ -1152,16 +1167,16 @@ static void nds_cmd_from_arm7(u8 cmd, u32 data)
 		scan_complete = 1;
 		wake_up_interruptible(&ndswifi_wait);
 		break;
-	case FIFO_WIFI_CMD_AP_QUERY_COMPLETE:
-		ap_query_complete = 1;
-		wake_up_interruptible(&ndswifi_wait);
-		break;
 	case FIFO_WIFI_CMD_GET_AP_MODE:
 		mode_query_output = data;
 		get_mode_completed = 1;
 		break;
 	case FIFO_WIFI_CMD_STATS_QUERY:
 		nds_wifi_recieve_stats();
+		break;
+	case FIFO_WIFI_CMD_AP_QUERY:
+		ap_query_complete = 1;
+		wake_up_interruptible(&ndswifi_wait);
 		break;
 	}
 }
