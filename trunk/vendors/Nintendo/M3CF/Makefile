@@ -16,7 +16,7 @@ FATFS	 = m3
 
 ROMFS_DIRS = dev etc proc sbin $(FATFS)/linux
 
-FS_DIRS = home lib usr/bin usr/share/udhcpc var/tmp
+FS_DIRS = home lib usr/bin usr/share/udhcpc var/tmp etc etc/rc.d
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
@@ -74,11 +74,19 @@ romfs:
 	$(ROMFSINST) -s $(FATFS)/linux/home /home
 	$(ROMFSINST) -s /var/tmp /tmp
 	$(ROMFSINST) -s /usr/share/udhcpc/resolv.conf /etc/resolv.conf
+	$(ROMFSINST) -s /$(FATFS)/linux/etc/rc.local /etc/rc.local
+	$(ROMFSINST) -s /$(FATFS)/linux/etc/rc.conf /etc/rc.conf
+	$(ROMFSINST) -s /$(FATFS)/linux/etc/rc.d /etc/rc.d
 	$(ROMFSINST) /etc/rc
 	$(ROMFSINST) /etc/inittab
 	$(ROMFSINST) /etc/motd
 	$(ROMFSINST) /etc/issue
 	$(ROMFSINST) $(NDS_COMMON)/passwd /etc/passwd
+	$(ROMFSINST) $(NDS_COMMON)/rc.common /etc/rc.common
+	$(ROMFSINST) $(NDS_COMMON)/rc.defaults /etc/rc.defaults
+	for f in $(NDS_COMMON)/rc.d/*; do \
+	       $(ROMFSINST) $$f /$(FATFS)/linux/etc/rc.d/ ; \
+	done
 	$(ROMFSINST) /usr/share/udhcpc/default.script
 	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
 
@@ -92,7 +100,7 @@ image:
 		j=`basename $$i` ; \
 		mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/$$j $(ROMFSDIR)/bin ; \
 	done
-	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/busybox $(ROMFSDIR)/bin ;
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/busybox $(ROMFSDIR)/bin
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/mount $(ROMFSDIR)/bin
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/sh $(ROMFSDIR)/bin
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/login $(ROMFSDIR)/bin

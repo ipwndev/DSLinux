@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
-# Sat Feb 25 15:57:40 2006
+# Tue Mar 14 23:04:52 2006
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
@@ -336,6 +336,7 @@ CONFIG_MTD_FIRMWARE=y
 # CONFIG_BLK_DEV_NBD is not set
 # CONFIG_BLK_DEV_RAM is not set
 CONFIG_BLK_DEV_RAM_COUNT=16
+# CONFIG_NDS_SUPERCARDSD is not set
 # CONFIG_CDROM_PKTCDVD is not set
 
 #
@@ -622,7 +623,6 @@ CONFIG_LOGO=y
 # CONFIG_LOGO_LINUX_CLUT224 is not set
 # CONFIG_LOGO_NDS_CLUT224 is not set
 CONFIG_LOGO_NDS_BIG_CLUT224=y
-# CONFIG_BACKLIGHT_LCD_SUPPORT is not set
 
 #
 # Sound
@@ -837,7 +837,6 @@ CONFIG_FRAME_POINTER=y
 # Security options
 #
 # CONFIG_KEYS is not set
-# CONFIG_SECURITY is not set
 
 #
 # Cryptographic options
