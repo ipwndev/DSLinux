@@ -9,17 +9,28 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 export PATH
 
 # setup networking
-if /etc/rc.d/network start
+if [ "$enable_network_on_boot" = "YES" ]
 then
-	__network_up="YES"
+	if /etc/rc.d/network start
+	then
+		__network_up="YES"
+	else
+		__network_up="NO"
+	fi
 else
+	echo "Not configuring network"
 	__network_up="NO"
 fi
 
 # start telnetd if configured
-if [ "$start_telnetd" = "YES" ] && [ "$__network_up" = "YES" ]
+if [ "$start_telnetd" = "YES" ]
 then
-	/etc/rc.d/telnetd start
+	if [ "$__network_up" = "YES" ]
+	then
+		/etc/rc.d/telnetd start
+	else
+		echo "Not starting telnetd: network is down"
+	fi
 fi
 
 # set hostname
