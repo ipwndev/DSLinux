@@ -9,7 +9,7 @@ ifndef PREFIX
 endif
 
 ## Compiler to use (modify this for cross compile)
-CC = gcc
+#CC = gcc
 ## Other tools you need to modify for cross compile (static lib only)
 AR = ar
 RANLIB = ranlib
@@ -17,7 +17,7 @@ RANLIB = ranlib
 ## Uncomment this to build tools using static version of the library
 ## Mostly useful for embedded platforms without ldd, or to create
 ## a local version (non-root).
-# BUILD_STATIC = y
+BUILD_STATIC = y
 
 ## Uncomment this to build without using libm (less efficient)
 ## This is mostly useful for embedded platforms without maths.
@@ -81,18 +81,19 @@ else
 endif
 
 # Other flags
-CFLAGS=-Os -W -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow \
+#CFLAGS=-Os -W -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow \
 	-Wpointer-arith -Wcast-qual -Winline -I.
 #CFLAGS=-O2 -W -Wall -Wstrict-prototypes -I.
-DEPFLAGS=-MMD
-XCFLAGS=$(CFLAGS) $(DEPFLAGS) $(WARN) $(HEADERS) $(WELIB_FLAG)
+#DEPFLAGS=-MMD
+XCFLAGS= -I. $(CFLAGS) $(DEPFLAGS) $(WARN) $(HEADERS) $(WELIB_FLAG)
 PICFLAG=-fPIC
 
 # Standard compilation targets
 all:: $(IWLIB) $(PROGS)
 
 %: %.o
-	$(CC) $(LDFLAGS) $(XCFLAGS) -o $@ $^ $(LIBS)
+	$(CC) $(LDFLAGS) $(XCFLAGS) -o $@ $^ $(LIBS) $(LDLIBS$(LDLIBS_$@)) ../../uClibc/libc/libc.a
+
 %.o: %.c wireless.h
 	$(CC) $(XCFLAGS) -c $<
 %.so: %.c wireless.h
@@ -120,7 +121,15 @@ wireless.h:
 
 # Compilation of the dynamic library
 $(DYNAMIC): $(OBJS:.o=.so)
-	$(CC) -shared -o $@ -Wl,-soname,$@ $(LIBS) -lc $^
+	$(CC) -shared $(LD_FLAGS) -o $@ -Wl,-soname,$@ $(LIBS) -lc $^  $(LDLIBS$(LDLIBS_$@)
+
+romfs:
+	$(ROMFSINST) -e CONFIG_USER_WIRELESS_TOOLS_IWCONFIG /bin/iwconfig
+	$(ROMFSINST) -e CONFIG_USER_WIRELESS_TOOLS_IWLIST   /bin/iwlist
+	$(ROMFSINST) -e CONFIG_USER_WIRELESS_TOOLS_IWPRIV   /bin/iwpriv
+	$(ROMFSINST) -e CONFIG_USER_WIRELESS_TOOLS_IWSPY    /bin/iwspy
+	$(ROMFSINST) -e CONFIG_USER_WIRELESS_TOOLS_IWGETID  /bin/iwgetid
+	$(ROMFSINST) -e CONFIG_USER_WIRELESS_TOOLS_IWEVENT  /bin/iwevent
 
 # Compilation of the static library
 $(STATIC): $(OBJS)
