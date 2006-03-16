@@ -13,7 +13,7 @@ IMAGE    = $(IMAGEDIR)/dslinux.nds.gba
 endif
 
 
-ROMFS_DIRS = bin dev etc home lib mnt proc usr usr/share/udhcpc var sys
+ROMFS_DIRS = bin dev etc etc/rc.d home lib mnt proc usr usr/share/udhcpc var sys
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
@@ -62,10 +62,16 @@ romfs:
 	$(ROMFSINST) -s /var/tmp /tmp
 	$(ROMFSINST) -s /bin /sbin
 	$(ROMFSINST) -s /var/resolv.conf /etc/resolv.conf
+	$(ROMFSINST) -s /var/rc.conf /etc/rc.conf
 	$(ROMFSINST) /etc/rc
 	$(ROMFSINST) /etc/inittab
 	$(ROMFSINST) /etc/motd
 	$(ROMFSINST) /etc/issue
+	$(ROMFSINST) $(NDS_COMMON)/rc.common /etc/rc.common
+	$(ROMFSINST) $(NDS_COMMON)/rc.defaults /etc/rc.defaults
+	for f in $(NDS_COMMON)/rc.d/*; do \
+		$(ROMFSINST) $$f /etc/rc.d/ ; \
+	done
 	$(ROMFSINST) $(NDS_COMMON)/passwd /etc/passwd
 	$(ROMFSINST) /usr/share/udhcpc/default.script
 	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
