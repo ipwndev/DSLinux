@@ -17,7 +17,7 @@ RANLIB = ranlib
 ## Uncomment this to build tools using static version of the library
 ## Mostly useful for embedded platforms without ldd, or to create
 ## a local version (non-root).
-BUILD_STATIC = y
+# BUILD_STATIC = y
 
 ## Uncomment this to build without using libm (less efficient)
 ## This is mostly useful for embedded platforms without maths.
@@ -81,11 +81,10 @@ else
 endif
 
 # Other flags
-# CFLAGS=-Os -W -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow \
-#	-Wpointer-arith -Wcast-qual -Winline -I.
+CFLAGS=-Os -W -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow \
+	-Wpointer-arith -Wcast-qual -Winline -I.
 #CFLAGS=-O2 -W -Wall -Wstrict-prototypes -I.
-CFLAGS=-I.
-# DEPFLAGS=-MMD
+DEPFLAGS=-MMD
 XCFLAGS=$(CFLAGS) $(DEPFLAGS) $(WARN) $(HEADERS) $(WELIB_FLAG)
 PICFLAG=-fPIC
 
@@ -128,14 +127,6 @@ $(STATIC): $(OBJS)
 	$(RM) $@
 	$(AR) cru $@ $^
 	$(RANLIB) $@
-
-romfs:
-	$(ROMFSINST) -e CONFIG_USER_WIRELESS_TOOLS_IWCONFIG /bin/iwconfig
-	$(ROMFSINST) -e CONFIG_USER_WIRELESS_TOOLS_IWLIST   /bin/iwlist
-	$(ROMFSINST) -e CONFIG_USER_WIRELESS_TOOLS_IWPRIV   /bin/iwpriv
-	$(ROMFSINST) -e CONFIG_USER_WIRELESS_TOOLS_IWSPY    /bin/iwspy
-	$(ROMFSINST) -e CONFIG_USER_WIRELESS_TOOLS_IWGETID  /bin/iwgetid
-	$(ROMFSINST) -e CONFIG_USER_WIRELESS_TOOLS_IWEVENT  /bin/iwevent
 
 # So crude but so effective ;-)
 # Less crude thanks to many contributions ;-)
