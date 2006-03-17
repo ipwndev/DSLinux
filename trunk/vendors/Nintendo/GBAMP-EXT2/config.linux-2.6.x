@@ -691,7 +691,7 @@ CONFIG_EXT2_FS=y
 # CONFIG_FS_POSIX_ACL is not set
 # CONFIG_XFS_FS is not set
 # CONFIG_MINIX_FS is not set
-CONFIG_ROMFS_FS=y
+# CONFIG_ROMFS_FS is not set
 # CONFIG_INOTIFY is not set
 # CONFIG_QUOTA is not set
 # CONFIG_DNOTIFY is not set
