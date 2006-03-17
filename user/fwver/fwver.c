@@ -1,5 +1,67 @@
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+//#define FWVER_DEBUG
+
+/* cake originally from http://www.myhairyass.com/ascii/Art/?ID=20 */
+#define CAKE_WIDTH 39
+#define CAKE_HEIGHT 15
+static char cake[CAKE_HEIGHT][CAKE_WIDTH]= {
+	"                0   0                \n",
+	"                |   |                \n",
+	"            ____|___|____            \n",
+	"         0  |~ ~ ~ ~ ~ ~|   0        \n",
+	"         |  |           |   |        \n",
+	"      ___|__|___________|___|__      \n",
+	"      |/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/|      \n",
+	"  0   |       H a p p y       |   0  \n",
+	"  |   |/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/|   |  \n",
+	"__|___|_______________________|___|__\n",
+	"|/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/|\n",
+	"|                                   |\n",
+	"|         B i r t h d a y! ! !      |\n",
+	"| ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ |\n",
+	"|___________________________________|\n",
+};
+
+
+/* first byte at this offset is bday month,
+ * second byte at this offset is bday day */
+#define FW_BDAY_OFFSET	0x03FE03
+
+static void print_cake()
+{
+	int i;
+	for (i = 0; i < CAKE_HEIGHT; i++)
+		printf(cake[i]);
+	sleep(5);
+}
+
+static int its_birthday(FILE *firmware)
+{
+	int day = 0;
+	int month = 0;
+	time_t t = 0;
+	struct tm *tm = NULL;
+
+	t = time(NULL);
+	tm = localtime(&t);
+	fseek(firmware, FW_BDAY_OFFSET, SEEK_SET);
+	fread(&month, 1, 1, firmware);
+	fread(&day, 1, 1, firmware);
+#ifdef FWVER_DEBUG
+	printf("birthday day: %i\n", day);
+	printf("birthday month: %i\n", month);
+	printf("current day: %i\n", tm->tm_mday);
+	printf("current month: %i\n", tm->tm_mon);
+	day = tm->tm_mday;
+	month = tm->tm_mon;
+#endif
+	return ((day == tm->tm_mday) && (month == tm->tm_mon));
+}
+
 
 int main( void )
 {
@@ -15,6 +77,9 @@ int main( void )
         perror( "/dev/firmware" ) ;
         exit(1);
     }
+
+    if (its_birthday(firmware))
+	    print_cake();
 
     fseek( firmware, 0x17c ,SEEK_SET ) ;
     fread( &data, sizeof(short), 1, firmware ) ;
