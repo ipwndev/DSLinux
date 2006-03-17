@@ -87,7 +87,7 @@ romfs:
 	for f in $(NDS_COMMON)/rc.d/*; do \
 		[ -d $$f ] || $(ROMFSINST) $$f /$(FATFS)/linux/etc/rc.d/ ; \
 	done
-	$(ROMFSINST) /usr/share/udhcpc/default.script
+	$(ROMFSINST) $(NDS_COMMON)/default.script /usr/share/udhcpc/default.script
 	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
 
 image:
