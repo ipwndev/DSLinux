@@ -9,7 +9,14 @@ case "$1" in
 		then
 			echo "Configuring wireless interface:"
 			echo "ESSID:    $essid"
-			iwconfig nds essid $essid 
+			iwconfig nds essid $essid
+			
+			if [ -n "$channel" ]
+			then 
+				echo "Channel:  $channel"
+				iwconfig nds channel $channel
+			fi
+
 			if [ -n "$wepkey" ]
 			then
 				echo "Setting wepkey."
@@ -46,6 +53,7 @@ case "$1" in
 	stop)
 		echo "Stopping network."
 		ifconfig nds down
+		kill `pidof udhcpc` 2> /dev/null
 	;;	
 	restart)
 		$0 stop
