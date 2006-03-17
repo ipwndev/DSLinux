@@ -5,12 +5,11 @@
 
 case "$1" in
 	start)
-		if [ -n "$essid" ] && [ -n "$channel" ]
+		if [ -n "$essid" ]
 		then
 			echo "Configuring wireless interface:"
 			echo "ESSID:    $essid"
-			echo "Channel:  $channel"
-			iwconfig nds essid $essid channel $channel
+			iwconfig nds essid $essid 
 			if [ -n "$wepkey" ]
 			then
 				echo "Setting wepkey."
@@ -18,7 +17,7 @@ case "$1" in
 			fi
 		else
 			echo "Not configuring network:"
-			echo "No ESSID or channel defined. See /etc/rc.defaults!"
+			echo "No ESSID defined. See /etc/rc.defaults!"
 			exit 1
 		fi
 
