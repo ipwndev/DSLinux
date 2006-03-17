@@ -2,6 +2,16 @@
 
 # Usage:
 # Update common/config.vendor with a GBAMP config.vendor then run this script
+# cvs diff
+# cvs commit
+#
+# To update the patches used by this script:
+#
+# Change config.vendor as required using make menuconfig (customise vendor, update)
+# cd vendors/Nintendo
+# diff -u common/config.vendor FOO/config.vendor > FOO/vendorpatch
+# cvs diff
+# cvs commit
 
 for i in [D-Z]* 
 do
