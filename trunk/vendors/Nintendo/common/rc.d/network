@@ -14,7 +14,7 @@ case "$1" in
 			if [ -n "$wepkey" ]
 			then
 				echo "Setting wepkey."
-				iwconfig nds key $webkey
+				iwconfig nds key $wepkey
 			fi
 		else
 			echo "Not configuring network:"
