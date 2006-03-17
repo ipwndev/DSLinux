@@ -80,5 +80,6 @@ image:
 		-7 $(ROOTDIR)/$(LINUXDIR)/arch/arm/mach-nds/arm7.bin \
 			-r7 0x03800000 -e7 0x03800000  \
 			-b $(NDS_COMMON)/tux.bmp "DSLinux;Port of Linux;to the DS!" 
-	( cd $(ROMFSDIR); tar -cvzf $(IMAGEDIR)/dslinux-$(FATFS).tgz .)
+	tar -C $(ROMFSDIR) -cvzf $(IMAGEDIR)/extract_this_to_ext2_partition.tgz .
+	tar -C $(IMAGEDIR) -cvzf $(IMAGEDIR)/dslinux-$(FATFS)-ext2.tgz dslinux.nds extract_this_to_ext2_partition.tgz
 
