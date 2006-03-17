@@ -6,6 +6,7 @@
 for i in [D-Z]* 
 do
     cp common/config.vendor $i 
+    cp common/config.uClibc $i 
     if [ -e $i/vendorpatch ] 
     then
         cd $i 
