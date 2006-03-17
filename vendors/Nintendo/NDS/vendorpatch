@@ -1,5 +1,5 @@
---- common/config.vendor	2006-03-12 11:52:33.000000000 +0000
-+++ NDS/config.vendor	2006-03-12 11:56:21.000000000 +0000
+--- common/config.vendor	2006-03-17 14:57:30.000000000 +0000
++++ NDS/config.vendor	2006-03-17 15:34:08.000000000 +0000
 @@ -56,7 +56,7 @@
  # CONFIG_LIB_LIBPNG_FORCE is not set
  # CONFIG_LIB_LIBJPEG_FORCE is not set
@@ -18,7 +18,13 @@
  # CONFIG_USER_RDATE_RDATE is not set
  # CONFIG_USER_ROUTED_ROUTED is not set
  # CONFIG_USER_RP_PPPOE_PPPOE is not set
-@@ -290,7 +290,7 @@
+@@ -286,12 +286,12 @@
+ # CONFIG_USER_GDBSERVER_GDBSERVER is not set
+ # CONFIG_USER_GREP_GREP is not set
+ # CONFIG_USER_HD_HD is not set
+-CONFIG_USER_HEXEDIT_HEXEDIT=y
++# CONFIG_USER_HEXEDIT_HEXEDIT is not set
+ # CONFIG_USER_LCD_LCD is not set
  # CONFIG_USER_LEDCON_LEDCON is not set
  # CONFIG_USER_LHA_LHA is not set
  # CONFIG_USER_LILO_LILO is not set
@@ -27,7 +33,7 @@
  # CONFIG_USER_LPR is not set
  # CONFIG_USER_USBCBI_USBCBI is not set
  # CONFIG_USER_USBISO_USBISO is not set
-@@ -306,7 +306,7 @@
+@@ -307,7 +307,7 @@
  # CONFIG_USER_ROOTLOADER_ROOTLOADER is not set
  # CONFIG_USER_SETSERIAL_SETSERIAL is not set
  # CONFIG_USER_TRIPWIRE_SIGGEN is not set
@@ -36,7 +42,7 @@
  # CONFIG_USER_STRACE_STRACE is not set
  # CONFIG_USER_STTY_STTY is not set
  # CONFIG_USER_TCSH_TCSH is not set
-@@ -330,15 +330,14 @@
+@@ -331,15 +331,14 @@
  # CONFIG_USER_QSPITEST_RX is not set
  # CONFIG_USER_LEVEE_VI is not set
  # CONFIG_USER_ELVISTINY_VI is not set
@@ -55,7 +61,7 @@
  # CONFIG_USER_VPLAY_MIXER is not set
  # CONFIG_USER_PLAYRT_PLAYRT is not set
  # CONFIG_USER_CAMSERV is not set
-@@ -611,8 +610,7 @@
+@@ -612,8 +611,7 @@
  # CONFIG_USER_BUSYBOX_UDHCPD is not set
  # CONFIG_USER_BUSYBOX_UDHCP_DEBUG is not set
  # CONFIG_USER_BUSYBOX_UDHCP_SYSLOG is not set
