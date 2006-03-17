@@ -1,6 +1,7 @@
 # This file provides default flags for the DSLinux boot process.
 
 # It can be used as an example configuration file.
+# You can override every flag in this file in a copy.
 # Copy it to:
 #	* linux/etc/rc.conf on your CF card (GBAMP, M3 CF, SC CF)
 #	* /var/rc.conf (.nds builds, not saved across reboots)
@@ -29,9 +30,14 @@ enable_network_on_boot="NO"
 # Set the essid of your wireless router here.
 # Example flags are:
 # 	essid="eXampLeEsSiD"
-# Note that these flags are required for wireless networking.
-# You cannot use wireless networking if these flags are empty.
+# You cannot use wireless networking without setting an essid.
 essid=""
+
+# If DSLinux fails to associate with your access point,
+# try setting you access point's channel here.
+# For example:
+#	channel="11"
+channel=""
 
 # Here you can set a wepkey. Both 64bit and 128bit keys are
 # supported. For hex keys, just enter the key without any prefix:
