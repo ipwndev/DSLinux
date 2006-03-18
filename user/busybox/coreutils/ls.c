@@ -517,10 +517,10 @@ static void showfiles(struct dnode **dn, int nfiles)
 						putchar(' ');
 						column++;
 					}
-			}
+				}
 				nexttab = column + column_width;
 				column += list_single(dn[i]);
-		}
+			}
 		}
 		putchar('\n');
 		column = 0;
@@ -670,48 +670,54 @@ static int list_single(struct dnode *dn)
 			break;
 		case LIST_BLOCKS:
 #if _FILE_OFFSET_BITS == 64
-			column += printf("%4lld ", dn->dstat.st_blocks >> 1);
+			column += printf("%3lld ", dn->dstat.st_blocks >> 1);
 #else
-			column += printf("%4ld ", dn->dstat.st_blocks >> 1);
+			column += printf("%3ld ", dn->dstat.st_blocks >> 1);
 #endif
 			break;
 		case LIST_MODEBITS:
 			column += printf("%-10s ", (char *) bb_mode_string(dn->dstat.st_mode));
 			break;
 		case LIST_NLINKS:
-			column += printf("%4ld ", (long) dn->dstat.st_nlink);
+			column += printf("%2ld ", (long) dn->dstat.st_nlink);
 			break;
 		case LIST_ID_NAME:
 #ifdef CONFIG_FEATURE_LS_USERNAME
 			my_getpwuid(scratch, dn->dstat.st_uid, sizeof(scratch));
-			printf("%-8.8s ", scratch);
+			printf("%-6.6s ", scratch);
 			my_getgrgid(scratch, dn->dstat.st_gid, sizeof(scratch));
-			printf("%-8.8s", scratch);
+			printf("%-6.6s", scratch);
 			column += 17;
 			break;
 #endif
 		case LIST_ID_NUMERIC:
-			column += printf("%-8d %-8d", dn->dstat.st_uid, dn->dstat.st_gid);
+			column += printf("%-3d %-3d", dn->dstat.st_uid, dn->dstat.st_gid);
 			break;
 		case LIST_SIZE:
 		case LIST_DEV:
 			if (S_ISBLK(dn->dstat.st_mode) || S_ISCHR(dn->dstat.st_mode)) {
-				column += printf("%4d, %3d ", (int) major(dn->dstat.st_rdev),
+				column += printf("%2d,%2d ", (int) major(dn->dstat.st_rdev),
 					   (int) minor(dn->dstat.st_rdev));
 			} else {
-#ifdef CONFIG_FEATURE_HUMAN_READABLE
+/* Always use human-readable sizes in dslinux. This uses less screen estate,
+ * and is, well, more readable. */
+#if 0
+//#ifdef CONFIG_FEATURE_HUMAN_READABLE
 				if (all_fmt & LS_DISP_HR) {
-					column += printf("%9s ",
-							make_human_readable_str(dn->dstat.st_size, 1, 0));
-				} else
 #endif
+					column += printf("%6s ",
+							make_human_readable_str(dn->dstat.st_size, 1, 0));
+#if 0
+				} else
+//#endif
 				{
 #if _FILE_OFFSET_BITS == 64
-					column += printf("%9lld ", (long long) dn->dstat.st_size);
+					column += printf("%5lld ", (long long) dn->dstat.st_size);
 #else
-					column += printf("%9ld ", dn->dstat.st_size);
+					column += printf("%5ld ", dn->dstat.st_size);
 #endif
 				}
+#endif /* 0 */
 			}
 			break;
 #ifdef CONFIG_FEATURE_LS_TIMESTAMPS
