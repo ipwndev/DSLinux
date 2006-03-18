@@ -148,7 +148,7 @@ RETAWQ_VERSION = 0.2.6b
 
 all: retawq
 retawq: build_binary
-build_binary: msgpre clean config retawqbin stripsyms msgpost
+build_binary: config retawqbin stripsyms msgpost
 
 devel: clean config retawqbin
 
