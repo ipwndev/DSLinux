@@ -106,11 +106,9 @@ int main( void )
         case 0xDFC7:
             version = 4 ;
             break ;
-#if 0
-        case 0xUNKNOWN:
+        case 0x73b3:
             version = 5 ;
             break ;
-#endif
         case 0xF96D:
             printf("iQue firmware detected.\n");
             version = -1 ;
