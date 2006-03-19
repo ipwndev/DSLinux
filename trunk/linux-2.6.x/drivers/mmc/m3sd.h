@@ -1,0 +1,9 @@
+
+#define M3SD_STRPCL 0x08800000
+#define M3SD_CTRL   0x09800000
+#define M3SD_CMD    0x09200000
+#define M3SD_ARGH   0x09400000
+#define M3SD_ARGL   0x09600000
+#define M3SD_STAT   0x09800000
+
+
