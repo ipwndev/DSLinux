@@ -83,7 +83,6 @@ romfs:
 image:
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
 	[ -d $(IMAGEDIR)/linux ] || mkdir -p $(IMAGEDIR)/linux
-	$(CROSS_COMPILE)flthdr -z $(ROMFSDIR)/bin/*
 	-rm -r $(IMAGEDIR)/linux
 	mv $(ROMFSDIR)/$(FATFS)/linux $(IMAGEDIR)
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)

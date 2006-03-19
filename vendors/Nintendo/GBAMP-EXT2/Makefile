@@ -73,7 +73,6 @@ romfs:
 
 image:
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
-	$(CROSS_COMPILE)flthdr -z $(ROMFSDIR)/bin/*
 	$(CROSS_COMPILE)objcopy -O binary $(ELFIMAGE) $(IMAGEDIR)/arm9.bin
 	ndstool -c $(IMAGEDIR)/dslinux.nds -9 $(IMAGEDIR)/arm9.bin \
 		-r9 0x02000000 -e9 0x02000000  \
