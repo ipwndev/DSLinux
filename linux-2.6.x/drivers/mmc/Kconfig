@@ -60,4 +60,13 @@ config MMC_WBSD
 
 	  If unsure, say N.
 
+config MMC_M3SD
+	tristate "M3SD support"
+	depends on MMC && ARCH_NDS
+	help
+	  This selects the M3 SD device
+	  If you have an M3 SD, say Y or M here.
+
+	  If unsure, say N.
+
 endmenu
