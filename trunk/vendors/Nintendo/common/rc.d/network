@@ -33,15 +33,30 @@ case "$1" in
 		if [ "$use_dhcp" = "YES" ]
 		then
 			echo "Configuring network via DHCP."
-			# XXX: other args are needed here?
-			udhcpc -i nds
+			# We have very little RAM, so don't fork a new
+			# process for the dhcp client. This is the last
+			# command to run anyway if using dhcp.
+			exec udhcpc -n -q -i nds
+			### NOT REACHED ###
 		elif [ -n "$ip" ] && [ -n "$gateway" ]
 		then
 			echo "Configuring network:"
-			echo "IP:       $ip"
-			echo "Gateway:  $gateway"
+			echo "IP:        $ip"
+			echo "Gateway:   $gateway"
 			ifconfig nds $ip up
 			route add default gw $gateway
+
+			# Let users optionally configure netmask and broadcast.
+			# Thanks to chatterbug89 for pointing out that this
+			# was missing.
+			if [ -n "$netmask" ]
+				echo "Netmask:   $netmask"
+				ifconfig nds netmask $netmask
+			fi
+			if [ -n "$broadcast" ]
+				echo "Broadcast: $broadcast"
+				ifconfig nds broadcast $broadcast
+			fi
 		else
 			echo "Not configuring network:"
 			echo "No static configuration found and DHCP is disabled."

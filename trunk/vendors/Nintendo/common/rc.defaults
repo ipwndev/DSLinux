@@ -59,6 +59,11 @@ use_dhcp="NO"
 ip=""
 gateway=""
 
+# If using static network configuration, you can also supply a netmask
+# and a broadcast address, if you want to.
+netmask=""
+broadcast=""
+
 # If you want to start telnetd on boot, so you can login into your
 # DS from your PC, set start_telnetd to "YES".
 # Note that telnet sends passwords unencrypted over the network,
