@@ -410,6 +410,14 @@ static int validate_mmap_request(struct file *file,
 		if (!file->f_op || !file->f_op->mmap)
 			return -ENODEV;
 
+#ifdef CONFIG_ARCH_NDS
+		if ((file->f_dentry->d_inode->i_mode & S_IFMT) == S_IFCHR) {
+			capabilities =
+				BDI_CAP_MAP_DIRECT |
+				BDI_CAP_READ_MAP |
+				BDI_CAP_WRITE_MAP;
+		} else {
+#else
 		/* work out if what we've got could possibly be shared
 		 * - we support chardevs that provide their own "memory"
 		 * - we support files/blockdevs that are memory backed
@@ -421,6 +429,10 @@ static int validate_mmap_request(struct file *file,
 		capabilities = 0;
 		if (mapping && mapping->backing_dev_info)
 			capabilities = mapping->backing_dev_info->capabilities;
+#endif
+#ifdef CONFIG_ARCH_NDS
+		}
+#endif
 
 		if (!capabilities) {
 			/* no explicit capabilities set, so assume some

@@ -103,6 +103,15 @@ extern int is_in_rom(unsigned long);
 
 #define FIRST_USER_ADDRESS      (0)
 
+
+#ifdef CONFIG_ARCH_NDS
+extern unsigned long get_fb_unmapped_area(struct file *filp, unsigned long,
+                                          unsigned long, unsigned long,
+                                          unsigned long);
+#define HAVE_ARCH_FB_UNMAPPED_AREA
+
+#endif
+
 #endif /*__ASSEMBLY__*/
 
 #endif /* _ASMARM_PGTABLE_H */
