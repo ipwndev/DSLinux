@@ -282,7 +282,7 @@ int main(int argc, char *argv[])
 	screen_width = screeninfo.xres;
 	screen_height = screeninfo.yres;
 	
-	screen_ptr = mmap(0, screen_height * screen_width / 8, PROT_READ|PROT_WRITE, 0, screen_fd, 0);
+	screen_ptr = mmap(0, screen_height * screen_width / 8, PROT_READ|PROT_WRITE, MAP_SHARED, screen_fd, 0);
 	
 	if (screen_ptr==MAP_FAILED) {
 		perror("Unable to mmap frame buffer");

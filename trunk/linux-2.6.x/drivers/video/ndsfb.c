@@ -496,6 +496,12 @@ static int ndsfb_pan_display(struct fb_var_screeninfo *var,
      *  We can't do a proper mmap without an mmu, so just give
      *  a pointer to the vram.
      */
+unsigned long get_fb_unmapped_area(struct file *filp, unsigned long addr,
+				   unsigned long x1, unsigned long x2,
+				   unsigned long x3)
+{
+	return addr;
+}
 
 static int ndsfb_mmap(struct fb_info *info, struct file *file,
 		      struct vm_area_struct *vma)
