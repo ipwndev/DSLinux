@@ -519,8 +519,8 @@ bool 'radvd'			CONFIG_USER_RADVD_RADVD
 if [ "$CONFIG_USER_RADVD_RADVD"  = "y" ]; then
 	define_bool CONFIG_LIB_FLEX y
 fi
-bool 'retawq'			CONFIG_USER_RETAWQ_RETAWQ
 bool 'rdate'			CONFIG_USER_RDATE_RDATE
+bool 'retawq'			CONFIG_USER_RETAWQ_RETAWQ
 bool 'routed'			CONFIG_USER_ROUTED_ROUTED
 bool 'rp-pppoe'			CONFIG_USER_RP_PPPOE_PPPOE
 dep_bool '  rp-pppoe server'	CONFIG_USER_RP_PPPOE_PPPOE_SERVER $CONFIG_USER_RP_PPPOE_PPPOE
