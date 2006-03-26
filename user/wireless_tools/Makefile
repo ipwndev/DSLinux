@@ -165,8 +165,9 @@ install-static:: $(STATIC)
 	install -m 755 -d $(INSTALL_LIB)
 	install -m 644 $(STATIC) $(INSTALL_LIB)
 
-clean::
-	$(RM_CMD) 
+# we always do realclean
+clean:: realclean
+	-$(RM_CMD) 
 
 realclean::
 	$(RM_CMD) 
