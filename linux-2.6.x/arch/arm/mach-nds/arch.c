@@ -59,6 +59,13 @@ extern void nds_machine_init(void)
 {
 	POWER_CR = POWER_2D | POWER_2D_SUB | POWER_LCD_TOP | POWER_LCD_BOTTOM | POWER_SWAP_LCDS ;
 	WAIT_CR &= ~(0x8880);
+#ifdef CONFIG_NDS_FASTGBA
+	// Switch to high speed:
+	// bit 0-1     RAM-region access cycle control 0..3=10,8,6,18 cycles
+	//     2-3     ROM 1st access cycle control    0..3=10,8,6,18 cycles
+	//       4     ROM 2nd access cycle control    0..1=6,4 cycles
+	WAIT_CR = (WAIT_CR & 0xFFE0) | 0x001A;
+#endif
 	pm_power_off = poweroff;
 }
 
