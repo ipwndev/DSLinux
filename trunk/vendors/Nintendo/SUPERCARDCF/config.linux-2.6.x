@@ -95,6 +95,7 @@ CONFIG_FLASH_SIZE=0x00400000
 # Nintendo DS Options
 #
 # CONFIG_NDS_TEXT_CONSOLE is not set
+# CONFIG_NDS_FASTGBA is not set
 
 #
 # Processor Type

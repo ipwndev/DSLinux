@@ -23,4 +23,14 @@ config NDS_TEXT_CONSOLE_STEP_BY_STEP
 	 boot problem.
 	 If in doubt, say N.
 
+config NDS_FASTGBA
+	bool "Fast bus cycles on GBA slot ROM"
+	depends on ARCH_NDS
+	default n
+	help
+	 Saying yes here will allow to get the maximum processing
+	 power from your GBA flash card. All timing parameters are
+	 set to their fastest values.
+	 If unsure, say N.
+
 endmenu
