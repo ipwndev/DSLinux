@@ -15,7 +15,7 @@ GZFLAGS		:=-9
 #CFLAGS		+=-pipe
 
 # Do not use arch/arm/defconfig - it's always outdated.
-# Select a platform tht is kept up-to-date
+# Select a platform that is kept up-to-date
 KBUILD_DEFCONFIG := versatile_defconfig
 
 # defines filename extension for mmu type, if any.
@@ -131,7 +131,7 @@ textaddr-$(CONFIG_ARCH_S3C24A0)	   := 0x10008000
 endif
  machine-$(CONFIG_ARCH_P2001)	   := p2001
 textaddr-$(CONFIG_ARCH_P2001)	   := 0x40100000
-machine-$(CONFIG_ARCH_NDS)	   := nds
+ machine-$(CONFIG_ARCH_NDS)	   := nds
 textaddr-$(CONFIG_ARCH_NDS)	   := 0x02000000
 
 ifeq ($(CONFIG_ARCH_EBSA110),y)
@@ -145,12 +145,18 @@ TEXTADDR := $(textaddr-y)
 ifeq ($(CONFIG_XIP_KERNEL),y)
   DATAADDR := $(TEXTADDR)
   xipaddr-$(CONFIG_ARCH_CO285) := 0x5f000000
-  xipaddr-$(CONFIG_ARCH_NDS) := 0x08000000
+  xipaddr-$(CONFIG_ARCH_NDS)   := $(CONFIG_XIP_PHYS_ADDR)
+  # FIXME: a default value for an implementation-dependent value is bogus.
   xipaddr-y ?= 0xbf000000
   # Replace phys addr with virt addr while keeping offset from base.
+  # FIXME: a default formula for the implementation-dependent PHYS->VIRT mapping is bogus.
   TEXTADDR := $(shell echo $(CONFIG_XIP_PHYS_ADDR) $(xipaddr-y) | \
                       awk --non-decimal-data '/[:xdigit:]/ \
                           { printf("0x%x\n", and($$1, 0x000fffff) + $$2) }' )
+  # set TEXTADDR for me, leaving the crap alone.
+  ifeq ($(CONFIG_ARCH_NDS),y)
+    TEXTADDR := $(xipaddr-y)
+  endif
 endif
 
 ifeq ($(incdir-y),)
