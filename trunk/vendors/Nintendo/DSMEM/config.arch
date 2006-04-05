@@ -1,0 +1,2 @@
+LINUXTARGET := xipImage
+include $(ROOTDIR)/vendors/Nintendo/common/common-config.arch
