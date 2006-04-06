@@ -417,7 +417,7 @@ static int validate_mmap_request(struct file *file,
 				BDI_CAP_READ_MAP |
 				BDI_CAP_WRITE_MAP;
 		} else {
-#else
+#endif
 		/* work out if what we've got could possibly be shared
 		 * - we support chardevs that provide their own "memory"
 		 * - we support files/blockdevs that are memory backed
@@ -429,7 +429,6 @@ static int validate_mmap_request(struct file *file,
 		capabilities = 0;
 		if (mapping && mapping->backing_dev_info)
 			capabilities = mapping->backing_dev_info->capabilities;
-#endif
 #ifdef CONFIG_ARCH_NDS
 		}
 #endif

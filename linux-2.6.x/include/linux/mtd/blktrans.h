@@ -56,6 +56,8 @@ struct mtd_blktrans_ops {
 	void (*add_mtd)(struct mtd_blktrans_ops *tr, struct mtd_info *mtd);
 	void (*remove_dev)(struct mtd_blktrans_dev *dev);
 
+	int (*direct_access) (struct mtd_blktrans_dev *, sector_t, unsigned long *);
+
 	struct list_head devs;
 	struct list_head list;
 	struct module *owner;
