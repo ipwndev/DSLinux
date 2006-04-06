@@ -60,7 +60,7 @@ PATH_INSTALL_LOCALE = $(PATH_INSTALL_PREFIX)/share/locale
 #ifeq ($(CC), gcc)
 #CFLAGS = -O2
 #else
-CFLAGS = -Os -trigraphs
+CFLAGS += -Os -trigraphs
 #endif
 
 # add include and link paths for ncurses in dslinux
