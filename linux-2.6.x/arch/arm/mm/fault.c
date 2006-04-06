@@ -457,6 +457,21 @@ hook_fault_code(int nr, int (*fn)(unsigned long, unsigned int, struct pt_regs *)
 	}
 }
 
+#ifdef CONFIG_ARCH_NDS
+asmlinkage void
+do_DataAbort(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+{
+	struct siginfo info;
+
+	printk(KERN_ALERT "Data fault: pc=0x%08lx\n", ((long *)regs)[15]);
+
+	info.si_signo = SIGKILL;
+	info.si_errno = 0;
+	info.si_code  = 0;
+	info.si_addr  = (void __user *)addr;
+	notify_die("", regs, &info, 0, 0);
+}
+#else
 /*
  * Dispatch a data abort to the relevant handler.
  */
@@ -478,6 +493,7 @@ do_DataAbort(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
 	info.si_addr  = (void __user *)addr;
 	notify_die("", regs, &info, fsr, 0);
 }
+#endif
 
 asmlinkage void
 do_PrefetchAbort(unsigned long addr, struct pt_regs *regs)
