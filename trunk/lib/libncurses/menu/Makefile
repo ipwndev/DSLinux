@@ -77,7 +77,7 @@ LN_S		= ln -s
 
 CC		= arm-elf-gcc
 CPP		= arm-elf-gcc -E
-CFLAGS		= -Wall -pipe -W -mtune=arm9tdmi -mcpu=arm9tdmi -ansi -Wstrict-prototypes -Wno-trigraphs -Os -fno-strict-aliasing -DNO_MM -I$(ROOTDIR)/uClibc/include
+CFLAGS		+= -Wall -pipe -W -mtune=arm9tdmi -mcpu=arm9tdmi -ansi -Wstrict-prototypes -Wno-trigraphs -Os -fno-strict-aliasing -DNO_MM -I$(ROOTDIR)/uClibc/include
 
 CPPFLAGS	= -I../ncurses -DHAVE_CONFIG_H -I. -I../include -I$(ROOTDIR)/uClibc/include -U_XOPEN_SOURCE -D_XOPEN_SOURCE=500 -U_POSIX_C_SOURCE -D_POSIX_C_SOURCE=199506L -DNDEBUG
 
