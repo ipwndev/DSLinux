@@ -75,6 +75,8 @@
 #include <linux/smp_lock.h>
 #include <linux/buffer_head.h>
 #include <linux/vfs.h>
+#include <linux/backing-dev.h>
+#include <linux/genhd.h>
 
 #include <asm/uaccess.h>
 
@@ -82,6 +84,14 @@ struct romfs_inode_info {
 	unsigned long i_metasize;	/* size of non-data area */
 	unsigned long i_dataoffset;	/* from the start of fs */
 	struct inode vfs_inode;
+};
+
+/* use when block device is directly accessable in memory/rom/flash */
+static struct backing_dev_info romfs_backing_dev_info = {
+    .capabilities    = BDI_CAP_NO_ACCT_DIRTY | BDI_CAP_NO_WRITEBACK |
+              BDI_CAP_MAP_DIRECT | BDI_CAP_MAP_COPY |
+              BDI_CAP_READ_MAP | BDI_CAP_WRITE_MAP |
+              BDI_CAP_EXEC_MAP,
 };
 
 /* instead of private superblock data */
@@ -457,6 +467,40 @@ err_out:
 	return result;
 }
 
+static unsigned long
+romfs_get_unmapped_area(struct file *file, unsigned long addr,
+    unsigned long len, unsigned long pgoff, unsigned long flags)
+{
+    struct inode * inode = file->f_dentry->d_inode;
+    struct romfs_inode_info * romfs_inode = ROMFS_I(inode);
+    unsigned long s;
+    sector_t sector;
+    unsigned long data;
+
+    if (!inode->i_sb->s_bdev->bd_disk->fops->direct_access)
+	    return -ENOMEM;
+
+    if (inode->i_mapping && inode->i_mapping->backing_dev_info &&
+        inode->i_mapping->backing_dev_info->capabilities & BDI_CAP_READ_MAP) {
+        s = romfs_inode->i_dataoffset;
+	sector = s / 512;
+        if (inode->i_sb->s_bdev->bd_disk->fops
+	   ->direct_access(inode->i_sb->s_bdev, sector, &data) != 0)
+	    return -ENOMEM;
+	return data + (s - (sector * 512));
+    }
+
+    return -ENOMEM;
+}
+
+static int romfs_readonly_mmap(struct file *file, struct vm_area_struct * vma)
+{
+	if (vma->vm_flags & VM_SHARED)
+		return 0;
+	else
+		return -ENOSYS;
+}
+
 /* Mapping from our types to the kernel */
 
 static struct address_space_operations romfs_aops = {
@@ -466,6 +510,12 @@ static struct address_space_operations romfs_aops = {
 static struct file_operations romfs_dir_operations = {
 	.read		= generic_read_dir,
 	.readdir	= romfs_readdir,
+};
+
+struct file_operations romfs_file_operations = {
+    .read            = generic_file_read,
+    .mmap            = romfs_readonly_mmap,
+    .get_unmapped_area    = romfs_get_unmapped_area,
 };
 
 static struct inode_operations romfs_dir_inode_operations = {
@@ -486,7 +536,6 @@ romfs_read_inode(struct inode *i)
 
 	ino = i->i_ino & ROMFH_MASK;
 	i->i_mode = 0;
-
 	/* Loop for finding the real hard link */
 	for(;;) {
 		if (romfs_copyfrom(i, &ri, ino, ROMFH_SIZE) <= 0) {
@@ -531,7 +580,7 @@ romfs_read_inode(struct inode *i)
 			i->i_mode = ino;
 			break;
 		case 2:
-			i->i_fop = &generic_ro_fops;
+                        i->i_fop = &romfs_file_operations;
 			i->i_data.a_ops = &romfs_aops;
 			if (nextfh & ROMFH_EXEC)
 				ino |= S_IXUGO;
@@ -548,6 +597,9 @@ romfs_read_inode(struct inode *i)
 			init_special_inode(i, ino,
 					MKDEV(nextfh>>16,nextfh&0xffff));
 	}
+
+        i->i_mapping->a_ops = &romfs_aops;
+        i->i_mapping->backing_dev_info = &romfs_backing_dev_info;
 }
 
 static kmem_cache_t * romfs_inode_cachep;

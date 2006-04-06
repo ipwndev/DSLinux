@@ -58,6 +58,17 @@ static void mtdblock_remove_dev(struct mtd_blktrans_dev *dev)
 	kfree(dev);
 }
 
+static int 
+mtdblock_direct(struct mtd_blktrans_dev *dev, sector_t sector, unsigned long *data)
+{
+	struct mtd_info *mtd = dev->mtd;
+	size_t len;
+
+	if (!mtd->point)
+		return -ENOSYS;
+	return (mtd->point)(mtd,sector * 512,0,&len,(u_char **) data);
+}
+
 static struct mtd_blktrans_ops mtdblock_tr = {
 	.name		= "mtdblock",
 	.major		= 31,
@@ -67,6 +78,7 @@ static struct mtd_blktrans_ops mtdblock_tr = {
 	.add_mtd	= mtdblock_add_mtd,
 	.remove_dev	= mtdblock_remove_dev,
 	.owner		= THIS_MODULE,
+	.direct_access  = mtdblock_direct,
 };
 
 static int __init mtdblock_init(void)

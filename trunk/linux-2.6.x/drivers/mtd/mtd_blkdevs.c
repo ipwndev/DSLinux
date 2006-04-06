@@ -229,11 +229,24 @@ static int blktrans_ioctl(struct inode *inode, struct file *file,
 	}
 }
 
+static int blktrans_direct (struct block_device *bdev, sector_t sector, unsigned long *data)
+{
+	struct mtd_blktrans_dev *dev;
+	struct mtd_blktrans_ops *tr;
+
+	dev = bdev->bd_disk->private_data;
+	tr = dev->tr;
+	if (tr->direct_access)
+		return tr->direct_access(dev, sector, data);
+	return -ENOSYS;
+}
+
 struct block_device_operations mtd_blktrans_ops = {
 	.owner		= THIS_MODULE,
 	.open		= blktrans_open,
 	.release	= blktrans_release,
 	.ioctl		= blktrans_ioctl,
+	.direct_access  = blktrans_direct,
 };
 
 int add_mtd_blktrans_dev(struct mtd_blktrans_dev *new)

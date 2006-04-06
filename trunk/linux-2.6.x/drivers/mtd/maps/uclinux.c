@@ -50,6 +50,10 @@ int uclinux_point(struct mtd_info *mtd, loff_t from, size_t len,
 	return(0);
 }
 
+void uclinux_unpoint (struct mtd_info *a, u_char *b, loff_t c, size_t d)
+{
+}
+
 /****************************************************************************/
 
 int __init uclinux_mtd_init(void)
@@ -90,6 +94,7 @@ int __init uclinux_mtd_init(void)
 		
 	mtd->owner = THIS_MODULE;
 	mtd->point = uclinux_point;
+	mtd->unpoint = uclinux_unpoint;
 	mtd->priv = mapp;
 
 	uclinux_ram_mtdinfo = mtd;

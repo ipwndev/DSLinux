@@ -519,13 +519,27 @@ static int load_flat_file(struct linux_binprm * bprm,
 		DBG_FLT("BINFMT_FLAT: ROM mapping of file (we hope)\n");
 
 		down_write(&current->mm->mmap_sem);
+#ifdef CONFIG_ARCH_NDS
+		textpos = do_mmap(bprm->file, 0, text_len, PROT_READ|PROT_EXEC, MAP_SHARED, 0);
+#else
 		textpos = do_mmap(bprm->file, 0, text_len, PROT_READ|PROT_EXEC, MAP_PRIVATE, 0);
+#endif
 		up_write(&current->mm->mmap_sem);
 		if (!textpos  || textpos >= (unsigned long) -4096) {
+#ifdef CONFIG_ARCH_NDS
+			down_write(&current->mm->mmap_sem);
+			textpos = do_mmap(bprm->file, 0, text_len, PROT_READ|PROT_EXEC, MAP_PRIVATE, 0);
+			up_write(&current->mm->mmap_sem);
+
+			if (!textpos  || textpos >= (unsigned long) -4096) {
+#endif
 			if (!textpos)
 				textpos = (unsigned long) -ENOMEM;
 			printk("Unable to mmap process text, errno %d\n", (int)-textpos);
 			return(textpos);
+#ifdef CONFIG_ARCH_NDS
+			}
+#endif
 		}
 
 		down_write(&current->mm->mmap_sem);
