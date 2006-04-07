@@ -198,7 +198,7 @@ static void sendTouchState(u16 buttons)
 void InterruptHandler(void)
 {
 	u16 buttons;
-	static u16 oldbuttons;
+	static u16 oldbuttons = 0x43; /* default stats */
 	u32 wif;
 
 	wif = NDS_IF;
@@ -229,6 +229,7 @@ void InterruptHandler(void)
 
 		/* Acknowledge Interrupt */
 		NDS_IF = IRQ_VBLANK;
+		wif &= ~IRQ_VBLANK;
 	}
 
 	if (wif & IRQ_TIMER0) {
@@ -261,7 +262,7 @@ void InterruptHandler(void)
 		wifi_interrupt();
 	}
 
-	/* Acknowledge Interrupts */
+	/* Acknowledge unhandled Interrupts */
 	NDS_IF = wif;
 }
 
@@ -277,6 +278,9 @@ int main(void)
                 
 	xoffset = ((PersonalData->calX1 + PersonalData->calX2) * xscale  - ((PersonalData->calX1px + PersonalData->calX2px) << 19) ) / 2;
 	yoffset = ((PersonalData->calY1 + PersonalData->calY2) * yscale  - ((PersonalData->calY1px + PersonalData->calY2px) << 19) ) / 2;
+
+	/* Dummy read to enable the touchpad PENIRQ */
+	touch_read_value(TSC_MEASURE_X, _MaxRetry, _MaxRange);
 
 	/* Enable VBLANK Interrupt */
 	DISP_SR = DISP_VBLANK_IRQ;
