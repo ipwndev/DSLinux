@@ -44,8 +44,8 @@ INSTALL_DATA	= ${INSTALL} -m 644
 AWK		= mawk
 LN_S		= ln -s
 
-CC		= arm-elf-gcc
-CPP		= arm-elf-gcc -E
+#CC		= arm-elf-gcc
+#CPP		= arm-elf-gcc -E
 CFLAGS		+= -Wall -pipe -W -mtune=arm9tdmi -mcpu=arm9tdmi -ansi -Wstrict-prototypes -Wno-trigraphs -Os -fno-strict-aliasing -DNO_MM -I$(ROOTDIR)/uClibc/include
 
 INCDIR		= $(srcdir)/../include
@@ -61,7 +61,7 @@ CFLAGS_SHARED	= $(CCFLAGS) unknown
 
 CFLAGS_DEFAULT	= $(CFLAGS_NORMAL)
 
-LD		= arm-elf-ld
+#LD		= arm-elf-ld
 LINK		=  $(LIBTOOL_LINK) $(CC)
 LDFLAGS		=  \
 		-L../lib -nostartfiles -nostdinc -lncurses -s -Wl,-elf2flt -L$(ROOTDIR)/uClibc/lib $(ROOTDIR)/uClibc/lib/crt0.o
