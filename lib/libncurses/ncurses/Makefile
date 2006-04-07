@@ -80,11 +80,11 @@ INSTALL_DATA	= ${INSTALL} -m 644
 AR		= arm-elf-ar
 AR_OPTS		= rv
 AWK		= mawk
-LD		= arm-elf-ld
+#LD		= arm-elf-ld
 LN_S		= ln -s
 
-CC		= arm-elf-gcc
-CPP		= arm-elf-gcc -E
+#CC		= arm-elf-gcc
+#CPP		= arm-elf-gcc -E
 CFLAGS		+= -Wall -pipe -W -mtune=arm9tdmi -mcpu=arm9tdmi -ansi -Wstrict-prototypes -Wno-trigraphs -Os -fno-strict-aliasing -DNO_MM -I$(ROOTDIR)/uClibc/include
 
 INCDIR		= $(srcdir)/../include
