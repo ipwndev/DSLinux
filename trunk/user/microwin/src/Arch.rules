@@ -190,7 +190,8 @@ HOSTCFLAGS :=
 CXX_COMPILER = g++
 TOOLSPREFIX =
 # INCLUDEDIRS += -I/usr/bcc/include -I/home/greg/net/elks/include
-CFLAGS += -DUNIX=1 -Dwchar_t=char
+# CFLAGS += -DUNIX=1 -Dwchar_t=char
+CFLAGS += -DUNIX=1
 # CFLAGS += -0 -ansi -O
 # LDFLAGS += --verbose
 FLTFLAGS += -s 64000
