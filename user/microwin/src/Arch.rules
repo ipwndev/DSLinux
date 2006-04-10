@@ -180,7 +180,9 @@ CFLAGS += -DUNIX=1 -Dwchar_t=char -DCONFIG_COBRA5272=1
 FLTFLAGS += -s 64000
 SYS_LIBS =
 LDLIBS += -lgcc -lc -lgcc
+
 else # Not compiling for COBRA5272 (same code as before):
+
 ifeq ($(ARCH), uClinux)
 COMPILER = gcc -I$(ROOTDIR)/user/microwin/src/include
 HOSTCC = gcc -I$(ROOTDIR)/user/microwin/src/include
@@ -194,7 +196,14 @@ CFLAGS += -DUNIX=1 -Dwchar_t=char
 FLTFLAGS += -s 64000
 SYS_LIBS =
 LDLIBS += -lgcc -lc -lgcc
+
+ifeq ($(NDSDRIVER), Y)
+COMPILER = $(TOP)/../../../tools/ucfront-gcc arm-uclinux-gcc -I$(TOP)/include
+DEFINES += -DLINUX=1 -DNDSDRIVER=1
+HOSTCFLAGS := -DLINUX=1 -DUNIX=1
+endif # end for "ifeq ($(NDSDRIVER), Y)"
 endif # end for "ifeq ($(ARCH), uClinux)".
+
 endif # end for "ifeq ($(CONFIG_COBRA5272), y)"
 
 

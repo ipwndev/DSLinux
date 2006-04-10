@@ -2506,12 +2506,16 @@ static void lialg_compute_lpf_parameters() {
 
     for (i = LP_FILTER_WIDTH; i >= 0; i--) {
 	float x = 0.04 * (i * i);
-#if defined(ARM_LINUX) || !defined(__GLIBC__) || defined(__ECOS) || defined(__uclibc__)
+#if defined(ARM_LINUX) || !defined(__GLIBC__) || defined(__ECOS) || defined(__uclibc__) || NDSDRIVER
 	double tmp = 100.0 * exp((double)x);
 #else
 	float tmp = 100.0 * expf(x);
 #endif
+#if NDSDRIVER
+	int wt = tmp + 0.5;
+#else
 	int wt = rint((double)tmp);
+#endif
 
 	lialg_lpfwts[LP_FILTER_WIDTH - i] = wt;
 	lialg_lpfwts[LP_FILTER_WIDTH + i] = wt;

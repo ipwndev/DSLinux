@@ -17,7 +17,7 @@ CFLAGS +=
 # Preprocessor flags OTHER than defines
 CPPFLAGS +=
 # Linking flags
-LDFLAGS += -lm
+NANOXCLIENTLIBS += -lm
 
 ############################# targets section ################################
 
