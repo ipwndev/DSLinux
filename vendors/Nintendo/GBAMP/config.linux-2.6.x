@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
-# Mon Mar 13 19:35:50 2006
+# Mon Apr 10 19:54:34 2006
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
@@ -89,7 +89,7 @@ CONFIG_ARCH_NDS=y
 CONFIG_DRAM_BASE=0x02000000
 CONFIG_DRAM_SIZE=0x00400000
 CONFIG_FLASH_MEM_BASE=0x08000000
-CONFIG_FLASH_SIZE=0x00400000
+CONFIG_FLASH_SIZE=0x02000000
 
 #
 # Nintendo DS Options
