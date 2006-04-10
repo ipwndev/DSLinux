@@ -41,13 +41,13 @@ ifeq ($(CONFIG_CLEOPATRA), y)
 ARCH                     = CLEOPATRA
 BIGENDIAN                = Y
 else
-# ifeq ($(CONFIG_DEFAULTS_NINTENDO), y)
-# override ARCH                     = uClinux
-# NDSDRIVER                = Y
-# else
+ifeq ($(CONFIG_DEFAULTS_NINTENDO), y)
+override ARCH                     = uClinux
+NDSDRIVER                = Y
+else
 BIGENDIAN                = N
 ARCH                     = LINUX-NATIVE
-# endif
+endif
 endif
 ARMTOOLSPREFIX           = arm-linux-
 MIPSTOOLSPREFIX          = mipsel-linux-
