@@ -273,7 +273,11 @@ fb_open(PSD psd)
 		goto fail;
 	}
 #else
+#if NDSDRIVER
+	psd->addr = mmap(NULL, psd->size, PROT_READ|PROT_WRITE,MAP_SHARED,fb,0);
+#else
 	psd->addr = mmap(NULL, psd->size, PROT_READ|PROT_WRITE,0,fb,0);
+#endif
 	if(psd->addr == MAP_FAILED) {
 		EPRINTF("Error mmaping %s: %m\n", env);
 		goto fail;

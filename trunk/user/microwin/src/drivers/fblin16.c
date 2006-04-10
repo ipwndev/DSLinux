@@ -19,6 +19,12 @@
 #include "device.h"
 #include "fb.h"
 
+#if NDSDRIVER
+#define ALPHA_1B  (1 << 15)
+#else
+#define ALPHA_1B 0
+#endif
+
 #define USE_16BIT_ACCESS 0	/* =1 to force 16 bit display access*/
 
 #if USE_16BIT_ACCESS
@@ -57,9 +63,11 @@ linear16_drawpixel(PSD psd, MWCOORD x, MWCOORD y, MWPIXELVAL c)
 
 	DRAWON;
 	if(gr_mode == MWMODE_COPY)
-		addr[x + y * psd->linelen] = c;
-	else
+		addr[x + y * psd->linelen] = c | ALPHA_1B;
+	else {
 		applyOp(gr_mode, c, &addr[x + y * psd->linelen], ADDR16);
+		addr[x + y * psd->linelen] |= ALPHA_1B;
+	}
 	DRAWOFF;
 }
 
@@ -73,7 +81,7 @@ linear16_readpixel(PSD psd, MWCOORD x, MWCOORD y)
 	assert (x >= 0 && x < psd->xres);
 	assert (y >= 0 && y < psd->yres);
 
-	return addr[x + y * psd->linelen];
+	return addr[x + y * psd->linelen] & ~(ALPHA_1B);
 }
 
 /* Draw horizontal line from x1,y to x2,y including final point*/
@@ -93,11 +101,13 @@ linear16_drawhorzline(PSD psd, MWCOORD x1, MWCOORD x2, MWCOORD y, MWPIXELVAL c)
 	addr += x1 + y * psd->linelen;
 	if(gr_mode == MWMODE_COPY) {
 		/* FIXME: memsetw(dst, c, x2-x1+1)*/
+		c |= ALPHA_1B;
 		while(x1++ <= x2)
 			*addr++ = c;
 	} else {
 		while (x1++ <= x2) {
 			applyOp(gr_mode, c, addr, ADDR16);
+			*addr |= ALPHA_1B;
 			++addr;
 		}
 	}
@@ -121,6 +131,7 @@ linear16_drawvertline(PSD psd, MWCOORD x, MWCOORD y1, MWCOORD y2, MWPIXELVAL c)
 	DRAWON;
 	addr += x + y1 * linelen;
 	if(gr_mode == MWMODE_COPY) {
+		c |= ALPHA_1B;
 		while(y1++ <= y2) {
 			*addr = c;
 			addr += linelen;
@@ -128,6 +139,7 @@ linear16_drawvertline(PSD psd, MWCOORD x, MWCOORD y1, MWCOORD y2, MWPIXELVAL c)
 	} else {
 		while (y1++ <= y2) {
 			applyOp(gr_mode, c, addr, ADDR16);
+			*addr |= ALPHA_1B;
 			addr += linelen;
 		}
 	}
@@ -200,7 +212,7 @@ linear16_blit(PSD dstpsd, MWCOORD dstx, MWCOORD dsty, MWCOORD w, MWCOORD h,
 				m2 = (((((s & 0x03e0) - t)*alpha)>>8) & 0x03e0) + t;
 				t = d & 0x001f;
 				m3 = (((((s & 0x001f) - t)*alpha)>>8) & 0x001f) + t;
-				*dst++ = m1 | m2 | m3;
+				*dst++ = m1 | m2 | m3 | ALPHA_1B;
 			}
 			dst += dlinelen - w;
 			src += slinelen - w;
@@ -230,6 +242,7 @@ stdblit:
 		while (--h >= 0) {
 			for (i=0; i<w; i++) {
 				applyOp(MWROP_TO_MODE(op), *src, dst, ADDR16);
+				*dst |= ALPHA_1B;
 				++src;
 				++dst;
 			}
@@ -300,7 +313,7 @@ if (g_col_inc) col_inc = g_col_inc; else
 				pixel = *src++;
 				col_pos -= 0x10000L;
 			}
-			*dst++ = pixel;
+			*dst++ = pixel | ALPHA_1B;
 			col_pos += col_inc;
 		}
 
@@ -498,7 +511,7 @@ linear16_stretchblitex(PSD dstpsd,
 
 			x_count = width;
 			while (x_count-- > 0) {
-				*dest_ptr++ = *src_ptr;
+				*dest_ptr++ = *src_ptr | ALPHA_1B;
 
 				src_ptr += src_x_step_normal;
 				x_error += x_error_step_normal;
@@ -544,6 +557,7 @@ linear16_stretchblitex(PSD dstpsd,
 			x_count = width;
 			while (x_count-- > 0) {
 				applyOp(MWROP_TO_MODE(op), *src_ptr, dest_ptr, ADDR16);
+				*dest_ptr |= ALPHA_1B;
 				dest_ptr++;
 
 				src_ptr += src_x_step_normal;
@@ -684,40 +698,40 @@ linear16_drawarea_bitmap_bytes_lsb_first(PSD psd, driver_gc_t * gc)
 			if (hard_prefix) {
 				for (m = prefix_mask; m < prefix_last;
 				     m <<= 1) {
-					*dst++ = (m & *src) ? fg_color :
-						bg_color;
+					*dst++ = ((m & *src) ? fg_color :
+						bg_color) | ALPHA_1B;
 				}
 				src++;
 			}
 
 			/* Do all pixels of main part one byte at a time */
 			for (t = 0; t < size_main; t++) {
-				maskp = byte2wordmask + 8 * (*src++);
+				maskp = byte2wordmask + 8 * (*src++ & ~(ALPHA_1B));
 
-				*dst++ = gc->
-					bg_color ^ (*maskp++ & xor_color);
-				*dst++ = gc->
-					bg_color ^ (*maskp++ & xor_color);
-				*dst++ = gc->
-					bg_color ^ (*maskp++ & xor_color);
-				*dst++ = gc->
-					bg_color ^ (*maskp++ & xor_color);
-				*dst++ = gc->
-					bg_color ^ (*maskp++ & xor_color);
-				*dst++ = gc->
-					bg_color ^ (*maskp++ & xor_color);
-				*dst++ = gc->
-					bg_color ^ (*maskp++ & xor_color);
-				*dst++ = gc->
-					bg_color ^ (*maskp++ & xor_color);
+				*dst++ = (gc->
+					bg_color ^ (*maskp++ & xor_color)) | ALPHA_1B;
+				*dst++ = (gc->
+					bg_color ^ (*maskp++ & xor_color)) | ALPHA_1B;
+				*dst++ = (gc->
+					bg_color ^ (*maskp++ & xor_color)) | ALPHA_1B;
+				*dst++ = (gc->
+					bg_color ^ (*maskp++ & xor_color)) | ALPHA_1B;
+				*dst++ = (gc->
+					bg_color ^ (*maskp++ & xor_color)) | ALPHA_1B;
+				*dst++ = (gc->
+					bg_color ^ (*maskp++ & xor_color)) | ALPHA_1B;
+				*dst++ = (gc->
+					bg_color ^ (*maskp++ & xor_color)) | ALPHA_1B;
+				*dst++ = (gc->
+					bg_color ^ (*maskp++ & xor_color)) | ALPHA_1B;
 			}
 
 			/* Do last few bits of line */
 			if (hard_postfix) {
 				for (m = postfix_mask; m < postfix_last;
 				     m <<= 1) {
-					*dst++ = (m & *src) ? fg_color :
-						bg_color;
+					*dst++ = ((m & *src) ? fg_color :
+						bg_color) | ALPHA_1B;
 				}
 				src++;
 			}
@@ -730,11 +744,11 @@ linear16_drawarea_bitmap_bytes_lsb_first(PSD psd, driver_gc_t * gc)
 
 			/* Do pixels of partial first byte */
 			if (hard_prefix) {
-				bitmap_byte = *src++;
+				bitmap_byte = *src++ & ~(ALPHA_1B);
 				for (m = prefix_mask; m < prefix_last;
 				     m <<= 1) {
 					if (m & bitmap_byte)
-						*dst = fg_color;
+						*dst = fg_color | ALPHA_1B;
 					dst++;
 				}
 			}
@@ -744,32 +758,32 @@ linear16_drawarea_bitmap_bytes_lsb_first(PSD psd, driver_gc_t * gc)
 				bitmap_byte = *src++;
 
 				if (0x01 & bitmap_byte)
-					dst[0] = fg_color;
+					dst[0] = fg_color | ALPHA_1B;
 				if (0x02 & bitmap_byte)
-					dst[1] = fg_color;
+					dst[1] = fg_color | ALPHA_1B;
 				if (0x04 & bitmap_byte)
-					dst[2] = fg_color;
+					dst[2] = fg_color | ALPHA_1B;
 				if (0x08 & bitmap_byte)
-					dst[3] = fg_color;
+					dst[3] = fg_color | ALPHA_1B;
 				if (0x10 & bitmap_byte)
-					dst[4] = fg_color;
+					dst[4] = fg_color | ALPHA_1B;
 				if (0x20 & bitmap_byte)
-					dst[5] = fg_color;
+					dst[5] = fg_color | ALPHA_1B;
 				if (0x40 & bitmap_byte)
-					dst[6] = fg_color;
+					dst[6] = fg_color | ALPHA_1B;
 				if (0x80 & bitmap_byte)
-					dst[7] = fg_color;
+					dst[7] = fg_color | ALPHA_1B;
 
 				dst += 8;
 			}
 
 			/* Do last few bits of line */
 			if (hard_postfix) {
-				bitmap_byte = *src++;
+				bitmap_byte = *src++ & ~(ALPHA_1B);
 				for (m = postfix_mask; m < postfix_last;
 				     m <<= 1) {
 					if (m & bitmap_byte)
-						*dst = fg_color;
+						*dst = fg_color | ALPHA_1B;
 					dst++;
 				}
 			}
@@ -898,45 +912,45 @@ linear16_drawarea_bitmap_bytes_msb_first(PSD psd, driver_gc_t * gc)
 
 			/* Do pixels of partial first byte */
 			if (prefix_first_bit) {
-				bitmap_byte = *src++;
+				bitmap_byte = *src++ & ~(ALPHA_1B);
 				for (mask = prefix_first_bit; mask;
 				     MWI_ADVANCE_BIT(mask)) {
-					*dst++ = (mask & bitmap_byte) ? fg :
-						bg;
+					*dst++ = ((mask & bitmap_byte) ? fg :
+						bg) | ALPHA_1B;
 				}
 			}
 
 			/* Do all pixels of main part one byte at a time */
 			for (t = size_main; t != 0; t--) {
-				bitmap_byte = *src++;
+				bitmap_byte = *src++ & ~(ALPHA_1B);
 
-				*dst++ = (MWI_BIT_NO(0) & bitmap_byte) ? fg :
-					bg;
-				*dst++ = (MWI_BIT_NO(1) & bitmap_byte) ? fg :
-					bg;
-				*dst++ = (MWI_BIT_NO(2) & bitmap_byte) ? fg :
-					bg;
-				*dst++ = (MWI_BIT_NO(3) & bitmap_byte) ? fg :
-					bg;
-				*dst++ = (MWI_BIT_NO(4) & bitmap_byte) ? fg :
-					bg;
-				*dst++ = (MWI_BIT_NO(5) & bitmap_byte) ? fg :
-					bg;
-				*dst++ = (MWI_BIT_NO(6) & bitmap_byte) ? fg :
-					bg;
-				*dst++ = (MWI_BIT_NO(7) & bitmap_byte) ? fg :
-					bg;
+				*dst++ = ((MWI_BIT_NO(0) & bitmap_byte) ? fg :
+					bg) | ALPHA_1B;
+				*dst++ = ((MWI_BIT_NO(1) & bitmap_byte) ? fg :
+					bg) | ALPHA_1B;
+				*dst++ = ((MWI_BIT_NO(2) & bitmap_byte) ? fg :
+					bg) | ALPHA_1B;
+				*dst++ = ((MWI_BIT_NO(3) & bitmap_byte) ? fg :
+					bg) | ALPHA_1B;
+				*dst++ = ((MWI_BIT_NO(4) & bitmap_byte) ? fg :
+					bg) | ALPHA_1B;
+				*dst++ = ((MWI_BIT_NO(5) & bitmap_byte) ? fg :
+					bg) | ALPHA_1B;
+				*dst++ = ((MWI_BIT_NO(6) & bitmap_byte) ? fg :
+					bg) | ALPHA_1B;
+				*dst++ = ((MWI_BIT_NO(7) & bitmap_byte) ? fg :
+					bg) | ALPHA_1B;
 			}
 
 			/* Do last few bits of line */
 			if (postfix_last_bit) {
-				bitmap_byte = *src++;
+				bitmap_byte = *src++ & ~(ALPHA_1B);
 				for (mask = postfix_first_bit;
 				     MWI_IS_BIT_BEFORE_OR_EQUAL(mask,
 								postfix_last_bit);
 				     MWI_ADVANCE_BIT(mask)) {
-					*dst++ = (mask & bitmap_byte) ? fg :
-						bg;
+					*dst++ = ((mask & bitmap_byte) ? fg :
+						bg) | ALPHA_1B;
 				}
 			}
 
@@ -948,11 +962,11 @@ linear16_drawarea_bitmap_bytes_msb_first(PSD psd, driver_gc_t * gc)
 
 			/* Do pixels of partial first byte */
 			if (prefix_first_bit) {
-				bitmap_byte = *src++;
+				bitmap_byte = *src++ & ~(ALPHA_1B);
 				for (mask = prefix_first_bit; mask;
 				     MWI_ADVANCE_BIT(mask)) {
 					if (mask & bitmap_byte)
-						*dst = fg;
+						*dst = fg | ALPHA_1B;
 					dst++;
 				}
 			}
@@ -962,34 +976,34 @@ linear16_drawarea_bitmap_bytes_msb_first(PSD psd, driver_gc_t * gc)
 				bitmap_byte = *src++;
 
 				if (MWI_BIT_NO(0) & bitmap_byte)
-					dst[0] = fg;
+					dst[0] = fg | ALPHA_1B;
 				if (MWI_BIT_NO(1) & bitmap_byte)
-					dst[1] = fg;
+					dst[1] = fg | ALPHA_1B;
 				if (MWI_BIT_NO(2) & bitmap_byte)
-					dst[2] = fg;
+					dst[2] = fg | ALPHA_1B;
 				if (MWI_BIT_NO(3) & bitmap_byte)
-					dst[3] = fg;
+					dst[3] = fg | ALPHA_1B;
 				if (MWI_BIT_NO(4) & bitmap_byte)
-					dst[4] = fg;
+					dst[4] = fg | ALPHA_1B;
 				if (MWI_BIT_NO(5) & bitmap_byte)
-					dst[5] = fg;
+					dst[5] = fg | ALPHA_1B;
 				if (MWI_BIT_NO(6) & bitmap_byte)
-					dst[6] = fg;
+					dst[6] = fg | ALPHA_1B;
 				if (MWI_BIT_NO(7) & bitmap_byte)
-					dst[7] = fg;
+					dst[7] = fg | ALPHA_1B;
 
 				dst += 8;
 			}
 
 			/* Do last few bits of line */
 			if (postfix_last_bit) {
-				bitmap_byte = *src++;
+				bitmap_byte = *src++ & ~(ALPHA_1B);
 				for (mask = postfix_first_bit;
 				     MWI_IS_BIT_BEFORE_OR_EQUAL(mask,
 								postfix_last_bit);
 				     MWI_ADVANCE_BIT(mask)) {
 					if (mask & bitmap_byte)
-						*dst = fg;
+						*dst = fg | ALPHA_1B;
 					dst++;
 				}
 			}
@@ -1177,7 +1191,7 @@ linear16_drawarea_alphacol(PSD psd, driver_gc_t * gc)
 			for (x = 0; x < gc->dstw; x++) {
 				as = *alpha++;
 				if (as == 255) {
-					*dst++ = ps;
+					*dst++ = ps | ALPHA_1B;
 				} else if (as != 0) {
 					/*
 					 * Scale alpha value from 255ths to 256ths
@@ -1209,7 +1223,8 @@ linear16_drawarea_alphacol(PSD psd, driver_gc_t * gc)
 						 (((((long)
 						     (pd & COLOR_MASK_B_555) -
 						     psb) * as) >> 8) +
-						  psb) & COLOR_MASK_B_555);
+						  psb) & COLOR_MASK_B_555)
+						| ALPHA_1B;
 				} else {
 					dst++;
 				}
@@ -1227,7 +1242,7 @@ static void
 linear16_drawarea_copyall(PSD psd, driver_gc_t * gc)
 {
 	ADDR16 src16, dst;
-	int linesize, x, y;
+	int linesize, x, y, z;
 	unsigned short pcol;
 
 	linesize = 2 * gc->dstw;
@@ -1236,11 +1251,15 @@ linear16_drawarea_copyall(PSD psd, driver_gc_t * gc)
 
 	DRAWON;
 	for (y = 1; y < gc->dsth; y++) {
-		memcpy(dst, src16, linesize);
+		/* memcpy(dst, src16, linesize); */
+		for (z = 0; z < linesize; z++)
+			dst[z] = src16[16] | ALPHA_1B;
 		src16 += gc->src_linelen;
 		dst += psd->linelen;
 	}
-	memcpy(dst, src16, linesize);	/* To be seriously ANSI */
+	/* memcpy(dst, src16, linesize); */	/* To be seriously ANSI */
+	for (z = 0; z < linesize; z++)
+		dst[z] = src16[16] | ALPHA_1B;
 	DRAWOFF;
 }
 
@@ -1259,11 +1278,11 @@ linear16_drawarea_copytrans(PSD psd, driver_gc_t * gc)
 		rdst = dst;
 		rsrc = src16;
 		for (x = 0; x < gc->dstw; x++) {
-			pcol = *rsrc++;
+			pcol = *rsrc++ & ~(ALPHA_1B);
 			if (pcol == gc->bg_color)
 				rdst++;
 			else
-				*rdst++ = pcol;
+				*rdst++ = pcol | ALPHA_1B;
 		}
 		dst += psd->linelen;
 		src16 += gc->src_linelen;

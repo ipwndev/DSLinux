@@ -50,6 +50,10 @@ endif
 all: default $(TARGET)
 endif
 
+ifeq ($(NDSDRIVER), Y)
+LDFLAGS += -Wl,-elf2flt="-s 50000"
+endif
+
 endif
 
 ######################### Makefile.rules section #############################

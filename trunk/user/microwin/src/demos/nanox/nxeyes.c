@@ -220,7 +220,11 @@ void calculate_pupil_position(GR_COORD window_x, GR_COORD window_y,
 		revy = 1;
 	} else revy = 0;
 
+#if NDSDRIVER
+	if(sqrt(dx*dx + dy*dy) <= MAX_EYE_MOVEMENT) {
+#else
 	if(hypot(dx, dy) <= MAX_EYE_MOVEMENT) {
+#endif
 		x = dx;
 		y = dy;
 	} else {

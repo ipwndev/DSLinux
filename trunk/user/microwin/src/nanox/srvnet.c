@@ -29,7 +29,7 @@
 #endif
 #if ELKS
 #include <linuxmt/na.h>
-#elif __ECOS
+#elif __ECOS || NDSDRIVER
 #include <netinet/in.h>
 
 #else
@@ -1792,7 +1792,7 @@ GsOpenSocket(void)
 #ifndef SUN_LEN
 #define SUN_LEN(ptr)	(sizeof(sckt))
 #endif
-#elif __ECOS
+#elif __ECOS || NDSDRIVER
 	struct sockaddr_in sckt;
 #ifndef SUN_LEN
 #define SUN_LEN(ptr)	(sizeof(sckt))
@@ -1811,7 +1811,7 @@ GsOpenSocket(void)
 
 	sckt.sun_family = AF_NANO;
 	sckt.sun_no = GR_NUMB_SOCKET;
-#elif __ECOS
+#elif __ECOS || NDSDRIVER
 	/* Create the socket */
 	if((un_sock = socket(AF_INET, SOCK_STREAM, 0)) == -1) 
 	    return -1;
@@ -1819,7 +1819,9 @@ GsOpenSocket(void)
 	/* Bind to any/all local IP addresses */
 	memset( &sckt, '\0', sizeof(sckt) );
 	sckt.sin_family = AF_INET;
+#if !LINUX
 	sckt.sin_len = sizeof(sckt);
+#endif
 	sckt.sin_port = htons(6600);
 	sckt.sin_addr.s_addr = INADDR_ANY;
 #else
@@ -1864,7 +1866,7 @@ GsAcceptClient(void)
 	int i;
 #if ELKS
 	struct sockaddr_na sckt;
-#elif __ECOS
+#elif __ECOS || NDSDRIVER
 	struct sockaddr_in sckt;
 #else
 	struct sockaddr_un sckt;

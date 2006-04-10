@@ -48,6 +48,12 @@
 #define ADDR_FAM AF_INET
 #define _NO_SVR_MAPPING
 #define getpid()	((int)cyg_thread_self())
+#elif NDSDRIVER
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sys/select.h>
+#include <netdb.h>
+#define ADDR_FAM AF_INET
 #else
 #include <sys/un.h>
 #if hpux
