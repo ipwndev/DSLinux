@@ -85,14 +85,14 @@ DEFS_TO_PASS_STRIP := INSTALL_BINARY="$(INSTALL_BINARY) -s" \
 HIDE_GAME := :
 
 # Compilation details
-CC := arm-elf-gcc
-CXX := arm-elf-g++
+#CC := gcc
+#CXX := g++
 OPTIMIZE := -g -O2
 WARNING := -Wall -W -Wstrict-prototypes -Wmissing-prototypes -Wpointer-arith -Wcast-align -Wcast-qual -Wwrite-strings
 CXX_WARNING := -Wall -W -Wpointer-arith -Wcast-align -Wcast-qual -Wwrite-strings
 CFLAGS := $(OPTIMIZE) $(WARNING) 
 CXXFLAGS := $(OPTIMIZE) $(CXX_WARNING) 
-LDFLAGS += 
+#LDFLAGS := 
 FGETLN_DEFS := 
 GETLOADAVG_DEFS := 
 STRLCPY_DEFS := 
