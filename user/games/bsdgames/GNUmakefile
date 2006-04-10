@@ -8,6 +8,8 @@ include Makeconfig
 
 .PHONY:	all  adventure_all arithmetic_all backgammon_teachgammon_all backgammon_backgammon_all backgammon_common_source_all backgammon_all battlestar_all bcd_all boggle_mkindex_all boggle_boggle_all boggle_mkdict_all boggle_all caesar_all canfield_cfscores_all canfield_canfield_all canfield_all countmail_all cribbage_all fish_all gomoku_all hack_all hangman_all mille_all morse_all number_all pig_all pom_all ppt_all primes_all quiz_datfiles_all quiz_all rain_all random_all robots_all sail_all snake_snake_all snake_snscore_all snake_all tetris_all trek_all wargames_all worm_all worms_all wtf_all wump_all lib_all
 all:	 adventure_all arithmetic_all backgammon_teachgammon_all backgammon_backgammon_all backgammon_common_source_all backgammon_all battlestar_all bcd_all boggle_mkindex_all boggle_boggle_all boggle_mkdict_all boggle_all caesar_all canfield_cfscores_all canfield_canfield_all canfield_all countmail_all cribbage_all fish_all gomoku_all hack_all hangman_all mille_all morse_all number_all pig_all pom_all ppt_all primes_all quiz_datfiles_all quiz_all rain_all random_all robots_all sail_all snake_snake_all snake_snscore_all snake_all tetris_all trek_all wargames_all worm_all worms_all wtf_all wump_all lib_all
+#.PHONY:	all  adventure_all arithmetic_all atc_games_all atc_all backgammon_teachgammon_all backgammon_backgammon_all backgammon_common_source_all backgammon_all battlestar_all bcd_all boggle_mkindex_all boggle_boggle_all boggle_mkdict_all boggle_all caesar_all canfield_cfscores_all canfield_canfield_all canfield_all countmail_all cribbage_all dab_all fish_all gomoku_all hack_all hangman_all hunt_hunt_all hunt_huntd_all hunt_all mille_all monop_all morse_all number_all phantasia_all pig_all pom_all ppt_all primes_all quiz_datfiles_all quiz_all rain_all random_all robots_all sail_all snake_snake_all snake_snscore_all snake_all tetris_all trek_all wargames_all worm_all worms_all wtf_all wump_all lib_all
+#all:	 adventure_all arithmetic_all atc_games_all atc_all backgammon_teachgammon_all backgammon_backgammon_all backgammon_common_source_all backgammon_all battlestar_all bcd_all boggle_mkindex_all boggle_boggle_all boggle_mkdict_all boggle_all caesar_all canfield_cfscores_all canfield_canfield_all canfield_all countmail_all cribbage_all dab_all fish_all gomoku_all hack_all hangman_all hunt_hunt_all hunt_huntd_all hunt_all mille_all monop_all morse_all number_all phantasia_all pig_all pom_all ppt_all primes_all quiz_datfiles_all quiz_all rain_all random_all robots_all sail_all snake_snake_all snake_snscore_all snake_all tetris_all trek_all wargames_all worm_all worms_all wtf_all wump_all lib_all
 
 # Include substitution rules.
 include subst.rules
@@ -39,6 +41,34 @@ arithmetic/%.s:	arithmetic/%.c
 
 arithmetic/%.d:	arithmetic/%.c
 	./mkdep $< $@ $(CC) $(CFLAGS) $(arithmetic_CFLAGS) $(arithmetic_DEFS) $(BASE_INCS) -Iarithmetic $(arithmetic_INCS)
+
+#include atc/games/Makefrag
+#
+#atc/games/%.o:	atc/games/%.c
+#	$(CC) $(CFLAGS) $(atc_games_CFLAGS) $(atc_games_DEFS) $(BASE_INCS) -Iatc/games $(atc_games_INCS) -c $< -o $@
+#
+#atc/games/%.i:	atc/games/%.c
+#	$(CC) $(CFLAGS) $(atc_games_CFLAGS) $(atc_games_DEFS) $(BASE_INCS) -Iatc/games $(atc_games_INCS) -E $< -o $@
+#
+#atc/games/%.s:	atc/games/%.c
+#	$(CC) $(CFLAGS) $(atc_games_CFLAGS) $(atc_games_DEFS) $(BASE_INCS) -Iatc/games $(atc_games_INCS) -S -fverbose-asm $< -o $@
+#
+#atc/games/%.d:	atc/games/%.c
+#	./mkdep $< $@ $(CC) $(CFLAGS) $(atc_games_CFLAGS) $(atc_games_DEFS) $(BASE_INCS) -Iatc/games $(atc_games_INCS)
+#
+#include atc/Makefrag
+#
+#atc/%.o:	atc/%.c
+#	$(CC) $(CFLAGS) $(atc_CFLAGS) $(atc_DEFS) $(BASE_INCS) -Iatc $(atc_INCS) -c $< -o $@
+#
+#atc/%.i:	atc/%.c
+#	$(CC) $(CFLAGS) $(atc_CFLAGS) $(atc_DEFS) $(BASE_INCS) -Iatc $(atc_INCS) -E $< -o $@
+#
+#atc/%.s:	atc/%.c
+#	$(CC) $(CFLAGS) $(atc_CFLAGS) $(atc_DEFS) $(BASE_INCS) -Iatc $(atc_INCS) -S -fverbose-asm $< -o $@
+#
+#atc/%.d:	atc/%.c
+#	./mkdep $< $@ $(CC) $(CFLAGS) $(atc_CFLAGS) $(atc_DEFS) $(BASE_INCS) -Iatc $(atc_INCS)
 
 include backgammon/teachgammon/Makefrag
 
@@ -164,7 +194,7 @@ boggle/mkdict/%.s:	boggle/mkdict/%.c
 	gcc $(CFLAGS) $(boggle_mkdict_CFLAGS) $(boggle_mkdict_DEFS) $(BASE_INCS) -Iboggle/mkdict $(boggle_mkdict_INCS) -S -fverbose-asm $< -o $@
 
 boggle/mkdict/%.d:	boggle/mkdict/%.c
-	./mkdep $< $@ gcc $(CFLAGS) $(boggle_mkdict_CFLAGS) $(boggle_mkdict_DEFS) $(BASE_INCS) -Iboggle/mkdict $(boggle_mkdict_INCS)
+	./mkdep $< $@ gcc gcc $(CFLAGS) $(boggle_mkdict_CFLAGS) $(boggle_mkdict_DEFS) $(BASE_INCS) -Iboggle/mkdict $(boggle_mkdict_INCS)
 
 include boggle/Makefrag
 
@@ -264,6 +294,20 @@ cribbage/%.s:	cribbage/%.c
 cribbage/%.d:	cribbage/%.c
 	./mkdep $< $@ $(CC) $(CFLAGS) $(cribbage_CFLAGS) $(cribbage_DEFS) $(BASE_INCS) -Icribbage $(cribbage_INCS)
 
+#include dab/Makefrag
+#
+#dab/%.o:	dab/%.cc
+#	$(CXX) $(CXXFLAGS) $(dab_CXXFLAGS) $(dab_DEFS) $(BASE_INCS) -Idab $(dab_INCS) -c $< -o $@
+#
+#dab/%.ii:	dab/%.cc
+#	$(CXX) $(CXXFLAGS) $(dab_CXXFLAGS) $(dab_DEFS) $(BASE_INCS) -Idab $(dab_INCS) -E $< -o $@
+#
+#dab/%.s:	dab/%.cc
+#	$(CXX) $(CXXFLAGS) $(dab_CXXFLAGS) $(dab_DEFS) $(BASE_INCS) -Idab $(dab_INCS) -S -fverbose-asm $< -o $@
+#
+#dab/%.d:	dab/%.cc
+#	./mkdep $< $@ $(CXX) $(CXXFLAGS) $(dab_CXXFLAGS) $(dab_DEFS) $(BASE_INCS) -Idab $(dab_INCS)
+
 include fish/Makefrag
 
 fish/%.o:	fish/%.c
@@ -320,6 +364,48 @@ hangman/%.s:	hangman/%.c
 hangman/%.d:	hangman/%.c
 	./mkdep $< $@ $(CC) $(CFLAGS) $(hangman_CFLAGS) $(hangman_DEFS) $(BASE_INCS) -Ihangman $(hangman_INCS)
 
+#include hunt/hunt/Makefrag
+#
+#hunt/hunt/%.o:	hunt/hunt/%.c
+#	$(CC) $(CFLAGS) $(hunt_hunt_CFLAGS) $(hunt_hunt_DEFS) $(BASE_INCS) -Ihunt/hunt $(hunt_hunt_INCS) -c $< -o $@
+#
+#hunt/hunt/%.i:	hunt/hunt/%.c
+#	$(CC) $(CFLAGS) $(hunt_hunt_CFLAGS) $(hunt_hunt_DEFS) $(BASE_INCS) -Ihunt/hunt $(hunt_hunt_INCS) -E $< -o $@
+#
+#hunt/hunt/%.s:	hunt/hunt/%.c
+#	$(CC) $(CFLAGS) $(hunt_hunt_CFLAGS) $(hunt_hunt_DEFS) $(BASE_INCS) -Ihunt/hunt $(hunt_hunt_INCS) -S -fverbose-asm $< -o $@
+#
+#hunt/hunt/%.d:	hunt/hunt/%.c
+#	./mkdep $< $@ $(CC) $(CFLAGS) $(hunt_hunt_CFLAGS) $(hunt_hunt_DEFS) $(BASE_INCS) -Ihunt/hunt $(hunt_hunt_INCS)
+#
+#include hunt/huntd/Makefrag
+#
+#hunt/huntd/%.o:	hunt/huntd/%.c
+#	$(CC) $(CFLAGS) $(hunt_huntd_CFLAGS) $(hunt_huntd_DEFS) $(BASE_INCS) -Ihunt/huntd $(hunt_huntd_INCS) -c $< -o $@
+#
+#hunt/huntd/%.i:	hunt/huntd/%.c
+#	$(CC) $(CFLAGS) $(hunt_huntd_CFLAGS) $(hunt_huntd_DEFS) $(BASE_INCS) -Ihunt/huntd $(hunt_huntd_INCS) -E $< -o $@
+#
+#hunt/huntd/%.s:	hunt/huntd/%.c
+#	$(CC) $(CFLAGS) $(hunt_huntd_CFLAGS) $(hunt_huntd_DEFS) $(BASE_INCS) -Ihunt/huntd $(hunt_huntd_INCS) -S -fverbose-asm $< -o $@
+#
+#hunt/huntd/%.d:	hunt/huntd/%.c
+#	./mkdep $< $@ $(CC) $(CFLAGS) $(hunt_huntd_CFLAGS) $(hunt_huntd_DEFS) $(BASE_INCS) -Ihunt/huntd $(hunt_huntd_INCS)
+#
+#include hunt/Makefrag
+#
+#hunt/%.o:	hunt/%.c
+#	$(CC) $(CFLAGS) $(hunt_CFLAGS) $(hunt_DEFS) $(BASE_INCS) -Ihunt $(hunt_INCS) -c $< -o $@
+#
+#hunt/%.i:	hunt/%.c
+#	$(CC) $(CFLAGS) $(hunt_CFLAGS) $(hunt_DEFS) $(BASE_INCS) -Ihunt $(hunt_INCS) -E $< -o $@
+#
+#hunt/%.s:	hunt/%.c
+#	$(CC) $(CFLAGS) $(hunt_CFLAGS) $(hunt_DEFS) $(BASE_INCS) -Ihunt $(hunt_INCS) -S -fverbose-asm $< -o $@
+#
+#hunt/%.d:	hunt/%.c
+#	./mkdep $< $@ $(CC) $(CFLAGS) $(hunt_CFLAGS) $(hunt_DEFS) $(BASE_INCS) -Ihunt $(hunt_INCS)
+
 include mille/Makefrag
 
 mille/%.o:	mille/%.c
@@ -333,6 +419,20 @@ mille/%.s:	mille/%.c
 
 mille/%.d:	mille/%.c
 	./mkdep $< $@ $(CC) $(CFLAGS) $(mille_CFLAGS) $(mille_DEFS) $(BASE_INCS) -Imille $(mille_INCS)
+
+#include monop/Makefrag
+#
+#monop/%.o:	monop/%.c
+#	$(CC) $(CFLAGS) $(monop_CFLAGS) $(monop_DEFS) $(BASE_INCS) -Imonop $(monop_INCS) -c $< -o $@
+#
+#monop/%.i:	monop/%.c
+#	$(CC) $(CFLAGS) $(monop_CFLAGS) $(monop_DEFS) $(BASE_INCS) -Imonop $(monop_INCS) -E $< -o $@
+#
+#monop/%.s:	monop/%.c
+#	$(CC) $(CFLAGS) $(monop_CFLAGS) $(monop_DEFS) $(BASE_INCS) -Imonop $(monop_INCS) -S -fverbose-asm $< -o $@
+#
+#monop/%.d:	monop/%.c
+#	./mkdep $< $@ $(CC) $(CFLAGS) $(monop_CFLAGS) $(monop_DEFS) $(BASE_INCS) -Imonop $(monop_INCS)
 
 include morse/Makefrag
 
@@ -361,6 +461,20 @@ number/%.s:	number/%.c
 
 number/%.d:	number/%.c
 	./mkdep $< $@ $(CC) $(CFLAGS) $(number_CFLAGS) $(number_DEFS) $(BASE_INCS) -Inumber $(number_INCS)
+
+#include phantasia/Makefrag
+#
+#phantasia/%.o:	phantasia/%.c
+#	$(CC) $(CFLAGS) $(phantasia_CFLAGS) $(phantasia_DEFS) $(BASE_INCS) -Iphantasia $(phantasia_INCS) -c $< -o $@
+#
+#phantasia/%.i:	phantasia/%.c
+#	$(CC) $(CFLAGS) $(phantasia_CFLAGS) $(phantasia_DEFS) $(BASE_INCS) -Iphantasia $(phantasia_INCS) -E $< -o $@
+#
+#phantasia/%.s:	phantasia/%.c
+#	$(CC) $(CFLAGS) $(phantasia_CFLAGS) $(phantasia_DEFS) $(BASE_INCS) -Iphantasia $(phantasia_INCS) -S -fverbose-asm $< -o $@
+#
+#phantasia/%.d:	phantasia/%.c
+#	./mkdep $< $@ $(CC) $(CFLAGS) $(phantasia_CFLAGS) $(phantasia_DEFS) $(BASE_INCS) -Iphantasia $(phantasia_INCS)
 
 include pig/Makefrag
 
@@ -677,12 +791,12 @@ endif
 arithmetic/arithmetic:	 arithmetic/arithmetic.o lib/getprogname.o
 	$(CC) $(LDFLAGS) $^  $(BASE_LIBS) -o $@
 
-ifneq ($(nodep),true)
-include  atc/extern.d atc/grammar.d atc/graphics.d atc/input.d atc/lex.d atc/list.d atc/log.d atc/main.d atc/tunable.d atc/update.d lib/strlcpy.d
-endif
-
-atc/atc:	 atc/extern.o atc/grammar.o atc/graphics.o atc/input.o atc/lex.o atc/list.o atc/log.o atc/main.o atc/tunable.o atc/update.o lib/strlcpy.o
-	$(CC) $(LDFLAGS) $^ -lm $(NCURSES_LIB) $(LEX_LIB) $(BASE_LIBS) -o $@
+#ifneq ($(nodep),true)
+#include  atc/extern.d atc/grammar.d atc/graphics.d atc/input.d atc/lex.d atc/list.d atc/log.d atc/main.d atc/tunable.d atc/update.d lib/strlcpy.d
+#endif
+#
+#atc/atc:	 atc/extern.o atc/grammar.o atc/graphics.o atc/input.o atc/lex.o atc/list.o atc/log.o atc/main.o atc/tunable.o atc/update.o lib/strlcpy.o
+#	$(CC) $(LDFLAGS) $^ -lm $(NCURSES_LIB) $(LEX_LIB) $(BASE_LIBS) -o $@
 
 ifneq ($(nodep),true)
 include  backgammon/backgammon/extra.d backgammon/backgammon/main.d backgammon/backgammon/move.d backgammon/backgammon/text.d backgammon/backgammon/version.d backgammon/common_source/allow.d backgammon/common_source/board.d backgammon/common_source/check.d backgammon/common_source/fancy.d backgammon/common_source/init.d backgammon/common_source/odds.d backgammon/common_source/one.d backgammon/common_source/save.d backgammon/common_source/subs.d backgammon/common_source/table.d
@@ -724,14 +838,14 @@ include  boggle/mkdict/mkdict.d
 endif
 
 boggle/mkdict/mkdict:	 boggle/mkdict/mkdict.o
-	gcc $(LDFLAGS) $^  $(BASE_LIBS) -o $@
+	gcc $^  $(BASE_LIBS) -o $@
 
 ifneq ($(nodep),true)
 include  boggle/mkindex/mkindex.d
 endif
 
 boggle/mkindex/mkindex:	 boggle/mkindex/mkindex.o
-	$(CC) $(LDFLAGS) $^  $(BASE_LIBS) -o $@
+	gcc $^  $(BASE_LIBS) -o $@
 
 ifneq ($(nodep),true)
 include  caesar/caesar.d
@@ -760,6 +874,13 @@ endif
 
 cribbage/cribbage:	 cribbage/cards.o cribbage/crib.o cribbage/extern.o cribbage/instr.o cribbage/io.o cribbage/score.o cribbage/support.o
 	$(CC) $(LDFLAGS) $^ $(NCURSES_LIB) $(BASE_LIBS) -o $@
+
+#ifneq ($(nodep),true)
+#include  dab/algor.d dab/board.d dab/box.d dab/gamescreen.d dab/human.d dab/main.d dab/player.d dab/random.d dab/ttyscrn.d
+#endif
+#
+#dab/dab:	 dab/algor.o dab/board.o dab/box.o dab/gamescreen.o dab/human.o dab/main.o dab/player.o dab/random.o dab/ttyscrn.o
+#	$(CXX) $(LDFLAGS) $^ $(NCURSES_LIB) $(BASE_LIBS) -o $@
 
 ifneq ($(nodep),true)
 include  fish/fish.d
@@ -796,6 +917,20 @@ endif
 hangman/hangman:	 hangman/endgame.o hangman/extern.o hangman/getguess.o hangman/getword.o hangman/main.o hangman/playgame.o hangman/prdata.o hangman/prman.o hangman/prword.o hangman/setup.o
 	$(CC) $(LDFLAGS) $^ $(NCURSES_LIB) $(BASE_LIBS) -o $@
 
+#ifneq ($(nodep),true)
+#include  hunt/hunt/connect.d hunt/hunt/hunt.d hunt/hunt/otto.d hunt/hunt/playit.d hunt/huntd/pathname.d
+#endif
+#
+#hunt/hunt/hunt:	 hunt/hunt/connect.o hunt/hunt/hunt.o hunt/hunt/otto.o hunt/hunt/playit.o hunt/huntd/pathname.o
+#	$(CC) $(LDFLAGS) $^ $(NCURSES_LIB) $(BASE_LIBS) -o $@
+#
+#ifneq ($(nodep),true)
+#include  hunt/huntd/answer.d hunt/huntd/ctl.d hunt/huntd/ctl_transact.d hunt/huntd/draw.d hunt/huntd/driver.d hunt/huntd/execute.d hunt/huntd/expl.d hunt/huntd/extern.d hunt/huntd/faketalk.d hunt/huntd/get_names.d hunt/huntd/makemaze.d hunt/huntd/shots.d hunt/huntd/terminal.d
+#endif
+#
+#hunt/huntd/huntd:	 hunt/huntd/answer.o hunt/huntd/ctl.o hunt/huntd/ctl_transact.o hunt/huntd/draw.o hunt/huntd/driver.o hunt/huntd/execute.o hunt/huntd/expl.o hunt/huntd/extern.o hunt/huntd/faketalk.o hunt/huntd/get_names.o hunt/huntd/makemaze.o hunt/huntd/pathname.o hunt/huntd/shots.o hunt/huntd/terminal.o
+#	$(CC) $(LDFLAGS) $^  $(BASE_LIBS) -o $@
+
 ifneq ($(nodep),true)
 include  mille/comp.d mille/end.d mille/extern.d mille/init.d mille/mille.d mille/misc.d mille/move.d mille/print.d mille/roll.d mille/save.d mille/types.d mille/varpush.d
 endif
@@ -830,6 +965,20 @@ endif
 
 number/number:	 number/number.o
 	$(CC) $(LDFLAGS) $^  $(BASE_LIBS) -o $@
+
+#ifneq ($(nodep),true)
+#include  phantasia/fight.d phantasia/gamesupport.d phantasia/interplayer.d phantasia/io.d phantasia/main.d phantasia/misc.d phantasia/phantglobs.d
+#endif
+#
+#phantasia/phantasia:	 phantasia/fight.o phantasia/gamesupport.o phantasia/interplayer.o phantasia/io.o phantasia/main.o phantasia/misc.o phantasia/phantglobs.o
+#	$(CC) $(LDFLAGS) $^ -lm $(NCURSES_LIB) $(BASE_LIBS) -o $@
+#
+#ifneq ($(nodep),true)
+#include  phantasia/setup.d
+#endif
+#
+#phantasia/setup:	 phantasia/phantglobs.o phantasia/setup.o
+#	$(CC) $(LDFLAGS) $^ -lm $(BASE_LIBS) -o $@
 
 ifneq ($(nodep),true)
 include  pig/pig.d
@@ -968,6 +1117,32 @@ arithmetic_install-strip:
 
 arithmetic_installdirs:
 	set -e; for d in $(arithmetic_DIRS) /; do mkdir -p $(INSTALL_PREFIX)$$d; done
+
+#.PHONY:	atc_games_clean
+#atc_games_clean:
+#	cd atc/games && rm -f -- a.out core *.o *.d *.i *.s *.d.tmp  $(atc_games_CLEANFILES)
+#
+#.PHONY:	atc_games_install atc_games_install-strip atc_games_installdirs
+#atc_games_install:	atc_games_installdirs
+#
+#atc_games_install-strip:
+#	$(MAKE) atc_games_install $(DEFS_TO_PASS_STRIP)
+#
+#atc_games_installdirs:
+#	set -e; for d in $(atc_games_DIRS) /; do mkdir -p $(INSTALL_PREFIX)$$d; done
+#
+#.PHONY:	atc_clean
+#atc_clean:
+#	cd atc && rm -f -- a.out core *.o *.d *.i *.s *.d.tmp  atc $(atc_CLEANFILES)
+#
+#.PHONY:	atc_install atc_install-strip atc_installdirs
+#atc_install:	atc_installdirs
+#
+#atc_install-strip:
+#	$(MAKE) atc_install $(DEFS_TO_PASS_STRIP)
+#
+#atc_installdirs:
+#	set -e; for d in $(atc_DIRS) /; do mkdir -p $(INSTALL_PREFIX)$$d; done
 
 .PHONY:	backgammon_teachgammon_clean
 backgammon_teachgammon_clean:
@@ -1177,6 +1352,19 @@ cribbage_install-strip:
 cribbage_installdirs:
 	set -e; for d in $(cribbage_DIRS) /; do mkdir -p $(INSTALL_PREFIX)$$d; done
 
+#.PHONY:	dab_clean
+#dab_clean:
+#	cd dab && rm -f -- a.out core *.o *.d *.i *.s *.d.tmp  dab $(dab_CLEANFILES)
+#
+#.PHONY:	dab_install dab_install-strip dab_installdirs
+#dab_install:	dab_installdirs
+#
+#dab_install-strip:
+#	$(MAKE) dab_install $(DEFS_TO_PASS_STRIP)
+#
+#dab_installdirs:
+#	set -e; for d in $(dab_DIRS) /; do mkdir -p $(INSTALL_PREFIX)$$d; done
+
 .PHONY:	fish_clean
 fish_clean:
 	cd fish && rm -f -- a.out core *.o *.d *.i *.s *.d.tmp  fish $(fish_CLEANFILES)
@@ -1229,6 +1417,45 @@ hangman_install-strip:
 hangman_installdirs:
 	set -e; for d in $(hangman_DIRS) /; do mkdir -p $(INSTALL_PREFIX)$$d; done
 
+#.PHONY:	hunt_hunt_clean
+#hunt_hunt_clean:
+#	cd hunt/hunt && rm -f -- a.out core *.o *.d *.i *.s *.d.tmp  hunt $(hunt_hunt_CLEANFILES)
+#
+#.PHONY:	hunt_hunt_install hunt_hunt_install-strip hunt_hunt_installdirs
+#hunt_hunt_install:	hunt_hunt_installdirs
+#
+#hunt_hunt_install-strip:
+#	$(MAKE) hunt_hunt_install $(DEFS_TO_PASS_STRIP)
+#
+#hunt_hunt_installdirs:
+#	set -e; for d in $(hunt_hunt_DIRS) /; do mkdir -p $(INSTALL_PREFIX)$$d; done
+#
+#.PHONY:	hunt_huntd_clean
+#hunt_huntd_clean:
+#	cd hunt/huntd && rm -f -- a.out core *.o *.d *.i *.s *.d.tmp  huntd $(hunt_huntd_CLEANFILES)
+#
+#.PHONY:	hunt_huntd_install hunt_huntd_install-strip hunt_huntd_installdirs
+#hunt_huntd_install:	hunt_huntd_installdirs
+#
+#hunt_huntd_install-strip:
+#	$(MAKE) hunt_huntd_install $(DEFS_TO_PASS_STRIP)
+#
+#hunt_huntd_installdirs:
+#	set -e; for d in $(hunt_huntd_DIRS) /; do mkdir -p $(INSTALL_PREFIX)$$d; done
+#
+#.PHONY:	hunt_clean
+#hunt_clean:
+#	cd hunt && rm -f -- a.out core *.o *.d *.i *.s *.d.tmp  $(hunt_CLEANFILES)
+#
+#.PHONY:	hunt_install hunt_install-strip hunt_installdirs
+#hunt_install:	hunt_installdirs
+#
+#hunt_install-strip:
+#	$(MAKE) hunt_install $(DEFS_TO_PASS_STRIP)
+#
+#hunt_installdirs:
+#	set -e; for d in $(hunt_DIRS) /; do mkdir -p $(INSTALL_PREFIX)$$d; done
+
 .PHONY:	mille_clean
 mille_clean:
 	cd mille && rm -f -- a.out core *.o *.d *.i *.s *.d.tmp  mille $(mille_CLEANFILES)
@@ -1280,6 +1507,19 @@ number_install-strip:
 
 number_installdirs:
 	set -e; for d in $(number_DIRS) /; do mkdir -p $(INSTALL_PREFIX)$$d; done
+
+#.PHONY:	phantasia_clean
+#phantasia_clean:
+#	cd phantasia && rm -f -- a.out core *.o *.d *.i *.s *.d.tmp  phantasia setup $(phantasia_CLEANFILES)
+#
+#.PHONY:	phantasia_install phantasia_install-strip phantasia_installdirs
+#phantasia_install:	phantasia_installdirs
+#
+#phantasia_install-strip:
+#	$(MAKE) phantasia_install $(DEFS_TO_PASS_STRIP)
+#
+#phantasia_installdirs:
+#	set -e; for d in $(phantasia_DIRS) /; do mkdir -p $(INSTALL_PREFIX)$$d; done
 
 .PHONY:	pig_clean
 pig_clean:
@@ -1556,6 +1796,7 @@ lib_installdirs:
 
 .PHONY:	clean mostlyclean distclean maintainer-clean
 clean mostlyclean:	 adventure_clean arithmetic_clean backgammon_teachgammon_clean backgammon_backgammon_clean backgammon_common_source_clean backgammon_clean battlestar_clean bcd_clean boggle_mkindex_clean boggle_boggle_clean boggle_mkdict_clean boggle_clean caesar_clean canfield_cfscores_clean canfield_canfield_clean canfield_clean countmail_clean cribbage_clean fish_clean gomoku_clean hack_clean hangman_clean mille_clean monop_clean morse_clean number_clean pig_clean pom_clean ppt_clean primes_clean quiz_datfiles_clean quiz_clean rain_clean random_clean robots_clean sail_clean snake_snake_clean snake_snscore_clean snake_clean tetris_clean trek_clean wargames_clean worm_clean worms_clean wtf_clean wump_clean lib_clean
+#clean mostlyclean:	 adventure_clean arithmetic_clean atc_games_clean atc_clean backgammon_teachgammon_clean backgammon_backgammon_clean backgammon_common_source_clean backgammon_clean battlestar_clean bcd_clean boggle_mkindex_clean boggle_boggle_clean boggle_mkdict_clean boggle_clean caesar_clean canfield_cfscores_clean canfield_canfield_clean canfield_clean countmail_clean cribbage_clean dab_clean fish_clean gomoku_clean hack_clean hangman_clean hunt_hunt_clean hunt_huntd_clean hunt_clean mille_clean monop_clean morse_clean number_clean phantasia_clean pig_clean pom_clean ppt_clean primes_clean quiz_datfiles_clean quiz_clean rain_clean random_clean robots_clean sail_clean snake_snake_clean snake_snscore_clean snake_clean tetris_clean trek_clean wargames_clean worm_clean worms_clean wtf_clean wump_clean lib_clean
 
 distclean maintainer-clean:	clean
 	rm -f subst.sed subst.rules
@@ -1567,7 +1808,8 @@ distclean maintainer-clean:	clean
 
 .PHONY:	install install-strip
 
-install:	 adventure_install arithmetic_install backgammon_teachgammon_install backgammon_backgammon_install backgammon_common_source_install backgammon_install battlestar_install bcd_install boggle_mkindex_install boggle_boggle_install boggle_mkdict_install boggle_install caesar_install canfield_cfscores_install canfield_canfield_install canfield_install countmail_install cribbage_install fish_install gomoku_install hack_install hangman_install mille_install monop_install morse_install number_install pig_install pom_install ppt_install primes_install quiz_datfiles_install quiz_install rain_install random_install robots_install sail_install snake_snake_install snake_snscore_install snake_install tetris_install trek_install wargames_install worm_install worms_install wtf_install wump_install lib_install
+install:	 adventure_install arithmetic_install backgammon_teachgammon_install backgammon_backgammon_install backgammon_common_source_install backgammon_install battlestar_install bcd_install boggle_mkindex_install boggle_boggle_install boggle_mkdict_install boggle_install caesar_install canfield_cfscores_install canfield_canfield_install canfield_install countmail_install cribbage_install fish_install mille_install monop_install morse_install number_install pig_install pom_install ppt_install primes_install quiz_datfiles_install quiz_install rain_install random_install robots_install sail_install snake_snake_install snake_snscore_install snake_install tetris_install trek_install wargames_install worm_install worms_install wtf_install wump_install lib_install
+#install:	 adventure_install arithmetic_install atc_games_install atc_install backgammon_teachgammon_install backgammon_backgammon_install backgammon_common_source_install backgammon_install battlestar_install bcd_install boggle_mkindex_install boggle_boggle_install boggle_mkdict_install boggle_install caesar_install canfield_cfscores_install canfield_canfield_install canfield_install countmail_install cribbage_install dab_install fish_install gomoku_install hack_install hangman_install hunt_hunt_install hunt_huntd_install hunt_install mille_install monop_install morse_install number_install phantasia_install pig_install pom_install ppt_install primes_install quiz_datfiles_install quiz_install rain_install random_install robots_install sail_install snake_snake_install snake_snscore_install snake_install tetris_install trek_install wargames_install worm_install worms_install wtf_install wump_install lib_install
 
 install-strip:
 	$(MAKE) install $(DEFS_TO_PASS_STRIP)
