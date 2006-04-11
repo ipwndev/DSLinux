@@ -42,6 +42,10 @@ else
 TARGET = $(TOP)/bin/nxscribble
 endif
 
+ifeq ($(NDSDRIVER), Y)
+DEFINES += -Dwchar_t=char -D_WCHAR_T_
+endif
+
 all: default $(TARGET)
 	$(CP) letters.cl digits.cl punc.cl $(TOP)/bin
 
