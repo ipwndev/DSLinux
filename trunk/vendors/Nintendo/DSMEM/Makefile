@@ -66,7 +66,6 @@ romfs:
 	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
 
 image:
-	$(CROSS_COMPILE)flthdr -Z $(ROMFSDIR)/bin/*
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
 	if [ "$(CONFIG_XIP_KERNEL)" != "y" ]; then \
