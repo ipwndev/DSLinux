@@ -28,7 +28,7 @@
 #include "m3sd.h"
 
 #ifdef CONFIG_MMC_DEBUG
-#define DBG(x...)	printk(KERN_DEBUG x)
+#define DBG(x...)	printk(x)
 #else
 #define DBG(x...)	do { } while (0)
 #endif
@@ -64,107 +64,20 @@ static void m3sd_unlock( void )
 static void m3sd_stop_clock(struct m3sd_host *host)
 {
     printk("%s\n",__FUNCTION__);
-#if 0
-	if (readw(M3SD_STAT) & STAT_CLK_EN) {
-		unsigned long timeout = 10000;
-		unsigned int v;
-
-		writew(STOP_CLOCK, M3SD_STRPCL);
-
-		do {
-			v = readw(M3SD_STAT);
-			if (!(v & STAT_CLK_EN))
-				break;
-			udelay(1);
-		} while (timeout--);
-
-		if (v & STAT_CLK_EN)
-			dev_err(mmc_dev(host->mmc), "unable to stop clock\n");
-	}
-#endif
 }
 
-static void m3sd_setup_data(struct m3sd_host *host, struct mmc_data *data)
+static void m3sd_send_cmd(struct mmc_command *cmd)
 {
-    printk("%s\n",__FUNCTION__);
-#if 0
-	unsigned int nob = data->blocks;
-	unsigned int timeout;
-	u32 dcmd;
-	int i;
-
-	host->data = data;
-
-	if (data->flags & MMC_DATA_STREAM)
-		nob = 0xffff;
-
-	writew(nob, M3SD_NOB);
-	writew(1 << data->blksz_bits, M3SD_BLKLEN);
-
-	timeout = ns_to_clocks(data->timeout_ns) + data->timeout_clks;
-	writew((timeout + 255) / 256, M3SD_RDTO);
-
-	if (data->flags & MMC_DATA_READ) {
-		host->dma_dir = DMA_FROM_DEVICE;
-		dcmd = DCMD_INCTRGADDR | DCMD_FLOWTRG;
-		DRCMRTXMMC = 0;
-		DRCMRRXMMC = host->dma | DRCMR_MAPVLD;
-	} else {
-		host->dma_dir = DMA_TO_DEVICE;
-		dcmd = DCMD_INCSRCADDR | DCMD_FLOWSRC;
-		DRCMRRXMMC = 0;
-		DRCMRTXMMC = host->dma | DRCMR_MAPVLD;
-	}
-
-	for (i = 0; i < host->dma_len; i++) {
-		if (data->flags & MMC_DATA_READ) {
-			host->sg_cpu[i].dsadr = host->res->start + M3SD_RXFIFO;
-			host->sg_cpu[i].dtadr = sg_dma_address(&data->sg[i]);
-		} else {
-			host->sg_cpu[i].dsadr = sg_dma_address(&data->sg[i]);
-			host->sg_cpu[i].dtadr = host->res->start + M3SD_TXFIFO;
-		}
-		host->sg_cpu[i].dcmd = dcmd | sg_dma_len(&data->sg[i]);
-		host->sg_cpu[i].ddadr = host->sg_dma + (i + 1) *
-					sizeof(struct pxa_dma_desc);
-	}
-
-#endif
-}
-
-static void m3sd_start_cmd(struct m3sd_host *host, struct mmc_command *cmd)
-{
-    unsigned int stat ;
-    unsigned int laststat = 0 ;
     int i;
+
     printk("%s\n",__FUNCTION__);
-
-#if 0
-	if (cmd->flags & MMC_RSP_BUSY)
-		cmdat |= CMDAT_BUSY;
-#endif
-
-#if 0
-	switch (cmd->flags & (MMC_RSP_MASK | MMC_RSP_CRC)) {
-	case MMC_RSP_SHORT | MMC_RSP_CRC:
-		cmdat |= CMDAT_RESP_SHORT;
-		break;
-	case MMC_RSP_SHORT:
-		cmdat |= CMDAT_RESP_R3;
-		break;
-	case MMC_RSP_LONG | MMC_RSP_CRC:
-		cmdat |= CMDAT_RESP_R2;
-		break;
-	default:
-		break;
-	}
-#endif
 
     writew(0x08, M3SD_CTRL);
     printk("opcode = %d\n",cmd->opcode);
     printk("arg = %d\n",cmd->arg);
     printk("flags = %d\n",cmd->flags);
 
+    cmd->opcode = 12 ;
 	writew(cmd->opcode | 0x40, M3SD_CMD);
 	writew(cmd->arg >> 16, M3SD_ARGH);
 	writew(cmd->arg & 0xffff, M3SD_ARGL);
@@ -172,137 +85,94 @@ static void m3sd_start_cmd(struct m3sd_host *host, struct mmc_command *cmd)
     printk("0x29\n");
 	writew(0x29, M3SD_STRPCL);
 
-    for (i = 0 ; i < 10 ; i++ )
-    {
-        stat = readw(M3SD_STAT);
-        if ( laststat != stat )
-        {
-            printk("stat=%x\n",stat);
-            laststat = stat ;
-        }
-    }
+    /* wait for command to complete */
+    while ( (readw(M3SD_STAT) & 0x01) == 0 ) ;
 
     printk("0x09\n");
     writew(0x09, M3SD_STRPCL);
 
-    for (i = 0 ; i < 10 ; i++ )
+    if ( cmd->flags )
     {
-        stat = readw(M3SD_STAT);
-        if ( laststat != stat )
+        writew(0x08, M3SD_STRPCL);
+        writew(0x04, M3SD_CTRL);
+
+#if 0
+        for (i = 0 ; i < 4 ; i++)
         {
-            printk("stat=%x\n",stat);
-            laststat = stat ;
+            u32 w1 = readw( M3SD_STRPCL ) ;
+            u32 w2 = readw( M3SD_STRPCL ) ;
+            cmd->resp[i] = (w1 << 16 ) | w2 ;
         }
+#endif
     }
+}
+
+static void m3sd_xfer( struct mmc_data * data )
+{
+    u16 crc ;
+    u16 ignore ;
+    int i;
+    printk("%s\n",__FUNCTION__);
+
+
     printk("0x49\n");
     writew(0x49, M3SD_STRPCL);
+    printk("reading3 %x\n", readw(M3SD_STRPCL)) ;
 
-    for (i = 0 ; i < 10 ; i++ )
+    while ( (readw(M3SD_STAT) & 0x40) != 0 ) ;
+
+    printk("reading4 %x\n", readw(M3SD_STRPCL)) ;
+    writew(0x09, M3SD_STRPCL);
+
+    printk("reading5 %x\n", readw(M3SD_STRPCL)) ;
+    writew(0x08, M3SD_STRPCL);
+
+    printk("reading %x\n", readw(M3SD_STRPCL)) ;
+    writew(0x04, M3SD_CTRL);
+
+    if ( data->flags & MMC_DATA_READ )
     {
-        stat = readw(M3SD_STAT);
-        if ( laststat != stat )
+        ignore = readw(M3SD_STRPCL) ;
+
+        for ( i = 0 ; i < 256 ; i++ )
         {
-            printk("stat=%x\n",stat);
-            laststat = stat ;
+            data = readw(M3SD_STRPCL) ;
         }
+
+        crc = readw(M3SD_STRPCL) ;
+        crc = readw(M3SD_STRPCL) ;
+        crc = readw(M3SD_STRPCL) ;
+        crc = readw(M3SD_STRPCL) ;
     }
+    else
+    {
+        /* TODO */
+    }
+
+    data->bytes_xfered = data->blocks << data->blksz_bits;
 }
-
-static int m3sd_cmd_done(struct m3sd_host *host, unsigned int stat)
-{
-    printk("%s\n",__FUNCTION__);
-#if 0
-	struct mmc_command *cmd = host->cmd;
-	int i;
-	u32 v;
-
-	if (!cmd)
-		return 0;
-
-	host->cmd = NULL;
-
-	v = readl(M3SD_RES) & 0xffff;
-	for (i = 0; i < 4; i++) {
-		u32 w1 = readl(M3SD_RES) & 0xffff;
-		u32 w2 = readl(M3SD_RES) & 0xffff;
-		cmd->resp[i] = v << 24 | w1 << 8 | w2 >> 8;
-		v = w2;
-	}
-
-	if (stat & STAT_TIME_OUT_RESPONSE) {
-		cmd->error = MMC_ERR_TIMEOUT;
-	} else if (stat & STAT_RES_CRC_ERR && cmd->flags & M3SD_RSP_CRC) {
-		cmd->error = MMC_ERR_BADCRC;
-	}
-#endif
-
-	return 1;
-}
-
-#if 0
-static int m3sd_data_done(struct m3sd_host *host, unsigned int stat)
-{
-    printk("%s\n",__FUNCTION__);
-	struct mmc_data *data = host->data;
-
-	if (!data)
-		return 0;
-
-	if (stat & STAT_READ_TIME_OUT)
-		data->error = MMC_ERR_TIMEOUT;
-	else if (stat & (STAT_CRC_READ_ERROR|STAT_CRC_WRITE_ERROR))
-		data->error = MMC_ERR_BADCRC;
-
-	if (data->error == MMC_ERR_NONE)
-		data->bytes_xfered = data->blocks << data->blksz_bits;
-	else
-		data->bytes_xfered = 0;
-
-
-	host->data = NULL;
-	if (host->mrq->stop && data->error == MMC_ERR_NONE) {
-		m3sd_stop_clock(host);
-		m3sd_start_cmd(host, host->mrq->stop, 0);
-	} else {
-		m3sd_finish_request(host, host->mrq);
-	}
-
-	return 1;
-}
-#endif
 
 static void m3sd_request(struct mmc_host *mmc, struct mmc_request *mrq)
 {
 	struct m3sd_host *host = mmc_priv(mmc);
+
     printk("%s\n",__FUNCTION__);
-#if 0
-	unsigned int cmdat;
 
-	cmdat = host->cmdat;
-	host->cmdat &= ~CMDAT_INIT;
+    /* Send the command to the card */
+	m3sd_send_cmd(mrq->cmd);
 
-	if (mrq->data) {
-		m3sd_setup_data(host, mrq->data);
-
-		cmdat &= ~CMDAT_BUSY;
-		cmdat |= CMDAT_DATAEN | CMDAT_DMAEN;
-		if (mrq->data->flags & MMC_DATA_WRITE)
-			cmdat |= CMDAT_WRITE;
-
-		if (mrq->data->flags & MMC_DATA_STREAM)
-			cmdat |= CMDAT_STREAM;
-	}
-
-#endif
-	m3sd_start_cmd(host, mrq->cmd);
     unsigned stat = readw(M3SD_STAT);
-
     DBG("M3SD: stat %08x\n", stat);
-#if 0
-    handled |= m3sd_cmd_done(host, stat);
-    handled |= m3sd_data_done(host, stat);
-#endif
-	mmc_request_done(mmc, mrq);
+
+    if ( mrq->data )
+    {
+        m3sd_xfer( mrq->data );
+        if (mrq->stop) {
+            m3sd_send_cmd(mrq->stop);
+        }
+    }
+
+    mmc_request_done(mmc, mrq);
 }
 
 static int m3sd_get_ro(struct mmc_host *mmc)
