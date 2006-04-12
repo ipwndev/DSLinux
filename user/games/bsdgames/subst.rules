@@ -1,5 +1,5 @@
-Makeconfig:	Makeconfig.in subst.sed substscr
-	./substscr g h Makeconfig.in Makeconfig
+#Makeconfig:	Makeconfig.in subst.sed substscr
+#	./substscr g h Makeconfig.in Makeconfig
 
 hide-game:	hide-game.in subst.sed substscr
 	./substscr g s hide-game.in hide-game
