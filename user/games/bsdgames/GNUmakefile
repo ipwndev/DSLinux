@@ -1846,6 +1846,8 @@ romfs:
 	    boggle/boggle/boggle /bin/boggle
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CAESAR \
 	    caesar/caesar /bin/caesar
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CAESAR \
+	    caesar/rot13 /bin/rot13
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CANFIELD \
 	    canfield/canfield/canfield /bin/canfield
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CANFIELD \
