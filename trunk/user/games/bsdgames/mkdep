@@ -36,10 +36,10 @@ source_file=$1
 base_name=${source_file%%.c}
 base_base_name=`basename $base_name`
 output_file=$2
-compiler=$4
+compiler="$3 $4"
 shift 4
 
-"$compiler" -M "$@" "$source_file" >"$output_file".tmp
+$compiler -M "$@" "$source_file" >"$output_file".tmp
 
 sed "s!^$base_base_name.o *:!$base_name.o :!g
 s!$base_name.o *:!$base_name.o $base_name.d:!g" <"$output_file".tmp >"$output_file"
