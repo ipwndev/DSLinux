@@ -194,7 +194,7 @@ boggle/mkdict/%.s:	boggle/mkdict/%.c
 	gcc $(CFLAGS) $(boggle_mkdict_CFLAGS) $(boggle_mkdict_DEFS) $(BASE_INCS) -Iboggle/mkdict $(boggle_mkdict_INCS) -S -fverbose-asm $< -o $@
 
 boggle/mkdict/%.d:	boggle/mkdict/%.c
-	./mkdep $< $@ gcc gcc $(CFLAGS) $(boggle_mkdict_CFLAGS) $(boggle_mkdict_DEFS) $(BASE_INCS) -Iboggle/mkdict $(boggle_mkdict_INCS)
+	./mkdep $< $@ gcc \  $(CFLAGS) $(boggle_mkdict_CFLAGS) $(boggle_mkdict_DEFS) $(BASE_INCS) -Iboggle/mkdict $(boggle_mkdict_INCS)
 
 include boggle/Makefrag
 
@@ -403,8 +403,8 @@ hangman/%.d:	hangman/%.c
 #hunt/%.s:	hunt/%.c
 #	$(CC) $(CFLAGS) $(hunt_CFLAGS) $(hunt_DEFS) $(BASE_INCS) -Ihunt $(hunt_INCS) -S -fverbose-asm $< -o $@
 #
-#hunt/%.d:	hunt/%.c
-#	./mkdep $< $@ $(CC) $(CFLAGS) $(hunt_CFLAGS) $(hunt_DEFS) $(BASE_INCS) -Ihunt $(hunt_INCS)
+hunt/%.d:	hunt/%.c
+	./mkdep $< $@ $(CC) $(CFLAGS) $(hunt_CFLAGS) $(hunt_DEFS) $(BASE_INCS) -Ihunt $(hunt_INCS)
 
 include mille/Makefrag
 
@@ -431,8 +431,8 @@ mille/%.d:	mille/%.c
 #monop/%.s:	monop/%.c
 #	$(CC) $(CFLAGS) $(monop_CFLAGS) $(monop_DEFS) $(BASE_INCS) -Imonop $(monop_INCS) -S -fverbose-asm $< -o $@
 #
-#monop/%.d:	monop/%.c
-#	./mkdep $< $@ $(CC) $(CFLAGS) $(monop_CFLAGS) $(monop_DEFS) $(BASE_INCS) -Imonop $(monop_INCS)
+monop/%.d:	monop/%.c
+	./mkdep $< $@ $(CC) $(CFLAGS) $(monop_CFLAGS) $(monop_DEFS) $(BASE_INCS) -Imonop $(monop_INCS)
 
 include morse/Makefrag
 
@@ -1827,4 +1827,75 @@ uninstall TAGS dist:
 .PHONY:	info dvi
 info dvi:
 	@echo "This package comes with no Texinfo documentation."
+
+
+romfs:
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_ADVENTURE \
+		adventure/adventure /bin/adventure
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_ARITHMETIC \
+   		arithmetic/arithmetic /bin/arithmetic
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BACKGAMMON \
+		backgammon/backgammon/backgammon /bin/backgammon
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BACKGAMMON \
+		backgammon/teachgammon/teachgammon /bin/teachgammon
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BATTLESTAR \
+	    battlestar/battlestar /bin/battlestar
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BCD \
+	    bcd/bcd /bin/bcd
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BOGGLE \
+	    boggle/boggle/boggle /bin/boggle
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CAESAR \
+	    caesar/caesar /bin/caesar
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CANFIELD \
+	    canfield/canfield/canfield /bin/canfield
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CANFIELD \
+	    canfield/cfscores/cfscores /bin/cfscores
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CRIBBAGE \
+	    cribbage/cribbage /bin/cribbage
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_FISH \
+	    fish/fish /bin/fish
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_GOMOKU \
+	    gomoku/gomoku /bin/gomoku
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_HACK \
+	    hack/hack /bin/hack
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_HANGMAN \
+	    hangman/hangman /bin/hangman
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_MILLE \
+	    mille/mille /bin/mille
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_MORSE \
+	    morse/morse /bin/morse
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_NUMBER \
+	    number/number /bin/number
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_PIG \
+	    pig/pig /bin/pig
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_POM \
+	    pom/pom /bin/pom
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_PPT \
+	    ppt/ppt /bin/ppt
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_PRIMES \
+	    primes/primes /bin/primes
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_QUIZ \
+	    quiz/quiz /bin/quiz
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_RAIN \
+	    rain/rain /bin/rain
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_RANDOM \
+	    random/random /bin/random
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_ROBOTS \
+	    robots/robots /bin/robots
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_SAIL \
+	    sail/sail /bin/sail
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_SNAKE \
+	    snake/snake/snake /bin/snake
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_SNAKE \
+	    snake/snscore/snscore /bin/snscore
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_TETRIS \
+   		tetris/tetris /bin/tetris
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_TREK \
+	    trek/trek /bin/trek
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_WORM \
+	    worm/worm /bin/worm
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_WORMS \
+	    worms/worms /bin/worms
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_WUMP \
+	    wump/wump /bin/wump
 
