@@ -38,9 +38,9 @@ BUILDDIRS := adventure arithmetic atc backgammon battlestar bcd boggle caesar ca
 # Installation prefix
 INSTALL_PREFIX := $(ROOTDIR)/user/games/bsdgames/debian/bsdgames
 # Games directory
-GAMESDIR := /usr/games
+GAMESDIR := /bin
 # Daemon directory
-SBINDIR := /usr/sbin
+SBINDIR := /bin
 # Other binaries directory
 USRBINDIR := 
 # Manual pages, section 6
