@@ -77,12 +77,12 @@ __RCSID("$NetBSD: hack.termcap.c,v 1.12 2003/04/02 18:36:40 jsm Exp $");
 #include "def.flag.h"		/* for flags.nonull */
 
 static char     tbuf[512];
-char           *HO, *CL, *CE, *UP, *CM, *ND, *XD, *BC, *SO, *SE, *TI, *TE;
+static char    *hack_HO, *hack_CL, *hack_CE, *hack_UP, *hack_CM, *ND, *XD, *hack_BC, *SO, *SE, *TI, *TE;
 static char    *VS, *VE;
 static int      SG;
-char            hack_PC = '\0';
-char           *CD;		/* tested in pri.c: docorner() */
-int             CO, LI;		/* used in pri.c and whatis.c */
+static char     hack_PC = '\0';
+char    *CD;		/* tested in pri.c: docorner() */
+int      CO, LI;		/* used in pri.c and whatis.c */
 
 void
 startup()
@@ -102,25 +102,25 @@ startup()
 		error("Unknown terminal type: %s.", term);
 	if ((pc = tgetstr("pc", &tbufptr)) != NULL)
 		hack_PC = *pc;
-	if (!(BC = tgetstr("bc", &tbufptr))) {
+	if (!(hack_BC = tgetstr("bc", &tbufptr))) {
 		if (!tgetflag("bs"))
 			error("Terminal must backspace.");
-		BC = tbufptr;
+		hack_BC = tbufptr;
 		tbufptr += 2;
-		*BC = '\b';
+		*hack_BC = '\b';
 	}
-	HO = tgetstr("ho", &tbufptr);
+	hack_HO = tgetstr("ho", &tbufptr);
 	CO = tgetnum("co");
 	LI = tgetnum("li");
 	if (CO < COLNO || LI < ROWNO + 2)
 		setclipped();
-	if (!(CL = tgetstr("cl", &tbufptr)))
-		error("Hack needs CL.");
+	if (!(hack_CL = tgetstr("cl", &tbufptr)))
+		error("Hack needs hack_CL.");
 	ND = tgetstr("nd", &tbufptr);
 	if (tgetflag("os"))
 		error("Hack can't have OS.");
-	CE = tgetstr("ce", &tbufptr);
-	UP = tgetstr("up", &tbufptr);
+	hack_CE = tgetstr("ce", &tbufptr);
+	hack_UP = tgetstr("up", &tbufptr);
 	/*
 	 * It seems that xd is no longer supported, and we should use a
 	 * linefeed instead; unfortunately this requires resetting CRMOD, and
@@ -129,9 +129,9 @@ startup()
 	 */
 	XD = tgetstr("xd", &tbufptr);
 	/* not: 		XD = tgetstr("do", &tbufptr); */
-	if (!(CM = tgetstr("cm", &tbufptr))) {
-		if (!UP && !HO)
-			error("Hack needs CM or UP or HO.");
+	if (!(hack_CM = tgetstr("cm", &tbufptr))) {
+		if (!hack_UP && !hack_HO)
+			error("Hack needs hack_CM or hack_UP or hack_HO.");
 		printf("Playing hack on terminals without cm is suspect...\n");
 		getret();
 	}
@@ -176,11 +176,11 @@ curs(x, y)
 	}
 	if (abs(cury - y) <= 3 && abs(curx - x) <= 3)
 		nocmov(x, y);
-	else if ((x <= 3 && abs(cury - y) <= 3) || (!CM && x < abs(curx - x))) {
+	else if ((x <= 3 && abs(cury - y) <= 3) || (!hack_CM && x < abs(curx - x))) {
 		(void) putchar('\r');
 		curx = 1;
 		nocmov(x, y);
-	} else if (!CM) {
+	} else if (!hack_CM) {
 		nocmov(x, y);
 	} else
 		cmov(x, y);
@@ -191,14 +191,14 @@ nocmov(x, y)
 	int x, y;
 {
 	if (cury > y) {
-		if (UP) {
+		if (hack_UP) {
 			while (cury > y) {	/* Go up. */
-				xputs(UP);
+				xputs(hack_UP);
 				cury--;
 			}
-		} else if (CM) {
+		} else if (hack_CM) {
 			cmov(x, y);
-		} else if (HO) {
+		} else if (hack_HO) {
 			home();
 			curs(x, y);
 		}		/* else impossible("..."); */
@@ -208,7 +208,7 @@ nocmov(x, y)
 				xputs(XD);
 				cury++;
 			}
-		} else if (CM) {
+		} else if (hack_CM) {
 			cmov(x, y);
 		} else {
 			while (cury < y) {
@@ -229,7 +229,7 @@ nocmov(x, y)
 			}
 	} else if (curx > x) {
 		while (curx > x) {	/* Go to the left. */
-			xputs(BC);
+			xputs(hack_BC);
 			curx--;
 		}
 	}
@@ -239,7 +239,7 @@ void
 cmov(x, y)
 	int x, y;
 {
-	xputs(tgoto(CM, x - 1, y - 1));
+	xputs(tgoto(hack_CM, x - 1, y - 1));
 	cury = y;
 	curx = x;
 }
@@ -261,9 +261,9 @@ xputs(s)
 void
 cl_end()
 {
-	if (CE)
-		xputs(CE);
-	else {			/* no-CE fix - free after Harold Rynes */
+	if (hack_CE)
+		xputs(hack_CE);
+	else {			/* no-hack_CE fix - free after Harold Rynes */
 		/*
 		 * this looks terrible, especially on a slow terminal but is
 		 * better than nothing
@@ -281,19 +281,19 @@ cl_end()
 void
 clear_screen()
 {
-	xputs(CL);
+	xputs(hack_CL);
 	curx = cury = 1;
 }
 
 void
 home()
 {
-	if (HO)
-		xputs(HO);
-	else if (CM)
-		xputs(tgoto(CM, 0, 0));
+	if (hack_HO)
+		xputs(hack_HO);
+	else if (hack_CM)
+		xputs(tgoto(hack_CM, 0, 0));
 	else
-		curs(1, 1);	/* using UP ... */
+		curs(1, 1);	/* using hack_UP ... */
 	curx = cury = 1;
 }
 
@@ -314,7 +314,7 @@ standoutend()
 void
 backsp()
 {
-	xputs(BC);
+	xputs(hack_BC);
 	curx--;
 }
 
