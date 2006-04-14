@@ -168,9 +168,7 @@ static int meminfo_read_proc(char *page, char **start, off_t off,
 		"Dirty:        %8lu kB\n"
 		"Writeback:    %8lu kB\n"
 		"Mapped:       %8lu kB\n"
-#ifdef CONFIG_SLAB
 		"Slab:         %8lu kB\n"
-#endif
 		"CommitLimit:  %8lu kB\n"
 		"Committed_AS: %8lu kB\n"
 		"PageTables:   %8lu kB\n"
@@ -193,9 +191,7 @@ static int meminfo_read_proc(char *page, char **start, off_t off,
 		K(ps.nr_dirty),
 		K(ps.nr_writeback),
 		K(ps.nr_mapped),
-#ifdef CONFIG_SLAB
 		K(ps.nr_slab),
-#endif
 		K(allowed),
 		K(committed),
 		K(ps.nr_page_table_pages),
