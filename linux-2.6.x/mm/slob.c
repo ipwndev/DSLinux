@@ -158,7 +158,7 @@ static int fastcall find_order(int size)
 	return order;
 }
 
-void *__kmalloc(size_t size, gfp_t gfp)
+void *kmalloc(size_t size, gfp_t gfp)
 {
 	slob_t *m;
 	bigblock_t *bb;
@@ -188,23 +188,7 @@ void *__kmalloc(size_t size, gfp_t gfp)
 	return 0;
 }
 
-EXPORT_SYMBOL(__kmalloc);
-
-
-/**
- * kzalloc - allocate memory. The memory is set to zero.
- * @size: how many bytes of memory are required.
- * @flags: the type of memory to allocate.
- */
-void *kzalloc(size_t size, gfp_t flags)
-{
-	void *ret = kmalloc(size, flags);
-	if (ret)
-		memset(ret, 0, size);
-	return ret;
-}
-EXPORT_SYMBOL(kzalloc);
-
+EXPORT_SYMBOL(kmalloc);
 
 void kfree(const void *block)
 {
@@ -256,21 +240,21 @@ unsigned int ksize(const void *block)
 	return ((slob_t *)block - 1)->units * SLOB_UNIT;
 }
 
-struct kmem_cache_s {
+struct kmem_cache {
 	unsigned int size, align;
 	const char *name;
-	void (*ctor)(void *, kmem_cache_t *, unsigned long);
-	void (*dtor)(void *, kmem_cache_t *, unsigned long);
+	void (*ctor)(void *, struct kmem_cache *, unsigned long);
+	void (*dtor)(void *, struct kmem_cache *, unsigned long);
 };
 
-kmem_cache_t *kmem_cache_create(const char *name, size_t size,
+struct kmem_cache *kmem_cache_create(const char *name, size_t size,
 	size_t align, unsigned long flags,
-	void (*ctor)(void*, kmem_cache_t *, unsigned long),
-	void (*dtor)(void*, kmem_cache_t *, unsigned long))
+	void (*ctor)(void*, struct kmem_cache *, unsigned long),
+	void (*dtor)(void*, struct kmem_cache *, unsigned long))
 {
-	kmem_cache_t *c;
+	struct kmem_cache *c;
 
-	c = slob_alloc(sizeof(kmem_cache_t), flags, 0);
+	c = slob_alloc(sizeof(struct kmem_cache), flags, 0);
 
 	if (c) {
 		c->name = name;
@@ -287,14 +271,14 @@ kmem_cache_t *kmem_cache_create(const char *name, size_t size,
 }
 EXPORT_SYMBOL(kmem_cache_create);
 
-int kmem_cache_destroy(kmem_cache_t *c)
+int kmem_cache_destroy(struct kmem_cache *c)
 {
-	slob_free(c, sizeof(kmem_cache_t));
+	slob_free(c, sizeof(struct kmem_cache));
 	return 0;
 }
 EXPORT_SYMBOL(kmem_cache_destroy);
 
-void *kmem_cache_alloc(kmem_cache_t *c, gfp_t flags)
+void *kmem_cache_alloc(struct kmem_cache *c, gfp_t flags)
 {
 	void *b;
 
@@ -310,7 +294,7 @@ void *kmem_cache_alloc(kmem_cache_t *c, gfp_t flags)
 }
 EXPORT_SYMBOL(kmem_cache_alloc);
 
-void kmem_cache_free(kmem_cache_t *c, void *b)
+void kmem_cache_free(struct kmem_cache *c, void *b)
 {
 	if (c->dtor)
 		c->dtor(b, c, 0);
@@ -322,40 +306,17 @@ void kmem_cache_free(kmem_cache_t *c, void *b)
 }
 EXPORT_SYMBOL(kmem_cache_free);
 
-unsigned int kmem_cache_size(kmem_cache_t *c)
+unsigned int kmem_cache_size(struct kmem_cache *c)
 {
 	return c->size;
 }
 EXPORT_SYMBOL(kmem_cache_size);
 
-const char *kmem_cache_name(kmem_cache_t *c)
+const char *kmem_cache_name(struct kmem_cache *c)
 {
 	return c->name;
 }
 EXPORT_SYMBOL(kmem_cache_name);
-
-/**
- * kmem_ptr_validate - check if an untrusted pointer might
- *	be a slab entry.
- * @cachep: the cache we're checking against
- * @ptr: pointer to validate
- *
- * This verifies that the untrusted pointer looks sane:
- * it is _not_ a guarantee that the pointer is actually
- * part of the slab cache in question, but it at least
- * validates that the pointer can be dereferenced and
- * looks half-way sane.
- *
- * Currently only used for dentry validation.
- */
-int fastcall kmem_ptr_validate(kmem_cache_t *cachep, void *ptr)
-{
-	// very simple form of validation...
-	if (ptr)
-		return 1;
-	else
-		return 0;
-}
 
 static struct timer_list slob_timer = TIMER_INITIALIZER(
 	(void (*)(unsigned long))kmem_cache_init, 0, 0);
@@ -375,7 +336,7 @@ EXPORT_SYMBOL(slab_reclaim_pages);
 
 #ifdef CONFIG_SMP
 
-void *__alloc_percpu(size_t size)
+void *__alloc_percpu(size_t size, size_t align)
 {
 	int i;
 	struct percpu_data *pdata = kmalloc(sizeof (*pdata), GFP_KERNEL);
