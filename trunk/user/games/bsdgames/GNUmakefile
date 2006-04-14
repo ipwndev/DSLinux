@@ -157,13 +157,13 @@ bcd/%.d:	bcd/%.c
 include boggle/mkindex/Makefrag
 
 boggle/mkindex/%.o:	boggle/mkindex/%.c
-	gcc $(CFLAGS) $(boggle_mkindex_CFLAGS) $(boggle_mkindex_DEFS) $(BASE_INCS) -Iboggle/mkindex $(boggle_mkindex_INCS) -c $< -o $@
+	gcc $(NATIVE_CFLAGS) $(boggle_mkindex_CFLAGS) $(boggle_mkindex_DEFS) $(BASE_INCS) -Iboggle/mkindex $(boggle_mkindex_INCS) -c $< -o $@
 
 boggle/mkindex/%.i:	boggle/mkindex/%.c
-	gcc $(CFLAGS) $(boggle_mkindex_CFLAGS) $(boggle_mkindex_DEFS) $(BASE_INCS) -Iboggle/mkindex $(boggle_mkindex_INCS) -E $< -o $@
+	gcc $(NATIVE_CFLAGS) $(boggle_mkindex_CFLAGS) $(boggle_mkindex_DEFS) $(BASE_INCS) -Iboggle/mkindex $(boggle_mkindex_INCS) -E $< -o $@
 
 boggle/mkindex/%.s:	boggle/mkindex/%.c
-	gcc $(CFLAGS) $(boggle_mkindex_CFLAGS) $(boggle_mkindex_DEFS) $(BASE_INCS) -Iboggle/mkindex $(boggle_mkindex_INCS) -S -fverbose-asm $< -o $@
+	gcc $(NATIVE_CFLAGS) $(boggle_mkindex_CFLAGS) $(boggle_mkindex_DEFS) $(BASE_INCS) -Iboggle/mkindex $(boggle_mkindex_INCS) -S -fverbose-asm $< -o $@
 
 boggle/mkindex/%.d:	boggle/mkindex/%.c
 	./mkdep $< $@ $(CC) $(CFLAGS) $(boggle_mkindex_CFLAGS) $(boggle_mkindex_DEFS) $(BASE_INCS) -Iboggle/mkindex $(boggle_mkindex_INCS)
@@ -185,16 +185,16 @@ boggle/boggle/%.d:	boggle/boggle/%.c
 include boggle/mkdict/Makefrag
 
 boggle/mkdict/%.o:	boggle/mkdict/%.c
-	gcc $(CFLAGS) $(boggle_mkdict_CFLAGS) $(boggle_mkdict_DEFS) $(BASE_INCS) -Iboggle/mkdict $(boggle_mkdict_INCS) -c $< -o $@
+	gcc $(NATIVE_CFLAGS) $(boggle_mkdict_CFLAGS) $(boggle_mkdict_DEFS) $(BASE_INCS) -Iboggle/mkdict $(boggle_mkdict_INCS) -c $< -o $@
 
 boggle/mkdict/%.i:	boggle/mkdict/%.c
-	gcc $(CFLAGS) $(boggle_mkdict_CFLAGS) $(boggle_mkdict_DEFS) $(BASE_INCS) -Iboggle/mkdict $(boggle_mkdict_INCS) -E $< -o $@
+	gcc $(NATIVE_CFLAGS) $(boggle_mkdict_CFLAGS) $(boggle_mkdict_DEFS) $(BASE_INCS) -Iboggle/mkdict $(boggle_mkdict_INCS) -E $< -o $@
 
 boggle/mkdict/%.s:	boggle/mkdict/%.c
-	gcc $(CFLAGS) $(boggle_mkdict_CFLAGS) $(boggle_mkdict_DEFS) $(BASE_INCS) -Iboggle/mkdict $(boggle_mkdict_INCS) -S -fverbose-asm $< -o $@
+	gcc $(NATIVE_CFLAGS) $(boggle_mkdict_CFLAGS) $(boggle_mkdict_DEFS) $(BASE_INCS) -Iboggle/mkdict $(boggle_mkdict_INCS) -S -fverbose-asm $< -o $@
 
 boggle/mkdict/%.d:	boggle/mkdict/%.c
-	./mkdep $< $@ gcc \  $(CFLAGS) $(boggle_mkdict_CFLAGS) $(boggle_mkdict_DEFS) $(BASE_INCS) -Iboggle/mkdict $(boggle_mkdict_INCS)
+	./mkdep $< $@ gcc \  $(NATIVE_CFLAGS) $(boggle_mkdict_CFLAGS) $(boggle_mkdict_DEFS) $(BASE_INCS) -Iboggle/mkdict $(boggle_mkdict_INCS)
 
 include boggle/Makefrag
 
