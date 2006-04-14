@@ -111,3 +111,23 @@ config SPARSEMEM_STATIC
 config SPARSEMEM_EXTREME
 	def_bool y
 	depends on SPARSEMEM && !SPARSEMEM_STATIC
+
+config SLAB
+	bool "SLAB Memory Allocator"
+	default y
+	help
+	  This is the default memory allocator.
+	  Memory requests are rounded up to the next power of two.
+	  This prevents fragmentation.
+
+	  If unsure, say Y here.
+
+config SLOB
+	bool "SLOB Memory Allocator for tiny systems"
+	default n
+	help
+	  This is the a modified memory allocator, allocating only
+	  the requested amount of memory. Use this allocator for
+	  systesm with little RAM memory.
+
+	  If unsure, say N here.
