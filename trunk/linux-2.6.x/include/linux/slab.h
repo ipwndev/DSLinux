@@ -78,6 +78,7 @@ extern void *__kmalloc(size_t, gfp_t);
 
 static inline void *kmalloc(size_t size, gfp_t flags)
 {
+#ifdef CONFIG_SLAB
 	if (__builtin_constant_p(size)) {
 		int i = 0;
 #define CACHE(x) \
@@ -96,6 +97,7 @@ found:
 			malloc_sizes[i].cs_dmacachep :
 			malloc_sizes[i].cs_cachep, flags);
 	}
+#endif
 	return __kmalloc(size, flags);
 }
 

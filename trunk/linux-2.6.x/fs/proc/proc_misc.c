@@ -168,7 +168,9 @@ static int meminfo_read_proc(char *page, char **start, off_t off,
 		"Dirty:        %8lu kB\n"
 		"Writeback:    %8lu kB\n"
 		"Mapped:       %8lu kB\n"
+#ifdef CONFIG_SLAB
 		"Slab:         %8lu kB\n"
+#endif
 		"CommitLimit:  %8lu kB\n"
 		"Committed_AS: %8lu kB\n"
 		"PageTables:   %8lu kB\n"
@@ -191,7 +193,9 @@ static int meminfo_read_proc(char *page, char **start, off_t off,
 		K(ps.nr_dirty),
 		K(ps.nr_writeback),
 		K(ps.nr_mapped),
+#ifdef CONFIG_SLAB
 		K(ps.nr_slab),
+#endif
 		K(allowed),
 		K(committed),
 		K(ps.nr_page_table_pages),
@@ -323,6 +327,7 @@ static struct file_operations proc_modules_operations = {
 };
 #endif
 
+#ifdef CONFIG_SLAB
 extern struct seq_operations slabinfo_op;
 extern ssize_t slabinfo_write(struct file *, const char __user *, size_t, loff_t *);
 static int slabinfo_open(struct inode *inode, struct file *file)
@@ -336,6 +341,7 @@ static struct file_operations proc_slabinfo_operations = {
 	.llseek		= seq_lseek,
 	.release	= seq_release,
 };
+#endif
 
 static int show_stat(struct seq_file *p, void *v)
 {
@@ -600,7 +606,9 @@ void __init proc_misc_init(void)
 	create_seq_entry("partitions", 0, &proc_partitions_operations);
 	create_seq_entry("stat", 0, &proc_stat_operations);
 	create_seq_entry("interrupts", 0, &proc_interrupts_operations);
+#ifdef CONFIG_SLAB
 	create_seq_entry("slabinfo",S_IWUSR|S_IRUGO,&proc_slabinfo_operations);
+#endif
 	create_seq_entry("buddyinfo",S_IRUGO, &fragmentation_file_operations);
 	create_seq_entry("vmstat",S_IRUGO, &proc_vmstat_file_operations);
 	create_seq_entry("zoneinfo",S_IRUGO, &proc_zoneinfo_file_operations);
