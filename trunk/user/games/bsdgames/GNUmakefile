@@ -3,6 +3,11 @@
 # No suffix rules
 .SUFFIXES:
 
+# don't try to make/include the dependency files if we only want to clean them
+ifeq ($(findstring clean,$(MAKECMDGOALS)),clean)
+nodep := true
+endif
+
 # Include configuration
 include Makeconfig
 
@@ -1302,7 +1307,7 @@ canfield_cfscores_installdirs:
 
 .PHONY:	canfield_canfield_clean
 canfield_canfield_clean:
-	cd canfield/canfield && rm -f -- a.out core *.o *.d *.i *.s *.d.tmp  canfield $(canfield_canfield_CLEANFILES)
+	cd canfield/canfield && rm -f -- a.out core *.o *.d *.i *.s *.d.tmp canfield.6  canfield $(canfield_canfield_CLEANFILES)
 
 .PHONY:	canfield_canfield_install canfield_canfield_install-strip canfield_canfield_installdirs
 canfield_canfield_install:	canfield_canfield_installdirs
@@ -1393,7 +1398,7 @@ gomoku_installdirs:
 
 .PHONY:	hack_clean
 hack_clean:
-	cd hack && rm -f -- a.out core *.o *.d *.i *.s *.d.tmp  hack makedefs $(hack_CLEANFILES)
+	cd hack && rm -f -- a.out core *.o *.d *.i *.s *.d.tmp  hack.6 hack makedefs $(hack_CLEANFILES)
 
 .PHONY:	hack_install hack_install-strip hack_installdirs
 hack_install:	hack_installdirs
@@ -1588,7 +1593,7 @@ quiz_datfiles_installdirs:
 
 .PHONY:	quiz_clean
 quiz_clean:
-	cd quiz && rm -f -- a.out core *.o *.d *.i *.s *.d.tmp  quiz $(quiz_CLEANFILES)
+	cd quiz && rm -f -- a.out core *.o *.d *.i *.s *.d.tmp datfiles/index quiz $(quiz_CLEANFILES)
 
 .PHONY:	quiz_install quiz_install-strip quiz_installdirs
 quiz_install:	quiz_installdirs
@@ -1653,7 +1658,7 @@ sail_installdirs:
 
 .PHONY:	snake_snake_clean
 snake_snake_clean:
-	cd snake/snake && rm -f -- a.out core *.o *.d *.i *.s *.d.tmp  snake $(snake_snake_CLEANFILES)
+	cd snake/snake && rm -f -- a.out core *.o *.d *.i *.s *.d.tmp snake.6 snake $(snake_snake_CLEANFILES)
 
 .PHONY:	snake_snake_install snake_snake_install-strip snake_snake_installdirs
 snake_snake_install:	snake_snake_installdirs
