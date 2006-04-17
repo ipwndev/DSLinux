@@ -36,6 +36,9 @@ fi
 # set hostname
 hostname $hostname
 
+# set up /etc/hosts so networking tools will work
+echo "127.0.0.1 $hostname" > /etc/hosts
+
 # show firmware version if configured
 [ "$show_firmware_version" = "YES" ] && fwver
 

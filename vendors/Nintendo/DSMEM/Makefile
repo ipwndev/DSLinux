@@ -8,7 +8,7 @@ ROMFSIMG = $(IMAGEDIR)/romfs.img
 ELFIMAGE = $(IMAGEDIR)/image.elf
 IMAGE    = $(IMAGEDIR)/dsimage.bin
 
-ROMFS_DIRS = bin dev etc home lib mnt proc usr usr/share/udhcpc var
+ROMFS_DIRS = bin dev etc home lib mnt proc usr usr/share/udhcpc var var/run
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
@@ -57,6 +57,7 @@ romfs:
 	$(ROMFSINST) -s /var/tmp /tmp
 	$(ROMFSINST) -s /bin /sbin
 	$(ROMFSINST) -s /var/resolv.conf /etc/resolv.conf
+	$(ROMFSINST) -s /var/hosts /etc/hosts
 	$(ROMFSINST) /etc/rc
 	$(ROMFSINST) /etc/inittab
 	$(ROMFSINST) /etc/motd

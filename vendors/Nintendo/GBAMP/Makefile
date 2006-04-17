@@ -16,7 +16,7 @@ FATFS	 = gbamp
 
 ROMFS_DIRS = dev etc proc sbin $(FATFS)/linux
 
-FS_DIRS = home lib usr/bin usr/share/udhcpc var/tmp etc etc/rc.d
+FS_DIRS = home lib usr/bin usr/share/udhcpc var/tmp var/run etc etc/rc.d
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
@@ -77,6 +77,7 @@ romfs:
 	$(ROMFSINST) -s /$(FATFS)/linux/etc/rc.local /etc/rc.local
 	$(ROMFSINST) -s /$(FATFS)/linux/etc/rc.conf /etc/rc.conf
 	$(ROMFSINST) -s /$(FATFS)/linux/etc/rc.d /etc/rc.d
+	$(ROMFSINST) -s /$(FATFS)/linux/etc/hosts /etc/hosts
 	$(ROMFSINST) /etc/rc
 	$(ROMFSINST) /etc/inittab
 	$(ROMFSINST) /etc/motd
