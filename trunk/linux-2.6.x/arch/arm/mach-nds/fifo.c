@@ -44,6 +44,10 @@ static irqreturn_t ndsfifo_interrupt(int irq, void *dev_id,
 			if (cb->type == FIFO_GET_TYPE(fifo_recv)) {
 				data = FIFO_GET_TYPE_DATA(fifo_recv);
 				switch (cb->type) {
+				case FIFO_FIRMWARE:
+					cb->handler.firmware_handler(
+					    FIFO_FIRMWARE_GET_CMD(data));
+					break;
 				case FIFO_BUTTONS:
 					cb->handler.button_handler(data & 0xff);
 					break;

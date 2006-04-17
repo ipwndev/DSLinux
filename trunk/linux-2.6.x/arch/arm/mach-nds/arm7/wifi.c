@@ -33,7 +33,6 @@ SOFTWARE.
 
 #include "asm/types.h"
 #include "asm/arch/fifo.h"
-#include "asm/arch/ipcsync.h"
 #include "asm/arch/wifi.h"
 
 #include "arm7.h"
