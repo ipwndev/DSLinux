@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
-# Mon Apr 10 19:54:34 2006
+# Mon Apr 17 10:30:17 2006
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
@@ -44,7 +44,9 @@ CONFIG_CC_ALIGN_FUNCTIONS=0
 CONFIG_CC_ALIGN_LABELS=0
 CONFIG_CC_ALIGN_LOOPS=0
 CONFIG_CC_ALIGN_JUMPS=0
+# CONFIG_SLAB is not set
 CONFIG_BASE_SMALL=1
+CONFIG_SLOB=y
 
 #
 # Loadable module support
@@ -138,8 +140,6 @@ CONFIG_FLATMEM=y
 CONFIG_FLAT_NODE_MEM_MAP=y
 # CONFIG_SPARSEMEM_STATIC is not set
 CONFIG_ALIGNMENT_TRAP=y
-# CONFIG_SLAB is not set
-CONFIG_SLOB=y
 
 #
 # Boot options
