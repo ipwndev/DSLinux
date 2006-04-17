@@ -1,18 +1,18 @@
 #include "asm/types.h"
 #include "asm/arch/fifo.h"
-#include "asm/arch/ipcsync.h"
-#include "asm/arch/shmemipc.h"
 #include "asm/arch/wifi.h"
+#include "asm/arch/firmware.h"
 
 #include "sound.h"
 #include "arm7.h"
-#include "shmemipc-arm7.h"
 #include "spi.h"
 #include "wifi.h"
 #include "time.h"
 
 static s32 xscale, yscale;
 static s32 xoffset, yoffset;
+
+static struct nds_firmware_block *firmware_block;
 
 /* recieve outstanding FIFO commands from ARM9 */
 static void recieveFIFOCommand(void)
@@ -27,6 +27,23 @@ static void recieveFIFOCommand(void)
 		fifo_recv = REG_IPCFIFORECV;
 		data = FIFO_GET_TYPE_DATA(fifo_recv);
 		switch (FIFO_GET_TYPE(fifo_recv)) {
+		case FIFO_FIRMWARE:
+			cmd = FIFO_FIRMWARE_GET_CMD(data);
+			switch (cmd) {
+			case FIFO_FIRMWARE_CMD_BUFFER_ADDRESS:
+				firmware_block = (struct nds_firmware_block*)
+				    FIFO_FIRMWARE_DECODE_ADDRESS(
+					FIFO_FIRMWARE_GET_DATA(data));
+				break;
+			case FIFO_FIRMWARE_CMD_READ:
+				read_firmware(firmware_block->from,
+				    (u8*)firmware_block->data,
+				    (int)firmware_block->len);
+				    REG_IPCFIFOSEND = FIFO_FIRMWARE_CMD(
+					FIFO_FIRMWARE_CMD_READ, 0);
+				break;
+			}
+			break;
 		case FIFO_POWER:
 			power_write(POWER_CONTROL, POWER0_SYSTEM_POWER);
 			break;
@@ -243,16 +260,6 @@ void InterruptHandler(void)
 		/* Acknowledge Interrupt */
 		NDS_IF = IRQ_ARM9;
 		wif &= ~IRQ_ARM9;
-
-		switch (ipcsync_get_remote_status()) {
-		case SHMEMIPC_REQUEST_FLUSH:
-			shmemipc_serve_flush_request();
-			break;
-		case SHMEMIPC_FLUSH_COMPLETE:
-			shmemipc_flush_complete();
-			break;
-		}
-
 	}
 
 	if ((wif & IRQ_WIFI) || WIFI_IF)  {
@@ -288,8 +295,6 @@ int main(void)
 
 	/* Enable FIFO */
 	REG_IPCFIFOCNT = FIFO_ENABLE | FIFO_IRQ_ENABLE | FIFO_CLEAR | FIFO_ERROR ;
-
-	ipcsync_allow_local_interrupt();
 
 	/* Set interrupt handler */
 	*(volatile u32 *)(0x04000000 - 4) = (u32) & InterruptHandler;

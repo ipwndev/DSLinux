@@ -27,6 +27,7 @@
  * |3 bits FIFO_TYPE | 29 bits type data (subcommands, data, ...) |
  * +--------------------------------------------------------------+
  */
+#define FIFO_FIRMWARE (0 << 29)
 #define FIFO_BUTTONS  (1 << 29)
 #define FIFO_TOUCH    (2 << 29)
 #define FIFO_MIC      (3 << 29)
@@ -40,6 +41,22 @@
 #define FIFO_HIGH_BITS  (1<<16)
 #define FIFO_LOW_BITS   (1<<17)
 
+/* 
+ * Fifo commands for firmware dumper.
+ * +-------------------------------------------------------------------------+
+ * |3 bits FIFO_FIRMWARE | 5 bits FIFO_CMD_FIRMWARE_x | 24 bits command data |
+ * +-------------------------------------------------------------------------+
+ */
+#define FIFO_FIRMWARE_CMD(c, d) (FIFO_FIRMWARE | ((c & 0x1f) << 24) | (d & 0x00ffffff))
+#define FIFO_FIRMWARE_GET_CMD(c) ((c >> 24) & 0x1f)
+#define FIFO_FIRMWARE_GET_DATA(d) (d & 0x00ffffff)
+#define FIFO_FIRMWARE_DECODE_ADDRESS(a) ((a) + 0x02000000)
+
+enum FIFO_FIRMWARE_CMDS {
+	FIFO_FIRMWARE_CMD_BUFFER_ADDRESS,
+	FIFO_FIRMWARE_CMD_READ
+};
+	
 /* 
  * Fifo wifi commands are encoded as follows:
  * +-----------------------------------------------------------------+
@@ -95,8 +112,10 @@ enum FIFO_WIFI_CMDS {
 #define REG_IPCFIFOSEND (*(volatile u32*) 0x04000188)
 #define REG_IPCFIFORECV (*(volatile u32*) 0x04100000)
 #define REG_IPCFIFOCNT  (*(volatile u16*) 0x04000184)
+#define FIFO_SEND_FULL	(1 << 1)
 #define FIFO_CLEAR	(1 << 3)
 #define FIFO_EMPTY	(1 << 8)
+#define FIFO_RECV_FULL	(1 << 9)
 #define FIFO_IRQ_ENABLE (1 << 10)
 #define FIFO_ERROR	(1 << 14)
 #define FIFO_ENABLE	(1 << 15)
@@ -107,6 +126,7 @@ struct fifo_cb
 	struct list_head list;
 	u32 type ;
 	union {
+		void (*firmware_handler)(u8 cmd);
 		void (*button_handler)(u32 state);
 		void (*touch_handler)(u8 pressed, u8 x, u8 y);
 		void (*time_handler)(u32 seconds);

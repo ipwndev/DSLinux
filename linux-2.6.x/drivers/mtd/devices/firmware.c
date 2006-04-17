@@ -6,6 +6,8 @@
  * 07/2003      rewritten by Joern Engel <joern@wh.fh-wedel.de>
  * 09/2005      modified for Firmware by Malcolm Parsons <malcolm.parsons@gmail.com>
  * 11/2005	shmemipc stuff added by Stefan Sperling <stsp@stsp.in-berlin.de>
+ * 04/2006	shmemipc stuff removed and converted to use the fifo
+ * 		by Stefan Sperling <stsp@stsp.in-berlin.de>
  *
  */
 
@@ -19,13 +21,15 @@
 #include <linux/wait.h>
 #include <linux/mtd/mtd.h>
 
-#include <asm/arch/shmemipc.h>
+#include <asm/arch/firmware.h>
+#include <asm/arch/fifo.h>
 
 #define ERROR(fmt, args...) printk(KERN_ERR "firmware: " fmt , ## args)
 
 static struct mtd_info *mtdinfo;
 static int firmware_data_read;
 static wait_queue_head_t wait_queue;
+static struct nds_firmware_block firmware_block;
 
 int firmware_read(struct mtd_info *mtd, loff_t from, size_t len,
 		size_t *retlen, u_char *buf)
@@ -34,20 +38,15 @@ int firmware_read(struct mtd_info *mtd, loff_t from, size_t len,
 	if (from + len > mtd->size)
 		return -EINVAL;
 
-	if (len > SHMEMIPC_FIRMWARE_DATA_SIZE)
-		len = SHMEMIPC_FIRMWARE_DATA_SIZE;
+	if (len > NDS_FIRMWARE_BLOCK_SIZE)
+		len = NDS_FIRMWARE_BLOCK_SIZE;
 
 	firmware_data_read = 0;
+	firmware_block.from = from;
+	firmware_block.len = len;
+	firmware_block.destination = buf;
 
-	shmemipc_lock();
-	SHMEMIPC_BLOCK_ARM9->firmware.from = from;
-	SHMEMIPC_BLOCK_ARM9->firmware.len = len;
-	SHMEMIPC_BLOCK_ARM9->firmware.destination = buf;
-	shmemipc_unlock();
-	/* 'flush' is not semantically correct here.
-	 * We are actually requesting the arm7 to read firmware data
-	 * and send us a "flush complete" */
-	shmemipc_flush(SHMEMIPC_USER_FIRMWARE);
+	REG_IPCFIFOSEND = FIFO_FIRMWARE_CMD(FIFO_FIRMWARE_CMD_READ, 0);
 
 	if(wait_event_interruptible(wait_queue, firmware_data_read)) {
 		return -ERESTART;
@@ -57,16 +56,14 @@ int firmware_read(struct mtd_info *mtd, loff_t from, size_t len,
 	return 0;
 }
 
-static void firmware_shmemipc_isr(u8 type)
+static void firmware_fifo_cb(u8 cmd)
 {
-	switch(type) {
-		case SHMEMIPC_REQUEST_FLUSH:
-			break;
-		case SHMEMIPC_FLUSH_COMPLETE:
-			memcpy(SHMEMIPC_BLOCK_ARM9->firmware.destination,
-			    &SHMEMIPC_BLOCK_ARM9->firmware.data,
-			    SHMEMIPC_BLOCK_ARM9->firmware.len);
+	switch(cmd) {
+		case FIFO_FIRMWARE_CMD_READ:
 			firmware_data_read = 1;
+			memcpy(firmware_block.destination,
+			    &firmware_block.data,
+			    firmware_block.len);
 			wake_up_interruptible(&wait_queue);
 			break;
 		default:
@@ -104,6 +101,9 @@ static int register_device(char *name, unsigned long len)
 		goto out2;
 	}
 
+	REG_IPCFIFOSEND = FIFO_FIRMWARE_CMD(FIFO_FIRMWARE_CMD_BUFFER_ADDRESS,
+	    (u32)&firmware_block);
+
 	return 0;
 
 out2:
@@ -112,9 +112,9 @@ out1:
 	return ret;
 }
 
-static struct shmemipc_cb callback = {
-	.user = SHMEMIPC_USER_FIRMWARE,
-	.handler.firmware_callback = firmware_shmemipc_isr
+static struct fifo_cb callback = {
+	.type = FIFO_FIRMWARE,
+	.handler.firmware_handler = firmware_fifo_cb
 };
 
 int __init init_firmware(void)
@@ -122,7 +122,7 @@ int __init init_firmware(void)
 	firmware_data_read = 0;
 	register_device("firmware", 256 * 1024);
 	init_waitqueue_head(&wait_queue);
-	register_shmemipc_cb(&callback);
+	register_fifocb(&callback);
 	return 0;
 }
 
