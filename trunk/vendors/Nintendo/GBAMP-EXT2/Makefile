@@ -7,10 +7,12 @@ include $(LINUX_CONFIG)
 ROMFSIMG = $(IMAGEDIR)/romfs.img
 ELFIMAGE = $(ROOTDIR)/$(LINUXDIR)/linux
 IMAGE    = $(IMAGEDIR)/dslinux.ds.gba
+
+# This really is the FAT filesystem, both filesystems are mounted by this build.
 FATFS	 = gbamp
 
 
-ROMFS_DIRS = bin dev etc proc sbin $(FATFS)/linux
+ROMFS_DIRS = bin dev etc proc sbin $(FATFS)
 
 FS_DIRS = home lib usr/bin usr/share/udhcpc var/tmp
 
