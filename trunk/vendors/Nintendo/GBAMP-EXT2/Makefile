@@ -14,7 +14,7 @@ FATFS	 = gbamp
 
 ROMFS_DIRS = bin dev etc proc sbin $(FATFS)
 
-FS_DIRS = home lib usr/bin usr/share/udhcpc var/tmp
+FS_DIRS = home lib usr/bin usr/share/udhcpc var/tmp var/run
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
