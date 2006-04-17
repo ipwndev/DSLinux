@@ -1267,6 +1267,9 @@ if [ "$CONFIG_USER_BUSYBOX_BUSYBOX" = "y" ]; then
 		bool 'sh: command editing' CONFIG_USER_BUSYBOX_COMMAND_EDITING
 		if [ "$CONFIG_USER_BUSYBOX_COMMAND_EDITING" = "y" ]; then
 			bool 'sh: history saving' CONFIG_USER_BUSYBOX_COMMAND_SAVEHISTORY
+			if [ "$CONFIG_USER_BUSYBOX_COMMAND_SAVEHISTORY" = "y" ]; then
+				string 'sh: number of lines in history' CONFIG_USER_BUSYBOX_FEATURE_COMMAND_HISTORY "15"
+			fi
 			bool 'sh: tab completion' CONFIG_USER_BUSYBOX_COMMAND_TAB_COMPLETION
 			if [ "$CONFIG_USER_BUSYBOX_COMMAND_TAB_COMPLETION" = "y" ]; then
 				bool 'sh: username completion' CONFIG_USER_BUSYBOX_COMMAND_USERNAME_COMPLETION
