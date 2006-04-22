@@ -69,4 +69,13 @@ config MMC_M3SD
 
 	  If unsure, say N.
 
+config MMC_DSMEMSD
+	tristate "DSMEM microSD support"
+	depends on MMC && ARCH_NDS
+	help
+	  This selects the DSMEM SD device
+	  If you have an DSMEM, say Y or M here.
+
+	  If unsure, say N.
+
 endmenu
