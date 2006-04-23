@@ -18,6 +18,8 @@
 #include <linux/dma-mapping.h>
 #include <linux/mmc/host.h>
 #include <linux/mmc/protocol.h>
+#include <linux/workqueue.h>
+#include <linux/kmod.h>
 
 #include <asm/dma.h>
 #include <asm/io.h>
@@ -32,7 +34,7 @@
 #endif
 
 #define DRIVER_NAME	"dsmemsd"
-#define DRIVER_VERSION	"1.0.2"
+#define DRIVER_VERSION	"1.1.1"
 
 /*****************************************************************************/
 /* IO registers */
@@ -222,7 +224,10 @@ struct dsmemsd_host {
 	u8			power_mode;
 	u8			idle;
 	u8			cids;
+	u8			operating;
 };
+
+static struct work_struct dsmemsd_work;
 
 /* send a SD command in SPI mode */
 /* @return 0 for success, != 0 otherwise */
@@ -556,6 +561,8 @@ static void dsmemsd_request(struct mmc_host *mmc, struct mmc_request *mrq)
 	int ret;
 	int i;
 
+	host->operating = 1;
+
     	DBG("%s Opcode %d\n",__FUNCTION__, mrq->cmd->opcode);
 
 	/* what command should we send? */
@@ -596,10 +603,11 @@ static void dsmemsd_request(struct mmc_host *mmc, struct mmc_request *mrq)
 					memset(mrq->cmd->resp, 0, sizeof(mrq->cmd->resp));
  					mrq->cmd->resp[0] = R1_APP_CMD | R1_READY_FOR_DATA;
 					mrq->cmd->error = MMC_ERR_NONE;
+					host->operating = 0;
 					mmc_request_done(mmc, mrq);
 					return;
  				}
-				msleep_interruptible(10);
+				msleep(10);
 			}					
 		}		
 		break;
@@ -613,6 +621,7 @@ static void dsmemsd_request(struct mmc_host *mmc, struct mmc_request *mrq)
 			memset(mrq->cmd->resp, 0, sizeof(mrq->cmd->resp));
 			mrq->cmd->retries = 0;
 			mrq->cmd->error = MMC_ERR_TIMEOUT;
+			host->operating = 0;
 			mmc_request_done(mmc, mrq);
 			return;	
 		} else {
@@ -633,6 +642,7 @@ static void dsmemsd_request(struct mmc_host *mmc, struct mmc_request *mrq)
 			}
 		}
     	}
+	host->operating = 0;
     	mmc_request_done(mmc, mrq);
 }
 
@@ -696,10 +706,59 @@ static void dsmemsd_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
 }
 
 static struct mmc_host_ops dsmemsd_ops = {
-	.request	= dsmemsd_request,
+ 	.request	= dsmemsd_request,
 	.get_ro		= dsmemsd_get_ro,
 	.set_ios	= dsmemsd_set_ios,
 };
+
+/* Function for supervising the SD card */
+static void dsmemsd_supervise(void *ptr)
+{
+	struct mmc_host *mmc = (struct mmc_host *)ptr;
+	struct dsmemsd_host *host = mmc_priv(mmc);
+
+	if (host->operating == 0) {
+		if (list_empty(&mmc->cards)) {
+			/* check if card is inserted */
+			struct mmc_command cmd;
+			int ret;
+			cmd.opcode = MMC_GO_IDLE_STATE;
+			cmd.arg    = 0;
+			cmd.flags  = MMC_RSP_R1;
+			cmd.retries= 0;
+			cmd.data   = NULL;
+			ret = dsmemsd_send_cmd(&cmd);
+			if (ret == 0) {
+				mmc->detect.func(mmc);
+				if (!list_empty(&mmc->cards)) {
+					char *argv[2] = { "/sbin/mountsd", NULL };
+					char *envp[3] = { "HOME=/", "PATH=/sbin:/bin", NULL };
+					call_usermodehelper(argv[0], argv, envp, 0);
+				}
+			}
+		} else {
+			/* check if card is removed */
+			struct mmc_command cmd;
+			int ret;
+			cmd.opcode = 58;
+			cmd.arg    = 0;
+			cmd.flags  = MMC_RSP_R3;
+			cmd.retries= 0;
+			cmd.data   = NULL;
+			ret = dsmemsd_send_cmd(&cmd);
+			if (ret != 0) {
+				mmc->detect.func(mmc);
+				if (list_empty(&mmc->cards)) {
+					char *argv[2] = { "/sbin/umountsd", NULL };
+					char *envp[3] = { "HOME=/", "PATH=/sbin:/bin", NULL };
+					call_usermodehelper(argv[0], argv, envp, 0);
+				}
+			}
+		}
+	}
+	/* once again, all 250 ms */
+	schedule_delayed_work(&dsmemsd_work, HZ / 4);
+}
 
 /* setup the SD host controller */
 static int dsmemsd_probe(struct device *dev)
@@ -737,6 +796,10 @@ static int dsmemsd_probe(struct device *dev)
 	dev_set_drvdata(dev, mmc);
 	mmc_add_host(mmc);
 
+	/* Start the SD card supervisor */
+	INIT_WORK(&dsmemsd_work, dsmemsd_supervise, mmc);
+	schedule_delayed_work(&dsmemsd_work, HZ * 2);
+
 	return 0;
 }
 
@@ -746,6 +809,9 @@ static int dsmemsd_remove(struct device *dev)
 	dev_set_drvdata(dev, NULL);
 
 	if (mmc) {
+		if (cancel_delayed_work(&dsmemsd_work) == 0) {
+			flush_scheduled_work();
+		}
 		mmc_remove_host(mmc);
 		mmc_free_host(mmc);
 	}

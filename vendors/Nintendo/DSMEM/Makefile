@@ -68,6 +68,8 @@ romfs:
 	$(ROMFSINST) $(NDS_COMMON)/passwd /etc/passwd
 	$(ROMFSINST) -p +x $(NDS_COMMON)/default.script /usr/share/udhcpc/default.script
 	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
+	$(ROMFSINST) -p +x /bin/mountsd
+	$(ROMFSINST) -p +x /bin/umountsd
 
 image:
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)

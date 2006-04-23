@@ -1,6 +1,6 @@
 hostname NintendoDS
 mount -t proc none /proc
 mount -t ramfs none /var
-mount -t vfat /dev/mmcblk1 /sd
+/sbin/mountsd
 mkdir /var/tmp
 fwver
