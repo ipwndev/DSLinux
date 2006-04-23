@@ -126,7 +126,13 @@ static int ndstouch_output_event(struct input_dev *dev, unsigned int type, unsig
 
 static struct input_dev ndstouch_dev = {
 	.name="Nintendo DS Touchscreen",
-	.evbit = { BIT(EV_KEY) | BIT(EV_REP) | BIT(EV_LED) },
+	.evbit = { BIT(EV_KEY) | BIT(EV_REP) | BIT(EV_LED) | BIT(EV_ABS) },
+	.keybit  = { [LONG(BTN_TOOL_FINGER)] = BIT(BTN_TOOL_FINGER) },
+	.absbit  = { BIT(ABS_X) | BIT(ABS_Y) | BIT(ABS_PRESSURE) | BIT(ABS_TOOL_WIDTH)},
+	.absmin  = { [ABS_X] = 0, [ABS_Y] = 0, [ABS_PRESSURE] = 0 },
+	.absmax  = { [ABS_X] = 256, [ABS_Y] = 192, [ABS_PRESSURE] = 1 },
+	.absfuzz = { [ABS_X] = 0, [ABS_Y] = 0, [ABS_PRESSURE] = 0 },
+	.absflat = { [ABS_X] = 0, [ABS_Y] = 0, [ABS_PRESSURE] = 0 },
 	.ledbit = { BIT(LED_CAPSL) },
         .event = ndstouch_output_event
 };
@@ -159,6 +165,17 @@ static void draw_keyboard(int gfx_id)
 	memset( fgmap, 0, 32 * 24 * 2 );
 	memcpy( bgmap + 32 * 9, keyboard_Map_Unpressed, 32 * 15 * 2 );
 	memcpy( fgmap + 32 * 9, keyboard_Map_Qwerty_Lower, 32 * 15 * 2 );
+
+	/* K un-pressed */
+	bgmap[0 * 32 + 30] = keyboard_Map_Unpressed[ 8 * 32 + 19];
+	bgmap[0 * 32 + 31] = keyboard_Map_Unpressed[ 8 * 32 + 20];
+	bgmap[1 * 32 + 30] = keyboard_Map_Unpressed[ 9 * 32 + 19];
+	bgmap[1 * 32 + 31] = keyboard_Map_Unpressed[ 9 * 32 + 20];
+
+	fgmap[0 * 32 + 30] = keyboard_Map_Qwerty_Upper[ 8 * 32 + 19];
+	fgmap[0 * 32 + 31] = keyboard_Map_Qwerty_Upper[ 8 * 32 + 20];
+	fgmap[1 * 32 + 30] = keyboard_Map_Qwerty_Upper[ 9 * 32 + 19];
+	fgmap[1 * 32 + 31] = keyboard_Map_Qwerty_Upper[ 9 * 32 + 20];
 }
 
 static void update_keyboard(u16 pressedKey)
@@ -204,6 +221,52 @@ static void update_keyboard(u16 pressedKey)
 	}
 }
 
+
+static void
+switch_to_mouse_mode(void)
+{
+	mode = MOUSE_MODE;
+
+	memset( bgmap, 0, 32 * 24 * 2 );
+	memset( fgmap, 0, 32 * 24 * 2 );
+
+	/* M pressed */
+	bgmap[0 * 32 + 30] = keyboard_Map_Pressed[ 10 * 32 + 18];
+	bgmap[0 * 32 + 31] = keyboard_Map_Pressed[ 10 * 32 + 19];
+	bgmap[1 * 32 + 30] = keyboard_Map_Pressed[ 11 * 32 + 18];
+	bgmap[1 * 32 + 31] = keyboard_Map_Pressed[ 11 * 32 + 19];
+
+	fgmap[0 * 32 + 30] = keyboard_Map_Qwerty_Upper[ 10 * 32 + 18];
+	fgmap[0 * 32 + 31] = keyboard_Map_Qwerty_Upper[ 10 * 32 + 19];
+	fgmap[1 * 32 + 30] = keyboard_Map_Qwerty_Upper[ 11 * 32 + 18];
+	fgmap[1 * 32 + 31] = keyboard_Map_Qwerty_Upper[ 11 * 32 + 19];
+
+	input_report_abs(&ndstouch_dev, ABS_PRESSURE, 1);
+	input_report_abs(&ndstouch_dev, ABS_TOOL_WIDTH, 5);
+
+}
+
+static void
+switch_to_keyboard_mode(void)
+{
+	mode = KEYBOARD_MODE;
+
+	/* K un-pressed */
+	bgmap[0 * 32 + 30] = keyboard_Map_Unpressed[ 8 * 32 + 19];
+	bgmap[0 * 32 + 31] = keyboard_Map_Unpressed[ 8 * 32 + 20];
+	bgmap[1 * 32 + 30] = keyboard_Map_Unpressed[ 9 * 32 + 19];
+	bgmap[1 * 32 + 31] = keyboard_Map_Unpressed[ 9 * 32 + 20];
+
+	fgmap[0 * 32 + 30] = keyboard_Map_Qwerty_Upper[ 8 * 32 + 19];
+	fgmap[0 * 32 + 31] = keyboard_Map_Qwerty_Upper[ 8 * 32 + 20];
+	fgmap[1 * 32 + 30] = keyboard_Map_Qwerty_Upper[ 9 * 32 + 19];
+	fgmap[1 * 32 + 31] = keyboard_Map_Qwerty_Upper[ 9 * 32 + 20];
+
+	input_report_abs(&ndstouch_dev, ABS_PRESSURE, 0);
+
+	update_keyboard(0);
+}
+
 int ndstouch_output_event(struct input_dev *dev, unsigned int type, unsigned int code, int value)
 {
 	if (type == EV_LED && code == LED_CAPSL ) {
@@ -231,6 +294,9 @@ static void ndstouch_input_event(u8 touched, u8 x, u8 y)
 				key = qwertyKeyMap[y * 32 + x] ;
 				if ( !wasTouched && key != KEY_RESERVED )
 				{
+					if (key == BTN_TOUCH) {
+						switch_to_mouse_mode();
+					}
 					currentKey = key ;
 					input_report_key(dev, currentKey, 1 ) ;
 				}
@@ -239,7 +305,7 @@ static void ndstouch_input_event(u8 touched, u8 x, u8 y)
 			}
 			else if ( wasTouched )
 			{
-				if ( currentKey != KEY_RESERVED )
+				if ( currentKey != KEY_RESERVED)
 				{
 					input_report_key(dev, currentKey, 0 ) ;
 					currentKey = KEY_RESERVED ;
@@ -249,14 +315,28 @@ static void ndstouch_input_event(u8 touched, u8 x, u8 y)
 
 			input_sync(dev);
 
-			update_keyboard( currentKey ) ;
+			if (mode == KEYBOARD_MODE)
+				update_keyboard( currentKey ) ;
 
 			break;
 		case MOUSE_MODE:
 			if (touched) {
+				u8 kx = x / 8;
+				u8 ky = y / 8;
+				if (!wasTouched) {
+					if (qwertyKeyMap[ky * 32 + kx] == BTN_TOUCH) {
+						switch_to_keyboard_mode();
+					}
+					input_report_key(dev, BTN_TOUCH, 1 ) ;
+				}
 				input_report_abs(dev, ABS_X, x);
 				input_report_abs(dev, ABS_Y, y);
 				input_sync(dev);
+				wasTouched = TRUE;
+			}
+			else if ( wasTouched) {
+				wasTouched = FALSE;
+				input_report_key(dev, BTN_TOUCH, 0 ) ;
 			}
 			break;
 		case DISABLED_MODE:

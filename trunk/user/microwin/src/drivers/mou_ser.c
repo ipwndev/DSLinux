@@ -25,6 +25,13 @@
 #include <string.h>
 #include "device.h"
 
+#if TEST
+#undef DPRINTF
+#define DPRINTF printf
+#undef EPRINTF
+#define EPRINTF printf
+#endif
+
 #define TERMIOS		1	/* set to use termios serial port control*/
 #define SGTTY		0	/* set to use sgtty serial port control*/
 
@@ -46,14 +53,14 @@
 #if ELKS
 #define	MOUSE_PORT	"/dev/ttys0"	/* default mouse tty port */
 #else
-/*#define MOUSE_PORT	"/dev/ttyS1"	/* default mouse tty port */*/
+/*#define MOUSE_PORT	"/dev/ttyS1"	-* default mouse tty port *-*/
 #define MOUSE_PORT	"/dev/psaux"	/* default mouse tty port*/
 #endif
 /* For the COBRA5272 we use mouse type ms: */
 #ifdef CONFIG_COBRA5272
 #define	MOUSE_TYPE	"ms"		/* default mouse type "ms","pc","ps2" */
 #else /* not for COBRA5272: */
-/*#define MOUSE_TYPE	"pc"		/* default mouse type "ms","pc","ps2" */
+/*#define MOUSE_TYPE	"pc"		-* default mouse type "ms","pc","ps2" */
 #define MOUSE_TYPE	"ps2"		/* default mouse type "ms","pc","ps2" */
 #endif /* end #ifdef CONFIG_COBRA5272 */
 #endif
@@ -463,6 +470,8 @@ MOU_Poll(void)
 
 /*  #define TEST 1  */
 #if TEST
+#undef DPRINTF
+#define DPRINTF printf
 main()
 {
 	MWCOORD x, y, z;
