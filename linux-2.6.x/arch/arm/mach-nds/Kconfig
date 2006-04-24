@@ -33,4 +33,12 @@ config NDS_FASTGBA
 	 set to their fastest values.
 	 If unsure, say N.
 
+config NDS_SOUNDTEST
+	bool "Little module for testing the ARM7 sound output"
+	depends on ARCH_NDS
+	default n
+	help
+	 Helper tool for ARM7 sound testing.
+	 If unsure, say N.
+
 endmenu
