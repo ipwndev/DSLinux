@@ -4,7 +4,9 @@
 
 /* some sound defines */
 #define SOUND_VOL(n)		(n)
-#define SOUND_FREQ(n)		((-0x1000000 / (n)))
+/* NOTE: you have to write the timer value calculation THIS way.
+   To avoid strange results (if you use a negative hex number). */
+#define SOUND_FREQ(n)		(0 - (0x1000000 / (n)))
 #define SOUND_ENABLE		(1<<15)
 #define SOUND_REPEAT		(1<<27)
 #define SOUND_ONE_SHOT		(1<<28)
@@ -19,7 +21,7 @@
 #define SCHANNEL_VOL(n)		(*(volatile u8*)(0x04000400 + ((n)<<4)))
 #define SCHANNEL_PAN(n)		(*(volatile u8*)(0x04000402 + ((n)<<4)))
 #define SCHANNEL_SOURCE(n)	(*(volatile u32*)(0x04000404 + ((n)<<4)))
-#define SCHANNEL_REPEAT_POINT(n)	(*(volatile u16*)(0x0400040A + ((n)<<4)))
+#define SCHANNEL_REPEAT_POINT(n) (*(volatile u16*)(0x0400040A + ((n)<<4)))
 #define SCHANNEL_LENGTH(n)	(*(volatile u32*)(0x0400040C + ((n)<<4)))
 #define SOUND_CR		(*(volatile u16*)0x04000500)
 #define SOUND_MASTER_VOL	(*(volatile u8*)0x04000500)
