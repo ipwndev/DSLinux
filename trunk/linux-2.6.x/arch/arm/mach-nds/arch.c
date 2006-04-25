@@ -52,7 +52,7 @@ extern void __init nds_init_irq(void);
 
 static void poweroff(void)
 {
-	REG_IPCFIFOSEND = FIFO_POWER ;
+	nds_fifo_send(FIFO_POWER);
 }
 
 extern void nds_machine_init(void)

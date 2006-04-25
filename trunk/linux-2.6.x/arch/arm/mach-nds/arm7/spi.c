@@ -1,4 +1,6 @@
 
+#define __DSLINUX_ARM7__
+
 #include "asm/types.h"
 #include "asm/arch/fifo.h"
 #include "spi.h"

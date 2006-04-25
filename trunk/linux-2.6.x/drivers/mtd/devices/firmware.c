@@ -46,7 +46,7 @@ int firmware_read(struct mtd_info *mtd, loff_t from, size_t len,
 	firmware_block.len = len;
 	firmware_block.destination = buf;
 
-	REG_IPCFIFOSEND = FIFO_FIRMWARE_CMD(FIFO_FIRMWARE_CMD_READ, 0);
+	nds_fifo_send(FIFO_FIRMWARE_CMD(FIFO_FIRMWARE_CMD_READ, 0));
 
 	if(wait_event_interruptible(wait_queue, firmware_data_read)) {
 		return -ERESTART;
@@ -101,8 +101,8 @@ static int register_device(char *name, unsigned long len)
 		goto out2;
 	}
 
-	REG_IPCFIFOSEND = FIFO_FIRMWARE_CMD(FIFO_FIRMWARE_CMD_BUFFER_ADDRESS,
-	    (u32)&firmware_block);
+	nds_fifo_send(FIFO_FIRMWARE_CMD(FIFO_FIRMWARE_CMD_BUFFER_ADDRESS,
+	    (u32)&firmware_block));
 
 	return 0;
 

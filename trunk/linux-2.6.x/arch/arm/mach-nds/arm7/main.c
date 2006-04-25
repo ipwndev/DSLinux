@@ -1,3 +1,6 @@
+
+#define __DSLINUX_ARM7__
+
 #include "asm/types.h"
 #include "asm/arch/fifo.h"
 #include "asm/arch/wifi.h"
@@ -23,8 +26,8 @@ static void recieveFIFOCommand(void)
 	int cmd;
 	struct nds_tx_packet *tx_packet = NULL;
 
-	while (!(REG_IPCFIFOCNT & FIFO_EMPTY)) {
-		fifo_recv = REG_IPCFIFORECV;
+	while (!(NDS_REG_IPCFIFOCNT & FIFO_EMPTY)) {
+		fifo_recv = nds_fifo_recv();
 		data = FIFO_GET_TYPE_DATA(fifo_recv);
 		switch (FIFO_GET_TYPE(fifo_recv)) {
 		case FIFO_FIRMWARE:
@@ -39,8 +42,8 @@ static void recieveFIFOCommand(void)
 				read_firmware(firmware_block->from,
 				    (u8*)firmware_block->data,
 				    (int)firmware_block->len);
-				    REG_IPCFIFOSEND = FIFO_FIRMWARE_CMD(
-					FIFO_FIRMWARE_CMD_READ, 0);
+				    nds_fifo_send(FIFO_FIRMWARE_CMD(
+					FIFO_FIRMWARE_CMD_READ, 0));
 				break;
 			}
 			break;
@@ -49,10 +52,10 @@ static void recieveFIFOCommand(void)
 			break;
 		case FIFO_TIME:
 			seconds = nds_get_time7();
-			REG_IPCFIFOSEND =
-			    (FIFO_TIME | FIFO_HIGH_BITS | (seconds >> 16));
-			REG_IPCFIFOSEND =
-			    (FIFO_TIME | FIFO_LOW_BITS | (seconds & 0xffff));
+			nds_fifo_send(FIFO_TIME | FIFO_HIGH_BITS |
+			    (seconds >> 16));
+			 nds_fifo_send(FIFO_TIME | FIFO_LOW_BITS |
+			    (seconds & 0xffff));
 			break;
 		case FIFO_SOUND:
 			switch (data & 0x0f000000) {
@@ -182,7 +185,7 @@ static void sendTouchState(u16 buttons)
 
 	if (buttons & TOUCH_RELEASED) {
 		if (lasty != 255)
-			REG_IPCFIFOSEND = FIFO_TOUCH;
+			nds_fifo_send(FIFO_TOUCH);
 		lastx = 255;
 		lasty = 255;
 	} else {
@@ -205,7 +208,7 @@ static void sendTouchState(u16 buttons)
 
 		if (lastx + 6 > x && lastx < x + 6 &&
 		    lasty + 6 > y && lasty < y + 6) {
-			REG_IPCFIFOSEND = FIFO_TOUCH | 1 << 16 | x << 8 | y;
+			nds_fifo_send(FIFO_TOUCH | 1 << 16 | x << 8 | y);
 		}
 		lastx = x;
 		lasty = y;
@@ -234,15 +237,15 @@ void InterruptHandler(void)
 
 		/* send button state to ARM9 */
 		if (buttons != oldbuttons) {
-			REG_IPCFIFOSEND = FIFO_BUTTONS | buttons;
+			nds_fifo_send(FIFO_BUTTONS | buttons);
 			oldbuttons = buttons;
 		}
 
 		sendTouchState(buttons);
 
 		/* clear FIFO errors (just in case) */
-		if (REG_IPCFIFOCNT & (1 << 14))
-			REG_IPCFIFOCNT |= (1 << 15) | (1 << 14);
+		if (NDS_REG_IPCFIFOCNT & (1 << 14))
+			NDS_REG_IPCFIFOCNT |= (1 << 15) | (1 << 14);
 
 		/* Acknowledge Interrupt */
 		NDS_IF = IRQ_VBLANK;
@@ -294,7 +297,7 @@ int main(void)
 	NDS_IE = IRQ_VBLANK | IRQ_RECV | IRQ_ARM9 | IRQ_WIFI;
 
 	/* Enable FIFO */
-	REG_IPCFIFOCNT = FIFO_ENABLE | FIFO_IRQ_ENABLE | FIFO_CLEAR | FIFO_ERROR ;
+	NDS_REG_IPCFIFOCNT = FIFO_ENABLE | FIFO_IRQ_ENABLE | FIFO_CLEAR | FIFO_ERROR ;
 
 	/* Set interrupt handler */
 	*(volatile u32 *)(0x04000000 - 4) = (u32) & InterruptHandler;

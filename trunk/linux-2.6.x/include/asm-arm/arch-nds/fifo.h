@@ -19,6 +19,7 @@
 #ifndef __ASM_ARM_ARCH_FIFO_H
 #define __ASM_ARM_ARCH_FIFO_H
 
+#include <linux/kernel.h>
 #include <linux/list.h>
 
 /* 
@@ -109,9 +110,11 @@ enum FIFO_WIFI_CMDS {
 #define FIFO_SOUND_POWER	(7<<24)
 
 /* FIFO registers */
-#define REG_IPCFIFOSEND (*(volatile u32*) 0x04000188)
-#define REG_IPCFIFORECV (*(volatile u32*) 0x04100000)
-#define REG_IPCFIFOCNT  (*(volatile u16*) 0x04000184)
+#define NDS_REG_IPCFIFOSEND (*(volatile u32*) 0x04000188)
+#define NDS_REG_IPCFIFORECV (*(volatile u32*) 0x04100000)
+#define NDS_REG_IPCFIFOCNT  (*(volatile u16*) 0x04000184)
+
+/* bits in NDS_REG_IPCFIFOCNT */
 #define FIFO_SEND_FULL	(1 << 1)
 #define FIFO_CLEAR	(1 << 3)
 #define FIFO_EMPTY	(1 << 8)
@@ -134,6 +137,52 @@ struct fifo_cb
 		/* ... */
 	} handler;
 };
+
+#ifdef __DSLINUX_ARM7__
+static inline void nds_fifo_send(u32 command)
+{
+	while (NDS_REG_IPCFIFOCNT & FIFO_SEND_FULL)
+		; /* do nothing */
+	NDS_REG_IPCFIFOSEND = command;
+}
+static inline u32 nds_fifo_recv(void)
+{
+	while (NDS_REG_IPCFIFOCNT & FIFO_RECV_FULL)
+		; /* do nothing */
+	return NDS_REG_IPCFIFORECV;
+}
+#else
+static inline void nds_fifo_send(u32 command)
+{
+	int fifo_full = 0;
+
+	while (NDS_REG_IPCFIFOCNT & FIFO_SEND_FULL)
+		fifo_full = 1;
+	
+	NDS_REG_IPCFIFOSEND = command;
+	
+	if (fifo_full)
+		printk(KERN_WARNING "fifo: detected send attempt while "
+		    "fifo was full\n");
+}
+
+static inline u32 nds_fifo_recv(void)
+{
+	int fifo_full = 0;
+	u32 command;
+
+	while (NDS_REG_IPCFIFOCNT & FIFO_RECV_FULL)
+		fifo_full = 1;
+	
+	command = NDS_REG_IPCFIFORECV;
+	
+	if (fifo_full)
+		printk(KERN_WARNING "fifo: detected recieve attempt while "
+		    "fifo was full\n");
+
+	return command;
+}
+#endif /* __DSLINUX_ARM7__ */
 
 /* Callback register functions. */
 int register_fifocb(struct fifo_cb *fifo_cb);
