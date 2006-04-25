@@ -140,7 +140,7 @@ static int nds_start_xmit11(struct sk_buff *skb, struct net_device *dev)
 	tx_packet.len = skb->len;
 	tx_packet.data = skb->data;
 	tx_packet.skb = (void*)skb;
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_TX, (u32)(&tx_packet));
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_TX, (u32)(&tx_packet)));
 	return 0;
 }
 
@@ -152,7 +152,7 @@ static struct net_device_stats *nds_get_stats(struct net_device *dev)
 
 	stats_query_complete = 0;
 	stats_query_output = (void *)&local->stats;
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_STATS_QUERY, 0);
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_STATS_QUERY, 0));
 	if(wait_event_interruptible_timeout(ndswifi_wait,
 	    stats_query_complete != 0, WIFI_ARM7_TIMEOUT) == 0) {
 		printk(KERN_WARNING "%s: timed out waiting for ARM7\n", __func__);
@@ -201,7 +201,7 @@ static int nds_open(struct net_device *dev)
 {
 	DEBUG(7, "Called: %s\n", __func__);
 
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_UP, 0);
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_UP, 0));
 
 	netif_start_queue(dev);
 
@@ -214,7 +214,7 @@ static int nds_close(struct net_device *dev)
 
 	netif_stop_queue(dev);
 
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_DOWN, 0);
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_DOWN, 0));
 
 	return 0;
 }
@@ -237,7 +237,7 @@ static int nds_dev_init(struct net_device *dev)
 	/* get the mac addr */
 	mac_query_complete = 0;
 	mac_query_output = (void *)dev->dev_addr;
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_MAC_QUERY, 0);
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_MAC_QUERY, 0));
 	wait_event_interruptible(ndswifi_wait, mac_query_complete != 0);
 
 	return 0;
@@ -288,7 +288,7 @@ static int nds_set_freq(struct net_device *dev,
 		return -EINVAL;	/* not allowed */
 	if (fwrq->m < 1 || fwrq->m > 13)
 		return -EINVAL;	/* not allowed */
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_CHANNEL, (fwrq->m));
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_CHANNEL, (fwrq->m)));
 	return 0;
 }
 
@@ -316,10 +316,9 @@ static int nds_set_mode(struct net_device *dev,
 	if (*uwrq != IW_MODE_ADHOC && *uwrq != IW_MODE_INFRA)
 		return -EINVAL;
 
-	REG_IPCFIFOSEND =
-	    FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_AP_MODE,
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_AP_MODE,
 			  (*uwrq ==
-			   IW_MODE_ADHOC) ? WIFI_AP_ADHOC : WIFI_AP_INFRA);
+			   IW_MODE_ADHOC) ? WIFI_AP_ADHOC : WIFI_AP_INFRA));
 	return 0;
 }
 
@@ -333,7 +332,7 @@ static int nds_get_mode(struct net_device *dev,
 	DEBUG(7, "Called: %s\n", __func__);
 
 	get_mode_completed = 0;
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_GET_AP_MODE, 0);
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_GET_AP_MODE, 0));
 	wait_event_interruptible(ndswifi_wait, get_mode_completed != 0);
 	*uwrq =
 	    (mode_query_output ==
@@ -448,7 +447,7 @@ static int nds_set_scan(struct net_device *dev,
 	DEBUG(7, "Called: %s\n", __func__);
 
 	scan_complete = 0;
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_SCAN, 0);
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_SCAN, 0));
 	wait_event_interruptible(ndswifi_wait, scan_complete != 0);
 
 	return 0;
@@ -470,7 +469,7 @@ static int nds_get_scan(struct net_device *dev,
 
 	/* stop ap list updates */
 	ap_query_complete = 0;
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY, 1);
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY, 1));
 	wait_event_interruptible(ndswifi_wait, ap_query_complete != 0);
 
 	for (i = 0; i < WIFI_MAX_AP; i++) {
@@ -525,7 +524,7 @@ static int nds_get_scan(struct net_device *dev,
 
 	/* restart aplist updates */
 	ap_query_complete = 0;
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY, 0);
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY, 0));
 	wait_event_interruptible(ndswifi_wait, ap_query_complete != 0);
 
 	/* Length of data */
@@ -563,12 +562,11 @@ static int nds_set_essid(struct net_device *dev,
 
 			tmp = *(c++) << 8;
 			tmp |= *(c++);
-			REG_IPCFIFOSEND =
-			    FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_ESSID,
+			nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_ESSID,
 				/* Send the essid in pieces of 2 chars each.
 				 * Encoded as follows:
 				 *          #essid      offset     2 chars */
-					  ((i << 20) | (j << 16) | tmp));
+					  ((i << 20) | (j << 16) | tmp)));
 			if (!*(c - 1) || !*(c - 2)) {
 				i = 4;
 				break;
@@ -795,8 +793,10 @@ static int nds_set_encode(struct net_device *dev,
 				for (j = 0; j < 4; j++) {
 					tmp = *(k++) << 8;
 					tmp |= *(k++);
-					REG_IPCFIFOSEND =
-					    FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_WEPKEY, ((index << 20) | (i << 18) | (j << 16) | tmp));
+					nds_fifo_send(FIFO_WIFI_CMD(
+					    FIFO_WIFI_CMD_SET_WEPKEY,
+					    ((index << 20) | (i << 18)
+					     | (j << 16) | tmp)));
 					if ((k - local->key_key[index]) >=
 					    key_len) {
 						i = 2;
@@ -821,20 +821,19 @@ static int nds_set_encode(struct net_device *dev,
 	index = (dwrq->flags & IW_ENCODE_INDEX) - 1;
 	if ((index >= 0) && index < 4) {
 		local->current_index = index;
-		REG_IPCFIFOSEND =
-		    FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_WEPKEYID, index);
+		nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_WEPKEYID, index));
 	}
 
 	/* Read the flags */
 	if ((dwrq->flags & IW_ENCODE_MODE) == IW_ENCODE_DISABLED) {
 		local->enable = 0;
-		REG_IPCFIFOSEND =
-		    FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_WEPMODE, WEPMODE_NONE);
+		nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_WEPMODE,
+		    WEPMODE_NONE));
 	}
 	if ((dwrq->flags & IW_ENCODE_MODE) == IW_ENCODE_ENABLED) {
 		local->enable = 1;
-		REG_IPCFIFOSEND =
-		    FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_WEPMODE, local->key_size);
+		nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_SET_WEPMODE,
+		    local->key_size));
 	}
 	return 0;		/* Call commit handler */
 }
@@ -1097,7 +1096,7 @@ static void nds_wifi_recieve_packet(void)
 
 	}
 
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_RX_COMPLETE, 0); 	
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_RX_COMPLETE, 0)); 	
 }
 
 void nds_wifi_recieve_stats(void)
@@ -1205,7 +1204,7 @@ static int __init init_nds(void)
 	for (i = 0; i < WIFI_STATS_MAX; i++)
 		arm7_stats[i] = 0;
 	DEBUG(5, "%s: sending stats buffer address 0x%p\n", __func__, arm7_stats);
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_STATS_QUERY, (u32)arm7_stats);
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_STATS_QUERY, (u32)arm7_stats));
 
 	/* Initialise AP list buffer and send address to ARM7 */
 	p = (u8*)aplist;
@@ -1213,7 +1212,7 @@ static int __init init_nds(void)
 		*p++ = 0;
 	p = NULL;
 	DEBUG(5, "%s: sending aplist buffer address 0x%p\n", __func__, aplist);
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY, (u32)aplist);
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY, (u32)aplist));
 
 	/* Allocate space for private device-specific data */
 	dev = alloc_etherdev(sizeof(struct nds_net_priv));
@@ -1242,7 +1241,7 @@ static int __init init_nds(void)
 	/* Initialise packet recieve buffer and send address to ARM7 */
 	nds_init_rx_packet(&rx_packet);
 	DEBUG(5, "%s: sending rx buffer address 0x%p\n", __func__, &rx_packet);
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_RX, (u32)&rx_packet);
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_RX, (u32)&rx_packet));
 	
 	return 0;
 

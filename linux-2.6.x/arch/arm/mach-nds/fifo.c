@@ -22,10 +22,6 @@
 
 #include <asm/arch/fifo.h>
 
-#define REG_IPCFIFOSEND (*(volatile u32*) 0x04000188)
-#define REG_IPCFIFORECV (*(volatile u32*) 0x04100000)
-#define REG_IPCFIFOCNT  (*(volatile u16*) 0x04000184)
-
 static LIST_HEAD(cblist);
 static DECLARE_MUTEX(cblist_mtx);
 
@@ -37,8 +33,8 @@ static irqreturn_t ndsfifo_interrupt(int irq, void *dev_id,
 	struct list_head *p;
 	struct fifo_cb *cb;
 
-	while (!(REG_IPCFIFOCNT & FIFO_EMPTY)) {
-		fifo_recv = REG_IPCFIFORECV;
+	while (!(NDS_REG_IPCFIFOCNT & FIFO_EMPTY)) {
+		fifo_recv = nds_fifo_recv();
 		list_for_each(p, &cblist) {
 			cb = list_entry(p, struct fifo_cb, list);
 			if (cb->type == FIFO_GET_TYPE(fifo_recv)) {
@@ -101,7 +97,7 @@ static int __init ndsfifo_init(void)
 		return -EBUSY;
 	}
 
-	REG_IPCFIFOCNT = FIFO_ENABLE | FIFO_IRQ_ENABLE | FIFO_CLEAR | FIFO_ERROR;
+	NDS_REG_IPCFIFOCNT = FIFO_ENABLE | FIFO_IRQ_ENABLE | FIFO_CLEAR | FIFO_ERROR;
 	return 0;
 }
 

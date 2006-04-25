@@ -31,7 +31,7 @@ static DECLARE_WAIT_QUEUE_HEAD(ndstime_wait);
 static u32 getTimeFromArm7(void) {
     timeavail = 0;
     
-    REG_IPCFIFOSEND = FIFO_TIME ;
+    nds_fifo_send(FIFO_TIME);
 
     wait_event_interruptible(ndstime_wait, timeavail != 0);
 

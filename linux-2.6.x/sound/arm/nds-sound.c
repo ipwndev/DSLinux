@@ -86,13 +86,13 @@ void nds_set_sample_format(struct nds *chip, snd_pcm_format_t format)
 {
 	switch (format) {
 	case SNDRV_PCM_FORMAT_S8:
-		REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_FORMAT | 0;
+		nds_fifo_send(FIFO_SOUND | FIFO_SOUND_FORMAT | 0);
 		break;
 	case SNDRV_PCM_FORMAT_S16_LE:
-		REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_FORMAT | 1;
+		nds_fifo_send(FIFO_SOUND | FIFO_SOUND_FORMAT | 1);
 		break;
 	case SNDRV_PCM_FORMAT_IMA_ADPCM:
-		REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_FORMAT | 2;
+		nds_fifo_send(FIFO_SOUND | FIFO_SOUND_FORMAT | 2);
 		break;
 	default:
 		break;
@@ -102,22 +102,22 @@ void nds_set_sample_format(struct nds *chip, snd_pcm_format_t format)
 /* Set the sample rate */
 void nds_set_sample_rate(struct nds *chip, unsigned int rate)
 {
-	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_RATE | rate;
+	nds_fifo_send(FIFO_SOUND | FIFO_SOUND_RATE | rate);
 }
 
 /* Set the number of channels */
 void nds_set_channels(struct nds *chip, unsigned int channels)
 {
-	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_CHANNELS | channels;
+	nds_fifo_send(FIFO_SOUND | FIFO_SOUND_CHANNELS | channels);
 }
 
 /* Setup the DMA */
 void nds_set_dma_setup(struct nds *chip, unsigned char *dma_area,
 		       size_t buffer_size, size_t period_size)
 {
-	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_DMA_SIZE | buffer_size;
-	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_DMA_ADDRESS |
-	    (((u32) dma_area) & 0xffffff);
+	nds_fifo_send(FIFO_SOUND | FIFO_SOUND_DMA_SIZE | buffer_size);
+	nds_fifo_send(FIFO_SOUND | FIFO_SOUND_DMA_ADDRESS |
+	    (((u32) dma_area) & 0xffffff));
 
 }
 
@@ -134,7 +134,7 @@ static int snd_nds_playback_open(snd_pcm_substream_t * substream)
 	chip->substream = substream;
 
 	// turn the power on
-	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_POWER | 1;
+	nds_fifo_send(FIFO_SOUND | FIFO_SOUND_POWER | 1);
 
 	spin_unlock(&chip->lock);
 
@@ -147,7 +147,7 @@ static int snd_nds_playback_close(snd_pcm_substream_t * substream)
 	struct nds *chip = snd_pcm_substream_chip(substream);
 
 	// turn the power off
-	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_POWER | 0;
+	nds_fifo_send(FIFO_SOUND | FIFO_SOUND_POWER | 0);
 	TIMER1_CR = 0;
 	TIMER2_CR = 0;
 
@@ -231,14 +231,14 @@ static int snd_nds_pcm_trigger(snd_pcm_substream_t * substream, int cmd)
 	switch (cmd) {
 	case SNDRV_PCM_TRIGGER_START:
 		// start the PCM engine
-		REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_TRIGGER | 1;
+		nds_fifo_send(FIFO_SOUND | FIFO_SOUND_TRIGGER | 1);
 
 		TIMER1_CR = TIMER_ENABLE;
 		TIMER2_CR = TIMER_CASCADE | TIMER_IRQ_REQ;
 		break;
 	case SNDRV_PCM_TRIGGER_STOP:
 		// stop the PCM engine
-		REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_TRIGGER | 0;
+		nds_fifo_send(FIFO_SOUND | FIFO_SOUND_TRIGGER | 0);
 		TIMER1_CR = 0;
 		TIMER2_CR = 0;
 		break;
@@ -335,7 +335,7 @@ static irqreturn_t snd_nds_interrupt(int irq, void *dev_id,
 static int snd_nds_free(struct nds *chip)
 {
 	// turn the power off
-	REG_IPCFIFOSEND = FIFO_SOUND | FIFO_SOUND_POWER | 0;
+	nds_fifo_send(FIFO_SOUND | FIFO_SOUND_POWER | 0);
 	kfree(chip);
 	return 0;
 }

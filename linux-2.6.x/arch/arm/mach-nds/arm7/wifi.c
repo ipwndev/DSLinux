@@ -31,6 +31,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
+#define __DSLINUX_ARM7__
+
 #include "asm/types.h"
 #include "asm/arch/fifo.h"
 #include "asm/arch/wifi.h"
@@ -665,15 +667,14 @@ void wifi_close(void)
 /* handle a query from kerney for wifi address */
 void wifi_mac_query(void)
 {
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_MAC_QUERY,
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_MAC_QUERY,
 					((0 << 16) |
-					 (((u16 *) wifi_data.MacAddr)[0])));
-	REG_IPCFIFOSEND =
-	    FIFO_WIFI_CMD(FIFO_WIFI_CMD_MAC_QUERY,
-			  ((1 << 16) | (((u16 *) wifi_data.MacAddr)[1])));
-	REG_IPCFIFOSEND =
-	    FIFO_WIFI_CMD(FIFO_WIFI_CMD_MAC_QUERY,
-			  ((2 << 16) | (((u16 *) wifi_data.MacAddr)[2])));
+					 (((u16 *) wifi_data.MacAddr)[0]))));
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_MAC_QUERY,
+			  ((1 << 16) | (((u16 *) wifi_data.MacAddr)[1]))));
+	
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_MAC_QUERY,
+			  ((2 << 16) | (((u16 *) wifi_data.MacAddr)[2]))));
 }
 
 /* handle a query from kerney for wifi address */
@@ -686,7 +687,7 @@ void wifi_stats_query(void)
 
 	wifi_data.state &= ~WIFI_STATE_SAW_TX_ERR;
 
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_STATS_QUERY, 0);
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_STATS_QUERY, 0));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1312,7 +1313,7 @@ int Wifi_QueueRxMacData(u32 base, u32 len)
 
 	Wifi_MACCopy((u16*)rx_packet->data, base, macofs, len);
 	rx_packet->len = len;
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_RX, 0);
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_RX, 0));
 
 	/* XOXOXO Disable rx interrupts */
 
@@ -1413,7 +1414,7 @@ static void Wifi_Intr_TxEnd(void)
 	if ((wifi_data.state & WIFI_STATE_TXPENDING)
 	    && !(WIFI_REG(0xA0) & 0x8000)) {
 		wifi_data.state &= ~WIFI_STATE_TXPENDING;
-		REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_TX_COMPLETE, 0);
+		nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_TX_COMPLETE, 0));
 	}
 }
 
@@ -1793,7 +1794,7 @@ void wifi_ap_query(u16 start_stop)
 	else
 		wifi_data.state &= ~WIFI_STATE_APQUERYPEND;
 
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY, 0);
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY, 0));
 }
 
 void wifi_start_scan(void)
@@ -1815,7 +1816,7 @@ static void wifi_bump_scan(void)
 		wifi_data.state &= ~WIFI_STATE_CHANNEL_SCANNING;
 		REG_TM0CNT_H = 0;
 		Wifi_SetChannel(wifi_data.reqChannel);
-		REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_SCAN, 1);
+		nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_SCAN, 1));
 	} else {
 		wifi_data.scanChannel++;
 		Wifi_SetChannel(wifi_data.scanChannel);
@@ -1841,5 +1842,5 @@ void Wifi_SetAPMode(enum WIFI_AP_MODE mode)
 
 void Wifi_GetAPMode()
 {
-	REG_IPCFIFOSEND = FIFO_WIFI_CMD(FIFO_WIFI_CMD_GET_AP_MODE, wifi_data.curMode);
+	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_GET_AP_MODE, wifi_data.curMode));
 }

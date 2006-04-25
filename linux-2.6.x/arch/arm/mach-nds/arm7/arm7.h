@@ -4,10 +4,6 @@
 extern void swiDelay(u32 duration);
 extern void swiWaitForVBlank(void);
 
-#define REG_IPCFIFOSEND	(*(volatile u32*) 0x04000188)
-#define REG_IPCFIFORECV	(*(volatile u32*) 0x04100000)
-#define REG_IPCFIFOCNT	(*(volatile u16*) 0x04000184)
-
 #define NDS_IE		(*(volatile u32*)0x04000210)	/* Interrupt mask */
 #define NDS_IF		(*(volatile u32*)0x04000214)	/* Interrup service */
 #define NDS_IME		(*(volatile u32*)0x04000208)	/* Enable/disable */
