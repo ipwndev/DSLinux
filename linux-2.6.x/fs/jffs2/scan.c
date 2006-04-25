@@ -365,7 +365,9 @@ static int jffs2_scan_eraseblock (struct jffs2_sb_info *c, struct jffs2_eraseblo
 	/* Now ofs is a complete physical flash offset as it always was... */
 	ofs += jeb->offset;
 
+#if 0
 	noise = 10;
+#endif
 
 scan_more:	
 	while(ofs < jeb->offset + c->sector_size) {
