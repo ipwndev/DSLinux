@@ -27,7 +27,7 @@ static void recieveFIFOCommand(void)
 	struct nds_tx_packet *tx_packet = NULL;
 
 	while (!(NDS_REG_IPCFIFOCNT & FIFO_EMPTY)) {
-		fifo_recv = nds_fifo_recv();
+		fifo_recv = NDS_REG_IPCFIFORECV;
 		data = FIFO_GET_TYPE_DATA(fifo_recv);
 		switch (FIFO_GET_TYPE(fifo_recv)) {
 		case FIFO_FIRMWARE:
