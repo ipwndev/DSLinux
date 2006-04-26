@@ -200,7 +200,7 @@ static int snd_nds_pcm_prepare(snd_pcm_substream_t * substream)
 
 	TIMER1_CR = 0;
 	TIMER2_CR = 0;
-	TIMER1_DATA = (-0x2000000/ (s32)(runtime->rate));
+	TIMER1_DATA = 0 - (0x2000000 / runtime->rate);
 	switch (runtime->format) {
 	case SNDRV_PCM_FORMAT_S8:
 		TIMER2_DATA = -(chip->period_size);
