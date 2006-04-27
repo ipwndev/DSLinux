@@ -17,9 +17,23 @@
 #include <asm/arch/fifo.h>
 
 #define SAMPLERATE 	44000
-#define BUFSIZE 	44000
 
-static short int soundbuffer[BUFSIZE];
+#define SINSIZE 100
+
+static const short sintab[SINSIZE] = {
+0, 2057, 4107, 6140, 8149, 10126, 12062, 13952, 15786, 17557,
+19260, 20886, 22431, 23886, 25247, 26509, 27666, 28714, 29648, 30466,
+31163, 31738, 32187, 32509, 32702, 32767, 32702, 32509, 32187, 31738,
+31163, 30466, 29648, 28714, 27666, 26509, 25247, 23886, 22431, 20886,
+19260, 17557, 15786, 13952, 12062, 10126, 8149, 6140, 4107, 2057,
+0, -2057, -4107, -6140, -8149, -10126, -12062, -13952, -15786, -17557,
+-19260, -20886, -22431, -23886, -25247, -26509, -27666, -28714, -29648, -30466,
+-31163, -31738, -32187, -32509, -32702, -32767, -32702, -32509, -32187, -31738,
+-31163, -30466, -29648, -28714, -27666, -26509, -25247, -23886, -22431, -20886,
+-19260, -17557, -15786, -13952, -12062, -10126, -8149, -6140, -4107, -2057
+};
+
+static short soundbuffer[SINSIZE*2];
 
 static void soundtest_initsound(void)
 {
@@ -53,43 +67,15 @@ static void soundtest_play(int start)
 static void soundtest_fill(void)
 {
 	int i;
-	int data = 0;
-	int freq = 440;
-	int samples_per_period = SAMPLERATE / freq;
-	/* 0x20000 is "2*Phi" for triangles */
-	int incr = 0x20000 / samples_per_period;
 
-	/* Fill the buffer with data */
-	for (i = 0; i < (BUFSIZE/2); i++){
-		soundbuffer[i] = (short int)data;
-		if (incr > 0) {
-			if ((data + incr) > 32767) {
-				incr = 0 - incr;
-			}
-		} else {
-			if ((data + incr) < -32768) {
-				incr = 0 - incr;
-			}
-		}	
-		data += incr;
+	for (i = 0; i < SINSIZE; i++) {
+		soundbuffer[i] = sintab[i];		
 	}
-
-	freq = 880;
- 	samples_per_period = SAMPLERATE / freq;
-	incr = 0x20000 / samples_per_period;
-	data = 0;
-	for (i = (BUFSIZE/2); i < BUFSIZE; i++){
-		soundbuffer[i] = (short int)data;
-		if (incr > 0) {
-			if ((data + incr) > 32767) {
-				incr = 0 - incr;
-			}
-		} else {
-			if ((data + incr) < -32768) {
-				incr = 0 - incr;
-			}
-		}	
-		data += incr;
+	for (i = 0; i < (SINSIZE/2); i++) {
+		soundbuffer[i+SINSIZE] = sintab[i*2];		
+	}
+	for (i = 0; i < (SINSIZE/2); i++) {
+		soundbuffer[i+SINSIZE+(SINSIZE/2)] = sintab[i*2];		
 	}
 }
 
