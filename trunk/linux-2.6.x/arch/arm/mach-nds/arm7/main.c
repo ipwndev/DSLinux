@@ -70,7 +70,7 @@ static void recieveFIFOCommand(void)
 				break;
 			case FIFO_SOUND_DMA_ADDRESS:
 				sound_set_address((data & 0x00ffffff) +
-						  0x02000000);
+							  0x02000000);
 				break;
 			case FIFO_SOUND_DMA_SIZE:
 				sound_set_size(data & 0x00ffffff);
