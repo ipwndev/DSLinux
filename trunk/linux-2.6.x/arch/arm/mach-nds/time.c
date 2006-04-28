@@ -52,7 +52,7 @@ static irqreturn_t nds_timer_interrupt(int irq, void *dev_id, struct pt_regs *re
 
 static struct irqaction nds_timer_irq = {
 	.name    = "NDS Timer Tick",
-	.flags   = SA_INTERRUPT,
+	.flags   = 0,	/* using low priority for all standard timer tasks */
 	.handler = nds_timer_interrupt
 };
 static unsigned long setup_timer (void)
