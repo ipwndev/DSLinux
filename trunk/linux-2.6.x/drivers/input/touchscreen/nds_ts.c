@@ -134,7 +134,7 @@ static struct input_dev ndstouch_dev = {
 	.absfuzz = { [ABS_X] = 0, [ABS_Y] = 0, [ABS_PRESSURE] = 0 },
 	.absflat = { [ABS_X] = 0, [ABS_Y] = 0, [ABS_PRESSURE] = 0 },
 	.ledbit = { BIT(LED_CAPSL) },
-        .event = ndstouch_output_event
+	.event = ndstouch_output_event
 };
 
 static struct fifo_cb my_callback = {
@@ -294,14 +294,14 @@ static void ndstouch_input_event(u8 touched, u8 x, u8 y)
 				key = qwertyKeyMap[y * 32 + x] ;
 				if ( !wasTouched && key != KEY_RESERVED )
 				{
+					wasTouched = TRUE ;
 					if (key == BTN_TOUCH) {
 						switch_to_mouse_mode();
+						break ;
 					}
 					currentKey = key ;
 					input_report_key(dev, currentKey, 1 ) ;
 				}
-
-				wasTouched = TRUE ;
 			}
 			else if ( wasTouched )
 			{
@@ -324,19 +324,21 @@ static void ndstouch_input_event(u8 touched, u8 x, u8 y)
 				u8 kx = x / 8;
 				u8 ky = y / 8;
 				if (!wasTouched) {
+					wasTouched = TRUE;
 					if (qwertyKeyMap[ky * 32 + kx] == BTN_TOUCH) {
 						switch_to_keyboard_mode();
+						break ;
 					}
-					input_report_key(dev, BTN_TOUCH, 1 ) ;
 				}
+				input_report_key(dev, BTN_TOUCH, 1 ) ;
 				input_report_abs(dev, ABS_X, x);
 				input_report_abs(dev, ABS_Y, y);
 				input_sync(dev);
-				wasTouched = TRUE;
 			}
 			else if ( wasTouched) {
 				wasTouched = FALSE;
 				input_report_key(dev, BTN_TOUCH, 0 ) ;
+				input_sync(dev);
 			}
 			break;
 		case DISABLED_MODE:
@@ -376,7 +378,7 @@ static int __init touchscreen_init(void)
 
 static void __exit touchscreen_exit(void)
 {
-  input_unregister_device(&ndstouch_dev);
+	input_unregister_device(&ndstouch_dev);
 }
 
 module_init(touchscreen_init);
