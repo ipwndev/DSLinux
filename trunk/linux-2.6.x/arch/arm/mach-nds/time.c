@@ -42,6 +42,9 @@
 #define NDS_TCR_IRQ 0x0040          /* Generate IRQ */
 #define NDS_TCR_ENB 0x0080          /* Enable timer */
 
+/* use timer 0 for ticks */
+#define KERNEL_TIMER 0
+
 #include <asm/mach/time.h>
 
 static irqreturn_t nds_timer_interrupt(int irq, void *dev_id, struct pt_regs *regs)
