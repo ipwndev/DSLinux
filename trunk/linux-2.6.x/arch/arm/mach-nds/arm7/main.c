@@ -295,20 +295,17 @@ int main(void)
 	/* Enable VBLANK Interrupt */
 	DISP_SR = DISP_VBLANK_IRQ;
 
-/* common define for all used ARM7 interrupts */
-#define ARM7_INTF (IRQ_VBLANK | IRQ_RECV | IRQ_ARM9 | IRQ_WIFI)
-
 	/* Set the INT enable flags */
-	NDS_IE = ARM7_INTF;
+	NDS_IE = IRQ_VBLANK | IRQ_RECV | IRQ_ARM9 | IRQ_WIFI;
 
-	/* Set the INT bitmask for swi wait calls */
-	VBLANK_INTR_WAIT_FLAGS = ARM7_INTF;
+	/* Set the INT bitmask for the swi wait call */
+	VBLANK_INTR_WAIT_FLAGS = IRQ_VBLANK;
 
 	/* Enable FIFO */
 	NDS_REG_IPCFIFOCNT = FIFO_ENABLE | FIFO_IRQ_ENABLE | FIFO_CLEAR | FIFO_ERROR ;
 
 	/* Set interrupt handler */
-	IRQ_HANDLER = (u32) & InterruptHandler;
+	IRQ_HANDLER = (u32) &InterruptHandler;
 
 	/* init the wifi stuff */
 	wifi_init();
@@ -319,6 +316,6 @@ int main(void)
 
 	/* power down ARM7, until the next activated interrupt */
 	while (1) {
-		swiIntrWait(1, ARM7_INTF);
+		swiWaitForVBlank();
 	}
 }
