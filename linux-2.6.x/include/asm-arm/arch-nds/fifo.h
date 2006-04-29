@@ -101,7 +101,7 @@ enum FIFO_WIFI_CMDS {
  * |3 bits FIFO_SOUND | 1bit unused | 28 bits command data |
  * +-------------------------------------------------------+
  */
- #define FIFO_SOUND_CHANNELS	(1<<24)
+#define FIFO_SOUND_CHANNELS	(1<<24)
 #define FIFO_SOUND_DMA_ADDRESS	(2<<24)
 #define FIFO_SOUND_DMA_SIZE	(3<<24)
 #define FIFO_SOUND_FORMAT	(4<<24)
