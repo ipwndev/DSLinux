@@ -4,11 +4,24 @@
 extern void swiDelay(u32 duration);
 extern void swiWaitForVBlank(void);
 
+/*---------------------------------------------------------------------------------
+	IntrWait (swi 0x04)
+
+	waitForSet -	0: Return if the interrupt has already occured
+			1: Wait until the interrupt has been set since the call
+	flags - 	interrupt sensitivity bitmask to wait for
+---------------------------------------------------------------------------------*/
+extern void swiIntrWait(int waitForSet, u32 flags);
+
+
 #define NDS_IE		(*(volatile u32*)0x04000210)	/* Interrupt mask */
 #define NDS_IF		(*(volatile u32*)0x04000214)	/* Interrup service */
 #define NDS_IME		(*(volatile u32*)0x04000208)	/* Enable/disable */
 
 #define DISP_SR		(*(volatile u16*)0x04000004)
+
+#define VBLANK_INTR_WAIT_FLAGS  (*(volatile u32*)(0x03FFFFF8))
+#define IRQ_HANDLER             (*(volatile u32*)(0x03FFFFFC))
 
 #define POWERCNT7   (*(volatile u16*)0x04000304)
 

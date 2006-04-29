@@ -37,8 +37,12 @@ swiDelay:
 	swi	0x030000
 	bx	lr
 
+.global swiIntrWait
+swiIntrWait:
+	swi	0x040000
+	bx	lr
+
 .global swiWaitForVBlank
 swiWaitForVBlank:
 	swi	0x050000
 	bx	lr
-
