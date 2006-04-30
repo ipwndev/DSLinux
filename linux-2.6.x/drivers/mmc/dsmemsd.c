@@ -34,7 +34,7 @@
 #endif
 
 #define DRIVER_NAME	"dsmemsd"
-#define DRIVER_VERSION	"1.1.1"
+#define DRIVER_VERSION	"1.2.1"
 
 /*****************************************************************************/
 /* IO registers */
@@ -195,24 +195,64 @@ static const u16 spi_ops[64] ={
 
 /*****************************************************************************/
 
-/* transfer a byte to/from SD */
-static inline u8 sd_transfer(u8 data)
-{
-	// send out the data and wait
-	sd_send(data);
-	// return the result
-	return spi_rec();
-}
-
-/* send FF for a specified amount of bytes */
+// send FF for a specified amount of bytes
 static inline void sd_clocks(int clocks) 
 {
 	for ( ; clocks; clocks--)
 		sd_send(0xFF);
 }
 
-/* receive a byte from SD, sending FF */
-static inline unsigned char sd_receive(void)
+static unsigned int sd_last;
+static unsigned int sd_shift;
+
+// synchronize to SD
+static u8 sd_sync(unsigned int retries)
+{
+	for (; retries; retries--) {
+		unsigned int mask = 0x80;
+
+		// send out FF and wait
+		sd_send(0xFF);
+
+		// get the answer
+		sd_last = spi_rec();
+		
+		// answer starts with a 0 bit
+		if (sd_last == 0xFF) continue;
+
+		// the answer starts in this byte
+		for (sd_shift = 8; sd_shift; sd_shift--) {
+			if (!(sd_last & mask))
+				// start bit found
+				break;
+			mask >>= 1;
+		}
+		if (sd_shift == 8) {
+			// synchronized at byte boundary
+			sd_shift = 0;
+			return sd_last;
+		}
+		// send out FF and wait
+		sd_send(0xFF);
+		// compute the shifted result
+		sd_last = (sd_last << 8) | spi_rec();
+		return (sd_last >> sd_shift);
+	}
+	return 0xFF;
+}
+	
+// transfer a byte to/from SD
+static inline u8 sd_transfer(u8 data)
+{
+	// send out the data and wait
+	sd_send(data);
+	// compute the shifted result
+	sd_last = (sd_last << 8) | spi_rec();
+	return (sd_last >> sd_shift);
+}
+
+// receive a byte from SD, sending FF
+static inline u8 sd_receive(void)
 {
 	return sd_transfer(0xFF);
 }
@@ -231,6 +271,7 @@ static struct work_struct dsmemsd_work;
 
 /* send a SD command in SPI mode */
 /* @return 0 for success, != 0 otherwise */
+/* if success, CS remains low */
 static int dsmemsd_send_cmd(struct mmc_command *cmd)
 {
 	int i;
@@ -270,28 +311,29 @@ static int dsmemsd_send_cmd(struct mmc_command *cmd)
 	enable CRC checking. */
 	sd_send(0x95);
 
+	/* Skip 1 byte of data, if we got the STOP command. 
+	   This data is from the last data block. */
+	if ((opcode & OPCODE_MASK) == 12) {
+		sd_send(0xFF);
+	}
+
 	/* Wait for a response. A response can be recognized by the
 	start bit (a zero) */
 	/* NCR = 8 Bytes, We use some more... */
-	for (i = 16; ; i--) {
-		if (!i) {
-			/* Timeout */
-			sd_csoff();
-			DBG("Timeout waiting for a response\n");
-			cmd->error = MMC_ERR_TIMEOUT;
-			return -1;
-		}
-		tmp = sd_receive();
-		if (!(tmp & 0x80))
-			break;
+	tmp = sd_sync(16);
+	if (tmp & 0x80) {
+		/* Timeout */
+		sd_csoff();
+		DBG("Timeout waiting for a response\n");
+		cmd->error = MMC_ERR_TIMEOUT;
+		return -1;
 	}
 
 	/* Read the response. */
 	memset(response, 0, sizeof(response));
-  	for (i=0; i < RESPONSE(opcode); i++) {
-		response[i] = tmp;
-		/* This handles the trailing-byte requirement. */
-		tmp = sd_receive();
+	response[0] = tmp;
+  	for (i=1; i < RESPONSE(opcode); i++) {
+		response[i] = sd_receive();
 	}
 	DBG("Got native response %X %X %X %X %X\n", (int)response[0],(int)response[1],(int)response[2],(int)response[3],(int)response[4]);
 
@@ -332,24 +374,21 @@ static int dsmemsd_send_cmd(struct mmc_command *cmd)
 				cmd->error = MMC_ERR_TIMEOUT;
 				return -1;
 			}
-			tmp = sd_receive();
-			if (tmp == 0xFE)
+			if (sd_receive() == 0xFE)
 				break;
 		}
 		
-		/* skip the data token */
-		tmp = sd_receive();
 		/* 16 bytes are waiting for us from the SD card.*/
 		for (i=0; i < 4; i++)
 		{
-			cmd->resp[i]  = (tmp << 24); tmp = sd_receive();
-			cmd->resp[i] |= (tmp << 16); tmp = sd_receive();
-			cmd->resp[i] |= (tmp << 8);  tmp = sd_receive();
-			cmd->resp[i] |=  tmp;        tmp = sd_receive();
+			cmd->resp[i]  = (sd_receive() << 24);
+			cmd->resp[i] |= (sd_receive() << 16);
+			cmd->resp[i] |= (sd_receive() << 8);
+			cmd->resp[i] |=  sd_receive(); 
 		}
 		/* skip CRC */
-		tmp = sd_receive();
-		tmp = sd_receive();
+		sd_receive();
+		sd_receive();
 		break;
 	case MMC_RSP_R3:
 		/* OCR register */
@@ -378,14 +417,10 @@ static int dsmemsd_send_cmd(struct mmc_command *cmd)
 				cmd->error = MMC_ERR_TIMEOUT;
 				return -1;
 			}
-			tmp = sd_receive();
-			if (tmp == 0xFF)
+			if (sd_receive() == 0xFF)
 				break;
 		}
 	}
-
-	/* deselect the card */
-	sd_csoff();
 
 	// success
 	cmd->error = MMC_ERR_NONE;
@@ -405,9 +440,6 @@ static void dsmemsd_xfer( struct mmc_data *data )
 	u8 tmp = 0;
 
      	DBG("%s Bytes=%d\n",__FUNCTION__, size);
-
-	/* activate chip select. We are in SPI mode */
-	sd_cson();
 
 	/* Iterate through the s/g list */
 	data->bytes_xfered = 0;
@@ -450,6 +482,7 @@ static void dsmemsd_xfer( struct mmc_data *data )
 				}
 				/* Error? */
 				if (tmp != 0xFE) {
+					sd_clocks(1);
 					sd_csoff();
 					DBG("Error data token read %d\n", (int)tmp);
 					data->error = MMC_ERR_FAILED;
@@ -467,18 +500,18 @@ static void dsmemsd_xfer( struct mmc_data *data )
 		
 				/* Send the data token */
 				if (multiwrite) 
-					sd_send(0xFC)
+					sd_transfer(0xFC);
 				else
-					sd_send(0xFE);
+					sd_transfer(0xFE);
 		
 				/* Send the data */
 				for (i = 0; i < length; i++) {
-					sd_send(*p++);
+					sd_transfer(*p++);
 				}
 		
 				/* skip the CRC */
-				sd_send(0x00);
-				sd_send(0x00);
+				sd_transfer(0x00);
+				sd_transfer(0x00);
 
 				/* Wait for the data response token */
 				/* NCR = 8 Bytes, We use some more... */
@@ -495,6 +528,7 @@ static void dsmemsd_xfer( struct mmc_data *data )
 						break;
 				}
 				if ((tmp & 0x0E) != 0x04) {
+					sd_clocks(1);
 					sd_csoff();
 					DBG("Error data response %d\n", (int)tmp);
 					data->error = MMC_ERR_FAILED;
@@ -529,7 +563,7 @@ static void dsmemsd_xfer( struct mmc_data *data )
 
 	/* for multiple writes, append the stop token */
 	if ((data->flags & MMC_DATA_WRITE) && multiwrite) {
-		sd_send(0xFD);
+		sd_transfer(0xFD);
 		/* Wait until not busy */
 		/* This gives 250ms timeout */
 		for (i = 500000; ;i--) {
@@ -588,6 +622,8 @@ static void dsmemsd_request(struct mmc_host *mmc, struct mmc_request *mrq)
 				ret = dsmemsd_send_cmd(&cmd2);
 				if (ret)
 					continue;
+				sd_clocks(1);
+				sd_csoff();
 				cmd2.opcode = SD_APP_OP_COND;
 				cmd2.arg    = 0;
 				cmd2.flags  = MMC_RSP_R1;
@@ -596,6 +632,8 @@ static void dsmemsd_request(struct mmc_host *mmc, struct mmc_request *mrq)
 				ret = dsmemsd_send_cmd(&cmd2);
 				if (ret)
 					continue;
+				sd_clocks(1);
+				sd_csoff();
 				if (R1_CURRENT_STATE(cmd2.resp[0]) != 0) {
 					/* We know that next command is SD_APP_OP_COND.
 					   This will be translated from a ACMD to a CMD.
@@ -642,6 +680,8 @@ static void dsmemsd_request(struct mmc_host *mmc, struct mmc_request *mrq)
 			}
 		}
     	}
+	sd_clocks(1);
+	sd_csoff();
 	host->operating = 0;
     	mmc_request_done(mmc, mrq);
 }
@@ -729,6 +769,8 @@ static void dsmemsd_supervise(void *ptr)
 			cmd.data   = NULL;
 			ret = dsmemsd_send_cmd(&cmd);
 			if (ret == 0) {
+				sd_clocks(1);
+				sd_csoff();
 				mmc->detect.func(mmc);
 				if (!list_empty(&mmc->cards)) {
 					char *argv[2] = { "/sbin/mountsd", NULL };
@@ -754,6 +796,8 @@ static void dsmemsd_supervise(void *ptr)
 					call_usermodehelper(argv[0], argv, envp, 0);
 				}
 			}
+			sd_clocks(1);
+			sd_csoff();
 		}
 	}
 	/* once again, all 250 ms */
