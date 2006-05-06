@@ -200,16 +200,18 @@ static int snd_nds_pcm_prepare(snd_pcm_substream_t * substream)
 
 	TIMER1_CR = 0;
 	TIMER2_CR = 0;
-	TIMER1_DATA = 0 - (0x2000000 / runtime->rate);
+	/* use exactly the same formula as for ARM7, to get the
+	   same period regarding rounding errors */
+	TIMER1_DATA = 0 - ((0x1000000 / runtime->rate)*2);
 	switch (runtime->format) {
 	case SNDRV_PCM_FORMAT_S8:
-		TIMER2_DATA = -(chip->period_size);
+		TIMER2_DATA = 0 - chip->period_size;
 		break;
 	case SNDRV_PCM_FORMAT_S16_LE:
-		TIMER2_DATA = -(chip->period_size / 2);
+		TIMER2_DATA = 0 - (chip->period_size / 2);
 		break;
 	case SNDRV_PCM_FORMAT_IMA_ADPCM:
-		TIMER2_DATA = -(chip->period_size * 2);
+		TIMER2_DATA = 0 - (chip->period_size * 2);
 		break;
 	default:
 		break;
@@ -228,11 +230,25 @@ static int snd_nds_pcm_prepare(snd_pcm_substream_t * substream)
 /* trigger callback */
 static int snd_nds_pcm_trigger(snd_pcm_substream_t * substream, int cmd)
 {
+	snd_pcm_runtime_t *runtime = substream->runtime;
+
 	switch (cmd) {
 	case SNDRV_PCM_TRIGGER_START:
 		// start the PCM engine
 		nds_fifo_send(FIFO_SOUND | FIFO_SOUND_TRIGGER | 1);
 
+		/* wait until we know for shure that the ARM7 has 
+		   started the sound output */
+		
+		/* send a dummy command */
+		nds_fifo_send(FIFO_SOUND | FIFO_SOUND_CHANNELS | runtime->channels);
+
+		/* wait until FIFO is empty */
+		while (!(NDS_REG_IPCFIFOCNT & FIFO_EMPTY))
+			;
+
+		/* now we can start the timer and be shure that
+                   the timer interrupt is not comming to early. */
 		TIMER1_CR = TIMER_ENABLE;
 		TIMER2_CR = TIMER_CASCADE | TIMER_IRQ_REQ;
 		break;
@@ -312,14 +328,14 @@ static irqreturn_t snd_nds_interrupt(int irq, void *dev_id,
 	struct nds *chip = dev_id;
 	snd_pcm_substream_t *substream = chip->substream;
 	snd_pcm_runtime_t *runtime = substream->runtime;
-    u8 period ;
+    	u8 period ;
 
 	spin_lock(&chip->lock);
 
 	period = chip->period + 1;
 	if (period == runtime->periods)
 		period = 0;
-    chip->period = period;
+    	chip->period = period;
 
 	spin_unlock(&chip->lock);
 
