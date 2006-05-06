@@ -46,6 +46,8 @@ int firmware_read(struct mtd_info *mtd, loff_t from, size_t len,
 	firmware_block.len = len;
 	firmware_block.destination = buf;
 
+	// TODO: drain write buffer 
+
 	nds_fifo_send(FIFO_FIRMWARE_CMD(FIFO_FIRMWARE_CMD_READ, 0));
 
 	if(wait_event_interruptible(wait_queue, firmware_data_read)) {
@@ -61,6 +63,7 @@ static void firmware_fifo_cb(u8 cmd)
 	switch(cmd) {
 		case FIFO_FIRMWARE_CMD_READ:
 			firmware_data_read = 1;
+			// TODO: invalidate data cache
 			memcpy(firmware_block.destination,
 			    &firmware_block.data,
 			    firmware_block.len);
