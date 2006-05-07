@@ -249,11 +249,10 @@ _entry:
 	mcr	p15, 0, r0, c2, c0, 0
 
 	@ Instruction cache is on for
-	@ - ITCM
 	@ - Main Memory
 	@ - GBA Slot ROM+RAM
 	@             DWVGM4IO
-	ldr	r0,=0b00011010
+	ldr	r0,=0b00011000
 	mcr	p15, 0, r0, c2, c0, 1
 
 	@-------------------------------------------------------------------------
