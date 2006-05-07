@@ -158,7 +158,6 @@ _entry:
 	msr	cpsr_c, r0			@ and all irqs disabled
 
 	mov	r0, #0x04000000
-
 	mov	r1,#0				@ enable arm9 iwram
 	strb	r1,[r0, #0x247]
 
@@ -170,8 +169,8 @@ _entry:
 	@---------------------------------------------------------------------------------
 	@ Disable cache
 	mov	r0, #0
-	mcr	p15, 0, r0, c7, c5, 0		@ Instruction cache
-	mcr	p15, 0, r0, c7, c6, 0		@ Data cache
+	mcr	p15, 0, r0, c7, c5, 0		@ Flush Instruction cache
+	mcr	p15, 0, r0, c7, c6, 0		@ Flush Data cache
 
 	@ Wait for write buffer to empty
 	mcr	p15, 0, r0, c7, c10, 4
@@ -233,23 +232,28 @@ _entry:
 	@-------------------------------------------------------------------------
 	@ Write buffer enable
 	@-------------------------------------------------------------------------
-	@ for Main Memory
-	ldr	r0,=0b00001000
+	@             DWVGM4IO
+	@ldr	r0,=0b00001000  @ we want write buffer for main memory, but
+				@ currently, it kills linux with data cache enabled.
+	ldr	r0,=0b00000000
 	mcr	p15, 0, r0, c3, c0, 0
 
 	@-------------------------------------------------------------------------
 	@ DCache & ICache enable
 	@-------------------------------------------------------------------------
-	@ Data cache is off(?) for now
-	ldr	r0,=0b00000000 @ Change this to 0b00001000 to enable data cache for main RAM
+	@ Data Cache
+	@ NOTE: Data Caching for GBA ROM+RAM is a problem: all the special
+	@	Hardware of the Flash Cards needs special cache operations.
+	@             DWVGM4IO
+	ldr	r0,=0b00001000 @ data cache is good for main memory
 	mcr	p15, 0, r0, c2, c0, 0
 
 	@ Instruction cache is on for
 	@ - ITCM
 	@ - Main Memory
 	@ - GBA Slot ROM+RAM
-	@ - Video RAM
-	ldr	r0,=0b00111010
+	@             DWVGM4IO
+	ldr	r0,=0b00011010
 	mcr	p15, 0, r0, c2, c0, 1
 
 	@-------------------------------------------------------------------------
@@ -262,6 +266,7 @@ _entry:
 	@ - GBA: all r+w
 	@ - Video: none
 	@ - ARM9 IWRAM: none
+	@             DWVGM4IO
 	ldr	r0,=0x00033010
 	mcr	p15, 0, r0, c5, c0, 3
 
@@ -276,6 +281,7 @@ _entry:
 	@ - Video: all r+w
 	@ - ARM9 IWRAM: kernel r+w
 	@ - DTCM: kernel r+w
+	@             DWVGM4IO
 	ldr	r0,=0x11333110
 	mcr	p15, 0, r0, c5, c0, 2
 
