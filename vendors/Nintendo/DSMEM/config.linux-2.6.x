@@ -609,7 +609,7 @@ CONFIG_LOGO_NDS_BIG_CLUT224=y
 #
 # Sound
 #
-# CONFIG_SOUND=y
+# CONFIG_SOUND is not set
 
 #
 # Advanced Linux Sound Architecture
