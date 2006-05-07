@@ -8,7 +8,8 @@
  * 11/2005	shmemipc stuff added by Stefan Sperling <stsp@stsp.in-berlin.de>
  * 04/2006	shmemipc stuff removed and converted to use the fifo
  * 		by Stefan Sperling <stsp@stsp.in-berlin.de>
- *
+ * 05/2006      ARM9 cache handling added; remove as much as possible
+ *              from interrupt callback by Amadeus <amadeus@iksw-muees.de>
  */
 
 #include <asm/io.h>
@@ -23,6 +24,7 @@
 
 #include <asm/arch/firmware.h>
 #include <asm/arch/fifo.h>
+#include <asm/cacheflush.h>
 
 #define ERROR(fmt, args...) printk(KERN_ERR "firmware: " fmt , ## args)
 
@@ -45,15 +47,23 @@ int firmware_read(struct mtd_info *mtd, loff_t from, size_t len,
 	firmware_block.from = from;
 	firmware_block.len = len;
 	firmware_block.destination = buf;
-
-	// TODO: drain write buffer 
+	/* writeback cached data before ARM7 gets hand on */
+	dmac_clean_range((unsigned long)&firmware_block,
+                        ((unsigned long)&firmware_block)+sizeof(firmware_block)); 
 
 	nds_fifo_send(FIFO_FIRMWARE_CMD(FIFO_FIRMWARE_CMD_READ, 0));
 
 	if(wait_event_interruptible(wait_queue, firmware_data_read)) {
 		return -ERESTART;
 	}
+	/* invalidate cache before we read data written by ARM7 */
+	dmac_inv_range((unsigned long)&firmware_block,
+                      ((unsigned long)&firmware_block)+sizeof(firmware_block)); 
 
+	/* copy data to caller. Here better than in interrupt callback. */
+	memcpy(firmware_block.destination,
+  	      &firmware_block.data,
+	       firmware_block.len);
 	*retlen = len;
 	return 0;
 }
@@ -63,10 +73,6 @@ static void firmware_fifo_cb(u8 cmd)
 	switch(cmd) {
 		case FIFO_FIRMWARE_CMD_READ:
 			firmware_data_read = 1;
-			// TODO: invalidate data cache
-			memcpy(firmware_block.destination,
-			    &firmware_block.data,
-			    firmware_block.len);
 			wake_up_interruptible(&wait_queue);
 			break;
 		default:
