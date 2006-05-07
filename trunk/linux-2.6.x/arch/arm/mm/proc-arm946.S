@@ -60,8 +60,12 @@ ENTRY(cpu_arm946_check_bugs)
 ENTRY(cpu_arm946_proc_init)
 	mov	pc, lr
 
-/*
+/**
  * cpu_arm946_proc_fin()
+ *
+ * Prepare the CPU for reset:
+ *  - Disable interrupts
+ *  - Clean and turn off caches.
  */
 ENTRY(cpu_arm946_proc_fin)
 	stmfd	sp!, {lr}
@@ -73,9 +77,10 @@ ENTRY(cpu_arm946_proc_fin)
 	bl	v4wb_flush_kern_cache_all	@ write-back
 #endif /* CONFIG_CPU_CACHE_V4WT */
 	mrc	p15, 0, r0, c1, c0, 0		@ ctrl register
-	bic	r0, r0, #0x1000			@ ...i............
-	bic	r0, r0, #0x000e			@ ............wca.
-	mcr	p15, 0, r0, c1, c0, 0		@ disable caches
+	bic	r0, r0, #0x1000			@ disable instr. cache
+	bic	r0, r0, #0x0004			@ disable data cache
+	mcr	p15, 0, r0, c1, c0, 0
+	mcr	p15, 0, r0, c7, c10, 4		@ drain the write buffer
 	ldmfd	sp!, {pc}
 
 /*
@@ -94,6 +99,7 @@ ENTRY(cpu_arm946_reset)
 	bic	ip, ip, #0x000f			@ ............wcam
 	bic	ip, ip, #0x1100			@ ...i...s........
 	mcr	p15, 0, ip, c1, c0, 0		@ ctrl register
+	mcr	p15, 0, r0, c7, c10, 4		@ drain the write buffer
 	mov	pc, r0
 
 /*
@@ -113,6 +119,8 @@ ENTRY(cpu_arm946_dcache_clean_area)
 	add	r0, r0, #CACHE_DLINESIZE
 	subs	r1, r1, #CACHE_DLINESIZE
 	bhi	1b
+@drain the write buffer
+	mcr	p15, 0, r0, c7, c10, 4
 	mov	pc, lr
 /*
  * Function: arm946_switch_mm(unsigned long pgd_phys)
@@ -144,13 +152,12 @@ __arm946_setup:
 #else
 	bic	r0, r0, #0x0001			@ Disable PU
 #endif
-
-#ifdef CONFIG_CPU_ARM940_D_CACHE_ON
+@ #ifdef CONFIG_CPU_ARM940_D_CACHE_ON
 	orr	r0, r0, #0x0004			@ Enable D cache
-#endif
-#ifdef CONFIG_CPU_ARM940_I_CACHE_ON
+@ #endif
+@ #ifdef CONFIG_CPU_ARM940_I_CACHE_ON
 	orr	r0, r0, #0x1000                 @ I Cache on
-#endif
+@ #endif
 	mov	pc, lr
 	.size	__arm946_setup, . - __arm946_setup	
 
