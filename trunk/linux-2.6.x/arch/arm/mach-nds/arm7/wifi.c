@@ -664,7 +664,7 @@ void wifi_close(void)
 						  POWER0_LED_FAST));
 }
 
-/* handle a query from kerney for wifi address */
+/* handle a query from kernel for wifi address */
 void wifi_mac_query(void)
 {
 	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_MAC_QUERY,
@@ -677,7 +677,7 @@ void wifi_mac_query(void)
 			  ((2 << 16) | (((u16 *) wifi_data.MacAddr)[2]))));
 }
 
-/* handle a query from kerney for wifi address */
+/* handle a query from kernel for wifi address */
 void wifi_stats_query(void)
 {
 	wifi_data.stats[WIFI_STATS_DEBUG3] = WIFI_REG(0xA0);
