@@ -16,6 +16,7 @@
 #include <linux/interrupt.h>
 
 #include <asm/arch/fifo.h>
+#include <asm/cacheflush.h>
 
 #define TIMER1_DATA	(*(volatile u16*)0x04000104)
 #define TIMER2_DATA	(*(volatile u16*)0x04000108)
@@ -25,24 +26,18 @@
 #define TIMER_IRQ_REQ	(1<<6)
 #define TIMER_CASCADE	(TIMER_ENABLE|(1<<2))
 
-#define SAMPLERATE 	44000
+#define SAMPLERATE 	80000
 
-#define SINSIZE 100
+#define SINSIZE 32
 
 static const short sintab[SINSIZE] = {
-0, 2057, 4107, 6140, 8149, 10126, 12062, 13952, 15786, 17557,
-19260, 20886, 22431, 23886, 25247, 26509, 27666, 28714, 29648, 30466,
-31163, 31738, 32187, 32509, 32702, 32767, 32702, 32509, 32187, 31738,
-31163, 30466, 29648, 28714, 27666, 26509, 25247, 23886, 22431, 20886,
-19260, 17557, 15786, 13952, 12062, 10126, 8149, 6140, 4107, 2057,
-0, -2057, -4107, -6140, -8149, -10126, -12062, -13952, -15786, -17557,
--19260, -20886, -22431, -23886, -25247, -26509, -27666, -28714, -29648, -30466,
--31163, -31738, -32187, -32509, -32702, -32767, -32702, -32509, -32187, -31738,
--31163, -30466, -29648, -28714, -27666, -26509, -25247, -23886, -22431, -20886,
--19260, -17557, -15786, -13952, -12062, -10126, -8149, -6140, -4107, -2057
+0, 6393, 12539, 18204, 23170, 27245, 30273, 32137, 32767, 32137,
+30273, 27245, 23170, 18204, 12539, 6393, 0, -6393, -12539, -18204,
+-23170, -27245, -30273, -32137, -32767, -32137, -30273, -27245, -23170, -18204,
+-12539, -6393
 };
 
-#define BUFSIZE 10000
+#define BUFSIZE 64
 #define INTSIZE 500
 
 static short soundbuffer[BUFSIZE];
@@ -100,8 +95,8 @@ static void soundtest_play(int start)
 
 	/* now we can start the timer and be shure that
            the timer interrupt is not comming to early. */
-	TIMER1_CR = TIMER_ENABLE;
-	TIMER2_CR = TIMER_CASCADE | TIMER_IRQ_REQ;
+//	TIMER1_CR = TIMER_ENABLE;
+//	TIMER2_CR = TIMER_CASCADE | TIMER_IRQ_REQ;
 }
 
 static void soundtest_write(struct memdescr *descr, int samples, int step)
@@ -116,6 +111,7 @@ static void soundtest_write(struct memdescr *descr, int samples, int step)
  	}
 }
 
+#if 0
 static irqreturn_t soundtest_interrupt(int irq, void *dev_id,
 				     struct pt_regs *regs)
 {
@@ -124,7 +120,7 @@ static irqreturn_t soundtest_interrupt(int irq, void *dev_id,
 
 	return IRQ_HANDLED;
 }
-
+#endif
 
 static void soundtest_fill(void)
 {
@@ -139,7 +135,18 @@ static void soundtest_fill(void)
 	snddescr_right.sinindex = 0;
 
 	soundtest_write( &snddescr_left, BUFSIZE/2, 1);
-	soundtest_write( &snddescr_right, BUFSIZE/2, 2);
+	soundtest_write( &snddescr_right, BUFSIZE/2, 1);
+	dmac_clean_range((unsigned long)&soundbuffer[0],(unsigned long)&soundbuffer[BUFSIZE]);
+}
+
+void debug_pin(int state)
+{
+	short pattern = state ? 0x7FFF : 0;
+	short *p = soundbuffer;
+	int i = BUFSIZE/2;
+	for ( ; i; i--)
+		*p++ = pattern;
+	dmac_clean_range((unsigned long)&soundbuffer[0],(unsigned long)&soundbuffer[BUFSIZE]);
 }
 
 static int __init soundtest_init(void)
