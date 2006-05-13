@@ -26,6 +26,8 @@
 # define CACHE_DSIZE	16384
 #elif defined(CONFIG_CPU_SA1100)
 # define CACHE_DSIZE	8192
+#elif defined(CONFIG_ARCH_NDS)
+# define CACHE_DSIZE	4096
 #else
 # error Unknown cache size
 #endif
@@ -134,6 +136,18 @@ ENTRY(v4wb_coherent_kern_range)
  *	- end	 - virtual end address
  */
 ENTRY(v4wb_coherent_user_range)
+
+#ifdef CONFIG_XIP_KERNEL
+#ifdef CONFIG_ARCH_NDS
+	@ Test for optimizing XIP addresses
+	@ =================================
+	@ if the region is mapped via XIP, we don't need to drain
+	@ the caches because this area is not in the data cache.
+	ldr	ip, =CONFIG_XIP_PHYS_ADDR
+	cmp	r0, ip				@ region > XIP start address?
+	movhs	pc, lr				@ yes: don't flush caches
+#endif	
+#endif
 	bic	r0, r0, #CACHE_DLINESIZE - 1
 1:	mcr	p15, 0, r0, c7, c10, 1		@ clean D entry
 	mcr	p15, 0, r0, c7, c6, 1		@ invalidate D entry
@@ -141,8 +155,8 @@ ENTRY(v4wb_coherent_user_range)
 	cmp	r0, r1
 	blo	1b
 	mov	ip, #0
-	mcr	p15, 0, ip, c7, c5, 0		@ invalidate I cache
 	mcr	p15, 0, ip, c7, c10, 4		@ drain WB
+	mcr	p15, 0, ip, c7, c5, 0		@ invalidate I cache
 	mov	pc, lr
 
 
@@ -194,11 +208,17 @@ ENTRY(v4wb_dma_clean_range)
  *
  *	- start  - virtual start address
  *	- end	 - virtual end address
- *
- *	This is actually the same as v4wb_coherent_kern_range()
  */
-	.globl	v4wb_dma_flush_range
-	.set	v4wb_dma_flush_range, v4wb_coherent_kern_range
+ENTRY(v4wb_dma_flush_range)
+	bic	r0, r0, #CACHE_DLINESIZE - 1
+1:	mcr	p15, 0, r0, c7, c10, 1		@ clean D entry
+	mcr	p15, 0, r0, c7, c6, 1		@ invalidate D entry
+	add	r0, r0, #CACHE_DLINESIZE
+	cmp	r0, r1
+	blo	1b
+	mcr	p15, 0, r0, c7, c10, 4		@ drain write buffer
+	mov	pc, lr
+
 
 	__INITDATA
 

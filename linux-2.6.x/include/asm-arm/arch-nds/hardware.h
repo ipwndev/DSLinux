@@ -32,6 +32,9 @@
   #define CONFIG_DRAM_BASE 0x10000000
 #endif
 
+/* only a dummy, the code in cache-v4wb.S is never executed */
+#define FLUSH_BASE	0x80000000
+
 #ifdef CONFIG_XIP_KERNEL
 
 #define MACH_RESERVE_BOOTMEM()

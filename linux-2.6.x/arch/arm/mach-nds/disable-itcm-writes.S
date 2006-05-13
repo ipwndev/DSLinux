@@ -47,13 +47,9 @@ ENTRY(disable_writes_to_itcm)
 	@---------------------------------------------------------------------------------
 	@ Protection Unit Setup added by Sasq
 	@---------------------------------------------------------------------------------
-	@ Disable cache
-	mov	r0, #0
-	mcr	p15, 0, r0, c7, c5, 0		@ Instruction cache
-	mcr	p15, 0, r0, c7, c6, 0		@ Data cache
 
-	@ Wait for write buffer to empty
-	mcr	p15, 0, r0, c7, c10, 4
+	@ NOTE: you can not invalidate the data cache here, 
+	@ because they are dirty in writeback mode.
 
 	@-------------------------------------------------------------------------
 	@ DAccess
