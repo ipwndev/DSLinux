@@ -742,6 +742,16 @@ CONFIG_LIB_UC_LIBC_TZ_FROM_FILE
   set up by init during system boot.  This means that changes to the
   time zone take effect immediately instead of requiring a reboot.
 
+CONFIG_LIB_ID3TAG_FORCE
+  MP3 tag file library.
+  Only enable this if you want to force the library to be built.  The
+  Config will make sure this library is built if it is needed.
+
+CONFIG_LIB_MAD_FORCE
+  Embedded MP3 decoder.
+  Only enable this if you want to force the library to be built.  The
+  Config will make sure this library is built if it is needed.
+
 CONFIG_USER_BOA_EMERG
   If enabled, boa will syslog all messages at the emergency level
 
@@ -1101,6 +1111,9 @@ CONFIG_USER_KLAXON_TFTP
 CONFIG_USER_MAIL_MAIL_IP
   Some kind of mail proggy
   Approx. binary size: 27k
+
+CONFIG_USER_MADPLAY
+  Play MP3 files
 
 CONFIG_USER_MP3PLAY_MP3PLAY
   Play MP3 files

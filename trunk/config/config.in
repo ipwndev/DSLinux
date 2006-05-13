@@ -113,6 +113,8 @@ if [ "$CONFIG_LIB_LIBCURL_FORCE" = "y" ]; then
 	define_bool CONFIG_LIB_LIBSSL y
 fi
 bool 'Build libcrypt_old'	CONFIG_LIB_LIBCRYPT_OLD_FORCE
+bool 'Build libid3tag'		CONFIG_LIB_ID3TAG_FORCE
+bool 'Build libmad'		CONFIG_LIB_MAD_FORCE
 
 comment 'Library Configuration'
 bool 'Support time zones'	CONFIG_LIB_UC_LIBC_TIMEZONE
@@ -827,6 +829,12 @@ bool 'vi (leevee)'		CONFIG_USER_LEVEE_VI
 bool 'vi (elvis-tiny)'		CONFIG_USER_ELVISTINY_VI
 
 comment 'Audio tools'
+bool 'madplay'			CONFIG_USER_MADPLAY
+if [ "$CONFIG_USER_MADPLAY" = "y" ]; then
+	define_bool CONFIG_LIB_ZLIB y
+	define_bool CONFIG_LIB_ID3TAG y
+	define_bool CONFIG_LIB_MAD y
+fi
 bool 'mp3play'			CONFIG_USER_MP3PLAY_MP3PLAY
 if [ "$CONFIG_USER_MP3PLAY_MP3PLAY" = "y" ]; then
 bool '  swap -d and -w options'	CONFIG_USER_MP3PLAY_SWAP_WD
