@@ -86,6 +86,10 @@ dir_$(CONFIG_LIB_NCURSES)       += libncurses
 dir_$(CONFIG_LIB_NCURSES_FORCE) += libncurses
 dir_$(CONFIG_LIB_LIBPCRE)	+= pcre
 dir_$(CONFIG_LIB_LIBPCRE_FORCE) += pcre
+dir_$(CONFIG_LIB_ID3TAG)	+= libid3tag
+dir_$(CONFIG_LIB_ID3TAG_FORCE)	+= libid3tag
+dir_$(CONFIG_LIB_MAD)		+= libmad
+dir_$(CONFIG_LIB_MAD_FORCE)	+= libmad
 
 
 # And build libraries in the prop directory last
@@ -167,7 +171,9 @@ LINKLIBS=\
 	$(ROOTDIR)/lib/expat/*.a $(ROOTDIR)/lib/expat/*.so* \
 	$(ROOTDIR)/lib/libupnp/upnp/bin/*.so* $(ROOTDIR)/lib/adns/src/libadns.a \
 	$(ROOTDIR)/lib/flex/build/*.a \
-	$(ROOTDIR)/lib/libgmp/*.a 
+	$(ROOTDIR)/lib/libgmp/*.a  \
+	$(ROOTDIR)/lib/libid3tag/*.a \
+	$(ROOTDIR)/lib/libmad/*.a 
 
 ##############################################################################
 

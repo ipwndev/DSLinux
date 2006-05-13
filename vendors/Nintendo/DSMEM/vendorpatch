@@ -1,6 +1,14 @@
---- common/config.vendor	2006-04-22 22:29:47.000000000 +0200
-+++ DSMEM/config.vendor	2006-04-23 20:53:26.000000000 +0200
-@@ -208,7 +208,7 @@
+--- common/config.vendor	2006-05-13 19:29:00.000000000 +0200
++++ DSMEM/config.vendor	2006-05-13 19:29:00.000000000 +0200
+@@ -68,7 +68,6 @@
+ # CONFIG_LIB_UC_LIBC_TIMEZONE is not set
+ # CONFIG_LIB_ID3TAG_FORCE is not set
+ # CONFIG_LIB_MAD_FORCE is not set
+-
+ #
+ # Flash Tools
+ #
+@@ -210,7 +209,7 @@
  # CONFIG_USER_PROFTPD_PROFTPD is not set
  # CONFIG_USER_RADVD_RADVD is not set
  # CONFIG_USER_RDATE_RDATE is not set
@@ -9,7 +17,7 @@
  # CONFIG_USER_ROUTED_ROUTED is not set
  # CONFIG_USER_RP_PPPOE_PPPOE is not set
  # CONFIG_USER_RP_PPPOE_PPPOE_SERVER is not set
-@@ -699,39 +699,39 @@
+@@ -702,39 +701,39 @@
  #
  # Games
  #
