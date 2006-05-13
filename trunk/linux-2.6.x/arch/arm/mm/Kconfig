@@ -199,7 +199,7 @@ config CPU_ARM946E
 	depends on ARCH_ST501X0 || ARCH_NDS
 	select CPU_32v5
 	select CPU_ABRT_EV5T
-	select CPU_CACHE_V4WT
+	select CPU_CACHE_V4WB
 	help
 	  ARM946E-S is a synthesizable macrocell combining an ARM
 	  process. It is a member of the ARM9 Thumb family of

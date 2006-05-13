@@ -233,9 +233,7 @@ _entry:
 	@ Write buffer enable
 	@-------------------------------------------------------------------------
 	@             DWVGM4IO
-	@ldr	r0,=0b00001000  @ we want write buffer for main memory, but
-				@ currently, it kills linux with data cache enabled.
-	ldr	r0,=0b00000000
+	ldr	r0,=0b00001000
 	mcr	p15, 0, r0, c3, c0, 0
 
 	@-------------------------------------------------------------------------
@@ -244,13 +242,16 @@ _entry:
 	@ Data Cache
 	@ NOTE: Data Caching for GBA ROM+RAM is a problem: all the special
 	@	Hardware of the Flash Cards needs special cache operations.
+	@	So we left them out of the data cache (only instruction for XIP).
 	@             DWVGM4IO
-	ldr	r0,=0b00001000 @ data cache is good for main memory
+	@ NOTE: in arch/arm/mm/cache-v4wb.S, there is an optimisation you
+	@       may have to change if you enable more cachable areas!
+	ldr	r0,=0b00001000
 	mcr	p15, 0, r0, c2, c0, 0
 
 	@ Instruction cache is on for
 	@ - Main Memory
-	@ - GBA Slot ROM+RAM
+	@ - GBA Slot ROM+RAM	(for XIP)
 	@             DWVGM4IO
 	ldr	r0,=0b00011000
 	mcr	p15, 0, r0, c2, c0, 1
@@ -259,29 +260,29 @@ _entry:
 	@ IAccess
 	@-------------------------------------------------------------------------
 	@ - default: none
-	@ - ITCM: kernel r+w
+	@ - ITCM: all r+w (we want to copy inner loops into the ITCM)
 	@ - IOREG: none
 	@ - Main: all r+w
 	@ - GBA: all r+w
 	@ - Video: none
 	@ - ARM9 IWRAM: none
 	@             DWVGM4IO
-	ldr	r0,=0x00033010
+	ldr	r0,=0x00033030
 	mcr	p15, 0, r0, c5, c0, 3
 
 	@-------------------------------------------------------------------------
 	@ DAccess
 	@-------------------------------------------------------------------------
 	@ - default: none
-	@ - ITCM: kernel r+w
+	@ - ITCM: all r+w  (we want to copy inner loops into the ITCM)
 	@ - IOREG: kernel r+w
 	@ - Main: all r+w
 	@ - GBA: all r+w
 	@ - Video: all r+w
 	@ - ARM9 IWRAM: kernel r+w
-	@ - DTCM: kernel r+w
+	@ - DTCM: all r+w  (we want to copy data into the DTCM)
 	@             DWVGM4IO
-	ldr	r0,=0x11333110
+	ldr	r0,=0x31333130
 	mcr	p15, 0, r0, c5, c0, 2
 
 	@-------------------------------------------------------------------------

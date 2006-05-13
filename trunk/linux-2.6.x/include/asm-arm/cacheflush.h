@@ -283,8 +283,8 @@ extern void dmac_flush_range(unsigned long, unsigned long);
 /*
  * Convert calls to our calling convention.
  */
-#define flush_cache_all()		__cpuc_flush_kern_all()
 #ifdef CONFIG_MMU
+#define flush_cache_all()		__cpuc_flush_kern_all()
 #ifndef CONFIG_CPU_CACHE_VIPT
 static inline void flush_cache_mm(struct mm_struct *mm)
 {
