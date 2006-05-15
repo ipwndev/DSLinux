@@ -25,6 +25,8 @@
 #define TIMER_IRQ_REQ	(1<<6)
 #define TIMER_CASCADE	(TIMER_ENABLE|(1<<2))
 
+#define DMA_BUFFERSIZE	(32*1024)
+
 /* module parameters (see "Module Parameters") */
 static int index[SNDRV_CARDS] = SNDRV_DEFAULT_IDX;
 static char *id[SNDRV_CARDS] = SNDRV_DEFAULT_STR;
@@ -56,11 +58,11 @@ static snd_pcm_hardware_t snd_nds_playback_hw = {
 	.rate_max = 48000,
 	.channels_min = 1,
 	.channels_max = 2,
-	.buffer_bytes_max = 32768,
-	.period_bytes_min = 512,
-	.period_bytes_max = 4096,
-	.periods_min = 1,
-	.periods_max = 1024,
+	.buffer_bytes_max = DMA_BUFFERSIZE,
+	.period_bytes_min = DMA_BUFFERSIZE/32,
+	.period_bytes_max = DMA_BUFFERSIZE/8,
+	.periods_min = 8,
+	.periods_max = 32,
 };
 
 /* hardware definition */
@@ -205,13 +207,13 @@ static int snd_nds_pcm_prepare(snd_pcm_substream_t * substream)
 	TIMER1_DATA = 0 - ((0x1000000 / runtime->rate)*2);
 	switch (runtime->format) {
 	case SNDRV_PCM_FORMAT_S8:
-		TIMER2_DATA = 0 - chip->period_size;
+		TIMER2_DATA = 0 - (chip->period_size / runtime->channels);
 		break;
 	case SNDRV_PCM_FORMAT_S16_LE:
-		TIMER2_DATA = 0 - (chip->period_size / 2);
+		TIMER2_DATA = 0 - ((chip->period_size / 2) / runtime->channels);
 		break;
 	case SNDRV_PCM_FORMAT_IMA_ADPCM:
-		TIMER2_DATA = 0 - (chip->period_size * 2);
+		TIMER2_DATA = 0 - ((chip->period_size * 2) / runtime->channels);
 		break;
 	default:
 		break;
@@ -319,7 +321,7 @@ static int __devinit snd_nds_new_pcm(struct nds *chip)
 	/* NOTE: this may fail */
 	//return snd_pcm_lib_preallocate_pages_for_all(pcm, SNDRV_DMA_TYPE_DEV, snd_dma_isa_data(),	/*pretend to be an ISA device */
 	return snd_pcm_lib_preallocate_pages_for_all(pcm, SNDRV_DMA_TYPE_CONTINUOUS, snd_dma_continuous_data(GFP_KERNEL),
-					      32 * 1024, 64 * 1024);
+					      DMA_BUFFERSIZE, DMA_BUFFERSIZE);
 }
 
 static irqreturn_t snd_nds_interrupt(int irq, void *dev_id,
