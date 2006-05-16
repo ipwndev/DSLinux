@@ -9,7 +9,7 @@
 #undef CRAY_STACKSEG_END
 
 /* Define to 1 if using `alloca.c'. */
-#define C_ALLOCA 	1
+#undef C_ALLOCA 
 
 /* Define to enable diagnostic debugging support. */
 #undef DEBUG
@@ -156,10 +156,10 @@
 #define HAVE_MEMPCPY	1
 
 /* Define to 1 if you have a working `mmap' system call. */
-#undef HAVE_MMAP
+#define HAVE_MMAP	1
 
 /* Define to 1 if you have the `munmap' function. */
-#undef HAVE_MUNMAP
+#define HAVE_MUNMAP	1
 
 /* Define to 1 if you have the <nl_types.h> header file. */
 #undef HAVE_NL_TYPES_H
@@ -307,13 +307,13 @@
 	STACK_DIRECTION > 0 => grows toward higher addresses
 	STACK_DIRECTION < 0 => grows toward lower addresses
 	STACK_DIRECTION = 0 => direction of growth unknown */
-#undef STACK_DIRECTION
+#define STACK_DIRECTION	0
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS	1
 
 /* Define if you have mmap() and you want to use it. */
-#undef USE_MMAP
+#undef	USE_MMAP
 
 /* Version number of package */
 #define VERSION "0.15.2 (beta)"

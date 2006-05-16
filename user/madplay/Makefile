@@ -33,8 +33,10 @@ LDLIBS += -lid3tag -lmad -lz -lm
 all: $(EXEC)
 
 # This is the rule that build the mad player.
+# madplay is executed from RAM (non-XIP), because of speed.
 $(EXEC): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
+	$(CROSS)flthdr -r $@
 
 # The romfs target is also phony. It is used to copy your app
 # into the DSLinux filesystem image.

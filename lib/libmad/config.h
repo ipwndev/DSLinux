@@ -23,9 +23,7 @@
 #define HAVE_FCNTL_H 1
 
 /* Define to 1 if you have the `fork' function. */
-/* NOTE: I have checked with and without HAVE_FORK in DSLINUX.
-   HAVE_FORK is not better. */
-#undef HAVE_FORK 
+#define HAVE_FORK 1
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
