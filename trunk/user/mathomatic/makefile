@@ -2,12 +2,12 @@
 # Currently uses gcc only options, just remove them for other C compilers.
 
 VERSION		= `cat VERSION`
-CFLAGS		+= -O -Wunused -Wshadow -DUNIX -DVERSION=\"$(VERSION)\"
-LDFLAGS		+= -s
+CFLAGS		+= -Wunused -Wshadow -DUNIX -DVERSION=\"$(VERSION)\"
+#LDFLAGS		+= -s
 LIBS		+= -lm
 
-CFLAGS		+= $(READLINE:1=-DREADLINE)
-LIBS		+= $(READLINE:1=-lreadline -lncurses)
+#CFLAGS		+= $(READLINE:1=-DREADLINE)
+#LIBS		+= $(READLINE:1=-lreadline -lncurses)
 
 prefix		?= /usr/local
 bindir		?= $(prefix)/bin
@@ -67,3 +67,6 @@ uninstall:
 clean:
 	rm -f *.o
 	rm -f lib/*.o
+
+romfs:
+	$(ROMFSINST) /bin/mathomatic
