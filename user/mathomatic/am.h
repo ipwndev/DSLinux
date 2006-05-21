@@ -60,13 +60,13 @@
 /*
  * The following defines the maximum number of equation spaces that can be allocated.
  */
-#define	N_EQUATIONS	50
+#define	N_EQUATIONS	5
 
 /*
  * The following defines the default maximum mathematical expression size.
  * This should be made much smaller for Palmtops or embedded systems.
  */
-#define	DEFAULT_N_TOKENS	30000
+#define	DEFAULT_N_TOKENS	100
 
 #define	DIVISOR_SIZE	(DEFAULT_N_TOKENS / 2)	/* A nice maximum divisor size. */
 
