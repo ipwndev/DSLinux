@@ -7,8 +7,10 @@ include $(LINUX_CONFIG)
 ROMFSIMG = $(IMAGEDIR)/romfs.img
 ELFIMAGE = $(IMAGEDIR)/image.elf
 IMAGE    = $(IMAGEDIR)/dsimage.bin
+FATFS	 = sd
 
-ROMFS_DIRS = bin dev etc home lib mnt proc sd usr usr/share/udhcpc var var/run
+ROMFS_DIRS = bin dev etc home lib mnt proc usr usr/share var $(FATFS)/linux
+FS_DIRS = home usr/share/udhcpc var/tmp var/run etc etc/rc.d
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
@@ -49,6 +51,7 @@ DEVICES = \
 clean:
 
 romfs:
+	rm -r $(ROMFSDIR)
 	[ -d $(ROMFSDIR)/$$i ] || mkdir -p $(ROMFSDIR)
 	for i in $(ROMFS_DIRS); do \
 		[ -d $(ROMFSDIR)/$$i ] || mkdir -p $(ROMFSDIR)/$$i; \
@@ -59,22 +62,38 @@ romfs:
 	# these permissions are needed for openpty and family to work
 	# on non-ptmx ptys
 	chmod 620 $(ROMFSDIR)/dev/@[pt]ty[pqrsPQRS][0-9a-f],*
+	for i in $(FS_DIRS); do \
+		[ -d $(ROMFSDIR)/$(FATFS)/linux/$$i ] || mkdir -p $(ROMFSDIR)/$(FATFS)/linux/$$i; \
+	done
+	$(ROMFSINST) -s /$(FATFS)/linux/var /var
+	$(ROMFSINST) -s /$(FATFS)/linux/home /home
 	$(ROMFSINST) -s /var/tmp /tmp
 	$(ROMFSINST) -s /bin /sbin
-	$(ROMFSINST) -s /var/resolv.conf /etc/resolv.conf
-	$(ROMFSINST) -s /var/hosts /etc/hosts
+	$(ROMFSINST) -s /$(FATFS)/linux/usr/share/udhcpc /usr/share/udhcpc
+	$(ROMFSINST) -s /$(FATFS)/linux/usr/share/udhcpc/resolv.conf /etc/resolv.conf
+	$(ROMFSINST) -s /$(FATFS)/linux/etc/rc.local /etc/rc.local
+	$(ROMFSINST) -s /$(FATFS)/linux/etc/rc.conf /etc/rc.conf
+	$(ROMFSINST) -s /$(FATFS)/linux/etc/rc.d /etc/rc.d
+	$(ROMFSINST) -s /$(FATFS)/linux/etc/hosts /etc/hosts
 	$(ROMFSINST) /etc/rc
 	$(ROMFSINST) /etc/inittab
 	$(ROMFSINST) /etc/motd
 	$(ROMFSINST) /etc/issue
 	$(ROMFSINST) $(NDS_COMMON)/passwd /etc/passwd
-	$(ROMFSINST) -p +x $(NDS_COMMON)/default.script /usr/share/udhcpc/default.script
+	$(ROMFSINST) $(NDS_COMMON)/rc.common /etc/rc.common
+	$(ROMFSINST) $(NDS_COMMON)/rc.defaults /etc/rc.defaults
+	for f in $(NDS_COMMON)/rc.d/*; do \
+		[ -d $$f ] || $(ROMFSINST) $$f /$(FATFS)/linux/etc/rc.d/ ; \
+	done
+	$(ROMFSINST) -p +x $(NDS_COMMON)/default.script /$(FATFS)/linux/usr/share/udhcpc/default.script
 	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
 	$(ROMFSINST) -p +x /bin/mountsd
 	$(ROMFSINST) -p +x /bin/umountsd
 
 image:
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
+	-rm -r $(IMAGEDIR)/linux
+	mv $(ROMFSDIR)/$(FATFS)/linux $(IMAGEDIR)
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
 	if [ "$(CONFIG_XIP_KERNEL)" != "y" ]; then \
 		BSS=`$(CROSS_COMPILE)objdump --headers $(ROOTDIR)/$(LINUXDIR)/linux | \
@@ -94,6 +113,7 @@ image:
 			-7 $(ROOTDIR)/$(LINUXDIR)/arch/arm/mach-nds/arm7.bin \
 		       	-r7 0x03800000 -e7 0x03800000  \
 			-b $(NDS_COMMON)/tux.bmp "DSLinux;Port of Linux;to the DS!" ; \
+		( cd $(IMAGEDIR); tar -cvzf dslinux-dsmem.tgz linux `basename $(IMAGE)` ) \
 	else \
 	        $(CROSS_COMPILE)objcopy -O binary \
                         --remove-section=.text --remove-section=.init \
@@ -102,5 +122,6 @@ image:
                         -j .init -j .text \
                         $(ROOTDIR)/$(LINUXDIR)/linux $(IMAGEDIR)/linux.text ; \
 		cat $(IMAGEDIR)/linux.text $(IMAGEDIR)/linux.data $(ROMFSIMG) > $(IMAGE) ; \
+		( cd $(IMAGEDIR); tar -cvzf dslinux-dsmem.tgz linux `basename $(IMAGE)` ) \
 	fi
 

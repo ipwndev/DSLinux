@@ -1,6 +1,5 @@
-hostname NintendoDS
+#!/bin/sh
+
 mount -t proc none /proc
-mount -t ramfs none /var
 /sbin/mountsd
-mkdir /var/tmp
-fwver
+. /etc/rc.common
