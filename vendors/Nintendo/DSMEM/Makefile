@@ -51,7 +51,7 @@ DEVICES = \
 clean:
 
 romfs:
-	rm -r $(ROMFSDIR)
+	rm -rf $(ROMFSDIR)
 	[ -d $(ROMFSDIR)/$$i ] || mkdir -p $(ROMFSDIR)
 	for i in $(ROMFS_DIRS); do \
 		[ -d $(ROMFSDIR)/$$i ] || mkdir -p $(ROMFSDIR)/$$i; \
