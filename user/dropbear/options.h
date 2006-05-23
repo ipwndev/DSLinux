@@ -32,7 +32,7 @@
  *
  * Both of these flags can be defined at once, don't compile without at least
  * one of them. */
-#define NON_INETD_MODE
+//#define NON_INETD_MODE
 #define INETD_MODE
 
 /* Setting this disables the fast exptmod bignum code. It saves ~5kB, but is
@@ -46,7 +46,7 @@ etc) slower (perhaps by 50%). Recommended for most small systems. */
 #define DROPBEAR_SMALL_CODE
 
 /* Enable X11 Forwarding - server only */
-#define ENABLE_X11FWD
+//#define ENABLE_X11FWD
 
 /* Enable TCP Fowarding */
 /* 'Local' is "-L" style (client listening port forwarded via server)
@@ -68,9 +68,9 @@ etc) slower (perhaps by 50%). Recommended for most small systems. */
 #define DROPBEAR_AES128_CBC
 #define DROPBEAR_3DES_CBC
 #define DROPBEAR_AES256_CBC
-#define DROPBEAR_BLOWFISH_CBC
-#define DROPBEAR_TWOFISH256_CBC
-#define DROPBEAR_TWOFISH128_CBC
+//#define DROPBEAR_BLOWFISH_CBC
+//#define DROPBEAR_TWOFISH256_CBC
+//#define DROPBEAR_TWOFISH128_CBC
 
 /* Message Integrity - at least one required.
  * RFC Draft requires sha1 and recommends sha1-96.
@@ -86,7 +86,7 @@ etc) slower (perhaps by 50%). Recommended for most small systems. */
  * which are not the standard form. */
 #define DROPBEAR_SHA1_HMAC
 #define DROPBEAR_SHA1_96_HMAC
-#define DROPBEAR_MD5_HMAC
+//#define DROPBEAR_MD5_HMAC
 
 /* Hostkey/public key algorithms - at least one required, these are used
  * for hostkey as well as for verifying signatures with pubkey auth.
@@ -191,9 +191,9 @@ etc) slower (perhaps by 50%). Recommended for most small systems. */
 /* if you want to enable running an sftp server (such as the one included with
  * OpenSSH), set the path below. If the path isn't defined, sftp will not
  * be enabled */
-#ifndef SFTPSERVER_PATH
-#define SFTPSERVER_PATH "/usr/libexec/sftp-server"
-#endif
+//#ifndef SFTPSERVER_PATH
+//#define SFTPSERVER_PATH "/usr/libexec/sftp-server"
+//#endif
 
 /* This is used by the scp binary when used as a client binary. If you're
  * not using the Dropbear client, you'll need to change it */
