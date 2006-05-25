@@ -32,6 +32,8 @@ do
 		 }' < $TMP > $NEW
 done
 
-cat $NEW
+# XXX: Quick and dirty sed hack below to stop the "history size" question
+# during build.
+cat $NEW | sed -e 's/CONFIG_FEATURE_COMMAND_HISTORY=\([0-9]*\)=y/CONFIG_FEATURE_COMMAND_HISTORY=\1/'
 rm -f $NEW $TMP
 exit 0
