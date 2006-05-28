@@ -67,6 +67,8 @@ uninstall:
 clean:
 	rm -f *.o
 	rm -f lib/*.o
+	rm -f $(AOUT)
+	rm -f *.gdb
 
 romfs:
 	$(ROMFSINST) /bin/mathomatic
