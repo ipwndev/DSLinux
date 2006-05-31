@@ -64,12 +64,18 @@ romfs:
 	$(ROMFSINST) -s /var/tmp /tmp
 	$(ROMFSINST) -s /bin /sbin
 	$(ROMFSINST) -s /var/resolv.conf /etc/resolv.conf
+	$(ROMFSINST) -s /var/rc.conf /etc/rc.conf
 	$(ROMFSINST) -s /var/hosts /etc/hosts
 	$(ROMFSINST) -s /var/home /home
 	$(ROMFSINST) /etc/rc
 	$(ROMFSINST) /etc/inittab
 	$(ROMFSINST) /etc/motd
 	$(ROMFSINST) /etc/issue
+	$(ROMFSINST) $(NDS_COMMON)/rc.common /etc/rc.common
+	$(ROMFSINST) $(NDS_COMMON)/rc.defaults /etc/rc.defaults
+	for f in $(NDS_COMMON)/rc.d/*; do \
+		$(ROMFSINST) $$f /etc/rc.d/ ; \
+	done
 	$(ROMFSINST) $(NDS_COMMON)/passwd /etc/passwd
 	$(ROMFSINST) -p +x $(NDS_COMMON)/default.script /usr/share/udhcpc/default.script
 	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
