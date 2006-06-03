@@ -119,7 +119,7 @@ config.tk: config.in
 	chmod 755 config.tk
 
 .PHONY: xconfig
-xconfig: config.tk
+xconfig: no_root config.tk
 	@wish -f config.tk
 	@if [ ! -f .config ]; then \
 		echo; \
@@ -141,7 +141,7 @@ xconfig: config.tk
 	@config/setconfig final
 
 .PHONY: config
-config: config.in
+config: no_root config.in
 	@HELP_FILE=config/Configure.help \
 		$(CONFIG_SHELL) $(SCRIPTSDIR)/Configure config.in
 	@chmod u+x config/setconfig
@@ -158,7 +158,7 @@ config: config.in
 	@config/setconfig final
 
 .PHONY: menuconfig
-menuconfig: config.in
+menuconfig: no_root config.in
 	$(MAKE) -C $(SCRIPTSDIR)/lxdialog all
 	@HELP_FILE=config/Configure.help \
 		$(CONFIG_SHELL) $(SCRIPTSDIR)/Menuconfig config.in
@@ -182,7 +182,7 @@ menuconfig: config.in
 	@config/setconfig final
 
 .PHONY: oldconfig
-oldconfig: config.in
+oldconfig: no_root config.in
 	@HELP_FILE=config/Configure.help \
 		$(CONFIG_SHELL) $(SCRIPTSDIR)/Configure -d config.in
 	@$(MAKE) oldconfig_linux
@@ -243,12 +243,12 @@ oldconfig_uClibc:
 #
 
 .PHONY: romfs
-romfs:
+romfs: no_root
 	for dir in vendors $(DIRS) ; do [ ! -d $$dir ] || $(MAKEARCH) -C $$dir romfs || exit 1 ; done
 	-find $(ROMFSDIR)/. -name CVS | xargs -r rm -rf
 
 .PHONY: image
-image:
+image: no_root
 	[ -d $(IMAGEDIR) ] || mkdir $(IMAGEDIR)
 	$(MAKEARCH) -C vendors image
 
