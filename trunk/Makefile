@@ -17,10 +17,18 @@ VERSIONSTR = $(CONFIG_VENDOR)/$(CONFIG_PRODUCT) Version $(VERSIONPKG)
 ifeq (.config,$(wildcard .config))
 include .config
 
-all: ucfront subdirs romfs modules modules_install image
+all: no_root ucfront subdirs romfs modules modules_install image
 else
-all: config_error
+all: no_root config_error
 endif
+
+no_root:
+	@if [ "`whoami`" = "root" ] && [ -z "$${FAKEROOTKEY}" ]; then \
+		echo "Building DSLinux as root is dangerous!"; \
+		echo "Build as non-root user instead."; \
+		echo "Exiting"; \
+		exit 1; \
+	fi
 
 ############################################################################
 #
