@@ -42,11 +42,11 @@ ENTRY(disable_writes_to_itcm)
     mov r10, r0
 
 	ldr	r1, =0x00002078			@ disable DTCM and protection unit
-	mcr	p15, 0, r1, c1, c0
+	mcr	p15, 0, r1, c1, c0, 0
 
-	@---------------------------------------------------------------------------------
+	@-------------------------------------------------------------------------
 	@ Protection Unit Setup added by Sasq
-	@---------------------------------------------------------------------------------
+	@-------------------------------------------------------------------------
 
 	@ NOTE: you can not invalidate the data cache here, 
 	@ because they are dirty in writeback mode.
@@ -54,21 +54,21 @@ ENTRY(disable_writes_to_itcm)
 	@-------------------------------------------------------------------------
 	@ DAccess
 	@-------------------------------------------------------------------------
-	@ modify only ITCM region 1
+	@ modify only ITCM,DTCM region 0
 	mrc	p15, 0, r0, c5, c0, 2
-	ldr	r1,=0xFFFFFF0F
+	ldr	r1,=0xFFFFFFF0
 	and	r0,r0,r1
-	ldr	r1,=0x00000050
+	ldr	r1,=0x00000005
 	orr	r0,r0,r1
 	mcr	p15, 0, r0, c5, c0, 2
 
 	@-------------------------------------------------------------------------
-	@ Enable ICache, DCache, ITCM & DTCM
+	@ Enable ICache, DCache, ITCM & DTCM. Set round-robin-replacement
 	@-------------------------------------------------------------------------
 	mrc	p15, 0, r0, c1, c0, 0
-	ldr	r1,=0x55005
+	ldr	r1,=0x5507B
 	orr	r0,r0,r1
-	ldr	r1,=0xfdfff
+	ldr	r1,=0x550FD
 	and	r0,r0,r1
 	mcr	p15, 0, r0, c1, c0, 0
 

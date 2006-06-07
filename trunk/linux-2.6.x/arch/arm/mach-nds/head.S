@@ -50,7 +50,7 @@
 #define PAGE_8K		(0b01100 << 1)
 #define PAGE_16K	(0b01101 << 1)
 #define PAGE_32K	(0b01110 << 1)
-#define PAGE_64K	(0b00111 << 1)
+#define PAGE_64K	(0b01111 << 1)
 #define PAGE_128K	(0b10000 << 1)
 #define PAGE_256K	(0b10001 << 1)
 #define PAGE_512K	(0b10010 << 1)
@@ -148,7 +148,7 @@ _entry:
 #endif
 #if 0
 	/* does not work for some reason */
-	/* Palatte debugging - draw a pixel with colour != [black|white] */
+	/* Palette debugging - draw a pixel with colour != [black|white] */
 	ldr r1, =0x05000000
 	ldr r0, =0x05
 	strh r0, [r1]
@@ -175,123 +175,127 @@ _entry:
 	@ Wait for write buffer to empty
 	mcr	p15, 0, r0, c7, c10, 4
 
-	ldr	r0, =(0x00800000 | 0x0A)
-	mcr	p15, 0, r0, c9, c1		@ DTCM base = 0x00800000, size = 16 KB
-	@---------------------------------------------------------------------------------
+	ldr	r0, =(0x00008000 | 0x0A)
+	mcr	p15, 0, r0, c9, c1		@ DTCM base = 0x00008000, size = 16 KB
+	@-------------------------------------------------------------------------
 	@ Setup memory regions similar to Release Version
-	@---------------------------------------------------------------------------------
 
 	@-------------------------------------------------------------------------
-	@ Region 0 - Default - No access
+
 	@-------------------------------------------------------------------------
-	ldr	r0,=( PAGE_4G | 0x00000000 | 1)
+	@ Region 0 - ITCM (vectors) and DTCM
+	@ ITCM   0x00000000 - 0x00007FFF
+	@ DTCM   0x00008000 - 0x0000BFFF
+	@ ITCM and DTCM are grouped together because we run out of available regions.
+	@-------------------------------------------------------------------------
+	ldr	r0,=( PAGE_64K | 0x00000000 | 1)
 	mcr	p15, 0, r0, c6, c0, 0
 
 	@-------------------------------------------------------------------------
-	@ Region 1 - ITCM - vectors
+	@ Region 1 - Main Memory
 	@-------------------------------------------------------------------------
-	ldr	r0,=( PAGE_32K | 0x00000000 | 1)
+	ldr	r0,=( PAGE_4M  | 0x02000000 | 1)
 	mcr	p15, 0, r0, c6, c1, 0
-
-	@-------------------------------------------------------------------------
-	@ Region 2 - IO Registers - Not cached
-	@-------------------------------------------------------------------------
-	ldr	r0,=( PAGE_32M | 0x04000000 | 1)
-	mcr	p15, 0, r0, c6, c2, 0
-
-	@-------------------------------------------------------------------------
-	@ Region 3 - Main Memory
-	@-------------------------------------------------------------------------
-	ldr	r0,=( PAGE_4M | 0x02000000 | 1)
-	mcr	p15, 0, r0, c6, c3, 0
 	
 	@-------------------------------------------------------------------------
-	@ Region 4 - GBA SLOT ROM
+	@ Region 2 - ARM9 IWRAM
 	@-------------------------------------------------------------------------
-	ldr	r0,=( PAGE_128M | 0x08000000 | 1)
+	ldr 	r0,=( PAGE_32K | 0x037F8000 | 1)
+	mcr 	p15, 0, r0, c6, c2, 0
+
+	@-------------------------------------------------------------------------
+	@ Region 3 - IO Registers
+	@-------------------------------------------------------------------------
+	ldr	r0,=( PAGE_16M | 0x04000000 | 1)
+	mcr	p15, 0, r0, c6, c3, 0
+
+	@-------------------------------------------------------------------------
+	@ Region 4 - Video Memory, lower 16 MBytes
+        @            (see alignment requirements in the ARM reference manual)
+	@-------------------------------------------------------------------------
+	ldr	r0,=( PAGE_16M | 0x05000000 | 1)
 	mcr	p15, 0, r0, c6, c4, 0
 
 	@-------------------------------------------------------------------------
-	@ Region 5 - Video Mem - Cached
+	@ Region 5 - Video Memory, upper 32 MBytes
+        @            (see alignment requirements in the ARM reference manual)
 	@-------------------------------------------------------------------------
-	ldr	r0,=( PAGE_64M | 0x05000000 | 1)
+	ldr	r0,=( PAGE_32M | 0x06000000 | 1)
 	mcr	p15, 0, r0, c6, c5, 0
 
 	@-------------------------------------------------------------------------
-	@ Region 6 - ARM9 IWRAM
+	@ Region 6 - GBA SLOT ROM
 	@-------------------------------------------------------------------------
-	ldr 	r0,=( PAGE_32K | 0x037F8000 | 1)
-	mcr 	p15, 0, r0, c6, c6, 0
+	ldr	r0,=( PAGE_32M | 0x08000000 | 1)
+	mcr	p15, 0, r0, c6, c6, 0
 
 	@-------------------------------------------------------------------------
-	@ Region 7 - DTCM
+	@ Region 7 - GBA SLOT SRAM
 	@-------------------------------------------------------------------------
-	ldr	r0,=( PAGE_16K | 0x00800000 | 1)	
-	mcr 	p15, 0, r0, c6, c7, 0
+	ldr	r0,=( PAGE_64K | 0x0A000000 | 1)
+	mcr	p15, 0, r0, c6, c7, 0
 
 	@-------------------------------------------------------------------------
 	@ Write buffer enable
 	@-------------------------------------------------------------------------
-	@             DWVGM4IO
-	ldr	r0,=0b00001000
+	@             SRVvIWMT
+	ldr	r0,=0b00000010
 	mcr	p15, 0, r0, c3, c0, 0
 
 	@-------------------------------------------------------------------------
-	@ DCache & ICache enable
+	@ Data cache enable
 	@-------------------------------------------------------------------------
-	@ Data Cache
-	@ NOTE: Data Caching for GBA ROM+RAM is a problem: all the special
-	@	Hardware of the Flash Cards needs special cache operations.
-	@	So we left them out of the data cache (only instruction for XIP).
-	@             DWVGM4IO
 	@ NOTE: in arch/arm/mm/cache-v4wb.S, there is an optimisation you
 	@       may have to change if you enable more cachable areas!
-	ldr	r0,=0b00001000
+	@             SRVvIWMT
+	ldr	r0,=0b00000010
 	mcr	p15, 0, r0, c2, c0, 0
 
+	@-------------------------------------------------------------------------
+	@ Instruction cache enable
+	@-------------------------------------------------------------------------
 	@ Instruction cache is on for
 	@ - Main Memory
-	@ - GBA Slot ROM+RAM	(for XIP)
-	@             DWVGM4IO
-	ldr	r0,=0b00011000
+	@ - GBA Slot ROM (for XIP and program executing)
+	@             SRVvIWMT
+	ldr	r0,=0b01000010
 	mcr	p15, 0, r0, c2, c0, 1
 
 	@-------------------------------------------------------------------------
 	@ IAccess
 	@-------------------------------------------------------------------------
-	@ - default: none
-	@ - ITCM: all r+w (we want to copy inner loops into the ITCM)
-	@ - IOREG: none
+	@ - TCM:  all r+w (maybe we load some fast code into ITCM)
 	@ - Main: all r+w
-	@ - GBA: all r+w
-	@ - Video: none
 	@ - ARM9 IWRAM: none
-	@             DWVGM4IO
-	ldr	r0,=0x00033030
+	@ - IOREG: none
+	@ - Video: none
+	@ - GBA ROM: all r+w
+	@ - GBA RAM: none
+	@             SRVvIWMT
+	ldr	r0,=0x03000033
 	mcr	p15, 0, r0, c5, c0, 3
 
 	@-------------------------------------------------------------------------
 	@ DAccess
 	@-------------------------------------------------------------------------
-	@ - default: none
-	@ - ITCM: all r+w  (we want to copy inner loops into the ITCM)
-	@ - IOREG: kernel r+w
+	@ - TCM:  all r+w (maybe we load some fast data into DTCM)
 	@ - Main: all r+w
-	@ - GBA: all r+w
-	@ - Video: all r+w
 	@ - ARM9 IWRAM: kernel r+w
-	@ - DTCM: all r+w  (we want to copy data into the DTCM)
-	@             DWVGM4IO
-	ldr	r0,=0x31333130
+	@ - IOREG: kernel r+w
+	@ - Video: all r+w
+	@ - GBA ROM: all r+w
+	@ - GBA RAM: kernel r+w
+	@             SRVvIWMT
+	ldr	r0,=0x13331133
 	mcr	p15, 0, r0, c5, c0, 2
 
 	@-------------------------------------------------------------------------
-	@ Enable ICache, DCache, ITCM & DTCM
+	@ Enable ICache, DCache, ITCM & DTCM. Set round-robin-replacement
 	@-------------------------------------------------------------------------
 	mrc	p15, 0, r0, c1, c0, 0
-	ldr	r1,=0x55005
+	ldr	r1,=0x5507B
 	orr	r0,r0,r1
-	ldr	r1,=0xfdfff
+	ldr	r1,=0x550FD
 	and	r0,r0,r1
 	mcr	p15, 0, r0, c1, c0, 0
 
