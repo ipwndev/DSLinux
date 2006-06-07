@@ -293,9 +293,9 @@ _entry:
 	@ Enable ICache, DCache, ITCM & DTCM. Set round-robin-replacement
 	@-------------------------------------------------------------------------
 	mrc	p15, 0, r0, c1, c0, 0
-	ldr	r1,=0x5507B
+	ldr	r1,=0x55005
 	orr	r0,r0,r1
-	ldr	r1,=0x550FD
+	ldr	r1,=0xfdfff
 	and	r0,r0,r1
 	mcr	p15, 0, r0, c1, c0, 0
 
