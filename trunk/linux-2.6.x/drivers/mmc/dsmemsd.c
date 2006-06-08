@@ -34,21 +34,21 @@
 #endif
 
 #define DRIVER_NAME	"dsmemsd"
-#define DRIVER_VERSION	"1.2.1"
+#define DRIVER_VERSION	"1.2.2"
 
 /*****************************************************************************/
 /* IO registers */
-#define WAIT_CR   (*(volatile u16 *) 0x04000204)
+#define WAIT_CR   0x04000204
 
-#define SDCONTROL (*(volatile  u8 *) 0x0A00C000) /* SD card control port */
+#define SDCONTROL 0x0A00C000	/* SD card control port */
 #define SDC_POWER 0x01		/* bit 0: 1 = power active */
 #define SDC_CS	  0x02		/* bit 1: 1 = SD card selected */
 #define SDC_ACTIV 0x04		/* bit 2: 1 = SD card outputs enabled */
 
-#define SDSTATUS  (*(volatile  u8 *) 0x0A00C000) /* SD card status  port */
+#define SDSTATUS  0x0A00C000	/* SD card status  port */
 #define SDS_BUSY  0x01		/* bit 0: 1 = SPI busy, transfer in progress */
 
-#define SDDATA    (*(volatile  u8 *) 0x0A00E000) /* SD card data port */
+#define SDDATA    0x0A00E000	/* SD card data port */
 
 /*****************************************************************************/
 /* translation of the SD mode commands to SPI mode commands */
@@ -160,15 +160,15 @@ static const u16 spi_ops[64] ={
 
 /* wait until the SPI is idle */
 #define spi_wait() \
-	while (SDSTATUS & SDS_BUSY) {}
+	while (readb(SDSTATUS) & SDS_BUSY) {}
 
 /* send a byte to SPI */
 #define spi_send(b) \
-	SDDATA = (b)
+	writeb((b), SDDATA)
 
 /* receive a byte from SPI */
 #define spi_rec() \
-	SDDATA
+	readb(SDDATA)
 
 // send a byte to SD, wait until done
 #define sd_send(b) \
@@ -179,19 +179,19 @@ static const u16 spi_ops[64] ={
 
 /* set SD to powerdown */
 #define sd_off() \
-	SDCONTROL = 0x00
+	writeb(0x00, SDCONTROL)
 
 /* set SD power on */
 #define sd_pon() \
-	SDCONTROL = SDC_POWER
+	writeb(SDC_POWER, SDCONTROL) 
 
 /* set SD active, but not selected */
 #define sd_csoff() \
-	SDCONTROL = (SDC_POWER | SDC_ACTIV)
+	writeb(SDC_POWER | SDC_ACTIV, SDCONTROL)
 
 /* select SD card */
 #define sd_cson() \
-	SDCONTROL = (SDC_POWER | SDC_ACTIV | SDC_CS)
+	writeb(SDC_POWER | SDC_ACTIV | SDC_CS, SDCONTROL)
 
 /*****************************************************************************/
 
@@ -717,7 +717,7 @@ static void dsmemsd_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
 		case MMC_POWER_UP:
 			/* set PHI = 16 MHz */
 			/* This is also needed for RS232, so we can't switch it off again */
-			WAIT_CR |= 0x0060;
+			writeb(readb(WAIT_CR) | 0x0060, WAIT_CR);
 		
 			/* apply power */
 			sd_pon();

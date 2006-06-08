@@ -44,7 +44,7 @@
 #include <asm/arch/power.h>
 #include <asm/arch/fifo.h>
 
-#define WAIT_CR (*(volatile u32 *) 0x04000204)
+#define WAIT_CR 	0x04000204
 
 extern struct sys_timer nds_timer;
 
@@ -61,14 +61,14 @@ extern void nds_machine_init(void)
 	/* bit 7: GBA Slot allocated to ARM9 */
 	/* bit 11: DS Slot allocated to ARM9 */
 	/* bit 15: Main Memory Priority to ARM9 */
-	WAIT_CR &= ~(0x8880);
+	writel( readl(WAIT_CR) & ~(0x8880), WAIT_CR);
 
 #ifdef CONFIG_NDS_FASTGBA
 	// Switch to high speed:
 	// bit 0-1     RAM-region access cycle control 0..3=10,8,6,18 cycles
 	//     2-3     ROM 1st access cycle control    0..3=10,8,6,18 cycles
 	//       4     ROM 2nd access cycle control    0..1=6,4 cycles
-	WAIT_CR = (WAIT_CR & 0xFFE0) | 0x001A;
+        writel( (readl(WAIT_CR) & 0xFFE0) | 0x001A, WAIT_CR);
 #endif
 	pm_power_off = poweroff;
 }
