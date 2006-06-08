@@ -10,6 +10,7 @@
 #include <linux/init.h>
 #include <linux/console.h>
 #include <linux/fs.h>
+#include <asm/io.h>
 
 #define	NDS_CTRLBASE	0x04000000		/* Register IO base */
 #define	NDS_PALBASE	0x05000000		/* Pallete RAM base */
@@ -401,8 +402,8 @@ static int __init nds_console_setup(struct console *co, char *options)
 	int			i;
 
 	/* VRAM setup */
-	*(volatile u32*)0x04000000 = 0x00010100 ;
-	*(volatile u8*)0x04000240 = 0x81 ;
+	writel(0x00010100, 0x04000000);
+	writeb(0x81, 0x04000240);
 
 	/* Enable mode 0 */
 	*((unsigned short *) NDS_DISPCNT) = NDS_DISPCNT_F;	/*MODE0|BG0*/
