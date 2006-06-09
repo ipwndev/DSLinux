@@ -239,16 +239,14 @@ _entry:
 	@ Write buffer enable
 	@-------------------------------------------------------------------------
 	@             SRVvIWMT
-	ldr	r0,=0b00000010
+	ldr	r0,=0b01000010
 	mcr	p15, 0, r0, c3, c0, 0
 
 	@-------------------------------------------------------------------------
 	@ Data cache enable
 	@-------------------------------------------------------------------------
-	@ NOTE: in arch/arm/mm/cache-v4wb.S, there is an optimisation you
-	@       may have to change if you enable more cachable areas!
 	@             SRVvIWMT
-	ldr	r0,=0b00000010
+	ldr	r0,=0b01000010
 	mcr	p15, 0, r0, c2, c0, 0
 
 	@-------------------------------------------------------------------------

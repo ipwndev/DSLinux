@@ -136,18 +136,6 @@ ENTRY(v4wb_coherent_kern_range)
  *	- end	 - virtual end address
  */
 ENTRY(v4wb_coherent_user_range)
-
-#ifdef CONFIG_XIP_KERNEL
-#ifdef CONFIG_ARCH_NDS
-	@ Test for optimizing XIP addresses
-	@ =================================
-	@ if the region is mapped via XIP, we don't need to drain
-	@ the caches because this area is not in the data cache.
-	ldr	ip, =CONFIG_XIP_PHYS_ADDR
-	cmp	r0, ip				@ region > XIP start address?
-	movhs	pc, lr				@ yes: don't flush caches
-#endif	
-#endif
 	bic	r0, r0, #CACHE_DLINESIZE - 1
 1:	mcr	p15, 0, r0, c7, c10, 1		@ clean D entry
 	mcr	p15, 0, r0, c7, c6, 1		@ invalidate D entry
