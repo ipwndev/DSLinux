@@ -165,6 +165,31 @@ _entry:
 	mcr	p15, 0, r1, c1, c0
 
 	@---------------------------------------------------------------------------------
+	@ allocate GBA+Main Memory to ARM9
+	@---------------------------------------------------------------------------------
+	ldr	r0, =0x04000204			@ wait_cr
+	@ bit  7: GBA Slot allocated to ARM9
+	@ bit 11: DS  Slot allocated to ARM9
+	@ bit 15: Main Memory Priority to ARM9
+	ldrh	r1,[r0]
+	bic	r1, r1, #0x0080
+	bic	r1, r1, #0x8800
+	strh	r1,[r0]
+
+	@---------------------------------------------------------------------------------
+	@ make the SDRAM of the Supercard SD writable
+	@---------------------------------------------------------------------------------
+#ifdef CONFIG_NDS_SUPERCARDSD
+	ldr	r0, =0x09FFFFE
+	ldr	r1, =0xA55A
+	strh	r1,[r0]				@ write 0xA55A to 0x09FFFFE, two times
+	strh	r1,[r0]
+	mov	r1, #5				@ write 0x0005 to 0x09FFFFE, two times
+	strh	r1,[r0]
+	strh	r1,[r0]				@ writing 0x0001 to 0x09FFFFE will make it r/o again
+#endif
+
+	@---------------------------------------------------------------------------------
 	@ Protection Unit Setup added by Sasq
 	@---------------------------------------------------------------------------------
 	@ Disable cache

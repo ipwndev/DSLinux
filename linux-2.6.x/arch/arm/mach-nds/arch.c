@@ -58,10 +58,8 @@ static void poweroff(void)
 extern void nds_machine_init(void)
 {
 	POWER_CR = POWER_2D | POWER_2D_SUB | POWER_LCD_TOP | POWER_LCD_BOTTOM | POWER_SWAP_LCDS ;
-	/* bit 7: GBA Slot allocated to ARM9 */
-	/* bit 11: DS Slot allocated to ARM9 */
-	/* bit 15: Main Memory Priority to ARM9 */
-	writel( readl(WAIT_CR) & ~(0x8880), WAIT_CR);
+
+	/* Note: initial setup of wait_cr in head.S */
 
 #ifdef CONFIG_NDS_FASTGBA
 	// Switch to high speed:
