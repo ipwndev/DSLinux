@@ -9,7 +9,7 @@ ELFIMAGE = $(IMAGEDIR)/image.elf
 IMAGE    = $(IMAGEDIR)/dsimage.bin
 FATFS	 = sd
 
-ROMFS_DIRS = bin dev etc home lib mnt proc usr usr/share var $(FATFS)/linux
+ROMFS_DIRS = bin dev etc lib mnt proc usr usr/share $(FATFS)/linux
 FS_DIRS = home usr/share/udhcpc var/tmp var/run etc etc/rc.d
 
 DEVICES = \
