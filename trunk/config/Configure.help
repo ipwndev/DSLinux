@@ -3207,6 +3207,9 @@ CONFIG_USER_MSNTP_MSNTP
 CONFIG_USER_FROB_LED_FROB_LED
   Utility to send commands to the ledman driver.
 
+CONFIG_USER_FROTZ_FROTZ
+  An interpreter for Infocom games and other Z-machine games.
+
 CONFIG_USER_MINI_HTTPD_MINI_HTTPD
   A small HTTP server.
 

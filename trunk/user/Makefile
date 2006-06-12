@@ -133,6 +133,7 @@ dir_$(CONFIG_USER_FLASHW_FLASHW)            += flashw
 dir_$(CONFIG_USER_FLATFSD_FLATFSD)          += flatfsd
 dir_$(CONFIG_USER_FREESWAN)                 += freeswan
 dir_$(CONFIG_USER_FROB_LED_FROB_LED)        += frob-led
+dir_$(CONFIG_USER_FROTZ_FROTZ)              += frotz
 dir_$(CONFIG_USER_FSWCERT_FSWCERT)          += fswcert
 dir_$(CONFIG_USER_FTP_FTP_FTP)              += ftp
 dir_$(CONFIG_USER_FTPD_FTPD)                += ftpd
