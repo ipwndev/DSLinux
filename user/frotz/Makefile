@@ -1,20 +1,20 @@
 # Define your C compiler.  I recommend gcc if you have it.
 # MacOS users should use "cc" even though it's really "gcc".
 #
-CC = gcc
+#CC = gcc
 #CC = cc
 
 # Define your optimization flags.  Most compilers understand -O and -O2,
 # Standard (note: Solaris on UltraSparc using gcc 2.8.x might not like this.)
 #
-OPTS = -O2 
+#OPTS = -O2 
 
 # Pentium with gcc 2.7.0 or better
 #OPTS = -O2 -fomit-frame-pointer -malign-functions=2 -malign-loops=2 \
 #-malign-jumps=2
 
 # Define where you want Frotz installed.  Usually this is /usr/local
-PREFIX = /usr/local
+PREFIX = /usr/
 
 MAN_PREFIX = $(PREFIX)
 #MAN_PREFIX = /usr/local/share
@@ -24,8 +24,8 @@ CONFIG_DIR = $(PREFIX)/etc
 
 # Define where you want Frotz to look for frotz.conf.
 #
-CONFIG_DIR = /usr/local/etc
-#CONFIG_DIR = /etc
+#CONFIG_DIR = /usr/local/etc
+CONFIG_DIR = /etc
 #CONFIG_DIR = /usr/pkg/etc
 #CONFIG_DIR =
 
@@ -59,6 +59,7 @@ COLOR_DEFS = -DCOLOR_SUPPORT
 #INCL = -I/usr/freeware/include
 #INCL = -I/5usr/include
 #INCL = -I/path/to/ncurses.h
+INCL = -I../../lib/libncurses/include
 
 # If your vendor-supplied curses library won't work, uncomment the
 # location where the ncurses library is.
@@ -68,13 +69,14 @@ COLOR_DEFS = -DCOLOR_SUPPORT
 #LIB = -L/usr/freeware/lib
 #LIB = -L/5usr/lib
 #LIB = -L/path/to/libncurses.so
+LIB = -L../../lib/libncurses/lib
 
 # One of these must always be uncommented.  If your vendor-supplied
 # curses library won't work, comment out the first option and uncomment
 # the second.
 #
-CURSES = -lcurses
-#CURSES = -lncurses
+#CURSES = -lcurses
+CURSES = -lncurses
 
 # Uncomment this if your need to use ncurses instead of the
 # vendor-supplied curses library.  This just tells the compile process
@@ -162,11 +164,11 @@ FLAGS = $(OPTS) $(COMP_DEFS) $(INCL)
 
 $(NAME): $(NAME)-curses
 
-$(NAME)-curses:		soundcard.h  $(COMMON_TARGET) $(CURSES_TARGET)
-	$(CC) -o $(BINNAME)$(EXTENSION) $(TARGETS) $(LIB) $(CURSES) \
-		$(SOUND_LIB)
+$(NAME)-curses:		soundcard.h  $(COMMON_OBJECT) $(CURSES_OBJECT)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINNAME)$(EXTENSION) \
+		$(COMMON_OBJECT) $(CURSES_OBJECT) $(LIB) $(CURSES) $(SOUND_LIB)
 
-all:	$(NAME) d$(NAME)
+all:	$(NAME)
 
 dumb:		$(NAME)-dumb
 d$(NAME):	$(NAME)-dumb
@@ -280,3 +282,5 @@ help:
 	@echo "    distclean"
 	@echo
 
+romfs:
+	$(ROMFSINST) /bin/frotz
