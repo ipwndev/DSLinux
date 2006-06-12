@@ -139,10 +139,13 @@ void os_process_arguments (int argc, char *argv[])
     char *home;
     char configfile[FILENAME_MAX + 1];
 
+    /* This non-root check is totally pointless on DSLinux (stsp) */
+#if 0
     if ((getuid() == 0) || (geteuid() == 0)) {
         printf("I won't run as root!\n");
         exit(1);
     }
+#endif
 
     if ((home = getenv("HOME")) == NULL) {
         printf("Hard drive on fire!\n");
