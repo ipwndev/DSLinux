@@ -166,28 +166,16 @@ _entry:
 
 	@---------------------------------------------------------------------------------
 	@ allocate GBA+Main Memory to ARM9
+	@ (Setting wait_cr here allows init of card specific registers here)
 	@---------------------------------------------------------------------------------
 	ldr	r0, =0x04000204			@ wait_cr
-	@ bit  7: GBA Slot allocated to ARM9
-	@ bit 11: DS  Slot allocated to ARM9
+	@ bit  7: GBA  Slot allocated to ARM9
+	@ bit 11: DS   Slot allocated to ARM9
 	@ bit 15: Main Memory Priority to ARM9
 	ldrh	r1,[r0]
 	bic	r1, r1, #0x0080
 	bic	r1, r1, #0x8800
 	strh	r1,[r0]
-
-	@---------------------------------------------------------------------------------
-	@ make the SDRAM of the Supercard SD writable
-	@---------------------------------------------------------------------------------
-#ifdef CONFIG_NDS_SUPERCARDSD
-	ldr	r0, =0x09FFFFE
-	ldr	r1, =0xA55A
-	strh	r1,[r0]				@ write 0xA55A to 0x09FFFFE, two times
-	strh	r1,[r0]
-	mov	r1, #5				@ write 0x0005 to 0x09FFFFE, two times
-	strh	r1,[r0]
-	strh	r1,[r0]				@ writing 0x0001 to 0x09FFFFE will make it r/o again
-#endif
 
 	@---------------------------------------------------------------------------------
 	@ Protection Unit Setup added by Sasq
@@ -202,76 +190,87 @@ _entry:
 
 	ldr	r0, =(0x00008000 | 0x0A)
 	mcr	p15, 0, r0, c9, c1		@ DTCM base = 0x00008000, size = 16 KB
-	@-------------------------------------------------------------------------
-	@ Setup memory regions similar to Release Version
 
 	@-------------------------------------------------------------------------
+	@ Setup memory regions
+	@-------------------------------------------------------------------------
 
 	@-------------------------------------------------------------------------
-	@ Region 0 - ITCM (vectors) and DTCM
+	@ Region 0 - Default
+        @ This region is used if no special entry exists for an address.
+	@ The region is r/w for the kernel (to cover all memory mapped IO)
+	@ and forbidden for the user (to catch unallowed pointer accesses).
+	@ This allows splitting of the GBA ROM area in a ROM and an IO part.
+	@-------------------------------------------------------------------------
+	ldr	r0,=( PAGE_4G  | 0x00000000 | 1)
+	mcr	p15, 0, r0, c6, c0, 0
+
+	@-------------------------------------------------------------------------
+	@ Region 1 - ITCM (vectors) and DTCM
 	@ ITCM   0x00000000 - 0x00007FFF
 	@ DTCM   0x00008000 - 0x0000BFFF
 	@ ITCM and DTCM are grouped together because we run out of available regions.
 	@-------------------------------------------------------------------------
 	ldr	r0,=( PAGE_64K | 0x00000000 | 1)
-	mcr	p15, 0, r0, c6, c0, 0
+	mcr	p15, 0, r0, c6, c1, 0
 
 	@-------------------------------------------------------------------------
-	@ Region 1 - Main Memory
+	@ Region 2 - Main Memory
 	@-------------------------------------------------------------------------
 	ldr	r0,=( PAGE_4M  | 0x02000000 | 1)
-	mcr	p15, 0, r0, c6, c1, 0
+	mcr	p15, 0, r0, c6, c2, 0
 	
 	@-------------------------------------------------------------------------
-	@ Region 2 - ARM9 IWRAM
-	@-------------------------------------------------------------------------
-	ldr 	r0,=( PAGE_32K | 0x037F8000 | 1)
-	mcr 	p15, 0, r0, c6, c2, 0
-
-	@-------------------------------------------------------------------------
-	@ Region 3 - IO Registers
-	@-------------------------------------------------------------------------
-	ldr	r0,=( PAGE_16M | 0x04000000 | 1)
-	mcr	p15, 0, r0, c6, c3, 0
-
-	@-------------------------------------------------------------------------
-	@ Region 4 - Video Memory, lower 16 MBytes
+	@ Region 3 - Video Memory, lower 16 MBytes
         @            (see alignment requirements in the ARM reference manual)
 	@-------------------------------------------------------------------------
 	ldr	r0,=( PAGE_16M | 0x05000000 | 1)
-	mcr	p15, 0, r0, c6, c4, 0
+	mcr	p15, 0, r0, c6, c3, 0
 
 	@-------------------------------------------------------------------------
-	@ Region 5 - Video Memory, upper 32 MBytes
+	@ Region 4 - Video Memory, upper 32 MBytes
         @            (see alignment requirements in the ARM reference manual)
 	@-------------------------------------------------------------------------
 	ldr	r0,=( PAGE_32M | 0x06000000 | 1)
+	mcr	p15, 0, r0, c6, c4, 0
+
+	@-------------------------------------------------------------------------
+	@ Region 5 - GBA SLOT ROM
+	@-------------------------------------------------------------------------
+	ldr	r0,=( PAGE_32M | 0x08000000 | 1)
 	mcr	p15, 0, r0, c6, c5, 0
 
 	@-------------------------------------------------------------------------
-	@ Region 6 - GBA SLOT ROM
+	@ Region 6 - unused
 	@-------------------------------------------------------------------------
-	ldr	r0,=( PAGE_32M | 0x08000000 | 1)
+	ldr	r0,= 0
 	mcr	p15, 0, r0, c6, c6, 0
 
 	@-------------------------------------------------------------------------
-	@ Region 7 - GBA SLOT SRAM
+	@ Region 7 - unused
 	@-------------------------------------------------------------------------
-	ldr	r0,=( PAGE_64K | 0x0A000000 | 1)
+	ldr	r0,= 0
 	mcr	p15, 0, r0, c6, c7, 0
 
 	@-------------------------------------------------------------------------
 	@ Write buffer enable
 	@-------------------------------------------------------------------------
-	@             SRVvIWMT
-	ldr	r0,=0b01000010
+	@ It is safe for all I/O and memory to enable the write buffer.
+	@ TCMs don't use the write buffer.
+	@             uuRVvMTD
+	ldr	r0,=0b00111101
 	mcr	p15, 0, r0, c3, c0, 0
 
 	@-------------------------------------------------------------------------
 	@ Data cache enable
 	@-------------------------------------------------------------------------
-	@             SRVvIWMT
-	ldr	r0,=0b01000010
+#ifdef CONFIG_XIP_KERNEL
+	@ only enable GBA ROM data cache if there is flash/ram ( == XIP)
+	ldr	r0,=0b00100100
+#else
+	@             uuRVvMTD
+	ldr	r0,=0b00000100
+#endif
 	mcr	p15, 0, r0, c2, c0, 0
 
 	@-------------------------------------------------------------------------
@@ -280,36 +279,32 @@ _entry:
 	@ Instruction cache is on for
 	@ - Main Memory
 	@ - GBA Slot ROM (for XIP and program executing)
-	@             SRVvIWMT
-	ldr	r0,=0b01000010
+	@             uuRVvMTD
+	ldr	r0,=0b00100100
 	mcr	p15, 0, r0, c2, c0, 1
 
 	@-------------------------------------------------------------------------
 	@ IAccess
 	@-------------------------------------------------------------------------
+	@ - Default: none
 	@ - TCM:  all r+w (maybe we load some fast code into ITCM)
 	@ - Main: all r+w
-	@ - ARM9 IWRAM: none
-	@ - IOREG: none
 	@ - Video: none
 	@ - GBA ROM: all r+w
-	@ - GBA RAM: none
-	@             SRVvIWMT
-	ldr	r0,=0x03000033
+	@             uuRVvMTD
+	ldr	r0,=0x00300330
 	mcr	p15, 0, r0, c5, c0, 3
 
 	@-------------------------------------------------------------------------
 	@ DAccess
 	@-------------------------------------------------------------------------
+	@ - Default: kernel r+w
 	@ - TCM:  all r+w (maybe we load some fast data into DTCM)
 	@ - Main: all r+w
-	@ - ARM9 IWRAM: kernel r+w
-	@ - IOREG: kernel r+w
 	@ - Video: all r+w
 	@ - GBA ROM: all r+w
-	@ - GBA RAM: kernel r+w
-	@             SRVvIWMT
-	ldr	r0,=0x13331133
+	@             uuRVvMTD
+	ldr	r0,=0x00333331
 	mcr	p15, 0, r0, c5, c0, 2
 
 	@-------------------------------------------------------------------------

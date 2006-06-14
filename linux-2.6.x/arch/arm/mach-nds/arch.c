@@ -66,7 +66,7 @@ extern void nds_machine_init(void)
 	// bit 0-1     RAM-region access cycle control 0..3=10,8,6,18 cycles
 	//     2-3     ROM 1st access cycle control    0..3=10,8,6,18 cycles
 	//       4     ROM 2nd access cycle control    0..1=6,4 cycles
-        writel( (readl(WAIT_CR) & 0xFFE0) | 0x001A, WAIT_CR);
+        writew( (readw(WAIT_CR) & 0xFFE0) | 0x001A, WAIT_CR);
 #endif
 	pm_power_off = poweroff;
 }
