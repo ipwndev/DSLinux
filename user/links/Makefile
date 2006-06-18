@@ -82,7 +82,7 @@ links_SOURCES = af_unix.c auth.c beos.c bfu.c block.c bookmarks.c builtin.c cach
 #CXXFLAGS = 
 
 datadir = $(prefix)/@DATADIRNAME@
-LIBS = -lm 
+LIBS = -L../../lib -lm -lssl -lcrypto
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = config.h
@@ -126,7 +126,26 @@ GZIP_ENV = --best
 SOURCES = $(links_SOURCES)
 OBJECTS = $(links_OBJECTS)
 
-all: links all-redirect
+$(top_builddir)/.sign_warnings:
+	@echo
+	@echo "While compiling links a lot of warnings regarding"
+	@echo "signedness are being printed. I have not yet found out"
+	@echo "why the links developers insist on passing unsigned chars"
+	@echo "to functions taking signed chars as arguments. I am too lazy"
+	@echo "to patch their code for the warnings to go away."
+	@echo "And I have not yet found a way to make gcc shut up about it."
+	@echo
+	@echo "This message appears only once - you won't see it again"
+	@echo "the next time you run 'make'."
+	@echo
+	@echo "The build will continue shortly."
+	@echo "Sorry for the inconvinience."
+	@echo "		-- stsp"
+	@touch $(top_builddir)/.sign_warnings
+	@sleep 20
+
+
+all: $(top_builddir)/.sign_warnings links all-redirect
 .SUFFIXES:
 .SUFFIXES: .S .c .o .s
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
