@@ -25,7 +25,7 @@
 #define TIMER_IRQ_REQ	(1<<6)
 #define TIMER_CASCADE	(TIMER_ENABLE|(1<<2))
 
-#define DMA_BUFFERSIZE	(64*1024)
+#define DMA_BUFFERSIZE	(128*1024)
 
 /* module parameters (see "Module Parameters") */
 static int index[SNDRV_CARDS] = SNDRV_DEFAULT_IDX;
