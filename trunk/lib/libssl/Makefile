@@ -11,9 +11,9 @@ SHLIB_VERSION_NUMBER=0.9.8
 SHLIB_VERSION_HISTORY=
 SHLIB_MAJOR=0
 SHLIB_MINOR=9.8
-SHLIB_EXT=
-PLATFORM=dist
-OPTIONS= no-gmp no-krb5 no-mdc2 no-rc5 no-shared no-zlib no-zlib-dynamic
+SHLIB_EXT=.so.$(SHLIB_MAJOR).$(SHLIB_MINOR)
+PLATFORM=uclinux
+OPTIONS= no-asm no-gmp no-krb5 no-mdc2 no-rc5 no-shared no-zlib no-zlib-dynamic
 CONFIGURE_ARGS=dist
 SHLIB_TARGET=
 
@@ -59,27 +59,51 @@ OPENSSLDIR=/usr/local/ssl
 # equal 4.
 # PKCS1_CHECK - pkcs1 tests.
 
-CC= cc
-CFLAG= -O
-DEPFLAG= -DOPENSSL_NO_GMP -DOPENSSL_NO_MDC2 -DOPENSSL_NO_RC5 
-PEX_LIBS= 
-EX_LIBS= 
+#CC= gcc
+#CFLAG= -DOPENSSL_THREADS -D_REENTRANT -DDSO_DLFCN -DHAVE_DLFCN_H -DL_ENDIAN -DTERMIO -O3 -fomit-frame-pointer -Wall -DOPENSSL_BN_ASM_PART_WORDS -DOPENSSL_IA32_SSE2 -DSHA1_ASM -DMD5_ASM -DRMD160_ASM -DAES_ASM
+
+# We need the smallest possible feature set for DSLinux
+DSLINUX_UNUSED_FEATURES= -DOPENSSL_NO_KRB5 \
+			 -DOPENSSL_NO_ASM \
+			 -DOPENSSL_NO_INLINE_ASM \
+			 -DOPENSSL_NO_ENGINE \
+			 -DOPENSSL_NO_SSL2
+
+# Algorithms not used in DSLinux:
+DSLINUX_UNUSED_CRYPTO=	-DOPENSSL_NO_BF \
+			-DOPENSSL_NO_CAST \
+			-DOPENSSL_NO_RC2 \
+			-DOPENSSL_NO_IDEA \
+			-DOPENSSL_NO_RC5 \
+			-DOPENSSL_NO_DH \
+			-DOPENSSL_NO_MD4 \
+			-DOPENSSL_NO_MDC2 \
+			-DOPENSSL_NO_MD2 \
+			-DOPENSSL_NO_RIPEMD \
+			-DOPENSSL_NO_ECDH \
+			-DOPENSSL_NO_ECDSA
+
+CFLAG= $(CFLAGS) -I$(ROOTDIR)/lib/libm -DTERMIOS -Wall $(DSLINUX_UNUSED_FEATURES) $(DSLINUX_UNUSED_CRYPTO)
+
+DEPFLAG= $(DSLINUX_UNUSED_FEATURES) $(DSLINUX_UNUSED_CRYPTO)
+PEX_LIBS= -L. -L.. -L../.. -L../../..
+EX_LIBS= -ldl
 EXE_EXT= 
 ARFLAGS= 
-AR=ar $(ARFLAGS) r
-RANLIB= /usr/bin/ranlib
+AR+= r
+#RANLIB= /usr/bin/ranlib
 PERL= /usr/bin/perl
 TAR= tar
 TARFLAGS= --no-recursion
-MAKEDEPPROG=makedepend
+MAKEDEPPROG= gcc
 
 # We let the C compiler driver to take care of .s files. This is done in
 # order to be excused from maintaining a separate set of architecture
 # dependent assembler flags. E.g. if you throw -mcpu=ultrasparc at SPARC
 # gcc, then the driver will automatically translate it to -xarch=v8plus
 # and pass it down to assembler.
-AS=$(CC) -c
-ASFLAG=$(CFLAG)
+#AS=$(CC) -c
+#ASFLAG=$(CFLAG)
 
 # For x86 assembler: Set PROCESSOR to 386 if you want to support
 # the 80386.
@@ -89,7 +113,7 @@ PROCESSOR=
 CPUID_OBJ= 
 BN_ASM= bn_asm.o
 DES_ENC= des_enc.o fcrypt_b.o
-AES_ASM_OBJ= aes_core.o aes_cbc.o
+AES_ASM_OBJ=aes_core.o aes_cbc.o
 BF_ENC= bf_enc.o
 CAST_ENC= c_enc.o
 RC4_ENC= rc4_enc.o
@@ -106,17 +130,18 @@ LIBKRB5=
 ZLIB_INCLUDE=
 LIBZLIB=
 
-DIRS=   crypto ssl engines apps test tools
+#DIRS=   crypto ssl engines apps test tools
+DIRS=   crypto ssl apps test tools
 SHLIBDIRS= crypto ssl
 
 # dirs in crypto to build
 SDIRS=  \
 	objects \
-	md2 md4 md5 sha hmac ripemd \
-	des aes rc2 rc4 idea bf cast \
-	bn ec rsa dsa ecdsa dh ecdh dso engine \
-	buffer bio stack lhash rand err \
-	evp asn1 pem x509 x509v3 conf txt_db pkcs7 pkcs12 comp ocsp ui krb5 \
+	md5 sha hmac \
+	des aes rc4 \
+	bn ec rsa dsa \
+	buffer bio dso stack lhash rand err \
+	evp asn1 pem x509 x509v3 conf txt_db pkcs7 pkcs12 comp ocsp ui \
 	store pqueue
 # keep in mind that the above list is adjusted by ./Configure
 # according to no-xxx arguments...
@@ -141,7 +166,7 @@ LIBS=   libcrypto.a libssl.a
 SHARED_CRYPTO=libcrypto$(SHLIB_EXT)
 SHARED_SSL=libssl$(SHLIB_EXT)
 SHARED_LIBS=
-SHARED_LIBS_LINK_EXTS=
+SHARED_LIBS_LINK_EXTS=.so.$(SHLIB_MAJOR) .so
 SHARED_LDFLAGS=
 
 GENERAL=        Makefile
@@ -152,7 +177,8 @@ WTARFILE=       $(NAME)-win.tar
 EXHEADER=       e_os2.h
 HEADER=         e_os.h
 
-all: Makefile build_all openssl.pc libssl.pc libcrypto.pc
+#all: Makefile build_all openssl.pc libssl.pc libcrypto.pc
+all: Makefile build_libs openssl.pc libssl.pc libcrypto.pc
 
 # as we stick to -e, CLEARENV ensures that local variables in lower
 # Makefiles remain local and variable. $${VAR+VAR} is tribute to Korn
@@ -587,4 +613,7 @@ install_docs:
 			 done); \
 	done
 
+# This is just here so the build doesn't fail. (stsp)
+romfs:
+	
 # DO NOT DELETE THIS LINE -- make depend depends on it.
