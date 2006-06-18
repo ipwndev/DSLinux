@@ -133,13 +133,12 @@ rsa_gen.o: ../cryptlib.h rsa_gen.c
 rsa_lib.o: ../../e_os.h ../../include/openssl/asn1.h
 rsa_lib.o: ../../include/openssl/bio.h ../../include/openssl/bn.h
 rsa_lib.o: ../../include/openssl/buffer.h ../../include/openssl/crypto.h
-rsa_lib.o: ../../include/openssl/e_os2.h ../../include/openssl/engine.h
-rsa_lib.o: ../../include/openssl/err.h ../../include/openssl/lhash.h
-rsa_lib.o: ../../include/openssl/opensslconf.h ../../include/openssl/opensslv.h
-rsa_lib.o: ../../include/openssl/ossl_typ.h ../../include/openssl/rand.h
-rsa_lib.o: ../../include/openssl/rsa.h ../../include/openssl/safestack.h
-rsa_lib.o: ../../include/openssl/stack.h ../../include/openssl/symhacks.h
-rsa_lib.o: ../cryptlib.h rsa_lib.c
+rsa_lib.o: ../../include/openssl/e_os2.h ../../include/openssl/err.h
+rsa_lib.o: ../../include/openssl/lhash.h ../../include/openssl/opensslconf.h
+rsa_lib.o: ../../include/openssl/opensslv.h ../../include/openssl/ossl_typ.h
+rsa_lib.o: ../../include/openssl/rand.h ../../include/openssl/rsa.h
+rsa_lib.o: ../../include/openssl/safestack.h ../../include/openssl/stack.h
+rsa_lib.o: ../../include/openssl/symhacks.h ../cryptlib.h rsa_lib.c
 rsa_none.o: ../../e_os.h ../../include/openssl/asn1.h
 rsa_none.o: ../../include/openssl/bio.h ../../include/openssl/bn.h
 rsa_none.o: ../../include/openssl/buffer.h ../../include/openssl/crypto.h
@@ -194,7 +193,6 @@ rsa_saos.o: ../../e_os.h ../../include/openssl/asn1.h
 rsa_saos.o: ../../include/openssl/bio.h ../../include/openssl/bn.h
 rsa_saos.o: ../../include/openssl/buffer.h ../../include/openssl/crypto.h
 rsa_saos.o: ../../include/openssl/e_os2.h ../../include/openssl/ec.h
-rsa_saos.o: ../../include/openssl/ecdh.h ../../include/openssl/ecdsa.h
 rsa_saos.o: ../../include/openssl/err.h ../../include/openssl/evp.h
 rsa_saos.o: ../../include/openssl/lhash.h ../../include/openssl/obj_mac.h
 rsa_saos.o: ../../include/openssl/objects.h ../../include/openssl/opensslconf.h
@@ -208,7 +206,6 @@ rsa_sign.o: ../../e_os.h ../../include/openssl/asn1.h
 rsa_sign.o: ../../include/openssl/bio.h ../../include/openssl/bn.h
 rsa_sign.o: ../../include/openssl/buffer.h ../../include/openssl/crypto.h
 rsa_sign.o: ../../include/openssl/e_os2.h ../../include/openssl/ec.h
-rsa_sign.o: ../../include/openssl/ecdh.h ../../include/openssl/ecdsa.h
 rsa_sign.o: ../../include/openssl/err.h ../../include/openssl/evp.h
 rsa_sign.o: ../../include/openssl/lhash.h ../../include/openssl/obj_mac.h
 rsa_sign.o: ../../include/openssl/objects.h ../../include/openssl/opensslconf.h

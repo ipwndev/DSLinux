@@ -125,8 +125,7 @@ dsa_key.o: ../../include/openssl/symhacks.h ../cryptlib.h dsa_key.c
 dsa_lib.o: ../../e_os.h ../../include/openssl/asn1.h
 dsa_lib.o: ../../include/openssl/bio.h ../../include/openssl/bn.h
 dsa_lib.o: ../../include/openssl/buffer.h ../../include/openssl/crypto.h
-dsa_lib.o: ../../include/openssl/dh.h ../../include/openssl/dsa.h
-dsa_lib.o: ../../include/openssl/e_os2.h ../../include/openssl/engine.h
+dsa_lib.o: ../../include/openssl/dsa.h ../../include/openssl/e_os2.h
 dsa_lib.o: ../../include/openssl/err.h ../../include/openssl/lhash.h
 dsa_lib.o: ../../include/openssl/opensslconf.h ../../include/openssl/opensslv.h
 dsa_lib.o: ../../include/openssl/ossl_typ.h ../../include/openssl/safestack.h
