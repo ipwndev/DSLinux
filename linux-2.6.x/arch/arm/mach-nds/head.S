@@ -73,6 +73,12 @@
  */
 #define DRAM_LIMIT	(DRAM_BASE + DRAM_SIZE)
 
+/*
+ *	Start address of the DTCM Memory.
+ */
+#define DTCM_BASE	0x027C0000	/* NDS DTCM standard address */
+
+
 /****************************************************************************/
 
 /*
@@ -158,7 +164,7 @@ _entry:
 	msr	cpsr_c, r0			@ and all irqs disabled
 
 	mov	r0, #0x04000000
-	mov	r1,#0				@ enable arm9 iwram
+	mov	r1, #0				@ enable arm9 iwram
 	strb	r1,[r0, #0x247]
 
 	ldr	r1, =0x00002078			@ disable DTCM and protection unit
@@ -171,7 +177,7 @@ _entry:
 	ldr	r0, =0x04000204			@ wait_cr
 	@ bit  7: GBA  Slot allocated to ARM9
 	@ bit 11: DS   Slot allocated to ARM9
-	@ bit 15: Main Memory Priority to ARM9
+	@ bit 15: Main Memory priority to ARM9
 	ldrh	r1,[r0]
 	bic	r1, r1, #0x0080
 	bic	r1, r1, #0x8800
@@ -188,89 +194,78 @@ _entry:
 	@ Wait for write buffer to empty
 	mcr	p15, 0, r0, c7, c10, 4
 
-	ldr	r0, =(0x00008000 | 0x0A)
-	mcr	p15, 0, r0, c9, c1		@ DTCM base = 0x00008000, size = 16 KB
+	ldr	r0, =(DTCM_BASE | 0x0A)         @ set DTCM base and size (16K)
+	mcr	p15, 0, r0, c9, c1
 
 	@-------------------------------------------------------------------------
 	@ Setup memory regions
 	@-------------------------------------------------------------------------
 
 	@-------------------------------------------------------------------------
-	@ Region 0 - Default
-        @ This region is used if no special entry exists for an address.
-	@ The region is r/w for the kernel (to cover all memory mapped IO)
-	@ and forbidden for the user (to catch unallowed pointer accesses).
-	@ This allows splitting of the GBA ROM area in a ROM and an IO part.
+	@ Region 0 - ITCM (vectors)
 	@-------------------------------------------------------------------------
-	ldr	r0,=( PAGE_4G  | 0x00000000 | 1)
+	ldr	r0,=( PAGE_32K | 0x00000000 | 1)
 	mcr	p15, 0, r0, c6, c0, 0
 
 	@-------------------------------------------------------------------------
-	@ Region 1 - ITCM (vectors) and DTCM
-	@ ITCM   0x00000000 - 0x00007FFF
-	@ DTCM   0x00008000 - 0x0000BFFF
-	@ ITCM and DTCM are grouped together because we run out of available regions.
-	@-------------------------------------------------------------------------
-	ldr	r0,=( PAGE_64K | 0x00000000 | 1)
-	mcr	p15, 0, r0, c6, c1, 0
-
-	@-------------------------------------------------------------------------
-	@ Region 2 - Main Memory
+	@ Region 1 - Main Memory
 	@-------------------------------------------------------------------------
 	ldr	r0,=( PAGE_4M  | 0x02000000 | 1)
-	mcr	p15, 0, r0, c6, c2, 0
+	mcr	p15, 0, r0, c6, c1, 0
 	
 	@-------------------------------------------------------------------------
-	@ Region 3 - Video Memory, lower 16 MBytes
-        @            (see alignment requirements in the ARM reference manual)
+	@ Region 2 - DTCM
 	@-------------------------------------------------------------------------
-	ldr	r0,=( PAGE_16M | 0x05000000 | 1)
-	mcr	p15, 0, r0, c6, c3, 0
+	ldr	r0,=( PAGE_16K | DTCM_BASE  | 1)
+	mcr	p15, 0, r0, c6, c2, 0
 
 	@-------------------------------------------------------------------------
-	@ Region 4 - Video Memory, upper 32 MBytes
-        @            (see alignment requirements in the ARM reference manual)
+	@ Region 3 - IWRAM
 	@-------------------------------------------------------------------------
-	ldr	r0,=( PAGE_32M | 0x06000000 | 1)
-	mcr	p15, 0, r0, c6, c4, 0
+	ldr 	r0,=( PAGE_32K | 0x037F8000 | 1)
+	mcr 	p15, 0, r0, c6, c3, 0
 
 	@-------------------------------------------------------------------------
-	@ Region 5 - GBA SLOT ROM
+	@ Region 4 - I/O (0x04000000) and Kernel VRAM (0x05000000,0x07000000)
 	@-------------------------------------------------------------------------
-	ldr	r0,=( PAGE_32M | 0x08000000 | 1)
-	mcr	p15, 0, r0, c6, c5, 0
+	ldr 	r0,=( PAGE_64M | 0x04000000 | 1)
+	mcr 	p15, 0, r0, c6, c4, 0
 
 	@-------------------------------------------------------------------------
-	@ Region 6 - unused
+	@ Region 5 - User-accessible VRAM (X-Server), overriding Region 4
 	@-------------------------------------------------------------------------
-	ldr	r0,= 0
+	ldr 	r0,=( PAGE_16M | 0x06000000 | 1)
+	mcr 	p15, 0, r0, c6, c5, 0
+
+	@-------------------------------------------------------------------------
+	@ Region 6 - GBA SLOT ROM for I/O access, including GBA RAM area
+	@-------------------------------------------------------------------------
+	ldr	r0,=( PAGE_64M | 0x08000000 | 1)
 	mcr	p15, 0, r0, c6, c6, 0
 
 	@-------------------------------------------------------------------------
-	@ Region 7 - unused
+	@ Region 7 - GBA SLOT ROM for Program+Data, overriding Region 6
 	@-------------------------------------------------------------------------
-	ldr	r0,= 0
+	ldr	r0,=( PAGE_32M | 0x08000000 | 1)
 	mcr	p15, 0, r0, c6, c7, 0
 
 	@-------------------------------------------------------------------------
 	@ Write buffer enable
 	@-------------------------------------------------------------------------
 	@ It is safe for all I/O and memory to enable the write buffer.
+	@ (The write buffer is drained before the next read).
 	@ TCMs don't use the write buffer.
-	@             uuRVvMTD
-	ldr	r0,=0b00111101
+	@	      gGViWDMI
+	ldr	r0,=0b11111010
 	mcr	p15, 0, r0, c3, c0, 0
 
 	@-------------------------------------------------------------------------
 	@ Data cache enable
 	@-------------------------------------------------------------------------
-#ifdef CONFIG_XIP_KERNEL
-	@ only enable GBA ROM data cache if there is flash/ram ( == XIP)
-	ldr	r0,=0b00100100
-#else
-	@             uuRVvMTD
-	ldr	r0,=0b00000100
-#endif
+	@ Disable data cache for GBA ROM, until we have full 8bit write support.
+	@	      gGViWDMI
+	@ldr	r0,=0b10000010
+	ldr	r0,=0b00000010
 	mcr	p15, 0, r0, c2, c0, 0
 
 	@-------------------------------------------------------------------------
@@ -279,32 +274,38 @@ _entry:
 	@ Instruction cache is on for
 	@ - Main Memory
 	@ - GBA Slot ROM (for XIP and program executing)
-	@             uuRVvMTD
-	ldr	r0,=0b00100100
+	@	      gGViWDMI
+	ldr	r0,=0b10000010
 	mcr	p15, 0, r0, c2, c0, 1
 
 	@-------------------------------------------------------------------------
 	@ IAccess
 	@-------------------------------------------------------------------------
-	@ - Default: none
-	@ - TCM:  all r+w (maybe we load some fast code into ITCM)
-	@ - Main: all r+w
-	@ - Video: none
-	@ - GBA ROM: all r+w
-	@             uuRVvMTD
-	ldr	r0,=0x00300330
+	@ - ITCM: kernel ro
+	@ - Main: all ro
+	@ - DTCM: none
+	@ - IWRAM: none
+	@ - IO+VRAM: none
+	@ - VRAM: none
+	@ - GBA IO: none
+	@ - GBA ROM: all ro
+	@	      gGViWDMI
+	ldr	r0,=0x60000065
 	mcr	p15, 0, r0, c5, c0, 3
 
 	@-------------------------------------------------------------------------
 	@ DAccess
 	@-------------------------------------------------------------------------
-	@ - Default: kernel r+w
-	@ - TCM:  all r+w (maybe we load some fast data into DTCM)
+	@ - ITCM: kernel r+w (write is later switched off)
 	@ - Main: all r+w
-	@ - Video: all r+w
+	@ - DTCM: all r+w
+	@ - IWRAM: kernel r+w
+	@ - IO+VRAM: kernel r+w
+	@ - VRAM: all r+w
+	@ - GBA IO: kernel r+w
 	@ - GBA ROM: all r+w
-	@             uuRVvMTD
-	ldr	r0,=0x00333331
+	@	      gGViWDMI
+	ldr	r0,=0x31311331
 	mcr	p15, 0, r0, c5, c0, 2
 
 	@-------------------------------------------------------------------------

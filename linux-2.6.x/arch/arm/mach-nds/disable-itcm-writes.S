@@ -54,11 +54,11 @@ ENTRY(disable_writes_to_itcm)
 	@-------------------------------------------------------------------------
 	@ DAccess
 	@-------------------------------------------------------------------------
-	@ modify only ITCM,DTCM region 1
+	@ modify only ITCM region 0
 	mrc	p15, 0, r0, c5, c0, 2
-	ldr	r1,=0xFFFFFF0F
+	ldr	r1,=0xFFFFFFF0
 	and	r0,r0,r1
-	ldr	r1,=0x00000050
+	ldr	r1,=0x00000005
 	orr	r0,r0,r1
 	mcr	p15, 0, r0, c5, c0, 2
 
