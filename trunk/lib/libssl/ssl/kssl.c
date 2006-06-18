@@ -80,9 +80,10 @@
 #include <openssl/ssl.h>
 #include <openssl/evp.h>
 #include <openssl/objects.h>
-#include <openssl/krb5_asn.h>
 
 #ifndef OPENSSL_NO_KRB5
+
+#include <openssl/krb5_asn.h>
 
 #ifndef ENOMEM
 #define ENOMEM KRB5KRB_ERR_GENERIC

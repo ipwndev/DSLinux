@@ -178,7 +178,7 @@ EXHEADER=       e_os2.h
 HEADER=         e_os.h
 
 #all: Makefile build_all openssl.pc libssl.pc libcrypto.pc
-all: Makefile build_libs openssl.pc libssl.pc libcrypto.pc
+all: depend links build_libs openssl.pc libssl.pc libcrypto.pc
 
 # as we stick to -e, CLEARENV ensures that local variables in lower
 # Makefiles remain local and variable. $${VAR+VAR} is tribute to Korn
