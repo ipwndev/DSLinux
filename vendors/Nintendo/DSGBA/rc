@@ -12,7 +12,7 @@ then
 	echo "MAKE A BACKUP FIRST!"
 	echo
 	echo "See http://www.dslinux.org/wiki/Running_DSLinux"
-	echo "for more information on the /sram filesystem."
+	echo "for more information."
 	echo
 fi
 
