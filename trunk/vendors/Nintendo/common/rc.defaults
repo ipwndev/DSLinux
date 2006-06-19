@@ -1,15 +1,30 @@
-# This file provides default flags for the DSLinux boot process.
-
-# It can be used as an example configuration file.
-# You can override every flag in this file in a copy.
-# Copy it to:
-#	* linux/etc/rc.conf on your CF card (GBAMP, M3 CF, SC CF)
-#	* /var/rc.conf (.nds builds, not saved across reboots)
+###########################################################
+#
+#	INSTRUCTIONS
+#
+# If you are using GBAMP. M3 CF or Supercard CF, copy this
+# file to linux/etc/rc.conf on your CF card.
+#
+# If you are using the .nds version of DSLinux, copy this
+# file to /var/rc.conf. Note that /var/rc.conf will not be
+# preserved across reboots!
+#
+# If you are using the .ds.gba version of DSLinux, copy the
+# file to /sram/rc.conf.
+#
+# The /sram filesystem needs to be initialised before it
+# can be used. See http://www.dslinux.org/wiki/Running_DSLinux
+# for more information.
+#
 # Then edit the copy with vi.
 # If you have never used vi before, see:
-# 	http://www.dslinux.org/wiki/index.php/Using_DSLinux
+# 	http://www.dslinux.org/wiki/Vi
 # There is an introduction to vi on that page.
+#
+###########################################################
 
+
+# This file provides default flags for the DSLinux boot process.
 # The flags defined in this file can be either set or empty.
 # If a flag is empty, it will not affect the system.
 
