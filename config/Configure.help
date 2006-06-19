@@ -1471,6 +1471,16 @@ CONFIG_USER_MATH_TEST
   A number of programs used to test the proper functioning of the maths
   library.
 
+CONFIG_USER_MATHOMATIC
+  Mathomatic is a portable, general purpose CAS (Computer Algebra System)
+  that can automatically solve, simplify, combine, and compare  algebraic
+  equations.   It  does  some  calculus  and  handles all algebra, except
+  trigonometry and logarithms.  It is entirely hand-written in  optimized
+  C.   It  does  not permit extremely large expressions, which can take a
+  lot of memory and time.  Instead reliability, ease of  use,  and  speed
+  are its features.
+  You can find excellent documentation at www.mathomatic.org
+
 CONFIG_USER_MAWK_AWK
   The mawk program is an interpreter for the AWK programming language.
   The AWK language is useful for manipulation of data files, text
