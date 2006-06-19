@@ -64,7 +64,7 @@ romfs:
 	$(ROMFSINST) -s /var/tmp /tmp
 	$(ROMFSINST) -s /bin /sbin
 	$(ROMFSINST) -s /var/resolv.conf /etc/resolv.conf
-	$(ROMFSINST) -s /var/rc.conf /etc/rc.conf
+	$(ROMFSINST) -s /sram/rc.conf /etc/rc.conf
 	$(ROMFSINST) -s /var/hosts /etc/hosts
 	$(ROMFSINST) -s /var/home /home
 	$(ROMFSINST) /etc/rc
