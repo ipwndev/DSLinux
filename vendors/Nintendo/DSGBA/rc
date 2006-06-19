@@ -2,7 +2,20 @@
 
 mount -t proc none /proc
 mount -t ramfs none /var
+
 mount -t jffs2 /dev/rom1 /sram
+if [ "$?" != "0" ]
+then
+	echo "Could not mount /sram. You should run the command:"
+	echo "    eraseall /dev/mtd1"
+	echo "This may erase game saves!"
+	echo "MAKE A BACKUP FIRST!"
+	echo
+	echo "See http://www.dslinux.org/wiki/Running_DSLinux"
+	echo "for more information on the /sram filesystem."
+	echo
+fi
+
 mkdir /var/tmp
 mkdir /var/home
 mkdir /var/run
