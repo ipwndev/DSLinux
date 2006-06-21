@@ -272,7 +272,7 @@ make_new_session(int sockfd)
 	pty = getpty(tty_name);
 
 	if (pty < 0) {
-		syslog(LOG_ERR, "All network ports in use!");
+		syslog(LOG_ERR, "Could not open pty");
 		return 0;
 	}
 
@@ -299,7 +299,7 @@ make_new_session(int sockfd)
 #else
 	if ((pid = fork()) < 0) {
 #endif
-		syslog(LOG_ERR, "Can`t forking");
+		syslog(LOG_ERR, "Can`t fork");
 	}
 	if (pid == 0) {
 		/* In child, open the child's side of the tty.  */
