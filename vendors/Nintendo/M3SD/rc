@@ -2,15 +2,12 @@
 
 mount -t proc none /proc
 mount -t vfat -o noatime /dev/hda1 /m3
-# some CF cards to not have a partition table
+# some SD cards to not have a partition table
 # try mounting /dev/hda if mounting /dev/hda1 fails
 if [ "$?" != "0" ]
 then
-	echo "Mounting the CF card failed."
-	echo "Trying again, assuming your CF card does"
-	echo "not have a partition table."
 	mount -t vfat -o noatime /dev/hda /m3
-	[ "$?" = "0" ] || echo "Sorry, failed to mount your CF card."
+	[ "$?" = "0" ] || echo "Sorry, failed to mount your SD card."
 fi
 
 . /etc/rc.common
