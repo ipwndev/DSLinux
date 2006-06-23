@@ -35,7 +35,7 @@ hostname="NintendoDS"
 # If you want to enable it at boot time, set this flag to "YES".
 enable_network_on_boot="NO"
 
-# You can of course also configure networking manually (i.e. without
+# You can of course also configure networking manually (without
 # the init scripts, e.g. by using a custom script), or save a
 # configuration in /etc/rc.conf and start networking by running:
 #	/etc/rc.d/network start
@@ -55,7 +55,7 @@ essid=""
 channel=""
 
 # Here you can set a wepkey. Both 64bit and 128bit keys are
-# supported. For hex keys, just enter the key without any prefix:
+# supported. For hex keys, just enter the key without prefix:
 #	wepkey="9923829ea8923"
 # For ascii keys, make sure you use an 's:' prefix:
 # 	wepkey="s:mysecretkey"
@@ -66,24 +66,28 @@ wepkey=""
 # your IP address and gateway address.
 use_dhcp="NO"
 
-# You can also assign a static IP and gateway instead of using DHCP.
+# You can assign a static IP and gateway instead of using DHCP.
 # For example:
 #	ip="192.168.1.42"
 #	gateway="192.168.1.1"
-# Note that these values are ignored if use_dhcp is set to "YES".
+# Note that these are ignored if use_dhcp is set to "YES".
 ip=""
 gateway=""
 
-# If using static network configuration, you can also supply a netmask
-# and a broadcast address, if you want to.
+# If using static network configuration, you can also supply
+# a netmask and a broadcast address, if you want to.
 netmask=""
 broadcast=""
 
-# If you want to start telnetd on boot, so you can login into your
-# DS from your PC, set start_telnetd to "YES".
-# Note that telnet sends passwords unencrypted over the network,
-# and makes it easy to crack into your DS from outside. You should
-# therefore not enable this if you use public wifi hotspots.
+# If you want to start telnetd on boot, so you can login into
+# your DS from your PC via telnet, set start_telnetd to "YES".
+# Note that you should only start the telnet server in a
+# trusted environment. Do not enable it if you are in a
+# public network, because anyone could easily connect to
+# your DSLinux installation (the default root password
+# is widely known). Neither should you configure your router
+# to put the DS into DMZ, because this makes your DS accessible
+# to anyone on the internet!
 start_telnetd="NO"
 
 # If you want to see your DS firmware version on boot,
