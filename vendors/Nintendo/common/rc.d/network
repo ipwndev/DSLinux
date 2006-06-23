@@ -7,56 +7,67 @@ case "$1" in
 	start)
 		if [ -n "$essid" ]
 		then
+			iwconfig_args=""
+
 			echo "Configuring wireless interface:"
 			echo "ESSID:    $essid"
-			iwconfig nds essid $essid
+			iwconfig_args="$iwconfig_args essid $essid"
 			
 			if [ -n "$channel" ]
 			then 
 				echo "Channel:  $channel"
-				iwconfig nds channel $channel
+				iwconfig_args="$iwconfig_args channel $channel"
 			fi
 
 			if [ -n "$wepkey" ]
 			then
 				echo "Setting wepkey."
-				iwconfig nds key $wepkey
+				iwconfig_args="$iwconfig_args key $wepkey"
 			fi
+
+			iwconfig nds $iwconfig_args
+			sleep 1
+
 		else
 			echo "Not configuring network:"
 			echo "No ESSID defined. See /etc/rc.defaults!"
 			exit 1
 		fi
 
-		# configure the interface
 		ifconfig nds down
+		sleep 1
+
 		if [ "$use_dhcp" = "YES" ]
 		then
 			echo "Configuring network via DHCP."
-			# We have very little RAM, so don't fork a new
-			# process for the dhcp client. This is the last
-			# command to run anyway if using dhcp.
+			# We have very little RAM, so use 'exec' to avoid
+			# forking a new process for the dhcp client. This is
+			# the last command to run anyway if using dhcp.
 			exec udhcpc -n -q -i nds
 			### NOT REACHED ###
 		elif [ -n "$ip" ] && [ -n "$gateway" ]
 		then
+
+			ifconfig_args=""
+			route_args=""
+
 			echo "Configuring network:"
 			echo "IP:        $ip"
 			echo "Gateway:   $gateway"
-			ifconfig nds $ip up
-			route add default gw $gateway
+			ifconfig_args="$ifconfig_args $ip"
 
-			# Let users optionally configure netmask and broadcast.
-			# Thanks to chatterbug89 for pointing out that this
-			# was missing.
 			if [ -n "$netmask" ]
 				echo "Netmask:   $netmask"
-				ifconfig nds netmask $netmask
+				ifconfig_args="$ifconfig_args netmask $netmask"
 			fi
 			if [ -n "$broadcast" ]
 				echo "Broadcast: $broadcast"
-				ifconfig nds broadcast $broadcast
+				ifconfig_args="$ifconfig_args broadcast $broadcast"
 			fi
+
+			ifconfig nds $ifconfig_args up
+			sleep 1
+			route add default gw $gateway
 		else
 			echo "Not configuring network:"
 			echo "No static configuration found and DHCP is disabled."
