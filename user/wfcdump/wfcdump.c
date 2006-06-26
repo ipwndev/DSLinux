@@ -134,7 +134,7 @@ void print_wep()
 	if (fseek(f, base + WEP_OFFSET, SEEK_SET) != 0)
 		die();
 	for (i = 0; i < 16; i++)
-		printf("%x", fgetc(f));
+		printf("%02x", fgetc(f));
 	printf("\n");
 }
 
