@@ -30,6 +30,8 @@ typedef int bool;
 #define DNS1_OFFSET		(GW_OFFSET + 4)
 #define DNS2_OFFSET		(DNS1_OFFSET + 4)
 #define MASK_OFFSET		0xD0
+#define WEP_MODE_OFFSET		0xE6
+#define STATUS_OFFSET		0xE7
 
 #define FIRMWARE_FILE "/dev/firmware"
 
