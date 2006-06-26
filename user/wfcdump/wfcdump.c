@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 typedef int bool;
 #define true 1
@@ -86,7 +87,7 @@ unsigned long read_ulong(int offset)
 	return out;
 }
 
-int print_ulong_item(int offset, char *name)
+void print_ulong_item(int offset, char *name)
 {
 	unsigned long item = read_ulong(offset);
 	print_dotquad(item, false);
@@ -104,10 +105,7 @@ unsigned long calc_mask(unsigned long bits)
 
 void print_mask()
 {
-	unsigned long mask = 0;
-	unsigned long bits = 0;
-
-	bits = read_ulong(MASK_OFFSET);
+	unsigned long bits = read_ulong(MASK_OFFSET);
 	print_dotquad(calc_mask(bits), true);
 	printf("\n");
 }
@@ -143,13 +141,7 @@ void print_wep()
 
 int main(int argc, char *argv[])
 {
-	int ch, i, j, offset;
-	unsigned long k, n;
-
-	if ((f = fopen(FIRMWARE_FILE, "r")) == NULL) {
-		perror("wfcdump: " FIRMWARE_FILE);
-		exit(1);
-	}
+	int ch, i;
 
 	while ((ch = getopt(argc, argv, "c:h")) != -1) {
 		switch (ch) {
@@ -173,6 +165,11 @@ int main(int argc, char *argv[])
 
 	if (argc <= optind)
 		usage();
+
+	if ((f = fopen(FIRMWARE_FILE, "r")) == NULL) {
+		perror("wfcdump: " FIRMWARE_FILE);
+		exit(1);
+	}
 	
 	for (i = optind; i < argc; i++) {
 		if (strcmp(argv[i], "ssid") == 0)
