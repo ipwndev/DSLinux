@@ -144,6 +144,7 @@ void print_wep()
 int main(int argc, char *argv[])
 {
 	int ch, i;
+	unsigned long status ;
 
 	while ((ch = getopt(argc, argv, "c:h")) != -1) {
 		switch (ch) {
@@ -170,6 +171,15 @@ int main(int argc, char *argv[])
 
 	if ((f = fopen(FIRMWARE_FILE, "r")) == NULL) {
 		perror("wfcdump: " FIRMWARE_FILE);
+		exit(1);
+	}
+
+	status = read_ulong(STATUS_OFFSET);
+
+	if ( status != 0 )
+	{
+		fprintf(stderr, "wfcdump: configuration %i not configured\n",
+				config + 1);
 		exit(1);
 	}
 	
