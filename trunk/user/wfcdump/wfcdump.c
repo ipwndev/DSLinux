@@ -28,10 +28,9 @@ typedef int bool;
 #define GW_OFFSET		(IP_OFFSET + 4)
 #define DNS1_OFFSET		(GW_OFFSET + 4)
 #define DNS2_OFFSET		(DNS1_OFFSET + 4)
-#define	MASK_OFFSET		0xD0
+#define MASK_OFFSET		0xD0
 
-//#define FIRMWARE_FILE "/dev/firmware"
-#define FIRMWARE_FILE "./fw.bin"
+#define FIRMWARE_FILE "/dev/firmware"
 
 #define DEFAULT_CONFIG 0
 static int config = DEFAULT_CONFIG;
