@@ -15,100 +15,189 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+
+typedef int bool;
+#define true 1
+#define false 0
 
 #define WFC_SETTINGS 		0x03FA00
 #define SSID_OFFSET		0x40
-#define WEP_KEY_OFFSET		0x80
-#define IP_SETTINGS_OFFSET	0xC0
-#define	NETMASK_OFFSET		0xD0
+#define WEP_OFFSET		0x80
+#define IP_OFFSET		0xC0
+#define GW_OFFSET		(IP_OFFSET + 4)
+#define DNS1_OFFSET		(GW_OFFSET + 4)
+#define DNS2_OFFSET		(DNS1_OFFSET + 4)
+#define	MASK_OFFSET		0xD0
 
-#define FIRMWARE_FILE "/dev/firmware"
-//#define FIRMWARE_FILE "./fw.bin"
+//#define FIRMWARE_FILE "/dev/firmware"
+#define FIRMWARE_FILE "./fw.bin"
+
+#define DEFAULT_CONFIG 0
+static int config = DEFAULT_CONFIG;
+static FILE* f = NULL;
+
+void usage()
+{
+	fprintf(stderr, "wfcdump - dump WFC settings from firmware\n");
+	fprintf(stderr, "Usage: wfcdump [options] <items to print>\n");
+	fprintf(stderr, "Options:\n");
+	fprintf(stderr, "\t-c n\tnumber of WFC configuration to use "
+			"(1, 2 or 3).\n");
+	fprintf(stderr, "\t        Default is %i.\n", DEFAULT_CONFIG + 1);
+	fprintf(stderr, "\t-h\tprint help\n");
+	fprintf(stderr, "Available items:\n");
+	fprintf(stderr, "\tssid\tprint SSID\n");
+	fprintf(stderr, "\twep\tprint WEP key\n");
+	fprintf(stderr, "\tip\tprint IP address\n");
+	fprintf(stderr, "\tgw\tprint gateway\n");
+	fprintf(stderr, "\tdns1\tprint first DNS server\n");
+	fprintf(stderr, "\tdns2\tprint second DNS server\n");
+	fprintf(stderr, "\tmask\tprint netmask\n");
+}
+
+void die()
+{
+	if (f != NULL)
+		fclose(f);
+	perror("wfcdump");
+	exit(1);
+}
+
+/* Prints n in quad dotted notation. If reverse is set,
+ * reverse byte order before printing. */
+void print_dotquad(unsigned long n, bool reverse)
+{
+	if (reverse)
+		printf("%lu.%lu.%lu.%lu", (n >> 24) & 0xff, (n >> 16) & 0xff, (n >> 8) & 0xff,
+				n & 0xff);
+	else
+		printf("%lu.%lu.%lu.%lu", n & 0xff, (n >> 8) & 0xff, (n >> 16) & 0xff,
+				(n >> 24) & 0xff);
+}
+
+unsigned long read_ulong(int offset)
+{
+	int base = WFC_SETTINGS + ((config) << 8);
+	if (fseek(f, base + offset, SEEK_SET) != 0)
+		die();
+	int out = 0;
+	if (fread(&out, sizeof(out), 1, f) < 1)
+		die();
+	return out;
+}
+
+int print_ulong_item(int offset, char *name)
+{
+	unsigned long item = read_ulong(offset);
+	print_dotquad(item, false);
+	printf("\n");
+}
+
+unsigned long calc_mask(unsigned long bits)
+{
+	int i;
+	unsigned long mask = 0;
+	for (i = 0; i < bits; i++)
+		mask |= 1 << (31 - i);
+	return mask;
+}
+
+void print_mask()
+{
+	unsigned long mask = 0;
+	unsigned long bits = 0;
+
+	bits = read_ulong(MASK_OFFSET);
+	print_dotquad(calc_mask(bits), true);
+	printf("\n");
+}
+
+void print_ssid()
+{
+	char ssid[32];
+	int base, i;
+
+	for (i = 0; i < sizeof(ssid); i++)
+		ssid[i] = '\0';
+
+	base = WFC_SETTINGS + ((config) << 8);
+	if (fseek(f, base + SSID_OFFSET, SEEK_SET) != 0)
+		die();
+	if (fgets(ssid, sizeof(ssid), f) == NULL)
+		die();
+	printf("%s\n", ssid);
+}
+
+void print_wep()
+{
+	int base, i;
+
+	base = WFC_SETTINGS + ((config) << 8);
+	if (fseek(f, base + WEP_OFFSET, SEEK_SET) != 0)
+		die();
+	for (i = 0; i < 16; i++)
+		printf("%x", fgetc(f));
+	printf("\n");
+}
+
 
 int main(int argc, char *argv[])
 {
-	FILE *f;
-	char ssid[32];
-	int i, j, offset;
+	int ch, i, j, offset;
 	unsigned long k, n;
 
-	f = fopen(FIRMWARE_FILE, "r");
-	if (f == NULL) {
+	if ((f = fopen(FIRMWARE_FILE, "r")) == NULL) {
 		perror("wfcdump: " FIRMWARE_FILE);
-		return 1;
+		exit(1);
 	}
 
-	for (i = 0; i < 3; i++) {
-		offset = WFC_SETTINGS + (i << 8);
-
-		printf("WFC Configuration %i:\n", i);
-
-		if (fseek(f, offset + SSID_OFFSET, SEEK_SET) != 0)
-			goto out;
-		for (j = 0; j < sizeof(ssid); j++)
-			ssid[j] = '\0';
-		if (fgets(ssid, sizeof(ssid), f) == NULL)
-			goto out;
-		printf("[%i]ssid\t%s\n", i, ssid);
-
-		if (fseek(f, offset + WEP_KEY_OFFSET, SEEK_SET) != 0)
-			goto out;
-		printf("[%i]wep\t", i);
-		for (j = 0; j < 16; j++)
-			printf("%x", fgetc(f));
-		printf("\n");
-
-		if (fseek(f, offset + IP_SETTINGS_OFFSET, SEEK_SET) != 0)
-			goto out;
-		
-		if (fread(&k, sizeof(k), 1, f) < 1)
-			goto out;
-		printf("[%i]ip\t%lu.%lu.%lu.%lu\n", i, k & 0xff,
-				(k >> 8) & 0xff, (k >> 16) & 0xff,
-				(k >> 24) & 0xff);
-		
-		if (fread(&k, sizeof(k), 1, f) < 1)
-			goto out;
-		printf("[%i]gw\t%lu.%lu.%lu.%lu\n", i, k & 0xff,
-				(k >> 8) & 0xff, (k >> 16) & 0xff,
-				(k >> 24) & 0xff);
-		
-		if (fread(&k, sizeof(k), 1, f) < 1)
-			goto out;
-		printf("[%i]dns1\t%lu.%lu.%lu.%lu\n", i, k & 0xff,
-				(k >> 8) & 0xff, (k >> 16) & 0xff,
-				(k >> 24) & 0xff);
-		
-		if (fread(&k, sizeof(k), 1, f) < 1)
-			goto out;
-		printf("[%i]dns2\t%lu.%lu.%lu.%lu\n", i, k & 0xff,
-				(k >> 8) & 0xff, (k >> 16) & 0xff,
-				(k >> 24) & 0xff);
-
-		if (fseek(f, offset + NETMASK_OFFSET, SEEK_SET) != 0)
-			goto out;
-
-		/* read number of bits set in netmask */
-		if (fread(&k, sizeof(k), 1, f) < 1)
-			goto out;
-
-		/* construct netmask */
-		n = 0;
-		for (j = 0; j < k; j++)
-			n |= 1 << (31 - j);
-
-		printf("[%i]mask\t%lu.%lu.%lu.%lu\n", i, (n >> 24) & 0xff,
-				(n >> 16) & 0xff, (n >> 8) & 0xff,
-				n & 0xff);
-
-		(i == 2) ? : printf("\n");
+	while ((ch = getopt(argc, argv, "c:h")) != -1) {
+		switch (ch) {
+		case 'c':
+			config = atoi(optarg) - 1;
+			if (config < 0 || config > 2) {
+				fprintf(stderr, "wfcdump: Invalid WFC "
+					"configuration number %i\n",
+					config + 1);
+				exit(1);
+			}
+			break;
+		case 'h':
+			usage();
+			exit(0);
+		default:
+			usage();
+			exit(1);
+		}
 	}
 
-	fclose(f);
-	return 0;
-out:
-	perror("wfcdump");
-	fclose(f);
-	return 1;
+	if (argc <= optind)
+		usage();
+	
+	for (i = optind; i < argc; i++) {
+		if (strcmp(argv[i], "ssid") == 0)
+			print_ssid();
+		else if (strcmp(argv[i], "wep") == 0)
+			print_wep();
+		else if (strcmp(argv[i], "ip") == 0)
+			print_ulong_item(IP_OFFSET, "ip");
+		else if (strcmp(argv[i], "gw") == 0)
+			print_ulong_item(GW_OFFSET, "gw");
+		else if (strcmp(argv[i], "dns1") == 0)
+			print_ulong_item(DNS1_OFFSET, "dns1");
+		else if (strcmp(argv[i], "dns2") == 0)
+			print_ulong_item(DNS2_OFFSET, "dns2");
+		else if (strcmp(argv[i], "mask") == 0)
+			print_mask();
+		else {
+			fprintf(stderr, "Unknown item %s\n", argv[i]);
+			exit(1);
+		}
+	}
+
+	if (f != NULL)
+		fclose(f);
+	exit(0);
 }
 
