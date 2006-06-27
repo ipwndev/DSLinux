@@ -49,8 +49,6 @@ do
 		fakeroot_cmd=""
 	fi
 		
-	mktopconfig $build && yes '' | make config && $fakeroot_cmd make
-
 	case $build in
 		DSGBA)
 			distfile=dslinux.ds.gba
@@ -79,7 +77,11 @@ do
 		;;
 	esac
 
-	[ -d $OUTDIR ] || mkdir -p $OUTDIR
-	cp -v -f ./images/$distfile $OUTDIR
-	(cd $OUTDIR && md5sum $distfile | tee $distfile.md5)
+	[ -d "$OUTDIR" ] || mkdir -p "$OUTDIR"
+
+	mktopconfig $build && \
+	yes '' | make config && \
+	$fakeroot_cmd make && \
+	cp -v -f ./images/$distfile "$OUTDIR" && \
+	(cd "$OUTDIR" && md5sum $distfile | tee $distfile.md5)
 done
