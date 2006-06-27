@@ -125,7 +125,7 @@ void print_ssid()
 		die();
 	if (fgets(ssid, sizeof(ssid), f) == NULL)
 		die();
-	printf("%s\n", ssid);
+	printf("\"%s\"\n", ssid);
 }
 
 void print_wep()
@@ -144,7 +144,6 @@ void print_wep()
 int main(int argc, char *argv[])
 {
 	int ch, i;
-	unsigned long status ;
 
 	while ((ch = getopt(argc, argv, "c:h")) != -1) {
 		switch (ch) {
@@ -174,10 +173,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	status = read_ulong(STATUS_OFFSET);
-
-	if ( status != 0 )
-	{
+	if (read_ulong(STATUS_OFFSET) != 0) {
 		fprintf(stderr, "wfcdump: configuration %i not configured\n",
 				config + 1);
 		exit(1);
