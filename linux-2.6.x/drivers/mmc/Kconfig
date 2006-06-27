@@ -78,4 +78,13 @@ config MMC_DSMEMSD
 
 	  If unsure, say N.
 
+config MMC_SCSD
+	tristate "Supercard SD support"
+	depends on MMC && ARCH_NDS
+	help
+	  This selects the Supercard SD device
+	  If you have an Supercard SD, say Y or M here.
+
+	  If unsure, say N.
+
 endmenu

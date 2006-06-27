@@ -247,6 +247,10 @@ _entry:
 	@ Region 7 - GBA SLOT ROM for Program+Data, overriding Region 6
 	@-------------------------------------------------------------------------
 	ldr	r0,=( PAGE_32M | 0x08000000 | 1)
+#ifdef CONFIG_MMC_SCSD
+	@ Supercard SD uses upper 16M for SD card I/O
+	ldr	r0,=( PAGE_16M | 0x08000000 | 1)
+#endif
 	mcr	p15, 0, r0, c6, c7, 0
 
 	@-------------------------------------------------------------------------
