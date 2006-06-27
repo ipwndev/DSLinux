@@ -408,9 +408,6 @@ config BLK_DEV_INITRD
 	  "real" root file system, etc. See <file:Documentation/initrd.txt>
 	  for details.
 
-config NDS_SUPERCARDSD
-	tristate "NDS Supercard SD support"
-	depends on ARCH_NDS
 
 #XXX - it makes sense to enable this only for 32-bit subarch's, not for x86_64
 #for instance.
