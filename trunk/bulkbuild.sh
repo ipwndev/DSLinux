@@ -29,7 +29,7 @@ EOF
 
 OUTDIR=${OUTDIR:-"./bulkbuild"}
 
-for build in DSGBA DSMEM GBAMP GBAMP_EXT2 M3CF NDS SUPERCARDCF
+for build in DSGBA DSMEM GBAMP GBAMP_EXT2 M3CF NDS SUPERCARDCF SUPERCARDSD
 do
 	if [ "$build" = "GBAMP_EXT2" ]
 	then
@@ -67,12 +67,16 @@ do
 		M3CF)
 			distfile=dslinux-m3cf.tgz
 		;;
-		SUPERCARDCF)
-			distfile=dslinux-supercardcf.tgz
-		;;
 		NDS)
 			distfile=dslinux.nds
 		;;	
+		SUPERCARDCF)
+			distfile=dslinux-supercardcf.tgz
+		;;
+
+		SUPERCARDSD)
+			distfile=dslinux-supercardsd.tgz
+		;;
 	esac
 
 	[ -d $OUTDIR ] || mkdir -p $OUTDIR
