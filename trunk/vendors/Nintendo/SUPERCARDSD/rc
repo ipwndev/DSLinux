@@ -1,4 +1,4 @@
 hostname NintendoDS
 mount -t proc none /proc
-mount -t vfat /dev/hda1 /supercard
+mount -t vfat /dev/mmcblk1 /supercard
 fwver

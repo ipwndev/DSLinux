@@ -664,6 +664,7 @@ CONFIG_MMC_BLOCK=y
 # CONFIG_MMC_WBSD is not set
 # CONFIG_MMC_M3SD is not set
 CONFIG_MMC_DSMEMSD=y
+# CONFIG_MMC_SCSD is not set
 
 #
 # File systems
