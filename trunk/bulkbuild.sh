@@ -75,6 +75,12 @@ do
 		SUPERCARDSD)
 			distfile=dslinux-supercardsd.tgz
 		;;
+		*)
+			echo
+			echo "ERROR: distfile is undefined for $build"
+			echo
+			exit 1
+		;;
 	esac
 
 	[ -d "$OUTDIR" ] || mkdir -p "$OUTDIR"
