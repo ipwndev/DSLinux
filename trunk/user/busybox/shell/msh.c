@@ -44,6 +44,7 @@
 #include <sys/times.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <pwd.h>
 
 #include "cmdedit.h"
 #include "busybox.h"
@@ -825,6 +826,8 @@ extern int msh_main(int argc, char **argv)
 	int cflag;
 	char *name, **ap;
 	int (*iof) (struct ioarg *);
+	uid_t uid;
+	struct passwd *pw;
 
 	DBGPRINTF(("MSH_MAIN: argc %d, environ 0x%x\n", argc, environ));
 
@@ -844,9 +847,23 @@ extern int msh_main(int argc, char **argv)
 	export(shell);
 
 	homedir = lookup("HOME");
+	uid = getuid();
+	pw = NULL;
+	do {
+		if ((pw = getpwent()) != NULL) {
+			if (pw->pw_uid == uid) {
+				setval(homedir, pw->pw_dir);
+				break;
+			}
+		}
+	} while (pw != NULL);
+	endpwent();
+
 	if (homedir->value == null)
 		setval(homedir, "/");
 	export(homedir);
+
+	chdir(homedir->value); /* Ignore return value. homedir should be sane. */
 
 	setval(lookup("$"), putn(getpid()));
 
