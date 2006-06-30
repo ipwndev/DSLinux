@@ -30,17 +30,25 @@
 #include <asm/scatterlist.h>
 #include <asm/sizes.h>
 
-#undef  READ_CRC	/* do CRC for data reads */
+#define  READ_CRC	/* do CRC for data reads */
+#undef   HALT_ON_ERROR	/* stop after error, so we can see what's happened */
 
 #ifdef CONFIG_MMC_DEBUG
 #define READ_CRC
+#define HALT_ON_ERROR
 #define DBG(x...)	printk(x)
 #else
 #define DBG(x...)	do { } while (0)
 #endif
 
+#ifdef HALT_ON_ERROR
+#define halt() do { } while (1)
+#else
+#define halt() do { } while (0)
+#endif
+
 #define DRIVER_NAME	"scsd"
-#define DRIVER_VERSION	"1.0.0"
+#define DRIVER_VERSION	"1.0.1"
 
 /*****************************************************************************/
 /* IO registers */
@@ -149,6 +157,37 @@ static u32 scsd_read_response_byte(void)
 	return res;
 }
 
+/* Wait until ready on the data lines */
+/* return 0 if ready, 1 if busy */
+static int scsd_waitready(void)
+{
+	u32 ioadr = SC_SD_DATAREAD;
+	u32 tries = 2000000; /* app. 1000 ms */
+	u32 count = 0;
+
+	/* skip max. 2 Z-bits */
+	readl(ioadr);
+
+	do {
+		if (readw(ioadr) & 0x0100) {
+			/* data line is high */
+			count++;
+			if (count > 8) {
+				/* minimum 8 bit not busy */
+				return 0;
+			}
+		} else {				
+			/* data line is low */
+			count = 0;
+			tries--;
+			if (!tries) {
+				/* busy for a very long time */
+				return 1;
+			}
+		}		
+	} while (1);
+}
+
 /* send a SD command */
 /* @return 0 for success, != 0 otherwise */
 static int scsd_send_cmd(struct mmc_command *cmd)
@@ -173,9 +212,9 @@ static int scsd_send_cmd(struct mmc_command *cmd)
 	i = 500000; /* app. 250 ms */
 	while (!(readw(ioadr) & 0x0001) && i) i--;
 	if (!i) {
-		/* Timeout error */
-		DBG("Timeout waiting for non-busy\n");
+		printk( KERN_ERR "CMD:timeout after command\n");
 		cmd->error = MMC_ERR_TIMEOUT;
+		halt();
 		return -1;
 	}
 
@@ -215,7 +254,7 @@ static int scsd_send_cmd(struct mmc_command *cmd)
 		while ((readw(ioadr) & 0x0001) && i) i--;
 		if (!i) {
 			/* Timeout error */
-			DBG("Timeout after Command\n");
+			printk(KERN_ERR "Timeout after Command\n");
 			cmd->error = MMC_ERR_TIMEOUT;
 			return -1;
 		}
@@ -248,21 +287,21 @@ static int scsd_send_cmd(struct mmc_command *cmd)
 		DBG("Got native response %X %X %X %X\n", cmd->resp[0], cmd->resp[1], cmd->resp[2], cmd->resp[3]);
 		break;
 	default:
-		DBG("Invalid flags code from mmc layer: %d\n", cmd->flags);
+		printk(KERN_ERR "Invalid flags code from mmc layer: %d\n", cmd->flags);
 		cmd->error = MMC_ERR_INVALID;
+		halt();
 		return -1;
 	}
 
 	/* Busy command? (== STOP) */
 	if (cmd->flags & MMC_RSP_BUSY) {
-		ioadr = SC_SD_DATAREAD;
 
-		i = 500000; /* app. 250 ms */
-		while (!(readw(ioadr) & 0x0100) && i) i--;
-		if (!i) {
+		/* Wait until ready on the data lines */
+		if (scsd_waitready()) {
 			/* Timeout error */
-			DBG("Timeout waiting for not busy\n");
+			printk(KERN_ERR "Busy: timeout waiting for not busy\n");
 			cmd->error = MMC_ERR_TIMEOUT;
+			halt();
 			return -1;
 		}
 	}
@@ -320,8 +359,9 @@ static void scsd_xfer( struct mmc_data *data )
 				while ((readw(ioadr) & 0x0100) && i) i--;
 				if (!i) {
 					/* Timeout error */
-					DBG("Timeout waiting for read data\n");
+					printk(KERN_ERR "Read: timeout waiting for read data\n");
 					data->error = MMC_ERR_TIMEOUT;
+					halt();
 					return;
 				}
 		
@@ -342,28 +382,25 @@ static void scsd_xfer( struct mmc_data *data )
 #ifdef READ_CRC
 				for (i = 0; i < 4; i++) {
 					if (crc16[i] != crcread[i]) {
-						printk (KERN_ERR "scsd: CRC read different Block\n");
+						printk (KERN_ERR "Read: CRC read different\n");
 						data->error = MMC_ERR_BADCRC;
+						halt();
 						return;
 					}
 				} 
 #endif
 			} else if (data->flags & MMC_DATA_WRITE) {
 
-				ioadr = SC_SD_DATAWRITE;
-
-				/* wait until not busy */
-				i = 500000; /* app. 250 ms */
-				while (!(readw(ioadr) & 0x0100) && i) i--;
-				if (!i) {
+				/* Wait until ready on the data lines */
+				if (scsd_waitready()) {
 					/* Timeout error */
-					DBG("Timeout waiting for not busy\n");
+					printk(KERN_ERR "before Write: timeout waiting for ready\n");
 					data->error = MMC_ERR_TIMEOUT;
+					halt();
 					return;
 				}
-				/* skip one Z bit */
-				readw(ioadr);
-		
+				ioadr = SC_SD_DATAWRITE;
+
 				/* calculate the crc */
 				sd_crc16_s(p, length, crc16);
 
@@ -388,12 +425,13 @@ static void scsd_xfer( struct mmc_data *data )
 				while ((readw(ioadr) & 0x0100) && i) i--;
 				if (!i) {
 					/* Timeout error */
-					DBG("Timeout waiting for CRC response\n");
+					printk(KERN_ERR "Timeout waiting for CRC response\n");
 					data->error = MMC_ERR_TIMEOUT;
+					halt();
 					return;
 				}
 
-				/* read CRC response (3 bit)*/
+				/* read CRC response (3 bit) + end bit */
 				readl(ioadr);
 				tmp = readl(ioadr);
 				tmp >>= 16;
@@ -401,20 +439,22 @@ static void scsd_xfer( struct mmc_data *data )
 				i = 0;
 				if (tmp & 0x1000) i |= 0x04;
 				if (tmp & 0x0100) i |= 0x02;
-				if (tmp & 0x0010) i |= 0x01;
+ 				if (tmp & 0x0010) i |= 0x01;
 				DBG("CRC Response = %d\n", i);
-				if (i != 2) {
+				/* found that SD cards give response codes 2 AND 3, without error */
+				if ((i != 2) && (i != 3)) {
+					printk(KERN_ERR "Write: CRC bad code= %d tmp= %X\n", i, tmp);
 					data->error = MMC_ERR_BADCRC;
+					halt();
 					return;				
 				}					
 			
-				/* wait until ready */
-				i = 500000; /* app. 250 ms */
-				while (!(readw(ioadr) & 0x0100) && i) i--;
-				if (!i) {
+				/* Wait until ready on the data lines */
+				if (scsd_waitready()) {
 					/* Timeout error */
-					DBG("Timeout waiting for ready\n");
+					printk(KERN_ERR "Write: timeout waiting for ready\n");
 					data->error = MMC_ERR_TIMEOUT;
+					halt();
 					return;
 				}
 
@@ -441,6 +481,7 @@ static void scsd_request(struct mmc_host *mmc, struct mmc_request *mrq)
 
 	u32 ioadr = SC_SD_CMD;
 	int ret;
+	int retry = 1;
 
     	DBG("%s Opcode %d, arg %d\n",__FUNCTION__, mrq->cmd->opcode, mrq->cmd->arg);
 
@@ -451,6 +492,13 @@ static void scsd_request(struct mmc_host *mmc, struct mmc_request *mrq)
 	}
 
 	switch (mrq->cmd->opcode){
+	/* do a retry for data I/O */
+	case MMC_READ_SINGLE_BLOCK:
+	case MMC_READ_MULTIPLE_BLOCK:
+	case MMC_WRITE_BLOCK:
+	case MMC_WRITE_MULTIPLE_BLOCK:
+		retry = 3;
+		break;
 	/* check if we have an inactivation command */
 	case SD_APP_OP_COND:
 	case MMC_GO_INACTIVE_STATE:
@@ -468,20 +516,31 @@ static void scsd_request(struct mmc_host *mmc, struct mmc_request *mrq)
 		break;
 	}
 
-    	/* Send the command to the card */
-	ret = scsd_send_cmd(mrq->cmd);
-	if (!ret) {
+	while (retry--) {
+		/* Send the command to the card */
+		mrq->cmd->error = MMC_ERR_NONE;
+		ret = scsd_send_cmd(mrq->cmd);
+		if (ret) 
+			continue;
+
 		/* check if we have an activation */
 		if (mrq->cmd->opcode == MMC_SET_RELATIVE_ADDR)
 			host->inactive = 0;
 
 		if ( mrq->data ) {
+			mrq->data->error = MMC_ERR_NONE;
 			scsd_xfer( mrq->data );
 			if (mrq->stop) {
-				scsd_send_cmd(mrq->stop);
+				mrq->stop->error = MMC_ERR_NONE;
+				ret = scsd_send_cmd(mrq->stop);
+				if (ret)
+					continue;
 			}
+			if (mrq->data->error != MMC_ERR_NONE)
+				continue;
 		}
-    	}
+		break;
+	}
 
 	/* minimum 8 bits after last command */
 	ret=4; while (ret--) readl(ioadr);
