@@ -117,6 +117,10 @@ int main( void )
             printf("DS Lite firmware detected.  It is safe to run online games.\n");
             version = -1 ;
             break ;
+        case 0x0f1f:
+            printf("DS Lite firmware v2(?) detected.  It is safe to run online games.\n");
+            version = -1 ;
+            break ;
     }
 
     if ( version > 0 )
