@@ -9,7 +9,7 @@
 # file to /var/rc.conf. Note that /var/rc.conf will not be
 # preserved across reboots!
 #
-# If you are using the .ds.gba version of DSLinux, copy the
+# If you are using the .ds.gba version of DSLinux, copy this
 # file to /sram/rc.conf.
 #
 # The /sram filesystem needs to be initialised before it
