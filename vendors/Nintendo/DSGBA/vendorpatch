@@ -1,5 +1,5 @@
 --- common/config.vendor	2006-06-12 09:47:40.000000000 +0100
-+++ DSGBA/config.vendor	2006-06-12 09:52:17.000000000 +0100
++++ DSGBA/config.vendor	2006-06-12 10:03:19.000000000 +0100
 @@ -65,9 +65,9 @@
  # CONFIG_LIB_LIBIDN_FORCE is not set
  # CONFIG_LIB_LIBCURL_FORCE is not set
