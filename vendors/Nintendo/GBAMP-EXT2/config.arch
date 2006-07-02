@@ -1,3 +1,0 @@
-DISABLE_XIP := 1
-
-include $(ROOTDIR)/vendors/Nintendo/common/common-config.arch
