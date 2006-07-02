@@ -299,6 +299,7 @@ else
 		bool '  enable log files' CONFIG_USER_BOA_LOGGING
 	fi
 fi
+bool 'bitchx'			CONFIG_USER_BITCHX_BITCHX
 bool 'bpalogin'			CONFIG_USER_BPALOGIN_BPALOGIN
 bool 'br2684ctl'		CONFIG_USER_BR2684CTL_BR2684CTL
 bool 'brcfg'			CONFIG_USER_BRCFG_BRCFG
