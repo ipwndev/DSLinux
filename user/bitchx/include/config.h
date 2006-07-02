@@ -38,8 +38,10 @@
  * List last updated: 03/24/01.  -dialtone.
  */
 #define DEFAULT_SERVER  "[efnet] "\
-				"irc.foxlink.net "\
+				"irc.inter.net.il "\
+				"irc.prison.net "\
 				"irc.weblook2k.com "\
+				"irc.foxlink.net "\
 				"irc.wh.verio.net "\
 				"irc.choopa.net "\
 				"irc.easynews.com "\
@@ -530,7 +532,7 @@
 #define DEFAULT_CPU_SAVER_EVERY 0
 #define DEFAULT_NO_FAIL_DISCONNECT OFF
 #define DEFAULT_MAX_URLS 20	/* this defines the MAX number of urls saved */
-#undef BITCHX_LITE
+#define BITCHX_LITE
 #undef EMACS_KEYBINDS	       /* change this is you have problems with 
 				* your keyboard
 				*/
@@ -590,7 +592,7 @@
 #define DEFAULT_USERINFO ""
 #define DEFAULT_XTERM "rxvt"
 #define DEFAULT_XTERM_OPTIONS "-bg black -fg white"
-#define DEFAULT_DCC_DLDIR "~"
+#define DEFAULT_DCC_DLDIR "/tmp"
 
 #define DEFAULT_PAD_CHAR ' '
 #define DEFAULT_USERMODE "+iw"  /* change this to the default usermode */
@@ -708,11 +710,11 @@
 #undef WANT_OPERVIEW
 #undef WANT_EPICHELP
 #undef WANT_LLOOK
-#undef WANT_CDCC
+//#undef WANT_CDCC
 #undef WANT_FTP
-#undef WANT_TABKEY
+//#undef WANT_TABKEY
 #undef WANT_CHELP
-#undef WANT_USERLIST
+//#undef WANT_USERLIST
 #undef COMPRESS_MODES
 #undef ALLOW_DETACH
 #endif

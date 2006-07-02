@@ -176,7 +176,7 @@ CtcpEntryDll *dll_ctcp = NULL;
 
 /* CDE do ops and unban logging */
 
-static char	*ctcp_type[] =
+char	*ctcp_type[] =
 {
 	"PRIVMSG",
 	"NOTICE"

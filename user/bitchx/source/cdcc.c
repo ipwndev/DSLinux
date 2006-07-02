@@ -1937,19 +1937,22 @@ int BX_get_num_queue(void)
 
 /* this is required for functions.c to compile properly */
 
-BUILD_IN_FUNCTION(function_cdcc)
+//BUILD_IN_FUNCTION(function_cdcc)
+int function_cdcc()
 {
 	return m_strdup(empty_string);
 }
 
-BUILT_IN_FUNCTION(function_sendcdcc)
+//BUILT_IN_FUNCTION(function_sendcdcc)
+int function_sendcdcc()
 {
 	return m_strdup(empty_string);
 }
 
-int get_num_queue(void)
-{
-	return 0;
-}
+//int get_num_queue(void)
+//{
+//	return 0;
+//}
+
 
 #endif

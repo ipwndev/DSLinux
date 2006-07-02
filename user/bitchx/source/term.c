@@ -92,7 +92,9 @@ extern	int		tgetflag();
 #endif
 
 extern  char    *getenv();
+#ifndef HAVE_TPARM
 extern	char	*tparm();
+#endif
 
 /*
  * The old code assumed termcap. termcap is almost always present, but on

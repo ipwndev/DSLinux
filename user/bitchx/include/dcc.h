@@ -13,6 +13,8 @@
 	 * a few other places as well. ie dcc.c
 	 */
 	int	BX_dcc_printf (int, char *, ...);
+#ifndef BITCHX_LITE
+	
 	void	tandout_but (int, char *, ...);
 	void	chanout_but (int, char *, ...);
 	int	handle_tcl_chan (int, char *, char *, char *);
@@ -55,7 +57,7 @@
 	int	send_command (int, char *);
 	
 	int	dcc_ftpcommand (char *, char *);
-	
+#endif	
 
 /* 
  * these definitions are mostly used by ircII as well 
