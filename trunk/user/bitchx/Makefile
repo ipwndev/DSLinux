@@ -418,4 +418,4 @@ reallydone:
 .NOEXPORT:
 
 romfs:
-	$(ROMFSINST) source/BitchX /bin/BitchX
+	$(ROMFSINST) source/BitchX /bin/bitchx
