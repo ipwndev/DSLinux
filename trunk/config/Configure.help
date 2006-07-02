@@ -1311,6 +1311,9 @@ CONFIG_USER_THTTPD_THTTPD
   Tiny HTTPD
   Approx. binary size: 52k
 
+CONFIG_USER_TINYIRC_TINYIRC
+  Very tiny IRC client.
+
 CONFIG_USER_TRIPWIRE_TRIPWIRE
   The tripwire file modification detection utility.
 
