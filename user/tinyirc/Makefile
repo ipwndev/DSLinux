@@ -4,16 +4,10 @@
 # I don't wish to assert any rights (copyright) over this makefile
 # but please give me credit if you use my code.
 #
-SERVER = irc.linpeople.org
-PORT = 7000
+SERVER = irc.efnet.org
+PORT = 6667
 #
-all:
-	## Please use "make target"
-	## where target is one of the following
-	##
-	## aix    hpux    gnu    posix    generic    debug
-	##
-	## If you have trouble with the input line, try a different target
+all: dslinux
 
 debug:
 	$(MAKE) tinyirc CFLAGS=-g LDFLAGS=-g CC=gcc LIBS=-ltermcap
@@ -42,7 +36,12 @@ ntest:
 ctest:
 	$(MAKE) tinyirccv CFLAGS=-O LDFLAGS=-s LIBS=-lcurses
 
-DEFINES = -DDEFAULTSERVER=\"$(SERVER)\" -DDEFAULTPORT=$(PORT)
+dslinux:
+	$(MAKE) tinyirc \
+		CFLAGS="$(CFLAGS) -I$(ROOTDIR)/lib/libncurses/include" \
+		LIBS="-L$(ROOTDIR)/lib/libncurses -lncurses"
+
+DEFINES = -DDEFAULTSERVER=\"$(SERVER)\" -DDEFAULTPORT=$(PORT) -DCURSES -DPOSIX
 
 tinyirc: tinyirc.o
 	$(CC) $(LDFLAGS) -o tinyirc tinyirc.o $(LIBS)
@@ -55,4 +54,11 @@ tinyirc.o: tinyirc.c Makefile
 
 tinyirccv.o: tinyirccv.c Makefile
 	$(CC) $(CFLAGS) $(DEFINES) -c tinyirccv.c -o tinyirccv.o
+
+romfs:
+	$(ROMFSINST) /bin/tinyirc
+
+clean:
+	rm -f tinyirc tinyirc.gdb tinyirc.o
+
 #EOF

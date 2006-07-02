@@ -1,17 +1,17 @@
-#undef AUTOJOIN	"JOIN :#linuxcon\n"
+#undef AUTOJOIN	/* "JOIN :#linuxcon\n" */
 #define COMMANDCHAR	'/'
 #define ASCIIHEXCHAR	'@'
 #define HEXASCIICHAR	'#'
 #define USE_ANSICOLOR
 /* each line of hist adds 512 bytes to resident size */
-#define HISTLEN		8
+#define HISTLEN		4
 #ifdef AUTOJOIN
 #define RELEASE		"TinyIRC 1.1 LinuxConv Edition"
 #else
 #define RELEASE		"TinyIRC 1.1"
 #endif
 /* most bytes to try to read from server at one time */
-#define IB_SIZE		4096
+#define IB_SIZE		1024
 /* TinyIRC 1.1
    Copyright (C) 1991-1996 Nathan I. Laredo
 
@@ -52,24 +52,28 @@
 #include <netdb.h>
 #include <signal.h>
 #include <utmp.h>
+#include <stdlib.h>
+#include <time.h>
+#include <term.h>
+#include <arpa/inet.h>
 struct dlist {
     char name[64];
     char mode[64];
     struct dlist *next;
 };
 
-#define ischan(x) (*x == '#' || *x == '&' || *x == '+')
+#define ischan(x) (x && (*x == '#' || *x == '&' || *x == '+'))
 #define OBJ obj->name
 #define raise_sig(x) kill(getpid(), x)
 struct dlist *obj = NULL, *olist = NULL, *newobj;
 unsigned short IRCPORT = DEFAULTPORT;
-int my_tcp, sok = 1, my_tty, hline, dumb = 0, CO, LI, column;
+int my_tcp, sok = 1, my_tty, my_hline, dumb = 0, CO, LI, column;
 char *tmp, *linein, *CM, *CS, *CE, *SO, *SE, *DC, *ptr, *term, *fromhost,
 *TOK[20], IRCNAME[32], IRCLOGIN[64], IRCGECOS[64], inputbuf[512], ib[IB_SIZE],
- serverdata[512], ch, *bp[1024], lineout[512], *hist[HISTLEN], termcap[1024];
+ serverdata[512], ch, bp[1024], lineout[512], *hist[HISTLEN], termcap[1024];
 int cursd = 0, curli = 0, curx = 0, noinput = 0, reconnect = 1;
 fd_set readfs;
-struct timeval timeout;
+struct timeval my_timeout;
 struct tm *timenow;
 static time_t idletimer, datenow, wasdate, tmptime;
 struct passwd *userinfo;
@@ -106,6 +110,7 @@ int my_stricmp(str1, str2)
 char *str1, *str2;
 {
     int cmp;
+    if (str1 == NULL || str2 == NULL) return 0;
     while (*str1 != 0 && str2 != 0) {
 	if (isalpha(*str1) && isalpha(*str2)) {
 	    cmp = *str1 ^ *str2;
@@ -166,7 +171,7 @@ struct dlist *p;
 }
 
 char encoded[512];
-hexascii(s)
+void hexascii(s)
 char *s;
 {
     int ch, i, j, k, l;
@@ -183,7 +188,7 @@ char *s;
     }
     encoded[j] = '\0';
 }
-asciihex(s)
+void asciihex(s)
 char *s;
 {
     int i;
@@ -232,7 +237,7 @@ static int doerror()
 static int doinvite()
 {
     printf("*** %s (%s) invites you to join %s.",
-	   TOK[0], fromhost, &TOK[3]);
+	   TOK[0], fromhost, TOK[3]);
     return 0;
 }
 static int dojoin()
@@ -481,7 +486,7 @@ char *p;
 int count;
 {
     while (p != NULL) {
-	if (tmp = strchr(p, ' '))
+	if ((tmp = strchr(p, ' ')))
 	    *(tmp++) = '\0';
 	if (strlen(p) < CO - count)
 	    count += printf(" %s", p);
@@ -495,10 +500,6 @@ int parsedata()
 {
     int i, found = 0;
 
-    if (serverdata[0] == 'P') {
-	sprintf(lineout, "PONG :%s\n", IRCNAME);
-	return sendline();
-    }
     if (!dumb)
 	tputs_x(tgoto(CM, 0, LI - 3));
     TOK[i = 0] = serverdata;
@@ -507,7 +508,7 @@ int parsedata()
 	if (*TOK[i] == ':')
 	    break;
 	else {
-	    if (tmp = strchr(TOK[i], ' ')) {
+	    if ((tmp = strchr(TOK[i], ' '))) {
 		TOK[++i] = &tmp[1];
 		*tmp = '\0';
 	    } else
@@ -516,7 +517,7 @@ int parsedata()
     if (TOK[i] != NULL && *TOK[i] == ':')
 	TOK[i]++;
     TOK[++i] = NULL;
-    if (tmp = strchr(TOK[0], '!')) {
+    if ((tmp = strchr(TOK[0], '!'))) {
 	fromhost = &tmp[1];
 	*tmp = '\0';
     } else
@@ -524,7 +525,11 @@ int parsedata()
     if (!dumb)
 	putchar('\n');
     column = 0;
-    if (i = atoi(TOK[1]))
+    if (serverdata[0] == 'P') {
+	sprintf(lineout, "PONG :%s\n", TOK[1]);
+	return sendline();
+    }
+    if ((i = atoi(TOK[1])))
 	i = donumeric(i);
     else {
 	for (i = 0; i < LISTSIZE && !found; i++)
@@ -581,7 +586,7 @@ void parseinput()
     strcpy(inputbuf, linein);
     TOK[i = 0] = inputbuf;
     while (TOK[i] != NULL && i < 5)
-	if (tmp = strchr(TOK[i], ' ')) {
+	if ((tmp = strchr(TOK[i], ' '))) {
 	    TOK[++i] = &tmp[1];
 	    *tmp = '\0';
 	} else
@@ -607,7 +612,7 @@ void parseinput()
 	    return;
 	}
 #ifndef AUTOJOIN
-	if (i == DO_JOIN)
+	if (i == DO_JOIN) {
 	    if ((newobj = finditem(TOK[1], olist)) != NULL) {
 		wasdate = 0;
 		obj = newobj;
@@ -619,6 +624,7 @@ void parseinput()
 		wasdate = 0;
 		return;
 	    }
+	}
 	if (i == DO_PART && !ischan(TOK[1]))
 	    if ((newobj = finditem(TOK[1], olist)) != NULL) {
 		wasdate = 0;
@@ -709,7 +715,7 @@ void ppart()
 }
 void histupdate()
 {
-    linein = hist[hline];
+    linein = hist[my_hline];
     curx = curli = strlen(linein);
     ppart();
 }
@@ -776,13 +782,13 @@ void userinput()
 	    tputs_x(tgoto(CM, curx % CO, LI - 1));
 	    break;
 	case '\16':
-	    if ((++hline) >= HISTLEN)
-		hline = 0;
+	    if ((++my_hline) >= HISTLEN)
+		my_hline = 0;
 	    histupdate();
 	    break;
 	case '\20':
-	    if ((--hline) < 0)
-		hline = HISTLEN - 1;
+	    if ((--my_hline) < 0)
+		my_hline = HISTLEN - 1;
 	    histupdate();
 	    break;
 	case '\r':
@@ -792,10 +798,10 @@ void userinput()
 	    tputs_x(tgoto(CM, 0, LI - 1));
 	    tputs_x(CE);
 	    parseinput();
-	    if ((++hline) >= HISTLEN)
-		hline = 0;
+	    if ((++my_hline) >= HISTLEN)
+		my_hline = 0;
 	    curx = curli = 0;
-	    linein = hist[hline];
+	    linein = hist[my_hline];
 	    break;
 	case '\27':
 	    if (obj == NULL)
@@ -885,7 +891,7 @@ char *hostname;
 	sa.sin_family = hp->h_addrtype;
 	sa.sin_port = htons((unsigned short) IRCPORT);
 	s = socket(hp->h_addrtype, SOCK_STREAM, 0);
-	if (s > 0)
+	if (s > 0) {
 	    if (connect(s, (struct sockaddr *) &sa, sizeof(sa)) < 0) {
 		close(s);
 		s = -1;
@@ -905,10 +911,11 @@ char *hostname;
 		    sendline();
 		}		/* error checking will be done later */
 	    }
+	}
     }
     return s;
 }
-main(argc, argv)
+int main(argc, argv)
 int argc;
 char **argv;
 {
@@ -947,11 +954,11 @@ For details please see the file COPYING.\n", RELEASE);
     if ((my_tty = open("/dev/tty", O_RDWR, 0)) == -1)
 	my_tty = fileno(stdin);
     IRCGECOS[i = 63] = 0;
-    if (!getpeername(my_tty, IRCGECOS, &i)) { /* inetd */
+/*  if (!getpeername(my_tty, IRCGECOS, &i)) { // inetd
 	strcpy(IRCNAME, IRCGECOS);
 	strcpy(IRCLOGIN, "fromident");
 	setenv("TERM", "vt102", 1);
-    } else {
+    } else { */
 	userinfo = getpwuid(getuid());
 	tmp = (char *) getenv("IRCNICK");
 	if (tmp == NULL)
@@ -960,7 +967,7 @@ For details please see the file COPYING.\n", RELEASE);
 	    strncpy(IRCNAME, tmp, sizeof(IRCNAME));
 	strcpy(IRCLOGIN, userinfo->pw_name);
 	setutent();
-	strcpy(ut.ut_line, strrchr(ttyname(0), '/') + 1);
+	strcpy(ut.ut_line, isatty(0) ? strrchr(ttyname(0), '/') + 1 : "");
 	if ((utmp = getutline(&ut)) == NULL || !(utmp->ut_addr) ||
 	    *((char *) utmp->ut_host) == ':' /* X connection */ )
 	    tmp = userinfo->pw_gecos;
@@ -975,8 +982,9 @@ For details please see the file COPYING.\n", RELEASE);
 		tmp = (char *) h->h_name;
 	}
 	strcpy(IRCGECOS, tmp);
+	if ((tmp = strchr(IRCGECOS, ','))) *tmp = '\0';
 	endutent();
-    }
+/*  } */
     fprintf(stderr, "*** User is %s\n", IRCGECOS);
     printf("*** trying port %d of %s\n\n", IRCPORT, hostname);
     if (makeconnect(hostname) < 0) {
@@ -1028,17 +1036,17 @@ For details please see the file COPYING.\n", RELEASE);
     signal(SIGTTIN, stopin);
     for (i = 0; i < HISTLEN; i++)
 	hist[i] = (char *) calloc(512, sizeof(char));
-    linein = hist[hline = 0];
+    linein = hist[my_hline = 0];
     while (sok) {
 	FD_ZERO(&readfs);
 	FD_SET(my_tcp, &readfs);
 	if (!noinput)
 	    FD_SET(my_tty, &readfs);
 	if (!dumb) {
-	    timeout.tv_sec = 61;
-	    timeout.tv_usec = 0;
+	    my_timeout.tv_sec = 61;
+	    my_timeout.tv_usec = 0;
 	}
-	if (select(FD_SETSIZE, &readfs, NULL, NULL, (dumb ? NULL : &timeout))) {
+	if (select(FD_SETSIZE, &readfs, NULL, NULL, (dumb ? NULL : &my_timeout))) {
 	    if (FD_ISSET(my_tty, &readfs))
 		userinput();
 	    if (FD_ISSET(my_tcp, &readfs))
