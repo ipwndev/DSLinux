@@ -17,6 +17,7 @@ CVS_REVISION(tcl_public_c)
 #define MAIN_SOURCE
 #include "modval.h"
 
+#ifndef BITCHX_LITE
 cmd_t C_dcc[] =
 {
 	{ "act",	cmd_act,	 ADD_DCC, "Perform action on a channel"},
@@ -39,6 +40,12 @@ cmd_t C_dcc[] =
 	{ "xlink",	send_command,	 ADD_DCC, "send command to all on link" },
 	{ NULL,		NULL,		-1,	NULL} 
 };
+#else
+cmd_t C_dcc[] =
+{
+       { NULL,         NULL,           -1,     NULL} 
+};
+#endif
 
 #ifdef WANT_TCL
 #include <tcl.h>
