@@ -378,6 +378,9 @@ CONFIG_USER_FNORD_NOAUTH
   Disables user authentication in fnord. This is useful if ALL of your
   cgi programs do their own authentication.
 
+CONFIG_USER_BITCHX_BITCHX
+  Text mode IRC client.
+
 CONFIG_USER_BPALOGIN_BPALOGIN
   Telstra Bigpond broadband internet authentication program.
   Approx. binary size: 39k
