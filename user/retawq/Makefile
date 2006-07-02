@@ -64,7 +64,7 @@ CFLAGS += -Os -trigraphs
 #endif
 
 # add include and link paths for ncurses in dslinux
-CFLAGS += -I../../lib/libncurses/include
+CFLAGS += -I$(ROOTDIR)/lib/libncurses/include
 LDFLAGS += -L../../lib/libncurses/lib -lncurses
 
 # flags for multi-threading
