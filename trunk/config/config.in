@@ -444,7 +444,7 @@ if [ "$CONFIG_USER_KLAXON_KLAXON" = "y" ]; then
 fi
 
 bool 'l2tpd'			CONFIG_USER_L2TPD_L2TPD
-
+bool 'links'		CONFIG_USER_LINKS_LINKS
 bool 'linux-igd'        CONFIG_USER_LINUXIGD_LINUXIGD
 if [ "$CONFIG_USER_LINUXIGD_LINUXIGD" = "y" ]; then
     define_bool CONFIG_LIB_LIBUPNP y

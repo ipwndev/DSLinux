@@ -1029,6 +1029,9 @@ CONFIG_USER_L2TPD_L2TPD
 CONFIG_USER_LISSA_LISSA
   Lissa
 
+CONFIG_USER_LINKS_LINKS
+  Nice text mode WWW browser.
+
 CONFIG_USER_LINUXIGD_LINUXIGD
   Linux Internet Gateway Device. A UPnP-IGD NAT-based 
   Daemon. 
