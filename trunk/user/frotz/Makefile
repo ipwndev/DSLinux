@@ -59,7 +59,7 @@ COLOR_DEFS = -DCOLOR_SUPPORT
 #INCL = -I/usr/freeware/include
 #INCL = -I/5usr/include
 #INCL = -I/path/to/ncurses.h
-INCL = -I../../lib/libncurses/include
+INCL = -I$(ROOTDIR)/lib/libncurses/include
 
 # If your vendor-supplied curses library won't work, uncomment the
 # location where the ncurses library is.
