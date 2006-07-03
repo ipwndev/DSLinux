@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <errno.h>
 
 typedef int bool;
 #define true 1
@@ -32,6 +33,10 @@ typedef int bool;
 #define MASK_OFFSET		0xD0
 #define WEP_MODE_OFFSET		0xE6
 #define STATUS_OFFSET		0xE7
+
+#define WEP_MODE_OFF		0
+#define WEP_MODE_40BIT		1
+#define WEP_MODE_128BIT		2
 
 #define FIRMWARE_FILE "/dev/firmware"
 
@@ -66,16 +71,16 @@ void die()
 	exit(1);
 }
 
-/* Prints n in quad dotted notation. If reverse is set,
- * reverse byte order before printing. */
+/* Print n in dotted quad notation. If reverse is set,
+ * print bytes in reverse order. */
 void print_dotquad(unsigned long n, bool reverse)
 {
 	if (reverse)
-		printf("%lu.%lu.%lu.%lu", (n >> 24) & 0xff, (n >> 16) & 0xff, (n >> 8) & 0xff,
-				n & 0xff);
+		printf("%lu.%lu.%lu.%lu", (n >> 24) & 0xff, (n >> 16) & 0xff,
+				(n >> 8) & 0xff, n & 0xff);
 	else
-		printf("%lu.%lu.%lu.%lu", n & 0xff, (n >> 8) & 0xff, (n >> 16) & 0xff,
-				(n >> 24) & 0xff);
+		printf("%lu.%lu.%lu.%lu", n & 0xff, (n >> 8) & 0xff,
+				(n >> 16) & 0xff, (n >> 24) & 0xff);
 }
 
 unsigned long read_ulong(int offset)
@@ -83,7 +88,7 @@ unsigned long read_ulong(int offset)
 	int base = WFC_SETTINGS + ((config) << 8);
 	if (fseek(f, base + offset, SEEK_SET) != 0)
 		die();
-	int out = 0;
+	unsigned long out = 0;
 	if (fread(&out, sizeof(out), 1, f) < 1)
 		die();
 	return out;
@@ -130,12 +135,36 @@ void print_ssid()
 
 void print_wep()
 {
-	int base, i;
+	int base, i, mode, len;
 
 	base = WFC_SETTINGS + ((config) << 8);
+	if (fseek(f, base + WEP_MODE_OFFSET, SEEK_SET) != 0)
+		die();
+
+	len = 0;
+	mode = (fgetc(f) & 0x0F);
+	
+	switch (mode) {
+	case WEP_MODE_OFF:
+		fprintf(stderr, "wfcdump: wep is disabled in "
+				"configuration %i\n", config + 1);
+		return;
+	case WEP_MODE_40BIT:
+		len = 5;
+		break;
+	case WEP_MODE_128BIT:
+		len = 13; /* 128 bit is actually 104 bit */
+		break;
+	default:
+		fprintf(stderr, "wfcdump: unknown wep mode %i read from "
+				"firmware\n", mode);
+		errno = EINVAL;
+		die();
+	}
+
 	if (fseek(f, base + WEP_OFFSET, SEEK_SET) != 0)
 		die();
-	for (i = 0; i < 16; i++)
+	for (i = 0; i < len; i++)
 		printf("%02x", fgetc(f));
 	printf("\n");
 }
