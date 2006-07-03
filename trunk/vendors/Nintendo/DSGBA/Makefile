@@ -13,7 +13,7 @@ IMAGE    = $(IMAGEDIR)/dslinux.nds.gba
 endif
 
 
-ROMFS_DIRS = bin dev etc lib mnt proc usr usr/share/udhcpc var sram
+ROMFS_DIRS = bin dev etc etc/rc.d lib mnt proc usr usr/share/udhcpc var sram
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
@@ -74,7 +74,7 @@ romfs:
 	$(ROMFSINST) $(NDS_COMMON)/rc.common /etc/rc.common
 	$(ROMFSINST) $(NDS_COMMON)/rc.defaults /etc/rc.defaults
 	for f in $(NDS_COMMON)/rc.d/*; do \
-		$(ROMFSINST) $$f /etc/rc.d/ ; \
+		[ -d $$f ] || $(ROMFSINST) $$f /etc/rc.d/ ; \
 	done
 	$(ROMFSINST) $(NDS_COMMON)/passwd /etc/passwd
 	$(ROMFSINST) -p +x $(NDS_COMMON)/default.script /usr/share/udhcpc/default.script
