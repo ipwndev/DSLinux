@@ -1,5 +1,5 @@
 /*
- * include/asm-arm/arch-s3c24a0/io.h
+ * include/asm-arm/arch-nds/io.h
  *
  * $Id$
  *
@@ -41,5 +41,15 @@
 
 #define iomem_valid_addr(iomem,sz)      (1)
 #define iomem_to_phys(iomem)            (iomem)
+
+/* Redefine raw write byte access as "strb" instruction, so we can use
+   a compiler which transforms each byte write into a swpb */
+#undef __raw_writeb
+#define __raw_writeb(value,address)			\
+({							\
+	__asm__ __volatile__(                           \
+        "strb   %0, [%1]"                               \
+        : : "r" (value), "r" (address));                \
+})
 
 #endif /* __ASM_ARM_ARCH_IO_H */
