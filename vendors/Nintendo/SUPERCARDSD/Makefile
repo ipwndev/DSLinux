@@ -16,7 +16,7 @@ FATFS	 = supercard
 
 ROMFS_DIRS = bin dev etc lib proc sbin $(FATFS)/linux
 
-FS_DIRS = home usr/lib usr/bin usr/share/udhcpc var/tmp
+FS_DIRS = home usr/lib usr/bin usr/share/udhcpc var/tmp var/run etc etc/rc.d
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
@@ -76,11 +76,21 @@ romfs:
 	$(ROMFSINST) -s $(FATFS)/linux/home /home
 	$(ROMFSINST) -s /var/tmp /tmp
 	$(ROMFSINST) -s /usr/share/udhcpc/resolv.conf /etc/resolv.conf
+	$(ROMFSINST) -s /$(FATFS)/linux/etc/rc.local /etc/rc.local
+	$(ROMFSINST) -s /$(FATFS)/linux/etc/rc.conf /etc/rc.conf
+	$(ROMFSINST) -s /$(FATFS)/linux/etc/rc.d /etc/rc.d
+	$(ROMFSINST) -s /$(FATFS)/linux/etc/hosts /etc/hosts
 	$(ROMFSINST) /etc/rc
 	$(ROMFSINST) /etc/inittab
 	$(ROMFSINST) /etc/motd
 	$(ROMFSINST) /etc/issue
 	$(ROMFSINST) $(NDS_COMMON)/passwd /etc/passwd
+	$(ROMFSINST) $(NDS_COMMON)/rc.common /etc/rc.common
+	$(ROMFSINST) $(NDS_COMMON)/rc.defaults /etc/rc.defaults
+	for f in $(NDS_COMMON)/rc.d/*; do \
+		[ -d $$f ] || $(ROMFSINST) $$f /$(FATFS)/linux/etc/rc.d/ ; \
+	done
+
 	$(ROMFSINST) -p +x $(NDS_COMMON)/default.script /usr/share/udhcpc/default.script
 	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
 

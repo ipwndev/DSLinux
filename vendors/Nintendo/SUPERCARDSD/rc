@@ -1,4 +1,6 @@
-hostname NintendoDS
+#!/bin/sh
+
 mount -t proc none /proc
 mount -t vfat /dev/mmcblk1 /supercard
-fwver
+
+. /etc/rc.common
