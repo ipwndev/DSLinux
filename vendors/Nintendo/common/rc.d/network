@@ -5,6 +5,12 @@
 
 case "$1" in
 	start)
+		if [ -n "$wfc_config" ]
+		then
+			eval `wfcdump -c $wfc_config`
+			broadcast=
+		fi
+
 		if [ -n "$essid" ]
 		then
 			iwconfig_args=""
@@ -37,7 +43,7 @@ case "$1" in
 		ifconfig nds down
 		sleep 1
 
-		if [ "$use_dhcp" = "YES" ]
+		if [ -z "$ip" ]
 		then
 			echo "Configuring network via DHCP."
 			# We have very little RAM, so use 'exec' to avoid
@@ -45,7 +51,7 @@ case "$1" in
 			# the last command to run anyway if using dhcp.
 			exec udhcpc -n -q -i nds
 			### NOT REACHED ###
-		elif [ -n "$ip" ] && [ -n "$gateway" ]
+		elif [ -n "$gateway" ]
 		then
 
 			ifconfig_args=""
@@ -84,7 +90,7 @@ case "$1" in
 			fi
 		else
 			echo "Not configuring network:"
-			echo "No static configuration found and DHCP is disabled."
+			echo "Static configuration incomplete and DHCP is disabled."
 			exit 1
 		fi
 

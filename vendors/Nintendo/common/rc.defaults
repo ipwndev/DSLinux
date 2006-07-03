@@ -42,6 +42,13 @@ enable_network_on_boot="NO"
 # and stop it by running:
 #	/etc/rc.d/network stop
 
+# DSLinux can use network settings from your Nintendo WiFi
+# Connection profiles. If you want to use this feature,
+# enter the number of the profile you want to use here (use 1, 2
+# or 3). If you don't want to use these settings, leave this
+# empty and configure your network below.
+wfc_config=""
+
 # Set the essid of your wireless router here.
 # Example flags are:
 # 	essid="eXampLeEsSiD"
@@ -62,15 +69,12 @@ channel=""
 # If you do not want to use WEP, just leave this flag empty.
 wepkey=""
 
-# Set use_dhcp to "YES" if you want to use DHCP to configure
-# your IP address and gateway address.
-use_dhcp="NO"
-
-# You can assign a static IP and gateway instead of using DHCP.
+# You can assign a static IP and gateway. If you leave IP
+# empty, automatic configuration via DHCP is used instead.
+#
 # For example:
 #	ip="192.168.1.42"
 #	gateway="192.168.1.1"
-# Note that these are ignored if use_dhcp is set to "YES".
 ip=""
 gateway=""
 
