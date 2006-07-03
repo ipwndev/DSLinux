@@ -24,7 +24,7 @@ typedef int bool;
 #define false 0
 
 #define WFC_SETTINGS 		0x03FA00
-#define SSID_OFFSET		0x40
+#define ESSID_OFFSET		0x40
 #define WEP_OFFSET		0x80
 #define IP_OFFSET		0xC0
 #define GW_OFFSET		(IP_OFFSET + 4)
@@ -47,20 +47,12 @@ static FILE* f = NULL;
 void usage()
 {
 	fprintf(stderr, "wfcdump - dump WFC settings from firmware\n");
-	fprintf(stderr, "Usage: wfcdump [options] <items to print>\n");
+	fprintf(stderr, "Usage: wfcdump [options]\n");
 	fprintf(stderr, "Options:\n");
 	fprintf(stderr, "\t-c n\tnumber of WFC configuration to use "
 			"(1, 2 or 3).\n");
 	fprintf(stderr, "\t        Default is %i.\n", DEFAULT_CONFIG + 1);
 	fprintf(stderr, "\t-h\tprint help\n");
-	fprintf(stderr, "Available items:\n");
-	fprintf(stderr, "\tssid\tprint SSID\n");
-	fprintf(stderr, "\twep\tprint WEP key\n");
-	fprintf(stderr, "\tip\tprint IP address\n");
-	fprintf(stderr, "\tgw\tprint gateway\n");
-	fprintf(stderr, "\tdns1\tprint first DNS server\n");
-	fprintf(stderr, "\tdns2\tprint second DNS server\n");
-	fprintf(stderr, "\tmask\tprint netmask\n");
 }
 
 void die()
@@ -94,11 +86,11 @@ unsigned long read_ulong(int offset)
 	return out;
 }
 
-void print_ulong_item(int offset, char *name)
+void print_ip_item(int offset)
 {
 	unsigned long item = read_ulong(offset);
-	print_dotquad(item, false);
-	printf("\n");
+	if (item != 0)
+		print_dotquad(item, false);
 }
 
 unsigned long calc_mask(unsigned long bits)
@@ -113,24 +105,24 @@ unsigned long calc_mask(unsigned long bits)
 void print_mask()
 {
 	unsigned long bits = read_ulong(MASK_OFFSET);
-	print_dotquad(calc_mask(bits), true);
-	printf("\n");
+	if (bits != 0)
+		print_dotquad(calc_mask(bits), true);
 }
 
-void print_ssid()
+void print_essid()
 {
-	char ssid[32];
+	char essid[32];
 	int base, i;
 
-	for (i = 0; i < sizeof(ssid); i++)
-		ssid[i] = '\0';
+	for (i = 0; i < sizeof(essid); i++)
+		essid[i] = '\0';
 
 	base = WFC_SETTINGS + ((config) << 8);
-	if (fseek(f, base + SSID_OFFSET, SEEK_SET) != 0)
+	if (fseek(f, base + ESSID_OFFSET, SEEK_SET) != 0)
 		die();
-	if (fgets(ssid, sizeof(ssid), f) == NULL)
+	if (fgets(essid, sizeof(essid), f) == NULL)
 		die();
-	printf("\"%s\"\n", ssid);
+	printf("\"%s\"", essid);
 }
 
 void print_wep()
@@ -146,8 +138,6 @@ void print_wep()
 	
 	switch (mode) {
 	case WEP_MODE_OFF:
-		fprintf(stderr, "wfcdump: wep is disabled in "
-				"configuration %i\n", config + 1);
 		return;
 	case WEP_MODE_40BIT:
 		len = 5;
@@ -166,13 +156,12 @@ void print_wep()
 		die();
 	for (i = 0; i < len; i++)
 		printf("%02x", fgetc(f));
-	printf("\n");
 }
 
 
 int main(int argc, char *argv[])
 {
-	int ch, i;
+	int ch;
 
 	while ((ch = getopt(argc, argv, "c:h")) != -1) {
 		switch (ch) {
@@ -194,9 +183,6 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	if (argc <= optind)
-		usage();
-
 	if ((f = fopen(FIRMWARE_FILE, "r")) == NULL) {
 		perror("wfcdump: " FIRMWARE_FILE);
 		exit(1);
@@ -208,26 +194,21 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 	
-	for (i = optind; i < argc; i++) {
-		if (strcmp(argv[i], "ssid") == 0)
-			print_ssid();
-		else if (strcmp(argv[i], "wep") == 0)
-			print_wep();
-		else if (strcmp(argv[i], "ip") == 0)
-			print_ulong_item(IP_OFFSET, "ip");
-		else if (strcmp(argv[i], "gw") == 0)
-			print_ulong_item(GW_OFFSET, "gw");
-		else if (strcmp(argv[i], "dns1") == 0)
-			print_ulong_item(DNS1_OFFSET, "dns1");
-		else if (strcmp(argv[i], "dns2") == 0)
-			print_ulong_item(DNS2_OFFSET, "dns2");
-		else if (strcmp(argv[i], "mask") == 0)
-			print_mask();
-		else {
-			fprintf(stderr, "Unknown item %s\n", argv[i]);
-			exit(1);
-		}
-	}
+	printf("essid=");
+	print_essid();
+	printf("\nwepkey=");
+	print_wep();
+	printf("\nip=");
+	print_ip_item(IP_OFFSET);
+	printf("\ngateway=");
+	print_ip_item(GW_OFFSET);
+	printf("\ndns1=");
+	print_ip_item(DNS1_OFFSET);
+	printf("\ndns2=");
+	print_ip_item(DNS2_OFFSET);
+	printf("\nnetmask=");
+	print_mask();
+	printf("\n");
 
 	if (f != NULL)
 		fclose(f);
