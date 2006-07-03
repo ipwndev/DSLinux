@@ -57,10 +57,13 @@ case "$1" in
 			ifconfig_args="$ifconfig_args $ip"
 
 			if [ -n "$netmask" ]
+			then
 				echo "Netmask:   $netmask"
 				ifconfig_args="$ifconfig_args netmask $netmask"
 			fi
+
 			if [ -n "$broadcast" ]
+			then
 				echo "Broadcast: $broadcast"
 				ifconfig_args="$ifconfig_args broadcast $broadcast"
 			fi
