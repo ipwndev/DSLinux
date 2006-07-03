@@ -79,6 +79,11 @@ gateway=""
 netmask=""
 broadcast=""
 
+# You can specify up to 2 DNS servers if you use
+# static network configuration (i.e. no DHCP)
+dns1=""
+dns2=""
+
 # If you want to start telnetd on boot, so you can login into
 # your DS from your PC via telnet, set start_telnetd to "YES".
 # Note that you should only start the telnet server in a
