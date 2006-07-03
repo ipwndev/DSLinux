@@ -99,6 +99,7 @@ CONFIG_FLASH_SIZE=0x02000000
 # CONFIG_NDS_TEXT_CONSOLE is not set
 # CONFIG_NDS_FASTGBA is not set
 # CONFIG_NDS_SOUNDTEST is not set
+# CONFIG_NDS_ROM8BIT is not set
 
 #
 # Processor Type

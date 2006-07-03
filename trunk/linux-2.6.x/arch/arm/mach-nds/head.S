@@ -268,8 +268,11 @@ _entry:
 	@-------------------------------------------------------------------------
 	@ Disable data cache for GBA ROM, until we have full 8bit write support.
 	@	      gGViWDMI
-	@ldr	r0,=0b10000010
+#ifdef CONFIG_NDS_ROM8BIT
+	ldr	r0,=0b10000010
+#else
 	ldr	r0,=0b00000010
+#endif
 	mcr	p15, 0, r0, c2, c0, 0
 
 	@-------------------------------------------------------------------------

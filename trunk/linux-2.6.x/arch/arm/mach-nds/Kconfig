@@ -41,4 +41,13 @@ config NDS_SOUNDTEST
 	 Helper tool for ARM7 sound testing.
 	 If unsure, say N.
 
+config NDS_ROM8BIT
+	bool "Support for using GBA ROM space as 8-bit-writable memory"
+	depends on ARCH_NDS
+	default n
+	help
+	 Saying Y here will enable the code to use the GBA ROM memory
+         area as general purpose RAM. You need a GBA cardridge with RAM
+         in the GBA ROM area, and a special gnu compiler for this.
+	 If unsure, say N. 
 endmenu

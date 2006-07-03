@@ -72,6 +72,12 @@ CFLAGS_ABI	:=$(call cc-option,-mapcs-32) $(call cc-option,-mno-thumb-interwork,)
 CFLAGS		+=$(CFLAGS_ABI) $(arch-y) $(tune-y) $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -msoft-float -Uarm
 AFLAGS		+=$(CFLAGS_ABI) $(arch-y) $(tune-y) -msoft-float
 
+# Add a compiler option to substitute all 8-bit-writes (strb)
+# with swpb, to be able to use 16bit memory as general memory.
+ifeq ($(CONFIG_NDS_ROM8BIT),y)
+CFLAGS += -mswp-byte-writes
+endif
+
 CHECKFLAGS	+= -D__arm__
 
 #Default value
