@@ -68,6 +68,17 @@ case "$1" in
 			ifconfig nds $ifconfig_args up
 			sleep 1
 			route add default gw $gateway
+
+			if [ -n "$dns1" ]
+			then
+				echo "1st DNS:   $dns1"
+				echo "nameserver $dns1" > /etc/resolv.conf
+				if [ -n "$dns2" ]
+				then
+					echo "2nd DNS:   $dns2"
+					echo "nameserver $dns2" >> /etc/resolv.conf
+				fi
+			fi
 		else
 			echo "Not configuring network:"
 			echo "No static configuration found and DHCP is disabled."
