@@ -351,13 +351,19 @@ static struct mmc_blk_data *mmc_blk_alloc(struct mmc_card *card)
 		sprintf(md->disk->disk_name, "mmcblk%d", devidx);
 		sprintf(md->disk->devfs_name, "mmc/blk%d", devidx);
 
-		md->block_bits = card->csd.read_blkbits;
+		/* Set the blocksize. If card->csd.read_blkbits > 9, use 9
+                   because SD cards are not able to transfer more than 512 Bytes
+                   in one sector. */
+		if (card->csd.read_blkbits > 9)
+			md->block_bits = 9;
+		else
+			md->block_bits = card->csd.read_blkbits;
 
 		blk_queue_hardsect_size(md->queue.queue, 1 << md->block_bits);
 
 		/*
 		 * The CSD capacity field is in units of read_blkbits.
-		 * set_capacity takes units of 512 bytes.
+		 * set_capacity takes units of max. 512 bytes.
 		 */
 		set_capacity(md->disk, card->csd.capacity << (card->csd.read_blkbits - 9));
 	}
