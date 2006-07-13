@@ -15,7 +15,7 @@ mandir		?= $(prefix)/man
 docdir		?= $(prefix)/share/doc
 
 AOUT		= mathomatic
-TARGETS		= $(AOUT) doc/manpage.html
+TARGETS		= $(AOUT)
 OBJECTS		= main.o globals.o am.o solve.o help.o parse.o cmds.o simplify.o \
 		  factor.o super.o unfactor.o poly.o diff.o integrate.o \
 		  complex.o complex_lib.o list.o gcd.o factor_int.o
