@@ -30,7 +30,7 @@
 #include <asm/scatterlist.h>
 #include <asm/sizes.h>
 
-#define  READ_CRC	/* do CRC for data reads */
+#undef   READ_CRC	/* do CRC for data reads */
 #undef   HALT_ON_ERROR	/* stop after error, so we can see what's happened */
 
 #ifdef CONFIG_MMC_DEBUG
