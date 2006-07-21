@@ -9,9 +9,9 @@ then
 	echo "Could not mount /sram. You should run the command:"
 	echo "    eraseall /dev/mtd1"
 	echo "This may erase game saves!"
-	echo "MAKE A BACKUP FIRST!"
+	echo "[31mMAKE A BACKUP FIRST![0m"
 	echo
-	echo "See http://www.dslinux.org/wiki/Running_DSLinux"
+	echo "See [36mhttp://www.dslinux.org/wiki/Running_DSLinux[0m"
 	echo "for more information."
 	echo
 fi
