@@ -15,7 +15,8 @@
  * Tom St Denis, tomstdenis@iahu.ca, http://math.libtomcrypt.org
  */
 
-#ifdef BN_MP_DIV_SMALL
+//#ifdef BN_MP_DIV_SMALL
+#if 1
 
 /* slower bit-bang division... also smaller */
 int mp_div(mp_int * a, mp_int * b, mp_int * c, mp_int * d)
