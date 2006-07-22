@@ -463,7 +463,8 @@ do_DataAbort(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
 {
 	struct siginfo info;
 
-	printk(KERN_ALERT "Data fault: pc=0x%08lx\n", ((long *)regs)[15]);
+	printk(KERN_ALERT "Data abort: pc=0x%08lx\n", ((long *)regs)[15]);
+	printk(KERN_ALERT "          addr=0x%08lx\n", addr);
 
 	info.si_signo = SIGKILL;
 	info.si_errno = 0;
