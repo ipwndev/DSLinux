@@ -154,7 +154,7 @@ etc) slower (perhaps by 50%). Recommended for most small systems. */
  * however significantly reduce the security of your ssh connections
  * if the PRNG state becomes guessable - make sure you know what you are
  * doing if you change this. */
-#define DROPBEAR_RANDOM_DEV "/dev/random"
+#define DROPBEAR_RANDOM_DEV "/dev/urandom"
 
 /* prngd must be manually set up to produce output */
 /*#define DROPBEAR_PRNGD_SOCKET "/var/run/dropbear-rng"*/
