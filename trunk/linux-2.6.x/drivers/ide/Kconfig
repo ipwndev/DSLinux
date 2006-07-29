@@ -795,6 +795,9 @@ config IDE_NDS_M3
 config IDE_NDS_SUPERCARD
     bool "SUPERCARD CF"
 
+config IDE_NDS_MAX_MEDIA_PLAYER
+    bool "Datel Max Media Player/Dock"
+
 endchoice
 
 config BLK_DEV_IDE_ICSIDE
