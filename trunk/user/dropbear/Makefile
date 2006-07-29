@@ -209,11 +209,11 @@ tidy:
 	-rm -f *~ *.gcov */*~
 
 romfs:
-	for p in $(PROGRAMS); \
+	for p in $(filter-out dbclient,$(PROGRAMS)); \
 	do \
 		$(ROMFSINST) /bin/$$p; \
 	done
-	$(ROMFSINST) -s /bin/dbclient /bin/ssh
+	$(ROMFSINST) dbclient /bin/ssh
 	$(ROMFSINST) -e CONFIG_USER_DROPBEAR_DROPBEAR \
 		-a "#ssh     stream tcp nowait root /bin/dropbear -i" /etc/inetd.conf
 
