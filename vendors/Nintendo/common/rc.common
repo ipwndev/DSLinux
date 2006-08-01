@@ -3,7 +3,12 @@
 [ -e /etc/rc.defaults ] && . /etc/rc.defaults
 
 # include overrides
-[ -e /etc/rc.conf ] && . /etc/rc.conf
+if [ -e /etc/rc.conf ]
+then
+	. /etc/rc.conf
+else
+	echo "/etc/rc.conf does not exist on your system - see /etc/rc.defaults"
+fi
 
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 export PATH
@@ -18,7 +23,8 @@ then
 		__network_up="NO"
 	fi
 else
-	echo "Not configuring network."
+	echo "Not configuring network:"
+	echo "enable_network_on_boot is not set to YES"
 	__network_up="NO"
 fi
 
