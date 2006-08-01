@@ -24,7 +24,7 @@ then
 	fi
 else
 	echo "Not configuring network:"
-	echo "enable_network_on_boot is not set to YES"
+	echo "enable_network_on_boot is set to \"$enable_network_on_boot\""
 	__network_up="NO"
 fi
 
