@@ -59,7 +59,10 @@ static int its_birthday(FILE *firmware)
 	day = tm->tm_mday;
 	month = tm->tm_mon;
 #endif
-	return ((day == tm->tm_mday) && (month == tm->tm_mon));
+        return ((day == tm->tm_mday) && (month-1 == tm->tm_mon));
+        /* month-1 because the month returned by the system is 0..11
+         * while the month in the firmware is 1..12 */
+ 
 }
 
 
