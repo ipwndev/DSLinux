@@ -1,4 +1,4 @@
-# Makefile for libid3tag in ucLinux
+# Makefile for libid3tag in uClinux
 # =================================
 
 # Special compiler options

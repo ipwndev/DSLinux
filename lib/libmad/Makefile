@@ -1,4 +1,4 @@
-# Makefile for libmad in ucLinux
+# Makefile for libmad in uClinux
 # ==============================
 
 # Special compiler options
