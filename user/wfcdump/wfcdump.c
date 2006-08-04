@@ -122,7 +122,17 @@ void print_essid()
 		die();
 	if (fgets(essid, sizeof(essid), f) == NULL)
 		die();
-	printf("\"%s\"", essid);
+	putchar('"');
+	for ( i = 0 ; essid[i] ; i++ )
+	{
+	    if ( essid[i] == '\\' )
+		printf("\\\\");
+	    else if ( essid[i] == '\"' )
+		printf("\\\"");
+	    else
+		putchar(essid[i]);
+	}
+	putchar('"');
 }
 
 void print_wep()
