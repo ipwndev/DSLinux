@@ -152,9 +152,9 @@ void print_wep()
 		die();
 	}
 
-	putchar('"');
 	if (fseek(f, base + WEP_OFFSET, SEEK_SET) != 0)
 		die();
+	putchar('"');
 	for (i = 0; i < len; i++)
 		printf("%02x", fgetc(f));
 	putchar('"');
