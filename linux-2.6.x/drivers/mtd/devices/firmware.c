@@ -59,6 +59,8 @@ int firmware_read(struct mtd_info *mtd, loff_t from, size_t len,
 	/* invalidate cache before we read data written by ARM7 */
 	dmac_inv_range((unsigned long)&firmware_block,
                       ((unsigned long)&firmware_block)+sizeof(firmware_block)); 
+	dmac_inv_range((unsigned long)&firmware_block.data,
+                      (((unsigned long)&firmware_block.data)+firmware_block.len)); 
 
 	/* copy data to caller. Here better than in interrupt callback. */
 	memcpy(firmware_block.destination,
