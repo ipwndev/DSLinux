@@ -31,7 +31,8 @@
 static struct mtd_info *mtdinfo;
 static int firmware_data_read;
 static wait_queue_head_t wait_queue;
-static struct nds_firmware_block firmware_block;
+/* This buffer is aligned to the ARM9 cache lines, because of cache line invalidation */
+static struct nds_firmware_block firmware_block __attribute__ ((aligned (32)));
 
 int firmware_read(struct mtd_info *mtd, loff_t from, size_t len,
 		size_t *retlen, u_char *buf)
@@ -47,8 +48,9 @@ int firmware_read(struct mtd_info *mtd, loff_t from, size_t len,
 	firmware_block.from = from;
 	firmware_block.len = len;
 	firmware_block.destination = buf;
-	/* writeback cached data before ARM7 gets hand on */
-	dmac_clean_range((unsigned long)&firmware_block,
+	/* writeback cached data before ARM7 gets hand on. Invalidate cache so
+           we can read the new values after ARM7 has written them. */
+	dmac_flush_range((unsigned long)&firmware_block,
                         ((unsigned long)&firmware_block)+sizeof(firmware_block)); 
 
 	nds_fifo_send(FIFO_FIRMWARE_CMD(FIFO_FIRMWARE_CMD_READ, 0));
@@ -56,16 +58,12 @@ int firmware_read(struct mtd_info *mtd, loff_t from, size_t len,
 	if(wait_event_interruptible(wait_queue, firmware_data_read)) {
 		return -ERESTART;
 	}
-	/* invalidate cache before we read data written by ARM7 */
-	dmac_inv_range((unsigned long)&firmware_block,
-                      ((unsigned long)&firmware_block)+sizeof(firmware_block)); 
-	dmac_inv_range((unsigned long)&firmware_block.data,
-                      (((unsigned long)&firmware_block.data)+firmware_block.len)); 
 
 	/* copy data to caller. Here better than in interrupt callback. */
 	memcpy(firmware_block.destination,
   	      &firmware_block.data,
 	       firmware_block.len);
+
 	*retlen = len;
 	return 0;
 }
