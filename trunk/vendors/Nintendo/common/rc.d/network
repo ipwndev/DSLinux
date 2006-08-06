@@ -16,8 +16,8 @@ case "$1" in
 			iwconfig_args=""
 
 			echo "Configuring wireless interface:"
-			echo "ESSID:    \"$essid\""
-			iwconfig_args="$iwconfig_args essid \"$essid\""
+			echo "ESSID:    $essid"
+			iwconfig_args="$iwconfig_args essid $essid"
 			
 			if [ -n "$channel" ]
 			then 
@@ -28,7 +28,7 @@ case "$1" in
 			if [ -n "$wepkey" ]
 			then
 				echo "Setting wepkey."
-				iwconfig_args="$iwconfig_args key \"$wepkey\""
+				iwconfig_args="$iwconfig_args key $wepkey"
 			fi
 
 			iwconfig nds $iwconfig_args
