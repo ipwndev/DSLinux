@@ -76,6 +76,8 @@ AFLAGS		+=$(CFLAGS_ABI) $(arch-y) $(tune-y) -msoft-float
 # with swpb, to be able to use 16bit memory as general memory.
 ifeq ($(CONFIG_NDS_ROM8BIT),y)
 CFLAGS += -mswp-byte-writes
+# don't erase the assembler files. For debugging purposes only.
+# CFLAGS += -save-temps -fverbose-asm
 endif
 
 CHECKFLAGS	+= -D__arm__
