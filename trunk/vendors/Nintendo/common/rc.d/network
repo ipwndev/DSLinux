@@ -5,6 +5,8 @@
 
 case "$1" in
 	start)
+		ifconfig lo up
+
 		if [ -n "$wfc_config" ]
 		then
 			eval `wfcdump -c $wfc_config`
@@ -98,6 +100,7 @@ case "$1" in
 	;;
 	stop)
 		echo "Stopping network."
+		ifconfig lo down
 		ifconfig nds down
 		kill `pidof udhcpc` 2> /dev/null
 	;;	
