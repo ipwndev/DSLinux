@@ -21,9 +21,10 @@
 
 #define NDS_FIRMWARE_BLOCK_SIZE	512
 struct nds_firmware_block {
+	/* data is first, because we want ARM9 cache line alignment */
+	u_char data[NDS_FIRMWARE_BLOCK_SIZE];
 	loff_t from;
 	size_t len;
 	u_char *destination;
-	u_char data[NDS_FIRMWARE_BLOCK_SIZE];
 };
 
