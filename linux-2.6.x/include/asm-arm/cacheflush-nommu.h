@@ -55,7 +55,7 @@
  * Drain the write buffer.
  * Does not invalidate/update the corresponding instruction cache blocks.
  */
-#define flush_dcache_range(start,stop)	      dma_flush_range(start,stop)
+#define flush_dcache_range(start,stop)	      dmac_flush_range(start,stop)
 
 /* Flush the range of user (defined by vma->vm_mm) address space
  * starting at 'addr' for 'len' bytes from the cache.  The range does
