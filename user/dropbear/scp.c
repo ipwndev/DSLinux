@@ -200,7 +200,7 @@ do_cmd(char *host, char *remuser, char *cmd, int *fdin, int *fdout, int argc)
 #endif /* __uClinux__ */
 
 	/* Fork a child to execute the command on the remote host using ssh. */
-#ifndef __uClinux__
+#ifdef __uClinux__
 	do_cmd_pid = vfork();
 #else
 	do_cmd_pid = fork();
@@ -227,7 +227,7 @@ do_cmd(char *host, char *remuser, char *cmd, int *fdin, int *fdout, int argc)
 		perror(ssh_program);
 		exit(1);
 	} else if (do_cmd_pid == -1) {
-		fatal("fork: %s", strerror(errno));
+		fatal("fork: %s\n", strerror(errno));
 	}
 
 
@@ -308,10 +308,13 @@ main(int argc, char **argv)
 	memset(&args, '\0', sizeof(args));
 	args.list = NULL;
 	addargs(&args, "%s", ssh_program);
+#if 0
+	/* These do not work with dbclient - stsp */
 	addargs(&args, "-x");
 	addargs(&args, "-oForwardAgent no");
 	addargs(&args, "-oPermitLocalCommand no");
 	addargs(&args, "-oClearAllForwardings yes");
+#endif
 
 	fflag = tflag = 0;
 	while ((ch = getopt(argc, argv, "dfl:prtvBCc:i:P:q1246S:o:F:")) != -1)
