@@ -10,7 +10,10 @@
 # Hopefully that seems intuitive.
 
 ifndef PROGRAMS
-	PROGRAMS=dropbear dbclient dropbearkey dropbearconvert
+	PROGRAMS=dropbear dbclient dropbearkey dropbearconvert scp
+endif
+ifndef SCPPROGRESS
+	SCPPROGRESS=1
 endif
 
 LTC=libtomcrypt/libtomcrypt.a
