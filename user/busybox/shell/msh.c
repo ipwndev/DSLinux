@@ -870,7 +870,7 @@ extern int msh_main(int argc, char **argv)
 	path = lookup("PATH");
 	if (path->value == null) {
 		if (geteuid() == 0)
-			setval(path, "/sbin:/bin:/usr/sbin:/usr/bin");
+			setval(path, "/sbin:/bin:/usr/sbin:/usr/bin:/sram:/home/bin");
 		else
 			setval(path, "/bin:/usr/bin");
 	}
