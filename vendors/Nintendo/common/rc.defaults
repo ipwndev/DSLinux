@@ -2,8 +2,12 @@
 #
 #	INSTRUCTIONS
 #
-# If you are using GBAMP. M3 CF or Supercard CF, copy this
-# file to linux/etc/rc.conf on your CF card.
+# If you are using the GBAMP, the M3 CF or the Supercard CF
+# version of DSLinux, copy this file to linux/etc/rc.conf
+# on your CF card.
+#
+# If you are using the Supercard SD version of DSLinux,
+# copy this file to linux/etc/rc.conf on your SD card.
 #
 # If you are using the .nds version of DSLinux, copy this
 # file to /var/rc.conf. Note that /var/rc.conf will not be
