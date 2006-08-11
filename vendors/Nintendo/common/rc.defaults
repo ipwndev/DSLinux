@@ -1,23 +1,37 @@
-###########################################################
+################################################################
 #
 #	INSTRUCTIONS
 #
-# If you are using the GBAMP, the M3 CF or the Supercard CF
-# version of DSLinux, copy this file to linux/etc/rc.conf
-# on your CF card.
+# You have to make a copy of this file so you can edit it.
 #
-# If you are using the Supercard SD version of DSLinux,
-# copy this file to linux/etc/rc.conf on your SD card.
+# If you are using the GBAMP or the GBAMP-EXT2 build,
+# run this command to create the copy:
+#	cp /etc/rc.defaults /gbamp/linux/etc/rc.conf
 #
-# If you are using the .nds version of DSLinux, copy this
-# file to /var/rc.conf. Note that /var/rc.conf will not be
-# preserved across reboots!
+# If you are using the M3 CF build,
+# run this command to create the copy:
+#	cp /etc/rc.defaults /m3/linux/etc/rc.conf
 #
-# If you are using the .ds.gba version of DSLinux, copy this
-# file to /sram/rc.conf.
+# If you are using the SUPERCARD CF or the SUPERCARD SD
+# build, run this command to create the copy:
+#	cp /etc/rc.defaults /supercard/linux/etc/rc.conf
 #
-# The /sram filesystem needs to be initialised before it
-# can be used. See http://www.dslinux.org/wiki/Running_DSLinux
+# If you are using the DSMEM build,
+# run this command to create the copy:
+#	cp /etc/rc.defaults /sd/linux/etc/rc.conf
+#
+# If you are using the NDS version of DSLinux,
+# run this command to create the copy:
+#	cp /etc/rc.defaults /var/rc.conf
+# NOTE THAT /var/rc.conf WILL NOT BE PRESERVED ACROSS
+# REBOOTS ON THE NDS BUILD!
+#
+# If you are using the .ds.gba version of DSLinux,
+# run this command to create the copy:
+#	cp /etc/rc.defaults /sram/rc.conf.
+# The /sram filesystem needs to be initialised before
+# it can be used.
+# See http://www.dslinux.org/wiki/Running_DSLinux
 # for more information.
 #
 # Then edit the copy with vi.
@@ -25,7 +39,7 @@
 # 	http://www.dslinux.org/wiki/Vi
 # There is an introduction to vi on that page.
 #
-###########################################################
+################################################################
 
 
 # This file provides default flags for the DSLinux boot process.
@@ -39,24 +53,26 @@ hostname="NintendoDS"
 # If you want to enable it at boot time, set this flag to "YES".
 enable_network_on_boot="NO"
 
-# You can of course also configure networking manually (without
-# the init scripts, e.g. by using a custom script), or save a
-# configuration in /etc/rc.conf and start networking by running:
+# You can start networking anytime by running:
 #	/etc/rc.d/network start
-# and stop it by running:
+# and stop it anytime by running:
 #	/etc/rc.d/network stop
 
 # DSLinux can use network settings from your Nintendo WiFi
-# Connection profiles. If you want to use this feature,
-# enter the number of the profile you want to use here (use 1, 2
-# or 3). If you don't want to use these settings, leave this
-# empty and configure your network below.
+# Connection (WFC) profiles. If you want to use this feature,
+# set wfc_config to the number of the profile you want to use,
+# either 1, 2 or 3. You don't have to configure anything else
+# if you use WFC settings.
+# If you don't want to use WFC settings, leave wfc_config
+# empty and configure your network below instead.
 wfc_config=""
 
 # Set the essid of your wireless router here.
-# Example flags are:
-# 	essid="eXampLeEsSiD"
+# For example:
+# 	essid="MyEssid"
 # You cannot use wireless networking without setting an essid.
+# Note that DSLinux only works in managed mode, i.e. with
+# an access point. Ad-hoc mode is not supported.
 essid=""
 
 # If DSLinux fails to associate with your access point,
@@ -82,13 +98,12 @@ wepkey=""
 ip=""
 gateway=""
 
-# If using static network configuration, you can also supply
-# a netmask and a broadcast address, if you want to.
+# If you are not using DHCP, you can supply a
+# netmask and a broadcast address, if you want to.
 netmask=""
 broadcast=""
 
-# You can specify up to 2 DNS servers if you use
-# static network configuration (i.e. no DHCP)
+# You can specify up to 2 DNS servers if you don't use DHCP.
 dns1=""
 dns2=""
 
