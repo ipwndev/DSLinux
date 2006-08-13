@@ -453,7 +453,12 @@ call_fpe:
 	and	r8, r0, #0x00000f00		@ mask out CP number
 	mov	r7, #1
 	add	r6, r10, #TI_USED_CP
+#ifdef CONFIG_NDS_ROM8BIT
+	add	r6, r6, r8, lsr #8
+	swpb	r5, r7, [r6]
+#else
 	strb	r7, [r6, r8, lsr #8]		@ set appropriate used_cp[]
+#endif
 #ifdef CONFIG_IWMMXT
 	@ Test if we need to give access to iWMMXt coprocessors
 	ldr	r5, [r10, #TI_FLAGS]

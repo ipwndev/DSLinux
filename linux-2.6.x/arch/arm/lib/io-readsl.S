@@ -9,6 +9,7 @@
  */
 #include <linux/linkage.h>
 #include <asm/assembler.h>
+#include <linux/config.h>
 
 ENTRY(__raw_readsl)
 		teq	r2, #0		@ do we have to check for the zero len?
@@ -38,14 +39,28 @@ ENTRY(__raw_readsl)
 3:		ldr	r3, [r0]
 		cmp	ip, #2
 		mov	ip, r3, get_byte_0
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	ip, ip, [r1]
+		add	r1, r1, #1
+#else
 		strb	ip, [r1], #1
+#endif
 		bgt	6f
 		mov	ip, r3, get_byte_1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	ip, ip, [r1]
+		add	r1, r1, #1
+#else
 		strb	ip, [r1], #1
+#endif
 		beq	5f
 		mov	ip, r3, get_byte_2
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	ip, ip, [r1]
+		add	r1, r1, #1
+#else
 		strb	ip, [r1], #1
-
+#endif
 4:		subs	r2, r2, #1
 		mov	ip, r3, pull #24
 		ldrne	r3, [r0]
@@ -70,9 +85,23 @@ ENTRY(__raw_readsl)
 		bne	6b
 
 		mov	r3, ip, get_byte_2
+#ifdef CONFIG_NDS_ROM8BIT
+		add	r2, r1, #2
+		swpb	r3, r3, [r2]
+#else
 		strb	r3, [r1, #2]
+#endif
 7:		mov	r3, ip, get_byte_1
+#ifdef CONFIG_NDS_ROM8BIT
+		add	r2, r1, #1
+		swpb	r3, r3, [r2]
+#else
 		strb	r3, [r1, #1]
+#endif
 8:		mov	r3, ip, get_byte_0
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r3, r3, [r1]
+#else
 		strb	r3, [r1, #0]
+#endif
 		mov	pc, lr
