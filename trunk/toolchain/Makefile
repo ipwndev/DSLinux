@@ -318,7 +318,7 @@ $(SRCDIR)/.kernel-configured:
 $(SRCDIR)/.headers-copied: $(SRCDIR)/.uClibc-headers-compiled
 	mkdir -p $(SYSROOT)/usr
 	tar -C $(UCLIBC_SRCDIR) --exclude=CVS -h -c -f - include \
-		| tar -C $(SYSROOT) -x -f -
+		| tar -C $(SYSROOT)/usr -x -f -
 	touch $@
 
 #######################################################################
