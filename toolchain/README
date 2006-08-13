@@ -1,0 +1,57 @@
+                                           _nnnn_    C++
+                                     C    dGGGGMMb  
+                                         @p~qp~~qMb
+                                         M|@||@) M|  ARM Assembly
+   *********************************     @,----.JM|
+   *       DSLinux Toolchain       *    JS^\__/  qKL
+   *********************************   dZP        qKRb
+                                      dZP          qKKb
+                                     fZP            SMMb
+                                     HZM            MMMM
+                                     FqM            MMMM
+                                   __| ".        |\dS"qML
+                                   |    `.       | `' \Zq
+ To build the toolchain, run:     _)      \.___.,|     .'
+                                  \____   )MMMMMP|   .'
+        make                           `-'       `--' 
+
+in the current directory. The build will take a while even on
+a fast computer.
+
+
+The default install prefix is ./prefix, which might not be what you want.
+To install in a different prefix, for example, "/usr/local/toolchain",
+compile like this:
+
+        make PREFIX=/usr/local/toolchain
+
+The toolchain can always be moved to a different prefix without
+trouble though.
+
+
+The build will want to download a couple of files (about 30MB total).
+If you want to get the files now and build the toolchain later, run:
+
+        make fetch
+
+
+To clean out files left over after the build, run:
+
+        make clean
+
+
+To remove *everything* INCLUDING THE INSTALLED TOOLCHAIN, run:
+
+        make nuke
+             |
+             +---- Use with caution!
+
+
+If there is an error during the build, please try to paste at least
+50 lines above the "make: Error 1" line into your problem report.
+Otherwise no one will be able to figure out the error.
+
+Once the error is fixed (by you or someone else), run make again,
+including the PREFIX if you specified one. The build will continue
+from where it failed.
+
