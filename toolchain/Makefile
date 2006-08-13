@@ -58,7 +58,7 @@ SOURCEFORGE_MIRROR	= http://switch.dl.sourceforge.net/sourceforge
 BINUTILS_URL	:= $(GNU_MIRROR)/binutils/$(BINUTILS_DIST)
 GCC_URL 	:= $(GNU_MIRROR)/gcc/gcc-$(GCC_VER)/$(GCC_DIST)
 GPP_URL		:= $(GNU_MIRROR)/gcc/gcc-$(GCC_VER)/$(GPP_DIST)
-ELF2FLT_URL	:= http://dslinux.in-berlin.de/dslinux/$(ELF2FLT_DIST)
+ELF2FLT_URL	:= http://dslinux.in-berlin.de/$(ELF2FLT_DIST)
 # Try this elf2flt mirror if the one above fails:
 #ELF2FLT_URL	:= http://stsp.spline.de/dslinux/$(ELF2FLT_DIST)
 GENROMFS_URL	:= $(SOURCEFORGE_MIRROR)/romfs/$(GENROMFS_DIST)
