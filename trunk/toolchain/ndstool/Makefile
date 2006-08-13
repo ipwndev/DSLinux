@@ -14,7 +14,6 @@ SOURCES		:=	source
 INCLUDES	:=	include
 DATA			:=	data
 
-export PATH		:=	$(DEVKITARM)/bin:$(PATH)
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
@@ -63,7 +62,7 @@ LIBS	:= -lelf
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:= /usr/local /c/cygwin/usr/local
+LIBDIRS		:= $(PREFIX)/lib
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
@@ -79,10 +78,10 @@ export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
 			$(foreach dir,$(DATA),$(CURDIR)/$(dir)) \
 			$(CURDIR)/DefaultArm7 $(CURDIR)/Loader
 
-export CC	:=	$(PREFIX)gcc
-export CXX	:=	$(PREFIX)g++
-export AR	:=	$(PREFIX)ar
-export OBJCOPY	:=	$(PREFIX)objcopy
+export CC	:=	gcc
+export CXX	:=	g++
+export AR	:=	ar
+export OBJCOPY	:=	objcopy
 
 #---------------------------------------------------------------------------------
 # automatically build a list of object files for our project
@@ -93,7 +92,7 @@ SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 BINFILES	:=	default_arm7.bin loadme.bin $(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.bin)))
 BMPFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.bmp)))
 
-export OFILES	:= $(BINFILES:.bin=.o) $(BMPFILES:.bmp=.o)  $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
+export OFILES	:= $(filter-out default_arm7.o, $(BINFILES:.bin=.o) $(BMPFILES:.bmp=.o)  $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o))
 #---------------------------------------------------------------------------------
 # use CXX for linking C++ projects, CC for standard C
 #---------------------------------------------------------------------------------
@@ -110,9 +109,9 @@ endif
 
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 			$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
-			-I$(CURDIR)/$(BUILD)
+			-I$(CURDIR)/$(BUILD) -I$(PREFIX)/include
 
-export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
+export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) -L$(PREFIX)/lib
 
 .PHONY: $(BUILD) clean
 
@@ -121,10 +120,9 @@ $(BUILD):
 	@echo $(PATH)
 	@[ -d $@ ] || mkdir -p $@
 	@make PassMeIncludes
-	@make -C DefaultArm7
-	@make -C Loader
+	@cc -o raw2c raw2c.c
+	@make -C Loader CC=$(CROSS)gcc
 	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
-	@./ndstool -@ DefaultArm7/default_arm7.bin && echo For official devkitPro releases, add this SHA1 hash of default ARM7 binary to data/arm7_sha1_homebrew.bin and recompile. || echo -n
 
 #---------------------------------------------------------------------------------
 .PHONY: PassMeIncludes
@@ -141,7 +139,7 @@ clean:
 	@echo clean ...
 	@make -C DefaultArm7 clean
 	@make -C Loader clean
-	@rm -fr $(BUILD) $(OUTPUT)
+	@rm -fr $(BUILD) $(OUTPUT) raw2c
 
 #---------------------------------------------------------------------------------
 all: clean $(BUILD)
@@ -164,7 +162,6 @@ DEPENDS	:=	$(OFILES:.o=.d)
 $(OUTPUT): $(OFILES)
 	@echo linking
 	@$(LD) $(LDFLAGS) $(OFILES) $(LIBPATHS) $(LIBS) -o $(OUTPUT)$(EXEEXT)
-	-@( cd $(OUTPUTDIR); upx -q -9 $(TARGET)$(EXEEXT) )
 
 #---------------------------------------------------------------------------------
 # Compile Targets for C/C++
@@ -190,13 +187,13 @@ $(OUTPUT): $(OFILES)
 %.c	:	%.bmp
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
-	@raw2c $<
+	@$(NDSTOOL_SRCDIR)/raw2c $<
  
 #---------------------------------------------------------------------------------
 %.c	:	%.bin
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
-	@raw2c $<
+	@$(NDSTOOL_SRCDIR)/raw2c $<
 
 -include $(DEPENDS)
 
