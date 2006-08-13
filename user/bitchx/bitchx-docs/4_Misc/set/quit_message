@@ -1,9 +1,0 @@
-Synopsis:
-   set quit_message [<text>]
-
-Description:
-   When you issue a /quit without arguments, <text> will be your quit reason.
-
-See Also:
-   quit(1).
-

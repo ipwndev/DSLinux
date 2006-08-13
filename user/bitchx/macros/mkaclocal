@@ -1,3 +1,0 @@
-#!/bin/sh
-
-cat *.m4 > ../aclocal.m4
