@@ -123,10 +123,12 @@ nuke:
 		case $$ANSWER in \
 			"yes") \
 				echo "You said $$ANSWER. I will continue."; \
+				echo rm -rf $(SRCDIR) $(OBJDIR) \
+					$(SYSROOT) $(PREFIX); \
 				rm -rf $(SRCDIR) $(OBJDIR) \
 					$(SYSROOT) $(PREFIX); \
 				echo "Resetting the build"; \
-				$(MAKE) reset ; \
+				$(MAKE) reset; \
 				;; \
 			"") \
 				echo "You said no."; \
