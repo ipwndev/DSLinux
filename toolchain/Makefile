@@ -403,10 +403,7 @@ $(GCC_SRCDIR)/.stage2-patched: $(GCC_SRCDIR)/.stage2-unpacked
 $(GCC_SRCDIR)/.stage2-configured: $(GCC_SRCDIR)/.stage2-patched
 	[ -d $(GCC_OBJDIR) ] || mkdir -p $(GCC_OBJDIR)
 	-$(MAKE) -C $(GCC_OBJDIR) distclean
-	# XXX: We need -fpermissive in CFLAGS for libstdc++ to build.
-	# Produces lots of warning for non-C++ code though :(
 	cd $(GCC_OBJDIR) \
-		&& export CFLAGS="-fpermissive -O2 -g" \
 		&& $(GCC_SRCDIR)/configure \
 		--prefix=$(PREFIX) \
 		--with-sysroot=$(SYSROOT) \
