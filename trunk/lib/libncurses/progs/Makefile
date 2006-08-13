@@ -70,7 +70,7 @@ LIBTOOL_UNINSTALL =
 
 INSTALL		= /usr/bin/install -c
 INSTALL_PROGRAM	= ${INSTALL}
-transform	= s,^,arm-elf-,
+transform	= s,^,$(CROSS),
 
 AWK		= mawk
 LN_S		= ln -s

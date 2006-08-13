@@ -77,7 +77,7 @@ INSTALL_LIB	= /usr/bin/install -c -m 644
 INSTALL_PROG	= @INSTALL_PROG@
 INSTALL_DATA	= ${INSTALL} -m 644
 
-AR		= arm-elf-ar
+#AR		= arm-elf-ar
 AR_OPTS		= rv
 AWK		= mawk
 #LD		= arm-elf-ld
@@ -88,7 +88,7 @@ LN_S		= ln -s
 CFLAGS		+= -Wall -pipe -W -mtune=arm9tdmi -mcpu=arm9tdmi -ansi -Wstrict-prototypes -Wno-trigraphs -Os -fno-strict-aliasing -DNO_MM -I$(ROOTDIR)/uClibc/include
 
 INCDIR		= $(srcdir)/../include
-CPPFLAGS	= -DHAVE_CONFIG_H -I../ncurses -I$(srcdir) -I. -I../include -I$(ROOTDIR)/uClibc/include -U_XOPEN_SOURCE -D_XOPEN_SOURCE=500 -U_POSIX_C_SOURCE -D_POSIX_C_SOURCE=199506L -DNDEBUG
+CPPFLAGS	+= -DHAVE_CONFIG_H -I../ncurses -I$(srcdir) -I. -I../include -I$(ROOTDIR)/uClibc/include -U_XOPEN_SOURCE -D_XOPEN_SOURCE=500 -U_POSIX_C_SOURCE -D_POSIX_C_SOURCE=199506L -DNDEBUG
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 
@@ -126,7 +126,7 @@ NCURSES_MINOR	= 4
 REL_VERSION	= 5.4
 ABI_VERSION	= 5
 
-RANLIB		= arm-elf-ranlib
+#RANLIB		= arm-elf-ranlib
 
 IMPORT_LIB	= 
 SHARED_LIB	= 

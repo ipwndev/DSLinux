@@ -69,17 +69,17 @@ INSTALL_LIB	= /usr/bin/install -c -m 644
 INSTALL_PROG	= @INSTALL_PROG@
 INSTALL_DATA	= ${INSTALL} -m 644
 
-AR		= arm-elf-ar
+#AR		= arm-elf-ar
 AR_OPTS		= rv
 AWK		= mawk
-LD		= arm-elf-ld
+#LD		= arm-elf-ld
 LN_S		= ln -s
 
 #CC		= arm-elf-gcc
 #CPP		= arm-elf-gcc -E
 CFLAGS		+= -Wall -pipe -W -mtune=arm9tdmi -mcpu=arm9tdmi -ansi -Wstrict-prototypes -Wno-trigraphs -Os -fno-strict-aliasing -DNO_MM -I$(ROOTDIR)/uClibc/include
 
-CPPFLAGS	= -I../ncurses -DHAVE_CONFIG_H -I. -I../include -I$(ROOTDIR)/uClibc/include -U_XOPEN_SOURCE -D_XOPEN_SOURCE=500 -U_POSIX_C_SOURCE -D_POSIX_C_SOURCE=199506L -DNDEBUG
+CPPFLAGS	+= -I../ncurses -DHAVE_CONFIG_H -I. -I../include -I$(ROOTDIR)/uClibc/include -U_XOPEN_SOURCE -D_XOPEN_SOURCE=500 -U_POSIX_C_SOURCE -D_POSIX_C_SOURCE=199506L -DNDEBUG
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 
@@ -92,7 +92,7 @@ CFLAGS_SHARED	= $(CCFLAGS) unknown
 CFLAGS_DEFAULT	= $(CFLAGS_NORMAL)
 
 LINK		= $(LIBTOOL_LINK) $(CC)
-LDFLAGS		= -s -Wl,-elf2flt -L$(ROOTDIR)/lib  
+#LDFLAGS		= -s -Wl,-elf2flt -L$(ROOTDIR)/lib  
 
 SHLIB_DIRS	= -L../lib
 SHLIB_LIST	= $(SHLIB_DIRS) -lncurses 
@@ -104,7 +104,7 @@ NCURSES_MINOR	= 4
 REL_VERSION	= 5.4
 ABI_VERSION	= 5
 
-RANLIB		= arm-elf-ranlib
+#RANLIB		= arm-elf-ranlib
 
 IMPORT_LIB	= 
 SHARED_LIB	= 
