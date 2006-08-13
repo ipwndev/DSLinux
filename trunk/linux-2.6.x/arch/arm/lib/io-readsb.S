@@ -9,17 +9,33 @@
  */
 #include <linux/linkage.h>
 #include <asm/assembler.h>
+#include <linux/config.h>
 
 .insb_align:	rsb	ip, ip, #4
 		cmp	ip, r2
 		movgt	ip, r2
 		cmp	ip, #2
 		ldrb	r3, [r0]
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r3, r3, [r1]
+		add	r1, r1, #1
+#else
 		strb	r3, [r1], #1
+#endif
 		ldrgeb	r3, [r0]
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgeb	r3, r3, [r1]
+		addge	r1, r1, #1
+#else
 		strgeb	r3, [r1], #1
+#endif
 		ldrgtb	r3, [r0]
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgtb	r3, r3, [r1]
+		addgt	r1, r1, #1
+#else
 		strgtb	r3, [r1], #1
+#endif
 		subs	r2, r2, ip
 		bne	.insb_aligned
 
@@ -113,10 +129,23 @@ ENTRY(__raw_readsb)
 
 		cmp	r2, #2
 		ldrb	r3, [r0]
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r3, r3, [r1]
+		add	r1, r1, #1
+#else
 		strb	r3, [r1], #1
+#endif
 		ldrgeb	r3, [r0]
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgeb	r3, r3, [r1]
+		addge	r1, r1, #1	
+#else
 		strgeb	r3, [r1], #1
+#endif
 		ldrgtb	r3, [r0]
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgtb	r3, r3, [r1]
+#else
 		strgtb	r3, [r1]
-
+#endif
 		LOADREGS(fd, sp!, {r4 - r6, pc})

@@ -21,9 +21,21 @@
 1:	subs	r1, r1, #4		@ 1 do we have enough
 	blt	5f			@ 1 bytes to align with?
 	cmp	r3, #2			@ 1
+#ifdef CONFIG_NDS_ROM8BIT
+	swpltb	r2, r2, [r0]
+	addlt	r0, r0, #1
+	movlt	r2, #0
+	swpleb	r2, r2, [r0]
+	addle	r0, r0, #1
+	movlt	r2, #0
+	swpb	r2, r2, [r0]
+	add	r0, r0, #1
+	mov	r2, #0
+#else
 	strltb	r2, [r0], #1		@ 1
 	strleb	r2, [r0], #1		@ 1
 	strb	r2, [r0], #1		@ 1
+#endif
 	add	r1, r1, r3		@ 1 (r1 = r1 - (4 - r3))
 /*
  * The pointer is now aligned and the length is adjusted.  Try doing the
@@ -73,8 +85,23 @@ ENTRY(__memzero)
  * may have an unaligned pointer as well.
  */
 5:	tst	r1, #2			@ 1 2 bytes or more?
+#ifdef CONFIG_NDS_ROM8BIT
+	swpneb	r2, r2, [r0]
+	addne	r0, r0, #1
+	movne	r2, #0
+	swpneb	r2, r2, [r0]
+	addne	r0, r0, #1
+	movne	r2, #0
+#else
 	strneb	r2, [r0], #1		@ 1
 	strneb	r2, [r0], #1		@ 1
+#endif
 	tst	r1, #1			@ 1 a byte left over
+#ifdef CONFIG_NDS_ROM8BIT
+	swpneb	r2, r2, [r0]
+	addne	r0, r0, #1
+	movne	r2, #0
+#else
 	strneb	r2, [r0], #1		@ 1
+#endif
 	RETINSTR(mov,pc,lr)		@ 1

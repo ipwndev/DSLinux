@@ -37,7 +37,12 @@
 	save_and_disable_irqs ip, r2
 	ldrb	r2, [r1, r0, lsr #3]
 	\instr	r2, r2, r3
+#ifdef CONFIG_NDS_ROM8BIT
+	add	r1, r1, r0, lsr #3
+	swpb	r3, r2, [r1]
+##else
 	strb	r2, [r1, r0, lsr #3]
+#endif
 	restore_irqs ip
 	mov	pc, lr
 	.endm
@@ -58,7 +63,11 @@
 	ldrb	r2, [r1]
 	tst	r2, r0, lsl r3
 	\instr	r2, r2, r0, lsl r3
+#ifdef CONFIG_NDS_ROM8BIT
+	\store	r3, r2, [r1]	@ store is swpxxb here
+#else
 	\store	r2, [r1]
+#endif
 	restore_irqs ip
 	moveq	r0, #0
 	mov	pc, lr
