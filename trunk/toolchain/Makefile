@@ -104,8 +104,7 @@ fetch: $(DISTFILES)
 reset: binutils-reset uClibc-reset sysroot-reset gcc-stage1-reset \
 	gcc-stage2-reset elf2flt-reset libelf-reset ndstool-reset
 
-# Use these together with reset targets to force re-compile.
-# Use on their own to save disc space.
+# Use to save disc space.
 clean: binutils-clean uClibc-clean sysroot-clean gcc-clean elf2flt-clean \
 	libelf-clean ndstool-clean
 
