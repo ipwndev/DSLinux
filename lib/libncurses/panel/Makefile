@@ -70,7 +70,7 @@ INSTALL_LIB	= /usr/bin/install -c -m 644
 INSTALL_PROG	= @INSTALL_PROG@
 INSTALL_DATA	= ${INSTALL} -m 644
 
-AR		= arm-elf-ar
+#AR		= arm-elf-ar
 AR_OPTS		= rv
 AWK		= mawk
 #LD		= arm-elf-ld
@@ -105,7 +105,7 @@ NCURSES_MINOR	= 4
 REL_VERSION	= 5.4
 ABI_VERSION	= 5
 
-RANLIB		= arm-elf-ranlib
+#RANLIB		= arm-elf-ranlib
 
 IMPORT_LIB	= 
 SHARED_LIB	= 
