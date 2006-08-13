@@ -1,11 +1,11 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
-ifeq ($(strip $(DEVKITARM)),)
-$(error "Please set DEVKITARM in your environment. export DEVKITARM=<path to>devkitARM)
-endif
+#ifeq ($(strip $(DEVKITARM)),)
+#$(error "Please set DEVKITARM in your environment. export DEVKITARM=<path to>devkitARM)
+#endif
 
-include $(DEVKITARM)/ds_rules
+#include $(DEVKITARM)/ds_rules
 #---------------------------------------------------------------------------------
 # TARGET is the name of the output, if this ends with _mb generates a multiboot image
 # BUILD is the directory where object files & intermediate files will be placed

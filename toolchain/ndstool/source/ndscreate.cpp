@@ -1,7 +1,9 @@
 #include <time.h>
 #include <ndstool.h>
 #include <ndstool_version.h>
+#if 0
 #include "default_arm7.h"
+#endif
 #include "logo.h"
 #include "raster.h"
 #include "banner.h"
@@ -433,10 +435,16 @@ void Create()
 	}
 	else	// default ARM7 binary
 	{
+#if 0
 		fwrite(default_arm7, 1, default_arm7_size, fNDS);
 		header.arm7_entry_address = 0x03800000;
 		header.arm7_ram_address = 0x03800000;
 		header.arm7_size = ((default_arm7_size + 3) & ~3);
+#endif
+
+		fprintf(stderr, "This version of ndstool does not include a default ARM7 binary.\n"
+				"ARM7 binary required!.\n");
+		exit(1);
 	}
 
 	// ARM7 overlay table
