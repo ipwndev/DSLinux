@@ -111,8 +111,34 @@ clean: binutils-clean uClibc-clean sysroot-clean gcc-clean elf2flt-clean \
 
 # Nukes everything (including the installed toolchain itself!)
 # Use this to start ALL OVER AGAIN! Use with caution!
-nuke: reset
-	rm -rf $(SRCDIR) $(OBJDIR) $(SYSROOT) $(PREFIX)
+nuke:
+	@echo
+	@echo "I will now remove the following directories PERMANENTLY:"
+	@echo
+	@echo "  $(SRCDIR)"
+	@echo "  $(OBJDIR)"
+	@echo "  $(SYSROOT)"
+	@echo "  $(PREFIX)"
+	@echo
+	@read -p 'Do you want me to continue? ([no]/yes): ' ANSWER ;\
+		case $$ANSWER in \
+			"yes") \
+				echo "You said $$ANSWER. I will continue."; \
+				rm -rf $(SRCDIR) $(OBJDIR) \
+					$(SYSROOT) $(PREFIX); \
+				echo "Resetting the build"; \
+				$(MAKE) reset ; \
+				;; \
+			"") \
+				echo "You said no."; \
+				;; \
+			*) \
+				echo "You said $$ANSWER."; \
+				;; \
+		esac
+
+
+
 
 #######################################################################
 # binutils
