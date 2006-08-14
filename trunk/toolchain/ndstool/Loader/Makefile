@@ -3,16 +3,16 @@
 all: build loadme.bin
 
 loadme.bin: build/loader.elf
-	@$(OBJCOPY) $< -O binary $@
+	$(CROSS)$(OBJCOPY) $< -O binary $@
 
 build/loader.elf: loader.s
-	@$(CC) -Wall -o $@ $< -Ttext 0x080000C0 -nostdlib
+	$(CC) -Wall -o $@ $< -Ttext 0x080000C0 -nostdlib
 
 .PHONY: build clean
 
 build:
-	@[ -d $@ ] || mkdir -p $@
+	[ -d $@ ] || mkdir -p $@
 
 clean:
 	@echo clean ...
-	@rm -fr build loadme.bin
+	rm -fr build loadme.bin
