@@ -90,7 +90,7 @@ export PATH := $(PREFIX)/bin:$(PATH)
 
 # The order of dependencies of the 'all' target is important
 # for the bootstrap process.
-all: dirs-create fetch binutils-install elf2flt-install sysroot-create \
+all: dirs-create binutils-install elf2flt-install sysroot-create \
 	gcc-stage1-install uClibc-install gcc-stage2-install \
 	genromfs-install libelf-install ndstool-install
 
@@ -98,7 +98,7 @@ all: dirs-create fetch binutils-install elf2flt-install sysroot-create \
 fetch: $(DISTFILES)
 
 # Use these to start a build from the beginning.
-reset: binutils-reset uClibc-reset sysroot-reset gcc-stage1-reset \
+reset: dirs-reset binutils-reset uClibc-reset sysroot-reset gcc-stage1-reset \
 	gcc-stage2-reset elf2flt-reset libelf-reset ndstool-reset
 
 # Use to save disc space.
