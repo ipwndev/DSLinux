@@ -24,7 +24,7 @@ PREFIX		:= $(CWD)/prefix
 SYSROOT 	:= $(PREFIX)/$(TARGET)
 EIGHTBIT_DIR	:= $(CWD)/8bit
 
-BINUTILS_VER	= 2.16.1
+BINUTILS_VER	= 2.17
 GCC_VER		= 4.0.2
 ELF2FLT_VER	= 20051225
 GENROMFS_VER	= 0.5.1
@@ -38,7 +38,7 @@ GENROMFS_DIST	:= genromfs-$(GENROMFS_VER).tar.gz
 LIBELF_DIST	:= libelf-$(LIBELF_VER).tar.gz
 
 # We do basic MD5 checking to prevent hassle with broken downloads.
-BINUTILS_DIST_MD5	= 6a9d529efb285071dad10e1f3d2b2967
+BINUTILS_DIST_MD5	= e26e2e06b6e4bf3acf1dc8688a94c0d1
 ELF2FLT_DIST_MD5	= 704ee32b30c58307bb5187d5ea9c7e2b
 GCC_DIST_MD5		= f7781398ada62ba255486673e6274b26
 GPP_DIST_MD5		= 97da403f4756d9e0b896368fd25c84df
@@ -86,7 +86,7 @@ export PATH := $(PREFIX)/bin:$(PATH)
 # Main targets.
 #######################################################################
 
-.PHONY: all fetch clean reset nuke
+.PHONY: all fetch reset clean nuke
 
 # The order of dependencies of the 'all' target is important
 # for the bootstrap process.
@@ -124,7 +124,7 @@ nuke:
 					$(SYSROOT) $(PREFIX); \
 				rm -rf $(SRCDIR) $(OBJDIR) \
 					$(SYSROOT) $(PREFIX); \
-				echo "Resetting the build"; \
+				echo "Resetting build"; \
 				$(MAKE) reset; \
 				;; \
 			"") \
@@ -273,7 +273,7 @@ $(SRCDIR)/.uClibc-configured: $(SRCDIR)/.kernel-configured
 	$(MAKE) -C $(UCLIBC_SRCDIR) distclean
 	cp $(CWD)/../vendors/Nintendo/common/config.uClibc \
 		$(UCLIBC_SRCDIR)/.config
-	# fix the target prefix:
+	# fix target prefix:
 	sed -i -e 's:usr/$$(TARGET_ARCH)-linux-uclibc:$(TARGET):g' \
 		$(UCLIBC_SRCDIR)/.config
 	cd $(UCLIBC_SRCDIR) && yes "" | $(MAKE) oldconfig
@@ -544,5 +544,4 @@ $(NDSTOOL_SRCDIR)/.compiled:
 $(NDSTOOL_SRCDIR)/.installed: $(NDSTOOL_SRCDIR)/.compiled
 	install -m 755 $(NDSTOOL_SRCDIR)/ndstool $(PREFIX)/bin
 	touch $@
-
 
