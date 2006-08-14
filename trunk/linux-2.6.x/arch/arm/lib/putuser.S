@@ -29,10 +29,16 @@
 #include <asm/asm-offsets.h>
 #include <asm/thread_info.h>
 #include <asm/errno.h>
+#include <linux/config.h>
 
 	.global	__put_user_1
 __put_user_1:
-1:	strbt	r2, [r0]
+1:
+#ifdef CONFIG_NDS_ROM8BIT
+	swpb	ip, r2, [r0]
+#else
+	strbt	r2, [r0]
+#endif
 	mov	r0, #0
 	mov	pc, lr
 
@@ -40,11 +46,36 @@ __put_user_1:
 __put_user_2:
 	mov	ip, r2, lsr #8
 #ifndef __ARMEB__
-2:	strbt	r2, [r0], #1
-3:	strbt	ip, [r0]
+2:
+#ifdef CONFIG_NDS_ROM8BIT
+	add	r0, r0, #1
+	swpb	ip, r2, [r0]
+	sub	r0, r0, #1
+	mov	ip, r2, lsr #8
 #else
-2:	strbt	ip, [r0], #1
-3:	strbt	r2, [r0]
+	strbt	r2, [r0], #1
+#endif
+3:
+#ifdef CONFIG_NDS_ROM8BIT
+	swpb	ip, ip, [r0]
+#else
+	strbt	ip, [r0]
+#endif
+#else
+2:
+#ifdef CONFIG_NDS_ROM8BIT
+	add	r0, r0, #1
+	swpb	ip, ip, [r0]
+	sub	r0, r0, #1
+#else
+	strbt	ip, [r0], #1
+#endif
+3:
+#ifdef CONFIG_NDS_ROM8BIT
+	swpb	ip, r2, [r0]
+#else
+	strbt	r2, [r0]
+#endif
 #endif
 	mov	r0, #0
 	mov	pc, lr
