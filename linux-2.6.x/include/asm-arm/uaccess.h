@@ -16,6 +16,7 @@
 #include <asm/memory.h>
 #include <asm/domain.h>
 #include <asm/system.h>
+#include <linux/config.h>
 
 #define VERIFY_READ 0
 #define VERIFY_WRITE 1
@@ -287,6 +288,24 @@ do {									\
 	}								\
 } while (0)
 
+#ifdef CONFIG_NDS_ROM8BIT
+#define __put_user_asm_byte(x,__pu_addr,err)			\
+	__asm__ __volatile__(					\
+	"1:	swpb	ip, %1,[%2]\n"				\
+	"2:\n"							\
+	"	.section .fixup,\"ax\"\n"			\
+	"	.align	2\n"					\
+	"3:	mov	%0, %3\n"				\
+	"	b	2b\n"					\
+	"	.previous\n"					\
+	"	.section __ex_table,\"a\"\n"			\
+	"	.align	3\n"					\
+	"	.long	1b, 3b\n"				\
+	"	.previous"					\
+	: "+r" (err)						\
+	: "r" (x), "r" (__pu_addr), "i" (-EFAULT)		\
+	: "ip", "cc")
+#else
 #define __put_user_asm_byte(x,__pu_addr,err)			\
 	__asm__ __volatile__(					\
 	"1:	strbt	%1,[%2],#0\n"				\
@@ -303,6 +322,7 @@ do {									\
 	: "+r" (err)						\
 	: "r" (x), "r" (__pu_addr), "i" (-EFAULT)		\
 	: "cc")
+#endif
 
 #ifndef __ARMEB__
 #define __put_user_asm_half(x,__pu_addr,err)			\
