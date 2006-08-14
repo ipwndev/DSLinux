@@ -9,6 +9,7 @@
  */
 #include <linux/linkage.h>
 #include <asm/assembler.h>
+#include <linux/config.h>
 
 		.macro	pack, rd, hw1, hw2
 #ifndef __ARMEB__
@@ -100,7 +101,12 @@ ENTRY(__raw_readsw)
 		ldrh	ip, [r0]
 		sub	r2, r2, #1
    _BE_ONLY_(	mov	ip, ip, ror #8		)
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r4, ip, [r1]
+		add	r1, r1, #1
+#else
 		strb	ip, [r1], #1
+#endif   
    _LE_ONLY_(	mov	ip, ip, lsr #8		)
    _BE_ONLY_(	mov	ip, ip, lsr #24		)
 
@@ -120,11 +126,25 @@ ENTRY(__raw_readsw)
    _BE_ONLY_(	mov	ip, ip, lsr #24		)
 
 3:		tst	r2, #1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r4, ip, [r1]
+		add	r1, r1, #1
+#else
 		strb	ip, [r1], #1
+#endif
 		ldrneh	ip, [r0]
    _BE_ONLY_(	movne	ip, ip, ror #8		)
+#ifdef CONFIG_NDS_ROM8BIT
+		swpneb	r4, ip, [r1]
+		addne	r1, r1, #1
+#else
 		strneb	ip, [r1], #1
+#endif
    _LE_ONLY_(	movne	ip, ip, lsr #8		)
    _BE_ONLY_(	movne	ip, ip, lsr #24		)
+#ifdef CONFIG_NDS_ROM8BIT
+		swpneb	r4, ip, [r1]
+#else
 		strneb	ip, [r1]
+#endif
 		ldmfd	sp!, {r4, pc}
