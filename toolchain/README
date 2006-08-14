@@ -55,3 +55,22 @@ Once the error is fixed (by you or someone else), run make again,
 including the PREFIX if you specified one. The build will continue
 from where it failed.
 
+
+To use the toolchain, run this command to put the toolchain
+binaries in your PATH, assuming you are using the default prefix,
+and assuming your dslinux source tree resides in ~/dslinux:
+
+        export PATH=~/dslinux/toolchain/prefix/bin:$PATH
+
+
+Currently, you also have to make a small modification to the
+file vendors/config/armnommu/config.arch to be able to use
+the toolchain. Find the line that says:
+
+        CROSS_COMPILE = arm-elf-
+
+and change it to:
+
+        CROSS_COMPILE = arm-linux-elf-        
+
+
