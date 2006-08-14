@@ -18,27 +18,27 @@
 in the current directory. The build will take a while even on
 a fast computer.
 
+If you already have a devkitARM-based toolchain installed, you
+should remove devkitARM binaries from your PATH *before* you
+start building the new toolchain. You can also simply rename the
+devkitARM directory to something else, for example devkitARM.dontuse.
 
 The default install prefix is ./prefix, which might not be what you want.
-To install in a different prefix, for example, "/usr/local/toolchain",
+To install in a different prefix, for example, /usr/local/toolchain,
 compile like this:
 
         make PREFIX=/usr/local/toolchain
 
-The toolchain can always be moved to a different prefix without
-trouble though.
-
+The toolchain can always be moved to a different prefix without trouble.
 
 The build will want to download a couple of files (about 30MB total).
 If you want to get the files now and build the toolchain later, run:
 
         make fetch
 
-
 To clean out files left over after the build, run:
 
         make clean
-
 
 To remove *everything* INCLUDING THE INSTALLED TOOLCHAIN, run:
 
@@ -46,22 +46,19 @@ To remove *everything* INCLUDING THE INSTALLED TOOLCHAIN, run:
              |
              +---- Use with caution!
 
-
 If there is an error during the build, please try to paste at least
-50 lines above the "make: Error 1" line into your problem report.
+50 lines above the "make: Error X" line into your problem report.
 Otherwise no one will be able to figure out the error.
 
 Once the error is fixed (by you or someone else), run make again,
 including the PREFIX if you specified one. The build will continue
 from where it failed.
 
-
 To use the toolchain, run this command to put the toolchain
 binaries in your PATH, assuming you are using the default prefix,
 and assuming your dslinux source tree resides in ~/dslinux:
 
         export PATH=~/dslinux/toolchain/prefix/bin:$PATH
-
 
 Currently, you also have to make a small modification to the
 file vendors/config/armnommu/config.arch to be able to use
@@ -73,4 +70,4 @@ and change it to:
 
         CROSS_COMPILE = arm-linux-elf-        
 
-
+Good luck!
