@@ -121,7 +121,7 @@ $(BUILD):
 	[ -d $@ ] || mkdir -p $@
 	make PassMeIncludes
 	cc -o raw2c raw2c.c
-	make -C Loader CC=$(CROSS)gcc
+	make -C Loader
 	make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 #---------------------------------------------------------------------------------
