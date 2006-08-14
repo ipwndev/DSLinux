@@ -48,9 +48,8 @@ __put_user_2:
 #ifndef __ARMEB__
 2:
 #ifdef CONFIG_NDS_ROM8BIT
-	add	r0, r0, #1
 	swpb	ip, r2, [r0]
-	sub	r0, r0, #1
+	add	r0, r0, #1
 	mov	ip, r2, lsr #8
 #else
 	strbt	r2, [r0], #1
@@ -64,9 +63,8 @@ __put_user_2:
 #else
 2:
 #ifdef CONFIG_NDS_ROM8BIT
-	add	r0, r0, #1
 	swpb	ip, ip, [r0]
-	sub	r0, r0, #1
+	add	r0, r0, #1
 #else
 	strbt	ip, [r0], #1
 #endif
