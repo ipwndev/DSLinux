@@ -117,12 +117,12 @@ export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) -L$(PREFIX)/lib
 
 #---------------------------------------------------------------------------------
 $(BUILD):
-	@echo $(PATH)
-	@[ -d $@ ] || mkdir -p $@
-	@make PassMeIncludes
-	@cc -o raw2c raw2c.c
-	@make -C Loader CC=$(CROSS)gcc
-	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+	@echo PATH=$(PATH)
+	[ -d $@ ] || mkdir -p $@
+	make PassMeIncludes
+	cc -o raw2c raw2c.c
+	make -C Loader CC=$(CROSS)gcc
+	make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 #---------------------------------------------------------------------------------
 .PHONY: PassMeIncludes
@@ -137,9 +137,9 @@ $(BUILD)/passme_vhd2.h: $(SOURCES)/passme.vhd
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@make -C DefaultArm7 clean
-	@make -C Loader clean
-	@rm -fr $(BUILD) $(OUTPUT) raw2c
+	make -C DefaultArm7 clean
+	make -C Loader clean
+	rm -fr $(BUILD) $(OUTPUT) raw2c
 
 #---------------------------------------------------------------------------------
 all: clean $(BUILD)
@@ -161,7 +161,7 @@ DEPENDS	:=	$(OFILES:.o=.d)
 #---------------------------------------------------------------------------------
 $(OUTPUT): $(OFILES)
 	@echo linking
-	@$(LD) $(LDFLAGS) $(OFILES) $(LIBPATHS) $(LIBS) -o $(OUTPUT)$(EXEEXT)
+	$(LD) $(LDFLAGS) $(OFILES) $(LIBPATHS) $(LIBS) -o $(OUTPUT)$(EXEEXT)
 
 #---------------------------------------------------------------------------------
 # Compile Targets for C/C++
@@ -170,30 +170,30 @@ $(OUTPUT): $(OFILES)
 #---------------------------------------------------------------------------------
 %.o : %.cpp
 	@echo $(notdir $<)
-	@$(CXX) -MMD $(CXXFLAGS) -o $@ -c $<
+	$(CXX) -MMD $(CXXFLAGS) -o $@ -c $<
 
 #---------------------------------------------------------------------------------
 %.o : %.c
 	@echo $(notdir $<)
-	@$(CC) -MMD $(CFLAGS) -o $@ -c $<
+	$(CC) -MMD $(CFLAGS) -o $@ -c $<
 
 #---------------------------------------------------------------------------------
 %.o : %.s
 	@echo $(notdir $<)
-	@$(CC) -MMD $(ASFLAGS) -o $@ -c $<
+	$(CC) -MMD $(ASFLAGS) -o $@ -c $<
 
 
 #---------------------------------------------------------------------------------
 %.c	:	%.bmp
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
-	@$(NDSTOOL_SRCDIR)/raw2c $<
+	$(NDSTOOL_SRCDIR)/raw2c $<
  
 #---------------------------------------------------------------------------------
 %.c	:	%.bin
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
-	@$(NDSTOOL_SRCDIR)/raw2c $<
+	$(NDSTOOL_SRCDIR)/raw2c $<
 
 -include $(DEPENDS)
 
