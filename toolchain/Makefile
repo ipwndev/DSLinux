@@ -86,18 +86,13 @@ export PATH := $(PREFIX)/bin:$(PATH)
 # Main targets.
 #######################################################################
 
-.PHONY: all dirs fetch clean reset nuke
+.PHONY: all fetch clean reset nuke
 
 # The order of dependencies of the 'all' target is important
 # for the bootstrap process.
-all: dirs fetch binutils-install elf2flt-install sysroot-create \
+all: dirs-create fetch binutils-install elf2flt-install sysroot-create \
 	gcc-stage1-install uClibc-install gcc-stage2-install \
 	genromfs-install libelf-install ndstool-install
-
-# Creates empty directories not shipped from CVS.
-dirs:
-	-$(foreach d,$(PREFIX) $(DISTDIR) $(SRCDIR) $(OBJDIR) $(SYSROOT), \
-		[ -d ${d} ] || mkdir -p ${d};)
 
 # If you just want to download distfiles, use this target.
 fetch: $(DISTFILES)
@@ -139,6 +134,19 @@ nuke:
 				echo "You said $$ANSWER."; \
 				;; \
 		esac
+
+#######################################################################
+# directories
+#######################################################################
+
+dirs-create: $(CWD)/.dirs-created
+dirs-reset:
+	rm -f $(CWD)/.dirs-created
+
+$(CWD)/.dirs-created: 
+	-$(foreach d,$(PREFIX) $(DISTDIR) $(SRCDIR) $(OBJDIR) $(SYSROOT), \
+		[ -d ${d} ] || mkdir -p ${d};)
+	touch $@
 
 #######################################################################
 # binutils
