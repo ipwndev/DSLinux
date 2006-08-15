@@ -58,6 +58,9 @@
 
 #define SC_SD_DATAWRITE 0x09000000
 #define SC_SD_DATAREAD  0x09100000
+#define SC_SDL_DOWRITE	0x09440000
+	/* SC lite: write 0 before write command */
+
 #define SC_SD_LOCK      0x09FFFFFE
 	/* bit 0: 1				*/
 	/* bit 1: enable IO interface (SD,CF)	*/
@@ -495,8 +498,12 @@ static void scsd_request(struct mmc_host *mmc, struct mmc_request *mrq)
 	/* do a retry for data I/O */
 	case MMC_READ_SINGLE_BLOCK:
 	case MMC_READ_MULTIPLE_BLOCK:
+		retry = 3;
+		break;
 	case MMC_WRITE_BLOCK:
 	case MMC_WRITE_MULTIPLE_BLOCK:
+		/* for SClite, switch to write mode */
+		writew(0, SC_SDL_DOWRITE); 
 		retry = 3;
 		break;
 	/* check if we have an inactivation command */
