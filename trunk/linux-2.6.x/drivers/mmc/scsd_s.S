@@ -93,8 +93,7 @@ sd_data_write_s:
 sd_data_write_loop:
 	ldrh	r3,[r0],#2
 	add	r3,r3,r3,lsl #20
-	mov	r4,r3,lsr #8		@ sclite
-@	mov	r4,r3,lsl #8		@ sc, minisc
+	mov	r4,r3,lsr #8	
 	stmia   r2,{r3-r4}
 	subs    r1,r1,#2
 	bne     sd_data_write_loop
