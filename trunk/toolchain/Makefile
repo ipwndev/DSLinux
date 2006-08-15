@@ -340,12 +340,14 @@ $(SRCDIR)/.headers-copied: $(SRCDIR)/.uClibc-headers-compiled
 #######################################################################
 
 gcc-stage1-unpack:	$(GCC_SRCDIR)/.stage1-unpacked
+gcc-stage1-patch:	$(GCC_SRCDIR)/.stage1-patched
 gcc-stage1-configure:	$(GCC_SRCDIR)/.stage1-configured
 gcc-stage1-compile:	$(GCC_SRCDIR)/.stage1-compiled
 gcc-stage1-install:	$(GCC_SRCDIR)/.stage1-installed
 gcc-stage1-reset:
-	rm -f $(foreach f, .stage1-unpacked .stage1-configured \
-		.stage1-compiled .stage1-installed, $(GCC_SRCDIR)/$(f))
+	rm -f $(foreach f, .stage1-unpacked .stage1-patched \
+		.stage1-configured .stage1-compiled .stage1-installed, \
+		$(GCC_SRCDIR)/$(f))
 gcc-stage2-unpack:	$(GCC_SRCDIR)/.stage2-unpacked
 gcc-stage2-patch:	$(GCC_SRCDIR)/.stage2-patched
 gcc-stage2-configure:	$(GCC_SRCDIR)/.stage2-configured
@@ -369,8 +371,15 @@ $(GCC_SRCDIR)/.stage1-unpacked: $(DISTDIR)/$(GCC_DIST)
 	tar -C $(SRCDIR) -jxf $(DISTDIR)/$(GCC_DIST)
 	touch $@
 
+# patch gcc (stage 1)
+$(GCC_SRCDIR)/.stage1-patched: $(GCC_SRCDIR)/.stage1-unpacked
+	# Use Amadeus' ARM code generator that fixes the 8bit write problem
+	$(foreach f,arm.h arm.c arm.md predicates.md, \
+		cp $(EIGHTBIT_DIR)/$(f) $(GCC_SRCDIR)/gcc/config/arm/;)
+	touch $@
+
 # configure gcc (stage 1)
-$(GCC_SRCDIR)/.stage1-configured: $(GCC_SRCDIR)/.stage1-unpacked
+$(GCC_SRCDIR)/.stage1-configured: $(GCC_SRCDIR)/.stage1-patched
 	[ -d $(GCC_OBJDIR) ] || mkdir -p $(GCC_OBJDIR)
 	cd $(GCC_OBJDIR) \
 		&& $(GCC_SRCDIR)/configure \
