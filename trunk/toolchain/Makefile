@@ -309,7 +309,7 @@ $(SRCDIR)/.uClibc-installed: $(SRCDIR)/.uClibc-compiled
 
 sysroot-create: copy-headers
 sysroot-reset:
-	rm -f $(foreach f, .kernel-headers-configured \
+	rm -f $(foreach f, .kernel-configured \
 		.uClibc-headers-compiled .headers-copied, $(SRCDIR)/$(f))
 sysroot-clean: 
 	rm -rf $(SYSROOT)
@@ -318,6 +318,9 @@ copy-headers:		$(SRCDIR)/.headers-copied
 
 # configure kernel headers
 $(SRCDIR)/.kernel-configured:
+	# backup kernel config if exists
+	-[ -e $(KERNEL_SRCDIR)/.config ] \
+		&& cp $(KERNEL_SRCDIR)/.config $(CWD)/.kernelconfig.saved
 	make -C $(KERNEL_SRCDIR) mrproper
 	-cd $(KERNEL_SRCDIR) && yes "" | $(MAKE) ARCH=arm oldconfig prepare
 	touch $@
@@ -327,6 +330,9 @@ $(SRCDIR)/.headers-copied: $(SRCDIR)/.uClibc-headers-compiled
 	mkdir -p $(SYSROOT)/usr
 	tar -C $(UCLIBC_SRCDIR) --exclude=CVS -h -c -f - include \
 		| tar -C $(SYSROOT)/usr -x -f -
+	# restore kernel config if backup exists
+	-[ -e $(CWD)/.kernelconfig.saved ] \
+		&& mv $(CWD)/.kernelconfig.saved $(KERNEL_SRCDIR)/.config
 	touch $@
 
 #######################################################################
