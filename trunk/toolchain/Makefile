@@ -92,14 +92,14 @@ export PATH := $(PREFIX)/bin:$(PATH)
 # for the bootstrap process.
 all: dirs-create binutils-install elf2flt-install sysroot-create \
 	gcc-stage1-install uClibc-install gcc-stage2-install \
-	genromfs-install libelf-install ndstool-install
+	genromfs-install libelf-install ndstool-install strip
 
 # If you just want to download distfiles, use this target.
 fetch: $(DISTFILES)
 
 # Use these to start a build from the beginning.
 reset: dirs-reset binutils-reset uClibc-reset sysroot-reset gcc-stage1-reset \
-	gcc-stage2-reset elf2flt-reset libelf-reset ndstool-reset
+	gcc-stage2-reset elf2flt-reset libelf-reset ndstool-reset strip-reset
 
 # Use to save disc space.
 clean: binutils-clean uClibc-clean sysroot-clean gcc-clean elf2flt-clean \
@@ -545,3 +545,36 @@ $(NDSTOOL_SRCDIR)/.installed: $(NDSTOOL_SRCDIR)/.compiled
 	install -m 755 $(NDSTOOL_SRCDIR)/ndstool $(PREFIX)/bin
 	touch $@
 
+#######################################################################
+# strip
+#######################################################################
+
+strip: $(CWD)/.stripped
+strip-reset:
+	rm -f $(CWD)/.stripped
+
+# Strip the size of the toolchain down as much as possible.
+# Note: Running this target twice will produce an error :(
+$(CWD)/.stripped:
+	# remove large pre-compiled C++ headers
+	rm -rf $(PREFIX)/include/c++/$(GCC_VER)/$(TARGET)/bits/stdc++.h.gch
+	# remove redundant include directories
+	rm -rf $(PREFIX)/$(TARGET)/include
+	rm -rf $(PREFIX)/$(TARGET)/usr/include/asm
+	ln -sf asm-arm $(PREFIX)/$(TARGET)/usr/include/asm
+	# strip binaries
+	-strip $(PREFIX)/bin/*
+	strip $(PREFIX)/lib/*.a
+	-strip $(PREFIX)/$(TARGET)/bin/*
+	-strip $(PREFIX)/libexec/gcc/$(TARGET)/$(GCC_VER)/*
+	-strip $(PREFIX)/libexec/gcc/$(TARGET)/$(GCC_VER)/install-tools/*
+	$(TARGET)-strip $(PREFIX)/$(TARGET)/lib/*.o
+	$(TARGET)-strip $(PREFIX)/$(TARGET)/lib/*.a
+	$(TARGET)-strip $(PREFIX)/$(TARGET)/lib/thumb/*.a
+	# XXX: Don't strip these as it breaks compilation in ncurses.
+	# ("Undefined reference to __udivsi3" etc. - but why?)
+	#$(TARGET)-strip $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/*.o
+	#$(TARGET)-strip $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/*.a
+	#$(TARGET)-strip $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/thumb/*.o
+	#$(TARGET)-strip $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/thumb/*.a
+	touch $@
