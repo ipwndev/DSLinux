@@ -1,4 +1,5 @@
 #include "asm/types.h"
+#include "asm/io.h"
 
 #include "sound.h"
 
@@ -18,8 +19,8 @@
 
 #define SCHANNEL_TIMER(n)	(*(volatile u16*)(0x04000408 + ((n)<<4)))
 #define SCHANNEL_CR(n)		(*(volatile u32*)(0x04000400 + ((n)<<4)))
-#define SCHANNEL_VOL(n)		(*(volatile u8*)(0x04000400 + ((n)<<4)))
-#define SCHANNEL_PAN(n)		(*(volatile u8*)(0x04000402 + ((n)<<4)))
+#define SCHANNEL_VOL(n)		(0x04000400 + ((n)<<4))
+#define SCHANNEL_PAN(n)		(0x04000402 + ((n)<<4))
 #define SCHANNEL_SOURCE(n)	(*(volatile u32*)(0x04000404 + ((n)<<4)))
 #define SCHANNEL_REPEAT_POINT(n) (*(volatile u16*)(0x0400040A + ((n)<<4)))
 #define SCHANNEL_LENGTH(n)	(*(volatile u32*)(0x0400040C + ((n)<<4)))
@@ -37,13 +38,13 @@ void sound_play(void)
 
 	for (i = 0; i < s_channels; i++) {
 		SCHANNEL_CR(i) = SCHANNEL_ENABLE | SOUND_REPEAT | s_format;
-		SCHANNEL_VOL(i) = SOUND_VOL(127);
-		SCHANNEL_PAN(i) = (i % 2) ? 127 : 0;
+		writeb(SOUND_VOL(127), SCHANNEL_VOL(i));
+		writeb(((i % 2) ? 127 : 0), SCHANNEL_PAN(i));
 		SCHANNEL_REPEAT_POINT(i) = 0;
 	}
 
 	if (s_channels == 1) {
-		SCHANNEL_PAN(0) = 64;
+		writeb(64, SCHANNEL_PAN(0));
 	}
 
 	sound_set_master_volume(127);
