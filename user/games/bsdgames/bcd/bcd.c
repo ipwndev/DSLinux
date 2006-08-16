@@ -142,6 +142,8 @@ main(argc, argv)
 	 * but this seems kind of silly.  So this one doesn't.
 	 */
 
+    printf("");
+
 	if (argc > 1) {
 		while (--argc)
 			printcard((unsigned char *)*++argv);
