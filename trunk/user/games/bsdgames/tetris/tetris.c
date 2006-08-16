@@ -36,8 +36,8 @@
 
 #include <sys/cdefs.h>
 #ifndef lint
-__COPYRIGHT("@(#) Copyright (c) 1992, 1993\n\
-	The Regents of the University of California.  All rights reserved.\n");
+//__COPYRIGHT("@(#) Copyright (c) 1992, 1993\n\
+//he Regents of the University of California.  All rights reserved.\n");
 #endif /* not lint */
 
 /*
@@ -79,6 +79,8 @@ static	void	setup_board(void);
 	int	main(int, char **);
 	void	onintr(int) __attribute__((__noreturn__));
 	void	usage(void) __attribute__((__noreturn__));
+
+#define ASCII_ESC	27
 
 /*
  * Set up the initial board.  The bottom display row is completely set,
@@ -145,7 +147,7 @@ main(argc, argv)
 		exit(1);
 	close(fd);
 
-	keys = "jkl pq";
+	keys = "DACBpq";
 
 	while ((ch = getopt(argc, argv, "k:l:ps")) != -1)
 		switch(ch) {
@@ -193,10 +195,7 @@ main(argc, argv)
 		}
 	}
 
-	sprintf(key_msg,
-"%s - left   %s - rotate   %s - right   %s - drop   %s - pause   %s - quit",
-		key_write[0], key_write[1], key_write[2], key_write[3],
-		key_write[4], key_write[5]);
+	sprintf(key_msg, "\n%s - pause   %s - quit", key_write[4], key_write[5]);
 
 	(void)signal(SIGINT, onintr);
 	scr_init();
@@ -216,6 +215,12 @@ main(argc, argv)
 		scr_update();
 		place(curshape, pos, 0);
 		c = tgetchar();
+                if(c == ASCII_ESC)
+                {
+                    c = tgetchar();
+                    if((c & 0xff) == '[')
+                        c = tgetchar();
+                }
 		if (c < 0) {
 			/*
 			 * Timeout.  Move down if possible.
@@ -274,7 +279,7 @@ main(argc, argv)
 				pos--;
 			continue;
 		}
-		if (c == keys[1]) {
+		if (c == keys[1] || c == '\n') {
 			/* turn */
 			const struct shape *new = &shapes[curshape->rot];
 
