@@ -40,7 +40,7 @@
 #ifdef CONFIG_NDS_ROM8BIT
 	add	r1, r1, r0, lsr #3
 	swpb	r3, r2, [r1]
-##else
+#else
 	strb	r2, [r1, r0, lsr #3]
 #endif
 	restore_irqs ip
