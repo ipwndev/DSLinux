@@ -1,4 +1,4 @@
-#define RTC_CR8         (* (volatile u8*) 0x04000138)
+#define RTC_CR8            0x04000138
 #define READ_DATA_REG1     0x65
 #define READ_STATUS_REG1   0x61
 #define RTC_DELAY 48
@@ -16,6 +16,7 @@
 #define HOUR_MASK 0x3f
 
 #include "asm/types.h"
+#include "asm/io.h"
 #include "linux/timex.h"
 
 #include "time.h"
@@ -27,17 +28,17 @@ static void rtcTransaction(u8 * command, u32 commandLen, u8 * result,
 	u8 bit;
 	u8 i;
 
-	RTC_CR8 = CS_0 | SCK_1 | SIO_1;
+	writeb(CS_0 | SCK_1 | SIO_1, RTC_CR8);
 	swiDelay(RTC_DELAY);
-	RTC_CR8 = CS_1 | SCK_1 | SIO_1;
+	writeb(CS_1 | SCK_1 | SIO_1, RTC_CR8);
 	swiDelay(RTC_DELAY);
 
 	for (i = 0; i < commandLen; i++) {
 		for (bit = 0; bit < 8; bit++) {
-			RTC_CR8 = CS_1 | SCK_0 | SIO_out | (command[i] >> 7);
+			writeb(CS_1 | SCK_0 | SIO_out | (command[i] >> 7), RTC_CR8);
 			swiDelay(RTC_DELAY);
 
-			RTC_CR8 = CS_1 | SCK_1 | SIO_out | (command[i] >> 7);
+			writeb(CS_1 | SCK_1 | SIO_out | (command[i] >> 7), RTC_CR8);
 			swiDelay(RTC_DELAY);
 
 			command[i] = command[i] << 1;
@@ -47,18 +48,18 @@ static void rtcTransaction(u8 * command, u32 commandLen, u8 * result,
 	for (i = 0; i < resultLen; i++) {
 		result[i] = 0;
 		for (bit = 0; bit < 8; bit++) {
-			RTC_CR8 = CS_1 | SCK_0;
+			writeb(CS_1 | SCK_0, RTC_CR8);
 			swiDelay(RTC_DELAY);
 
-			RTC_CR8 = CS_1 | SCK_1;
+			writeb(CS_1 | SCK_1, RTC_CR8);
 			swiDelay(RTC_DELAY);
 
-			if (RTC_CR8 & SIO_in)
+			if (readb(RTC_CR8) & SIO_in)
 				result[i] |= (1 << bit);
 		}
 	}
 
-	RTC_CR8 = CS_0 | SCK_1;
+	writeb(CS_0 | SCK_1, RTC_CR8);
 	swiDelay(RTC_DELAY);
 }
 
