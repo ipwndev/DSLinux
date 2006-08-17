@@ -830,6 +830,7 @@ dep_bool 'qspitest'                 CONFIG_USER_QSPITEST_TEST	$CONFIG_MCF_QSPI
 dep_bool 'qspirx'                   CONFIG_USER_QSPITEST_RX	$CONFIG_MCF_QSPI
 
 comment 'Editors'
+bool 'nano'			CONFIG_USER_NANO
 bool 'vi (leevee)'		CONFIG_USER_LEVEE_VI
 bool 'vi (elvis-tiny)'		CONFIG_USER_ELVISTINY_VI
 

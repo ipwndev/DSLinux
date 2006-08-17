@@ -362,6 +362,9 @@ CONFIG_USER_QSPITEST_TEST
   two-channel ADC) on the qspi bus of a Motorola Coldfire 5272 to
   determine whether data is being correctly received on the qspi bus.
 
+CONFIG_USER_NANO
+  A small user-friendly editor for people who can't stand vi.
+
 CONFIG_USER_LEVEE_VI
   A small version of 'vi' for editing files.
 
