@@ -17,6 +17,8 @@
  * Note that 'tst' and 'teq' preserve the carry flag.
  */
 
+#include <linux/config.h>
+
 src	.req	r0
 dst	.req	r1
 len	.req	r2
@@ -37,16 +39,31 @@ sum	.req	r3
 		load1b	ip
 		sub	len, len, #1
 		adcs	sum, sum, ip, put_byte_1	@ update checksum
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	ip, ip, [dst]
+		add	dst, dst, #1
+#else
 		strb	ip, [dst], #1
+#endif
 		tst	dst, #2
 		moveq	pc, lr			@ dst is now 32bit aligned
 
 .dst_16bit:	load2b	r8, ip
 		sub	len, len, #2
 		adcs	sum, sum, r8, put_byte_0
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r8, r8, [dst]
+		add	dst, dst, #1
+#else
 		strb	r8, [dst], #1
+#endif
 		adcs	sum, sum, ip, put_byte_1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	ip, ip, [dst]
+		add	dst, dst, #1
+#else
 		strb	ip, [dst], #1
+#endif
 		mov	pc, lr			@ dst is now 32bit aligned
 
 		/*
@@ -64,16 +81,31 @@ sum	.req	r3
 		load1b	ip
 		sub	len, len, #1
 		adcs	sum, sum, ip, put_byte_1	@ update checksum
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	ip, ip, [dst]
+		add	dst, dst, #1
+#else
 		strb	ip, [dst], #1
+#endif
 		tst	len, #6
 		beq	.less8_byteonly
 
 1:		load2b	r8, ip
 		sub	len, len, #2
 		adcs	sum, sum, r8, put_byte_0
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r8, r8, [dst]
+		sdd	dst, dst, #1
+#else
 		strb	r8, [dst], #1
+#endif
 		adcs	sum, sum, ip, put_byte_1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	ip, ip, [dst]
+		add	dst, dst, #1
+#else
 		strb	ip, [dst], #1
+#endif
 .less8_aligned:	tst	len, #6
 		bne	1b
 .less8_byteonly:
@@ -81,7 +113,12 @@ sum	.req	r3
 		beq	.done
 		load1b	r8
 		adcs	sum, sum, r8, put_byte_0	@ update checksum
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r8, r8, [dst]
+		sdd	dst, dst, #1
+#else
 		strb	r8, [dst], #1
+#endif
 		b	.done
 
 FN_ENTRY
@@ -142,12 +179,27 @@ FN_ENTRY
 		mov	r5, r4, get_byte_0
 		beq	.exit
 		adcs	sum, sum, r4, push #16
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r5, r5, [dst]
+		add	dst, dst, #1
+#else
 		strb	r5, [dst], #1
+#endif
 		mov	r5, r4, get_byte_1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r5, r5, [dst]
+		add	dst, dst, #1
+#else
 		strb	r5, [dst], #1
+#endif
 		mov	r5, r4, get_byte_2
 .exit:		tst	len, #1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpneb	r0, r5, [dst]
+		addne	dst, dst, #1
+#else
 		strneb	r5, [dst], #1
+#endif
 		andne	r5, r5, #255
 		adcnes	sum, sum, r5, put_byte_0
 
@@ -216,9 +268,19 @@ FN_ENTRY
 		tst	len, #2
 		beq	.exit
 		adcs	sum, sum, r4, push #16
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r5, r5, [dst]
+		add	dst, dst, #1
+#else
 		strb	r5, [dst], #1
+#endif
 		mov	r5, r4, get_byte_1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r5, r5, [dst]
+		add	dst, dst, #1
+#else
 		strb	r5, [dst], #1
+#endif
 		mov	r5, r4, get_byte_2
 		b	.exit
 
@@ -268,9 +330,19 @@ FN_ENTRY
 		tst	len, #2
 		beq	.exit
 		adcs	sum, sum, r4
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r5, r5, [dst]
+		add	dst, dst, #1
+#else
 		strb	r5, [dst], #1
+#endif
 		mov	r5, r4, get_byte_1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r5, r5, [dst]
+		add	dst, dst, #1
+#else
 		strb	r5, [dst], #1
+#endif
 		tst	len, #1
 		beq	.done
 		load1b	r5
@@ -321,11 +393,21 @@ FN_ENTRY
 		mov	r5, r4, get_byte_0
 		tst	len, #2
 		beq	.exit
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r5, r5, [dst]
+		add	dst, dst, #1
+#else
 		strb	r5, [dst], #1
+#endif
 		adcs	sum, sum, r4
 		load1l	r4
 		mov	r5, r4, get_byte_0
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r5, r5, [dst]
+		add	dst, dst, #1
+#else
 		strb	r5, [dst], #1
+#endif
 		adcs	sum, sum, r4, push #24
 		mov	r5, r4, get_byte_1
 		b	.exit
