@@ -9,6 +9,7 @@
  *
  *  ASM optimised string functions
  */
+#include <linux/config.h>
 #include <linux/linkage.h>
 #include <asm/assembler.h>
 
@@ -19,10 +20,20 @@
 1:	subs	r2, r2, #4		@ 1 do we have enough
 	blt	5f			@ 1 bytes to align with?
 	cmp	r3, #2			@ 1
+#ifdef CONFIG_NDS_ROM8BIT
+	add	r2, r2, r3		@ 1 (r2 = r2 - (4 - r3))
+	swpltb	r3, r1, [r0]
+	addlt	r0, r0, #1
+	swpleb	r3, r1, [r0]
+	addle	r0, r0, #1
+	swpb	r3, r1, [r0]
+	add	r0, r0, #1
+#else
 	strltb	r1, [r0], #1		@ 1
 	strleb	r1, [r0], #1		@ 1
 	strb	r1, [r0], #1		@ 1
 	add	r2, r2, r3		@ 1 (r2 = r2 - (4 - r3))
+#endif
 /*
  * The pointer is now aligned and the length is adjusted.  Try doing the
  * memzero again.
@@ -73,8 +84,20 @@ ENTRY(memset)
  * may have an unaligned pointer as well.
  */
 5:	tst	r2, #2
+#ifdef CONFIG_NDS_ROM8BIT
+	swpneb	r3, r1, [r0]
+	addne	r0, r0, #1
+	swpneb	r3, r1, [r0]
+	addne	r0, r0, #1
+#else
 	strneb	r1, [r0], #1
 	strneb	r1, [r0], #1
+#endif
 	tst	r2, #1
+#ifdef CONFIG_NDS_ROM8BIT
+	swpneb	r3, r1, [r0]
+	addne	r0, r0, #1
+#else
 	strneb	r1, [r0], #1
+#endif
 	RETINSTR(mov,pc,lr)
