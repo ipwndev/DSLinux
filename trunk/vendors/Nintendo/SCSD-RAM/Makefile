@@ -127,6 +127,6 @@ image:
                         -j .init -j .text \
                         $(ROOTDIR)/$(LINUXDIR)/linux $(IMAGEDIR)/linux.text && \
 		cat $(IMAGEDIR)/linux.text $(IMAGEDIR)/linux.data $(ROMFSIMG) > $(IMAGE) && \
-		( cd $(IMAGEDIR); tar -cvzf dslinux-$(FATFS)sd.tgz linux dslinux.ds.nds ) ; \
+		( cd $(IMAGEDIR); tar -cvzf dslinux-$(FATFS)sd-ram.tgz linux dslinux.ds.nds ) ; \
 	fi
 
