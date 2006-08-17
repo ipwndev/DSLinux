@@ -7,6 +7,7 @@
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
  */
+#include <linux/config.h>
 #include <linux/linkage.h>
 #include <asm/assembler.h>
 #include <asm/errno.h>
@@ -26,8 +27,14 @@ ENTRY(__arch_strncpy_from_user)
 1:	subs	r2, r2, #1
 USER(	ldrplbt	r3, [r1], #1)
 	bmi	2f
+#ifdef CONFIG_NDS_ROM8BIT
+	teq	r3, #0
+	swpb	r3, r3, [r0]
+	add	r0, r0, #1
+#else
 	strb	r3, [r0], #1
 	teq	r3, #0
+#endif
 	bne	1b
 	sub	r1, r1, #1	@ take NUL character out of count
 2:	sub	r0, r1, ip
