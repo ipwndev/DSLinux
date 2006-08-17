@@ -115,7 +115,7 @@ sum	.req	r3
 		adcs	sum, sum, r8, put_byte_0	@ update checksum
 #ifdef CONFIG_NDS_ROM8BIT
 		swpb	r8, r8, [dst]
-		sdd	dst, dst, #1
+		add	dst, dst, #1
 #else
 		strb	r8, [dst], #1
 #endif
