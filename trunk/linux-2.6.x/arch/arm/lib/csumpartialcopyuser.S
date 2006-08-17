@@ -10,6 +10,7 @@
  * 27/03/03 Ian Molton Clean up CONFIG_CPU
  *
  */
+#include <linux/config.h>
 #include <linux/linkage.h>
 #include <asm/assembler.h>
 #include <asm/errno.h>
@@ -98,7 +99,13 @@
 		add	r2, r2, r1
 		mov	r0, #0			@ zero the buffer
 6002:		teq	r2, r1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpneb	r0, r0, [r1]
+		addne	r1, r1, #1
+		movne	r0, #0
+#else
 		strneb	r0, [r1], #1
+#endif
 		bne	6002b
 		load_regs	ea
 		.previous

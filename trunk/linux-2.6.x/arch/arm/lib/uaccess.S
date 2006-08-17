@@ -11,6 +11,7 @@
  *   These are highly optimised both for the 4k page size
  *   and for various alignments.
  */
+#include <linux/config.h>
 #include <linux/linkage.h>
 #include <asm/assembler.h>
 #include <asm/errno.h>
@@ -31,11 +32,26 @@
 		rsb	ip, ip, #4
 		cmp	ip, #2
 		ldrb	r3, [r1], #1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r3, r3, [r0]
+		add	r0, r0, #1
+#else
 USER(		strbt	r3, [r0], #1)			@ May fault
+#endif
 		ldrgeb	r3, [r1], #1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgeb	r3, r3, [r0]
+		addge	r0, r0, #1
+#else
 USER(		strgebt	r3, [r0], #1)			@ May fault
+#endif
 		ldrgtb	r3, [r1], #1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgtb	r3, r3, [r0]
+		addgt	r0, r0, #1
+#else
 USER(		strgtbt	r3, [r0], #1)			@ May fault
+#endif
 		sub	r2, r2, ip
 		b	.c2u_dest_aligned
 
@@ -108,11 +124,26 @@ USER(		strt	r3, [r0], #4)			@ May fault
 		beq	.c2u_finished
 .c2u_nowords:	cmp	ip, #2
 		ldrb	r3, [r1], #1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r3, r3, [r0]
+		add	r0, r0, #1
+#else
 USER(		strbt	r3, [r0], #1)			@ May fault
+#endif
 		ldrgeb	r3, [r1], #1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgeb	r3, r3, [r0]
+		addge	r0, r0, #1
+#else
 USER(		strgebt	r3, [r0], #1)			@ May fault
+#endif
 		ldrgtb	r3, [r1], #1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgtb	r3, r3, [r0]
+		addgt	r0, r0, #1
+#else
 USER(		strgtbt	r3, [r0], #1)			@ May fault
+#endif
 		b	.c2u_finished
 
 .c2u_not_enough:
@@ -187,11 +218,26 @@ USER(		strt	r3, [r0], #4)			@ May fault
 		teq	ip, #0
 		beq	.c2u_finished
 		cmp	ip, #2
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r3, r3, [r0]
+		add	r0, r0, #1
+#else
 USER(		strbt	r3, [r0], #1)			@ May fault
+#endif
 		movge	r3, r7, get_byte_2
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgeb	r3, r3, [r0]
+		addge	r0, r0, #1
+#else
 USER(		strgebt	r3, [r0], #1)			@ May fault
+#endif
 		movgt	r3, r7, get_byte_3
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgtb	r3, r3, [r0]
+		addgt	r0, r0, #1
+#else
 USER(		strgtbt	r3, [r0], #1)			@ May fault
+#endif
 		b	.c2u_finished
 
 .c2u_2fupi:	subs	r2, r2, #4
@@ -254,11 +300,26 @@ USER(		strt	r3, [r0], #4)			@ May fault
 		teq	ip, #0
 		beq	.c2u_finished
 		cmp	ip, #2
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r3, r3, [r0]
+		add	r0, r0, #1
+#else
 USER(		strbt	r3, [r0], #1)			@ May fault
+#endif
 		movge	r3, r7, get_byte_3
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgeb	r3, r3, [r0]
+		addge	r0, r0, #1
+#else
 USER(		strgebt	r3, [r0], #1)			@ May fault
+#endif
 		ldrgtb	r3, [r1], #0
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgtb	r3, r3, [r0]
+		addgt	r0, r0, #1
+#else
 USER(		strgtbt	r3, [r0], #1)			@ May fault
+#endif
 		b	.c2u_finished
 
 .c2u_3fupi:	subs	r2, r2, #4
@@ -321,11 +382,26 @@ USER(		strt	r3, [r0], #4)			@ May fault
 		teq	ip, #0
 		beq	.c2u_finished
 		cmp	ip, #2
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r3, r3, [r0]
+		add	r0, r0, #1
+#else
 USER(		strbt	r3, [r0], #1)			@ May fault
+#endif
 		ldrgeb	r3, [r1], #1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgeb	r3, r3, [r0]
+		addge	r0, r0, #1
+#else
 USER(		strgebt	r3, [r0], #1)			@ May fault
+#endif
 		ldrgtb	r3, [r1], #0
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgtb	r3, r3, [r0]
+		addgt	r0, r0, #1
+#else
 USER(		strgtbt	r3, [r0], #1)			@ May fault
+#endif
 		b	.c2u_finished
 
 		.section .fixup,"ax"
@@ -344,11 +420,26 @@ USER(		strgtbt	r3, [r0], #1)			@ May fault
 		rsb	ip, ip, #4
 		cmp	ip, #2
 USER(		ldrbt	r3, [r1], #1)			@ May fault
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r3, r3, [r0]
+		add	r0, r0, #1
+#else
 		strb	r3, [r0], #1
+#endif
 USER(		ldrgebt	r3, [r1], #1)			@ May fault
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgeb	r3, r3, [r0]
+		addge	r0, r0, #1
+#else
 		strgeb	r3, [r0], #1
+#endif
 USER(		ldrgtbt	r3, [r1], #1)			@ May fault
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgtb	r3, r3, [r0]
+		addgt	r0, r0, #1
+#else
 		strgtb	r3, [r0], #1
+#endif
 		sub	r2, r2, ip
 		b	.cfu_dest_aligned
 
@@ -420,11 +511,26 @@ USER(		ldrt	r3, [r1], #4)
 		beq	.cfu_finished
 .cfu_nowords:	cmp	ip, #2
 USER(		ldrbt	r3, [r1], #1)			@ May fault
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r3, r3, [r0]
+		add	r0, r0, #1
+#else
 		strb	r3, [r0], #1
+#endif
 USER(		ldrgebt	r3, [r1], #1)			@ May fault
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgeb	r3, r3, [r0]
+		addge	r0, r0, #1
+#else
 		strgeb	r3, [r0], #1
+#endif
 USER(		ldrgtbt	r3, [r1], #1)			@ May fault
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgtb	r3, r3, [r0]
+		addgt	r0, r0, #1
+#else
 		strgtb	r3, [r0], #1
+#endif
 		b	.cfu_finished
 
 .cfu_not_enough:
@@ -500,11 +606,26 @@ USER(		ldrnet	r7, [r1], #4)			@ May fault
 		teq	ip, #0
 		beq	.cfu_finished
 		cmp	ip, #2
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r3, r3, [r0]
+		add	r0, r0, #1
+#else
 		strb	r3, [r0], #1
+#endif
 		movge	r3, r7, get_byte_2
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgeb	r3, r3, [r0]
+		addge	r0, r0, #1
+#else
 		strgeb	r3, [r0], #1
+#endif
 		movgt	r3, r7, get_byte_3
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgtb	r3, r3, [r0]
+		addgt	r0, r0, #1
+#else
 		strgtb	r3, [r0], #1
+#endif
 		b	.cfu_finished
 
 .cfu_2fupi:	subs	r2, r2, #4
@@ -567,11 +688,26 @@ USER(		ldrnet	r7, [r1], #4)			@ May fault
 		teq	ip, #0
 		beq	.cfu_finished
 		cmp	ip, #2
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r3, r3, [r0]
+		add	r0, r0, #1
+#else
 		strb	r3, [r0], #1
+#endif
 		movge	r3, r7, get_byte_3
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgeb	r3, r3, [r0]
+		addge	r0, r0, #1
+#else
 		strgeb	r3, [r0], #1
+#endif
 USER(		ldrgtbt	r3, [r1], #0)			@ May fault
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgtb	r3, r3, [r0]
+		addgt	r0, r0, #1
+#else
 		strgtb	r3, [r0], #1
+#endif
 		b	.cfu_finished
 
 .cfu_3fupi:	subs	r2, r2, #4
@@ -634,11 +770,26 @@ USER(		ldrnet	r7, [r1], #4)			@ May fault
 		teq	ip, #0
 		beq	.cfu_finished
 		cmp	ip, #2
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r3, r3, [r0]
+		add	r0, r0, #1
+#else
 		strb	r3, [r0], #1
+#endif
 USER(		ldrgebt	r3, [r1], #1)			@ May fault
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgeb	r3, r3, [r0]
+		addge	r0, r0, #1
+#else
 		strgeb	r3, [r0], #1
+#endif
 USER(		ldrgtbt	r3, [r1], #1)			@ May fault
+#ifdef CONFIG_NDS_ROM8BIT
+		swpgtb	r3, r3, [r0]
+		addgt	r0, r0, #1
+#else
 		strgtb	r3, [r0], #1
+#endif
 		b	.cfu_finished
 
 		.section .fixup,"ax"
@@ -671,9 +822,21 @@ ENTRY(__arch_clear_user)
 		ands	ip, r0, #3
 		beq	1f
 		cmp	ip, #2
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r2, r2, [r0]
+		add	r0, r0, #1
+		mov	r2, #0
+		swpleb	r2, r2, [r0]
+		addle	r0, r0, #1
+		movle	r2, #0
+		swpltb	r2, r2, [r0]
+		addlt	r0, r0, #1
+		movlt	r2, #0
+#else
 USER(		strbt	r2, [r0], #1)
 USER(		strlebt	r2, [r0], #1)
 USER(		strltbt	r2, [r0], #1)
+#endif
 		rsb	ip, ip, #4
 		sub	r1, r1, ip		@  7  6  5  4  3  2  1
 1:		subs	r1, r1, #8		@ -1 -2 -3 -4 -5 -6 -7
@@ -683,10 +846,25 @@ USER(		strplt	r2, [r0], #4)
 		adds	r1, r1, #4		@  3  2  1  0 -1 -2 -3
 USER(		strplt	r2, [r0], #4)
 2:		tst	r1, #2			@ 1x 1x 0x 0x 1x 1x 0x
+#ifdef CONFIG_NDS_ROM8BIT
+		swpneb	r2, r2, [r0]
+		addne	r0, r0, #1
+		movne	r2, #0
+		swpneb	r2, r2, [r0]
+		addne	r0, r0, #1
+		movne	r2, #0
+#else
 USER(		strnebt	r2, [r0], #1)
 USER(		strnebt	r2, [r0], #1)
+#endif
 		tst	r1, #1			@ x1 x0 x1 x0 x1 x0 x1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpneb	r2, r2, [r0]
+		addne	r0, r0, #1
+		movne	r2, #0
+#else
 USER(		strnebt	r2, [r0], #1)
+#endif
 		mov	r0, #0
 		LOADREGS(fd,sp!, {r1, pc})
 
