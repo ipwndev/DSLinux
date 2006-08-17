@@ -9,6 +9,7 @@
  *
  *  ASM optimised string functions
  */
+#include <linux/config.h>
 #include <linux/linkage.h>
 #include <asm/assembler.h>
 
@@ -86,9 +87,18 @@ ENTRY(memmove)
 		ldrb	r3, [r1], #1
 		ldrgeb	r4, [r1], #1
 		ldrgtb	r5, [r1], #1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r3, r3, [r0]
+		add	r0, r0, #1
+		swpgeb	r4, r4, [r0]
+		addge	r0, r0, #1
+		swpgtb	r5, r5, [r0]
+		addgt	r0, r0, #1
+#else
 		strb	r3, [r0], #1
 		strgeb	r4, [r0], #1
 		strgtb	r5, [r0], #1
+#endif
 		EXIT
 
 7:		rsb	ip, ip, #4
@@ -96,9 +106,18 @@ ENTRY(memmove)
 		ldrb	r3, [r1], #1
 		ldrgeb	r4, [r1], #1
 		ldrgtb	r5, [r1], #1
+#ifdef CONFIG_NDS_ROM8BIT
+		swpb	r3, r3, [r0]
+		add	r0, r0, #1
+		swpgeb	r4, r4, [r0]
+		addge	r0, r0, #1
+		swpgtb	r5, r5, [r0]
+		addgt	r0, r0, #1
+#else
 		strb	r3, [r0], #1
 		strgeb	r4, [r0], #1
 		strgtb	r5, [r0], #1
+#endif
 		subs	r2, r2, ip
 		blt	6b
 		ands	ip, r1, #3
@@ -267,18 +286,36 @@ ENTRY(memmove)
 		ldrb	r3, [r1, #-1]!
 		ldrgeb	r4, [r1, #-1]!
 		ldrgtb	r5, [r1, #-1]!
+#ifdef CONFIG_NDS_ROM8BIT
+		sub	r0, r0, #1
+		swpb	r3, r3, [r0]
+		subge	r0, r0, #1
+		swpgeb	r4, r4, [r0]
+		subgt	r0, r0, #1
+		swpgtb	r5, r5, [r0]
+#else
 		strb	r3, [r0, #-1]!
 		strgeb	r4, [r0, #-1]!
 		strgtb	r5, [r0, #-1]!
+#endif
 		EXIT
 
 30:		cmp	ip, #2
 		ldrb	r3, [r1, #-1]!
 		ldrgeb	r4, [r1, #-1]!
 		ldrgtb	r5, [r1, #-1]!
+#ifdef CONFIG_NDS_ROM8BIT
+		sub	r0, r0, #1
+		swpb	r3, r3, [r0]
+		subge	r0, r0, #1
+		swpgeb	r4, r4, [r0]
+		subgt	r0, r0, #1
+		swpgtb	r5, r5, [r0]
+#else
 		strb	r3, [r0, #-1]!
 		strgeb	r4, [r0, #-1]!
 		strgtb	r5, [r0, #-1]!
+#endif
 		subs	r2, r2, ip
 		blt	29b
 		ands	ip, r1, #3
