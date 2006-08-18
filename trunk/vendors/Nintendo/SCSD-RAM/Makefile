@@ -14,9 +14,9 @@ endif
 FATFS	 = supercard
 
 
-ROMFS_DIRS = bin dev etc lib proc sbin $(FATFS)/linux
+ROMFS_DIRS = dev etc proc sbin $(FATFS)/linux
 
-FS_DIRS = home usr/lib usr/bin usr/share/udhcpc var/tmp var/run etc etc/rc.d
+FS_DIRS = home lib usr/bin usr/share/udhcpc var/tmp var/run etc etc/rc.d
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
@@ -72,7 +72,9 @@ romfs:
 		[ -d $(ROMFSDIR)/$(FATFS)/linux/$$i ] || mkdir -p $(ROMFSDIR)/$(FATFS)/linux/$$i; \
 	done
 	$(ROMFSINST) -s $(FATFS)/linux/var /var
+	$(ROMFSINST) -s $(FATFS)/linux/lib /lib
 	$(ROMFSINST) -s $(FATFS)/linux/usr /usr
+	$(ROMFSINST) -s $(FATFS)/linux/usr/bin /bin
 	$(ROMFSINST) -s $(FATFS)/linux/home /home
 	$(ROMFSINST) -s /var/tmp /tmp
 	$(ROMFSINST) -s /usr/share/udhcpc/resolv.conf /etc/resolv.conf
@@ -98,6 +100,19 @@ romfs:
 image:
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
 	[ -d $(IMAGEDIR)/linux ] || mkdir -p $(IMAGEDIR)/linux
+	$(CROSS_COMPILE)flthdr -z $(ROMFSDIR)/bin/*
+	rm -r $(ROMFSDIR)/bin
+	mkdir $(ROMFSDIR)/bin
+	-for i in `sort $(ROOTDIR)/user/busybox/busybox.links` ; do\
+		j=`basename $$i` ; \
+		mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/$$j $(ROMFSDIR)/bin ; \
+	done
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/busybox $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/mount $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/sh $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/login $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/init $(ROMFSDIR)/bin
+	$(CROSS_COMPILE)flthdr -Z $(ROMFSDIR)/bin/*
 	-rm -r $(IMAGEDIR)/linux
 	mv $(ROMFSDIR)/$(FATFS)/linux $(IMAGEDIR)
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
