@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
-# Fri Aug 18 14:54:57 2006
+# Fri Aug 18 21:40:33 2006
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
@@ -109,7 +109,6 @@ CONFIG_CPU_ARM946E=y
 CONFIG_CPU_32v5=y
 CONFIG_CPU_ABRT_EV5T=y
 CONFIG_CPU_CACHE_V4WB=y
-CONFIG_CPU_ARM946_CPU_IDLE=y
 
 #
 # Processor Features
@@ -117,11 +116,12 @@ CONFIG_CPU_ARM946_CPU_IDLE=y
 # CONFIG_ARM_THUMB is not set
 CONFIG_CPU_MXU_ENABLE=y
 CONFIG_TLS_REG_EMUL=y
+CONFIG_CPU_ARM946_CPU_IDLE=y
 
 #
 # Bus support
 #
-# CONFIG_ISA_DMA_API is not set
+CONFIG_ISA_DMA_API=y
 
 #
 # PCCARD (PCMCIA/CardBus) support
@@ -646,7 +646,7 @@ CONFIG_SND_NDS=y
 #
 # USB support
 #
-# CONFIG_USB_ARCH_HAS_HCD is not set
+CONFIG_USB_ARCH_HAS_HCD=y
 # CONFIG_USB_ARCH_HAS_OHCI is not set
 # CONFIG_USB is not set
 
