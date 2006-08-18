@@ -202,6 +202,40 @@ union offset_union {
 #define get32t_unaligned_check(val,addr) \
 	__get32_unaligned_check("ldrbt",val,addr)
 
+#ifdef CONFIG_NDS_ROM8BIT
+#define __put16_unaligned_check(ins,val,addr)			\
+	do {							\
+		unsigned int err, v = val, a = addr;		\
+		__asm__( FIRST_BYTE_16				\
+		"1:	"ins"	%0, %1, [%2]\n"			\
+		"       add	%2, %2, #1\n"                   \
+		"	mov	%1, %1, "NEXT_BYTE"\n"		\
+		"2:	"ins"	%0, %1, [%2]\n"			\
+		"	mov	%0, #0\n"			\
+		"3:\n"						\
+		"	.section .fixup,\"ax\"\n"		\
+		"	.align	2\n"				\
+		"4:	mov	%0, #1\n"			\
+		"	b	3b\n"				\
+		"	.previous\n"				\
+		"	.section __ex_table,\"a\"\n"		\
+		"	.align	3\n"				\
+		"	.long	1b, 4b\n"			\
+		"	.long	2b, 4b\n"			\
+		"	.previous\n"				\
+		: "=r" (err), "=&r" (v), "=&r" (a)		\
+		: "0" (err), "1" (v), "2" (a));			\
+		if (err)					\
+			goto fault;				\
+	} while (0)
+
+#define put16_unaligned_check(val,addr)  \
+	__put16_unaligned_check("swpb",val,addr)
+
+#define put16t_unaligned_check(val,addr) \
+	__put16_unaligned_check("swpb",val,addr)
+
+#else
 #define __put16_unaligned_check(ins,val,addr)			\
 	do {							\
 		unsigned int err = 0, v = val, a = addr;	\
@@ -231,7 +265,49 @@ union offset_union {
 
 #define put16t_unaligned_check(val,addr) \
 	__put16_unaligned_check("strbt",val,addr)
+#endif
 
+#ifdef CONFIG_NDS_ROM8BIT
+#define __put32_unaligned_check(ins,val,addr)			\
+	do {							\
+		unsigned int err, v = val, a = addr;		\
+		__asm__( FIRST_BYTE_32				\
+		"1:	"ins"	%0, %1, [%2]\n"			\
+		"       add	%2, %2, #1\n"                   \
+		"	mov	%1, %1, "NEXT_BYTE"\n"		\
+		"2:	"ins"	%0, %1, [%2]\n"			\
+		"       add	%2, %2, #1\n"                   \
+		"	mov	%1, %1, "NEXT_BYTE"\n"		\
+		"3:	"ins"	%0, %1, [%2]\n"			\
+		"       add	%2, %2, #1\n"                   \
+		"	mov	%1, %1, "NEXT_BYTE"\n"		\
+		"4:	"ins"	%0, %1, [%2]\n"			\
+		"	mov	%0, #0\n"			\
+		"5:\n"						\
+		"	.section .fixup,\"ax\"\n"		\
+		"	.align	2\n"				\
+		"6:	mov	%0, #1\n"			\
+		"	b	5b\n"				\
+		"	.previous\n"				\
+		"	.section __ex_table,\"a\"\n"		\
+		"	.align	3\n"				\
+		"	.long	1b, 6b\n"			\
+		"	.long	2b, 6b\n"			\
+		"	.long	3b, 6b\n"			\
+		"	.long	4b, 6b\n"			\
+		"	.previous\n"				\
+		: "=r" (err), "=&r" (v), "=&r" (a)		\
+		: "0" (err), "1" (v), "2" (a));			\
+		if (err)					\
+			goto fault;				\
+	} while (0)
+
+#define put32_unaligned_check(val,addr) \
+	__put32_unaligned_check("swpb", val, addr)
+
+#define put32t_unaligned_check(val,addr) \
+ 	__put32_unaligned_check("swpb", val, addr)
+#else
 #define __put32_unaligned_check(ins,val,addr)			\
 	do {							\
 		unsigned int err = 0, v = val, a = addr;	\
@@ -267,6 +343,7 @@ union offset_union {
 
 #define put32t_unaligned_check(val,addr) \
 	__put32_unaligned_check("strbt", val, addr)
+#endif
 
 static void
 do_alignment_finish_ldst(unsigned long addr, unsigned long instr, struct pt_regs *regs, union offset_union offset)
