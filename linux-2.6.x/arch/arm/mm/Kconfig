@@ -520,4 +520,7 @@ config NEEDS_SYSCALL_FOR_CMPXCHG
 	  It is just not possible.
 
 config CPU_ARM946_CPU_IDLE
-	bool
+	bool "ARM946 CPU Idling"
+	help
+	  Say Y here to enable cpu idle on the ARM946
+
