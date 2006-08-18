@@ -121,7 +121,7 @@ CONFIG_TLS_REG_EMUL=y
 #
 # Bus support
 #
-CONFIG_ISA_DMA_API=y
+# CONFIG_ISA_DMA_API is not set
 
 #
 # PCCARD (PCMCIA/CardBus) support
@@ -646,7 +646,7 @@ CONFIG_SND_NDS=y
 #
 # USB support
 #
-CONFIG_USB_ARCH_HAS_HCD=y
+# CONFIG_USB_ARCH_HAS_HCD is not set
 # CONFIG_USB_ARCH_HAS_OHCI is not set
 # CONFIG_USB is not set
 
