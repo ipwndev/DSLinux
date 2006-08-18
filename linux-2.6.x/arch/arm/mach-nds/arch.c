@@ -55,7 +55,7 @@ static void poweroff(void)
 	nds_fifo_send(FIFO_POWER);
 }
 
-extern void nds_machine_init(void)
+static void nds_machine_init(void)
 {
 	POWER_CR = POWER_2D | POWER_2D_SUB | POWER_LCD_TOP | POWER_LCD_BOTTOM | POWER_SWAP_LCDS ;
 
@@ -71,11 +71,28 @@ extern void nds_machine_init(void)
 	pm_power_off = poweroff;
 }
 
+static void __init
+fixup_nds(struct machine_desc *desc, struct tag *tags,
+	      char **cmdline, struct meminfo *mi)
+{
+	mi->bank[0].start = CONFIG_DRAM_BASE;
+	mi->bank[0].size  = CONFIG_DRAM_SIZE;
+	mi->bank[0].node  = 0;
+	mi->nr_banks = 1;
+#ifdef CONFIG_NDS_ROM8BIT
+	mi->bank[1].start = CONFIG_FLASH_MEM_BASE;
+	mi->bank[1].size  = CONFIG_FLASH_SIZE;
+	mi->bank[1].node  = 1;
+	mi->nr_banks = 2;
+#endif
+}
+
 MACHINE_START(NDS, "Nintendo DS")
 	/* Maintainer: Malcolm Parsons <pepsiman@blueyonder.co.uk> */
-	.phys_ram	= 0x02000000,
+	.phys_ram	= CONFIG_DRAM_BASE,
 	.phys_io	= 0x04000000,
 	.init_irq	= nds_init_irq,
 	.timer		= &nds_timer,
 	.init_machine	= nds_machine_init,
+	.fixup		= fixup_nds,
 MACHINE_END
