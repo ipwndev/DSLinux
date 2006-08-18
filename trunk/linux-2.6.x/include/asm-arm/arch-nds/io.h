@@ -48,7 +48,7 @@
 #define __raw_writeb(value,address)			\
 ({							\
 	__asm__ __volatile__(                           \
-        "strb   %0, [%1]"                               \
+        "strb   %0, [%1] @ writeb"                      \
         : : "r" (value), "r" (address));                \
 })
 
