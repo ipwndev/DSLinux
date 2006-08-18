@@ -145,11 +145,26 @@ _memcpy:
 	/* copy the crud byte at a time */
 	cmp	r2, #2
 	ldrb	r3, [r1], #1
+#ifdef CONFIG_NDS_ROM8BIT
+	swpb	r3, r3, [r0]
+	add	r0, r0, #1
+#else
 	strb	r3, [r0], #1
+#endif
 	ldrgeb	r3, [r1], #1
+#ifdef CONFIG_NDS_ROM8BIT
+	swpgeb	r3, r3, [r0]
+	addge	r0, r0, #1
+#else
 	strgeb	r3, [r0], #1
+#endif
 	ldrgtb	r3, [r1], #1
+#ifdef CONFIG_NDS_ROM8BIT
+	swpgtb	r3, r3, [r0]
+	addgt	r0, r0, #1
+#else
 	strgtb	r3, [r0], #1
+#endif
 	ldmia	sp!, {r0, pc}
 
 	/* erg - unaligned destination */
@@ -159,11 +174,26 @@ _memcpy:
 
 	/* align destination with byte copies */
 	ldrb	r3, [r1], #1
+#ifdef CONFIG_NDS_ROM8BIT
+	swpb	r3, r3, [r0]
+	add	r0, r0, #1
+#else
 	strb	r3, [r0], #1
+#endif
 	ldrgeb	r3, [r1], #1
+#ifdef CONFIG_NDS_ROM8BIT
+	swpgeb	r3, r3, [r0]
+	addge	r0, r0, #1
+#else
 	strgeb	r3, [r0], #1
+#endif
 	ldrgtb	r3, [r1], #1
+#ifdef CONFIG_NDS_ROM8BIT
+	swpgtb	r3, r3, [r0]
+	addgt	r0, r0, #1
+#else
 	strgtb	r3, [r0], #1
+#endif
 	subs	r2, r2, r12
 	blt	.Lmemcpy_fl4		/* less the 4 bytes */
 
@@ -393,11 +423,26 @@ _memcpy:
 	/* copy the crud byte at a time */
 	cmp	r2, #2
 	ldrb	r3, [r1, #-1]!
+#ifdef CONFIG_NDS_ROM8BIT
+	sub	r0, r0, #1
+	swpb	r3, r3, [r0]
+#else
 	strb	r3, [r0, #-1]!
+#endif
 	ldrgeb	r3, [r1, #-1]!
+#ifdef CONFIG_NDS_ROM8BIT
+	subge	r0, r0, #1
+	swpgeb	r3, r3, [r0]
+#else
 	strgeb	r3, [r0, #-1]!
+#endif
 	ldrgtb	r3, [r1, #-1]!
+#ifdef CONFIG_NDS_ROM8BIT
+	subgt	r0, r0, #1
+	swpgtb	r3, r3, [r0]
+#else
 	strgtb	r3, [r0, #-1]!
+#endif
 	mov	pc, lr
 
 	/* erg - unaligned destination */
@@ -406,11 +451,26 @@ _memcpy:
 
 	/* align destination with byte copies */
 	ldrb	r3, [r1, #-1]!
+#ifdef CONFIG_NDS_ROM8BIT
+	sub	r0, r0, #1
+	swpb	r3, r3, [r0]
+#else
 	strb	r3, [r0, #-1]!
+#endif
 	ldrgeb	r3, [r1, #-1]!
+#ifdef CONFIG_NDS_ROM8BIT
+	subge	r0, r0, #1
+	swpgeb	r3, r3, [r0]
+#else
 	strgeb	r3, [r0, #-1]!
+#endif
 	ldrgtb	r3, [r1, #-1]!
+#ifdef CONFIG_NDS_ROM8BIT
+	subgt	r0, r0, #1
+	swpgtb	r3, r3, [r0]
+#else
 	strgtb	r3, [r0, #-1]!
+#endif
 	subs	r2, r2, r12
 	blt	.Lmemcpy_bl4		/* less than 4 bytes to go */
 	ands	r12, r1, #3

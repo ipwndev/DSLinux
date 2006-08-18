@@ -32,7 +32,12 @@ memset:
 	orr	a2, a2, a2, lsl $16
 1:
 	tst	a4, $3		@ aligned yet?
+#ifdef CONFIG_NDS_ROM8BIT
+	swpneb	ip, a2, [a4]
+	addne	a4, a4, #1
+#else 
 	strneb	a2, [a4], $1
+#endif
 	subne	a3, a3, $1
 	bne	1b
 	mov	ip, a2
@@ -56,6 +61,12 @@ memset:
 2:
 	movs	a3, a3		@ anything left?
 	moveq	pc, lr		@ nope
+#ifdef CONFIG_NDS_ROM8BIT
+3:	swpb	ip, a2, [a4]
+	add	a4, a4, #1
+	subs	a3, a3, #1
+	bne	3b
+#else
 	rsb	a3, a3, $7
 	add	pc, pc, a3, lsl $2
 	mov	r0, r0
@@ -66,6 +77,7 @@ memset:
 	strb	a2, [a4], $1
 	strb	a2, [a4], $1
 	strb	a2, [a4], $1
+#endif
 	mov	pc, lr
 
 .size memset,.-memset;
