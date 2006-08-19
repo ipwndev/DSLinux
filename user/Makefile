@@ -287,6 +287,7 @@ dir_$(CONFIG_USER_RP_PPPOE_PPPOE_SERVER)    += rp-pppoe
 dir_$(CONFIG_USER_RSYSLOGD_RSYSLOGD)        += rsyslogd
 dir_$(CONFIG_USER_RTC_M41T11)               += rtc-m41t11
 dir_$(CONFIG_USER_RTC_DS1302)               += rtc-ds1302
+dir_$(CONFIG_USER_RTEST)		    += rtest
 dir_$(CONFIG_USER_SAMBA_SMBD)               += samba
 dir_$(CONFIG_USER_SAMBA_NMBD)               += samba
 dir_$(CONFIG_USER_SAMBA_SMBMOUNT)           += samba
