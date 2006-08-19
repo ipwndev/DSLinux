@@ -79,11 +79,10 @@ fixup_nds(struct machine_desc *desc, struct tag *tags,
 	mi->bank[0].size  = CONFIG_DRAM_SIZE;
 	mi->bank[0].node  = 0;
 	mi->nr_banks = 1;
-#if 0
-//#ifdef CONFIG_NDS_ROM8BIT
+#if 0 //#ifdef CONFIG_NDS_ROM8BIT
 	mi->bank[1].start = CONFIG_FLASH_MEM_BASE;
 	mi->bank[1].size  = CONFIG_FLASH_SIZE;
-	mi->bank[1].node  = 1;
+	mi->bank[1].node  = 0;
 	mi->nr_banks = 2;
 #endif
 }
