@@ -522,7 +522,7 @@ config NO_IDLE_HZ
 
 config ARCH_DISCONTIGMEM_ENABLE
 	bool
-	default (ARCH_LH7A40X && !LH7A40X_CONTIGMEM)
+	default ((ARCH_LH7A40X && !LH7A40X_CONTIGMEM) || (ARCH_NDS && NDS_ROM8BIT))
 	help
 	  Say Y to support efficient handling of discontiguous physical memory,
 	  for architectures which are either NUMA (Non-Uniform Memory Access)
