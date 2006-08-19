@@ -112,6 +112,7 @@ image:
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/sh $(ROMFSDIR)/bin
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/login $(ROMFSDIR)/bin
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/init $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/agetty $(ROMFSDIR)/bin
 	$(CROSS_COMPILE)flthdr -Z $(ROMFSDIR)/bin/*
 	-rm -r $(IMAGEDIR)/linux
 	mv $(ROMFSDIR)/$(FATFS)/linux $(IMAGEDIR)
