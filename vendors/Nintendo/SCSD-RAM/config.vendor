@@ -413,6 +413,7 @@ CONFIG_USER_WIRELESS_TOOLS_IWLIST=y
 #
 # Editors
 #
+# CONFIG_USER_NANO is not set
 # CONFIG_USER_LEVEE_VI is not set
 # CONFIG_USER_ELVISTINY_VI is not set
 
