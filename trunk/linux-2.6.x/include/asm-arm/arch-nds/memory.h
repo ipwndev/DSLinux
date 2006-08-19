@@ -52,7 +52,7 @@
 #define PFN_TO_MAPBASE(pfn)	NODE_MEM_MAP(PFN_TO_NID(pfn))
 
 /*
- * Given a kaddr, LOCAL_MAR_NR finds the owning node of the memory
+ * Given a kaddr, LOCAL_MAP_NR finds the owning node of the memory
  * and returns the index corresponding to the appropriate page in the
  * node's mem_map.
  */
