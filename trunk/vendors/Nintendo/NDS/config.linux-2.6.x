@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
-# Tue Mar 14 21:51:10 2006
+# Sat Aug 19 21:53:41 2006
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
@@ -44,7 +44,9 @@ CONFIG_CC_ALIGN_FUNCTIONS=0
 CONFIG_CC_ALIGN_LABELS=0
 CONFIG_CC_ALIGN_LOOPS=0
 CONFIG_CC_ALIGN_JUMPS=0
+# CONFIG_SLAB is not set
 CONFIG_BASE_SMALL=1
+CONFIG_SLOB=y
 
 #
 # Loadable module support
@@ -107,7 +109,6 @@ CONFIG_CPU_ARM946E=y
 CONFIG_CPU_32v5=y
 CONFIG_CPU_ABRT_EV5T=y
 CONFIG_CPU_CACHE_V4WB=y
-CONFIG_CPU_ARM946_CPU_IDLE=y
 
 #
 # Processor Features
@@ -115,6 +116,7 @@ CONFIG_CPU_ARM946_CPU_IDLE=y
 # CONFIG_ARM_THUMB is not set
 CONFIG_CPU_MXU_ENABLE=y
 CONFIG_TLS_REG_EMUL=y
+CONFIG_CPU_ARM946_CPU_IDLE=y
 
 #
 # Bus support
@@ -141,8 +143,6 @@ CONFIG_FLATMEM=y
 CONFIG_FLAT_NODE_MEM_MAP=y
 # CONFIG_SPARSEMEM_STATIC is not set
 CONFIG_ALIGNMENT_TRAP=y
-# CONFIG_SLAB is not set
-CONFIG_SLOB=y
 
 #
 # Boot options
@@ -357,9 +357,6 @@ CONFIG_IOSCHED_NOOP=y
 # ATA/ATAPI/MFM/RLL support
 #
 # CONFIG_IDE is not set
-# CONFIG_IDE_NDS_GBAMP is not set
-# CONFIG_IDE_NDS_M3 is not set
-# CONFIG_IDE_NDS_SUPERCARD is not set
 
 #
 # SCSI device support
