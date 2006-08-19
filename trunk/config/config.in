@@ -1703,6 +1703,7 @@ bool 'build debugable libraries'	CONFIG_LIB_DEBUG
 bool 'build debugable applications'	CONFIG_USER_DEBUG
 comment "Debug tools"
 bool 'tpt'				CONFIG_USER_TIMEPEG_TPT
+bool 'rtest'				CONFIG_USER_RTEST
 comment "Debug libraries"
 bool 'ccmalloc'				CONFIG_LIB_LIBCCMALLOC
 
