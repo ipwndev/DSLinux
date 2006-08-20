@@ -103,11 +103,12 @@ fetch: $(DISTFILES)
 
 # Use these to start a build from the beginning.
 reset: dirs-reset binutils-reset uClibc-reset sysroot-reset gcc-stage1-reset \
-	gcc-stage2-reset elf2flt-reset libelf-reset ndstool-reset strip-reset
+	gcc-stage2-reset elf2flt-reset libelf-reset ndstool-reset strip-reset \
+	dist-reset
 
 # Use to save disc space.
 clean: binutils-clean uClibc-clean sysroot-clean gcc-clean elf2flt-clean \
-	libelf-clean ndstool-clean
+	libelf-clean ndstool-clean dist-clean
 
 # Nukes everything (including the installed toolchain itself!)
 # Use this to start ALL OVER AGAIN! Use with caution!
@@ -605,9 +606,12 @@ $(CWD)/.stripped:
 dist: $(CWD)/.stripped $(CWD)/.dist-made
 dist-reset:
 	rm -f $(CWD)/.dist-made
+dist-clean:
+	rm -rf $(DISTNAME)
+	rm -f $(DISTNAME).tbz $(DISTNAME).tbz.md5
 
 $(CWD)/.dist-made:
-	[ -d $(DISTNAME) ] && rm -rf $(DISTNAME)
+	-[ -d $(DISTNAME) ] && rm -rf $(DISTNAME)
 	mkdir $(DISTNAME)
 	cp -r $(PREFIX)/* $(DISTNAME)
 	tar -jcf $(DISTNAME).tbz $(DISTNAME)
