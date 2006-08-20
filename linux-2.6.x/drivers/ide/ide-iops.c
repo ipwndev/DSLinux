@@ -42,8 +42,8 @@ void supercard_unlock( void )
        NDS_IME = 0;
        *(volatile u16 *)0x09fffffe = 0xa55a ;
        *(volatile u16 *)0x09fffffe = 0xa55a ;
-       *(volatile u16 *)0x09fffffe = 0x3 ;
-       *(volatile u16 *)0x09fffffe = 0x3 ;
+       *(volatile u16 *)0x09fffffe = 0x7 ;
+       *(volatile u16 *)0x09fffffe = 0x7 ;
 }
 
 void supercard_lock()
