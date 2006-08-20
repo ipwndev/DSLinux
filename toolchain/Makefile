@@ -611,5 +611,6 @@ $(CWD)/.dist-made:
 	mkdir $(DISTNAME)
 	cp -r $(PREFIX)/* $(DISTNAME)
 	tar -jcf $(DISTNAME).tbz $(DISTNAME)
+	md5sum $(DISTNAME).tbz > $(DISTNAME).tbz.md5
 	touch $@
 
