@@ -50,8 +50,8 @@ void supercard_lock()
 {
        *(volatile u16 *)0x09fffffe = 0xa55a ;
        *(volatile u16 *)0x09fffffe = 0xa55a ;
-       *(volatile u16 *)0x09fffffe = 0x1 ;
-       *(volatile u16 *)0x09fffffe = 0x1 ;
+       *(volatile u16 *)0x09fffffe = 0x5 ;
+       *(volatile u16 *)0x09fffffe = 0x5 ;
        NDS_IME = 1;
 }
 
