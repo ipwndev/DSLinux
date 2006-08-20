@@ -247,8 +247,8 @@ _entry:
 	@ Region 7 - GBA SLOT ROM for Program+Data, overriding Region 6
 	@-------------------------------------------------------------------------
 	ldr	r0,=( PAGE_32M | 0x08000000 | 1)
-#ifdef CONFIG_MMC_SCSD
-	@ Supercard SD uses upper 16M for SD card I/O
+#if defined(CONFIG_MMC_SCSD) || defined (CONFIG_IDE_NDS_SUPERCARD)
+	@ Supercard uses upper 16M for card I/O
 	ldr	r0,=( PAGE_16M | 0x08000000 | 1)
 #endif
 	mcr	p15, 0, r0, c6, c7, 0
@@ -348,6 +348,9 @@ _copydata:
 	strcc	r4, [r5],#4
 	bcc	1b
 
+	/* Enable RAM on RAM-based cards */
+	bl	unlock_ram
+
 	/*  Pretend we know what our processor code is (for arm_id)   */
 
 	ldr	r2, =0x41009460
@@ -357,6 +360,24 @@ _copydata:
 
 	mov fp, #0
 	b	start_kernel
+
+	/* Enable RAM on RAM-based cards.
+	 * This has to happen early, because the kernel tries to
+         * use this RAM. */
+unlock_ram:
+#ifdef CONFIG_NDS_ROM8BIT
+#if defined(CONFIG_MMC_SCSD) || defined (CONFIG_IDE_NDS_SUPERCARD)
+	ldr	r0, =0x09FFFFFE
+	ldr	r1, =0xa55a
+	ldr	r2, =0x0007
+	strh	r1, [r0]
+	strh	r1, [r0]
+	strh	r2, [r0]
+	strh	r2, [r0]
+#endif
+#endif
+	mov	pc, lr	
+
 
 	.type	__LC0_init_data, %object
 __LC0_init_data:
