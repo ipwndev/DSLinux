@@ -80,7 +80,11 @@ GCC_OBJDIR	:= $(OBJDIR)/gcc-$(GCC_VER)
 ELF2FLT_OBJDIR	:= $(OBJDIR)/elf2ftl-$(ELF2FLT_VER)
 LIBELF_OBJDIR	:= $(OBJDIR)/libelf-$(ELF2FLT_VER)
 
-export PATH := $(PREFIX)/bin:$(PATH)
+# For releases, this must be changed to the version number:
+VERSION		:= $(shell date -I)
+DISTNAME	:= dslinux-toolchain-$(VERSION)-$(shell uname -m)
+
+export PATH	:= $(PREFIX)/bin:$(PATH)
 
 #######################################################################
 # Main targets.
@@ -92,7 +96,7 @@ export PATH := $(PREFIX)/bin:$(PATH)
 # for the bootstrap process.
 all: dirs-create binutils-install elf2flt-install sysroot-create \
 	gcc-stage1-install uClibc-install gcc-stage2-install \
-	genromfs-install libelf-install ndstool-install strip
+	genromfs-install libelf-install ndstool-install strip dist
 
 # If you just want to download distfiles, use this target.
 fetch: $(DISTFILES)
@@ -593,3 +597,19 @@ $(CWD)/.stripped:
 	#$(TARGET)-strip $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/thumb/*.o
 	#$(TARGET)-strip $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/thumb/*.a
 	touch $@
+
+#######################################################################
+# dist
+#######################################################################
+
+dist: $(CWD)/.stripped $(CWD)/.dist-made
+dist-reset:
+	rm -f $(CWD)/.dist-made
+
+$(CWD)/.dist-made:
+	[ -d $(DISTNAME) ] && rm -rf $(DISTNAME)
+	mkdir $(DISTNAME)
+	cp -r $(PREFIX)/* $(DISTNAME)
+	tar -jcf $(DISTNAME).tbz $(DISTNAME)
+	touch $@
+
