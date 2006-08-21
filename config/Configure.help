@@ -1501,6 +1501,9 @@ CONFIG_USER_MAWK_AWK
   as /bin/awk.
   Approx. binary size: 110k
 
+CONFIG_USER_MPC
+  A client for MPD, the Music Player Daemon.
+
 CONFIG_USER_MYSQL
   Enable building the various mysql components.
 
