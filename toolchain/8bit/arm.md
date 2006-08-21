@@ -9498,7 +9498,7 @@
 	(match_operand:QI 3 "s_register_operand" "r"))
    (set (match_operand:SI 0 "s_register_operand" "=r")
 	(plus:SI (match_dup 1) (match_dup 2)))]
-  "TARGET_ARM
+  "TARGET_ARM && !TARGET_SWP_BYTE_WRITES
    && REGNO (operands[0]) != FRAME_POINTER_REGNUM
    && REGNO (operands[1]) != FRAME_POINTER_REGNUM
    && (GET_CODE (operands[2]) != REG
@@ -9514,7 +9514,7 @@
 	(match_operand:QI 3 "s_register_operand" "r"))
    (set (match_operand:SI 0 "s_register_operand" "=r")
 	(minus:SI (match_dup 1) (match_dup 2)))]
-  "TARGET_ARM
+  "TARGET_ARM && !TARGET_SWP_BYTE_WRITES
    && REGNO (operands[0]) != FRAME_POINTER_REGNUM
    && REGNO (operands[1]) != FRAME_POINTER_REGNUM
    && (GET_CODE (operands[2]) != REG
@@ -9663,7 +9663,7 @@
    (set (match_operand:SI 0 "s_register_operand" "=r")
 	(plus:SI (match_op_dup 2 [(match_dup 3)	(match_dup 4)])
 		 (match_dup 1)))]
-  "TARGET_ARM
+  "TARGET_ARM && !TARGET_SWP_BYTE_WRITES
    && REGNO (operands[0]) != FRAME_POINTER_REGNUM
    && REGNO (operands[1]) != FRAME_POINTER_REGNUM
    && REGNO (operands[3]) != FRAME_POINTER_REGNUM"
@@ -9681,7 +9681,7 @@
    (set (match_operand:SI 0 "s_register_operand" "=r")
 	(minus:SI (match_dup 1) (match_op_dup 2 [(match_dup 3)
 						 (match_dup 4)])))]
-  "TARGET_ARM
+  "TARGET_ARM && !TARGET_SWP_BYTE_WRITES
    && REGNO (operands[0]) != FRAME_POINTER_REGNUM
    && REGNO (operands[1]) != FRAME_POINTER_REGNUM
    && REGNO (operands[3]) != FRAME_POINTER_REGNUM"
@@ -9813,7 +9813,7 @@
 	(match_operand:QI 2 "s_register_operand" "r"))
    (set (match_dup 0)
 	(plus:SI (match_dup 0) (match_operand:SI 1 "index_operand" "rJ")))]
-  "TARGET_ARM
+  "TARGET_ARM && !TARGET_SWP_BYTE_WRITES
    && (REGNO (operands[2]) != REGNO (operands[0]))
    && (GET_CODE (operands[1]) != REG
        || (REGNO (operands[1]) != REGNO (operands[0])))"
@@ -9861,7 +9861,7 @@
 			 (match_operand:SI 1 "index_operand" "rJ")))
 	(match_operand:QI 2 "s_register_operand" "r"))
    (set (match_dup 0) (plus:SI (match_dup 0) (match_dup 1)))]
-  "TARGET_ARM
+  "TARGET_ARM && !TARGET_SWP_BYTE_WRITES
    && (REGNO (operands[2]) != REGNO (operands[0]))
    && (GET_CODE (operands[1]) != REG
        || (REGNO (operands[1]) != REGNO (operands[0])))"
@@ -9876,7 +9876,7 @@
 	(match_operand:QI 3 "s_register_operand" "r"))
    (set (match_dup 2) (plus:SI (match_op_dup 4 [(match_dup 0) (match_dup 1)])
 			       (match_dup 2)))]
-  "TARGET_ARM
+  "TARGET_ARM && !TARGET_SWP_BYTE_WRITES
    && (REGNO (operands[3]) != REGNO (operands[2]))
    && (REGNO (operands[0]) != REGNO (operands[2]))"
   "str%?b\\t%3, [%2, %0%S4]!"
