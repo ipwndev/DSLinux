@@ -268,7 +268,7 @@ retawqbin: $(OBJS)
 	tglibs=`tool/tgmode --libs $(OPTION_TG)`; $(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) $(PTHREAD_LIBS) $$tglibs $(LTLS) $(LCLM) -o retawq
 
 stripsyms:
-	-strip --strip-unneeded retawq
+	-$(CROSS_COMPILE)strip --strip-unneeded retawq
 
 # In theory, users read documentation files without being told, at least when
 # something fails. But in practice, ...
