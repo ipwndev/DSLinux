@@ -320,7 +320,7 @@ static int __devinit snd_nds_new_pcm(struct nds *chip)
 	/* pre-allocation of buffers */
 	/* NOTE: this may fail */
 	//return snd_pcm_lib_preallocate_pages_for_all(pcm, SNDRV_DMA_TYPE_DEV, snd_dma_isa_data(),	/*pretend to be an ISA device */
-	return snd_pcm_lib_preallocate_pages_for_all(pcm, SNDRV_DMA_TYPE_CONTINUOUS, snd_dma_continuous_data(GFP_KERNEL),
+	return snd_pcm_lib_preallocate_pages_for_all(pcm, SNDRV_DMA_TYPE_CONTINUOUS, snd_dma_continuous_data(GFP_DMA),
 					      DMA_BUFFERSIZE, DMA_BUFFERSIZE);
 }
 
