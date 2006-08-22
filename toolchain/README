@@ -33,6 +33,7 @@ for the build to succeed:
         * patch
         * bzip2
         * GNU awk - most often called 'gawk'
+        * wget
 
 All this software should be packaged with any general purpose Linux
 distribution.
