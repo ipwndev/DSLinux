@@ -1,17 +1,13 @@
 #
-#	Makefile -- Build instructions for Supercard SD RAM
+#	Makefile -- Build instructions for Supercard SD/CF RAM
 #
 
 include $(LINUX_CONFIG)
 
 ROMFSIMG = $(IMAGEDIR)/romfs.img
 ELFIMAGE = $(IMAGEDIR)/image.elf
-ifdef CONFIG_XIP_KERNEL
-IMAGE    = $(IMAGEDIR)/dslinux.ds.nds
-else
-IMAGE    = $(IMAGEDIR)/dslinux.nds.gba
-endif
-FATFS	 = supercard
+
+FATFS	 = media
 
 
 ROMFS_DIRS = dev etc proc sbin $(FATFS)/linux
@@ -26,6 +22,9 @@ DEVICES = \
 	\
 	mmcblk0,b,254,0 \
 	mmcblk1,b,254,1 \
+	\
+	hda,b,3,0      hda1,b,3,1         hda2,b,3,2	   hda3,b,3,3 \
+	hda4,b,3,4 \
 	\
 	ptyp0,c,2,0    ptyp1,c,2,1        ptyp2,c,2,2      ptyp3,c,2,3 \
 	ptyp4,c,2,4    ptyp5,c,2,5        ptyp6,c,2,6      ptyp7,c,2,7 \
@@ -120,33 +119,21 @@ image:
 	-rm -r $(IMAGEDIR)/linux
 	mv $(ROMFSDIR)/$(FATFS)/linux $(IMAGEDIR)
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
-	if [ "$(CONFIG_XIP_KERNEL)" != "y" ]; then \
-		BSS=`$(CROSS_COMPILE)objdump --headers $(ROOTDIR)/$(LINUXDIR)/linux | \
-		grep .bss` && \
-		BSSADDR=`set -- $${BSS} ; echo 0x$${4}` && \
-		BSSSIZE=`set -- $${BSS} ; echo 0x$${3}` && \
-		ADDR=`echo $${BSSADDR} $${BSSSIZE} | \
-		perl -ane 'printf "0x%x\n",hex($$F[0]) + hex($$F[1])' ` && \
-		echo "BSS=$${BSSADDR},$${BSSSIZE} ADDR=$${ADDR}" && \
-		$(CROSS_COMPILE)objcopy --add-section=.romfs=$(ROMFSIMG) \
-		--adjust-section-vma=.romfs=$${ADDR} --no-adjust-warnings \
-		--set-section-flags=.romfs=alloc,load,data   \
-		$(ROOTDIR)/$(LINUXDIR)/linux $(ELFIMAGE) 2> /dev/null && \
-		$(CROSS_COMPILE)objcopy -O binary $(ELFIMAGE) $(IMAGEDIR)/arm9.bin && \
-		ndstool -c $(IMAGEDIR)/dslinux.nds -9 $(IMAGEDIR)/arm9.bin \
-			-r9 0x02000000 -e9 0x02000000  \
-			-7 $(ROOTDIR)/$(LINUXDIR)/arch/arm/mach-nds/arm7.bin \
-		       	-r7 0x03800000 -e7 0x03800000  \
-			-b $(NDS_COMMON)/tux.bmp "DSLinux;Port of Linux;to the DS!" && \
-		( cd $(IMAGEDIR); tar -cvzf dslinux-$(FATFS)sd-ram.tgz linux dslinux.nds ) ; \
-	else \
-	        $(CROSS_COMPILE)objcopy -O binary \
-                        --remove-section=.text --remove-section=.init \
-                        $(ROOTDIR)/$(LINUXDIR)/linux $(IMAGEDIR)/linux.data && \
-		$(CROSS_COMPILE)objcopy -O binary \
-                        -j .init -j .text \
-                        $(ROOTDIR)/$(LINUXDIR)/linux $(IMAGEDIR)/linux.text && \
-		cat $(IMAGEDIR)/linux.text $(IMAGEDIR)/linux.data $(ROMFSIMG) > $(IMAGE) && \
-		( cd $(IMAGEDIR); tar -cvzf dslinux-$(FATFS)sd-ram.tgz linux dslinux.ds.nds ) ; \
-	fi
-
+	BSS=`$(CROSS_COMPILE)objdump --headers $(ROOTDIR)/$(LINUXDIR)/linux | \
+	grep .bss` && \
+	BSSADDR=`set -- $${BSS} ; echo 0x$${4}` && \
+	BSSSIZE=`set -- $${BSS} ; echo 0x$${3}` && \
+	ADDR=`echo $${BSSADDR} $${BSSSIZE} | \
+	perl -ane 'printf "0x%x\n",hex($$F[0]) + hex($$F[1])' ` && \
+	echo "BSS=$${BSSADDR},$${BSSSIZE} ADDR=$${ADDR}" && \
+	$(CROSS_COMPILE)objcopy --add-section=.romfs=$(ROMFSIMG) \
+	--adjust-section-vma=.romfs=$${ADDR} --no-adjust-warnings \
+	--set-section-flags=.romfs=alloc,load,data   \
+	$(ROOTDIR)/$(LINUXDIR)/linux $(ELFIMAGE) 2> /dev/null && \
+	$(CROSS_COMPILE)objcopy -O binary $(ELFIMAGE) $(IMAGEDIR)/arm9.bin && \
+	ndstool -c $(IMAGEDIR)/dslinux.nds -9 $(IMAGEDIR)/arm9.bin \
+		-r9 0x02000000 -e9 0x02000000  \
+		-7 $(ROOTDIR)/$(LINUXDIR)/arch/arm/mach-nds/arm7.bin \
+		-r7 0x03800000 -e7 0x03800000  \
+		-b $(NDS_COMMON)/tux.bmp "DSLinux;Port of Linux;to the DS!" && \
+	( cd $(IMAGEDIR); tar -cvzf dslinux-supercard-ram.tgz linux dslinux.nds ) ; 
