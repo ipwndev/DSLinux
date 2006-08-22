@@ -60,7 +60,7 @@ void __init ide_arm_init(void)
 		for (i=0; i<8; i++)
 			hw.io_ports[i] = 0x08800000 + 0x20000*i;
 		hw.io_ports[8] = 0x080C0000; // control
-#elif CONFIG_IDE_NDS_MAX_MEDIA_PLAYER
+#elif defined(CONFIG_IDE_NDS_MAX_MEDIA_PLAYER)
 		for (i=0; i<8; i++)
 			hw.io_ports[i] = 0x08000000 + 0x20000*i;
 		hw.io_ports[8] = 0x080E0000; // control
