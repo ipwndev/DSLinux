@@ -68,10 +68,13 @@ static void *mac_query_output;
 static u8 mode_query_output;
 static DECLARE_WAIT_QUEUE_HEAD(ndswifi_wait);
 
-static volatile struct nds_tx_packet tx_packet = {0,0,0};
-static volatile struct nds_rx_packet rx_packet;
-static volatile u32 arm7_stats[WIFI_STATS_MAX];
-static volatile Wifi_AccessPoint aplist[WIFI_MAX_AP];
+/* Communication interface with ARM7. Each of these data structures is aligned
+   on an ARM9 cache line, to allow independent cache invalidation. */
+static volatile struct nds_tx_packet tx_packet __attribute__ ((aligned (32))) = {0,0,0};
+static volatile struct nds_rx_packet rx_packet __attribute__ ((aligned (32)));
+static volatile u32 arm7_stats[WIFI_STATS_MAX] __attribute__ ((aligned (32)));
+static volatile Wifi_AccessPoint aplist[WIFI_MAX_AP] __attribute__ ((aligned (32)));
+static volatile u8 txpaketbuffer[NDS_WIFI_MAX_PACKET_SIZE] __attribute__ ((aligned (32)));
 
 #if defined(DUMP_INPUT_PACKETS) || defined(DUMP_OUTPUT_PACKETS)
 static void nds_dump_packet(u8 *data, u16 len)
@@ -138,13 +141,16 @@ static int nds_start_xmit11(struct sk_buff *skb, struct net_device *dev)
 #endif
 	/* wrap up packet information and send it to arm7 */
 	tx_packet.len = skb->len;
-	tx_packet.data = skb->data;
-	tx_packet.skb = (void*)skb;
+	tx_packet.data = (void *)txpaketbuffer;
+	memcpy((void *)txpaketbuffer, skb->data, skb->len);
+
 	/* write data to memory before ARM7 gets hands on */
-	dmac_clean_range((unsigned long)&tx_packet,
+	/* here we are using "flush" because we don't need the data in the cache any more */
+	dmac_flush_range((unsigned long)&tx_packet,
                         ((unsigned long)&tx_packet)+sizeof(tx_packet));
-	dmac_clean_range((unsigned long)skb->data,
-                        ((unsigned long)skb->data)+skb->len);
+	dmac_flush_range((unsigned long)txpaketbuffer,
+                        ((unsigned long)txpaketbuffer)+skb->len);
+	dev_kfree_skb(skb);
 	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_TX, (u32)(&tx_packet)));
 	return 0;
 }
@@ -155,15 +161,17 @@ static struct net_device_stats *nds_get_stats(struct net_device *dev)
 
 	DEBUG(7, "Called: %s\n", __func__);
 
+	/* invalidate cache before we read data written by ARM7 */
+	/* do this here, because of alignment & cache clean at nonaligned areas. */
+	dmac_inv_range((unsigned long)&arm7_stats[0],
+                       (unsigned long)&arm7_stats[WIFI_STATS_MAX]);
+
 	stats_query_complete = 0;
 	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_STATS_QUERY, 0));
 	if(wait_event_interruptible_timeout(ndswifi_wait,
 	    stats_query_complete != 0, WIFI_ARM7_TIMEOUT) == 0) {
 		printk(KERN_WARNING "%s: timed out waiting for ARM7\n", __func__);
 	}
-	/* invalidate cache before we read data written by ARM7 */
-	dmac_inv_range((unsigned long)&arm7_stats[0],
-                       (unsigned long)&arm7_stats[WIFI_STATS_MAX]);
 
 #ifdef REPORT_RAW_PACKET_STATS
 	local->stats.rx_packets = arm7_stats[WIFI_STATS_RXRAWPACKETS];
@@ -497,13 +505,15 @@ static int nds_get_scan(struct net_device *dev,
 
 	DEBUG(7, "Called: %s\n", __func__);
 
+	/* invalidate cache before we read data written by ARM7 */
+	/* do this here, because of alignment & cache clean at nonaligned areas. */
+	dmac_inv_range((unsigned long)&aplist[0],
+                      ((unsigned long)&aplist[WIFI_MAX_AP])); 
+
 	/* stop ap list updates */
 	ap_query_complete = 0;
 	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_AP_QUERY, 1));
 	wait_event_interruptible(ndswifi_wait, ap_query_complete != 0);
-	/* invalidate cache before we read data written by ARM7 */
-	dmac_inv_range((unsigned long)&aplist[0],
-                      ((unsigned long)&aplist[WIFI_MAX_AP])); 
 
 	for (i = 0; i < WIFI_MAX_AP; i++) {
 		if (!aplist[i].channel)
@@ -1155,10 +1165,6 @@ static void nds_cmd_from_arm7(u8 cmd, u32 data)
 		}
 		break;
 	case FIFO_WIFI_CMD_TX_COMPLETE:
-		if (tx_packet.skb) {
-			dev_kfree_skb((struct sk_buff*)tx_packet.skb);
-			tx_packet.skb = NULL;
-		}
 		if (global_dev)
 			netif_wake_queue(global_dev);
 		break;
@@ -1211,7 +1217,7 @@ static int __init init_nds(void)
 		arm7_stats[i] = 0;
 	DEBUG(5, "%s: sending stats buffer address 0x%p\n", __func__, arm7_stats);
 	/* write data to memory before ARM7 gets hands on */
-	dmac_clean_range((unsigned long)&arm7_stats[0],
+	dmac_flush_range((unsigned long)&arm7_stats[0],
                          (unsigned long)&arm7_stats[WIFI_STATS_MAX]);
 	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_STATS_QUERY, (u32)arm7_stats));
 
