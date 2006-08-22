@@ -32,6 +32,10 @@ static int index[SNDRV_CARDS] = SNDRV_DEFAULT_IDX;
 static char *id[SNDRV_CARDS] = SNDRV_DEFAULT_STR;
 static int enable[SNDRV_CARDS] = SNDRV_DEFAULT_ENABLE_PNP;
 
+/* DMA-capable sample buffer */
+/* This buffer is aligned to the ARM9 cache lines */
+static char samplebuf[DMA_BUFFERSIZE] __attribute__ ((aligned (32)));
+
 MODULE_AUTHOR("Malcolm Parsons <malcolm.parsons@gmail.com>");
 MODULE_LICENSE("GPL");
 
@@ -146,8 +150,6 @@ static int snd_nds_playback_open(snd_pcm_substream_t * substream)
 /* close callback */
 static int snd_nds_playback_close(snd_pcm_substream_t * substream)
 {
-	struct nds *chip = snd_pcm_substream_chip(substream);
-
 	// turn the power off
 	nds_fifo_send(FIFO_SOUND | FIFO_SOUND_POWER | 0);
 	TIMER1_CR = 0;
@@ -159,7 +161,6 @@ static int snd_nds_playback_close(snd_pcm_substream_t * substream)
 /* open callback */
 static int snd_nds_capture_open(snd_pcm_substream_t * substream)
 {
-	struct nds *chip = snd_pcm_substream_chip(substream);
 	snd_pcm_runtime_t *runtime = substream->runtime;
 	runtime->hw = snd_nds_capture_hw;
 	// more hardware-initialization will be done here
@@ -169,7 +170,6 @@ static int snd_nds_capture_open(snd_pcm_substream_t * substream)
 /* close callback */
 static int snd_nds_capture_close(snd_pcm_substream_t * substream)
 {
-	struct nds *chip = snd_pcm_substream_chip(substream);
 	// the hardware-specific codes will be here
 	return 0;
 }
@@ -270,7 +270,6 @@ static int snd_nds_pcm_trigger(snd_pcm_substream_t * substream, int cmd)
 static snd_pcm_uframes_t snd_nds_pcm_pointer(snd_pcm_substream_t * substream)
 {
 	struct nds *chip = snd_pcm_substream_chip(substream);
-	unsigned int current_ptr;
 	snd_pcm_runtime_t *runtime = substream->runtime;
 
 	/* fake the current hardware pointer */
@@ -308,20 +307,30 @@ static snd_pcm_ops_t snd_nds_capture_ops = {
 static int __devinit snd_nds_new_pcm(struct nds *chip)
 {
 	snd_pcm_t *pcm;
+	snd_pcm_substream_t *substream;
 	int err;
-	if ((err = snd_pcm_new(chip->card, "NDS", 0, 1, 1, &pcm)) < 0)
+
+	if ((err = snd_pcm_new(chip->card, "NDS", 0, 1, 0, &pcm)) < 0)
 		return err;
+
 	pcm->private_data = chip;
 	strcpy(pcm->name, "NDS");
 	chip->pcm = pcm;
 	/* set operators */
 	snd_pcm_set_ops(pcm, SNDRV_PCM_STREAM_PLAYBACK, &snd_nds_playback_ops);
 	snd_pcm_set_ops(pcm, SNDRV_PCM_STREAM_CAPTURE, &snd_nds_capture_ops);
-	/* pre-allocation of buffers */
-	/* NOTE: this may fail */
-	//return snd_pcm_lib_preallocate_pages_for_all(pcm, SNDRV_DMA_TYPE_DEV, snd_dma_isa_data(),	/*pretend to be an ISA device */
-	return snd_pcm_lib_preallocate_pages_for_all(pcm, SNDRV_DMA_TYPE_CONTINUOUS, snd_dma_continuous_data(GFP_DMA),
-					      DMA_BUFFERSIZE, DMA_BUFFERSIZE);
+
+	/* set the DMA buffer for the playback substream */
+	substream = pcm->streams[0].substream;
+	substream->dma_buffer.dev.type = SNDRV_DMA_TYPE_CONTINUOUS;
+	substream->dma_buffer.dev.dev  = snd_dma_continuous_data(GFP_DMA);
+	substream->dma_buffer.bytes    = DMA_BUFFERSIZE;
+	substream->dma_buffer.area     = samplebuf;
+	substream->dma_buffer.addr     = (unsigned long)samplebuf;
+	substream->buffer_bytes_max    = DMA_BUFFERSIZE;
+	substream->dma_max             = DMA_BUFFERSIZE;
+
+	return 0;
 }
 
 static irqreturn_t snd_nds_interrupt(int irq, void *dev_id,
