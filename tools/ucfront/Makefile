@@ -1,9 +1,11 @@
 HOSTCC ?= cc
 
-SRC=ucfront.c args.c util.c execute.c vasprintf.c
+UTIL=args.c util.c execute.c
 
-ucfront: $(SRC)
-	$(HOSTCC) -g -Werror -Wall -DHAVE_MKSTEMP -o $@ $(SRC)
+all: ucfront
+
+ucfront: ucfront.c $(UTIL)
+	$(HOSTCC) -g -Werror -Wall -DHAVE_MKSTEMP -o $@ $^
 
 clean:
 	$(RM) -f *.o ucfront core tags
