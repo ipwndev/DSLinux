@@ -5105,17 +5105,18 @@
    (set_attr "predicable" "yes")]
 )
 
-(define_insn "_arm_movqi_insn_const"
-  [(set (match_operand:QI 0 "register_operand" "=r")
-	(match_operand:QI 1 "const_int_operand" ""))]
+(define_insn "_arm_movqi_insn_noswp"
+  [(set (match_operand:QI 0 "register_operand" "=r,r,r")
+	(match_operand:QI 1 "general_operand"  "rI,K,m"))]
   "TARGET_ARM && TARGET_SWP_BYTE_WRITES
    && (   register_operand (operands[0], QImode))"
   "@
-   mov%?\\t%0, %1"
-  [(set_attr "type" "*")
+   mov%?\\t%0, %1
+   mvn%?\\t%0, #%B1
+   ldr%?b\\t%0, %1"
+  [(set_attr "type" "*,*,load1")
    (set_attr "predicable" "yes")]
 )
-
 
 ;; The earlyclobber is required by default_secondary_reload() in targhooks.c.
 ;; We may be asked to generate reg->stack moves from what was reg->reg moves.
