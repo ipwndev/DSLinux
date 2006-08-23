@@ -76,4 +76,13 @@ and change it to:
 
         CROSS_COMPILE = arm-linux-elf-        
 
+Before compiling DSLinux with the new toolchain for the first
+time, you should run make menuconfig and select the following
+option:
+
+  ---> Kernel/Library/Defaults Selection
+    --->  [*] Default all settings (lose changes)
+
+Otherwise your build might fail.
+
 Good luck!
