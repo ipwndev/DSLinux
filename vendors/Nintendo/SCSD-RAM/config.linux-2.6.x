@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
-# Sat Aug 19 21:11:24 2006
+# Wed Aug 23 14:44:50 2006
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
@@ -39,7 +39,7 @@ CONFIG_PRINTK=y
 # CONFIG_BUG is not set
 # CONFIG_BASE_FULL is not set
 # CONFIG_EPOLL is not set
-CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+# CONFIG_CC_OPTIMIZE_FOR_SIZE is not set
 CONFIG_CC_ALIGN_FUNCTIONS=0
 CONFIG_CC_ALIGN_LABELS=0
 CONFIG_CC_ALIGN_LOOPS=0
