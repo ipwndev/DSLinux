@@ -66,16 +66,6 @@ resides in ~/dslinux:
 
         export PATH=~/dslinux/toolchain/prefix/bin:$PATH
 
-Currently, you also have to make a small modification to the
-file vendors/config/armnommu/config.arch to be able to use
-the toolchain. Find the line that says:
-
-        CROSS_COMPILE = arm-elf-
-
-and change it to:
-
-        CROSS_COMPILE = arm-linux-elf-        
-
 Before compiling DSLinux with the new toolchain for the first
 time, you should run make menuconfig and select the following
 option:
