@@ -95,6 +95,7 @@ romfs:
 	$(ROMFSINST) -p +x $(NDS_COMMON)/default.script /usr/share/udhcpc/default.script
 	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
 	$(ROMFSINST) -p +x /bin/t
+	$(ROMFSINST) -p +x /bin/x
 
 image:
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
