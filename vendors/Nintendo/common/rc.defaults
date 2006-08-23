@@ -122,4 +122,7 @@ start_telnetd="NO"
 # set this to "YES". By default, the firmware version is shown.
 show_firmware_version="YES"
 
+# 
+start_nanox="NO"
+
 # End of file.
