@@ -51,5 +51,12 @@ echo "127.0.0.1 $hostname" > /etc/hosts
 # run local startup script if it exists
 [ -e /etc/rc.local ] && . /etc/rc.local
 
+# setup nano-X
+if [ "$start_nanox" = "YES" ]
+then
+	fbset -depth 16 -n
+	ifconfig lo up
+fi
+
 # this is here so that we will get a login prompt in any case
 exit 0
