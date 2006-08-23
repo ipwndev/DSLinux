@@ -18,7 +18,7 @@ CONFIG_DEFAULTS_LIBC_UCLIBC=y
 CONFIG_DEFAULTS_OVERRIDE=y
 # CONFIG_DEFAULTS_KERNEL is not set
 # CONFIG_DEFAULTS_VENDOR is not set
-# CONFIG_DEFAULTS_VENDOR_UPDATE is not set
+CONFIG_DEFAULTS_VENDOR_UPDATE=y
 CONFIG_VENDOR=Nintendo
 CONFIG_PRODUCT=$1
 CONFIG_LINUXDIR=linux-2.6.x
@@ -29,7 +29,7 @@ EOF
 
 OUTDIR=${OUTDIR:-"./bulkbuild"}
 
-for build in DSGBA DSMEM GBAMP GBAMP_EXT2 M3CF NDS SUPERCARDCF SUPERCARDSD
+for build in DSGBA DSMEM GBAMP GBAMP_EXT2 M3CF NDS SUPERCARDCF SUPERCARDSD SCSD-RAM
 do
 	if [ "$build" = "GBAMP_EXT2" ]
 	then
@@ -71,9 +71,11 @@ do
 		SUPERCARDCF)
 			distfile=dslinux-supercardcf.tgz
 		;;
-
 		SUPERCARDSD)
 			distfile=dslinux-supercardsd.tgz
+		;;
+		SCSD-RAM)
+			distfile=dslinux-supercard-ram.tgz
 		;;
 		*)
 			echo
