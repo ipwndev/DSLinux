@@ -99,7 +99,7 @@ all: dirs-create binutils-install elf2flt-install sysroot-create \
 	genromfs-install libelf-install ndstool-install strip dist
 
 # If you just want to download distfiles, use this target.
-fetch: $(DISTFILES)
+fetch: $(CWD)/.dirs-created $(DISTFILES)
 
 # Use these to start a build from the beginning.
 reset: dirs-reset binutils-reset uClibc-reset sysroot-reset gcc-stage1-reset \
