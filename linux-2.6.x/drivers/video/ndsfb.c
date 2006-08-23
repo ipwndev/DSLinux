@@ -23,6 +23,7 @@
 #include <linux/init.h>
 
 #include <asm/arch/power.h>
+#include <asm/io.h>
 
 #define DISPLAY_CR       (*(volatile u32*)0x04000000)
 #define SUB_DISPLAY_CR   (*(volatile u32*)0x04001000)
@@ -103,16 +104,17 @@
 #define SUB_BG3_CR     (*(volatile u16*)0x0400100E)
 
 #define VRAM_CR         (*(volatile u32*)0x04000240)
-#define VRAM_A_CR       (*(volatile u8*)0x04000240)
-#define VRAM_B_CR       (*(volatile u8*)0x04000241)
-#define VRAM_C_CR       (*(volatile u8*)0x04000242)
-#define VRAM_D_CR       (*(volatile u8*)0x04000243)
-#define VRAM_E_CR       (*(volatile u8*)0x04000244)
-#define VRAM_F_CR       (*(volatile u8*)0x04000245)
-#define VRAM_G_CR       (*(volatile u8*)0x04000246)
-#define WRAM_CR         (*(volatile u8*)0x04000247)
-#define VRAM_H_CR       (*(volatile u8*)0x04000248)
-#define VRAM_I_CR       (*(volatile u8*)0x04000249)
+/* 8bit registers are accessed by readb/writeb */
+#define VRAM_A_CR       0x04000240
+#define VRAM_B_CR       0x04000241
+#define VRAM_C_CR       0x04000242
+#define VRAM_D_CR       0x04000243
+#define VRAM_E_CR       0x04000244
+#define VRAM_F_CR       0x04000245
+#define VRAM_G_CR       0x04000246
+#define WRAM_CR         0x04000247
+#define VRAM_H_CR       0x04000248
+#define VRAM_I_CR       0x04000249
 
 #define VRAM_ENABLE   (1<<7)
 
@@ -349,8 +351,7 @@ static int ndsfb_set_par(struct fb_info *info)
 			DISPLAY_CR =
 			    MODE_5_2D | DISPLAY_BG2_ACTIVE | DISPLAY_BG3_ACTIVE;
 			if (info->fix.visual == FB_VISUAL_TRUECOLOR) {
-				VRAM_B_CR =
-				    VRAM_ENABLE | VRAM_B_MAIN_BG_0x6020000;
+				writeb( VRAM_ENABLE | VRAM_B_MAIN_BG_0x6020000, VRAM_B_CR);
 				BG3_CR = BG_BMP16_256x256 | BG_BMP_BASE(8);
 			} else {
 				BG3_CR = BG_BMP8_256x256 | BG_BMP_BASE(4);
@@ -365,7 +366,7 @@ static int ndsfb_set_par(struct fb_info *info)
 		} else {
 			DISPLAY_CR = MODE_5_2D | DISPLAY_BG2_ACTIVE;
 		}
-		VRAM_A_CR = VRAM_ENABLE | VRAM_A_MAIN_BG_0x6000000;
+		writeb(VRAM_ENABLE | VRAM_A_MAIN_BG_0x6000000, VRAM_A_CR);
 		if (info->var.xres_virtual == 512)
 			if (info->fix.visual == FB_VISUAL_TRUECOLOR)
 				BG2_CR = BG_BMP16_512x256 | BG_BMP_BASE(0);
@@ -384,7 +385,7 @@ static int ndsfb_set_par(struct fb_info *info)
 		BG2_CY = (info->var.yoffset) << 8;
 	} else {
 		SUB_DISPLAY_CR = MODE_5_2D | DISPLAY_BG3_ACTIVE;
-		VRAM_C_CR = VRAM_ENABLE | VRAM_C_SUB_BG_0x6200000;
+		writeb(VRAM_ENABLE | VRAM_C_SUB_BG_0x6200000, VRAM_C_CR);
 
 		if (info->fix.visual == FB_VISUAL_TRUECOLOR)
 			SUB_BG3_CR = BG_BMP16_256x256;
