@@ -61,7 +61,7 @@ else
 ARCH          = armnommu
 endif
 ENDIAN        ?= little
-CROSS_COMPILE = arm-elf-
+CROSS_COMPILE = arm-linux-elf-
 CROSS         = $(CROSS_COMPILE)
 
 CC        = ucfront-gcc $(CROSS_COMPILE)gcc $(CPUFLAGS)
