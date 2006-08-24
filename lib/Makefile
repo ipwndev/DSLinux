@@ -90,6 +90,8 @@ dir_$(CONFIG_LIB_ID3TAG)	+= libid3tag
 dir_$(CONFIG_LIB_ID3TAG_FORCE)	+= libid3tag
 dir_$(CONFIG_LIB_MAD)		+= libmad
 dir_$(CONFIG_LIB_MAD_FORCE)	+= libmad
+dir_$(CONFIG_LIB_FLNX)		+= flnx
+dir_$(CONFIG_LIB_FLNX_FORCE)	+= flnx
 
 
 # And build libraries in the prop directory last
@@ -173,7 +175,8 @@ LINKLIBS=\
 	$(ROOTDIR)/lib/flex/build/*.a \
 	$(ROOTDIR)/lib/libgmp/*.a  \
 	$(ROOTDIR)/lib/libid3tag/*.a \
-	$(ROOTDIR)/lib/libmad/*.a 
+	$(ROOTDIR)/lib/libmad/*.a \
+	$(ROOTDIR)/lib/flnx/*.a 
 
 ##############################################################################
 

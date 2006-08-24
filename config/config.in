@@ -115,6 +115,7 @@ fi
 bool 'Build libcrypt_old'	CONFIG_LIB_LIBCRYPT_OLD_FORCE
 bool 'Build libid3tag'		CONFIG_LIB_ID3TAG_FORCE
 bool 'Build libmad'		CONFIG_LIB_MAD_FORCE
+bool 'Build flnx library'	CONFIG_LIB_FLNX_FORCE
 
 comment 'Library Configuration'
 bool 'Support time zones'	CONFIG_LIB_UC_LIBC_TIMEZONE
