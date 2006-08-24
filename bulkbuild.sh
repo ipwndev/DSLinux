@@ -29,9 +29,9 @@ EOF
 
 OUTDIR=${OUTDIR:-"./bulkbuild"}
 
-for build in DSGBA DSMEM GBAMP GBAMP_EXT2 M3CF NDS SUPERCARDCF SUPERCARDSD SCSD_RAM
+for build in DSGBA DSMEM GBAMP GBAMP-EXT2 M3CF NDS SUPERCARDCF SUPERCARDSD SCSD-RAM
 do
-	if [ "$build" = "GBAMP_EXT2" ]
+	if [ "$build" = "GBAMP-EXT2" ]
 	then
 		if which fakeroot > /dev/null
 		then
@@ -59,7 +59,7 @@ do
 		GBAMP)
 			distfile=dslinux-gbamp.tgz
 		;;
-		GBAMP_EXT2)
+		GBAMP-EXT2)
 			distfile=dslinux-gbamp-ext2.tgz
 		;;
 		M3CF)
