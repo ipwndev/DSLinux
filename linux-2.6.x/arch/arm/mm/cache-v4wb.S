@@ -118,7 +118,6 @@ ENTRY(v4wb_flush_user_cache_range)
  *	- end	 - virtual end address
  */
 ENTRY(v4wb_dma_flush_range)
-	bic	r0, r0, #CACHE_DLINESIZE - 1
 	/* FALLTHROUGH */
 
 /*
@@ -134,6 +133,7 @@ ENTRY(v4wb_flush_dcache_range)
 	sub	ip, r1, r0			@ calculate total size
 	cmp	ip, #CACHE_DLIMIT		@ total size >= limit?
 	bhs	v4wb_flush_dcache_all		@ yes: flush the complete d-cache
+	bic	r0, r0, #CACHE_DLINESIZE - 1	@ safety first: adjust start pointer to cache line
 1:
 #ifdef CONFIG_ARCH_NDS				/* we can clean and invalidate at once */
 	mcr	p15, 0, r0, c7, c14, 1		@ clean and flush a D-cache line
@@ -184,7 +184,6 @@ ENTRY(v4wb_coherent_kern_range)
  *	- end	 - virtual end address
  */
 ENTRY(v4wb_coherent_user_range)
-	bic	r0, r0, #CACHE_DLINESIZE - 1	@ align to cache line
 	/* fall through */
 /*
  *	flush_cache_range(start, end)
@@ -199,6 +198,7 @@ ENTRY(v4wb_flush_cache_range)
 	sub	ip, r1, r0			@ calculate total size
 	cmp	ip, #CACHE_DLIMIT		@ total size >= limit?
 	bhs	v4wb_flush_kern_cache_all	@ yes: flush the complete i+d-cache
+	bic	r0, r0, #CACHE_DLINESIZE - 1	@ safety first: adjust start pointer to cache line
 2:
 #ifdef CONFIG_ARCH_NDS				/* we can clean and invalidate at once */
 	mcr	p15, 0, r0, c7, c14, 1		@ clean and flush a D-cache line
@@ -228,8 +228,11 @@ ENTRY(v4wb_dma_inv_range)
 	tst	r0, #CACHE_DLINESIZE - 1
 	bic	r0, r0, #CACHE_DLINESIZE - 1
 	mcrne	p15, 0, r0, c7, c10, 1		@ clean D entry
+
 	tst	r1, #CACHE_DLINESIZE - 1
-	mcrne	p15, 0, r1, c7, c10, 1		@ clean D entry
+	bicne	r2, r1, #CACHE_DLINESIZE - 1
+	mcrne	p15, 0, r2, c7, c10, 1		@ clean D entry
+
 1:	mcr	p15, 0, r0, c7, c6, 1		@ invalidate D entry
 	add	r0, r0, #CACHE_DLINESIZE
 	cmp	r0, r1
@@ -247,10 +250,10 @@ ENTRY(v4wb_dma_inv_range)
  *	- end	 - virtual end address
  */
 ENTRY(v4wb_dma_clean_range)
-	bic	r0, r0, #CACHE_DLINESIZE - 1
 	sub	ip, r1, r0			@ calculate total size
 	cmp	ip, #CACHE_DLIMIT		@ total size >= limit?
 	bhs	v4wb_dma_clean_all		@ yes: clean the complete d-cache
+	bic	r0, r0, #CACHE_DLINESIZE - 1
 1:	mcr	p15, 0, r0, c7, c10, 1		@ clean D entry
 	add	r0, r0, #CACHE_DLINESIZE
 	cmp	r0, r1
