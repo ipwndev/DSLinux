@@ -62,15 +62,36 @@ ENTRY(v4wb_flush_user_cache_all)
  *	Clean and invalidate the entire cache.
  */
 ENTRY(v4wb_flush_kern_cache_all)
-	mov	ip, #0
-	mcr	p15, 0, ip, c7, c5, 0		@ invalidate I cache
-__flush_whole_cache:
+	mov	r0, #0
+	mcr	p15, 0, r0, c7, c5, 0		@ invalidate I cache
+	/* FALLTHROUGH */
+/*
+ *	flush_dcache_all()
+ *
+ *	Clean and invalidate the entire d-cache.
+ */
+ENTRY(v4wb_flush_dcache_all)
+#ifdef CONFIG_ARCH_NDS				/* we can flush the D-cache line by line */
+	mov	r0, #(CACHE_DSIZE/4)
+1:	sub	r0, r0, #CACHE_DLINESIZE	@ next line
+	mcr	p15, 0, r0, c7, c14, 2		@ clean and flush a D-cache line
+	add	r0, r0, #0x40000000		@ next segment
+	mcr	p15, 0, r0, c7, c14, 2		@ clean and flush a D-cache line
+	add	r0, r0, #0x40000000		@ next segment
+	mcr	p15, 0, r0, c7, c14, 2		@ clean and flush a D-cache line
+	add	r0, r0, #0x40000000		@ next segment
+	mcr	p15, 0, r0, c7, c14, 2		@ clean and flush a D-cache line
+	adds	r0, r0, #0x40000000		@ next segment
+	bne	1b				@ next cache line
+#else
 	mov	r0, #FLUSH_BASE
 	add	r1, r0, #CACHE_DSIZE
 1:	ldr	r2, [r0], #32
 	cmp	r0, r1
 	blo	1b
-	mcr	p15, 0, ip, c7, c10, 4		@ drain write buffer
+#endif
+	mov	r0, #0
+	mcr	p15, 0, r0, c7, c10, 4		@ drain write buffer
 	mov	pc, lr
 
 /*
@@ -84,20 +105,47 @@ __flush_whole_cache:
  *	- flags	- vma_area_struct flags describing address space
  */
 ENTRY(v4wb_flush_user_cache_range)
-	sub	r3, r1, r0			@ calculate total size
 	tst	r2, #VM_EXEC			@ executable region?
-	mcrne	p15, 0, ip, c7, c5, 0		@ invalidate I cache
+	bne	v4wb_flush_cache_range		@ yes: flush i-cache and d-cache
+	/* FALLTHROUGH */
 
-	cmp	r3, #CACHE_DLIMIT		@ total size >= limit?
-	bhs	__flush_whole_cache		@ flush whole D cache
+/*
+ *	dma_flush_range(start, end)
+ *
+ *	Clean and invalidate the specified virtual address range.
+ *
+ *	- start  - virtual start address
+ *	- end	 - virtual end address
+ */
+ENTRY(v4wb_dma_flush_range)
+	bic	r0, r0, #CACHE_DLINESIZE - 1
+	/* FALLTHROUGH */
 
-1:	mcr	p15, 0, r0, c7, c10, 1		@ clean D entry
+/*
+ *	flush_dcache_range(start, end)
+ *
+ *	Invalidate a range of D cache entries in the specified
+ *	address space.
+ *
+ *	- start - start address (inclusive, page aligned)
+ *	- end	- end address (exclusive, page aligned)
+ */
+ENTRY(v4wb_flush_dcache_range)
+	sub	ip, r1, r0			@ calculate total size
+	cmp	ip, #CACHE_DLIMIT		@ total size >= limit?
+	bhs	v4wb_flush_dcache_all		@ yes: flush the complete d-cache
+1:
+#ifdef CONFIG_ARCH_NDS				/* we can clean and invalidate at once */
+	mcr	p15, 0, r0, c7, c14, 1		@ clean and flush a D-cache line
+#else
+	mcr	p15, 0, r0, c7, c10, 1		@ clean D entry
 	mcr	p15, 0, r0, c7, c6, 1		@ invalidate D entry
+#endif
 	add	r0, r0, #CACHE_DLINESIZE
 	cmp	r0, r1
 	blo	1b
-	tst	r2, #VM_EXEC
-	mcrne	p15, 0, ip, c7, c10, 4		@ drain write buffer
+	mov	r0, #0
+	mcr	p15, 0, r0, c7, c10, 4		@ drain write buffer
 	mov	pc, lr
 
 /*
@@ -136,18 +184,35 @@ ENTRY(v4wb_coherent_kern_range)
  *	- end	 - virtual end address
  */
 ENTRY(v4wb_coherent_user_range)
-	bic	r0, r0, #CACHE_DLINESIZE - 1
-1:	mcr	p15, 0, r0, c7, c10, 1		@ clean D entry
+	bic	r0, r0, #CACHE_DLINESIZE - 1	@ align to cache line
+	/* fall through */
+/*
+ *	flush_cache_range(start, end)
+ *
+ *	Invalidate a range of I+D cache entries in the specified
+ *	address space.
+ *
+ *	- start - start address (inclusive, page aligned)
+ *	- end	- end address (exclusive, page aligned)
+ */
+ENTRY(v4wb_flush_cache_range)
+	sub	ip, r1, r0			@ calculate total size
+	cmp	ip, #CACHE_DLIMIT		@ total size >= limit?
+	bhs	v4wb_flush_kern_cache_all	@ yes: flush the complete i+d-cache
+2:
+#ifdef CONFIG_ARCH_NDS				/* we can clean and invalidate at once */
+	mcr	p15, 0, r0, c7, c14, 1		@ clean and flush a D-cache line
+#else
+	mcr	p15, 0, r0, c7, c10, 1		@ clean D entry
 	mcr	p15, 0, r0, c7, c6, 1		@ invalidate D entry
+#endif
+	mcr	p15, 0, r0, c7, c5, 1		@ invalidate I entry
 	add	r0, r0, #CACHE_DLINESIZE
 	cmp	r0, r1
-	blo	1b
+	blo	2b
 	mov	ip, #0
-	mcr	p15, 0, ip, c7, c10, 4		@ drain WB
-	mcr	p15, 0, ip, c7, c5, 0		@ invalidate I cache
+	mcr	p15, 0, ip, c7, c10, 4		@ drain write buffer
 	mov	pc, lr
-
-
 /*
  *	dma_inv_range(start, end)
  *
@@ -169,6 +234,7 @@ ENTRY(v4wb_dma_inv_range)
 	add	r0, r0, #CACHE_DLINESIZE
 	cmp	r0, r1
 	blo	1b
+	mov	r0, #0
 	mcr	p15, 0, r0, c7, c10, 4		@ drain write buffer
 	mov	pc, lr
 
@@ -182,30 +248,41 @@ ENTRY(v4wb_dma_inv_range)
  */
 ENTRY(v4wb_dma_clean_range)
 	bic	r0, r0, #CACHE_DLINESIZE - 1
+	sub	ip, r1, r0			@ calculate total size
+	cmp	ip, #CACHE_DLIMIT		@ total size >= limit?
+	bhs	v4wb_dma_clean_all		@ yes: clean the complete d-cache
 1:	mcr	p15, 0, r0, c7, c10, 1		@ clean D entry
 	add	r0, r0, #CACHE_DLINESIZE
 	cmp	r0, r1
 	blo	1b
+	mov	r0, #0
 	mcr	p15, 0, r0, c7, c10, 4		@ drain write buffer
 	mov	pc, lr
 
-/*
- *	dma_flush_range(start, end)
- *
- *	Clean and invalidate the specified virtual address range.
- *
- *	- start  - virtual start address
- *	- end	 - virtual end address
- */
-ENTRY(v4wb_dma_flush_range)
-	bic	r0, r0, #CACHE_DLINESIZE - 1
-1:	mcr	p15, 0, r0, c7, c10, 1		@ clean D entry
-	mcr	p15, 0, r0, c7, c6, 1		@ invalidate D entry
-	add	r0, r0, #CACHE_DLINESIZE
+ENTRY(v4wb_dma_clean_all)
+#ifdef CONFIG_ARCH_NDS				/* we can clean the D-cache line by line */
+	mov	r0, #(CACHE_DSIZE/4)
+1:	sub	r0, r0, #CACHE_DLINESIZE	@ next line
+	mcr	p15, 0, r0, c7, c10, 2		@ clean a D-cache line
+	add	r0, r0, #0x40000000		@ next segment
+	mcr	p15, 0, r0, c7, c10, 2		@ clean a D-cache line
+	add	r0, r0, #0x40000000		@ next segment
+	mcr	p15, 0, r0, c7, c10, 2		@ clean a D-cache line
+	add	r0, r0, #0x40000000		@ next segment
+	mcr	p15, 0, r0, c7, c10, 2		@ clean a D-cache line
+	adds	r0, r0, #0x40000000		@ next segment
+	bne	1b				@ next cache line
+#else
+	mov	r0, #FLUSH_BASE
+	add	r1, r0, #CACHE_DSIZE
+1:	ldr	r2, [r0], #32
 	cmp	r0, r1
 	blo	1b
+#endif
+	mov	r0, #0
 	mcr	p15, 0, r0, c7, c10, 4		@ drain write buffer
 	mov	pc, lr
+
 
 
 	__INITDATA
