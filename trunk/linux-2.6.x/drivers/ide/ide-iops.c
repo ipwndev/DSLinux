@@ -46,7 +46,7 @@ void supercard_unlock( void )
        *(volatile u16 *)0x09fffffe = 0x7 ;
 }
 
-void supercard_lock()
+void supercard_lock( void )
 {
        *(volatile u16 *)0x09fffffe = 0xa55a ;
        *(volatile u16 *)0x09fffffe = 0xa55a ;

@@ -237,6 +237,7 @@ static struct fb_ops ndsfb_ops = {
 	.fb_blank = ndsfb_blank
 };
 
+#if 0
 static irqreturn_t ndsfb_interrupt(int irq, void *dev_id, struct pt_regs *regs)
 {
 	struct fb_info *info = dev_get_drvdata(dev_id);
@@ -247,6 +248,7 @@ static irqreturn_t ndsfb_interrupt(int irq, void *dev_id, struct pt_regs *regs)
 
 	return IRQ_HANDLED;
 }
+#endif
 
     /*
      *  Internal routines
