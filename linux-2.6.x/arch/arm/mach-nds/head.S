@@ -247,8 +247,8 @@ _entry:
 	@ Region 7 - GBA SLOT ROM for Program+Data, overriding Region 6
 	@-------------------------------------------------------------------------
 	ldr	r0,=( PAGE_32M | 0x08000000 | 1)
-#if defined(CONFIG_MMC_SCSD) || defined (CONFIG_IDE_NDS_SUPERCARD)
-	@ Supercard uses upper 16M for card I/O
+#ifdef CONFIG_IDE_NDS_SUPERCARD
+	@ Supercard CF uses upper 16M for card I/O
 	ldr	r0,=( PAGE_16M | 0x08000000 | 1)
 #endif
 	mcr	p15, 0, r0, c6, c7, 0
@@ -266,8 +266,9 @@ _entry:
 	@-------------------------------------------------------------------------
 	@ Data cache enable
 	@-------------------------------------------------------------------------
-	@ Disable data cache for GBA ROM, until we have full 8bit write support.
+	@ Disable data cache for GBA ROM, unless we have full 8bit write support.
 	@	      gGViWDMI
+	@ NOTE: this code must be synchronous with include/asm-arm/arch-nds/gbarom-macros.S
 #ifdef CONFIG_NDS_ROM8BIT
 	ldr	r0,=0b10000010
 #else
@@ -366,10 +367,19 @@ _copydata:
          * use this RAM. */
 unlock_ram:
 #ifdef CONFIG_NDS_ROM8BIT
-#if defined(CONFIG_MMC_SCSD) || defined (CONFIG_IDE_NDS_SUPERCARD)
+#ifdef CONFIG_MMC_SCSD
 	ldr	r0, =0x09FFFFFE
 	ldr	r1, =0xa55a
-	ldr	r2, =0x0007
+	ldr	r2, =0x0005	@ complete GBA ROM space as RAM
+	strh	r1, [r0]
+	strh	r1, [r0]
+	strh	r2, [r0]
+	strh	r2, [r0]
+#endif
+#ifdef CONFIG_IDE_NDS_SUPERCARD
+	ldr	r0, =0x09FFFFFE
+	ldr	r1, =0xa55a
+	ldr	r2, =0x0007	@ 16 MByte RAM + 16 MByte IO
 	strh	r1, [r0]
 	strh	r1, [r0]
 	strh	r2, [r0]
