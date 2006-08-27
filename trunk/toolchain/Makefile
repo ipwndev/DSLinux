@@ -582,21 +582,20 @@ $(CWD)/.stripped:
 	rm -rf $(PREFIX)/$(TARGET)/include
 	rm -rf $(PREFIX)/$(TARGET)/usr/include/asm
 	ln -sf asm-arm $(PREFIX)/$(TARGET)/usr/include/asm
-	# strip binaries
+	# strip binaries completely
 	-strip $(PREFIX)/bin/*
-	strip $(PREFIX)/lib/*.a
 	-strip $(PREFIX)/$(TARGET)/bin/*
 	-strip $(PREFIX)/libexec/gcc/$(TARGET)/$(GCC_VER)/*
 	-strip $(PREFIX)/libexec/gcc/$(TARGET)/$(GCC_VER)/install-tools/*
-	$(TARGET)-strip $(PREFIX)/$(TARGET)/lib/*.o
-	$(TARGET)-strip $(PREFIX)/$(TARGET)/lib/*.a
-	$(TARGET)-strip $(PREFIX)/$(TARGET)/lib/thumb/*.a
-	# XXX: Don't strip these as it breaks compilation in ncurses.
-	# ("Undefined reference to __udivsi3" etc. - but why?)
-	#$(TARGET)-strip $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/*.o
-	#$(TARGET)-strip $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/*.a
-	#$(TARGET)-strip $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/thumb/*.o
-	#$(TARGET)-strip $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/thumb/*.a
+	# strip debug symbols from libraries
+	strip --strip-debug $(PREFIX)/lib/*.a
+	$(TARGET)-strip --strip-debug $(PREFIX)/$(TARGET)/lib/*.o
+	$(TARGET)-strip --strip-debug $(PREFIX)/$(TARGET)/lib/*.a
+	$(TARGET)-strip --strip-debug $(PREFIX)/$(TARGET)/lib/thumb/*.a
+	$(TARGET)-strip --strip-debug $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/*.o
+	$(TARGET)-strip --strip-debug $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/*.a
+	$(TARGET)-strip --strip-debug $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/thumb/*.o
+	$(TARGET)-strip --strip-debug $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/thumb/*.a
 	touch $@
 
 #######################################################################
