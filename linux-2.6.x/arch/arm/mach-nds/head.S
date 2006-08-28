@@ -35,6 +35,7 @@
 #include <asm/system.h>
 #include <asm/mach/arch.h>
 #include <asm/thread_info.h>
+#include <asm/arch/gbarom-macro.S>
 
 /* Copied here from another machine type.
  * All arm machines have the same values for these. (stsp) */
@@ -368,23 +369,15 @@ _copydata:
 unlock_ram:
 #ifdef CONFIG_NDS_ROM8BIT
 #ifdef CONFIG_MMC_SCSD
-	ldr	r0, =0x09FFFFFE
-	ldr	r1, =0xa55a
-	ldr	r2, =0x0005	@ complete GBA ROM space as RAM
-	strh	r1, [r0]
-	strh	r1, [r0]
-	strh	r2, [r0]
-	strh	r2, [r0]
+	sc_setmode  SC_MODE_RAM
 #endif
 #ifdef CONFIG_IDE_NDS_SUPERCARD
-	ldr	r0, =0x09FFFFFE
-	ldr	r1, =0xa55a
-	ldr	r2, =0x0007	@ 16 MByte RAM + 16 MByte IO
-	strh	r1, [r0]
-	strh	r1, [r0]
-	strh	r2, [r0]
-	strh	r2, [r0]
+	sc_setmode  SC_MODE_IORAM
 #endif
+#ifdef CONFIG_MMC_M3SD
+	m3_set_rw
+#endif
+	@ more activation for other cards here
 #endif
 	mov	pc, lr	
 
