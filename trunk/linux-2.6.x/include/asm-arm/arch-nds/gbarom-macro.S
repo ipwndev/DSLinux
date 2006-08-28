@@ -88,7 +88,110 @@
 	.endm
 
 /*****************************************************************************/
+/*
+ * Supercard SD/CF ROM/RAM/IO switching.
+ */
+#define SC_LOCK      0x09FFFFFE
+	/* bit 0: must be 1, unknown            */
+	/* bit 1: enable IO interface (SD,CF)	*/
+	/* bit 2: enable R/W SDRAM access 	*/
+	/* bit 3-7: unknown, 0                  */
+#define SC_MODE_ROM	0x01	/* 32 MByte ROM 		*/
+#define SC_MODE_IO	0x03	/* 16 MByte ROM + 16 MByte IO 	*/
+#define SC_MODE_RAM	0x05	/* 32 MByte RAM 		*/
+#define SC_MODE_IORAM	0x07	/* 16 MByte RAM + 16 MByte IO 	*/
+/* NOTE: the Supercard Lite doesn't like WRITE access to lower 
+   ===== 16 MByte RAM, while I/O is in progress. */
+#define SC_PATTERN	0xA55A	/* Key pattern for SC_LOCK      */
 
+/* sc_setmode: supercard SD/CF GBA ROM/RAM/IO switching.
+   Use only register R3 and IP.
+   NOTE: this macro destroys the RAM contents at address SC_LOCK. */
 
+	.macro	sc_setmode  mode
+	ldr	r3, =SC_LOCK
+	ldr	ip, =SC_PATTERN
+	strh	ip, [r3]
+	strh	ip, [r3]
+	mov	ip, #\mode
+	strh	ip, [r3]
+	strh	ip, [r3]
+	.endm
 
+/*****************************************************************************/
+/*
+ * M3 Adapter SD/CF ROM/RAM/IO switching.
+ */
 
+/* 
+ * m3_set_io: M3SD/CF is set to I/O ("MEDIA") mode.
+ * Use only register R3 and IP.
+ */
+	.macro	m3_set_io
+	ldr	r3, =0x08e00002
+	ldrh	ip, [r3]
+	ldr	r3, =0x0800000e
+	ldrh	ip, [r3]
+	ldr	r3, =0x08801ffc
+	ldrh	ip, [r3]
+	ldr	r3, =0x0800104a
+	ldrh	ip, [r3]
+	ldr	r3, =0x08800612
+	ldrh	ip, [r3]
+	ldr	r3, =0x08000000
+	ldrh	ip, [r3]
+	ldr	r3, =0x08801b66
+	ldrh	ip, [r3]
+	ldr	r3, =0x08800006
+	ldrh	ip, [r3]
+	ldr	r3, =0x0800080e
+	ldrh	ip, [r3]
+	ldr	r3, =0x08000000
+	ldrh	ip, [r3]
+	ldr	r3, =0x09000000
+	ldrh	ip, [r3]
+	.endm
+/* 
+ * m3_set_rom: M3SD/CF is set to ROM mode.
+ * Use only register R3 and IP.
+ */
+	.macro	m3_set_rom
+	ldr	r3, =0x08e00002
+	ldrh	ip, [r3]
+	ldr	r3, =0x0800000e
+	ldrh	ip, [r3]
+	ldr	r3, =0x08801ffc
+	ldrh	ip, [r3]
+	ldr	r3, =0x0800104a
+	ldrh	ip, [r3]
+	ldr	r3, =0x08800612
+	ldrh	ip, [r3]
+	ldr	r3, =0x08000000
+	ldrh	ip, [r3]
+	ldr	r3, =0x08801b66
+	ldrh	ip, [r3]
+	ldr	r3, =0x08800008
+	ldrh	ip, [r3]
+	ldr	r3, =0x0800080e
+	ldrh	ip, [r3]
+	ldr	r3, =0x08000000
+	ldrh	ip, [r3]
+	ldr	r3, =0x080001e4
+	ldrh	ip, [r3]
+	ldrh	ip, [r3]
+	ldr	r3, =0x08000188
+	ldrh	ip, [r3]
+	ldrh	ip, [r3]
+	.endm
+/* 
+ * m3_set_rw: if the previous mode of M3SD/CF was "ROM",
+ * allow write access. Use only register R3 and IP.
+ */
+	.macro	m3_set_rw
+	ldr	r3, =0x09FFEFFE
+	ldr	ip, =0xAA55
+	swph	ip, ip, [r3]	@ be carefull not to overwrite memory
+	strh	ip, [r3]
+	.endm
+
+/*****************************************************************************/
