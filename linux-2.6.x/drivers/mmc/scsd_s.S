@@ -30,42 +30,6 @@
 #define SC_SDL_DOWRITE	0x09440000
 	/* SC lite: write 0 before write command */
 
-#define SC_SD_LOCK      0x09FFFFFE
-	/* bit 0: 1				*/
-	/* bit 1: enable IO interface (SD,CF)	*/
-	/* bit 2: enable R/W SDRAM access 	*/
-#define SC_SD_PATTERN	0xA55A
-
-/*****************************************************************************/
-
-/* Switch GBA ROM space of supercard to IO mode.
- * Only registers R3 and IP are used.
- * RAM content @ SC_SD_LOCK destroyed.
- */
-	.macro	switch_io
-	ldr	r3, =SC_SD_LOCK
-	ldr	ip, =SC_SD_PATTERN
-	strh	ip, [r3]
-	strh	ip, [r3]
-	mov	ip, #7		@ to be compatible - lower 16 MByte == RAM
-	strh	ip, [r3]
-	strh	ip, [r3]
-	.endm
-	
-/* Switch GBA ROM space of supercard to RAM mode.
- * Only registers R3 and IP are used.
- * RAM content @ SC_SD_LOCK destroyed.
- */
-	.macro	switch_ram
-	ldr	r3, =SC_SD_LOCK
-	ldr	ip, =SC_SD_PATTERN
-	strh	ip, [r3]
-	strh	ip, [r3]
-	mov	ip, #5		@ all 32 MBytes to RAM mode.
-	strh	ip, [r3]
-	strh	ip, [r3]
-	.endm
-	
 /*****************************************************************************/
 
 	@ Test if the card is present.
@@ -81,11 +45,11 @@ detect_card:
 	@ store opposite of requested value in SC_SD_CMD (in RAM)
 	mov	r0, #-1
 	strh	r0, [r3]
-	@ read old value @ SC_SD_LOCK (in RAM)
-	ldr	r3, =SC_SD_LOCK
+	@ read old value @ SC_LOCK (in RAM)
+	ldr	r3, =SC_LOCK
 	ldrh	r1, [r3]
 	@ now switch to IO mode (destroy RAM @ SC_SD_LOCK)
-	switch_io
+	sc_setmode SC_MODE_IO
 	@ now read SC_SD_CMD (in IO)
 	ldr	r3, =SC_SD_CMD
 	ldrh	r0, [r3]
@@ -93,11 +57,11 @@ detect_card:
 	moveq	r0, #1
 	movne	r0, #0
 	@ switch back to RAM
-	switch_ram
+	sc_setmode SC_MODE_RAM
 	@ restore RAM contents
 	ldr	r3, =SC_SD_CMD
 	strh	r2, [r3]
-	ldr	r3, =SC_SD_LOCK
+	ldr	r3, =SC_LOCK
 	strh	r1, [r3] 
 	suffix
 	mov	pc, lr
@@ -123,7 +87,7 @@ transfer_nibbles:
 send_command:
 	stmfd   sp!,{r4-r6}		@ use additional registers
 	prefix
-	switch_io
+	sc_setmode SC_MODE_IO
 	ldr	r2,=SC_SD_CMD
 	ldmia	r2,{r3-r6}		@ write 8 clocks
 	mov	r4, #1024		@ max. loop count
@@ -153,7 +117,7 @@ send_command_loop:
 	ldr	r3,[r2]			@ skip 2 Z bits
 	mov	r0, #1			@ OK
 send_command_exit:
-	switch_ram
+	sc_setmode SC_MODE_RAM
 	suffix
 	ldmfd   sp!,{r4-r6}		@ restore used registers
 	mov	pc, lr
@@ -168,7 +132,7 @@ send_command_exit:
 	.ALIGN
 read_response:
 	prefix
-	switch_io
+	sc_setmode SC_MODE_IO
 	ldr	r2, =SC_SD_CMD
 	mov	ip, #1024
 read_response_wait:
@@ -211,7 +175,7 @@ read_response_7bit:
 	ldr	r3,[r2]			@ skip 2 Z bits
 	mov	r0, #1			@ R0=OK
 read_response_exit:
-	switch_ram
+	sc_setmode SC_MODE_RAM
 	suffix
 	mov	pc, lr
 
@@ -223,7 +187,7 @@ read_response_exit:
 	.ALIGN
 wait_ready:
 	prefix
-	switch_io
+	sc_setmode SC_MODE_IO
 	ldr	r1,=SC_SD_DATAREAD	@ IO address
 	mov	r2, #1024		@ number of tries
 wait_ready_again:
@@ -240,7 +204,7 @@ wait_ready_loop:
 	@ 8 times HIGH - OK!
 	mov	r0, #1			@ R0=OK
 wait_ready_exit:
-	switch_ram
+	sc_setmode SC_MODE_RAM
 	suffix
 	mov	pc, lr
 
@@ -256,7 +220,7 @@ wait_ready_exit:
 	.ALIGN
 send_data:
 	prefix
-	switch_io
+	sc_setmode SC_MODE_IO
 	@ write the start bit (0)
 	ldr	ip,=SC_SD_DATAWRITE
 	strh	ip, [ip]
@@ -291,7 +255,7 @@ send_data_wait:
 	tst	r2, #0x01000000
 	movne	r0, #1			@ R0=OK if CRC code == 2 or 3
 send_data_exit:
-	switch_ram
+	sc_setmode SC_MODE_RAM
 	suffix
 	mov	pc, lr
 
@@ -305,7 +269,7 @@ send_data_exit:
 	.ALIGN
 read_data:
 	prefix
-	switch_io
+	sc_setmode SC_MODE_IO
 	ldr	ip,=SC_SD_DATAREAD
 	mov	r2, #1024
 read_data_wait:
@@ -338,7 +302,7 @@ read_data_loop:
 	ldrh	r2,[ip]		@ read the end bit
 	mov	r0, #1		@ R0=OK
 read_data_exit:
-	switch_ram
+	sc_setmode SC_MODE_RAM
 	suffix
 	mov	pc, lr
 
@@ -358,13 +322,13 @@ read_only:
 	.ALIGN
 send_clocks:
 	prefix
-	switch_io
+	sc_setmode SC_MODE_IO
 	ldr	r0,=SC_SD_CMD
 	ldr	r1,[r0]
 	ldr	r1,[r0]
 	ldr	r1,[r0]
 	ldr	r1,[r0]
-	switch_ram
+	sc_setmode SC_MODE_RAM
 	suffix
 	mov	pc, lr
 
