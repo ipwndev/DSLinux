@@ -5,7 +5,7 @@ NDS_COMMON = $(ROOTDIR)/vendors/Nintendo/common
 CONSOLE_BAUD_RATE = 115200
 
 # CPUFLAGS :=
-VENDOR_CFLAGS := -mswp-byte-writes -DCONFIG_NDS_ROM8BIT
+VENDOR_CFLAGS := -mswp-byte-writes -DCONFIG_NDS_ROM8BIT -mcpu=arm946e-s -mfpu=fpe3
 # DISABLE_XIP := 1
 DISABLE_MOVE_RODATA := 1
 DISABLE_SHARED_LIBS := 1
