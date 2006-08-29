@@ -12,7 +12,7 @@ CONSOLE_BAUD_RATE = 115200
 ############################################################################
 
 # CPUFLAGS :=
-# VENDOR_CFLAGS :=
+VENDOR_CFLAGS += -mcpu=arm946e-s -mfpu=fpe3
 # DISABLE_XIP := 1
 DISABLE_MOVE_RODATA := 1
 DISABLE_SHARED_LIBS := 1
