@@ -87,7 +87,7 @@
 # include "tag.h"
 # include "rgain.h"
 
-# define MPEG_BUFSZ	40000	/* 2.5 s at 128 kbps; 1 s at 320 kbps */
+# define MPEG_BUFSZ	65536	/* 4 s at 128 kbps; 1.6 s at 320 kbps */
 # define FREQ_TOLERANCE	2	/* percent sampling frequency tolerance */
 
 # define TTY_DEVICE	"/dev/tty"
