@@ -1,3 +1,3 @@
 #!/bin/sh
-cd /media/musik
+cd /media/music
 madplay -m -z *
