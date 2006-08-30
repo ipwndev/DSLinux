@@ -156,10 +156,10 @@
 #define HAVE_MEMPCPY	1
 
 /* Define to 1 if you have a working `mmap' system call. */
-#define HAVE_MMAP	1
+#undef HAVE_MMAP
 
 /* Define to 1 if you have the `munmap' function. */
-#define HAVE_MUNMAP	1
+#undef HAVE_MUNMAP
 
 /* Define to 1 if you have the <nl_types.h> header file. */
 #undef HAVE_NL_TYPES_H
