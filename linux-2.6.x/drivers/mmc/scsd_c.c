@@ -1,5 +1,5 @@
 /*
- *  linux/drivers/mmc/scsd_c.c - Nintendo DS SD driver
+ *  linux/drivers/mmc/scsd_c.c - Supercard SD driver
  *
  *  Copyright (C) 2006 Amadeus, All Rights Reserved.
  *  Based on the old non-mmc driver by by Jean-Pierre Thomasset.
@@ -48,7 +48,7 @@
 #define BLOCKSIZE 	512
 
 #define DRIVER_NAME	"scsd"
-#define DRIVER_VERSION	"1.1.2"
+#define DRIVER_VERSION	"1.1.3"
 
 /*****************************************************************************/
 
@@ -58,66 +58,56 @@ struct scsd_host {
 };
 
 /*****************************************************************************/
-/* Structure for device-specific functions in assembler.
-*/
-struct sd_functions {
-	/* Test if the card is present.
-	   Return != 0 if present. */
-	int  	(*detect_card) (void);
+/* 
+ * Low-level assembler stuff in scsd_s.S 
+ */
 
-	/* Say if the data transfer is 1 or 4 bit.
-	   Return != 0 if 4 bit. */
-	int     (*transfer_nibbles) (void);
+/* Test if the card is present.
+   Return != 0 if present. */
+extern int scsd_detect_card(void);
 
-	/* Write at minimum 8 clock cycles to the card.
-	   Wait max. 1ms for the CMD line to become HIGH.
-	   Send a command to the card. Skip 2 Z bits.
-           data = pointer to start of command. 32bit aligned.
-           len  = length of the command (including CRC7).
-	   Return != 0 if OK, 0 if timeout. */
-	int 	(*send_command)	(u8 *data, int len);
+/* Write at minimum 8 clock cycles to the card.
+   Wait max. 1ms for the CMD line to become HIGH.
+   Send a command to the card. Skip 2 Z bits.
+   if reslen > 0:
+   Wait max. 1ms for the CMD line to become LOW.
+   Read a response from the device and skip 2 Z bits. 
+   data = pointer to start of command & response. 32bit aligned.
+   len  = length of the command (including CRC7).
+   reslen = length of response.
+   Return 0 if OK, 1 if timeout waiting for CMD HIGH,
+                   2 if timeout waiting for CMD LOW */
+extern int scsd_send_command_resp(u8 *data, int len, int reslen);
 
-	/* Wait max. 1ms for the CMD line to become LOW.
- 	   Read a response from the device and skip 2 Z bits. 
-           data = pointer to start of response buffer. 32bit aligned.
-           len  = number of bytes to read(including CRC).
-	   Return != 0 if OK, 0 if timeout. */
-	int	(*read_response) (u8* data, int len);
+/* Wait for the DATA line to become HIGH.
+   Return != 0 if OK, 0 if timeout.
+   Maximum length of testing is 1ms. */
+extern int scsd_wait_ready(void);
 
-	/* Wait for the DATA line to become HIGH.
-	   Return != 0 if OK, 0 if timeout.
-	   Maximum length of testing is 1ms. */
-	int 	(*wait_ready) (void);
+/* Write a start bit, send a Data block incl. CRC.
+   Write the end bit. Skip 2 Z bits.
+   Wait max. 1ms for the start of the CRC response.
+   Check the CRC response.
+   data = pointer to start of data. 32bit aligned.
+   len  = number of bytes to send.
+   Return != 0 if OK, 0 if CRC missing or error. */
+extern int scsd_send_data(u8 *data, int len);
 
-	/* Write a start bit, send a Data block incl. CRC.
-	   Write the end bit. Skip 2 Z bits.
-           Wait max. 1ms for the start of the CRC response.
-	   Check the CRC response.
-	   data = pointer to start of data. 32bit aligned.
-	   len  = number of bytes to send.
-	   Return != 0 if OK, 0 if CRC missing or error. */
-	int     (*send_data) (u8 *data, int len);
+/* Wait max 1ms for the DATA line to become LOW.
+   Receive a Data block and CRC, skip the end bit.
+   data = pointer to start of data. 32bit aligned.
+   len  = number of bytes to receive (incl. CRC) 
+   Return != 0 if OK, 0 if timeout. */
+extern int scsd_read_data(u8 *data, int len);
 
-	/* Wait max 1ms for the DATA line to become LOW.
-	   Receive a Data block and CRC, skip the end bit.
-	   data = pointer to start of data. 32bit aligned.
-	   len  = number of bytes to receive (incl. CRC) 
-	   Return != 0 if OK, 0 if timeout. */
-	int     (*read_data) (u8 *data, int len);
+/* Write at minimum 8 clock cycles to the card. */
+extern void scsd_send_clocks(void);
 
-	/* Read the write protect switch.
-	   Return != 0 if readonly, 0 if r/w.
-	   When in doubt, return 0. */
-	int	(*read_only) (void);
-
-	/* Write at minimum 8 clock cycles to the card. */
-	void	(*send_clocks) (void);
-};
-
-/*****************************************************************************/
-/* Active link to device-specific functions.
-*/
-static struct sd_functions *sd_dev;
+/* Calculate the data crc.
+   data = pointer to start of data. 32bit aligned.
+   len  = number of bytes of CRC calculation.
+   crc  = pointer to start of CRC. */
+extern void scsd_calc_crc(u8 *data, int len, u8* crc);
 
 /*****************************************************************************/
 /* Timer delayed execution of last clocks */
@@ -130,14 +120,6 @@ static struct timer_list clock_timer;
    This buffer holds data and CRC (two times for reading).
 */
 static u8 sd_databuf[BLOCKSIZE+16] __attribute__ ((aligned (4)));
-
-/*****************************************************************************/
-/* Device-specific functions.
-*/
-#ifdef CONFIG_MMC_SCSD
-/* Supercard SD(mini,lite) */
-extern struct sd_functions supercard_functions;
-#endif
 
 /*****************************************************************************/
 
@@ -162,85 +144,6 @@ inline static u8 scsd_crc7(u8* data, int cnt)
     return(crc);
 } 
 
-/* Calculate the data crc.
-   data = pointer to start of data. 32bit aligned.
-   len  = number of bytes of CRC calculation.
-   crc  = pointer to start of CRC. 
-*/
-/* non-static */ void scsd_calc_crc(u8 *data, int len, u8* crc)
-{
-	__asm__ __volatile__(					
-"	mov	r9,%2		\n"
-"                               \n"
-"	mov	r3,#0           \n"
-"	mov	r4,#0           \n"          
-"	mov	r5,#0           \n"          
-"	mov	r6,#0           \n"          
-"                               \n"
-"	ldr	r7,=0x80808080  \n"
-"	ldr	r8,=0x1021      \n"          
-"	mov	%1,%1,lsl #3    \n"          
-"1:                             \n"
-"	tst	r7,#0x80        \n"          
-"	ldrneb	%2,[%0],#1      \n"       
-"                               \n"
-"	mov	r3,r3,lsl #1    \n"
-"	tst	r3,#0x10000     \n"          
-"	eorne	r3,r3,r8        \n"        
-"	tst	%2,r7,lsr #24   \n"          
-"	eorne	r3,r3,r8        \n"        
-"	                        \n"      
-"	mov	r4,r4,lsl #1    \n"          
-"	tst	r4,#0x10000     \n"          
-"	eorne	r4,r4,r8        \n"        
-"	tst	%2,r7,lsr #25   \n"          
-"	eorne	r4,r4,r8        \n"        
-"	                        \n"      
-"	mov	r5,r5,lsl #1    \n"          
-"	tst	r5,#0x10000     \n"          
-"	eorne	r5,r5,r8        \n"        
-"	tst	%2,r7,lsr #26   \n"          
-"	eorne	r5,r5,r8        \n"        
-"	                        \n"      
-"	mov	r6,r6,lsl #1    \n"          
-"	tst	r6,#0x10000     \n"          
-"	eorne	r6,r6,r8        \n"        
-"	tst	%2,r7,lsr #27   \n"          
-"	eorne	r6,r6,r8        \n"        
-"                               \n"
-"	mov	r7,r7,ror #4    \n"
-"	subs	%1,%1,#4        \n"         
-"       bne     1b              \n"
-"                               \n"
-"	mov	%2,r9           \n"
-"	mov	r8,#16          \n"          
-"2:                             \n"
-"	mov	r7,r7,lsl #4    \n"          
-"	tst	r3,#0x8000      \n"          
-"	orrne	r7,r7,#8        \n"        
-"	tst	r4,#0x8000      \n"          
-"	orrne	r7,r7,#4        \n"        
-"	tst	r5,#0x8000      \n"          
-"	orrne	r7,r7,#2        \n"        
-"	tst	r6,#0x8000      \n"          
-"	orrne	r7,r7,#1        \n"        
-"                               \n"
-"	mov	r3,r3,lsl #1    \n"
-"	mov	r4,r4,lsl #1    \n"          
-"	mov	r5,r5,lsl #1    \n"          
-"	mov	r6,r6,lsl #1    \n"          
-"                               \n"
-"	sub	r8,r8,#1        \n"
-"	tst	r8,#1           \n"          
-"	streqb	r7,[%2],#1	\n"
-"	cmp	r8,#0           \n"          
-"	bne	2b              \n"          
-"                               \n"
-	: /* no output registers */					
-	: "r" (data), "r" (len), "r" (crc)
-	: "r3", "r4", "r5", "r6", "r7", "r8", "r9", "cc");
-}
-
 
 /* Wait until ready on the data lines */
 /* return 0 if ready, 1 if busy */
@@ -249,7 +152,7 @@ inline static int scsd_waitready(void)
 	int i;
 
 	for (i = 1000; i; i--) {
-		if (sd_dev->wait_ready())
+		if (scsd_wait_ready())
 			return 0;
 	}
 	return 1;
@@ -261,6 +164,7 @@ static int scsd_send_cmd(struct mmc_command *cmd)
 {
 	u8 *p = sd_databuf;
 	int i;
+	int reslen;
 
 	/* stop the clock timer, we will send a command */
 	del_timer(&clock_timer);
@@ -276,10 +180,29 @@ static int scsd_send_cmd(struct mmc_command *cmd)
 	*p++ = cmd->arg; 
 	*p   = scsd_crc7(sd_databuf, 5);
 	
-	/* waiting for CMD line high, write command to card */
+	/* calculate length of response */
+	reslen = 0;
+	if ((cmd->flags & MMC_RSP_MASK) == MMC_RSP_LONG)
+		reslen = 18;
+	if ((cmd->flags & MMC_RSP_MASK) == MMC_RSP_SHORT)
+		reslen = 6;
+	if ((cmd->opcode == MMC_READ_SINGLE_BLOCK)
+         || (cmd->opcode == MMC_READ_MULTIPLE_BLOCK)
+	 || (cmd->opcode == SD_APP_SEND_SCR))
+		reslen = 0;
+	/* waiting for CMD line high, write command to card, read response */
 	for (i = 250; i; i--) {
-		if (sd_dev->send_command(sd_databuf, 6))
+		int ret = scsd_send_command_resp(sd_databuf, 6, reslen);
+		if (!ret)	/* all OK */
 			break;
+		if (ret == 1)	/* Card busy, try again */
+			continue;
+		if (ret == 2) {	/* Timeout waiting for response */
+			/* Timeout error */
+			printk(KERN_ERR "CMD:Timeout after command\n");
+			cmd->error = MMC_ERR_TIMEOUT;
+			return -1;
+		}
 	}
 	if (!i) {
 		printk( KERN_ERR "CMD:Timeout before command\n");
@@ -307,17 +230,6 @@ static int scsd_send_cmd(struct mmc_command *cmd)
 			return 0;
 		}  
 
-		/* Read the response */
-		if ((cmd->flags & MMC_RSP_MASK) == MMC_RSP_LONG)
-			i = 18;
-		else
-			i = 6;
-		if (!sd_dev->read_response(sd_databuf, i)) {
-			/* Timeout error */
-			printk(KERN_ERR "CMD:Timeout after command\n");
-			cmd->error = MMC_ERR_TIMEOUT;
-			return -1;
-		}
 		p = sd_databuf;
 		p++; /* skip command byte */
 		cmd->resp[0]  = *p++ << 24;
@@ -361,7 +273,6 @@ static int scsd_send_cmd(struct mmc_command *cmd)
 	}
 
 	/* success */
-	cmd->error = MMC_ERR_NONE;
 	return 0;
 }
 
@@ -404,7 +315,7 @@ static void scsd_xfer( struct mmc_data *data )
 
 				/* wait max. 100ms for start bit, read the data+crc+end bit */
 				for( i=100; i; i--) {
-					if (sd_dev->read_data(sd_databuf, length+8))
+					if (scsd_read_data(sd_databuf, length+8))
 						break;
 				}
 				if (!i) {
@@ -447,7 +358,7 @@ static void scsd_xfer( struct mmc_data *data )
 				}
 
 				/* Write data, check CRC response */
-				if (!sd_dev->send_data(sd_databuf, length+8)) {
+				if (!scsd_send_data(sd_databuf, length+8)) {
 					/* Timeout error */
 					printk(KERN_ERR "BAD CRC response\n");
 					data->error = MMC_ERR_TIMEOUT;
@@ -493,7 +404,7 @@ static void scsd_request(struct mmc_host *mmc, struct mmc_request *mrq)
 
 	/* Fooling mmc core to only do 4bit data transfers.
 	   if the hardware/the driver can only do 4bit transfers. */
-	if (sd_dev->transfer_nibbles() && mmc->card_selected) {
+	if (mmc->card_selected) {
 		mmc->card_selected->scr.bus_widths |= SD_SCR_BUS_WIDTH_4;
 	}
 
@@ -565,14 +476,14 @@ static void scsd_timeout(unsigned long arg)
 		return;	/* nothing to do, next timeout will come */
 	
 	/* send 8 clocks after last command */
-	sd_dev->send_clocks();
+	scsd_send_clocks();
 }
 
 /* read the write protect switch */
 static int scsd_get_ro(struct mmc_host *mmc)
 {
 	DBG("%s\n",__FUNCTION__);
-	return sd_dev->read_only();
+	return 0;
 }
 
 /* set operating conditions for the host */
@@ -612,20 +523,14 @@ static int scsd_probe(struct device *dev)
 	struct scsd_host *host = NULL;
     	DBG("%s\n",__FUNCTION__);
 
-	/* Pointer to device-specific functions */
-#ifdef CONFIG_MMC_SCSD
-	sd_dev = &supercard_functions;
-	if (sd_dev->detect_card()) {
+	if (scsd_detect_card()) {
 		printk(KERN_INFO "Supercard SD detected\n");
-		goto success;
+	} else {
+		/* device not found */
+		printk(KERN_INFO "No Supercard SD found\n");
+		return -ENODEV;
 	}
-#endif	
 
-	/* device not found */
-	printk(KERN_INFO "No SD device found\n");
-	return -ENODEV;
-
-success:
         /* allocate host data structures */
 	mmc = mmc_alloc_host(sizeof(struct scsd_host), dev);
 	if (!mmc) {
@@ -714,5 +619,5 @@ static void __exit scsd_exit(void)
 module_init(scsd_init);
 module_exit(scsd_exit);
 
-MODULE_DESCRIPTION("Nintendo DS SD Driver");
+MODULE_DESCRIPTION("Supercard SD Driver");
 MODULE_LICENSE("GPL");
