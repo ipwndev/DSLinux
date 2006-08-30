@@ -25,7 +25,7 @@
 
 /*****************************************************************************/
 /*
- * Prefix macro. This macro does all the magic required to switch the 
+ * GBA prefix macro. This macro does all the magic required to switch the 
  * GBA ROM space from RAM mode to IO mode (exclusive the switching itself,
  * which is device dependent).
  * This is a macro and not a function, because the stack(!) may be in GBA
@@ -36,7 +36,7 @@
  * R3 and IP are used and altered. If you need more registers, you
  * must reserve these registers BEFORE calling this macro.
  */
-	.macro	prefix
+	.macro	gba_prefix
 	@ Disable interrupts
 	ldr	r3, =NDS_IME		@ interrupt mask register
 	mov	ip, #0			@ 0 = disable
@@ -64,7 +64,7 @@
 
 /*****************************************************************************/
 /*
- * Suffix macro. This macro does all the magic required to switch the
+ * GBA suffix macro. This macro does all the magic required to switch the
  * GBA ROM space from IO mode to RAM mode (exclusive the switching itself,
  * which is device dependent).
  * This is a macro and not a function, because the stack(!) may be in GBA
@@ -73,7 +73,7 @@
  *
  * Register R0 is not altered and used as a return register.
  */
-	.macro	suffix
+	.macro	gba_suffix
 	@ be safe that all switching commands before are executed
 	mov	ip, #0
 	mcr	p15, 0, ip, c7, c10, 4	@ drain write buffer
@@ -107,7 +107,6 @@
 /* sc_setmode: supercard SD/CF GBA ROM/RAM/IO switching.
    Use only register R3 and IP.
    NOTE: this macro destroys the RAM contents at address SC_LOCK. */
-
 	.macro	sc_setmode  mode
 	ldr	r3, =SC_LOCK
 	ldr	ip, =SC_PATTERN
@@ -116,6 +115,32 @@
 	mov	ip, #\mode
 	strh	ip, [r3]
 	strh	ip, [r3]
+	.endm
+
+/* sc_set_io: set mode to I/O, save old value @SC_LOCK in R2.
+   Use register R2, R3, IP. */
+	.macro	sc_set_io
+	ldr	r3, =SC_LOCK
+	ldr	ip, =SC_PATTERN
+	ldrh	r2, [r3]
+	strh	ip, [r3]
+	strh	ip, [r3]
+	mov	ip, #SC_MODE_IO
+	strh	ip, [r3]
+	strh	ip, [r3]
+	.endm
+
+/* sc_set_ram: set mode to RAM, restore old value @SC_LOCK from R2.
+   Use register R2, R3, IP. */
+	.macro	sc_set_ram
+	ldr	r3, =SC_LOCK
+	ldr	ip, =SC_PATTERN
+	strh	ip, [r3]
+	strh	ip, [r3]
+	mov	ip, #SC_MODE_RAM
+	strh	ip, [r3]
+	strh	ip, [r3]
+	strh	r2, [r3]
 	.endm
 
 /*****************************************************************************/
@@ -185,13 +210,15 @@
 	.endm
 /* 
  * m3_set_rw: if the previous mode of M3SD/CF was "ROM",
- * allow write access. Use only register R3 and IP.
+ * allow write access. Use only register R2, R3 and IP.
  */
 	.macro	m3_set_rw
 	ldr	r3, =0x09FFEFFE
 	ldr	ip, =0xAA55
-	swph	ip, ip, [r3]	@ be carefull not to overwrite memory
+	ldrh	r2, [r3]	@ read old value @ 0x09FFEFFE
 	strh	ip, [r3]
+	strh	ip, [r3]
+	strh	r2, [r3]	@ restore old value
 	.endm
 
 /*****************************************************************************/

@@ -369,9 +369,11 @@ _copydata:
 unlock_ram:
 #ifdef CONFIG_NDS_ROM8BIT
 #ifdef CONFIG_MMC_SCSD
-	sc_setmode  SC_MODE_RAM
+	sc_set_ram	@ swith to RAM mode, restore @SC_LOCK from R2
 #endif
 #ifdef CONFIG_IDE_NDS_SUPERCARD
+	@ supercard CF driver is not 32 MByte clean, so use only lower
+	@ 16 MBytes
 	sc_setmode  SC_MODE_IORAM
 #endif
 #ifdef CONFIG_MMC_M3SD
