@@ -69,7 +69,6 @@ romfs:
 	$(ROMFSINST) -s /var/home /home
 	$(ROMFSINST) /etc/rc
 	$(ROMFSINST) /etc/inittab
-	$(ROMFSINST) /etc/motd
 	$(ROMFSINST) /etc/issue
 	$(ROMFSINST) $(NDS_COMMON)/rc.common /etc/rc.common
 	$(ROMFSINST) $(NDS_COMMON)/rc.defaults /etc/rc.defaults
