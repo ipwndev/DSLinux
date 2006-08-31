@@ -305,8 +305,7 @@ main(argc, argv)
 			 pcpu / 10, pcpu % 10, 
 			 /*(int)seconds / 60, (int)seconds % 60,*/
 			 l ? psbuf : name);
-	next:
-		;
+	next: ;
 	}
 	
 	closedir(d);
