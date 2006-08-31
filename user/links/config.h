@@ -343,7 +343,7 @@
 /* #undef HAVE_LIBATHEOS */
 
 /* Define if you have the dl library (-ldl).  */
-//#define HAVE_LIBDL 1
+#define HAVE_LIBDL 1
 
 /* Define if you have the gpm library (-lgpm).  */
 /* #undef HAVE_LIBGPM */
@@ -505,3 +505,5 @@
 /* */
 #define C_LITTLE_ENDIAN 1
 
+/* */
+/* #undef RENAME_OVER_EXISTING_FILES */
