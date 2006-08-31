@@ -82,7 +82,6 @@ romfs:
 	$(ROMFSINST) -s /$(FATFS)/linux/etc/hosts /etc/hosts
 	$(ROMFSINST) /etc/rc
 	$(ROMFSINST) /etc/inittab
-	$(ROMFSINST) /etc/motd
 	$(ROMFSINST) /etc/issue
 	$(ROMFSINST) $(NDS_COMMON)/passwd /etc/passwd
 	$(ROMFSINST) $(NDS_COMMON)/rc.common /etc/rc.common
