@@ -3,6 +3,9 @@
 
 #include "sound.h"
 
+/* send MONO as a stereo signal, to get the same output power to the speakers */
+#define MONO_AS_STEREO
+
 /* some sound defines */
 #define SOUND_VOL(n)		(n)
 /* NOTE: you have to write the timer value calculation THIS way.
@@ -27,7 +30,8 @@
 #define SOUND_CR		(*(volatile u16*)0x04000500)
 #define POWER_CR		(*(volatile u16*)0x04000304)
 
-static u8 s_channels;
+static u32 s_channels;
+static u32 true_channels;
 static u32 s_format;
 static u32 s_size;
 
@@ -72,6 +76,10 @@ void sound_set_address(u32 buffer)
 
 	for (i = 0; i < s_channels; i++)
 		SCHANNEL_SOURCE(i) = buffer + i * (s_size / s_channels);
+#ifdef MONO_AS_STEREO
+	if (true_channels == 1)
+		SCHANNEL_SOURCE(1) = buffer;
+#endif
 }
 
 void sound_set_size(u32 size)
@@ -80,11 +88,16 @@ void sound_set_size(u32 size)
 
 	s_size = size;
 	for (i = 0; i < s_channels; i++)
-		SCHANNEL_LENGTH(i) = (s_size / s_channels) >> 2;
+		SCHANNEL_LENGTH(i) = (s_size / true_channels) >> 2;
 }
 
 void sound_set_channels(u8 channels)
 {
+	true_channels = channels;
+#ifdef MONO_AS_STEREO
+	if (channels & 1)
+		channels++;
+#endif
 	s_channels = channels;
 }
 
