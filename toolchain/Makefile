@@ -295,16 +295,20 @@ $(SRCDIR)/.uClibc-compiled: $(SRCDIR)/.uClibc-configured
 		CROSS=$(TARGET)-
 	touch $@
 
+# XXX: Apparently there is a switch in the compiler specs that
+# causes the -g flag to link with libg.a in addition to libc.a.
+# uClibc does not provide libg.a, so linking fails if -g is
+# in CFLAGS. Create a dummy libg.a to work around this.
+$(PREFIX)/$(TARGET)/lib/libg.a:
+	echo 'void __libg__dummy(){};' | $(TARGET)-gcc -xc -c -o libg.o -
+	$(TARGET)-ar r libg.a libg.o
+	rm libg.o
+	mv libg.a $(PREFIX)/$(TARGET)/lib/
+
 # install uClibc
-$(SRCDIR)/.uClibc-installed: $(SRCDIR)/.uClibc-compiled
+$(SRCDIR)/.uClibc-installed: $(SRCDIR)/.uClibc-compiled \
+		$(PREFIX)/$(TARGET)/lib/libg.a
 	$(MAKE) -C $(UCLIBC_SRCDIR) PREFIX=$(PREFIX) install
-	# XXX: Apparently there is a switch in the compiler specs that
-	# causes the -g flag to use libg.a and not libc.a.
-	# uClibc does not provide libg.a, so linking fails if -g is
-	# in CFLAGS. Copying libc.a to libg.a seems make things work.
-	# Workaround taken from notes by Phil Wilshire found at
-	# http://www.ucdot.org/article.pl?sid=03/01/07/0214244
-	cp $(PREFIX)/$(TARGET)/lib/libc.a $(PREFIX)/$(TARGET)/lib/libg.a
 	touch $@
 
 
