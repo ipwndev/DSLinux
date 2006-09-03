@@ -104,19 +104,6 @@
    ===== 16 MByte RAM, while I/O is in progress. */
 #define SC_PATTERN	0xA55A	/* Key pattern for SC_LOCK      */
 
-/* sc_setmode: supercard SD/CF GBA ROM/RAM/IO switching.
-   Use only register R3 and IP.
-   NOTE: this macro destroys the RAM contents at address SC_LOCK. */
-	.macro	sc_setmode  mode
-	ldr	r3, =SC_LOCK
-	ldr	ip, =SC_PATTERN
-	strh	ip, [r3]
-	strh	ip, [r3]
-	mov	ip, #\mode
-	strh	ip, [r3]
-	strh	ip, [r3]
-	.endm
-
 /* sc_set_io: set mode to I/O, save old value @SC_LOCK in R2.
    Use register R2, R3, IP. */
 	.macro	sc_set_io
