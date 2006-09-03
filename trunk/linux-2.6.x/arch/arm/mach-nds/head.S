@@ -248,10 +248,6 @@ _entry:
 	@ Region 7 - GBA SLOT ROM for Program+Data, overriding Region 6
 	@-------------------------------------------------------------------------
 	ldr	r0,=( PAGE_32M | 0x08000000 | 1)
-#ifdef CONFIG_IDE_NDS_SUPERCARD
-	@ Supercard CF uses upper 16M for card I/O
-	ldr	r0,=( PAGE_16M | 0x08000000 | 1)
-#endif
 	mcr	p15, 0, r0, c6, c7, 0
 
 	@-------------------------------------------------------------------------
@@ -368,13 +364,8 @@ _copydata:
          * use this RAM. */
 unlock_ram:
 #ifdef CONFIG_NDS_ROM8BIT
-#ifdef CONFIG_MMC_SCSD
+#if defined(CONFIG_MMC_SCSD) || defined(CONFIG_IDE_NDS_SUPERCARD)
 	sc_set_ram	@ swith to RAM mode, restore @SC_LOCK from R2
-#endif
-#ifdef CONFIG_IDE_NDS_SUPERCARD
-	@ supercard CF driver is not 32 MByte clean, so use only lower
-	@ 16 MBytes
-	sc_setmode  SC_MODE_IORAM
 #endif
 #ifdef CONFIG_MMC_M3SD
 	m3_set_rw
