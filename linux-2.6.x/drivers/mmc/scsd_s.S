@@ -27,6 +27,8 @@
 #define SC_SDL_DOWRITE	0x09440000
 	/* SC lite: write 0 before write command */
 
+#define REG_SCCF_LBA1	0x09060000	@ 1st byte of sector address (CF)
+
 /*****************************************************************************/
 
 	@ Test if the card is present.
@@ -45,8 +47,11 @@ scsd_detect_card:
 	strh	r0, [r3]
 	@ now switch to IO mode (save old value @SC_LOCK in R2)
 	sc_set_io
-	@ now read SC_SD_CMD (in IO)
+	@ store opposite of requested value in SC_SD_CMD (in IO)
 	ldr	r3, =SC_SD_CMD
+	mov	r0, #-1
+	strh	r0, [r3]
+	@ now read SC_SD_CMD (in IO)
 	ldrh	r0, [r3]
 	tst	r0, #0x300		@ both bits must be 0
 	moveq	r0, #1
