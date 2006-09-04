@@ -18,6 +18,7 @@
 /*****************************************************************************/
 
 #define REG_SCCF_LBA1	0x09060000	@ 1st byte of sector address
+#define SC_SD_CMD	0x09800000
 
 /*****************************************************************************/
 
@@ -28,12 +29,35 @@
 	.ALIGN
 	.GLOBAL sccf_detect_card
 sccf_detect_card:	
+	stmfd   sp!,{r4-r5}		@ use additional registers
 	gba_prefix
-	@ read old value @ REG_SCCF_LBA1 (in RAM) and save in R1
+	@ there is a special problem: if we have a supercard lite,
+	@ accessing REG_SCCF_LBA1 is bad for the scsd driver.
+	@ So we have to check for a supercard SD first.
+
+	@ read old value @ SC_SD_CMD (in RAM)
+	ldr	r3, =SC_SD_CMD
+	ldrh	r4, [r3]
+	@ store opposite of requested value in SC_SD_CMD (in RAM)
+	mov	r0, #-2
+	strh	r0, [r3]
+	@ read old value @ REG_SCCF_LBA1 (in RAM)
 	ldr	r3, =REG_SCCF_LBA1
-	ldrh	r1, [r3]
+	ldrh	r5, [r3]
 	@ now switch to IO mode (save old value @SC_LOCK in R2)
 	sc_set_io
+	@ now read SC_SD_CMD (in IO)
+	ldr	r3, =SC_SD_CMD
+	ldrh	r0, [r3]
+	tst	r0, #0x300		@ both bits must be 0
+	bne	sccf_detect_testcf	@ if not: test for CF
+	tst	r0, #0x001		@ bit must be 1
+	beq	sccf_detect_testcf	@ if not: test for CF
+	@ it's a supercard SD. So signal failure.
+	mov	r0, #0
+	b	sccf_detect_exit
+	@ it's no supercard SD. So we can test for CF.
+sccf_detect_testcf:
 	@ test if the lower 8 bit of LBA1 are read- and writable	
 	ldr	r3, =REG_SCCF_LBA1
 	ldrb	ip, [r3]
@@ -41,25 +65,27 @@ sccf_detect_card:
 	strh	ip, [r3]		@ store complement in LBA1
 	ldrb	r0, [r3]
 	teq	ip, r0			@ are they the same?
-	bne	sccf_not_detected
+	movne	r0, #0			@ failure code
+	bne	sccf_detect_exit	@ no: no CF
 	@ make sure the register is 8 bit, not 16
 	ldr	ip, =0xAA55
 	strh	ip, [r3]
 	ldrh	r0, [r3]
 	teq	ip, r0			@ are they the same?
-	beq	sccf_not_detected
-	mov	r0, #1			@ positive detection
+	moveq	r0, #0			@ yes: can't be a CF card
+	movne	r0, #1			@ positive detection
 sccf_detect_exit:
 	@ switch back to RAM (restore old value @SC_LOCK from R2)
 	sc_set_ram
-	@ restore RAM contents @ REG_SCCF_LBA1 from R1
+	@ restore RAM contents @ REG_SCCF_LBA1 from R5
 	ldr	r3, =REG_SCCF_LBA1
-	strh	r1, [r3]
+	strh	r5, [r3]
+	@ restore RAM contents @ SC_SD_CMD from R4
+	ldr	r3, =SC_SD_CMD
+	strh	r4, [r3]
 	gba_suffix
+	ldmfd   sp!,{r4-r5}		@ restore used registers
 	mov	pc, lr
-sccf_not_detected:
-	mov	r0, #0
-	b	sccf_detect_exit
 
 /*****************************************************************************/
 
