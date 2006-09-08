@@ -207,7 +207,7 @@ void __init ide_arm_init(void)
 			hw.io_ports[i] = 0x08000000 + 0x20000*i;
 		hw.io_ports[8] = 0x080E0000; // control
 #endif
-#ifdef CONFIG_IDE_NDS_SUPERCARD
+#if defined(CONFIG_IDE_NDS_SUPERCARD) || defined(CONFIG_IDE_NDS_GBAMP)
 		for (i=0; i<8; i++)
 			hw.io_ports[i] = 0x09000000 + 0x20000*i;
 		hw.io_ports[8] = 0x098C0000; // control
