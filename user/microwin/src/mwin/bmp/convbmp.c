@@ -29,8 +29,8 @@ typedef unsigned char	BYTE;
 
 #if !_MINIX
 typedef unsigned short	WORD;
-typedef unsigned long	DWORD;
-typedef long		LONG;
+typedef unsigned int	DWORD;
+typedef int		LONG;
 #define	CASTWORD
 #define	CASTDWORD
 #define	CASTLONG
