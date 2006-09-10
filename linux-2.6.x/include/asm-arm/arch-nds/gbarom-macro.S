@@ -154,7 +154,7 @@
 	ldrh	ip, [r3]
 	ldr	r3, =0x08801b66
 	ldrh	ip, [r3]
-	ldr	r3, =0x08800006
+	ldr	r3, =0x08800006	@ mode MEDIA
 	ldrh	ip, [r3]
 	ldr	r3, =0x0800080e
 	ldrh	ip, [r3]
@@ -163,11 +163,12 @@
 	ldr	r3, =0x09000000
 	ldrh	ip, [r3]
 	.endm
+
 /* 
- * m3_set_rom: M3SD/CF is set to ROM mode.
+ * m3_set_ram: M3SD/CF is set to RAM mode.
  * Use only register R3 and IP.
  */
-	.macro	m3_set_rom
+	.macro	m3_set_ram
 	ldr	r3, =0x08e00002
 	ldrh	ip, [r3]
 	ldr	r3, =0x0800000e
@@ -182,30 +183,14 @@
 	ldrh	ip, [r3]
 	ldr	r3, =0x08801b66
 	ldrh	ip, [r3]
-	ldr	r3, =0x08800008
+	ldr	r3, =0x0880000C	@ mode RAM (RW)
 	ldrh	ip, [r3]
 	ldr	r3, =0x0800080e
 	ldrh	ip, [r3]
 	ldr	r3, =0x08000000
 	ldrh	ip, [r3]
-	ldr	r3, =0x080001e4
+	ldr	r3, =0x09000000
 	ldrh	ip, [r3]
-	ldrh	ip, [r3]
-	ldr	r3, =0x08000188
-	ldrh	ip, [r3]
-	ldrh	ip, [r3]
-	.endm
-/* 
- * m3_set_rw: if the previous mode of M3SD/CF was "ROM",
- * allow write access. Use only register R2, R3 and IP.
- */
-	.macro	m3_set_rw
-	ldr	r3, =0x09FFEFFE
-	ldr	ip, =0xAA55
-	ldrh	r2, [r3]	@ read old value @ 0x09FFEFFE
-	strh	ip, [r3]
-	strh	ip, [r3]
-	strh	r2, [r3]	@ restore old value
 	.endm
 
 /*****************************************************************************/
