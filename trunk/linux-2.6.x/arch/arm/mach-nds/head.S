@@ -199,6 +199,23 @@ _entry:
 	mcr	p15, 0, r0, c9, c1
 
 	@-------------------------------------------------------------------------
+	@ Enable RAM on RAM-based cards.
+	@ This should be done with data cache disabled for GBA ROM space.
+	@ This has to happen early, because the kernel tries to
+        @ use this RAM.
+	@-------------------------------------------------------------------------
+#ifdef CONFIG_NDS_ROM8BIT
+#if defined(CONFIG_MMC_SCSD) || defined(CONFIG_IDE_NDS_SUPERCARD)
+	sc_set_ram	@ swith to RAM mode, restore @SC_LOCK from R2
+#endif
+#if defined(CONFIG_MMC_M3SD) || defined(CONFIG_IDE_NDS_M3)
+	m3_set_ram	@ switch to RAM mode
+#endif
+	@ more activation for other cards here
+
+#endif
+
+	@-------------------------------------------------------------------------
 	@ Setup memory regions
 	@-------------------------------------------------------------------------
 
@@ -346,9 +363,6 @@ _copydata:
 	strcc	r4, [r5],#4
 	bcc	1b
 
-	/* Enable RAM on RAM-based cards */
-	bl	unlock_ram
-
 	/*  Pretend we know what our processor code is (for arm_id)   */
 
 	ldr	r2, =0x41009460
@@ -358,21 +372,6 @@ _copydata:
 
 	mov fp, #0
 	b	start_kernel
-
-	/* Enable RAM on RAM-based cards.
-	 * This has to happen early, because the kernel tries to
-         * use this RAM. */
-unlock_ram:
-#ifdef CONFIG_NDS_ROM8BIT
-#if defined(CONFIG_MMC_SCSD) || defined(CONFIG_IDE_NDS_SUPERCARD)
-	sc_set_ram	@ swith to RAM mode, restore @SC_LOCK from R2
-#endif
-#ifdef CONFIG_MMC_M3SD
-	m3_set_rw
-#endif
-	@ more activation for other cards here
-#endif
-	mov	pc, lr	
 
 
 	.type	__LC0_init_data, %object
