@@ -527,7 +527,6 @@ static int scsd_probe(struct device *dev)
 		printk(KERN_INFO "Supercard SD detected\n");
 	} else {
 		/* device not found */
-		printk(KERN_INFO "No Supercard SD found\n");
 		return -ENODEV;
 	}
 
