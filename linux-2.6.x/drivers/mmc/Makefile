@@ -24,3 +24,4 @@ obj-$(CONFIG_MMC_SCSD)		+= scsd.o
 
 mmc_core-y := mmc.o mmc_queue.o mmc_sysfs.o
 scsd-y := scsd_c.o scsd_s.o
+m3sd-y := m3sd_c.o m3sd_s.o
