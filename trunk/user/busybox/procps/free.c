@@ -64,18 +64,18 @@ extern int free_main(int argc, char **argv)
 	if (argc > 1 && **(argv + 1) == '-')
 		bb_show_usage();
 
-	printf("%6s%13s%13s%13s%13s%13s\n", "", "total", "used", "free",
+	printf("%6s%12s%12s%12s%11s%11s\n", "", "total", "used", "free",
 			"shared", "buffers");
 
-	printf("%6s%13ld%13ld%13ld%13ld%13ld\n", "Mem:", info.totalram,
+	printf("%6s%12ld%12ld%12ld%11ld%11ld\n", "Mem:", info.totalram,
 			info.totalram-info.freeram, info.freeram,
 			info.sharedram, info.bufferram);
 
 #ifndef __uClinux__
-	printf("%6s%13ld%13ld%13ld\n", "Swap:", info.totalswap,
+	printf("%6s%12ld%11ld%11ld\n", "Swap:", info.totalswap,
 			info.totalswap-info.freeswap, info.freeswap);
 
-	printf("%6s%13ld%13ld%13ld\n", "Total:", info.totalram+info.totalswap,
+	printf("%6s%12ld%11ld%11ld\n", "Total:", info.totalram+info.totalswap,
 			(info.totalram-info.freeram)+(info.totalswap-info.freeswap),
 			info.freeram+info.freeswap);
 #endif
