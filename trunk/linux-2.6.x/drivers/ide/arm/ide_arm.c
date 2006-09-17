@@ -71,6 +71,23 @@ extern void m3cf_ide_insw(unsigned long port, u16 *dest, u32 count);
 extern void m3cf_ide_outsw(unsigned long port, u16 *src, u32 count);
 #endif
 
+#if defined(CONFIG_IDE_NDS_M3) && !defined(CONFIG_NDS_ROM8BIT)
+static void M3_Unlock( void )
+{
+	volatile u16 tmp ;
+	tmp = *(volatile u16 *)0x08000000 ;
+	tmp = *(volatile u16 *)0x08E00002 ;
+	tmp = *(volatile u16 *)0x0800000E ;
+	tmp = *(volatile u16 *)0x08801FFC ;
+	tmp = *(volatile u16 *)0x0800104A ;
+	tmp = *(volatile u16 *)0x08800612 ;
+	tmp = *(volatile u16 *)0x08000000 ;
+	tmp = *(volatile u16 *)0x08801B66 ;
+	tmp = *(volatile u16 *)0x08800006 ;
+	tmp = *(volatile u16 *)0x08000000 ;
+}
+#endif
+
 /*****************************************************************************/
 #ifdef CONFIG_NDS_ROM8BIT
 static void nds_ide_insw(unsigned long port, void *dest, u32 count)
@@ -198,6 +215,7 @@ void __init ide_arm_init(void)
 #ifndef CONFIG_NDS_ROM8BIT
 
 #ifdef CONFIG_IDE_NDS_M3
+		M3_Unlock();
 		for (i=0; i<8; i++)
 			hw.io_ports[i] = 0x08800000 + 0x20000*i;
 		hw.io_ports[8] = 0x080C0000; // control
