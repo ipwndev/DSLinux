@@ -4,7 +4,7 @@
 #
 # You have to make a copy of this file so you can edit it.
 #
-# If you are using the RAM the RAM-DEVEL build,
+# If you are using the RAM or the RAM-DEVEL build,
 # run this command to create the copy:
 #	cp /etc/rc.defaults /media/linux/etc/rc.conf
 #
