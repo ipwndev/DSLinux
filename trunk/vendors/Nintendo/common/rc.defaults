@@ -4,6 +4,10 @@
 #
 # You have to make a copy of this file so you can edit it.
 #
+# If you are using the RAM the RAM-DEVEL build,
+# run this command to create the copy:
+#	cp /etc/rc.defaults /media/linux/etc/rc.conf
+#
 # If you are using the GBAMP or the GBAMP-EXT2 build,
 # run this command to create the copy:
 #	cp /etc/rc.defaults /gbamp/linux/etc/rc.conf
