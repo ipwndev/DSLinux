@@ -3371,7 +3371,10 @@ CONFIG_USER_LHA_LHA
   The lha archiving program for dealing with .lzh archives.
 
 CONFIG_USER_ARJ_ARJ
-  THe arj archiving program for dealing with .arj archives.
+  The arj archiving program for dealing with .arj archives.
+
+CONFIG_USER_AUTOLOGIN_AUTOLOGIN
+  A simple program for automatic login on boot.
 
 CONFIG_USER_TCSH_TCSH
   Enhanced C shell (csh).

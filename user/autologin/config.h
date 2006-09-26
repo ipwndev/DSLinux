@@ -4,31 +4,31 @@
 #undef HAVE_PAM
 
 /* Define if you have the setegid function.  */
-#undef HAVE_SETEGID
+#define HAVE_SETEGID	1
 
 /* Define if you have the seteuid function.  */
-#undef HAVE_SETEUID
+#define HAVE_SETEUID	1
 
 /* Define if you have the setgid function.  */
-#undef HAVE_SETGID
+#define HAVE_SETGID	1
 
 /* Define if you have the setregid function.  */
-#undef HAVE_SETREGID
+#define HAVE_SETREGID	1
 
 /* Define if you have the setreuid function.  */
-#undef HAVE_SETREUID
+#define HAVE_SETREUID	1
 
 /* Define if you have the setuid function.  */
-#undef HAVE_SETUID
+#define HAVE_SETUID	1
 
 /* Define if you have the dl library (-ldl).  */
 #undef HAVE_LIBDL
 
 /* Name of package */
-#undef PACKAGE
+#define PACKAGE	"autologin"
 
 /* Version number of package */
-#undef VERSION
+#define VERSION	"1.0.0"
 
 /* be paranoid */
 #undef PARANOID

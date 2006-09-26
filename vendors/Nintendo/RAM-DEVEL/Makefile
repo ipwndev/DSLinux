@@ -111,6 +111,7 @@ image:
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/sh $(ROMFSDIR)/bin
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/login $(ROMFSDIR)/bin
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/init $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/autologin $(ROMFSDIR)/bin
 	# move MADPLAY into internal RAM and make it XIP, to gain the processing power
 	# for undisturbed audio.
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/madplay $(ROMFSDIR)/bin

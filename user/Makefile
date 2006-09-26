@@ -41,6 +41,7 @@ dir_$(CONFIG_USER_ASTERISK)                 += asterisk
 dir_$(CONFIG_USER_AT_AT)                    += at
 dir_$(CONFIG_USER_AT_ATD)                   += at
 dir_$(CONFIG_USER_AT_ATRUN)                 += at
+dir_$(CONFIG_USER_AUTOLOGIN_AUTOLOGIN)	    += autologin
 dir_$(CONFIG_USER_BASH_BASH)                += bash
 dir_$(CONFIG_USER_BITCHX_BITCHX)            += bitchx
 dir_$(CONFIG_USER_BOA_SRC_BOA)              += boa
