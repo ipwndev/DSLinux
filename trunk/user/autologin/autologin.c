@@ -10,8 +10,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <pwd.h>
-#define CONFIG "/etc/sysconfig/autologin"
-#define DEFAULT "/usr/X11R6/bin/startx"
+#define CONFIG "/etc/autologin.conf"
+#define DEFAULT "/bin/sh"
 
 #ifdef HAVE_PAM
 #include <security/pam_appl.h>
@@ -185,7 +185,9 @@ int main(int argc, char **argv)
 	free(user);
 	user=NULL;
 	
-	execvp(runthis, argv);
+	/* this is neccessary for normal shell execute */
+	execlp(runthis, "-sh", NULL);
+
 	free(dir); free(shell);
 	printf("ERROR: Couldn't exec %s: %s\n", runthis, strerror(errno));
 	return 2;

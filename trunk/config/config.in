@@ -722,6 +722,7 @@ if [ "$CONFIG_USER_LANG_A60" = "y" ]; then
 	bool '  tests'		CONFIG_USER_LANG_A60_TEST
 fi
 bool 'arj'			CONFIG_USER_ARJ_ARJ
+bool 'autologin'		CONFIG_USER_AUTOLOGIN_AUTOLOGIN
 bool 'bzip2'			CONFIG_USER_BZIP2_BZIP2
 if [ "$CONFIG_USER_BZIP2_BZIP2" = "y" ]; then
 	define_bool CONFIG_LIB_LIBBZ2 y
