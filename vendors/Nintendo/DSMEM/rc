@@ -1,5 +1,0 @@
-#!/bin/sh
-
-mount -t proc none /proc
-/sbin/mountsd
-. /etc/rc.common
