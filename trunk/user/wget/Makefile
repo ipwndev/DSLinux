@@ -23,4 +23,4 @@ romfs:
 
 clean:
 	rm -rf build
-
+	rm -f doc/texi2pod.pl

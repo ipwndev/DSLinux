@@ -540,6 +540,7 @@ installdirs:
 mostlyclean-generic:
 
 clean-generic:
+	-rm .sign_warnings stamp-h
 
 distclean-generic:
 	-rm -f Makefile $(CONFIG_CLEAN_FILES)
