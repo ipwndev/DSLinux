@@ -158,7 +158,7 @@ mostlyclean:
 GDBPROGS := $(PROGS:%=%.gdb)
 
 clean: mostlyclean
-		rm -f $(PROGS) $(GDBPROGS)
+		rm -f $(PROGS) $(GDBPROGS) version.h
 		@for i in $(SUBDIRS); do (cd $$i && $(MAKE) clean) ; done
 		@cd po && $(MAKE) clean
 
