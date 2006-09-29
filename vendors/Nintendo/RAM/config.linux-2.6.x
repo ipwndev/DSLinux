@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
-# Tue Aug 29 15:17:00 2006
+# Fri Sep 29 18:41:17 2006
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
