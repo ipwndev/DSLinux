@@ -76,7 +76,7 @@ extern int df_main(int argc, char **argv)
 	opt = bb_getopt_ulflags(argc, argv, "k");
 #endif
 
-	bb_printf("Filesystem%11s%-15sUsed Available Use%% Mounted on\n",
+	bb_printf("Filesystem%9s%-15sUsed Available Use%% Mounted on\n",
 			  "", disp_units_hdr);
 
 	mount_table = NULL;
@@ -136,7 +136,7 @@ extern int df_main(int argc, char **argv)
 			}
 
 #ifdef CONFIG_FEATURE_HUMAN_READABLE
-			bb_printf("%-21s%9s ", device,
+			bb_printf("%-19s%9s ", device,
 					  make_human_readable_str(s.f_blocks, s.f_bsize, df_disp_hr));
 
 			bb_printf("%9s ",
@@ -147,7 +147,7 @@ extern int df_main(int argc, char **argv)
 					  make_human_readable_str(s.f_bavail, s.f_bsize, df_disp_hr),
 					  blocks_percent_used, mount_point);
 #else
-			bb_printf("%-21s%9ld %9ld %9ld %3ld%% %s\n",
+			bb_printf("%-19s%9ld %9ld %9ld %3ld%% %s\n",
 					  device,
 					  kscale(s.f_blocks, s.f_bsize),
 					  kscale(s.f_blocks-s.f_bfree, s.f_bsize),
