@@ -74,6 +74,7 @@ LIBELF_SRCDIR	:= $(SRCDIR)/libelf-$(LIBELF_VER)
 KERNEL_SRCDIR	:= $(CWD)/../linux-2.6.x
 UCLIBC_SRCDIR	:= $(CWD)/../uClibc
 NDSTOOL_SRCDIR	:= $(CWD)/ndstool
+SYMBOLMAP_SH	:= $(CWD)/symbolmap.sh
 
 BINUTILS_OBJDIR := $(OBJDIR)/binutils-$(BINUTILS_VER)
 GCC_OBJDIR	:= $(OBJDIR)/gcc-$(GCC_VER)
@@ -96,7 +97,8 @@ export PATH	:= $(PREFIX)/bin:$(PATH)
 # for the bootstrap process.
 all: dirs-create binutils-install elf2flt-install sysroot-create \
 	gcc-stage1-install uClibc-install gcc-stage2-install \
-	genromfs-install libelf-install ndstool-install strip dist
+	genromfs-install libelf-install ndstool-install \
+	symbolmap.sh-install strip dist
 
 # If you just want to download distfiles, use this target.
 fetch: $(CWD)/.dirs-created $(DISTFILES)
@@ -570,6 +572,18 @@ $(NDSTOOL_SRCDIR)/.compiled:
 # install ndstool
 $(NDSTOOL_SRCDIR)/.installed: $(NDSTOOL_SRCDIR)/.compiled
 	install -m 755 $(NDSTOOL_SRCDIR)/ndstool $(PREFIX)/bin
+	touch $@
+
+#######################################################################
+# symbolmap.sh
+#######################################################################
+
+symbolmap.sh-install:		$(SRCDIR)/.symbolmap.sh-installed
+symbolmap.sh-reset:
+	rm -f $(SRCDIR)/.symbolmap.sh-installed
+
+$(SRCDIR)/.symbolmap.sh-installed:
+	install -m 755 $(SYMBOLMAP_SH) $(PREFIX)/bin
 	touch $@
 
 #######################################################################
