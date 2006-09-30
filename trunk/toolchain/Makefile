@@ -617,6 +617,10 @@ $(CWD)/.stripped:
 	$(TARGET)-strip --strip-debug $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/*.a
 	$(TARGET)-strip --strip-debug $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/thumb/*.o
 	$(TARGET)-strip --strip-debug $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/thumb/*.a
+	$(foreach d, multibase nopic pic singlebase strb swpb, \
+		$(TARGET)-strip --strip-debug $(PREFIX)/$(TARGET)/lib/$d/*.a; \
+		$(TARGET)-strip --strip-debug $(PREFIX)/$(TARGET)/lib/$d/*/*.a; \
+		$(TARGET)-strip --strip-debug $(PREFIX)/$(TARGET)/lib/$d/*/*/*.a;)
 	touch $@
 
 #######################################################################
