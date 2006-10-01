@@ -750,6 +750,7 @@ static int nlseen;
 static int iounit = IODEFAULT;
 static YYSTYPE yylval;
 static char *elinep = line + sizeof(line) - 5;
+static int grave_exitstatus = -1; /* exitstatus of command run by grave() */
 
 static struct ioarg temparg = { 0, 0, 0, AFID_NOBUF, 0 };	/* temporary for PUSHIO */
 static struct ioarg ioargstack[NPUSH];
@@ -2914,7 +2915,13 @@ forkexec(REGISTER struct op *t, int *pin, int *pout, int act, char **wp)
 		if (cp == NULL && t->ioact == NULL) {
 			while ((cp = *owp++) != NULL && assign(cp, COPYV));
 			DBGPRINTF(("FORKEXEC: returning setstatus()\n"));
-			return (setstatus(0));
+			if (grave_exitstatus != -1) {
+				i = grave_exitstatus;
+				grave_exitstatus = -1;
+				return (setstatus(i));
+			} else {
+				return (setstatus(0));
+			}
 		} else if (cp != NULL) {
 			shcom = inbuilt(cp);
 		}
@@ -4402,7 +4409,11 @@ int quoted;
 		return (0);
 	}
 	if (i != 0) {
-		waitpid(i, NULL, 0);
+		waitpid(i, &grave_exitstatus, 0);
+		if WIFEXITED(grave_exitstatus)
+			grave_exitstatus = WEXITSTATUS(grave_exitstatus);
+		else
+			grave_exitstatus = 0;
 		e.iop->argp->aword = ++cp;
 		close(pf[1]);
 		PUSHIO(afile, remap(pf[0]),
