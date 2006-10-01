@@ -75,13 +75,10 @@ DSLINUX_UNUSED_CRYPTO=	-DOPENSSL_NO_BF \
 			-DOPENSSL_NO_RC2 \
 			-DOPENSSL_NO_IDEA \
 			-DOPENSSL_NO_RC5 \
-			-DOPENSSL_NO_DH \
 			-DOPENSSL_NO_MD4 \
 			-DOPENSSL_NO_MDC2 \
 			-DOPENSSL_NO_MD2 \
-			-DOPENSSL_NO_RIPEMD \
-			-DOPENSSL_NO_ECDH \
-			-DOPENSSL_NO_ECDSA
+			-DOPENSSL_NO_RIPEMD
 
 CFLAG= $(CFLAGS) -I$(ROOTDIR)/lib/libm -DTERMIOS -Wall $(DSLINUX_UNUSED_FEATURES) $(DSLINUX_UNUSED_CRYPTO)
 
@@ -139,7 +136,7 @@ SDIRS=  \
 	objects \
 	md5 sha hmac \
 	des aes rc4 \
-	bn ec rsa dsa \
+	bn ec rsa dsa ecdsa dh ecdh \
 	buffer bio dso stack lhash rand err \
 	evp asn1 pem x509 x509v3 conf txt_db pkcs7 pkcs12 comp ocsp ui \
 	store pqueue
