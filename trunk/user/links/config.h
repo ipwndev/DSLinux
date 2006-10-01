@@ -443,7 +443,7 @@
 /* #undef HAVE_PTHREADS */
 
 /* */
-/* #undef HAVE_SSL */
+#define HAVE_SSL 1
 
 /* */
 /* #undef X2 */
