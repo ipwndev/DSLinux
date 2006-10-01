@@ -168,11 +168,8 @@ config.h: stamp-h
 		rm -f stamp-h; \
 		$(MAKE) stamp-h; \
 	else :; fi
-stamp-h: $(srcdir)/config.h.in $(top_builddir)/config.status
-	cd $(top_builddir) \
-	  && CONFIG_FILES= CONFIG_HEADERS=config.h \
-	     $(SHELL) ./config.status
-	@echo timestamp > stamp-h 2> /dev/null
+stamp-h:
+	touch $@
 $(srcdir)/config.h.in: $(srcdir)/stamp-h.in
 	@if test ! -f $@; then \
 		rm -f $(srcdir)/stamp-h.in; \
