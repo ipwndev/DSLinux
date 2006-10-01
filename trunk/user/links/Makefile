@@ -139,7 +139,7 @@ $(top_builddir)/.sign_warnings:
 	@echo "the next time you run 'make'."
 	@echo
 	@echo "The build will continue shortly."
-	@echo "Sorry for the inconvinience."
+	@echo "Sorry for the inconvenience."
 	@echo "		-- stsp"
 	@touch $(top_builddir)/.sign_warnings
 	@sleep 20
