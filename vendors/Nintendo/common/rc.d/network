@@ -3,6 +3,10 @@
 [ -e /etc/rc.defaults ] && . /etc/rc.defaults
 [ -e /etc/rc.conf ] && . /etc/rc.conf
 
+# Source a custom configuration file if specified
+# in the environment.
+[ -n "$NETWORK_CONFIG" ] && . "$NETWORK_CONFIG"
+
 case "$1" in
 	start)
 		ifconfig lo up
