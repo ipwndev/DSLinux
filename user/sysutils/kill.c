@@ -39,7 +39,7 @@ main(argc, argv)
 
 	sig = SIGTERM;
 
-	if (argv[1][0] == '-') {
+	if ((argc > 1) && argv[1][0] == '-') {
 		cp = &argv[1][1];
 		if (strcmp(cp, "HUP") == 0)
 			sig = SIGHUP;
