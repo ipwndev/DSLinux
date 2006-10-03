@@ -1,0 +1,64 @@
+CXX=arm-linux-g++
+LD=arm-linux-ld
+
+DOPDA = Y
+
+
+NXLIBDIR = -L/home/jasonk/projects/microwin/src/lib
+NXLIBS   =  -lnano-X
+
+XBILLHOME = -DXBILL_HOME=\"/home/jasonk/projects/xbill-2.0/\"
+
+CXXFLAGS = -O2 -I/home/jasonk/projects/microwin/src/include $(XBILLHOME)
+
+ifeq ($(DOPDA), Y)
+CXXFLAGS += -DPDA
+endif
+
+SRCS =	Bucket.cc \
+	Cable.cc \
+	Computer.cc \
+	Game.cc \
+	Horde.cc \
+	Library.cc \
+	Monster.cc \
+	Network.cc \
+	Scorelist.cc \
+	Spark.cc \
+	NXPicture.cc \
+	nanox-UI.cc  \
+	NXwidgets.cc \
+	NX.cc 
+
+
+OBJS =	Bucket.o \
+	Cable.o \
+	Computer.o \
+	Game.o \
+	Horde.o \
+	Library.o \
+	Monster.o \
+	Network.o \
+	Scorelist.o \
+	Spark.o \
+	NXPicture.o \
+	NXwidgets.o \
+        NX.o \
+        nanox-UI.o
+
+ifeq ($(DOPDA), N)
+SRCS += NXMCursor.cc
+OBJS += NXMCursor.o
+endif
+
+nbill: $(OBJS)
+	$(CXX)  $(OBJS) $(NXLIBDIR) $(NXLIBS) -o nbill
+
+clean:
+	rm *.o
+
+SUFFIXES:      .cc .o
+
+.cc.o :
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+

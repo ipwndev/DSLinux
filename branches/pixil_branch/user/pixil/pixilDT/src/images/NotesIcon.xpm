@@ -1,0 +1,22 @@
+/* XPM */
+/* NotesIcon.xpm */
+static const char* NotesIconXPM[] =
+{
+ "9 10 6 1",
+ "  c None",
+ "0 c #000000",
+ "6 c #008080",
+ "7 c #808080",
+ "e c #00ffff",
+ "f c #ffffff",
+ "00000000 ",
+ "0ffffff07",
+ "0f666ef07",
+ "0ffffff07",
+ "0ffffff07",
+ "0f6600007",
+ "0fff07077",
+ "0fff00777",
+ "000007777",
+ " 77777777",
+};

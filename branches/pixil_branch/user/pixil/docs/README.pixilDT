@@ -1,0 +1,64 @@
+The PIXIL Desktop PIM Component
+May 29, 2003
+
+The PIXIL source distribution includes a set of PIM applications meant
+to run on the PDA or embedded device, as well as a workstation PIM
+application, known as the PIXIL Desktop.  The PIXIL Desktop can
+be built to show PIM synchronization between the PDA applications
+and the desktop.
+
+The PIXIL Desktop currently requires an external FLTK library, which
+allows building for X11 or Win32 (only X11 is currently tested).
+Since PIXIL Desktop requires X11, PIXIL PDA must be built using
+Microwindows on top of X11 in order to run both simultaneosly and
+demonstrate synchronization.  See README.microwindows for more
+information on setting up the PIXIL PDA build.
+
+PIXIL Desktop has been tested using FLTK version 1.0.11,
+available from http://www.fltk.org.  Currently, PIXIL Desktop
+requires GCC version 2.96 or greater.
+
+Building PIXIL Desktop (after building PIXIL PDA normally)
+
+1.  If required, extract FLTK 1.0.11 into it's own directory,
+    and build it:
+
+	tar zxvf fltk-1.0.11-source.tar.gz
+	cd fltk-1.0.11
+	./configure
+	make
+
+2.  Edit the PIXIL config file and select the PIXIL Desktop build:
+	CONFIG_PIXILDT=y
+
+3.  Specify the external FLTK directory in the PIXIL config file:
+	CONFIG_PIXILDT_FLTK=y
+	CONFIG_PIXILDT_FLTKDIR="/usr2/fltk-1.0.11"
+
+4.  (Re)make PIXIL
+	Type "make".
+
+7.  Install PIXIL:
+	Type "make install".
+
+	PIXIL Desktop will be installed into the $(INSTALL_DIR)/workstation
+	directory, normally /usr/local/pixil/workstation.
+
+8.  Run PIXIL PDA and Desktop:
+	cd /usr/local/pixil
+	./run_pda.sh
+	./run_desktop.sh
+
+
+Demonstrating Synchronization
+
+Currently, sync is performed only for Address Book records, and
+will only merge records that were created uniqely on either the
+PDA or Desktop.  The sync is performed for demonstration using
+TCP/IP localhost sockets.
+
+To sync, start PIXIL PDA and Destkop, as described above.
+Then start the PDA Sync application in the PIM group.
+Select Address Book checkbox, and press synchronize.
+The records should be copied across.  To view the records
+on the desktop, shutdown the desktop application and restart.

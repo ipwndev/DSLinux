@@ -1,0 +1,20 @@
+This version of dvdview requires Microwindows 0.89pre8
+or later.
+To build, first build Microwindows, and install.
+
+You may have to hand-edit some Makefiles to for 
+the nano-X -L/net/microwin/src/lib -lnano-X.
+(I'd like to see a configure script modification)
+
+To build dvdview:
+
+cd libvideogfx
+make
+cd ../src
+make
+
+Look at src/demo.sh for demonstration startup.
+
+Regards,
+
+Greg

@@ -1,0 +1,10 @@
+/* XPM */
+/* c:\dev\SmallUpIcon.xpm */
+static char* SmallUpIconXPM[] =
+{
+ "3 2 2 1",
+ "  c None",
+ "0 c #000000",
+ " 0 ",
+ "000",
+ };
