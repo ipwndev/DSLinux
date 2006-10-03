@@ -65,9 +65,7 @@ OPENSSLDIR=/usr/local/ssl
 # We need the smallest possible feature set for DSLinux
 DSLINUX_UNUSED_FEATURES= -DOPENSSL_NO_KRB5 \
 			 -DOPENSSL_NO_ASM \
-			 -DOPENSSL_NO_INLINE_ASM \
-			 -DOPENSSL_NO_ENGINE \
-			 -DOPENSSL_NO_SSL2
+			 -DOPENSSL_NO_INLINE_ASM
 
 # Algorithms not used in DSLinux:
 DSLINUX_UNUSED_CRYPTO=	-DOPENSSL_NO_BF \
@@ -127,8 +125,7 @@ LIBKRB5=
 ZLIB_INCLUDE=
 LIBZLIB=
 
-#DIRS=   crypto ssl engines apps test tools
-DIRS=   crypto ssl apps test tools
+DIRS=   crypto ssl engines apps test tools
 SHLIBDIRS= crypto ssl
 
 # dirs in crypto to build
@@ -136,7 +133,7 @@ SDIRS=  \
 	objects \
 	md5 sha hmac \
 	des aes rc4 \
-	bn ec rsa dsa ecdsa dh ecdh \
+	bn ec rsa dsa ecdsa dh ecdh engine \
 	buffer bio dso stack lhash rand err \
 	evp asn1 pem x509 x509v3 conf txt_db pkcs7 pkcs12 comp ocsp ui \
 	store pqueue
