@@ -1,0 +1,78 @@
+PIXIL ARM Cross-Compilation Instructions
+September 10, 2003
+
+This README describes the procedure for compiling PIXIL for an ARM target 
+platform on an x86 Linux host. To complete this procedure, you'll need to 
+perform the following steps.
+
+1. Download ARM Toolchain
+----------------------------------
+
+PIXIL is known to compile and work properly with the compiler supplied
+with Century Software's PIXIL Developer's License (see
+http://www.pixil.org/products.php for more information).
+
+This compiler should work with any modern x86 Linux system. There are other 
+compiler toolchains available, such as the ones distributed by the OpenZaurus 
+project, http://www.openzaurus.org. Some have had success with these 
+toolchains, but a good many people have not. If using one of these compilers, 
+watch for segmentation faults during compilation, which is a sure sign that 
+your toolchain has something incorrect about it. 
+
+
+2. Install ARM Toolchain
+----------------------------------
+
+If you've downloaded the recommended toolchain included with the PIXIL
+Developers License, all you need to do to install it is:
+
+   a. As root, untar the gcc-arm-2.95.2.tar.gz file into the root of your 
+filesystem. This will result in a new top-level directory called /skiff being 
+created. It is important that the tar file is placed into the correct location, 
+as the toolchain won't function with it in another place in the filesystem.
+
+   b. For users wanting to use the compiler, add /skiff/local/bin to the 
+user's path. This will allow the running of the compiler tools, arm-linux-*.
+
+
+3. Unpack PIXIL Source
+----------------------------------
+
+Since you're reading this file, you've probably already done this step. If 
+not, get the source from http://www.pixil.org and untar it into the directory 
+of your choice.
+
+
+4. Setup PIXIL Source for Cross-Compilation
+----------------------------------
+
+In the PIXIL top level directory, copy the file config.ARM to config 
+(overwrite anything that you may be there.) This file is pre-configured to 
+work with the cross-compiler that should be in your path.
+
+After copying this file, edit it as you normally would, changing the 
+INSTALL_PATH and other variables that are important to your particular 
+environment. Please see the other PIXIL READMEs and documentation for more 
+information on this topic.
+
+
+5. Build the source
+----------------------------------
+
+Type make at the top level to build PIXIL. After the build complete, type 
+"make install" to create a small ready-for-copying tree that is pre-configured 
+for use on your ARM device. This is installed in the place that is specified 
+in the top-level config using the INSTALL_PATH setting.
+
+
+libwww Problems
+----------------------------------
+
+A common problem is the mishandling of libwww-config, a small utility script 
+that is used to determine the proper location and configuration of libraries 
+for the w3c-lib, used for viewml. When cross-compiling, you must make sure 
+that you don't have another libwww-config program in your path that will cause 
+an linking error when building ViewML. If ViewML fails to build, check this 
+first. You can safely temporarily move the libwww-config program our of the 
+way until your compilation is complete to remedy this situation.
+

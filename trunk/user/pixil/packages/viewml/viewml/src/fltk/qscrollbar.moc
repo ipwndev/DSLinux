@@ -1,0 +1,68 @@
+/****************************************************************************
+** QScrollBar meta object code from reading C++ file 'qscrollbar.h'
+**
+** Created: Wed Nov 8 16:23:43 2000
+**      by: The Qt Meta Object Compiler ($Revision$)
+**
+** WARNING! All changes made in this file will be lost!
+*****************************************************************************/
+
+#if !defined(Q_MOC_OUTPUT_REVISION)
+#define Q_MOC_OUTPUT_REVISION 2
+#elif Q_MOC_OUTPUT_REVISION != 2
+#error "Moc format conflict - please regenerate all moc files"
+#endif
+
+#include "qscrollbar.h"
+#include <qmetaobject.h>
+
+
+const char *QScrollBar::className() const
+{
+    return "QScrollBar";
+}
+
+QMetaObject *QScrollBar::metaObj = 0;
+
+
+#if QT_VERSION >= 200
+static QMetaObjectInit init_QScrollBar(&QScrollBar::staticMetaObject);
+
+#endif
+
+void QScrollBar::initMetaObject()
+{
+    if ( metaObj )
+	return;
+    if ( strcmp(QWidget::className(), "QWidget") != 0 )
+	badSuperclassWarning("QScrollBar","QWidget");
+
+#if QT_VERSION >= 200
+    staticMetaObject();
+}
+
+void QScrollBar::staticMetaObject()
+{
+    if ( metaObj )
+	return;
+    QWidget::staticMetaObject();
+#else
+
+    QWidget::initMetaObject();
+#endif
+
+    typedef void(QScrollBar::*m2_t0)(int);
+    m2_t0 v2_0 = &QScrollBar::valueChanged;
+    QMetaData *signal_tbl = new QMetaData[1];
+    signal_tbl[0].name = "valueChanged(int)";
+    signal_tbl[0].ptr = *((QMember*)&v2_0);
+    metaObj = new QMetaObject( "QScrollBar", "QWidget",
+	0, 0,
+	signal_tbl, 1 );
+}
+
+// SIGNAL valueChanged
+void QScrollBar::valueChanged( int t0 )
+{
+    activate_signal( "valueChanged(int)", t0 );
+}

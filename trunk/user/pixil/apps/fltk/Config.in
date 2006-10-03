@@ -1,0 +1,111 @@
+menu "FLTK Applications"
+
+config CONFIG_FLTKAPPS
+       bool "Build FLTK Applications"
+       depends CONFIG_FLNX
+       default y
+       help
+	Say 'yes' here to build the FLTK PIMs and other
+	applications
+
+config CONFIG_PIM_ADDRESS
+       bool "Address Book"
+       depends CONFIG_FLTKAPPS
+       default y
+       help
+	Say 'yes' here to build the Pixil address book,
+	part of the Pixil PIM suite
+
+config CONFIG_PIM_NOTEPAD
+       bool "Notepad"
+        depends CONFIG_FLTKAPPS
+       default y
+       help
+	Say 'yes' here to build the Pixil notepad,
+	part of the Pixil PIM suite
+
+config CONFIG_PIM_TODO
+       bool "Todo"
+       default y
+        depends CONFIG_FLTKAPPS
+       help
+	Say 'yes' here to build the Pixil todo manager,
+	part of the Pixil PIM suite
+
+config CONFIG_PIM_SCHEDULE
+       bool "Scheduler"
+        depends CONFIG_FLTKAPPS
+       default y
+       help
+	Say 'yes' here to build the Pixil scheduler,
+	part of the Pixil PIM suite
+
+config CONFIG_APP_ALARM
+       bool "Alarm Deamon"
+       default y
+       depends on CONFIG_PIM_SCHEDULE
+       help 
+         Say 'yes' here to build the alarm deamon, which
+	 allows you to set audible alarms through the
+	 scheduler.
+
+config CONFIG_APP_CALC
+	bool "Calculator"
+	        depends CONFIG_FLTKAPPS	
+	default y
+	help
+	 Say 'yes' here to build a calculator app
+
+config CONFIG_APP_FIND
+       bool "Global Find"
+        depends on CONFIG_COLOSSEUM && CONFIG_FLTKAPPS
+       default y
+       help
+         Say 'yes' here to build the Global Find application.
+
+config CONFIG_APP_MP3
+       bool "MP3 Player"
+       depends CONFIG_FLTKAPPS && CONFIG_NANOX
+       default y
+       help
+         Say 'yes' here to build the MP3 player.
+
+config CONFIG_MP3_USE_PTHREAD
+       bool "Use pthread library"
+       default y
+       depends on CONFIG_APP_MP3
+       help
+         Say 'yes' here to build the MP3 player with threading enabled.
+
+config CONFIG_APP_EMAIL
+       bool "E-mail client"
+       depends CONFIG_FLTKAPPS
+       default y
+       help 
+         Say 'yes' here to build the Pixil e-mail client.
+
+config CONFIG_APP_SYNC
+        bool "Sync manager"
+	depends CONFIG_FLTKAPPS && CONFIG_SYNC
+        default y
+	help 
+	Say yes here to build the sync manager to handle the syncronization process.
+
+config CONFIG_APP_NETCONFIG
+ 	bool "Network Configuration"
+	depends CONFIG_FLTKAPPS && CONFIG_NANOX
+	default y
+	help
+	  Say 'yes' here to build the network configuration utility.
+
+config CONFIG_APP_SYSCONFIG
+       bool "System Configuration"
+       depends CONFIG_FLTKAPPS
+       default y
+       help
+         Say 'yes' here to build the Pixil system configuration
+	 utility.
+
+source apps/fltk/sysconfig/Config.in
+
+endmenu

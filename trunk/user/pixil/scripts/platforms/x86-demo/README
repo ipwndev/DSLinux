@@ -1,0 +1,4 @@
+** platforms/demo-nanox **
+
+This "platform" installs Pixil on the native platform, and sets it up with some demostration
+files and other various scripts. 

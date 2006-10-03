@@ -1,0 +1,30 @@
+ViewML Browser 
+
+Please see the ViewML web site at www.viewml.com for the FAQ, 
+mailing list, news, screenshots, etc. If you are interested in 
+the development of the browser, please subscribe to the ViewML
+development mailing list at the above web site.
+
+Please see the file INSTALL for some minimal instructions on
+getting the browser to build.
+
+If you want to help, please check the file TODO for major tasks
+that are uncompleted. Then ask around on the ViewML development
+mailing list to make sure that no one else is working on what
+you want to do.
+
+For anonymous CVS access:
+1. Set your CVSROOT as such:
+     export CVSROOT=:pserver:anoncvs@cvs.viewml.com:/usr/cvs
+2. Run "cvs login" and use a password of "guest".
+3. Run "cvs co viewml"
+
+Some major caveats:
+
+This software is in development. Things don't work well and sometimes
+not at all. It *will* get better. Contribute, and it will get better
+faster.
+
+Some notable problems:
+
+1. Scrollbars don't work.

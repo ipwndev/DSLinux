@@ -1,0 +1,112 @@
+
+                   DVDview - GPLed MPEG-2 video decoder
+                -----------------------------------------
+                  Dirk Farin - farin@ti.uni-mannheim.de
+
+
+DVDview is a software only MPEG-1/2 video decoder. A special feature of the
+decoder is its ability to superimpose additional information to the video
+sequence like motion vectors or quantizer scales. It runs on any UNIX system,
+preferably Linux, as many of the features depend on it.
+
+Features:
+ - Direct VideoCD access (Linux only)
+ - Bitstream-error robust decoding
+ - G200/400 backend-scaler support for much faster decoding (Linux only)
+ - Extraction of MPEG-audio or AC3 streams (mpg123, ac3dec needed for
+     audio decoding) 
+ - Saving decoded frames as PPM or YUV files 
+ - Debugging output with adjustable verbosity 
+ - Overlay-display of 
+        Macroblock boundaries 
+        Motion vectors (as vectors or coded as color information) 
+        QScale value 
+	current FPS
+
+Note: Although DVDview is able to decode MPEG-2 streams, there is no code
+included to circumvent the DVD copy protection. Only unprotected discs can be
+read. 
+
+
+Installation
+------------
+
+You should have got two top-level directories "dvdview" and "ulib". Change to
+ulib and type ./configure and make. Then change to dvdview, type ./configure,
+change to the "src" subdirectory and execute make. This should result in a
+dvdview binary that you can copy to /usr/local/bin or where you'd like it to be.
+
+
+Compiling with Linux MGA_VID support:
+-------------------------------------
+
+The Linux MGA_VID driver allows to send the decoded video output
+directly to the backend scaler of the gfxcard. This not only is
+a bit faster than output through X11, but also allows to scale the
+output as large as you want it to be.
+
+Normally, the configure script should automatically detect that
+you are compiling for a Linux system and enable the code.
+To ease the compilation process, I included the mga_vid.h file
+of the mga_vid-driver in the thirdparty directory.
+However, this has the disadvantage that the version of this
+file may not match your installed driver version. So you should
+replace this file with a link to one of your version if it doesn't
+work.
+
+
+Notes
+-----
+- Be aware that the MMX-IDCT code is not completely conform to IEEE-1180.
+  If you need perfect conformity, manually disable the MMX code in config.h
+  before compiling.
+
+
+Known bugs
+----------
+- dual prime prediction is still missing
+- 4:4:4 chroma format MPEG streams have not been tested and will most
+  probably not decode correctly.
+
+
+History
+-------
+1.1.0   - output architecture rewritten, better cache locality, faster decoding
+        - robust against bitstream errors
+        - 16x8 field prediction
+        - syncs to realtime clock
+        - X11 output resizing
+        - FPS output
+1.0.2   - direct VideoCD access
+        - 4:2:2 chroma support
+1.0.1   - MGA_VID support
+1.0.0   - initial release
+
+
+To do
+-----
+Has anyone got a 4:4:4-MPEG stream to test the encoder with?
+Please send it to me!
+
+If you want to help, I'd appreciate to cooperate for working on:
+
+- XFree86 Xv-extension support
+- more MMX code for motion compensation
+- support for Pentium-III special instructions (PREFETCH, PAVGB).
+- Integrating the audio parts for AV synchronization
+- writing a nice GUI
+
+
+Copyright
+---------
+DVDview can be distributed freely under the terms of the GPL (included as the
+COPYRIGHT file in this archive). If you think that DVDview is really useful
+for you, I'd be pleased to receive a postcard from where you live.
+
+
+Credits
+-------
+
+A big thank you goes to:
+
+- Christophe Labouisse - for the MGA_VID G200 code

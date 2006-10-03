@@ -1,0 +1,22 @@
+/* XPM */
+/* Private.xpm */
+static const char* PrivateXPM[] =
+{
+ "p 12 4 1",
+ "  c None",
+ "0 c #000000",
+ "3 c #808000",
+ "b c #ffff00",
+ "         ",
+ "  3333   ",
+ " 3bbbb3  ",
+ " 3b00bb3 ",
+ " 3bbbbb3 ",
+ "  3bb00  ",
+ "   3bb0  ",
+ "   3b0   ",
+ "   3bb0  ",
+ "   3b0   ",
+ "   300   ",
+ "         ",
+};

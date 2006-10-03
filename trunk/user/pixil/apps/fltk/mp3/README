@@ -1,0 +1,8 @@
+This is based on splay, which can be found at
+http://splay.sourceforge.net. 
+
+Unless otherwise tagged, all code in this directory belongs to them.
+
+If anyone is ever caught with a copy of the FLTK frontend that they wouldn't
+be afraid to admit to, please submit it to the splay folks.
+

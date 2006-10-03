@@ -1,0 +1,68 @@
+/****************************************************************************
+** QTimer meta object code from reading C++ file 'qtimer.h'
+**
+** Created: Fri Jul 14 14:55:28 2000
+**      by: The Qt Meta Object Compiler ($Revision$)
+**
+** WARNING! All changes made in this file will be lost!
+*****************************************************************************/
+
+#if !defined(Q_MOC_OUTPUT_REVISION)
+#define Q_MOC_OUTPUT_REVISION 2
+#elif Q_MOC_OUTPUT_REVISION != 2
+#error "Moc format conflict - please regenerate all moc files"
+#endif
+
+#include "qtimer.h"
+#include <qmetaobject.h>
+
+
+const char *QTimer::className() const
+{
+    return "QTimer";
+}
+
+QMetaObject *QTimer::metaObj = 0;
+
+
+#if QT_VERSION >= 200
+static QMetaObjectInit init_QTimer(&QTimer::staticMetaObject);
+
+#endif
+
+void QTimer::initMetaObject()
+{
+    if ( metaObj )
+	return;
+    if ( strcmp(QObject::className(), "QObject") != 0 )
+	badSuperclassWarning("QTimer","QObject");
+
+#if QT_VERSION >= 200
+    staticMetaObject();
+}
+
+void QTimer::staticMetaObject()
+{
+    if ( metaObj )
+	return;
+    QObject::staticMetaObject();
+#else
+
+    QObject::initMetaObject();
+#endif
+
+    typedef void(QTimer::*m2_t0)();
+    m2_t0 v2_0 = &QTimer::timeout;
+    QMetaData *signal_tbl = new QMetaData[1];
+    signal_tbl[0].name = "timeout()";
+    signal_tbl[0].ptr = *((QMember*)&v2_0);
+    metaObj = new QMetaObject( "QTimer", "QObject",
+	0, 0,
+	signal_tbl, 1 );
+}
+
+// SIGNAL timeout
+void QTimer::timeout()
+{
+    activate_signal( "timeout()" );
+}

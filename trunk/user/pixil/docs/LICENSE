@@ -1,0 +1,72 @@
+PIXIL v1.2.3 Operating Environment License Agreement
+September 10, 2003
+
+The files comprising the PIXIL Operating Environment fall under
+three license categories, dependent upon the original origin of
+the software component.  These three categories and license
+documents are:
+
+LICENSE.DUAL: Dual-licensed GPL and Century Commercial License (CCL).
+LICENSE.GPL:  GPL only (GPL)
+LICENSE.LGPL: LGPL only (LGPL)
+
+See the above named files for descriptions of these licenses.
+
+PIXIL is dual-licensed under the GPL license (see docs/LICENSE.GPL),
+as well as Century Software's commercial CCL license (see docs/LICENSE.DUAL).
+If your application is open source and fully GPL, then you are
+able to use PIXIL under the GPL-only license.  Otherwise, a more commercial
+oriented license is available from Century Software, Inc.
+See http://www.pixil.org/license.html or
+email cetsales@centurysoftware.com for more information.
+
+The PIXIL open source site is http://www.pixil.org
+The Century Software embedded site is http://embedded.censoft.com
+
+Following is a breakdown of the components used in PIXIL and their
+individual licensing.  All code originally written by Century Software,
+Inc., is licensed under the dual-licensed GPL/CCL arrangement.
+
+Component			License			Version
+apps/fltk/address		DUAL GPL/CCL
+apps/fltk/alarm			DUAL GPL/CCL
+apps/fltk/calc			GPL
+apps/fltk/find			DUAL GPL/CCL
+apps/fltk/mail			DUAL GPL/CCL 
+apps/fltk/mp3/frontend		DUAL GPL/CCL 
+apps/fltk/mp3/mpegplay		LGPL
+apps/fltk/netconfig		DUAL GPL/CCL
+apps/fltk/notepad		DUAL GPL/CCL
+apps/fltk/schedule		DUAL GPL/CCL
+apps/fltk/sync			DUAL GPL/CCL
+apps/fltk/sysconfig		DUAL GPL/CCL
+apps/fltk/todo			DUAL GPL/CCL
+apps/games/minesweep		DUAL GPL/CCL
+apps/games/nxbill		GPL
+apps/games/snake		DUAL GPL/CCL
+apps/nanox/keyboard		DUAL GPL/CCL
+apps/nanox/scribble		GPL
+apps/nanox/wclock		DUAL GPL/CCL
+apps/nanox/misc/nxclock		DUAL GPL/CCL
+apps/nanox/misc/nxloadmon	DUAL GPL/CCL
+apps/nanox/misc/nxterm		DUAL GPL/CCL
+packages/dvdview		GPL			1.1.0e
+packages/flash			GPL			0.4.10b
+packages/nxdoom			DOOMLIC.TXT		1.0.0a
+packages/viewml			GPL			0.23
+libs/flek			LGPL			0.3
+libs/flnx			LGPL			0.18
+libs/pim			DUAL GPL/CCL
+libs/pixlib			DUAL GPL/CCL
+libs/sync			DUAL GPL/CCL
+libs/wm				DUAL GPL/CCL
+libs/xml			DUAL GPL/CCL
+pixilDT				DUAL GPL/CCL
+sys/ipc				DUAL GPL/CCL
+sys/par				DUAL GPL/CCL
+sys/pixilwm			DUAL GPL/CCL
+
+Other libraries
+microwindows			DUAL MPL/GPL		0.90
+w3c-libwww			W3C			5.2.8+
+fltk				LGPL			1.0.11
