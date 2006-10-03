@@ -15,4 +15,4 @@ build:
 
 clean:
 	@echo clean ...
-	rm -fr build loadme.bin
+	rm -rf build loadme.bin

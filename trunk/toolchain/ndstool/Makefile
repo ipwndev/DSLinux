@@ -140,6 +140,7 @@ clean:
 	make -C DefaultArm7 clean
 	make -C Loader clean
 	rm -fr $(BUILD) $(OUTPUT) raw2c
+	rm -f ndstool raw2c
 
 #---------------------------------------------------------------------------------
 all: clean $(BUILD)
