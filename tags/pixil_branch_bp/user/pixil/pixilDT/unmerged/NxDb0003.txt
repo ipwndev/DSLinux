@@ -1,0 +1,3 @@
+not
+#2 1,0,"","Untitled",0
+#1 0,1,"c:\pixil-dt\pixildt/not_0ccfc8.not","Visit Century Software at http://www.censoft.com",0

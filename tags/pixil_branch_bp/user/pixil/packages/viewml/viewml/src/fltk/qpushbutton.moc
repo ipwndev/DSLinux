@@ -1,0 +1,68 @@
+/****************************************************************************
+** QPushButton meta object code from reading C++ file 'qpushbutton.h'
+**
+** Created: Mon Nov 13 14:12:33 2000
+**      by: The Qt Meta Object Compiler ($Revision$)
+**
+** WARNING! All changes made in this file will be lost!
+*****************************************************************************/
+
+#if !defined(Q_MOC_OUTPUT_REVISION)
+#define Q_MOC_OUTPUT_REVISION 2
+#elif Q_MOC_OUTPUT_REVISION != 2
+#error "Moc format conflict - please regenerate all moc files"
+#endif
+
+#include "qpushbutton.h"
+#include <qmetaobject.h>
+
+
+const char *QPushButton::className() const
+{
+    return "QPushButton";
+}
+
+QMetaObject *QPushButton::metaObj = 0;
+
+
+#if QT_VERSION >= 200
+static QMetaObjectInit init_QPushButton(&QPushButton::staticMetaObject);
+
+#endif
+
+void QPushButton::initMetaObject()
+{
+    if ( metaObj )
+	return;
+    if ( strcmp(QWidget::className(), "QWidget") != 0 )
+	badSuperclassWarning("QPushButton","QWidget");
+
+#if QT_VERSION >= 200
+    staticMetaObject();
+}
+
+void QPushButton::staticMetaObject()
+{
+    if ( metaObj )
+	return;
+    QWidget::staticMetaObject();
+#else
+
+    QWidget::initMetaObject();
+#endif
+
+    typedef void(QPushButton::*m2_t0)();
+    m2_t0 v2_0 = &QPushButton::clicked;
+    QMetaData *signal_tbl = new QMetaData[1];
+    signal_tbl[0].name = "clicked()";
+    signal_tbl[0].ptr = *((QMember*)&v2_0);
+    metaObj = new QMetaObject( "QPushButton", "QWidget",
+	0, 0,
+	signal_tbl, 1 );
+}
+
+// SIGNAL clicked
+void QPushButton::clicked()
+{
+    activate_signal( "clicked()" );
+}
