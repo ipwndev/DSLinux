@@ -1,0 +1,114 @@
+/********************************************************************************
+    Copyright (C) 1999  Dirk Farin
+
+    This program is distributed under GNU Public License (GPL) as
+    outlined in the COPYING file that comes with the source distribution.
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ ********************************************************************************/
+
+#include "config.h"
+
+#include <assert.h>
+#include <iostream.h>
+
+
+inline uint32 MemBitstreamReader::GetBits (int n)
+{
+  if (n>d_bitsleft)
+    Refill();
+
+  uint32 val = d_buffer>>(64-n);
+  d_buffer <<= n;
+  d_bitsleft -= n;
+
+  return val;
+}
+
+
+inline uint32 MemBitstreamReader::PeekBits(int n)
+{
+  if (n>d_bitsleft)
+    Refill();
+
+  uint32 val = d_buffer>>(64-n);
+
+  return val;
+}
+
+
+inline void   MemBitstreamReader::SkipBits(int nbits)
+{
+  if (nbits>d_bitsleft)
+    Refill();
+
+  d_buffer<<=nbits;
+  d_bitsleft-=nbits;
+}
+
+inline void   MemBitstreamReader::SkipBitsFast(int nbits)
+{
+  d_buffer<<=nbits;
+  d_bitsleft-=nbits;
+}
+
+
+inline bool   MemBitstreamReader::eof() const
+{
+  return d_ptr >= d_endptr;
+}
+
+
+inline uint32 MemBitstreamReader::AskBitsLeft() const
+{
+  return ((d_endptr-d_ptr)<<3) + d_bitsleft;
+}
+
+inline void MemBitstreamReader::Refill()
+{
+#if WORDS_BIGENDIAN
+  uint32 val = *((uint32*)d_ptr)++;
+
+  uint64 val64 = val;
+  val64 <<= 64-32-d_bitsleft;
+  d_buffer |= val64;
+  d_bitsleft += 32;
+#else
+
+#if CPU_x86
+  uint32 val = *((uint32*)d_ptr);
+  d_ptr+=4;
+
+  __asm__("bswap %0" : "=r" (val) : "0" (val));
+
+  uint64 val64 = val;
+  val64 <<= 64-32-d_bitsleft;
+  d_buffer |= val64;
+  d_bitsleft += 32;
+#else
+  int shiftval = 64-8-d_bitsleft;
+
+  while (shiftval>=0)
+    {
+      uint64 newval = *d_ptr++;
+      newval <<= shiftval;
+      d_buffer |= newval;
+      shiftval  -=8;
+   }
+
+  d_bitsleft = 64-8 -shiftval;
+#endif
+#endif
+}

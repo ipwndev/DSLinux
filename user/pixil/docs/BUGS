@@ -1,0 +1,8 @@
+make menuconfig build fails on 2.91.66 RH 6.2 system
+some startup issues when Colosseum isn't around (what?)
+we have some ugly default colors when PAR isn't enabled.  
+remove template code to allow pixilDT build with 2.91.66?
+
+X11-only
+No resize_notify event for FLTK.  We need to make a patch.
+A few minor drawing issues

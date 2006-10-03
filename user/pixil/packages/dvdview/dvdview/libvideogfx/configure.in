@@ -1,0 +1,221 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(libvideogfx/init.hh)
+
+# Save this value here, since automake will set cflags later
+cflags_set=${CFLAGS+set}
+
+dnl we need to AC_DIVERT_PUSH/AC_DIVERT_POP these variable definitions so they
+dnl are available for $ac_help expansion (don't we all *love* autoconf?)
+AC_DIVERT_PUSH(AC_DIVERSION_NOTICE)dnl
+#
+# Making releases:
+#   LIBVIDEOGFX_MICRO_VERSION += 1;
+#   LIBVIDEOGFX_INTERFACE_AGE += 1;
+#   LIBVIDEOGFX_BINARY_AGE += 1;
+# if any functions have been added, set LIBVIDEOGFX_INTERFACE_AGE to 0.
+# if backwards compatibility has been broken,
+# set LIBVIDEOGFX_BINARY_AGE and LIBVIDEOGFX_INTERFACE_AGE to 0.
+#
+LIBVIDEOGFX_MAJOR_VERSION=0
+LIBVIDEOGFX_MINOR_VERSION=0
+LIBVIDEOGFX_MICRO_VERSION=1
+LIBVIDEOGFX_INTERFACE_AGE=0
+LIBVIDEOGFX_BINARY_AGE=0
+LIBVIDEOGFX_VERSION=$LIBVIDEOGFX_MAJOR_VERSION.$LIBVIDEOGFX_MINOR_VERSION.$LIBVIDEOGFX_MICRO_VERSION
+dnl
+AC_DIVERT_POP()dnl
+
+AC_SUBST(LIBVIDEOGFX_MAJOR_VERSION)
+AC_SUBST(LIBVIDEOGFX_MINOR_VERSION)
+AC_SUBST(LIBVIDEOGFX_MICRO_VERSION)
+AC_SUBST(LIBVIDEOGFX_INTERFACE_AGE)
+AC_SUBST(LIBVIDEOGFX_BINARY_AGE)
+AC_SUBST(LIBVIDEOGFX_VERSION)
+
+# libtool versioning
+LT_RELEASE=$LIBVIDEOGFX_MAJOR_VERSION.$LIBVIDEOGFX_MINOR_VERSION
+LT_CURRENT=`expr $LIBVIDEOGFX_MICRO_VERSION - $LIBVIDEOGFX_INTERFACE_AGE`
+LT_REVISION=$LIBVIDEOGFX_INTERFACE_AGE
+LT_AGE=`expr $LIBVIDEOGFX_BINARY_AGE - $LIBVIDEOGFX_INTERFACE_AGE`
+AC_SUBST(LT_RELEASE)
+AC_SUBST(LT_CURRENT)
+AC_SUBST(LT_REVISION)
+AC_SUBST(LT_AGE)
+
+# For automake.
+VERSION=$LIBVIDEOGFX_VERSION
+PACKAGE=libvideogfx
+
+# Save this value here, since automake will set cflags later
+cflags_set=${CFLAGS+set}
+
+dnl Initialize automake stuff
+AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
+
+AM_CONFIG_HEADER(config.h)
+
+dnl Initialize libtool
+AM_PROG_LIBTOOL
+
+dnl Initialize maintainer mode
+AM_MAINTAINER_MODE
+
+# Build time sanity check...
+AM_SANITY_CHECK
+
+# Sets more variables than AC_CANONICAL_HOST
+AC_CANONICAL_SYSTEM
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_CXX
+AC_ISC_POSIX
+AM_PROG_CC_STDC
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
+
+AC_ARG_ENABLE(debug, [  --enable-debug          turn on debugging [default=no]],
+if eval "test x$enable_debug = xyes"; then
+  DEBUGFLAG="-g"
+fi)
+
+dnl Use -Wall if we have gcc.
+changequote(,)dnl
+if test "x$GCC" = "xyes"; then
+  case " $CFLAGS " in
+  *[\ \	]-Wall[\ \	]*) ;;
+  *) CFLAGS="$CFLAGS -Wall" ;;
+  esac
+fi
+changequote([,])dnl
+
+# Honor aclocal flags
+ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
+
+dnl Check for MMX
+AC_MSG_CHECKING([for MMX support])
+case ${target_cpu} in
+  i?86) AC_MSG_RESULT([found, using MMX optimized code])
+	AC_DEFINE(ENABLE_MMX)
+	AC_DEFINE(CPU_x86)
+	AM_CONDITIONAL(ENABLE_MMX, true)
+	AM_CONDITIONAL(ENABLE_CPU_x86, true)
+	;;
+
+  *)    AC_MSG_RESULT(no)
+	AM_CONDITIONAL(ENABLE_MMX, false)
+	AM_CONDITIONAL(ENABLE_CPU_x86, false)
+	;;
+esac
+
+
+dnl Check for LINUX specific code
+AC_MSG_CHECKING([for Linux])
+case ${target_os} in
+  *linux*) AC_MSG_RESULT([found, enabling Linux specific code])
+	   AC_DEFINE(LINUX)
+	   AM_CONDITIONAL(LINUX, true)
+	   ;;
+  *)       AC_MSG_RESULT(no)
+	   AM_CONDITIONAL(LINUX, false)
+	   ;;
+esac
+
+AC_ARG_WITH(nanox, [  --with-nanox=nano-X base path]  Uses Nano-X instead of X (specify path)],
+[
+	CFLAGS="$CFLAGS -I$with_nanox/include"
+	CXXFLAGS="$CXXFLAGS -I$with_nanox/include"
+	LDFLAGS="$LDFLAGS -L$with_nanox/lib"
+	LIBS="$LIBS -L$with_nanox/lib -lnano-X -lm"
+],
+[
+# Find the X11 include and library directories
+AC_PATH_X
+AC_PATH_XTRA
+
+if test "x$x_includes" = "x"; then
+  x_includes="/usr/include"
+fi
+
+saved_cflags="$CFLAGS"
+saved_ldflags="$LDFLAGS"
+
+CFLAGS="$CFLAGS $X_CFLAGS"
+LDFLAGS="$LDFLAGS $X_LDFLAGS $X_LIBS"
+
+if test "x$no_x" = "xyes"; then 
+  AC_MSG_ERROR([
+*** X libraries or include files not found. Check 'config.log' for 
+*** more details.])
+fi
+
+# Check for the X11 library
+AC_CHECK_LIB(X11, XOpenDisplay, x_libs="-lX11 $X_EXTRA_LIBS", 
+  AC_MSG_ERROR([*** libX11 not found. Check 'config.log' for more details.]),
+  $X_EXTRA_LIBS)
+
+# Check for the Xext library (needed for XShm extention)
+AC_CHECK_LIB(Xext, XShmAttach, 
+    x_libs="-lXext $x_libs", 
+    # On AIX, it is in XextSam instead, but we still need -lXext
+    AC_CHECK_LIB(XextSam, XShmAttach, 
+	x_libs="-lXextSam -lXext $x_libs", 
+	AC_MSG_ERROR([*** XShm extension not found. Check 'config.log' for more details.]),
+	$x_libs),
+    $x_libs)
+
+X_LIBS="$X_LIBS $x_libs"
+
+dnl Why the fuck doesn't this get AC_SUBST() automatically???
+AC_SUBST(X_LDFLAGS)
+])
+
+CFLAGS="$saved_cflags"
+LDFLAGS="$saved_ldflags"
+
+dnl Replace `main' with a function in -lqt:
+dnl AC_CHECK_LIB(qt, main)
+
+dnl Replace `main' with a function in -lstdc:
+dnl AC_CHECK_LIB(stdc, main)
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(strings.h unistd.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_C_INLINE
+AC_C_BIGENDIAN
+
+dnl Checks for library functions.
+AC_PROG_GCC_TRADITIONAL
+
+AC_SUBST(PACKAGE)
+
+AC_OUTPUT([
+libvideogfx-config
+Makefile
+examples/Makefile
+libvideogfx/Makefile
+libvideogfx/arch/Makefile
+libvideogfx/arch/linux/Makefile
+libvideogfx/arch/linux/x86/Makefile
+libvideogfx/arch/x86/Makefile
+libvideogfx/containers/Makefile
+libvideogfx/graphics/Makefile
+libvideogfx/graphics/basic/Makefile
+libvideogfx/graphics/color/Makefile
+libvideogfx/graphics/datatypes/Makefile
+libvideogfx/graphics/draw/Makefile
+libvideogfx/graphics/fileio/Makefile
+libvideogfx/graphics/filters/Makefile
+libvideogfx/graphics/lowlevel/Makefile
+libvideogfx/graphics/motvec/Makefile
+libvideogfx/graphics/visualize/Makefile
+libvideogfx/qt/Makefile
+libvideogfx/utility/Makefile
+libvideogfx/utility/bitstream/Makefile
+libvideogfx/nanox/Makefile
+libvideogfx/x11/Makefile
+], [chmod +x libvideogfx-config])

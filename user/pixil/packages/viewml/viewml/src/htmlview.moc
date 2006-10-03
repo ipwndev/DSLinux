@@ -1,0 +1,904 @@
+/****************************************************************************
+** KHTMLView meta object code from reading C++ file 'htmlview.h'
+**
+** Created: Fri Nov 17 11:13:37 2000
+**      by: The Qt Meta Object Compiler ($Revision$)
+**
+** WARNING! All changes made in this file will be lost!
+*****************************************************************************/
+
+#if !defined(Q_MOC_OUTPUT_REVISION)
+#define Q_MOC_OUTPUT_REVISION 2
+#elif Q_MOC_OUTPUT_REVISION != 2
+#error "Moc format conflict - please regenerate all moc files"
+#endif
+
+#include "htmlview.h"
+#include <qmetaobject.h>
+
+
+const char *KHTMLView::className() const
+{
+    return "KHTMLView";
+}
+
+QMetaObject *KHTMLView::metaObj = 0;
+
+
+#if QT_VERSION >= 200
+static QMetaObjectInit init_KHTMLView(&KHTMLView::staticMetaObject);
+
+#endif
+
+void KHTMLView::initMetaObject()
+{
+    if ( metaObj )
+	return;
+    if ( strcmp(QWidget::className(), "QWidget") != 0 )
+	badSuperclassWarning("KHTMLView","QWidget");
+
+#if QT_VERSION >= 200
+    staticMetaObject();
+}
+
+void KHTMLView::staticMetaObject()
+{
+    if ( metaObj )
+	return;
+    QWidget::staticMetaObject();
+#else
+
+    QWidget::initMetaObject();
+#endif
+
+    typedef void(KHTMLView::*m1_t0)(int);
+    typedef void(KHTMLView::*m1_t1)(int);
+    typedef void(KHTMLView::*m1_t2)(const char*,const char*);
+    typedef void(KHTMLView::*m1_t3)(KHTMLView*,const char*);
+    typedef void(KHTMLView::*m1_t4)(KHTMLView*,const char*);
+    typedef void(KHTMLView::*m1_t5)(KHTMLView*,const char*,int,const char*);
+    typedef void(KHTMLView::*m1_t6)(const char*);
+    typedef void(KHTMLView::*m1_t7)(KHTMLView*,const char*);
+    typedef void(KHTMLView::*m1_t8)(KHTMLView*,const char*,const QPoint&);
+    typedef void(KHTMLView::*m1_t9)(KHTMLView*,const char*);
+    typedef void(KHTMLView::*m1_t10)(KHTMLView*,const char*);
+    typedef void(KHTMLView::*m1_t11)(KHTMLView*,const char*,const char*,const char*);
+    typedef void(KHTMLView::*m1_t12)(KHTMLView*);
+    typedef void(KHTMLView::*m1_t13)(KHTMLView*);
+    typedef void(KHTMLView::*m1_t14)();
+    typedef void(KHTMLView::*m1_t15)();
+    typedef void(KHTMLView::*m1_t16)();
+    typedef void(KHTMLView::*m1_t17)();
+    typedef void(KHTMLView::*m1_t18)(const char*,int,const char*);
+    typedef void(KHTMLView::*m1_t19)(const char*);
+    typedef void(KHTMLView::*m1_t20)(bool);
+    typedef void(KHTMLView::*m1_t21)(const char*,const QPoint&);
+    typedef void(KHTMLView::*m1_t22)(const char*);
+    typedef void(KHTMLView::*m1_t23)(const char*);
+    typedef void(KHTMLView::*m1_t24)(const char*,const char*,const char*);
+    typedef void(KHTMLView::*m1_t25)();
+    typedef void(KHTMLView::*m1_t26)();
+    typedef void(KHTMLView::*m1_t27)();
+    typedef void(KHTMLView::*m1_t28)(int);
+    typedef void(KHTMLView::*m1_t29)(int);
+    typedef void(KHTMLView::*m1_t30)();
+    typedef void(KHTMLView::*m1_t31)();
+    typedef void(KHTMLView::*m1_t32)();
+    m1_t0 v1_0 = &KHTMLView::slotScrollVert;
+    m1_t1 v1_1 = &KHTMLView::slotScrollHorz;
+    m1_t2 v1_2 = &KHTMLView::slotImageLoaded;
+    m1_t3 v1_3 = &KHTMLView::slotDocumentRequest;
+    m1_t4 v1_4 = &KHTMLView::slotCancelDocumentRequest;
+    m1_t5 v1_5 = &KHTMLView::slotURLSelected;
+    m1_t6 v1_6 = &KHTMLView::slotSetTitle;
+    m1_t7 v1_7 = &KHTMLView::slotOnURL;
+    m1_t8 v1_8 = &KHTMLView::slotPopupMenu;
+    m1_t9 v1_9 = &KHTMLView::slotImageRequest;
+    m1_t10 v1_10 = &KHTMLView::slotCancelImageRequest;
+    m1_t11 v1_11 = &KHTMLView::slotFormSubmitted;
+    m1_t12 v1_12 = &KHTMLView::slotDocumentStarted;
+    m1_t13 v1_13 = &KHTMLView::slotDocumentDone;
+    m1_t14 v1_14 = &KHTMLView::slotVertSubtractLine;
+    m1_t15 v1_15 = &KHTMLView::slotVertAddLine;
+    m1_t16 v1_16 = &KHTMLView::slotVertSubtractPage;
+    m1_t17 v1_17 = &KHTMLView::slotVertAddPage;
+    m1_t18 v1_18 = &KHTMLView::slotURLSelected;
+    m1_t19 v1_19 = &KHTMLView::slotOnURL;
+    m1_t20 v1_20 = &KHTMLView::slotTextSelected;
+    m1_t21 v1_21 = &KHTMLView::slotPopupMenu;
+    m1_t22 v1_22 = &KHTMLView::slotImageRequest;
+    m1_t23 v1_23 = &KHTMLView::slotCancelImageRequest;
+    m1_t24 v1_24 = &KHTMLView::slotFormSubmitted;
+    m1_t25 v1_25 = &KHTMLView::slotDocumentChanged;
+    m1_t26 v1_26 = &KHTMLView::slotDocumentStarted;
+    m1_t27 v1_27 = &KHTMLView::slotDocumentDone;
+    m1_t28 v1_28 = &KHTMLView::slotInternScrollVert;
+    m1_t29 v1_29 = &KHTMLView::slotInternScrollHorz;
+    m1_t30 v1_30 = &KHTMLView::slotGoUp;
+    m1_t31 v1_31 = &KHTMLView::slotGoRight;
+    m1_t32 v1_32 = &KHTMLView::slotGoLeft;
+    QMetaData *slot_tbl = new QMetaData[33];
+    slot_tbl[0].name = "slotScrollVert(int)";
+    slot_tbl[1].name = "slotScrollHorz(int)";
+    slot_tbl[2].name = "slotImageLoaded(const char*,const char*)";
+    slot_tbl[3].name = "slotDocumentRequest(KHTMLView*,const char*)";
+    slot_tbl[4].name = "slotCancelDocumentRequest(KHTMLView*,const char*)";
+    slot_tbl[5].name = "slotURLSelected(KHTMLView*,const char*,int,const char*)";
+    slot_tbl[6].name = "slotSetTitle(const char*)";
+    slot_tbl[7].name = "slotOnURL(KHTMLView*,const char*)";
+    slot_tbl[8].name = "slotPopupMenu(KHTMLView*,const char*,const QPoint&)";
+    slot_tbl[9].name = "slotImageRequest(KHTMLView*,const char*)";
+    slot_tbl[10].name = "slotCancelImageRequest(KHTMLView*,const char*)";
+    slot_tbl[11].name = "slotFormSubmitted(KHTMLView*,const char*,const char*,const char*)";
+    slot_tbl[12].name = "slotDocumentStarted(KHTMLView*)";
+    slot_tbl[13].name = "slotDocumentDone(KHTMLView*)";
+    slot_tbl[14].name = "slotVertSubtractLine()";
+    slot_tbl[15].name = "slotVertAddLine()";
+    slot_tbl[16].name = "slotVertSubtractPage()";
+    slot_tbl[17].name = "slotVertAddPage()";
+    slot_tbl[18].name = "slotURLSelected(const char*,int,const char*)";
+    slot_tbl[19].name = "slotOnURL(const char*)";
+    slot_tbl[20].name = "slotTextSelected(bool)";
+    slot_tbl[21].name = "slotPopupMenu(const char*,const QPoint&)";
+    slot_tbl[22].name = "slotImageRequest(const char*)";
+    slot_tbl[23].name = "slotCancelImageRequest(const char*)";
+    slot_tbl[24].name = "slotFormSubmitted(const char*,const char*,const char*)";
+    slot_tbl[25].name = "slotDocumentChanged()";
+    slot_tbl[26].name = "slotDocumentStarted()";
+    slot_tbl[27].name = "slotDocumentDone()";
+    slot_tbl[28].name = "slotInternScrollVert(int)";
+    slot_tbl[29].name = "slotInternScrollHorz(int)";
+    slot_tbl[30].name = "slotGoUp()";
+    slot_tbl[31].name = "slotGoRight()";
+    slot_tbl[32].name = "slotGoLeft()";
+    slot_tbl[0].ptr = *((QMember*)&v1_0);
+    slot_tbl[1].ptr = *((QMember*)&v1_1);
+    slot_tbl[2].ptr = *((QMember*)&v1_2);
+    slot_tbl[3].ptr = *((QMember*)&v1_3);
+    slot_tbl[4].ptr = *((QMember*)&v1_4);
+    slot_tbl[5].ptr = *((QMember*)&v1_5);
+    slot_tbl[6].ptr = *((QMember*)&v1_6);
+    slot_tbl[7].ptr = *((QMember*)&v1_7);
+    slot_tbl[8].ptr = *((QMember*)&v1_8);
+    slot_tbl[9].ptr = *((QMember*)&v1_9);
+    slot_tbl[10].ptr = *((QMember*)&v1_10);
+    slot_tbl[11].ptr = *((QMember*)&v1_11);
+    slot_tbl[12].ptr = *((QMember*)&v1_12);
+    slot_tbl[13].ptr = *((QMember*)&v1_13);
+    slot_tbl[14].ptr = *((QMember*)&v1_14);
+    slot_tbl[15].ptr = *((QMember*)&v1_15);
+    slot_tbl[16].ptr = *((QMember*)&v1_16);
+    slot_tbl[17].ptr = *((QMember*)&v1_17);
+    slot_tbl[18].ptr = *((QMember*)&v1_18);
+    slot_tbl[19].ptr = *((QMember*)&v1_19);
+    slot_tbl[20].ptr = *((QMember*)&v1_20);
+    slot_tbl[21].ptr = *((QMember*)&v1_21);
+    slot_tbl[22].ptr = *((QMember*)&v1_22);
+    slot_tbl[23].ptr = *((QMember*)&v1_23);
+    slot_tbl[24].ptr = *((QMember*)&v1_24);
+    slot_tbl[25].ptr = *((QMember*)&v1_25);
+    slot_tbl[26].ptr = *((QMember*)&v1_26);
+    slot_tbl[27].ptr = *((QMember*)&v1_27);
+    slot_tbl[28].ptr = *((QMember*)&v1_28);
+    slot_tbl[29].ptr = *((QMember*)&v1_29);
+    slot_tbl[30].ptr = *((QMember*)&v1_30);
+    slot_tbl[31].ptr = *((QMember*)&v1_31);
+    slot_tbl[32].ptr = *((QMember*)&v1_32);
+    typedef void(KHTMLView::*m2_t0)(KHTMLView*,const char*);
+    typedef void(KHTMLView::*m2_t1)(KHTMLView*,const char*);
+    typedef void(KHTMLView::*m2_t2)(const char*);
+    typedef void(KHTMLView::*m2_t3)(KHTMLView*,const char*,int,const char*);
+    typedef void(KHTMLView::*m2_t4)(KHTMLView*,const char*);
+    typedef void(KHTMLView::*m2_t5)(KHTMLView*,bool);
+    typedef void(KHTMLView::*m2_t6)(KHTMLView*,const char*,const QPoint&);
+    typedef void(KHTMLView::*m2_t7)(KHTMLView*,const char*);
+    typedef void(KHTMLView::*m2_t8)(const char*);
+    typedef void(KHTMLView::*m2_t9)(KHTMLView*,const char*);
+    typedef void(KHTMLView::*m2_t10)(const char*);
+    typedef void(KHTMLView::*m2_t11)(KHTMLView*,const char*,const char*,const char*);
+    typedef void(KHTMLView::*m2_t12)(KHTMLView*);
+    typedef void(KHTMLView::*m2_t13)(KHTMLView*);
+    typedef void(KHTMLView::*m2_t14)(KHTMLView*);
+    typedef void(KHTMLView::*m2_t15)(KHTMLView*);
+    typedef void(KHTMLView::*m2_t16)();
+    typedef void(KHTMLView::*m2_t17)(KHTMLView*);
+    typedef void(KHTMLView::*m2_t18)();
+    typedef void(KHTMLView::*m2_t19)(KHTMLView*);
+    typedef void(KHTMLView::*m2_t20)();
+    m2_t0 v2_0 = &KHTMLView::documentRequest;
+    m2_t1 v2_1 = &KHTMLView::cancelDocumentRequest;
+    m2_t2 v2_2 = &KHTMLView::setTitle;
+    m2_t3 v2_3 = &KHTMLView::URLSelected;
+    m2_t4 v2_4 = &KHTMLView::onURL;
+    m2_t5 v2_5 = &KHTMLView::textSelected;
+    m2_t6 v2_6 = &KHTMLView::popupMenu;
+    m2_t7 v2_7 = &KHTMLView::imageRequest;
+    m2_t8 v2_8 = &KHTMLView::imageRequest;
+    m2_t9 v2_9 = &KHTMLView::cancelImageRequest;
+    m2_t10 v2_10 = &KHTMLView::cancelImageRequest;
+    m2_t11 v2_11 = &KHTMLView::formSubmitted;
+    m2_t12 v2_12 = &KHTMLView::frameSelected;
+    m2_t13 v2_13 = &KHTMLView::documentStarted;
+    m2_t14 v2_14 = &KHTMLView::documentDone;
+    m2_t15 v2_15 = &KHTMLView::goUp;
+    m2_t16 v2_16 = &KHTMLView::goUp;
+    m2_t17 v2_17 = &KHTMLView::goRight;
+    m2_t18 v2_18 = &KHTMLView::goRight;
+    m2_t19 v2_19 = &KHTMLView::goLeft;
+    m2_t20 v2_20 = &KHTMLView::goLeft;
+    QMetaData *signal_tbl = new QMetaData[21];
+    signal_tbl[0].name = "documentRequest(KHTMLView*,const char*)";
+    signal_tbl[1].name = "cancelDocumentRequest(KHTMLView*,const char*)";
+    signal_tbl[2].name = "setTitle(const char*)";
+    signal_tbl[3].name = "URLSelected(KHTMLView*,const char*,int,const char*)";
+    signal_tbl[4].name = "onURL(KHTMLView*,const char*)";
+    signal_tbl[5].name = "textSelected(KHTMLView*,bool)";
+    signal_tbl[6].name = "popupMenu(KHTMLView*,const char*,const QPoint&)";
+    signal_tbl[7].name = "imageRequest(KHTMLView*,const char*)";
+    signal_tbl[8].name = "imageRequest(const char*)";
+    signal_tbl[9].name = "cancelImageRequest(KHTMLView*,const char*)";
+    signal_tbl[10].name = "cancelImageRequest(const char*)";
+    signal_tbl[11].name = "formSubmitted(KHTMLView*,const char*,const char*,const char*)";
+    signal_tbl[12].name = "frameSelected(KHTMLView*)";
+    signal_tbl[13].name = "documentStarted(KHTMLView*)";
+    signal_tbl[14].name = "documentDone(KHTMLView*)";
+    signal_tbl[15].name = "goUp(KHTMLView*)";
+    signal_tbl[16].name = "goUp()";
+    signal_tbl[17].name = "goRight(KHTMLView*)";
+    signal_tbl[18].name = "goRight()";
+    signal_tbl[19].name = "goLeft(KHTMLView*)";
+    signal_tbl[20].name = "goLeft()";
+    signal_tbl[0].ptr = *((QMember*)&v2_0);
+    signal_tbl[1].ptr = *((QMember*)&v2_1);
+    signal_tbl[2].ptr = *((QMember*)&v2_2);
+    signal_tbl[3].ptr = *((QMember*)&v2_3);
+    signal_tbl[4].ptr = *((QMember*)&v2_4);
+    signal_tbl[5].ptr = *((QMember*)&v2_5);
+    signal_tbl[6].ptr = *((QMember*)&v2_6);
+    signal_tbl[7].ptr = *((QMember*)&v2_7);
+    signal_tbl[8].ptr = *((QMember*)&v2_8);
+    signal_tbl[9].ptr = *((QMember*)&v2_9);
+    signal_tbl[10].ptr = *((QMember*)&v2_10);
+    signal_tbl[11].ptr = *((QMember*)&v2_11);
+    signal_tbl[12].ptr = *((QMember*)&v2_12);
+    signal_tbl[13].ptr = *((QMember*)&v2_13);
+    signal_tbl[14].ptr = *((QMember*)&v2_14);
+    signal_tbl[15].ptr = *((QMember*)&v2_15);
+    signal_tbl[16].ptr = *((QMember*)&v2_16);
+    signal_tbl[17].ptr = *((QMember*)&v2_17);
+    signal_tbl[18].ptr = *((QMember*)&v2_18);
+    signal_tbl[19].ptr = *((QMember*)&v2_19);
+    signal_tbl[20].ptr = *((QMember*)&v2_20);
+    metaObj = new QMetaObject( "KHTMLView", "QWidget",
+	slot_tbl, 33,
+	signal_tbl, 21 );
+}
+
+#include <qobjectdefs.h>
+#if QT_VERSION >= 141
+// newer implementation
+#include <qsignalslotimp.h>
+#else
+// for late-model 1.x header files
+#if !defined(Q_MOC_CONNECTIONLIST_DECLARED)
+#define Q_MOC_CONNECTIONLIST_DECLARED
+#include <qlist.h>
+Q_DECLARE(QListM,QConnection);
+Q_DECLARE(QListIteratorM,QConnection);
+#endif
+#endif
+
+// SIGNAL documentRequest
+void KHTMLView::documentRequest( KHTMLView* t0, const char* t1 )
+{
+    QConnectionList *clist = receivers("documentRequest(KHTMLView*,const char*)");
+    if ( !clist || signalsBlocked() )
+	return;
+    typedef void (QObject::*RT0)();
+    typedef RT0 *PRT0;
+    typedef void (QObject::*RT1)(KHTMLView*);
+    typedef RT1 *PRT1;
+    typedef void (QObject::*RT2)(KHTMLView*,const char*);
+    typedef RT2 *PRT2;
+    RT0 r0;
+    RT1 r1;
+    RT2 r2;
+    QConnectionListIt it(*clist);
+    QConnection   *c;
+    QSenderObject *object;
+    while ( (c=it.current()) ) {
+	++it;
+	object = (QSenderObject*)c->object();
+	object->setSender( this );
+	switch ( c->numArgs() ) {
+	    case 0:
+		r0 = *((PRT0)(c->member()));
+		(object->*r0)();
+		break;
+	    case 1:
+		r1 = *((PRT1)(c->member()));
+		(object->*r1)(t0);
+		break;
+	    case 2:
+		r2 = *((PRT2)(c->member()));
+		(object->*r2)(t0, t1);
+		break;
+	}
+    }
+}
+
+// SIGNAL cancelDocumentRequest
+void KHTMLView::cancelDocumentRequest( KHTMLView* t0, const char* t1 )
+{
+    QConnectionList *clist = receivers("cancelDocumentRequest(KHTMLView*,const char*)");
+    if ( !clist || signalsBlocked() )
+	return;
+    typedef void (QObject::*RT0)();
+    typedef RT0 *PRT0;
+    typedef void (QObject::*RT1)(KHTMLView*);
+    typedef RT1 *PRT1;
+    typedef void (QObject::*RT2)(KHTMLView*,const char*);
+    typedef RT2 *PRT2;
+    RT0 r0;
+    RT1 r1;
+    RT2 r2;
+    QConnectionListIt it(*clist);
+    QConnection   *c;
+    QSenderObject *object;
+    while ( (c=it.current()) ) {
+	++it;
+	object = (QSenderObject*)c->object();
+	object->setSender( this );
+	switch ( c->numArgs() ) {
+	    case 0:
+		r0 = *((PRT0)(c->member()));
+		(object->*r0)();
+		break;
+	    case 1:
+		r1 = *((PRT1)(c->member()));
+		(object->*r1)(t0);
+		break;
+	    case 2:
+		r2 = *((PRT2)(c->member()));
+		(object->*r2)(t0, t1);
+		break;
+	}
+    }
+}
+
+// SIGNAL setTitle
+void KHTMLView::setTitle( const char* t0 )
+{
+    activate_signal( "setTitle(const char*)", t0 );
+}
+
+// SIGNAL URLSelected
+void KHTMLView::URLSelected( KHTMLView* t0, const char* t1, int t2, const char* t3 )
+{
+    QConnectionList *clist = receivers("URLSelected(KHTMLView*,const char*,int,const char*)");
+    if ( !clist || signalsBlocked() )
+	return;
+    typedef void (QObject::*RT0)();
+    typedef RT0 *PRT0;
+    typedef void (QObject::*RT1)(KHTMLView*);
+    typedef RT1 *PRT1;
+    typedef void (QObject::*RT2)(KHTMLView*,const char*);
+    typedef RT2 *PRT2;
+    typedef void (QObject::*RT3)(KHTMLView*,const char*,int);
+    typedef RT3 *PRT3;
+    typedef void (QObject::*RT4)(KHTMLView*,const char*,int,const char*);
+    typedef RT4 *PRT4;
+    RT0 r0;
+    RT1 r1;
+    RT2 r2;
+    RT3 r3;
+    RT4 r4;
+    QConnectionListIt it(*clist);
+    QConnection   *c;
+    QSenderObject *object;
+    while ( (c=it.current()) ) {
+	++it;
+	object = (QSenderObject*)c->object();
+	object->setSender( this );
+	switch ( c->numArgs() ) {
+	    case 0:
+		r0 = *((PRT0)(c->member()));
+		(object->*r0)();
+		break;
+	    case 1:
+		r1 = *((PRT1)(c->member()));
+		(object->*r1)(t0);
+		break;
+	    case 2:
+		r2 = *((PRT2)(c->member()));
+		(object->*r2)(t0, t1);
+		break;
+	    case 3:
+		r3 = *((PRT3)(c->member()));
+		(object->*r3)(t0, t1, t2);
+		break;
+	    case 4:
+		r4 = *((PRT4)(c->member()));
+		(object->*r4)(t0, t1, t2, t3);
+		break;
+	}
+    }
+}
+
+// SIGNAL onURL
+void KHTMLView::onURL( KHTMLView* t0, const char* t1 )
+{
+    QConnectionList *clist = receivers("onURL(KHTMLView*,const char*)");
+    if ( !clist || signalsBlocked() )
+	return;
+    typedef void (QObject::*RT0)();
+    typedef RT0 *PRT0;
+    typedef void (QObject::*RT1)(KHTMLView*);
+    typedef RT1 *PRT1;
+    typedef void (QObject::*RT2)(KHTMLView*,const char*);
+    typedef RT2 *PRT2;
+    RT0 r0;
+    RT1 r1;
+    RT2 r2;
+    QConnectionListIt it(*clist);
+    QConnection   *c;
+    QSenderObject *object;
+    while ( (c=it.current()) ) {
+	++it;
+	object = (QSenderObject*)c->object();
+	object->setSender( this );
+	switch ( c->numArgs() ) {
+	    case 0:
+		r0 = *((PRT0)(c->member()));
+		(object->*r0)();
+		break;
+	    case 1:
+		r1 = *((PRT1)(c->member()));
+		(object->*r1)(t0);
+		break;
+	    case 2:
+		r2 = *((PRT2)(c->member()));
+		(object->*r2)(t0, t1);
+		break;
+	}
+    }
+}
+
+// SIGNAL textSelected
+void KHTMLView::textSelected( KHTMLView* t0, bool t1 )
+{
+    QConnectionList *clist = receivers("textSelected(KHTMLView*,bool)");
+    if ( !clist || signalsBlocked() )
+	return;
+    typedef void (QObject::*RT0)();
+    typedef RT0 *PRT0;
+    typedef void (QObject::*RT1)(KHTMLView*);
+    typedef RT1 *PRT1;
+    typedef void (QObject::*RT2)(KHTMLView*,bool);
+    typedef RT2 *PRT2;
+    RT0 r0;
+    RT1 r1;
+    RT2 r2;
+    QConnectionListIt it(*clist);
+    QConnection   *c;
+    QSenderObject *object;
+    while ( (c=it.current()) ) {
+	++it;
+	object = (QSenderObject*)c->object();
+	object->setSender( this );
+	switch ( c->numArgs() ) {
+	    case 0:
+		r0 = *((PRT0)(c->member()));
+		(object->*r0)();
+		break;
+	    case 1:
+		r1 = *((PRT1)(c->member()));
+		(object->*r1)(t0);
+		break;
+	    case 2:
+		r2 = *((PRT2)(c->member()));
+		(object->*r2)(t0, t1);
+		break;
+	}
+    }
+}
+
+// SIGNAL popupMenu
+void KHTMLView::popupMenu( KHTMLView* t0, const char* t1, const QPoint& t2 )
+{
+    QConnectionList *clist = receivers("popupMenu(KHTMLView*,const char*,const QPoint&)");
+    if ( !clist || signalsBlocked() )
+	return;
+    typedef void (QObject::*RT0)();
+    typedef RT0 *PRT0;
+    typedef void (QObject::*RT1)(KHTMLView*);
+    typedef RT1 *PRT1;
+    typedef void (QObject::*RT2)(KHTMLView*,const char*);
+    typedef RT2 *PRT2;
+    typedef void (QObject::*RT3)(KHTMLView*,const char*,const QPoint&);
+    typedef RT3 *PRT3;
+    RT0 r0;
+    RT1 r1;
+    RT2 r2;
+    RT3 r3;
+    QConnectionListIt it(*clist);
+    QConnection   *c;
+    QSenderObject *object;
+    while ( (c=it.current()) ) {
+	++it;
+	object = (QSenderObject*)c->object();
+	object->setSender( this );
+	switch ( c->numArgs() ) {
+	    case 0:
+		r0 = *((PRT0)(c->member()));
+		(object->*r0)();
+		break;
+	    case 1:
+		r1 = *((PRT1)(c->member()));
+		(object->*r1)(t0);
+		break;
+	    case 2:
+		r2 = *((PRT2)(c->member()));
+		(object->*r2)(t0, t1);
+		break;
+	    case 3:
+		r3 = *((PRT3)(c->member()));
+		(object->*r3)(t0, t1, t2);
+		break;
+	}
+    }
+}
+
+// SIGNAL imageRequest
+void KHTMLView::imageRequest( KHTMLView* t0, const char* t1 )
+{
+    QConnectionList *clist = receivers("imageRequest(KHTMLView*,const char*)");
+    if ( !clist || signalsBlocked() )
+	return;
+
+    typedef void (QObject::*RT0)();
+    typedef RT0 *PRT0;
+    typedef void (QObject::*RT1)(KHTMLView*);
+    typedef RT1 *PRT1;
+    typedef void (QObject::*RT2)(KHTMLView*,const char*);
+    typedef RT2 *PRT2;
+    RT0 r0;
+    RT1 r1;
+    RT2 r2;
+    QConnectionListIt it(*clist);
+    QConnection   *c;
+    QSenderObject *object;
+    while ( (c=it.current()) ) {
+	++it;
+	object = (QSenderObject*)c->object();
+	object->setSender( this );
+	switch ( c->numArgs() ) {
+	    case 0:
+		r0 = *((PRT0)(c->member()));
+		(object->*r0)();
+		break;
+	    case 1:
+		r1 = *((PRT1)(c->member()));
+		(object->*r1)(t0);
+		break;
+	    case 2:
+		r2 = *((PRT2)(c->member()));
+		(object->*r2)(t0, t1);
+		break;
+	}
+    }
+}
+
+// SIGNAL imageRequest
+void KHTMLView::imageRequest( const char* t0 )
+{
+    activate_signal( "imageRequest(const char*)", t0 );
+}
+
+// SIGNAL cancelImageRequest
+void KHTMLView::cancelImageRequest( KHTMLView* t0, const char* t1 )
+{
+    QConnectionList *clist = receivers("cancelImageRequest(KHTMLView*,const char*)");
+    if ( !clist || signalsBlocked() )
+	return;
+    typedef void (QObject::*RT0)();
+    typedef RT0 *PRT0;
+    typedef void (QObject::*RT1)(KHTMLView*);
+    typedef RT1 *PRT1;
+    typedef void (QObject::*RT2)(KHTMLView*,const char*);
+    typedef RT2 *PRT2;
+    RT0 r0;
+    RT1 r1;
+    RT2 r2;
+    QConnectionListIt it(*clist);
+    QConnection   *c;
+    QSenderObject *object;
+    while ( (c=it.current()) ) {
+	++it;
+	object = (QSenderObject*)c->object();
+	object->setSender( this );
+	switch ( c->numArgs() ) {
+	    case 0:
+		r0 = *((PRT0)(c->member()));
+		(object->*r0)();
+		break;
+	    case 1:
+		r1 = *((PRT1)(c->member()));
+		(object->*r1)(t0);
+		break;
+	    case 2:
+		r2 = *((PRT2)(c->member()));
+		(object->*r2)(t0, t1);
+		break;
+	}
+    }
+}
+
+// SIGNAL cancelImageRequest
+void KHTMLView::cancelImageRequest( const char* t0 )
+{
+    activate_signal( "cancelImageRequest(const char*)", t0 );
+}
+
+// SIGNAL formSubmitted
+void KHTMLView::formSubmitted( KHTMLView* t0, const char* t1, const char* t2, const char* t3 )
+{
+    QConnectionList *clist = receivers("formSubmitted(KHTMLView*,const char*,const char*,const char*)");
+    if ( !clist || signalsBlocked() )
+	return;
+    typedef void (QObject::*RT0)();
+    typedef RT0 *PRT0;
+    typedef void (QObject::*RT1)(KHTMLView*);
+    typedef RT1 *PRT1;
+    typedef void (QObject::*RT2)(KHTMLView*,const char*);
+    typedef RT2 *PRT2;
+    typedef void (QObject::*RT3)(KHTMLView*,const char*,const char*);
+    typedef RT3 *PRT3;
+    typedef void (QObject::*RT4)(KHTMLView*,const char*,const char*,const char*);
+    typedef RT4 *PRT4;
+    RT0 r0;
+    RT1 r1;
+    RT2 r2;
+    RT3 r3;
+    RT4 r4;
+    QConnectionListIt it(*clist);
+    QConnection   *c;
+    QSenderObject *object;
+    while ( (c=it.current()) ) {
+	++it;
+	object = (QSenderObject*)c->object();
+	object->setSender( this );
+	switch ( c->numArgs() ) {
+	    case 0:
+		r0 = *((PRT0)(c->member()));
+		(object->*r0)();
+		break;
+	    case 1:
+		r1 = *((PRT1)(c->member()));
+		(object->*r1)(t0);
+		break;
+	    case 2:
+		r2 = *((PRT2)(c->member()));
+		(object->*r2)(t0, t1);
+		break;
+	    case 3:
+		r3 = *((PRT3)(c->member()));
+		(object->*r3)(t0, t1, t2);
+		break;
+	    case 4:
+		r4 = *((PRT4)(c->member()));
+		(object->*r4)(t0, t1, t2, t3);
+		break;
+	}
+    }
+}
+
+// SIGNAL frameSelected
+void KHTMLView::frameSelected( KHTMLView* t0 )
+{
+    QConnectionList *clist = receivers("frameSelected(KHTMLView*)");
+    if ( !clist || signalsBlocked() )
+	return;
+    typedef void (QObject::*RT0)();
+    typedef RT0 *PRT0;
+    typedef void (QObject::*RT1)(KHTMLView*);
+    typedef RT1 *PRT1;
+    RT0 r0;
+    RT1 r1;
+    QConnectionListIt it(*clist);
+    QConnection   *c;
+    QSenderObject *object;
+    while ( (c=it.current()) ) {
+	++it;
+	object = (QSenderObject*)c->object();
+	object->setSender( this );
+	switch ( c->numArgs() ) {
+	    case 0:
+		r0 = *((PRT0)(c->member()));
+		(object->*r0)();
+		break;
+	    case 1:
+		r1 = *((PRT1)(c->member()));
+		(object->*r1)(t0);
+		break;
+	}
+    }
+}
+
+// SIGNAL documentStarted
+void KHTMLView::documentStarted( KHTMLView* t0 )
+{
+    QConnectionList *clist = receivers("documentStarted(KHTMLView*)");
+    if ( !clist || signalsBlocked() )
+	return;
+    typedef void (QObject::*RT0)();
+    typedef RT0 *PRT0;
+    typedef void (QObject::*RT1)(KHTMLView*);
+    typedef RT1 *PRT1;
+    RT0 r0;
+    RT1 r1;
+    QConnectionListIt it(*clist);
+    QConnection   *c;
+    QSenderObject *object;
+    while ( (c=it.current()) ) {
+	++it;
+	object = (QSenderObject*)c->object();
+	object->setSender( this );
+	switch ( c->numArgs() ) {
+	    case 0:
+		r0 = *((PRT0)(c->member()));
+		(object->*r0)();
+		break;
+	    case 1:
+		r1 = *((PRT1)(c->member()));
+		(object->*r1)(t0);
+		break;
+	}
+    }
+}
+
+// SIGNAL documentDone
+void KHTMLView::documentDone( KHTMLView* t0 )
+{
+    QConnectionList *clist = receivers("documentDone(KHTMLView*)");
+    if ( !clist || signalsBlocked() )
+	return;
+    typedef void (QObject::*RT0)();
+    typedef RT0 *PRT0;
+    typedef void (QObject::*RT1)(KHTMLView*);
+    typedef RT1 *PRT1;
+    RT0 r0;
+    RT1 r1;
+    QConnectionListIt it(*clist);
+    QConnection   *c;
+    QSenderObject *object;
+    while ( (c=it.current()) ) {
+	++it;
+	object = (QSenderObject*)c->object();
+	object->setSender( this );
+	switch ( c->numArgs() ) {
+	    case 0:
+		r0 = *((PRT0)(c->member()));
+		(object->*r0)();
+		break;
+	    case 1:
+		r1 = *((PRT1)(c->member()));
+		(object->*r1)(t0);
+		break;
+	}
+    }
+}
+
+// SIGNAL goUp
+void KHTMLView::goUp( KHTMLView* t0 )
+{
+    QConnectionList *clist = receivers("goUp(KHTMLView*)");
+    if ( !clist || signalsBlocked() )
+	return;
+    typedef void (QObject::*RT0)();
+    typedef RT0 *PRT0;
+    typedef void (QObject::*RT1)(KHTMLView*);
+    typedef RT1 *PRT1;
+    RT0 r0;
+    RT1 r1;
+    QConnectionListIt it(*clist);
+    QConnection   *c;
+    QSenderObject *object;
+    while ( (c=it.current()) ) {
+	++it;
+	object = (QSenderObject*)c->object();
+	object->setSender( this );
+	switch ( c->numArgs() ) {
+	    case 0:
+		r0 = *((PRT0)(c->member()));
+		(object->*r0)();
+		break;
+	    case 1:
+		r1 = *((PRT1)(c->member()));
+		(object->*r1)(t0);
+		break;
+	}
+    }
+}
+
+// SIGNAL goUp
+void KHTMLView::goUp()
+{
+    activate_signal( "goUp()" );
+}
+
+// SIGNAL goRight
+void KHTMLView::goRight( KHTMLView* t0 )
+{
+    QConnectionList *clist = receivers("goRight(KHTMLView*)");
+    if ( !clist || signalsBlocked() )
+	return;
+    typedef void (QObject::*RT0)();
+    typedef RT0 *PRT0;
+    typedef void (QObject::*RT1)(KHTMLView*);
+    typedef RT1 *PRT1;
+    RT0 r0;
+    RT1 r1;
+    QConnectionListIt it(*clist);
+    QConnection   *c;
+    QSenderObject *object;
+    while ( (c=it.current()) ) {
+	++it;
+	object = (QSenderObject*)c->object();
+	object->setSender( this );
+	switch ( c->numArgs() ) {
+	    case 0:
+		r0 = *((PRT0)(c->member()));
+		(object->*r0)();
+		break;
+	    case 1:
+		r1 = *((PRT1)(c->member()));
+		(object->*r1)(t0);
+		break;
+	}
+    }
+}
+
+// SIGNAL goRight
+void KHTMLView::goRight()
+{
+    activate_signal( "goRight()" );
+}
+
+// SIGNAL goLeft
+void KHTMLView::goLeft( KHTMLView* t0 )
+{
+    QConnectionList *clist = receivers("goLeft(KHTMLView*)");
+    if ( !clist || signalsBlocked() )
+	return;
+    typedef void (QObject::*RT0)();
+    typedef RT0 *PRT0;
+    typedef void (QObject::*RT1)(KHTMLView*);
+    typedef RT1 *PRT1;
+    RT0 r0;
+    RT1 r1;
+    QConnectionListIt it(*clist);
+    QConnection   *c;
+    QSenderObject *object;
+    while ( (c=it.current()) ) {
+	++it;
+	object = (QSenderObject*)c->object();
+	object->setSender( this );
+	switch ( c->numArgs() ) {
+	    case 0:
+		r0 = *((PRT0)(c->member()));
+		(object->*r0)();
+		break;
+	    case 1:
+		r1 = *((PRT1)(c->member()));
+		(object->*r1)(t0);
+		break;
+	}
+    }
+}
+
+// SIGNAL goLeft
+void KHTMLView::goLeft()
+{
+    activate_signal( "goLeft()" );
+}

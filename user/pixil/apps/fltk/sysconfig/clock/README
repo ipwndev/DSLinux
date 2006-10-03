@@ -1,0 +1,5 @@
+Note:
+
+the old/ directory contains the unmodified code for the clock widget
+with the sunclock built in.  We should merge that in gradually 
+

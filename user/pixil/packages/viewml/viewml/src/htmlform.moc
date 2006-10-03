@@ -1,0 +1,792 @@
+/****************************************************************************
+** HTMLWidgetElement meta object code from reading C++ file 'htmlform.h'
+**
+** Created: Mon Jul 10 13:09:08 2000
+**      by: The Qt Meta Object Compiler ($Revision$)
+**
+** WARNING! All changes made in this file will be lost!
+*****************************************************************************/
+
+#if !defined(Q_MOC_OUTPUT_REVISION)
+#define Q_MOC_OUTPUT_REVISION 2
+#elif Q_MOC_OUTPUT_REVISION != 2
+#error "Moc format conflict - please regenerate all moc files"
+#endif
+
+#include "htmlform.h"
+#include <qmetaobject.h>
+
+
+const char *HTMLWidgetElement::className() const
+{
+    return "HTMLWidgetElement";
+}
+
+QMetaObject *HTMLWidgetElement::metaObj = 0;
+
+
+#if QT_VERSION >= 200
+static QMetaObjectInit init_HTMLWidgetElement(&HTMLWidgetElement::staticMetaObject);
+
+#endif
+
+void HTMLWidgetElement::initMetaObject()
+{
+    if ( metaObj )
+	return;
+    if ( strcmp(QObject::className(), "QObject") != 0 )
+	badSuperclassWarning("HTMLWidgetElement","QObject");
+
+#if QT_VERSION >= 200
+    staticMetaObject();
+}
+
+void HTMLWidgetElement::staticMetaObject()
+{
+    if ( metaObj )
+	return;
+    QObject::staticMetaObject();
+#else
+
+    QObject::initMetaObject();
+#endif
+
+    metaObj = new QMetaObject( "HTMLWidgetElement", "QObject",
+	0, 0,
+	0, 0 );
+}
+
+
+const char *HTMLSelect::className() const
+{
+    return "HTMLSelect";
+}
+
+QMetaObject *HTMLSelect::metaObj = 0;
+
+
+#if QT_VERSION >= 200
+static QMetaObjectInit init_HTMLSelect(&HTMLSelect::staticMetaObject);
+
+#endif
+
+void HTMLSelect::initMetaObject()
+{
+    if ( metaObj )
+	return;
+    if ( strcmp(HTMLWidgetElement::className(), "HTMLWidgetElement") != 0 )
+	badSuperclassWarning("HTMLSelect","HTMLWidgetElement");
+
+#if QT_VERSION >= 200
+    staticMetaObject();
+}
+
+void HTMLSelect::staticMetaObject()
+{
+    if ( metaObj )
+	return;
+    HTMLWidgetElement::staticMetaObject();
+#else
+
+    HTMLWidgetElement::initMetaObject();
+#endif
+
+    typedef void(HTMLSelect::*m1_t0)(int);
+    m1_t0 v1_0 = &HTMLSelect::slotHighlighted;
+    QMetaData *slot_tbl = new QMetaData[1];
+    slot_tbl[0].name = "slotHighlighted(int)";
+    slot_tbl[0].ptr = *((QMember*)&v1_0);
+    metaObj = new QMetaObject( "HTMLSelect", "HTMLWidgetElement",
+	slot_tbl, 1,
+	0, 0 );
+}
+
+
+const char *HTMLTextArea::className() const
+{
+    return "HTMLTextArea";
+}
+
+QMetaObject *HTMLTextArea::metaObj = 0;
+
+
+#if QT_VERSION >= 200
+static QMetaObjectInit init_HTMLTextArea(&HTMLTextArea::staticMetaObject);
+
+#endif
+
+void HTMLTextArea::initMetaObject()
+{
+    if ( metaObj )
+	return;
+    if ( strcmp(HTMLWidgetElement::className(), "HTMLWidgetElement") != 0 )
+	badSuperclassWarning("HTMLTextArea","HTMLWidgetElement");
+
+#if QT_VERSION >= 200
+    staticMetaObject();
+}
+
+void HTMLTextArea::staticMetaObject()
+{
+    if ( metaObj )
+	return;
+    HTMLWidgetElement::staticMetaObject();
+#else
+
+    HTMLWidgetElement::initMetaObject();
+#endif
+
+    metaObj = new QMetaObject( "HTMLTextArea", "HTMLWidgetElement",
+	0, 0,
+	0, 0 );
+}
+
+
+const char *HTMLInput::className() const
+{
+    return "HTMLInput";
+}
+
+QMetaObject *HTMLInput::metaObj = 0;
+
+
+#if QT_VERSION >= 200
+static QMetaObjectInit init_HTMLInput(&HTMLInput::staticMetaObject);
+
+#endif
+
+void HTMLInput::initMetaObject()
+{
+    if ( metaObj )
+	return;
+    if ( strcmp(HTMLWidgetElement::className(), "HTMLWidgetElement") != 0 )
+	badSuperclassWarning("HTMLInput","HTMLWidgetElement");
+
+#if QT_VERSION >= 200
+    staticMetaObject();
+}
+
+void HTMLInput::staticMetaObject()
+{
+    if ( metaObj )
+	return;
+    HTMLWidgetElement::staticMetaObject();
+#else
+
+    HTMLWidgetElement::initMetaObject();
+#endif
+
+    metaObj = new QMetaObject( "HTMLInput", "HTMLWidgetElement",
+	0, 0,
+	0, 0 );
+}
+
+
+const char *HTMLCheckBox::className() const
+{
+    return "HTMLCheckBox";
+}
+
+QMetaObject *HTMLCheckBox::metaObj = 0;
+
+
+#if QT_VERSION >= 200
+static QMetaObjectInit init_HTMLCheckBox(&HTMLCheckBox::staticMetaObject);
+
+#endif
+
+void HTMLCheckBox::initMetaObject()
+{
+    if ( metaObj )
+	return;
+    if ( strcmp(HTMLInput::className(), "HTMLInput") != 0 )
+	badSuperclassWarning("HTMLCheckBox","HTMLInput");
+
+#if QT_VERSION >= 200
+    staticMetaObject();
+}
+
+void HTMLCheckBox::staticMetaObject()
+{
+    if ( metaObj )
+	return;
+    HTMLInput::staticMetaObject();
+#else
+
+    HTMLInput::initMetaObject();
+#endif
+
+    metaObj = new QMetaObject( "HTMLCheckBox", "HTMLInput",
+	0, 0,
+	0, 0 );
+}
+
+
+const char *HTMLHidden::className() const
+{
+    return "HTMLHidden";
+}
+
+QMetaObject *HTMLHidden::metaObj = 0;
+
+
+#if QT_VERSION >= 200
+static QMetaObjectInit init_HTMLHidden(&HTMLHidden::staticMetaObject);
+
+#endif
+
+void HTMLHidden::initMetaObject()
+{
+    if ( metaObj )
+	return;
+    if ( strcmp(HTMLInput::className(), "HTMLInput") != 0 )
+	badSuperclassWarning("HTMLHidden","HTMLInput");
+
+#if QT_VERSION >= 200
+    staticMetaObject();
+}
+
+void HTMLHidden::staticMetaObject()
+{
+    if ( metaObj )
+	return;
+    HTMLInput::staticMetaObject();
+#else
+
+    HTMLInput::initMetaObject();
+#endif
+
+    metaObj = new QMetaObject( "HTMLHidden", "HTMLInput",
+	0, 0,
+	0, 0 );
+}
+
+
+const char *HTMLRadio::className() const
+{
+    return "HTMLRadio";
+}
+
+QMetaObject *HTMLRadio::metaObj = 0;
+
+
+#if QT_VERSION >= 200
+static QMetaObjectInit init_HTMLRadio(&HTMLRadio::staticMetaObject);
+
+#endif
+
+void HTMLRadio::initMetaObject()
+{
+    if ( metaObj )
+	return;
+    if ( strcmp(HTMLInput::className(), "HTMLInput") != 0 )
+	badSuperclassWarning("HTMLRadio","HTMLInput");
+
+#if QT_VERSION >= 200
+    staticMetaObject();
+}
+
+void HTMLRadio::staticMetaObject()
+{
+    if ( metaObj )
+	return;
+    HTMLInput::staticMetaObject();
+#else
+
+    HTMLInput::initMetaObject();
+#endif
+
+    typedef void(HTMLRadio::*m1_t0)(const char*,const char*);
+    typedef void(HTMLRadio::*m1_t1)();
+    m1_t0 v1_0 = &HTMLRadio::slotRadioSelected;
+    m1_t1 v1_1 = &HTMLRadio::slotClicked;
+    QMetaData *slot_tbl = new QMetaData[2];
+    slot_tbl[0].name = "slotRadioSelected(const char*,const char*)";
+    slot_tbl[1].name = "slotClicked()";
+    slot_tbl[0].ptr = *((QMember*)&v1_0);
+    slot_tbl[1].ptr = *((QMember*)&v1_1);
+    typedef void(HTMLRadio::*m2_t0)(const char*,const char*);
+    m2_t0 v2_0 = &HTMLRadio::radioSelected;
+    QMetaData *signal_tbl = new QMetaData[1];
+    signal_tbl[0].name = "radioSelected(const char*,const char*)";
+    signal_tbl[0].ptr = *((QMember*)&v2_0);
+    metaObj = new QMetaObject( "HTMLRadio", "HTMLInput",
+	slot_tbl, 2,
+	signal_tbl, 1 );
+}
+
+#include <qobjectdefs.h>
+#if QT_VERSION >= 141
+// newer implementation
+#include <qsignalslotimp.h>
+#else
+// for late-model 1.x header files
+#if !defined(Q_MOC_CONNECTIONLIST_DECLARED)
+#define Q_MOC_CONNECTIONLIST_DECLARED
+#include <qlist.h>
+Q_DECLARE(QListM,QConnection);
+Q_DECLARE(QListIteratorM,QConnection);
+#endif
+#endif
+
+// SIGNAL radioSelected
+void HTMLRadio::radioSelected( const char* t0, const char* t1 )
+{
+    QConnectionList *clist = receivers("radioSelected(const char*,const char*)");
+    if ( !clist || signalsBlocked() )
+	return;
+    typedef void (QObject::*RT0)();
+    typedef RT0 *PRT0;
+    typedef void (QObject::*RT1)(const char*);
+    typedef RT1 *PRT1;
+    typedef void (QObject::*RT2)(const char*,const char*);
+    typedef RT2 *PRT2;
+    RT0 r0;
+    RT1 r1;
+    RT2 r2;
+    QConnectionListIt it(*clist);
+    QConnection   *c;
+    QSenderObject *object;
+    while ( (c=it.current()) ) {
+	++it;
+	object = (QSenderObject*)c->object();
+	object->setSender( this );
+	switch ( c->numArgs() ) {
+	    case 0:
+		r0 = *((PRT0)(c->member()));
+		(object->*r0)();
+		break;
+	    case 1:
+		r1 = *((PRT1)(c->member()));
+		(object->*r1)(t0);
+		break;
+	    case 2:
+		r2 = *((PRT2)(c->member()));
+		(object->*r2)(t0, t1);
+		break;
+	}
+    }
+}
+
+
+const char *HTMLReset::className() const
+{
+    return "HTMLReset";
+}
+
+QMetaObject *HTMLReset::metaObj = 0;
+
+
+#if QT_VERSION >= 200
+static QMetaObjectInit init_HTMLReset(&HTMLReset::staticMetaObject);
+
+#endif
+
+void HTMLReset::initMetaObject()
+{
+    if ( metaObj )
+	return;
+    if ( strcmp(HTMLInput::className(), "HTMLInput") != 0 )
+	badSuperclassWarning("HTMLReset","HTMLInput");
+
+#if QT_VERSION >= 200
+    staticMetaObject();
+}
+
+void HTMLReset::staticMetaObject()
+{
+    if ( metaObj )
+	return;
+    HTMLInput::staticMetaObject();
+#else
+
+    HTMLInput::initMetaObject();
+#endif
+
+    typedef void(HTMLReset::*m1_t0)();
+    m1_t0 v1_0 = &HTMLReset::slotClicked;
+    QMetaData *slot_tbl = new QMetaData[1];
+    slot_tbl[0].name = "slotClicked()";
+    slot_tbl[0].ptr = *((QMember*)&v1_0);
+    typedef void(HTMLReset::*m2_t0)();
+    m2_t0 v2_0 = &HTMLReset::resetForm;
+    QMetaData *signal_tbl = new QMetaData[1];
+    signal_tbl[0].name = "resetForm()";
+    signal_tbl[0].ptr = *((QMember*)&v2_0);
+    metaObj = new QMetaObject( "HTMLReset", "HTMLInput",
+	slot_tbl, 1,
+	signal_tbl, 1 );
+}
+
+// SIGNAL resetForm
+void HTMLReset::resetForm()
+{
+    activate_signal( "resetForm()" );
+}
+
+
+const char *HTMLSubmit::className() const
+{
+    return "HTMLSubmit";
+}
+
+QMetaObject *HTMLSubmit::metaObj = 0;
+
+
+#if QT_VERSION >= 200
+static QMetaObjectInit init_HTMLSubmit(&HTMLSubmit::staticMetaObject);
+
+#endif
+
+void HTMLSubmit::initMetaObject()
+{
+    if ( metaObj )
+	return;
+    if ( strcmp(HTMLInput::className(), "HTMLInput") != 0 )
+	badSuperclassWarning("HTMLSubmit","HTMLInput");
+
+#if QT_VERSION >= 200
+    staticMetaObject();
+}
+
+void HTMLSubmit::staticMetaObject()
+{
+    if ( metaObj )
+	return;
+    HTMLInput::staticMetaObject();
+#else
+
+    HTMLInput::initMetaObject();
+#endif
+
+    typedef void(HTMLSubmit::*m1_t0)();
+    m1_t0 v1_0 = &HTMLSubmit::slotClicked;
+    QMetaData *slot_tbl = new QMetaData[1];
+    slot_tbl[0].name = "slotClicked()";
+    slot_tbl[0].ptr = *((QMember*)&v1_0);
+    typedef void(HTMLSubmit::*m2_t0)();
+    m2_t0 v2_0 = &HTMLSubmit::submitForm;
+    QMetaData *signal_tbl = new QMetaData[1];
+    signal_tbl[0].name = "submitForm()";
+    signal_tbl[0].ptr = *((QMember*)&v2_0);
+    metaObj = new QMetaObject( "HTMLSubmit", "HTMLInput",
+	slot_tbl, 1,
+	signal_tbl, 1 );
+}
+
+// SIGNAL submitForm
+void HTMLSubmit::submitForm()
+{
+    activate_signal( "submitForm()" );
+}
+
+
+const char *HTMLTextInput::className() const
+{
+    return "HTMLTextInput";
+}
+
+QMetaObject *HTMLTextInput::metaObj = 0;
+
+
+#if QT_VERSION >= 200
+static QMetaObjectInit init_HTMLTextInput(&HTMLTextInput::staticMetaObject);
+
+#endif
+
+void HTMLTextInput::initMetaObject()
+{
+    if ( metaObj )
+	return;
+    if ( strcmp(HTMLInput::className(), "HTMLInput") != 0 )
+	badSuperclassWarning("HTMLTextInput","HTMLInput");
+
+#if QT_VERSION >= 200
+    staticMetaObject();
+}
+
+void HTMLTextInput::staticMetaObject()
+{
+    if ( metaObj )
+	return;
+    HTMLInput::staticMetaObject();
+#else
+
+    HTMLInput::initMetaObject();
+#endif
+
+    typedef void(HTMLTextInput::*m1_t0)(const char*);
+    typedef void(HTMLTextInput::*m1_t1)();
+    m1_t0 v1_0 = &HTMLTextInput::slotTextChanged;
+    m1_t1 v1_1 = &HTMLTextInput::slotReturnPressed;
+    QMetaData *slot_tbl = new QMetaData[2];
+    slot_tbl[0].name = "slotTextChanged(const char*)";
+    slot_tbl[1].name = "slotReturnPressed()";
+    slot_tbl[0].ptr = *((QMember*)&v1_0);
+    slot_tbl[1].ptr = *((QMember*)&v1_1);
+    typedef void(HTMLTextInput::*m2_t0)();
+    m2_t0 v2_0 = &HTMLTextInput::submitForm;
+    QMetaData *signal_tbl = new QMetaData[1];
+    signal_tbl[0].name = "submitForm()";
+    signal_tbl[0].ptr = *((QMember*)&v2_0);
+    metaObj = new QMetaObject( "HTMLTextInput", "HTMLInput",
+	slot_tbl, 2,
+	signal_tbl, 1 );
+}
+
+// SIGNAL submitForm
+void HTMLTextInput::submitForm()
+{
+    activate_signal( "submitForm()" );
+}
+
+
+const char *HTMLImageInput::className() const
+{
+    return "HTMLImageInput";
+}
+
+QMetaObject *HTMLImageInput::metaObj = 0;
+
+
+#if QT_VERSION >= 200
+static QMetaObjectInit init_HTMLImageInput(&HTMLImageInput::staticMetaObject);
+
+#endif
+
+void HTMLImageInput::initMetaObject()
+{
+    if ( metaObj )
+	return;
+    if ( strcmp(HTMLImage::className(), "HTMLImage") != 0 )
+	badSuperclassWarning("HTMLImageInput","HTMLImage");
+
+#if QT_VERSION >= 200
+    staticMetaObject();
+}
+
+void HTMLImageInput::staticMetaObject()
+{
+    if ( metaObj )
+	return;
+    HTMLImage::staticMetaObject();
+#else
+
+    HTMLImage::initMetaObject();
+#endif
+
+    typedef void(HTMLImageInput::*m2_t0)();
+    m2_t0 v2_0 = &HTMLImageInput::submitForm;
+    QMetaData *signal_tbl = new QMetaData[1];
+    signal_tbl[0].name = "submitForm()";
+    signal_tbl[0].ptr = *((QMember*)&v2_0);
+    metaObj = new QMetaObject( "HTMLImageInput", "HTMLImage",
+	0, 0,
+	signal_tbl, 1 );
+}
+
+// SIGNAL submitForm
+void HTMLImageInput::submitForm()
+{
+    activate_signal( "submitForm()" );
+}
+
+
+const char *HTMLForm::className() const
+{
+    return "HTMLForm";
+}
+
+QMetaObject *HTMLForm::metaObj = 0;
+
+
+#if QT_VERSION >= 200
+static QMetaObjectInit init_HTMLForm(&HTMLForm::staticMetaObject);
+
+#endif
+
+void HTMLForm::initMetaObject()
+{
+    if ( metaObj )
+	return;
+    if ( strcmp(QObject::className(), "QObject") != 0 )
+	badSuperclassWarning("HTMLForm","QObject");
+
+#if QT_VERSION >= 200
+    staticMetaObject();
+}
+
+void HTMLForm::staticMetaObject()
+{
+    if ( metaObj )
+	return;
+    QObject::staticMetaObject();
+#else
+
+    QObject::initMetaObject();
+#endif
+
+    typedef void(HTMLForm::*m1_t0)();
+    typedef void(HTMLForm::*m1_t1)();
+    typedef void(HTMLForm::*m1_t2)(const char*,const char*);
+    typedef void(HTMLForm::*m1_t3)();
+    m1_t0 v1_0 = &HTMLForm::slotReset;
+    m1_t1 v1_1 = &HTMLForm::slotSubmit;
+    m1_t2 v1_2 = &HTMLForm::slotRadioSelected;
+    m1_t3 v1_3 = &HTMLForm::slotTimeout;
+    QMetaData *slot_tbl = new QMetaData[4];
+    slot_tbl[0].name = "slotReset()";
+    slot_tbl[1].name = "slotSubmit()";
+    slot_tbl[2].name = "slotRadioSelected(const char*,const char*)";
+    slot_tbl[3].name = "slotTimeout()";
+    slot_tbl[0].ptr = *((QMember*)&v1_0);
+    slot_tbl[1].ptr = *((QMember*)&v1_1);
+    slot_tbl[2].ptr = *((QMember*)&v1_2);
+    slot_tbl[3].ptr = *((QMember*)&v1_3);
+    typedef void(HTMLForm::*m2_t0)(const char*,const char*,const char*);
+    typedef void(HTMLForm::*m2_t1)(const char*,const char*);
+    m2_t0 v2_0 = &HTMLForm::submitted;
+    m2_t1 v2_1 = &HTMLForm::radioSelected;
+    QMetaData *signal_tbl = new QMetaData[2];
+    signal_tbl[0].name = "submitted(const char*,const char*,const char*)";
+    signal_tbl[1].name = "radioSelected(const char*,const char*)";
+    signal_tbl[0].ptr = *((QMember*)&v2_0);
+    signal_tbl[1].ptr = *((QMember*)&v2_1);
+    metaObj = new QMetaObject( "HTMLForm", "QObject",
+	slot_tbl, 4,
+	signal_tbl, 2 );
+}
+
+// SIGNAL submitted
+void HTMLForm::submitted( const char* t0, const char* t1, const char* t2 )
+{
+    QConnectionList *clist = receivers("submitted(const char*,const char*,const char*)");
+    if ( !clist || signalsBlocked() )
+	return;
+    typedef void (QObject::*RT0)();
+    typedef RT0 *PRT0;
+    typedef void (QObject::*RT1)(const char*);
+    typedef RT1 *PRT1;
+    typedef void (QObject::*RT2)(const char*,const char*);
+    typedef RT2 *PRT2;
+    typedef void (QObject::*RT3)(const char*,const char*,const char*);
+    typedef RT3 *PRT3;
+    RT0 r0;
+    RT1 r1;
+    RT2 r2;
+    RT3 r3;
+    QConnectionListIt it(*clist);
+    QConnection   *c;
+    QSenderObject *object;
+    while ( (c=it.current()) ) {
+	++it;
+	object = (QSenderObject*)c->object();
+	object->setSender( this );
+
+	cerr << "Number of args is " << c->numArgs() << "\n";
+
+
+	switch ( c->numArgs() ) {
+	    case 0:
+		r0 = *((PRT0)(c->member()));
+		(object->*r0)();
+		break;
+	    case 1:
+		r1 = *((PRT1)(c->member()));
+		(object->*r1)(t0);
+		break;
+	    case 2:
+		r2 = *((PRT2)(c->member()));
+		(object->*r2)(t0, t1);
+		break;
+	    case 3:
+		r3 = *((PRT3)(c->member()));
+		(object->*r3)(t0, t1, t2);
+		break;
+	}
+    }
+}
+
+// SIGNAL radioSelected
+void HTMLForm::radioSelected( const char* t0, const char* t1 )
+{
+    QConnectionList *clist = receivers("radioSelected(const char*,const char*)");
+    if ( !clist || signalsBlocked() )
+	return;
+    typedef void (QObject::*RT0)();
+    typedef RT0 *PRT0;
+    typedef void (QObject::*RT1)(const char*);
+    typedef RT1 *PRT1;
+    typedef void (QObject::*RT2)(const char*,const char*);
+    typedef RT2 *PRT2;
+    RT0 r0;
+    RT1 r1;
+    RT2 r2;
+    QConnectionListIt it(*clist);
+    QConnection   *c;
+    QSenderObject *object;
+    while ( (c=it.current()) ) {
+	++it;
+	object = (QSenderObject*)c->object();
+	object->setSender( this );
+	switch ( c->numArgs() ) {
+	    case 0:
+		r0 = *((PRT0)(c->member()));
+		(object->*r0)();
+		break;
+	    case 1:
+		r1 = *((PRT1)(c->member()));
+		(object->*r1)(t0);
+		break;
+	    case 2:
+		r2 = *((PRT2)(c->member()));
+		(object->*r2)(t0, t1);
+		break;
+	}
+    }
+}
+
+
+const char *HTMLButton::className() const
+{
+    return "HTMLButton";
+}
+
+QMetaObject *HTMLButton::metaObj = 0;
+
+
+#if QT_VERSION >= 200
+static QMetaObjectInit init_HTMLButton(&HTMLButton::staticMetaObject);
+
+#endif
+
+void HTMLButton::initMetaObject()
+{
+    if ( metaObj )
+	return;
+    if ( strcmp(HTMLInput::className(), "HTMLInput") != 0 )
+	badSuperclassWarning("HTMLButton","HTMLInput");
+
+#if QT_VERSION >= 200
+    staticMetaObject();
+}
+
+void HTMLButton::staticMetaObject()
+{
+    if ( metaObj )
+	return;
+    HTMLInput::staticMetaObject();
+#else
+
+    HTMLInput::initMetaObject();
+#endif
+
+    typedef void(HTMLButton::*m1_t0)();
+    m1_t0 v1_0 = &HTMLButton::slotClicked;
+    QMetaData *slot_tbl = new QMetaData[1];
+    slot_tbl[0].name = "slotClicked()";
+    slot_tbl[0].ptr = *((QMember*)&v1_0);
+    metaObj = new QMetaObject( "HTMLButton", "HTMLInput",
+	slot_tbl, 1,
+	0, 0 );
+}
