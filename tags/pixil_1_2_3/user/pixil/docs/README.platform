@@ -1,0 +1,39 @@
+This README details the status of PIXIL on the various platforms.
+
+---------------------------------------------
+PLATFORM:  Compaq Ipaq 3x00
+STATUS:  Running
+
+BUGS:
+APM returns the wrong values for the battery life
+The battery widget freaks out the server
+Network setup is broken
+Backlight is always at 100% brightness
+
+TODO:
+
+---------------------------------------------
+PLATFORM:  Sharp Zaurus SL5500
+STATUS:  Running
+
+BUGS:
+APM returns the wrong values for the battery life
+The battery widget freaks out the server
+Network setup is broken
+Some of the keyboard isn't mapped yet
+
+TODO:
+Backlight control not ready yet
+No way to suspend the device
+Power management timer fires during use
+Timezones not set up correctly
+
+---------------------------------------------
+PLATFORM:  Tuxscreen
+STATUS:  Running
+
+BUGS:
+
+TODO:
+ViewML isn't installed (may not fit)
+World Clock isn't installed (may not fit)

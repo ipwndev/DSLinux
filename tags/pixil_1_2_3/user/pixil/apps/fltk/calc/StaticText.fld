@@ -1,0 +1,59 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 2.00 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+decl {\#include <FL/Fl_Widget.H>} {public
+} 
+
+decl {\#include <FL/fl_draw.H>} {} 
+
+decl {\#include <stdio.h>} {} 
+
+class StaticText {open : {public Fl_Widget}
+} {
+  decl {enum {MaxLength = 255};} {}
+  decl {char *str;} {}
+  Function {StaticText(int xx,int yy,int ww,int hh) : Fl_Widget(xx,yy,ww,hh,0)} {open
+  } {
+    code {str = 0;} {}
+  }
+  Function {~StaticText()} {open
+  } {
+    code {if (str != 0) delete [] str;} {}
+  }
+  Function {value(char *mstr)} {open
+  } {
+    code {int i,l;
+
+	for (l=0; l<MaxLength-1;l++)
+	{
+		if (mstr[l] == 0) break;
+	}
+	if (str) delete [] str;
+	str = 0;
+	if (l == 0) return;
+	str = new char[l+1];
+	for (i=0;i<l;i++) str[i] = mstr[i];
+	str[l] = 0;} {}
+  }
+  Function {draw()} {open private
+  } {
+    code {int xx,yy,ww,hh;
+
+	draw_box();
+	xx = x() + 3;
+	yy = y() + 3;
+	ww = w() - 6;
+	hh = h() - 6;
+	fl_clip(xx,yy,ww,hh);
+	fl_color(labelcolor());
+	fl_font(labelfont(),labelsize());
+	if (str != 0)
+		fl_draw((const char *)str,xx,yy,ww,hh,align());
+	fl_pop_clip();} {selected
+    }
+  }
+} 

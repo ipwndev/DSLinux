@@ -1,0 +1,275 @@
+AddressBookDB.cpp: : NxDbAccess("add",&cFile,cFields)
+AddressBookDB.cpp:	NxDbAccess::Delete(nRow);
+AddressBookDB.cpp:	NxDbAccess::Export(nRow,vExportString);
+AddressBookDB.cpp:	nRow=NxDbAccess::Import(vExportString2);
+AddressBookDB.cpp:	int nRow = NxDbAccess::Insert();
+AddressBookDB.h:#include "NxDbAccess.h"
+AddressBookDB.h:class AddressBookDB:public NxDbAccess
+AddressBookList.cpp:bool AddressBookList::SortCategory1(NxDbRow* pRow1,
+AddressBookList.cpp:								    NxDbRow* pRow2)
+AddressBookList.cpp:bool AddressBookList::SortCategory2(NxDbRow* pRow1,
+AddressBookList.cpp:								    NxDbRow* pRow2)
+AddressBookList.cpp:bool AddressBookList::SortCompare1(NxDbRow* pRow1,
+AddressBookList.cpp:								   NxDbRow* pRow2)
+AddressBookList.cpp:bool AddressBookList::SortCompare2(NxDbRow* pRow1,
+AddressBookList.cpp:								   NxDbRow* pRow2)
+AddressBookList.h:    static bool SortCategory1(NxDbRow * pRow1,	// Sort by last name, first name and filter by category
+AddressBookList.h:			      NxDbRow * pRow2);
+AddressBookList.h:    static bool SortCategory2(NxDbRow * pRow1,	// Sort by company, last name and filter by category
+AddressBookList.h:			      NxDbRow * pRow2);
+AddressBookList.h:    static bool SortCompare1(NxDbRow * pRow1,	// Sort by last name, first name
+AddressBookList.h:			     NxDbRow * pRow2);
+AddressBookList.h:    static bool SortCompare2(NxDbRow * pRow1,	// Sort by company, last name
+AddressBookList.h:			     NxDbRow * pRow2);
+CategoryDB.cpp: : NxDbAccess(pszFileName,m_pStaticFildes[m_nLastIndexUsed],CreateFields(nCategoryLength))
+CategoryDB.cpp:	int nRow = NxDbAccess::Insert();
+CategoryDB.cpp:	bReturn=NxDbAccess::TestDuplicate(pszString,
+CategoryDB.h:#include "NxDbAccess.h"
+CategoryDB.h:class CategoryDB:public NxDbAccess
+CustomFieldDB.cpp: : NxDbAccess("add_custfields",&custFile,custFields)
+CustomFieldDB.cpp:	int nRow = NxDbAccess::Insert();
+CustomFieldDB.h:#include "NxDbAccess.h"
+CustomFieldDB.h:class CustomFieldDB:public NxDbAccess
+FindDlg.cpp:string FindDlg::GetAddressKey(NxDbAccess* pDB,
+FindDlg.cpp:string FindDlg::GetNoteKey(NxDbAccess* pDB,
+FindDlg.cpp:string FindDlg::GetSchedulerKey(NxDbAccess* pDB,
+FindDlg.cpp:string FindDlg::GetToDoKey(NxDbAccess* pDB,
+FindDlg.cpp:void FindDlg::Search(NxDbAccess* pDB,
+FindDlg.cpp:					 string (*pfnGetKeyValue)(NxDbAccess*,int))
+FindDlg.h:#include "NxDbAccess.h"
+FindDlg.h:    static string GetAddressKey(NxDbAccess * pDB,	// Get address book key
+FindDlg.h:    static string GetNoteKey(NxDbAccess * pDB,	// Get notes key
+FindDlg.h:    static string GetSchedulerKey(NxDbAccess * pDB,	// Get Scheduler key
+FindDlg.h:    static string GetToDoKey(NxDbAccess * pDB,	// Get ToDo List key
+FindDlg.h:    void Search(NxDbAccess * pDB,	// Search a data base
+FindDlg.h:		string(*pfnGetKeyValue) (NxDbAccess *, int));
+InfoDB.cpp: : NxDbAccess("add_info",&iFile,iFields)
+InfoDB.cpp:	int nRow = NxDbAccess::Insert();
+InfoDB.h:#include "NxDbAccess.h"
+InfoDB.h:class InfoDB:public NxDbAccess
+InfoGroup.cpp:  NxDbAccess::RefreshAll();
+Makefile:LIBS=-lflek-native -lfltk-native ../NxDb/libNxDb.a ../sync/libpixil-sync-native.a -lX11
+Makefile.old:LDLIBS = -L/usr/local/lib -L$(FLTKDIR)/lib/ -L$(FLEKDIR)/lib/ ../NxDb/libNxDb.a  -lflek_ui -lflek_core -lfltk -L/usr/X11R6/lib -lX11
+Makefile.old:$(TARGET): ../NxDb/libNxDb.a $(OBJS) 
+NoteDB.cpp: : NxDbAccess("not",&noteFile,noteFields)
+NoteDB.cpp:	NxDbAccess::Delete(nRow);
+NoteDB.cpp:	NxDbAccess::Export(nRow,vExportString);
+NoteDB.cpp:	nRow=NxDbAccess::Import(vExportString2);
+NoteDB.cpp:	int nRow = NxDbAccess::Insert();
+NoteDB.h:#include "NxDbAccess.h"
+NoteDB.h:class NoteDB:public NxDbAccess
+NoteList.cpp:bool NoteList::SortCategory(NxDbRow* pRow1,
+NoteList.cpp:							NxDbRow* pRow2)
+NoteList.cpp:bool NoteList::SortCompare(NxDbRow* pRow1,
+NoteList.cpp:						   NxDbRow* pRow2)
+NoteList.h:    static bool SortCategory(NxDbRow * pRow1,	// Sort by note title and filter by category
+NoteList.h:			     NxDbRow * pRow2);
+NoteList.h:    static bool SortCompare(NxDbRow * pRow1,	// Sort by note title
+NoteList.h:			    NxDbRow * pRow2);
+NxDbAccess.cpp:// Class to access an NxDb database for desktop applications.   //
+NxDbAccess.cpp:#include "NxDbAccess.h"
+NxDbAccess.cpp:// Pointer to the one and only NxDb object.                     //
+NxDbAccess.cpp:NxDb* NxDbAccess::m_pNxDb = NULL;
+NxDbAccess.cpp:int NxDbAccess::m_nArgc = 0;
+NxDbAccess.cpp:char** NxDbAccess::m_ppszArgv = NULL;
+NxDbAccess.cpp:set<NxDbAccess*> NxDbAccess::m_setOpenDB;
+NxDbAccess.cpp:int NxDbAccess::m_nSortColumn = -1;
+NxDbAccess.cpp:bool (*NxDbAccess::m_pfnCompareRoutine)(NxDbRow*,NxDbRow*);
+NxDbAccess.cpp:NxDbAccess::NxDbAccess(const char* pszFileName,
+NxDbAccess.cpp:  m_pNxDb = NULL;
+NxDbAccess.cpp:void NxDbAccess::Open()
+NxDbAccess.cpp:  if (m_pNxDb==NULL)
+NxDbAccess.cpp:      m_pNxDb = new NxDb(m_nArgc,m_ppszArgv);
+NxDbAccess.cpp:      m_pNxDb->SetPath(Options::GetDatabasePath().c_str());
+NxDbAccess.cpp:  if (!m_pNxDb->Open(m_pszFileName,m_pDescription,m_pField,0))
+NxDbAccess.cpp:      if (m_pNxDb->Create(m_pszFileName,m_pDescription,m_pField,0))
+NxDbAccess.cpp:	  if (m_pNxDb->Open(m_pszFileName,m_pDescription,m_pField,0))
+NxDbAccess.cpp:NxDbAccess::~NxDbAccess()
+NxDbAccess.cpp:	// Destroy the NxDb object if this is the last NxDbAccess object
+NxDbAccess.cpp:		delete m_pNxDb;
+NxDbAccess.cpp:		m_pNxDb=NULL;
+NxDbAccess.cpp:void NxDbAccess::Close()
+NxDbAccess.cpp:      set<NxDbAccess*>::iterator iter;
+NxDbAccess.cpp:	  m_pNxDb->Close(m_strDbName.c_str());
+NxDbAccess.cpp:void NxDbAccess::RefreshAll()
+NxDbAccess.cpp:  // The destructor for NxDbAccess removes entries from the set m_setOpenDB
+NxDbAccess.cpp:  set<NxDbAccess*>::iterator iter;
+NxDbAccess.cpp:  set<NxDbAccess*> tmp;
+NxDbAccess.cpp:void NxDbAccess::CloseAll()
+NxDbAccess.cpp:  NxDbAccess* pNxDbAccess;
+NxDbAccess.cpp:  // The destructor for NxDbAccess removes entries from the set m_setOpenDB
+NxDbAccess.cpp:      pNxDbAccess=*(m_setOpenDB.begin());
+NxDbAccess.cpp:      delete pNxDbAccess;
+NxDbAccess.cpp:bool NxDbAccess::CompareCustom(NxDbRow* pRow1,
+NxDbAccess.cpp:							   NxDbRow* pRow2)
+NxDbAccess.cpp:int NxDbAccess::CompareDeleted(NxDbRow* pRow1,
+NxDbAccess.cpp:							   NxDbRow* pRow2)
+NxDbAccess.cpp:bool NxDbAccess::CompareInteger(NxDbRow* pRow1,
+NxDbAccess.cpp:								NxDbRow* pRow2)
+NxDbAccess.cpp:bool NxDbAccess::ComparePhysicalRecord(NxDbRow* pRow1,
+NxDbAccess.cpp:									   NxDbRow* pRow2)
+NxDbAccess.cpp:bool NxDbAccess::CompareString(NxDbRow* pRow1,
+NxDbAccess.cpp:							   NxDbRow* pRow2)
+NxDbAccess.cpp:void NxDbAccess::Delete(int nRow)
+NxDbAccess.cpp:void NxDbAccess::DoSort(FNCUSTOMCOMPARE pfnCompareRoutine,
+NxDbAccess.cpp:int NxDbAccess::FindRealRow(int nRow,
+NxDbAccess.cpp:int NxDbAccess::FindRow(int nCol,
+NxDbAccess.cpp:void NxDbAccess::Dump(const char* pszFileName)
+NxDbAccess.cpp:	field* pField = m_pNxDb->GetField(m_strDbName);
+NxDbAccess.cpp:	fildes* pDesc = m_pNxDb->GetFilDes(m_strDbName);
+NxDbAccess.cpp:void NxDbAccess::DumpAll()
+NxDbAccess.cpp:	set<NxDbAccess*>::iterator iter;
+NxDbAccess.cpp:		sprintf(szFileName,"NxDb%04d.txt",++i);
+NxDbAccess.cpp:int NxDbAccess::FindFirst(int nCol,
+NxDbAccess.cpp:int NxDbAccess::FindRow(int nCol,
+NxDbAccess.cpp:int NxDbAccess::FindPhysicalRecord(int nRecordNumber,
+NxDbAccess.cpp:// character string columns as NxDb must have room for a null   //
+NxDbAccess.cpp:int NxDbAccess::GetColumnSize(int nCol)
+NxDbAccess.cpp:	field* pField = m_pNxDb->GetField(m_strDbName);
+NxDbAccess.cpp:	fildes* pFileDesc = m_pNxDb->GetFilDes(m_strDbName);
+NxDbAccess.cpp:int NxDbAccess::Insert()
+NxDbAccess.cpp:	NxDbRow* pRow;
+NxDbAccess.cpp:		pRow=new NxDbRow(m_pNxDb->GetField(m_strDbName));
+NxDbAccess.cpp:int NxDbAccess::NumRecsByKey(int nCol,
+NxDbAccess.cpp:int NxDbAccess::GetLocalRow(int nRow,
+NxDbAccess.cpp:ROW_VECTOR NxDbAccess::GetRows()
+NxDbAccess.cpp:int NxDbAccess::Import(const vector<string>& vExportString)
+NxDbAccess.cpp:int NxDbAccess::NumRecsByKey(int nCol,
+NxDbAccess.cpp:int NxDbAccess::NumUndeletedRecs()
+NxDbAccess.cpp:void NxDbAccess::ReadAll()
+NxDbAccess.cpp:	int nMax = m_pNxDb->NumRecs(m_strDbName);
+NxDbAccess.cpp:	NxDbRow* pRow;
+NxDbAccess.cpp:		pRow=new NxDbRow(m_strDbName,i+1,m_pNxDb);
+NxDbAccess.cpp:bool NxDbAccess::Save()
+NxDbAccess.cpp:		bReturn&=(m_vpRow[i]->Save(m_strDbName,m_pNxDb));
+NxDbAccess.cpp:// opening NxDb objects                                         //
+NxDbAccess.cpp:void NxDbAccess::SaveCmdLine(int argc,
+NxDbAccess.cpp:bool NxDbAccess::Search(int nRow,
+NxDbAccess.cpp:		field* pField = m_pNxDb->GetField(m_strDbName);
+NxDbAccess.cpp:		fildes* pFileDesc = m_pNxDb->GetFilDes(m_strDbName);
+NxDbAccess.cpp:bool NxDbAccess::SearchString(const char* pszHaystack,
+NxDbAccess.cpp:void NxDbAccess::SetHighKey(int nRow,
+NxDbAccess.cpp:void NxDbAccess::SetHighStringKey(int nRow,
+NxDbAccess.cpp:void NxDbAccess::Sort(FNCUSTOMCOMPARE pfnCompareRoutine)
+NxDbAccess.cpp:void NxDbAccess::Sort(FNCUSTOMCOMPARE pfnCompareRoutine,
+NxDbAccess.cpp:void NxDbAccess::Sort(int nCol)
+NxDbAccess.cpp:	bool (*pfnPr)(NxDbRow*,NxDbRow*);
+NxDbAccess.cpp:		const field* pField = m_pNxDb->GetField(m_strDbName);
+NxDbAccess.cpp:		const fildes* pFileDescription = m_pNxDb->GetFilDes(m_strDbName);
+NxDbAccess.cpp:bool NxDbAccess::TestDuplicate(const char* pszString,
+NxDbAccess.h:// Class to access an NxDb database for desktop applications.   //
+NxDbAccess.h:#include "NxDbRow.h"
+NxDbAccess.h:typedef bool(*FNCUSTOMCOMPARE) (NxDbRow * pRow1,	// Custom comparison routine for sorting
+NxDbAccess.h:				NxDbRow * pRow2);
+NxDbAccess.h:class NxDbAccess
+NxDbAccess.h:  public:NxDbAccess(const char *pszFileName,
+NxDbAccess.h:      virtual ~ NxDbAccess();	// Destructor, closes the database
+NxDbAccess.h:	return (m_pNxDb->NumRecs(m_strDbName));
+NxDbAccess.h:    static set < NxDbAccess * >m_setOpenDB;	// List of pointers to currently open data bases
+NxDbAccess.h:    static NxDb *m_pNxDb;	// The database object, kept open to prevent file sharing
+NxDbAccess.h:    string m_strDbName;		// Name of the data base for NxDb
+NxDbAccess.h:    static bool(*m_pfnCompareRoutine) (NxDbRow *, NxDbRow *);	// Kludge - Custom comparison routine currently in use
+NxDbAccess.h:    static bool CompareCustom(NxDbRow * pRow1,	// Compare rows using a custom comparison routine
+NxDbAccess.h:			      NxDbRow * pRow2);
+NxDbAccess.h:    static int CompareDeleted(NxDbRow * pRow1,	// Compare the deleted status of two rows
+NxDbAccess.h:			      NxDbRow * pRow2);
+NxDbAccess.h:    static bool CompareInteger(NxDbRow * pRow1,	// Compare rows by contents of an integer column
+NxDbAccess.h:			       NxDbRow * pRow2);
+NxDbAccess.h:    static bool ComparePhysicalRecord(NxDbRow * pRow1,	// Compare rows by physical record number
+NxDbAccess.h:				      NxDbRow * pRow2);
+NxDbAccess.h:    static bool CompareString(NxDbRow * pRow1,	// Compare rows by contents of a string column
+NxDbAccess.h:			      NxDbRow * pRow2);
+NxDbColumn.cpp:// Class Used to represent a column in an NxDb database.        //
+NxDbColumn.cpp:#include "NxDbColumn.h"
+NxDbColumn.cpp:NxDbColumn::NxDbColumn(int nType,
+NxDbColumn.cpp:NxDbColumn::~NxDbColumn()
+NxDbColumn.cpp:NxDbColumn& NxDbColumn::operator=(const NxDbColumn& Other)
+NxDbColumn.cpp:void NxDbColumn::Clear()
+NxDbColumn.cpp:string NxDbColumn::Export()
+NxDbColumn.cpp:int NxDbColumn::GetIntValue() const
+NxDbColumn.cpp:string NxDbColumn::GetStringValue() const
+NxDbColumn.cpp:void NxDbColumn::Import(const string& strData)
+NxDbColumn.cpp:void NxDbColumn::Output(unsigned char* ucPtr)
+NxDbColumn.cpp:void NxDbColumn::SetStringValue(const char* pszValue)
+NxDbColumn.cpp:void NxDbColumn::SetType(int nType,
+NxDbColumn.cpp:bool NxDbColumn::SetValue(const char* pszValue)
+NxDbColumn.cpp:bool NxDbColumn::SetValue(int nValue)
+NxDbColumn.cpp:bool NxDbColumn::SetValue(const string& strValue)
+NxDbColumn.h:// Class Used to represent a column in an NxDb database.        //
+NxDbColumn.h:class NxDbColumn
+NxDbColumn.h:      NxDbColumn(int nType,	// Constructor
+NxDbColumn.h:    inline NxDbColumn(const NxDbColumn & Other)	// Copy constructor
+NxDbColumn.h:     ~NxDbColumn();		// Destructor
+NxDbColumn.h:    NxDbColumn & operator=(const NxDbColumn & Other);	// Assignment operator
+NxDbRow.cpp:#include "NxDbRow.h"
+NxDbRow.cpp:NxDbRow::NxDbRow()
+NxDbRow.cpp:NxDbRow::NxDbRow(field* pField)
+NxDbRow.cpp:NxDbRow::NxDbRow(const string& strDbName, // Construct from data base info
+NxDbRow.cpp:				 NxDb* pNxDb)
+NxDbRow.cpp:	pField=pNxDb->GetField(strCopy);
+NxDbRow.cpp:		if (pNxDb->Extract(strCopy,nRow,i,szBuffer)==0)
+NxDbRow.cpp:			szBuffer[pField[i].size]='\0'; // Workaround to error in NxDb class Extract method
+NxDbRow.cpp:NxDbRow::~NxDbRow()
+NxDbRow.cpp:NxDbRow& NxDbRow::operator=(const NxDbRow& Other)
+NxDbRow.cpp:void NxDbRow::Clear()
+NxDbRow.cpp:unsigned char* NxDbRow::CreateRecord(string& strDbName,
+NxDbRow.cpp:									 NxDb* pNxDb)
+NxDbRow.cpp:	field* pField = pNxDb->GetField(strDbName);
+NxDbRow.cpp:	int nRecSize = pNxDb->GetFilDes(strDbName)->recsiz;
+NxDbRow.cpp:void NxDbRow::Export(vector<string>& vExportString)
+NxDbRow.cpp:void NxDbRow::Import(const vector<string>& vExportString)
+NxDbRow.cpp:bool NxDbRow::Save(const string& strDbName,
+NxDbRow.cpp:				   NxDb* pNxDb)
+NxDbRow.cpp:			pNxDb->DeleteRec(strName,m_nRecordNumber);
+NxDbRow.cpp:			m_ucRecord=CreateRecord(strName,pNxDb);
+NxDbRow.cpp:			pNxDb->Insert(strName,(char*)m_ucRecord);
+NxDbRow.cpp:			m_ucRecord=CreateRecord(strName,pNxDb);
+NxDbRow.cpp:			pNxDb->Edit(strName,m_nRecordNumber,(char*)m_ucRecord);
+NxDbRow.cpp:bool NxDbRow::SetColumn(int nCol,
+NxDbRow.cpp:bool NxDbRow::SetColumn(int nCol,
+NxDbRow.cpp:void NxDbRow::SetColumns(field* pField)
+NxDbRow.cpp:	NxDbColumn column(NxDbColumn::DataTypeChar);
+NxDbRow.h:#include "NxDbColumn.h"
+NxDbRow.h:class NxDbRow
+NxDbRow.h:  public:NxDbRow();		// Default constructor
+NxDbRow.h:    NxDbRow(field * pField);	// Construct with field definitions
+NxDbRow.h:    NxDbRow(const string & strDbName,	// Construct from data base info
+NxDbRow.h:	    int nRow, NxDb * pNxDb);
+NxDbRow.h:    inline NxDbRow(const NxDbRow & Other)	// Copy constructor
+NxDbRow.h:     ~NxDbRow();		// Destructor, closes the database
+NxDbRow.h:    NxDbRow & operator=(const NxDbRow & Other);	// Assignment operator
+NxDbRow.h:	      NxDb * pNxDb);
+NxDbRow.h:    vector < NxDbColumn > m_vField;	// The fields in this row
+NxDbRow.h:				NxDb * pNxDb);
+NxDbRow.h:typedef vector < NxDbRow * >ROW_VECTOR;
+OptionsDlg.cpp:			NxDbAccess::CloseAll();
+PixilDTApp.cpp:	// Save the command line arguments for the NxDbAccess class
+PixilDTApp.cpp:	NxDbAccess::SaveCmdLine(argc,argv);
+PixilDT.dsp:SOURCE=.\NxDbAccess.cpp
+PixilDT.dsp:SOURCE=.\NxDbColumn.cpp
+PixilDT.dsp:SOURCE=.\NxDbRow.cpp
+PixilDT.dsp:SOURCE=.\NxDbAccess.h
+PixilDT.dsp:SOURCE=.\NxDbColumn.h
+PixilDT.dsp:SOURCE=.\NxDbRow.h
+PixilDT.dsw:Project: "NxDb"="..\NxDb\NxDb.dsp" - Package Owner=<4>
+PixilDT.dsw:    Project_Dep_Name NxDb
+PixilMainWnd.cpp:	NxDbAccess::DumpAll();
+PixilMainWnd.cpp:	NxDbAccess::CloseAll();
+SchedulerDB.cpp: : NxDbAccess("sched",&sFile,sFields)
+SchedulerDB.cpp:	NxDbAccess::Delete(nRow);
+SchedulerDB.cpp:	nRow=NxDbAccess::Import(vExportString);
+SchedulerDB.cpp:	int nRow = NxDbAccess::Insert();
+SchedulerDB.cpp:			NxDbAccess::Delete(nRow);
+SchedulerDB.h:#include "NxDbAccess.h"
+SchedulerDB.h:class SchedulerDB:public NxDbAccess
+ToDoListDB.cpp: : NxDbAccess("td",&tdFile,tdFields)
+ToDoListDB.cpp:	nRow=NxDbAccess::Import(vExportString);
+ToDoListDB.cpp:  int nRow = NxDbAccess::Insert();
+ToDoListDB.h:#include "NxDbAccess.h"
+ToDoListDB.h:class ToDoListDB:public NxDbAccess
+ToDoListList.cpp:bool ToDoListList::IsVisible(NxDbRow* pRow)
+ToDoListList.cpp:bool ToDoListList::SortCompare(NxDbRow* pRow1,
+ToDoListList.cpp:							   NxDbRow* pRow2)
+ToDoListList.h:    bool IsVisible(NxDbRow * pRow);	// Test if a row is visible or not
+ToDoListList.h:    static bool SortCompare(NxDbRow * pRow1,	// Sort by priority/due date
+ToDoListList.h:			    NxDbRow * pRow2);

@@ -1,0 +1,24 @@
+/* XPM */
+/* DisabledCut.xpm */
+static char* DisabledCutIconXPM[] =
+{
+ "10 15 3 1",
+ "  c None",
+ "8 c #808080",
+ "f c #ffffff",
+ "  8   8   ",
+ "  8f  8f  ",
+ "  8f  8f  ",
+ "  88 88f  ",
+ "   8f8ff  ",
+ "   888f   ",
+ "    8ff   ",
+ "   888    ",
+ "   8f888  ",
+ " 888f8ff8 ",
+ "8 f8f8f 8f",
+ "8f 8f8f 8f",
+ "8f 8f 88 f",
+ " 88 f  ff ",
+ "  ff      ",
+};

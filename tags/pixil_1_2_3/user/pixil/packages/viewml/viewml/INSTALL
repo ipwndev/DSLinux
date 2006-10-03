@@ -1,0 +1,152 @@
+ViewML Build Instructions
+
+This project doesn't yet have the ever-present configure script that
+automagically makes everything work. However, getting the thing to
+build should be pretty easy, as the dependencies are fairly common
+libraries.
+
+For most of this stuff, you can get versions of the libraries below
+that are needed from ftp://ftp.viewml.com/pub/viewml/dep
+
+FLNX can be retrieved from CVS with the following settings:
+
+export CVSROOT=:pserver:anoncvs@cvs.viewml.com:/usr/cvs
+cvs login   (password guest)
+cvs co flnx
+
+and Microwindows can be retrieved from CVS with the following settings:
+
+export CVSROOT=:pserver:anoncvs@cvs.microwindows.org:/usr/cvs
+cvs login   (password guest)
+cvs co microwin
+
+General Dependencies:
+
+1. STL. ViewML uses some of the container classes and string class to 
+   simulate some of the Qt classes. Just about any version that comes
+   with any relatively new version of g++ should work.
+
+2. PThreads. This should be around on any standard Linux system, and
+   probably is available for your platform too.
+
+3. libwww. Standard on my RedHat system, you can get this from 
+   http://www.w3c.org .. I have been using version 5.2.8. This libary
+   seems to need libmd5, which is present on most systems. If not, you
+   can get a copy from ftp://ftp.viewml.com/pub/viewml/dep
+
+
+Dependencies for X-Windows:
+
+1. FLTK built for your system. ViewML has been tested with version
+   1.0.7. FLTK distributions can be found at www.fltk.org.
+
+2. imlib. Came on my RedHat box, version 1.9.8.1  You can get yours
+   from http://www.labs.redhat.com/imlib. You may also need libraries
+   for image decoding (libungif, libjpeg, libpng..). libungif and
+   libjpeg can be found on the ftp site 
+   ftp://ftp.viewml.com/pub/viewml/dep
+
+
+Dependencies For Microwindows/Nano-X
+
+1. FLTK built for Nano-X. This library is different from the
+   general FLTK that can be gotten from www.fltk.org. You can get
+   this version from ftp://ftp.microwindows.org/pub/microwindows. Get
+   the file called "flnx-current.tar.gz" You can also get the latest
+   version of flnx from the CVS server at cvs.viewml.com
+
+2. Microwindows, compiled with Nano-X running. You can get this from
+   ftp://ftp.microwindows.org/pub/microwindows. You need version 
+   0.88patch1 (or later .. check the dates of the .tar.gz). You can
+   also get the latest microwindows sources from the CVS server at
+   cvs.microwindows.org
+
+To Build:
+
+There are now two ways to build.  
+
+******** BUILDING VIEWML:  THE NEW WAY (Using configure) *************
+
+--> The following was put in place by Jordan Crouse (jordanc@censoft.com).  Please feel
+    free to bother him with any questions or complaints.
+
+1. Use configure in the top directory:
+
+   Run configure in the normal manner.  Aside from the usual passed in variables
+   (prefix, libdir, etc....) there are three new commands that you should be interested in.
+
+   Configure for X:
+	./configure --with-fltk=[FLTK dir] --host=[prefix]
+
+   Configure for Nano-X:
+	./configure --with-microwin=[Microwindows dir] ---with-fltk=[FLTK dir] --host=[prefix]
+
+   --with-fltk:
+	Specifies where your FLTK source code lives.  This is required for all builds of ViewML, regardless
+	of the graphics engine
+
+   --with-microwin:
+	This specifies where your Nano-GUI code lives.  If this is specified, the code will build with
+	Nano-X calls instead of X11 calls.  If you build MicroWindows to work with xdrivers, you will also	
+	need to specify the --with-xdrivers.  If this is not specified, X11 is assumed.
+	
+   --with-xdrivers:
+	This is only significant when using --with-microwin.  If you have choosen to build MicroWindows with
+	underlying X11 driver support, this configures the system to build in the appropriate X11 drivers.
+
+   --host:
+	This specifies which host you would like to build for.  Usually, you will specify the prefix for the
+	desired tool chain (for example, the MIPS linux toolchain has a prefix of mipsel-linux, so you would specify
+	--host=mipsel-linux to build with the MIPS toolset).  If you don't specify this, the system will try to guess
+	the current system and build for it.
+
+   For all the other various commands, make sure that you pass the correct variables in.
+   The configure script was designed with the idea that all of the binaries, libraries and other
+   good stuff would be generally in the same prefix, so thats the primary variable we use to
+   find these files.  That may or may not tie into your system, and I urge you to fix the configure.in
+   if you find any holes.  Also, its not 100% complete, so if you see a test or file that we don't look for,
+   please do not be afraid to put it in.  
+
+2. Run make all in the top directory.  
+
+   The configure script sets up a Makefile in the top directory, which in turn manages the building of the whole tree. 
+   You will note that the makefile runs make with an alternate makefile called Makefile.new in each source directory.  The
+   reason for this is that we wanted to keep the old Makefile system around for a while, so we had the best of both worlds.
+
+   If you still want to build in the old manner, read on....
+
+****** BUILDING VIEWML:  THE ORIGINAL WAY  ********
+ 
+1. Edit the following in src/Makefile:
+
+   For X:
+
+     _NANOX should be commented out.
+     FLTK should be set to the location of your built FLTK disctibution.
+     XLIBS should be set to the location of your X11 libraries.
+     IMLIBS should be set to the command that dumps your imlib libraries.
+     WWWLIBS should be set to the command that dumps your libwww libraries.
+     CFLAGS .. edit the `libwww-config --cflags` portion to point to the 
+       correct script.
+
+   For Nano-X:
+
+     _NANOX should be uncommented and set to "1".
+     FLTK should be set to the location of your FLNX distribution.
+     NANOX should be set to the top level of your Microwindows distribution.
+     WWWLIBS should be set to the command that dumps your libwww libraries.     
+     CFLAGS .. edit the `libwww-config --cflags` portion to point to the 
+       correct script.
+
+2. Depending on your compiler version, you may have to add --permissive
+   to the CFLAGS settings in the Makefile. If you see errors like:
+     Ansi C++ forbids ... you need this setting.
+
+3. Run make depend (yes ... I know this sucks .. I want to get rid of
+   it too. Soon.)
+
+4. Now type make in the src subdirectory.
+
+5. Wait.
+
+6. Run the viewml binary.
