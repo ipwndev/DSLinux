@@ -758,11 +758,6 @@ CONFIG_LIB_MAD_FORCE
   Only enable this if you want to force the library to be built.  The
   Config will make sure this library is built if it is needed.
 
-CONFIG_LIB_FLNX_FORCE
-  THis is the nano-X version of FLTK.
-  Only enable this if you want to force the library to be built.  The
-  Config will make sure this library is built if it is needed.
-
 CONFIG_USER_BOA_EMERG
   If enabled, boa will syslog all messages at the emergency level
 
