@@ -633,6 +633,7 @@ dist-reset:
 dist-clean:
 	rm -rf $(DISTNAME)
 	rm -f $(DISTNAME).tbz $(DISTNAME).tbz.md5
+	rm -rf $(DISTDIR)
 
 $(CWD)/.dist-made:
 	-[ -d $(DISTNAME) ] && rm -rf $(DISTNAME)
