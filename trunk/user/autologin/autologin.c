@@ -10,6 +10,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <pwd.h>
+#include <stdlib.h>
+#include <ctype.h>
 #define CONFIG "/etc/autologin.conf"
 #define DEFAULT "/bin/sh"
 
