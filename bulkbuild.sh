@@ -8,6 +8,13 @@
 
 set -e
 
+if [ "$1" = "-u" ]
+then
+	update_config="CONFIG_DEFAULTS_VENDOR_UPDATE=y"
+else
+	update_config="# CONFIG_DEFAULTS_VENDOR_UPDATE is not set"
+fi
+
 mktopconfig() {
 	cat > .config <<EOF
 CONFIG_DEFAULTS_NINTENDO=y
@@ -18,7 +25,7 @@ CONFIG_DEFAULTS_LIBC_UCLIBC=y
 CONFIG_DEFAULTS_OVERRIDE=y
 # CONFIG_DEFAULTS_KERNEL is not set
 # CONFIG_DEFAULTS_VENDOR is not set
-CONFIG_DEFAULTS_VENDOR_UPDATE=y
+$update_config
 CONFIG_VENDOR=Nintendo
 CONFIG_PRODUCT=$1
 CONFIG_LINUXDIR=linux-2.6.x
