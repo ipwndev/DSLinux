@@ -8,6 +8,10 @@ obj-y                += arch.o irq.o time.o button.o fifo.o rtc.o disable-itcm-w
 
 obj-$(CONFIG_NDS_TEXT_CONSOLE) += console.o
 obj-$(CONFIG_NDS_SOUNDTEST) += soundtest.o
+obj-$(CONFIG_NDS_BLK_M3CF) += m3cf.o
+obj-$(CONFIG_NDS_BLK_SCCF) += sccf.o
+m3cf-y := m3cf_c.o m3cf_s.o
+sccf-y := sccf_c.o sccf_s.o
 
 extra-y += arm7/head.o
 extra-y += arm7/main.o

@@ -100,6 +100,8 @@ CONFIG_FLASH_SIZE=0x02000000
 # CONFIG_NDS_FASTGBA is not set
 # CONFIG_NDS_SOUNDTEST is not set
 CONFIG_NDS_ROM8BIT=y
+CONFIG_NDS_BLK_M3CF=y
+CONFIG_NDS_BLK_SCCF=y
 
 #
 # Processor Type
@@ -356,14 +358,14 @@ CONFIG_IOSCHED_NOOP=y
 #
 # ATA/ATAPI/MFM/RLL support
 #
-CONFIG_IDE=y
-CONFIG_BLK_DEV_IDE=y
+# CONFIG_IDE is not set
+# CONFIG_BLK_DEV_IDE is not set
 
 #
 # Please see Documentation/ide.txt for help/info on IDE drives
 #
 # CONFIG_BLK_DEV_IDE_SATA is not set
-CONFIG_BLK_DEV_IDEDISK=y
+# CONFIG_BLK_DEV_IDEDISK is not set
 # CONFIG_IDEDISK_MULTI_MODE is not set
 # CONFIG_BLK_DEV_IDECD is not set
 # CONFIG_BLK_DEV_IDETAPE is not set
@@ -373,11 +375,11 @@ CONFIG_BLK_DEV_IDEDISK=y
 #
 # IDE chipset support/bugfixes
 #
-CONFIG_IDE_GENERIC=y
-CONFIG_IDE_ARM=y
+# CONFIG_IDE_GENERIC is not 
+# CONFIG_IDE_ARM is not set
 # CONFIG_IDE_NDS_GBAMP is not set
 # CONFIG_IDE_NDS_M3 is not set
-CONFIG_IDE_NDS_SUPERCARD=y
+# CONFIG_IDE_NDS_SUPERCARD is not set
 # CONFIG_IDE_NDS_MAX_MEDIA_PLAYER is not set
 # CONFIG_BLK_DEV_IDEDMA is not set
 # CONFIG_IDEDMA_AUTO is not set

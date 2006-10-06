@@ -205,10 +205,10 @@ _entry:
         @ use this RAM.
 	@-------------------------------------------------------------------------
 #ifdef CONFIG_NDS_ROM8BIT
-#if defined(CONFIG_MMC_SCSD) || defined(CONFIG_IDE_NDS_SUPERCARD)
+#if defined(CONFIG_MMC_SCSD) || defined(CONFIG_IDE_NDS_SUPERCARD) || defined(CONFIG_NDS_BLK_SCCF)
 	sc_set_ram	@ swith to RAM mode, restore @SC_LOCK from R2
 #endif
-#if defined(CONFIG_MMC_M3SD) || defined(CONFIG_IDE_NDS_M3)
+#if defined(CONFIG_MMC_M3SD) || defined(CONFIG_IDE_NDS_M3) || defined(CONFIG_NDS_BLK_M3CF)
 	m3_set_ram	@ switch to RAM mode
 #endif
 	@ more activation for other cards here
