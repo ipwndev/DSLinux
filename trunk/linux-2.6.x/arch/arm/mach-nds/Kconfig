@@ -49,5 +49,22 @@ config NDS_ROM8BIT
 	 Saying Y here will enable the code to use the GBA ROM memory
          area as general purpose RAM. You need a GBA cardridge with RAM
          in the GBA ROM area, and a special gnu compiler for this.
-	 If unsure, say N. 
+	 If unsure, say N.
+
+config	NDS_BLK_M3CF
+	bool "Block device support for the M3 Compact Flash Adaptor"
+	depends on ARCH_NDS
+	default n
+	help
+	 Saying Y here will include a block driver for the M3 CF card.
+	 If unsure, say N.
+
+config	NDS_BLK_SCCF
+	bool "Block device support for the Supercard Compact Flash Adaptor"
+	depends on ARCH_NDS
+	default n
+	help
+	 Saying Y here will include a block driver for the Supercard CF.
+	 If unsure, say N.
+
 endmenu
