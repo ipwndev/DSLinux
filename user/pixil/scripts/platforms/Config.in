@@ -19,6 +19,9 @@ config CONFIG_PLATFORM_TUXSCREEN
 config CONFIG_PLATFORM_X86DEMO
        bool" Desktop"
 
+config CONFIG_PLATFORM_DSLINUX
+       bool" DSLinux"
+
 endchoice
 
 config CONFIG_CPU_STRONGARM
@@ -29,6 +32,11 @@ config CONFIG_CPU_STRONGARM
 config CONFIG_CPU_INTEL
        bool
        depends CONFIG_PLATFORM_X86DEMO 
+       default y
+
+config CONFIG_CPU_ARM
+       bool
+       depends CONFIG_PLATFORM_DSLINUX
        default y
 
 endmenu

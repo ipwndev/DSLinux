@@ -27,83 +27,77 @@
  * restriction as set forth in paragraph (b)(3)(b) of the Rights in     
  * Technical Data and Computer Software clause in DAR 7-104.9(a).       
  *                                                                      
- * See http://embedded.centurysoftware.com/gpl/ for GPL licensing       
+ * See http://www.pixil.org/gpl/ for GPL licensing       
  * information.                                                         
  *                                                                      
- * See http://embedded.centurysoftware.com/license.html or              
+ * See http://www.pixil.org/license.html or              
  * email cetsales@centurysoftware.com for information about the PIXIL   
  * Commercial License Agreement, or if any conditions of this licensing 
  * are not clear to you.                                                
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#ifndef		NXTMINPUT_INCLUDED
-#define		NXTMINPUT_INCLUDED	1
-
-/* System header files */
-#include <time.h>
-
-
-/* Local header files */
-#include <FL/Fl_Widget.H>
-#include <FL/Fl_Input.H>
-#include <nxapp.h>
+#include <pixlib/pixlib.h>
 
 
-/* Typedef, macros, enum/struct/unions definitions */
-#define			MAX_UNITS		4	// Maximum number of units (HH:MM:SS:[am/pm])
-
-//const char                            *dayzn[2] = {{"AM"}, {"PM"}};                   // Array of either am or pm
-const short max_val[3] = { 23, 59, 59 };	// Max values per unit (23 = hours, 59 = min/sec)
-
-
-/* Forward declarations */
-class NxTmUnit;
-
-/* Class definitions */
-class NxTmInput:public Fl_Widget
+/*******************************************************************************\
+**
+**	Function:	int pix_sys_cpuinfo()
+**	Desc:		Parses /proc/cpu info and organizes the data in a system independant
+**				way
+**	Accepts:	pixCpuInfo_t *pcpu = Ptr to the cpu info
+**	Returns:	int; 0 on success, -1 on error
+**
+\*******************************************************************************/
+int
+pix_sys_cpuinfo(pixCpuInfo_t * pcpu)
 {
-  private:
-    char _tmstring[2 + 1 + 2 + 1 + 2 + 1 + 2 + 1];	// String for time
-    int _nunits;		// Actual number in use
-    void draw();		// Over-ridden draw function
+    char buffer[512],		/* Buffer */
+      model_name[80];
+    float cpu_speed = 0.0;
+    int rc = -1;		/* Return code */
+    FILE *fp;			/* File pointer */
 
-  public:
-      NxTmUnit * Units[MAX_UNITS];	// Maximum number of units
+    /* Validate the incoming arguments */
+    if (pcpu == NULL)
+	return (rc);
 
-    char *GetTime(void);	// Returns the time in a char *
-    void GetTime(struct tm *);	// Returns the time in a tm struct
-    int GetUnits()
-    {
-	return (_nunits);
-    }				// Returns the number of units
-    void SetUnits(int num);	// Sets the _nunits value
-    void SetTime(char *tm);	// Set the time from a ##:##:## string
-    void SetTime(struct tm *);	// Set the time from a tm struct
+    if ((fp = fopen("/proc/cpuinfo", "r")) == NULL)
+	return (rc);
 
-    void hide();		// Hides everything
-    void show();		// Shows all
+    /*
+       ** Start parsing the file.  The only fields that are interesting are 
+       ** "model name" and "cpu MHZ"
+     */
+    while (fgets(buffer, sizeof(buffer), fp)) {
+	char *cp;
+	int len = strlen(buffer);
 
-    // Constructor
-    NxTmInput(int x, int y, int w, int h, char *l = 0, int nfld = 4);	// Default constructor
-};				// end of NxTmInput class
+	if (buffer[len - 1] == '\n')
+	    buffer[--len] = '\0';
 
-class NxTmUnit:public Fl_Input
-{
-  private:
-    NxTmInput * parent;		// Parent of this unit
+	/* Set up cp to point to the data */
+	if ((cp = strchr(buffer, ':')) == NULL)
+	    continue;
+	if (!memcmp(buffer, "model name", 10)) {
+	    cp += 2;		/* Skip the space */
+	    strcpy(model_name, cp);
+	    rc++;
+	} /* end of if */
+	else if (!memcmp(buffer, "cpu MHz", 7)) {
+	    cp += 2;
+	    cpu_speed = atof(cp);
+	    rc++;
+	}			/* end of if */
+    }				/* end of while */
 
-  public:
-    void SetParent(NxTmInput * par)
-    {
-	parent = par;
-    }				// Sets the parent
-    int handle(int);		// Over-ridden handle() event
-
-    NxTmUnit(int x, int y, int w, int h, const char *l =
-	     0):Fl_Input(x, y, w, h, l)
-    {
-    };
-};				// end of NxTmUnit class
-
-#endif //      NX_TMINPUTINLUCDED
+    if (rc > -1) {
+	sprintf(pcpu->cpu, "%s %.0f MHz", model_name, cpu_speed);
+	rc = 0;
+    }
+    /* end of if */
+    return (rc);
+}				/* end of pix_sys_cpuinfo() */

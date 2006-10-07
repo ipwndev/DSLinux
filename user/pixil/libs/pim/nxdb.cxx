@@ -187,10 +187,7 @@ NxDb::Close(string _dbName)
     fildes *_dbDesc = dbDesc[dbNumber];
     dbclose(_dbDesc);
 
-#ifdef WIN32
     return (0);
-
-#endif /*  */
 }
 
 void
