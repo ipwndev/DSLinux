@@ -3711,6 +3711,9 @@ CONFIG_PROP_CLAMAV_HELPER
   correct location.  Also, optionally, runs freshclam to bring the
   databases up to date.  Will make the database directory if required.
 
+CONFIG_USER_PIXIL
+  The PIXIL PDA GUI from www.pixil.org.
+
 #
 # END of proprietary config help
 #
