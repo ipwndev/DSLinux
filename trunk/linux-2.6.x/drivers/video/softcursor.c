@@ -36,10 +36,10 @@ int soft_cursor(struct fb_info *info, struct fb_cursor *cursor)
 		return -ENOMEM;
 #ifdef CONFIG_ARCH_NDS
 	/* XXX: We need to align the image pointer on a four-byte boundary
-	 * for 4x6 and 6x6 fonts to work. */
+	 * for 4x6, 6x6 and 6x9 fonts to work. */
 	if ((dsize % 4) != 0)
-		/* assume dsize is 6 (not greater 8 anyway) */
-		dsize = 8;
+		/* set dsize to the next larger multiple of 4 */
+		dsize += 4 - (dsize % 4);
 #endif
 	image = (struct fb_image *) (src + dsize);
 	*image = cursor->image;
