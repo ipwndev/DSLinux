@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
-# Fri Sep 29 18:41:17 2006
+# Fri Oct  6 23:59:05 2006
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
@@ -359,31 +359,6 @@ CONFIG_IOSCHED_NOOP=y
 # ATA/ATAPI/MFM/RLL support
 #
 # CONFIG_IDE is not set
-# CONFIG_BLK_DEV_IDE is not set
-
-#
-# Please see Documentation/ide.txt for help/info on IDE drives
-#
-# CONFIG_BLK_DEV_IDE_SATA is not set
-# CONFIG_BLK_DEV_IDEDISK is not set
-# CONFIG_IDEDISK_MULTI_MODE is not set
-# CONFIG_BLK_DEV_IDECD is not set
-# CONFIG_BLK_DEV_IDETAPE is not set
-# CONFIG_BLK_DEV_IDEFLOPPY is not set
-# CONFIG_IDE_TASK_IOCTL is not set
-
-#
-# IDE chipset support/bugfixes
-#
-# CONFIG_IDE_GENERIC is not 
-# CONFIG_IDE_ARM is not set
-# CONFIG_IDE_NDS_GBAMP is not set
-# CONFIG_IDE_NDS_M3 is not set
-# CONFIG_IDE_NDS_SUPERCARD is not set
-# CONFIG_IDE_NDS_MAX_MEDIA_PLAYER is not set
-# CONFIG_BLK_DEV_IDEDMA is not set
-# CONFIG_IDEDMA_AUTO is not set
-# CONFIG_BLK_DEV_HD is not set
 
 #
 # SCSI device support
