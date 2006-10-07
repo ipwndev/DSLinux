@@ -1,5 +1,5 @@
 # Include the depends for the file
-include .depends
+-include .depends
 
 PKGCONF=pkg.conf
 BUILD_DIR=${shell pwd}/build

@@ -17,6 +17,15 @@ TOOL_DIR    = $(BASE_DIR)/scripts/tools
 IMAGES_DIR  = $(BASE_DIR)/data/images
 MCONFIG_DIR = $(BASE_DIR)/scripts/config
 SYSDEP_DIR  = $(BASE_DIR)/scripts/sysdep
+EN_SHARED   = --enable-shared
+EN_STATIC   = --enable-static
+
+ifdef CONFIG_PLATFORM_DSLINUX
+MW_PREFIX       = $(BASE_DIR)/../microwin/src
+INSTALL_PREFIX  = $(BASE_DIR)/../romfs/usr/pixil/
+EN_SHARED	= --disable-shared
+CXXFLAGS       += -Wno-deprecated
+endif
 
 # The base directory for installing
 ROOT_DIR = $(strip $(subst ",, $(INSTALL_PREFIX)))
@@ -51,12 +60,15 @@ endif
 ifeq ($(CONFIG_TARGET_I386_UCLIBC),y)
 SYS=i386-uclibc-linux
 endif
+ifdef CONFIG_PLATFORM_DSLINUX
+SYS=????
+endif
 else
 SYS=$(BUILD_SYS)
 endif
 
 export TARGET_CROSS BASE_DIR STAGE_DIR INCLUDE_DIR PAR_DB PAR_CONFIG 
-export TOOL_DIR INSTALL_DIR ROOT_DIR SYS BUILD_SYS
+export TOOL_DIR INSTALL_DIR ROOT_DIR SYS BUILD_SYS EN_SHARED EN_STATIC MW_PREFIX
 
 # Set up the list of directories based on the configuration
 ifdef SUBDIRS
@@ -80,6 +92,7 @@ endif
 
 ##### Toplevel targets #####
 
+.PHONY: all install clean distclean
 all: local-build
 install: local-install 
 clean: local-clean
@@ -87,8 +100,13 @@ clean: local-clean
 distclean: local-clean packages-clean
 	@ rm -rf config
 
+# uCLinux builds: add PIXIL to the rom file system
+.PHONY: romfs
+romfs:
+
 ##### Local targets #####
 
+.PHONY: local-build local-install local-clean dostrip
 local-build: $(STAGE_DIR) $(INCLUDE_DIR)/pixil_config.h $(subdir-build) platform-build
 
 local-install: $(INSTALL_DIR) $(subdir-install) $(STRIP_TARGET) platform-install
@@ -108,6 +126,7 @@ dostrip:
 		fi; \
 	done
 
+.PHONY: $(subdir-build) $(subdir-clean) $(subdir-install)
 $(subdir-build): dummy
 	@ $(MAKE) -C $(patsubst _subdir_%,%,$@)
 
@@ -117,6 +136,7 @@ $(subdir-clean): dummy
 $(subdir-install): dummy
 	@ $(MAKE) -C $(patsubst _install_%,%,$@) install
 
+.PHONY: platform-build platform-clean platform-install packages-clean
 platform-build:
 	@ make -C scripts/platforms/ 
 
@@ -168,6 +188,7 @@ defconfig: $(BASE_DIR)/config
 $(BASE_DIR)/config:
 	@ cp $(SYSDEP_DIR)/defconfig $(BASE_DIR)/config
 
+.PHONY: defconfig_ipaq defconfig_zaurus defconfig_tuxscreen defconfig_dslinux
 defconfig_ipaq:
 	@ cp $(SYSDEP_DIR)/defconfig.ipaq $(BASE_DIR)/config
 
@@ -176,6 +197,9 @@ defconfig_zaurus:
 
 defconfig_tuxscreen:
 	@ cp $(SYSDEP_DIR)/defconfig.tuxscreen $(BASE_DIR)/config
+
+defconfig_dslinux:
+	@ cp $(SYSDEP_DIR)/defconfig.dslinux $(BASE_DIR)/config
 
 dummy:
 

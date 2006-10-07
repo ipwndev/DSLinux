@@ -30,6 +30,8 @@
 
 #define FL_WINDOW 0xF0	// all subclasses have type() >= this
 
+class Fl_X;
+
 class Fl_Window : public Fl_Group {
 
   friend class Fl_X; Fl_X *i; // points at the system-specific stuff

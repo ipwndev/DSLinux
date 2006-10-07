@@ -1282,7 +1282,7 @@ NxApp::GetRowData(int &flags, vector < string > &data, string & key)
 
 			    if (false == err) {
 				int f_pos = 0;
-				char c;
+				int c;
 
 				memset(file_buf, 0, file_size);
 

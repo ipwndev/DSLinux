@@ -67,7 +67,8 @@ $(BASE_DIR)/libs/flnx/.configured:
 	(cd $(BASE_DIR)/libs/flnx; ./configure \
 	--host=$(SYS) \
         --build=$(BUILD_SYS) \
-	--enable-shared \
+	$(EN_SHARED) \
+	$(EN_STATIC) \
 	--with-microwin=$(strip $(subst ",, $(MW_PREFIX))))
 	touch $(BASE_DIR)/libs/flnx/.configured
 

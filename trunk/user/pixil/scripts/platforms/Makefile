@@ -6,6 +6,7 @@ target-$(CONFIG_PLATFORM_X86DEMO) += x86-demo
 target-$(CONFIG_PLATFORM_IPAQ) += ipaq
 target-$(CONFIG_PLATFORM_ZAURUS) += zaurus
 target-$(CONFIG_PLATFORM_TUXSCREEN) += tuxscreen
+target-$(CONFIG_PLATFORM_DSLINUX) += dslinux
 
 # This will ensure that we only build one target at a time
 DIRS=$(sort $(target-y))

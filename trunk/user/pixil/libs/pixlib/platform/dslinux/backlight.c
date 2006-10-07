@@ -27,83 +27,81 @@
  * restriction as set forth in paragraph (b)(3)(b) of the Rights in     
  * Technical Data and Computer Software clause in DAR 7-104.9(a).       
  *                                                                      
- * See http://embedded.centurysoftware.com/gpl/ for GPL licensing       
+ * See http://www.pixil.org/gpl/ for GPL licensing       
  * information.                                                         
  *                                                                      
- * See http://embedded.centurysoftware.com/license.html or              
+ * See http://www.pixil.org/license.html or              
  * email cetsales@centurysoftware.com for information about the PIXIL   
  * Commercial License Agreement, or if any conditions of this licensing 
  * are not clear to you.                                                
  */
 
 
-#ifndef		NXTMINPUT_INCLUDED
-#define		NXTMINPUT_INCLUDED	1
 
 /* System header files */
-#include <time.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 
 /* Local header files */
-#include <FL/Fl_Widget.H>
-#include <FL/Fl_Input.H>
-#include <nxapp.h>
+#include <pixlib/pixlib.h>
+
+/* Typedef, macros, enum/struct/union definitions */
 
 
-/* Typedef, macros, enum/struct/unions definitions */
-#define			MAX_UNITS		4	// Maximum number of units (HH:MM:SS:[am/pm])
-
-//const char                            *dayzn[2] = {{"AM"}, {"PM"}};                   // Array of either am or pm
-const short max_val[3] = { 23, 59, 59 };	// Max values per unit (23 = hours, 59 = min/sec)
+/* Global scope variables */
 
 
-/* Forward declarations */
-class NxTmUnit;
+/* File scope variables */
+unsigned char f_maxval = -1;	/* Maximum backlight value */
 
-/* Class definitions */
-class NxTmInput:public Fl_Widget
+
+/* Static function prototypes */
+
+
+/*******************************************************************************\
+**
+**	Static function definitions
+**
+\*******************************************************************************/
+
+
+/*******************************************************************************\
+**
+**	Externally callable function definitions 
+**
+\*******************************************************************************/
+
+/*******************************************************************************\
+**
+**	Function:	int pix_bl_ctrl()
+**	Desc:		Controls the backlight settings on the iPAQ
+**	Accepts:	int pwr = Power settings (0 = off, 1 = on)
+**				int level = Brightness level (0 - f_maxval) will be clamped
+**	Returns:	int; 0 on success, -1 on error (with errno being set)
+**
+\*******************************************************************************/
+int
+pix_bl_ctrl(int pwr, int level)
 {
-  private:
-    char _tmstring[2 + 1 + 2 + 1 + 2 + 1 + 2 + 1];	// String for time
-    int _nunits;		// Actual number in use
-    void draw();		// Over-ridden draw function
+    int retval = 0;		/* Default to success */
 
-  public:
-      NxTmUnit * Units[MAX_UNITS];	// Maximum number of units
+    return (retval);
+}				/* end of pix_bl_ctrl() */
 
-    char *GetTime(void);	// Returns the time in a char *
-    void GetTime(struct tm *);	// Returns the time in a tm struct
-    int GetUnits()
-    {
-	return (_nunits);
-    }				// Returns the number of units
-    void SetUnits(int num);	// Sets the _nunits value
-    void SetTime(char *tm);	// Set the time from a ##:##:## string
-    void SetTime(struct tm *);	// Set the time from a tm struct
-
-    void hide();		// Hides everything
-    void show();		// Shows all
-
-    // Constructor
-    NxTmInput(int x, int y, int w, int h, char *l = 0, int nfld = 4);	// Default constructor
-};				// end of NxTmInput class
-
-class NxTmUnit:public Fl_Input
+/*******************************************************************************\
+**
+**	Function:	int pix_bl_getmxval()
+**	Desc:		Returns the maximum backlite value supported by hardware for the
+**				given platform (default is 255)
+**	Accepts:	Nothing (void)
+**	Returns:	int; >= 0 on success, -1 on error
+**
+\*******************************************************************************/
+int
+pix_bl_getmxval(void)
 {
-  private:
-    NxTmInput * parent;		// Parent of this unit
-
-  public:
-    void SetParent(NxTmInput * par)
-    {
-	parent = par;
-    }				// Sets the parent
-    int handle(int);		// Over-ridden handle() event
-
-    NxTmUnit(int x, int y, int w, int h, const char *l =
-	     0):Fl_Input(x, y, w, h, l)
-    {
-    };
-};				// end of NxTmUnit class
-
-#endif //      NX_TMINPUTINLUCDED
+    return (f_maxval);
+}				/* end of bl_getmxval() */
