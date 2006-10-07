@@ -181,6 +181,16 @@ config FONT_MINI_4x6
 	bool "Mini 4x6 font"
 	depends on !SPARC32 && !SPARC64 && FONTS
 
+config FONT_MINI_4x9
+	bool "Mini 4x9 font"
+	depends on !SPARC32 && !SPARC64 && FONTS
+	help
+	  This 4x9 font was created by Cayenne Boyer to fit as many characters
+	  as possible per row but to be more readable and visually appealing than
+	  a font that is also as short as possible.  This is ideal for purely text 
+	  applications but does not work as well for some situations where the number 
+	  of rows on the screen is also important.
+
 config FONT_MINI_6x6
 	bool "Mini 6x6 font"
 	depends on !SPARC32 && !SPARC64 && FONTS
