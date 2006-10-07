@@ -937,6 +937,9 @@ comment 'PCI utilities'
 bool 'lspci'			CONFIG_USER_PCIUTILS_LSPCI
 bool 'setpci'			CONFIG_USER_PCIUTILS_SETPCI
 
+comment 'PIXIL PDA GUI'
+bool 'pixil'			CONFIG_USER_PIXIL
+
 comment ''
 bool 'C++ Test Applications'	CONFIG_USER_CXXTEST_CXXTEST
 if [ "$CONFIG_USER_CXXTEST_CXXTEST" = "y" ]; then
