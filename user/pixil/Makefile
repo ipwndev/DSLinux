@@ -24,7 +24,8 @@ ifdef CONFIG_PLATFORM_DSLINUX
 MW_PREFIX       = $(BASE_DIR)/../microwin/src
 INSTALL_PREFIX  = $(BASE_DIR)/../romfs/usr/pixil/
 EN_SHARED	= --disable-shared
-CFLAGS         += -D_GNU_SOURCE
+#CFLAGS         += -D_GNU_SOURCE
+CFLAGS	       += -fno-exceptions
 LDFLAGS        += -lstdc++ -lc -lgcc
 endif
 

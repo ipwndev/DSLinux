@@ -15,7 +15,8 @@ ifeq ($(CONFIG_SYNC),y)
 LIBS+=-lpixil-sync
 endif
 
-LIBS+=-lfltk -lflek
+LIBS+=-lflek
+LIBS+=-lfltk
 
 ifeq ($(CONFIG_NANOX),y)
 LIBS+=-lwm -lnano-X 

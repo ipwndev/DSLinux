@@ -19,7 +19,8 @@ ifeq ($(CONFIG_PAR),y)
 LIBS+=-lpar
 endif
 
-LIBS+=-lfltk -lflek
+LIBS+=-lflek
+LIBS+=-lfltk
 
 ifeq ($(CONFIG_NANOX),y)
 LIBS+=-lnano-X 

@@ -46,6 +46,13 @@
 #include "config.h"
 #include "applets.h"
 
+#if 1	// xAMADEUS
+#define dlopen(x,y) 0
+#define dlsym(x,y)  0
+#define dlclose(x)  0
+#define dlerror()   0
+#endif
+
 static int g_applet_id = 0;
 static int g_timer_id = 0;
 

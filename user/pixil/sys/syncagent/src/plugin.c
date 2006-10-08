@@ -51,6 +51,13 @@
 
 #include "plugin.h"
 
+#if 1	// xAMADEUS
+#define dlopen(x,y) 0
+#define dlsym(x,y)  0
+#define dlclose(x)  0
+#define dlerror()   0
+#endif
+
 static plugin_t *g_plugin = 0;
 
 /* Fixme:  Just a bogus path right for the moment */
