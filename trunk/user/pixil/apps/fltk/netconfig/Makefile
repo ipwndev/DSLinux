@@ -5,7 +5,7 @@ TARGET_CXX=netconfig
 SRC=${shell ls *.cxx} 
 OBJS=${SRC:.cxx=.o}
 
-ifeq ($(CROSS_COMPILE),y)
+ifeq ($(COMPILE_CROSS),y)
 CFLAGS ?= 
 CFLAGS += -fpermissive
 endif

@@ -44,6 +44,7 @@ pix_cal_GetDataPt(CalPt_t * ptdata)
   return PIXLIB_STUB_VAL;
 }				
 
+int
 pix_cal_Calibrate(int npts, CalPt_t * ctrldata, CalPt_t * userdata)
 {
   return PIXLIB_STUB_VAL;

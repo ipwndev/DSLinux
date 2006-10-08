@@ -9,11 +9,7 @@ platform-$(CONFIG_PLATFORM_TUXSCREEN)=platform/tuxscreen
 platform-$(CONFIG_PLATFORM_DSLINUX)=platform/dslinux
 
 LIB_STATIC=libpixil.a
-ifeq ($(EN_SHARED),--enable-shared)
 LIB_SHARED=libpixil.so
-else
-LIB_SHARED=
-endif
 
 INCLUDES+=-I./include
 

@@ -24,7 +24,8 @@ ifdef CONFIG_PLATFORM_DSLINUX
 MW_PREFIX       = $(BASE_DIR)/../microwin/src
 INSTALL_PREFIX  = $(BASE_DIR)/../romfs/usr/pixil/
 EN_SHARED	= --disable-shared
-CXXFLAGS       += -Wno-deprecated
+CFLAGS         += -D_GNU_SOURCE
+LDFLAGS        += -lstdc++ -lc -lgcc
 endif
 
 # The base directory for installing
@@ -53,22 +54,22 @@ TARGET_CROSS=$(subst ",, $(strip $(CROSS_COMPILER_PREFIX)))
 
 BUILD_SYS=i386-linux
 
-ifeq ($(CROSS_COMPILE),y)
+ifeq ($(COMPILE_CROSS),y)
 ifeq ($(CONFIG_TARGET_ARM),y)
 SYS=arm-linux
 endif
 ifeq ($(CONFIG_TARGET_I386_UCLIBC),y)
 SYS=i386-uclibc-linux
 endif
-ifdef CONFIG_PLATFORM_DSLINUX
-SYS=????
+ifeq ($(CONFIG_PLATFORM_DSLINUX),y)
+SYS=arm-linux-elf
 endif
 else
 SYS=$(BUILD_SYS)
 endif
 
 export TARGET_CROSS BASE_DIR STAGE_DIR INCLUDE_DIR PAR_DB PAR_CONFIG 
-export TOOL_DIR INSTALL_DIR ROOT_DIR SYS BUILD_SYS EN_SHARED EN_STATIC MW_PREFIX
+export TOOL_DIR INSTALL_DIR ROOT_DIR SYS BUILD_SYS EN_SHARED EN_STATIC MW_PREFIX COMPILE_CROSS
 
 # Set up the list of directories based on the configuration
 ifdef SUBDIRS

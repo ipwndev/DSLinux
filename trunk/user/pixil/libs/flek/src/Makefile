@@ -3,11 +3,7 @@
 # Check the readme for details on the changes that we have made
 
 LIB_STATIC=libflek.a
-ifeq ($(EN_SHARED),--enable-shared)
 LIB_SHARED=libflek.so
-else
-LIB_SHARED=
-endif
 
 CPPFILES= FDate.cxx FSocket.cxx FFile.cxx FVector.cxx \
 	FImage.cxx FSGI.cxx FPNM.cxx Fl_App_Window.cxx \
@@ -22,7 +18,7 @@ OBJS = $(CPPFILES:.cxx=.o)
 CFLAGS ?=
 CFLAGS += -DPIXIL
 
-ifeq ($(CROSS_COMPILE),y)
+ifeq ($(COMPILE_CROSS),y)
 CFLAGS += -fpermissive
 endif
 

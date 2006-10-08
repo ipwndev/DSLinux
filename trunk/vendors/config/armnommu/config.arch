@@ -163,7 +163,9 @@ ifdef UCLINUX_BUILD_USER
 	CFLAGS  += -Dlinux -D__linux__ -Dunix
 	CFLAGS  += -D__uClinux__
 
-	CXXFLAGS = $(CFLAGS) -nostdinc++ -fno-exceptions
+	# Amadeus: use std c++ support libs (iostream, new/delete)
+	# CXXFLAGS = $(CFLAGS) -nostdinc++ -fno-exceptions
+	CXXFLAGS = $(CFLAGS) -fno-exceptions
 	CXXSUP = 
 
 	LDFLAGS += -Wl,-elf2flt

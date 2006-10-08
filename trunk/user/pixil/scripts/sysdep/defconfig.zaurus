@@ -21,7 +21,7 @@ CONFIG_CPU_STRONGARM=y
 #
 # Build Options
 #
-CROSS_COMPILE=y
+COMPILE_CROSS=y
 CROSS_COMPILER_PREFIX="/usr/local/arm/bin/arm-linux-"
 MW_PREFIX="/user/projects/microwin/microwin/src/"
 CONFIG_FLNX=y

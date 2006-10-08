@@ -28,12 +28,10 @@ void Fl_Animator::draw_frame()
 
 Fl_Animator::Fl_Animator(char * const *image, int X, int Y,
 			 int fcount, int fwidth, int fheight, 
-			 int interval, const char *label = 0)
+			 int interval, const char *label)
   : Fl_Widget(X,Y,fwidth,fheight,label)
   
 {
-  int x, y;
-  
   _image = new Fl_Pixmap(image);
 
   _xpos = X;

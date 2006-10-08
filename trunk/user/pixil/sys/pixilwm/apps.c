@@ -59,7 +59,7 @@
 APP *g_last_app;		/* The last known application that was started */
 
 /* A local list of applications */
-static NXLISTHEAD apphead;
+NXLISTHEAD apphead;
 
 static int
 searchPath(char *in, char *out, int size, int flags)
