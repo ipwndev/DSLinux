@@ -34,6 +34,7 @@ DEVICES = \
 	dsp,c,14,3\
 	\
 	fb0,c,29,0\
+	fb1,c,29,1\
 	\
 	psaux,c,10,1   mouse0,c,13,32\
 	\
