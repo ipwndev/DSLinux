@@ -16,7 +16,7 @@ ifeq ($(CONFIG_MP3_USE_PTHREAD),y)
 CFLAGS += -DPTHREADEDMPEG
 endif
 
-ifeq ($(CROSS_COMPILE),y)
+ifeq ($(COMPILE_CROSS),y)
 CFLAGS += -fpermissive
 endif
 

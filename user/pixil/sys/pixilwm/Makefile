@@ -50,7 +50,8 @@ LIBS+=-lpar
 endif
 
 LIBS+=-ldl
-BUILD_CFLAGS=-rdynamic
+BUILD_CFLAGS=-export-dynamic
+#BUILD_CFLAGS=-rdynamic
 
 CLEAN_EXTRAS=clean_themes
 

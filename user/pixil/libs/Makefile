@@ -72,8 +72,9 @@ $(BASE_DIR)/libs/flnx/.configured:
 	--with-microwin=$(strip $(subst ",, $(MW_PREFIX))))
 	touch $(BASE_DIR)/libs/flnx/.configured
 
+#	make -C $(BASE_DIR)/libs/flnx/src -e 
 _build_flnx: $(BASE_DIR)/libs/flnx/.configured
-	make -C $(BASE_DIR)/libs/flnx/src -e 
+	make -C $(BASE_DIR)/libs/flnx/src
 
 	rm -f $(STAGE_DIR)/lib/libfltk.a $(STAGE_DIR)/lib/libfltk.so $(STAGE_DIR)/lib/libfltk.so.1
 	ln -s $(BASE_DIR)/libs/flnx/lib/libfltk.a $(STAGE_DIR)/lib

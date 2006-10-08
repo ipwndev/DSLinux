@@ -32,7 +32,7 @@ source scripts/platforms/Config.in
 
 menu "Build Options"
 
-config CROSS_COMPILE
+config COMPILE_CROSS
 	bool "Do you want to build Pixil with a cross compiler?"
 	default n
 	help
@@ -41,7 +41,7 @@ config CROSS_COMPILE
 choice
 	prompt "Target Platform"
 	default "Strongarm"
-	depends CROSS_COMPILE
+	depends COMPILE_CROSS
 	help
 	  Select the target platform for this code 
 
@@ -56,7 +56,7 @@ endchoice
 config CROSS_COMPILER_PREFIX
 	string "Cross compiler prefix"
 	default "/usr/local/arm/bin/arm-linux-"
-	depends CROSS_COMPILE
+	depends COMPILE_CROSS
 	help
 	  If you want to build Pixil with a cross compiler, then you 
 	  will need to set this to the cross-compiler prefix.  For example,

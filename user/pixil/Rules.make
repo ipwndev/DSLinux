@@ -104,8 +104,6 @@ endif
 
 ifeq ($(CONFIG_DEBUG),y)
 CFLAGS += -O0 -g -DDEBUG
-else
-CFLAGS += -O3 
 endif
 
 INCLUDES += -I$(FLTKDIR) -I$(FLEKDIR)
@@ -134,7 +132,14 @@ INSTALL_EXTRAS   ?=
 INST_STATIC=$(patsubst %, $(STAGE_DIR)/lib/%, $(LIB_STATIC))
 INST_SHARED=$(patsubst %, $(STAGE_DIR)/lib/%, $(LIB_SHARED))
 
-BUILD_LIBS        := $(LIB_STATIC) $(LIB_SHARED)
+BUILD_LIBS :=
+ifeq ($(EN_SHARED),--enable-shared)
+BUILD_LIBS += $(LIB_SHARED)
+endif
+ifeq ($(EN_STATIC),--enable-static)
+BUILD_LIBS += $(LIB_STATIC)
+endif
+
 BUILD_NATIVE_LIBS := $(NATIVE_LIB_STATIC) $(NATIVE_LIB_SHARED)
 BUILD_BINS        := $(TARGET) $(TARGET_CXX)
 BUILD_SO          := $(TARGET_SO)
