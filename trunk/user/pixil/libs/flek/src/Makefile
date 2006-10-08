@@ -19,7 +19,7 @@ CFLAGS ?=
 CFLAGS += -DPIXIL
 
 ifeq ($(COMPILE_CROSS),y)
-CFLAGS += -fpermissive
+# CFLAGS += -fpermissive
 endif
 
 INCLUDES=-I. -I../ 

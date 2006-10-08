@@ -97,12 +97,12 @@ static const NxMenu_ *button;
 ////////////////////////////////////////////////////////////////
 
 // tiny window for title of menu:
-class menutitle:public NxMenuWindow
+class nxmenutitle:public NxMenuWindow
 {
     void draw();
   public:
     const NxMenuItem *menu;
-      menutitle(int X, int Y, int W, int H, const NxMenuItem *);
+      nxmenutitle(int X, int Y, int W, int H, const NxMenuItem *);
 };
 
 // each vertical menu has one of these:
@@ -111,7 +111,7 @@ class nxmenuwindow:public NxMenuWindow
     void draw();
     void drawentry(const NxMenuItem *, int i, int erase);
   public:
-      menutitle * title;
+      nxmenutitle * title;
     int handle(int);
     int itemheight;		// zero == menubar
     int numitems;
@@ -283,7 +283,7 @@ NxMenuItem::draw(int x, int y, int w, int h, const NxMenu_ * m, int selected) co
 
 }
 
-menutitle::menutitle(int X, int Y, int W, int H, const NxMenuItem * L):
+nxmenutitle::nxmenutitle(int X, int Y, int W, int H, const NxMenuItem * L):
 NxMenuWindow(X, Y, W, H, 0)
 {
     end();
@@ -413,7 +413,7 @@ NxMenuWindow(X, Y, Wp, Hp, 0)
 
     if (t) {
 	int ht = menubar_title ? button->h() - 6 : Htitle + 2 * BW + 3;
-	title = new menutitle(X, Y - ht - 3, Wtitle, ht, t);
+	title = new nxmenutitle(X, Y - ht - 3, Wtitle, ht, t);
     } else
 	title = 0;
     reposition();
@@ -537,7 +537,7 @@ nxmenuwindow::drawentry(const NxMenuItem * m, int i, int erase)
 }
 
 void
-menutitle::draw()
+nxmenutitle::draw()
 {
     menu->draw(0, 0, w(), h(), button, 2);
 }

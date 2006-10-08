@@ -59,6 +59,13 @@
 #include <par/par.h>
 #include "sysconfig.h"
 
+#if 1	// xAMADEUS
+#define dlopen(x,y) 0
+#define dlsym(x,y)  0
+#define dlclose(x)  0
+#define dlerror()   0
+#endif
+
 SysConfig::SysConfig(void)
 {
     _syswin = NULL;
