@@ -5,12 +5,18 @@ mount -t vfat -o noatime /dev/mmcblk1 /media
 if [ "$?" != "0" ]
 then
 	mount -t vfat -o noatime /dev/hda1 /media
-	# some CF cards do not have a partition table
-	# try mounting /dev/hda if mounting /dev/hda1 fails
 	if [ "$?" != "0" ]
 	then
+		# some CF cards do not have a partition table
+		# try mounting /dev/hda
 		mount -t vfat -o noatime /dev/hda /media
-		[ "$?" = "0" ] || echo "Sorry, failed to mount your CF card."
+		if [ "$?" != "0" ]
+		then
+			# some SD cards do not have a partition table
+			# try mounting /dev/mmcblk0
+			mount -t vfat -o noatime /dev/mmcblk0 /media
+			[ "$?" = "0" ] || echo "Sorry, failed to mount your CF/SD card."
+		fi
 	fi
 fi
 . /etc/rc.common
