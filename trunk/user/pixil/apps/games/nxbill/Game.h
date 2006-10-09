@@ -27,11 +27,11 @@ class Game
     static const int END = 3;
     static const int WAITING = 4;
 
-    static const int DEFAULTC = 0;	/* cursors */
-    static const int DOWNC = -1;
-    static const int BUCKETC = -2;
+#define DEFAULTC         0		/* cursors */
+#define DOWNC           (-1)
+#define BUCKETC         (-2)
 
-    static const int ENDGAME = 200;	/* dialog window IDs */
+#define ENDGAME 	200		/* dialog window IDs */
     static const int ENTERNAME = 201;
     static const int HIGHSCORE = 202;
     static const int SCORE = 203;

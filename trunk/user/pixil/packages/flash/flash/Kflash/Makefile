@@ -20,7 +20,12 @@ CXX = g++
 CXXFLAGS = -O $(QTINCL) -I$(COMMON) -I../Lib
 LD = g++
 LDFLAGS = -s -L../Lib
-LIBS = -lflash ../Zlib/libz.a ../Jpeg/libjpeg.a -lqt -lcrypt -lkdeui -lkdecore -lpam -ldl
+LIBS = -lflash ../Zlib/libz.a ../Jpeg/libjpeg.a -lqt -lcrypt -lkdeui -lkdecore -lpam 
+
+ifeq ($(EN_SHARED),--enable-shared)
+LIBS+=-ldl
+endif
+
 AR = ar rc
 RANLIB = ar s
 MOC = moc

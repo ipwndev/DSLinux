@@ -32,7 +32,9 @@ ifeq ($(CONFIG_COLOSSEUM),y)
 LIBS+=-lipc
 endif
 
-LIBS+=-ldl 
+ifeq ($(EN_SHARED),--enable-shared)
+LIBS+=-ldl
+endif
 
 BUILD_CFLAGS=-rdynamic 
 INCLUDES=-I../include

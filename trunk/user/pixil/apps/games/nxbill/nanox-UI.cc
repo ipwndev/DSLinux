@@ -177,7 +177,7 @@ UI::popup_dialog(int dialog)
     GR_WINDOW_ID w = 0;
 
     switch (dialog) {
-    case game.ENDGAME:
+    case ENDGAME:
 	w = endgamebox;
 	break;
     }
@@ -199,13 +199,13 @@ void
 UI::set_cursor(int cursor)
 {
     switch (cursor) {
-    case game.BUCKETC:
+    case BUCKETC:
 	bucket.cursor.setCursor(toplevel);
 	break;
-    case game.DOWNC:
+    case DOWNC:
 	bucket.cursor.setCursor(toplevel);
 	break;
-    case game.DEFAULTC:
+    case DEFAULTC:
 	bucket.cursor.setCursor(toplevel);
 	break;
     default:
