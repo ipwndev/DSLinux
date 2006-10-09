@@ -18,7 +18,9 @@
 #include "mpegsound.h"
 #include "mpegsound_locals.h"
 
+#ifdef PTHREADEDMPEG
 extern pthread_mutex_t startuplock;
+#endif
 
 Mpegtoraw::Mpegtoraw(Soundinputstream * loader, Soundplayer * player)
 {
