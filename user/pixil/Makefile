@@ -26,7 +26,7 @@ INSTALL_PREFIX  = $(BASE_DIR)/../../romfs/usr/pixil/
 EN_SHARED	= --disable-shared
 #CFLAGS         += -D_GNU_SOURCE
 CFLAGS	       += -fno-exceptions
-LDFLAGS        += -lstdc++ -lc -lgcc
+LDFLAGS        += -lstdc++ -lc -lgcc -elf2flt
 endif
 
 # The base directory for installing

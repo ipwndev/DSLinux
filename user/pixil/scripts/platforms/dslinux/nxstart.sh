@@ -1,10 +1,11 @@
 #!/bin/sh
 
 # Set some required environment variables
-
-export LD_LIBRARY_PATH=/usr/pixil/lib:/usr/lib
 export PARDB=/usr/pixil/share/par/pixil.db
-export CONSOLE=/dev/tty0
+export CONSOLE=/dev/tty1
+
+fbset -depth 16 -n
+ifconfig lo up
 
 # Start the IPC server
 /usr/pixil/sbin/clserver &
@@ -13,7 +14,7 @@ export CONSOLE=/dev/tty0
 /usr/bin/nano-X -p &
 
 # Make sure that the server is calibrated
-/usr/bin/nxcal -d /etc/pixil.calibrate
+# /usr/bin/nxcal -d /etc/pixil.calibrate
 
 # Start the window manager
 /usr/pixil/bin/pixilwm 
@@ -23,5 +24,4 @@ export CONSOLE=/dev/tty0
 
 killall -q /usr/bin/nano-X
 killall -TERM -q /usr/pxil/sbin/clserver
-
 

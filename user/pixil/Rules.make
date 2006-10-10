@@ -176,10 +176,10 @@ install-so: $(INSTALL_SODIR)
 	fi
 
 $(TARGET): $(OBJS)
-	$(CC) $(BUILD_CFLAGS) -o $@ $(OBJS) $(sort $(LIBDIRS)) $(LIBS) 
+	$(CC) $(BUILD_CFLAGS) $(LDFLAGS) -o $@ $(OBJS) $(sort $(LIBDIRS)) $(LIBS)
 
 $(TARGET_CXX): $(OBJS)
-	$(CXX) $(BUILD_CFLAGS) -o $@ $(OBJS) $(sort $(LIBDIRS)) $(LIBS) -lstdc++ -lm 
+	$(CXX) $(BUILD_CFLAGS) $(LDFLAGS) -o $@ $(OBJS) $(sort $(LIBDIRS)) $(LIBS) -lstdc++ -lm 
 
 $(TARGET_SO): $(OBJS)
 	$(CC) -shared -o $@ $(OBJS)
