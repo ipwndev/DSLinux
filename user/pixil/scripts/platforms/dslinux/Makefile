@@ -31,7 +31,7 @@ install: $(INSTALL_DIRS) $(SAMPLE_TARGET) $(PAR_DB)
 	@ chmod uga+x $(INSTALL_DIR)/nxstart.sh
 
 copy-samples: $(HTML_DIR) $(MP3_DIR) $(MPEG_DIR)
-	@ cp $(BASE_DIR)/data/html/* $(HTML_DIR)
+	@ cp $(BASE_DIR)/data/html/*.* $(HTML_DIR)
 
 $(HTML_DIR) $(MP3_DIR) $(MPEG_DIR) $(INSTALL_DIRS):
 	mkdir -p $@

@@ -22,7 +22,7 @@ EN_STATIC   = --enable-static
 
 ifdef CONFIG_PLATFORM_DSLINUX
 MW_PREFIX       = $(BASE_DIR)/../microwin/src
-INSTALL_PREFIX  = $(BASE_DIR)/../romfs/usr/pixil/
+INSTALL_PREFIX  = $(BASE_DIR)/../../romfs/usr/pixil/
 EN_SHARED	= --disable-shared
 #CFLAGS         += -D_GNU_SOURCE
 CFLAGS	       += -fno-exceptions
@@ -104,7 +104,7 @@ distclean: local-clean packages-clean
 
 # uCLinux builds: add PIXIL to the rom file system
 .PHONY: romfs
-romfs:
+romfs:	install
 
 ##### Local targets #####
 

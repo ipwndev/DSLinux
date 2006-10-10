@@ -23,7 +23,9 @@ TARGET_EXTRAS += applets/backlight$(LIBTYPE)
 TARGET_EXTRAS += applets/battery$(LIBTYPE)
 endif
 
+ifeq ($(EN_SHARED),--enable-shared)
 INSTALL_EXTRAS=inst_applets
+endif
 
 ifeq ($(CONFIG_PIXILWM_THEMES),y)
 INSTALL_EXTRAS += inst_themes 
