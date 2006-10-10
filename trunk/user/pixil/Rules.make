@@ -154,7 +154,11 @@ clean: $(CLEAN_EXTRAS)
 
 	@ rm -rf $(PAR_CONFIG) $(LOCAL_DB)
 
-install: install-libs install-bin install-so $(INSTALL_EXTRAS)
+INSTALL_TARGETS = install-bin $(INSTALL_EXTRAS)
+ifeq ($(EN_SHARED),--enable-shared)
+INSTALL_TARGETS += install-libs install-so
+endif
+install: $(INSTALL_TARGETS)
 
 install-libs: $(INSTALL_DIR)/lib
 	@ if [ -n "$(LIB_SHARED)" ]; then \

@@ -81,7 +81,12 @@ _build_flnx: $(BASE_DIR)/libs/flnx/.configured
 	ln -s $(BASE_DIR)/libs/flnx/lib/libfltk.so $(STAGE_DIR)/lib
 	ln -s $(BASE_DIR)/libs/flnx/lib/libfltk.so $(STAGE_DIR)/lib/libfltk.so.1
 
-_install_flnx: dummy
+ifeq ($(EN_SHARED),--enable-shared)
+INSTALL_FLNX = install_flnx
+endif
+_install_flnx: $(INSTALL_FLNX)
+
+install_flnx: dummy
 	cp flnx/lib/libfltk.so $(INSTALL_DIR)/lib/
 	rm -f $(INSTALL_DIR)/lib/libfltk.so.1
 	ln -s $(INSTALL_DIR)/lib/libfltk.so $(INSTALL_DIR)/lib/libfltk.so.1
