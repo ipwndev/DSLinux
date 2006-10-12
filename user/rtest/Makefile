@@ -10,6 +10,9 @@ OBJS = 	rtest.o
 # includes
 INCS =
 
+CXXFLAGS += -Wno-deprecated
+CXX := arm-linux-elf-g++
+
 # libraries to link with
 # LDLIBS +=
 
@@ -21,9 +24,12 @@ INCS =
 # enters this directory and wants to build the program.
 all: $(EXEC)
 
-# This is the rule that build the mad player.
+%.o: %.cxx 
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
+
+# This is the rule that build the executable.
 $(EXEC): $(OBJS)
-	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
+	$(CXX) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
 
 # The romfs target is also phony. It is used to copy your app
 # into the DSLinux filesystem image.
