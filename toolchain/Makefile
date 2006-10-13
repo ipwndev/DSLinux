@@ -380,6 +380,8 @@ $(DISTDIR)/$(GCC_DIST):
 
 # unpack gcc (stage 1)
 $(GCC_SRCDIR)/.stage1-unpacked: $(DISTDIR)/$(GCC_DIST)
+	test "`md5sum $(DISTDIR)/$(GCC_DIST) | cut -d' ' -f 1`" \
+		= "$(GCC_DIST_MD5)"
 	tar -C $(SRCDIR) -jxf $(DISTDIR)/$(GCC_DIST)
 	touch $@
 
