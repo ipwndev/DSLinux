@@ -10,11 +10,10 @@ OBJS = 	rtest.o
 # includes
 INCS =
 
-CXXFLAGS += -Wno-deprecated
-CXX := arm-linux-elf-g++
-
 # libraries to link with
 # LDLIBS +=
+
+LDFLAGS += -s
 
 # declare these targets as phony, so make will not try to look
 # for files named like them:
@@ -30,6 +29,7 @@ all: $(EXEC)
 # This is the rule that build the executable.
 $(EXEC): $(OBJS)
 	$(CXX) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
+	arm-linux-elf-flthdr -k $(EXEC) 
 
 # The romfs target is also phony. It is used to copy your app
 # into the DSLinux filesystem image.
