@@ -163,9 +163,17 @@ ifdef UCLINUX_BUILD_USER
 	CFLAGS  += -Dlinux -D__linux__ -Dunix
 	CFLAGS  += -D__uClinux__
 
-	# Amadeus: use std c++ support libs (iostream, new/delete)
-	# CXXFLAGS = $(CFLAGS) -nostdinc++ -fno-exceptions
 	CXXFLAGS = $(CFLAGS) -fno-exceptions
+
+	# C++ headers, linked into the DSLINUX source tree
+	# use -I because the c++ dirs have to come before the other system dirs.
+	CXXFLAGS += -I $(ROOTDIR)/include/c++
+	CXXFLAGS += -I $(ROOTDIR)/include/c++/arm-linux-elf
+	CXXFLAGS += -I $(ROOTDIR)/include/c++/backward
+	
+	# be compatible for old style c++ includes
+	CXXFLAGS += -Wno-deprecated
+
 	CXXSUP = 
 
 	LDFLAGS += -Wl,-elf2flt
