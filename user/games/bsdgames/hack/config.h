@@ -160,8 +160,8 @@
 #endif /* CHDIR */
 
 /* size of terminal screen is (at least) (ROWNO+2) by COLNO */
-#define	COLNO	80
-#define	ROWNO	22
+#define	COLNO	64
+#define	ROWNO	30
 
 /*
  * small signed integers (8 bits suffice)
