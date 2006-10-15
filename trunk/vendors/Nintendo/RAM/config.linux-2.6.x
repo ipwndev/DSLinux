@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
-# Fri Oct  6 23:59:05 2006
+# Sun Oct 15 00:25:52 2006
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
@@ -593,6 +593,7 @@ CONFIG_FONTS=y
 # CONFIG_FONT_PEARL_8x8 is not set
 # CONFIG_FONT_ACORN_8x8 is not set
 CONFIG_FONT_MINI_4x6=y
+# CONFIG_FONT_MINI_4x9 is not set
 # CONFIG_FONT_MINI_6x6 is not set
 # CONFIG_FONT_SUN8x16 is not set
 # CONFIG_FONT_SUN12x22 is not set
