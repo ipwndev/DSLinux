@@ -1,11 +1,11 @@
-// #include <iostream.h>
-#include <stdio.h> 
+#include <iostream.h>
+//#include <stdio.h> 
 int main()
  {
     	// Dies ist das Hello-World-Programm
-  //  	cout<<"Hello, world!"<<endl;
+    	cout<<"Hello, world!"<<endl;
 	
-	printf("Hello");
+//	printf("Hello");
 
 
 	return 0;
