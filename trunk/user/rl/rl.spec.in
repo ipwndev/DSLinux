@@ -1,0 +1,41 @@
+Name: @PACKAGE@
+Summary: Randomize Lines
+Version: @VERSION@
+Release: 1
+Vendor: Arthur de Jong
+Packager: Arthur de Jong arthur@ch.tudelft.nl
+URL: http://ch.tudelft.nl/~arthur/rl/
+Source: %{name}-%{version}.tar.gz
+Group: Application/Generic
+Copyright: GPL
+BuildRoot: /var/tmp/%{name}-%{version}
+
+%description
+rl is a command-line tool that reads lines from an input file or stdin,
+randomizes the lines and outputs a specified number of lines. It does this
+with only a single pass over the input while trying to use as little memory
+as possible.
+
+Currently randomize-lines is under development and command-line arguments
+may change slightly until a 1.0 release is made.
+
+%prep
+%setup -n %{name}-%{version} 
+#%patch -p1
+
+%build
+./configure --prefix=%{_prefix} --mandir=%{_mandir} CFLAGS="$RPM_OPT_FLAGS"
+make
+
+%install
+[ "$RPM_BUILD_ROOT" = "/" ] || rm -rf "$RPM_BUILD_ROOT"
+mkdir -p $RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT
+
+%clean
+[ "$RPM_BUILD_ROOT" = "/" ] || rm -rf $RPM_BUILD_ROOT
+
+%files 
+%doc README TODO AUTHORS NEWS COPYING
+%{_mandir}/man1/rl.1*
+/usr/bin/rl
