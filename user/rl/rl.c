@@ -112,8 +112,9 @@ display_version(FILE *fp)
   fprintf(fp,"rl %s\n",VERSION);
   fprintf(fp,_("Written by Arthur de Jong.\n\n"));
   fprintf(fp,_("Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006 Arthur de Jong.\n"
-               "This is free software; see the source for copying conditions.  There is NO\n"
-               "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"));
+               "This is free software; see the source for copying conditions.\n"  
+               "There is NO warranty; not even for MERCHANTABILITY or FITNESS\n"
+               "FOR A PARTICULAR PURPOSE.\n"));
 }
 
 
