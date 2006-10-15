@@ -1,8 +1,0 @@
-menu "Applications"
-
-source apps/nanox/Config.in
-source apps/games/Config.in
-source apps/fltk/Config.in
-
-endmenu
-
