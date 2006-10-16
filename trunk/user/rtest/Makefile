@@ -13,7 +13,7 @@ INCS =
 # libraries to link with
 # LDLIBS +=
 
-LDFLAGS += -s
+# LDFLAGS += -Wl,-M
 
 # declare these targets as phony, so make will not try to look
 # for files named like them:
