@@ -12,6 +12,7 @@
 #  DISABLE_MOVE_RODATA - set this to 1 to disable moving rodata to text
 #  LOPT                - library optimisation flags
 #  UOPT                - user optimisation flags
+#  LD_OPTION	       - linker flags (not for the linux kernel)
 #
 #  David McCullough <davidm@snapgear.com>
 #
@@ -126,6 +127,7 @@ ifdef UCLINUX_BUILD_LIB
 	  LDFLAGS  += -D__PIC__ -fpic -msingle-pic-base
 	endif
   endif
+	LDFLAGS += $(LD_OPTION)
 
 	UCLINUX_BUILD_SET=1
 endif
@@ -196,6 +198,8 @@ ifdef UCLINUX_BUILD_USER
 
 	# for anyone still using it
 	CONVERT = /bin/true
+
+	LDFLAGS += $(LD_OPTION)
 
 	UCLINUX_BUILD_SET=1
 endif
