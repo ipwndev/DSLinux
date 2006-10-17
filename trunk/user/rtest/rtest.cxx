@@ -49,7 +49,11 @@ int main()
  {
 	test1 *bubi;
 
+	puts("start: before new\n");
+
 	bubi = new test1;
+
+	puts("after new\n");
 
 	puts( bubi->self());
 
