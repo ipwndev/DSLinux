@@ -1,0 +1,70 @@
+# Finnish translation for dialog.
+# Copyright © 2005 Lauri Nurmi <lanurmi@iki.fi>
+# This file is distributed under the same license as the dialog package.
+# Lauri Nurmi <lanurmi@iki.fi>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: dialog 1.0-rel20041222\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-01-19 20:24-0500\n"
+"PO-Revision-Date: 2005-03-07 19:15+0200\n"
+"Last-Translator: Lauri Nurmi <lanurmi@iki.fi>\n"
+"Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: buttons.c:379
+msgid "Yes"
+msgstr "Kyllä"
+
+#: buttons.c:387
+msgid "No"
+msgstr "Ei"
+
+#: buttons.c:395
+msgid "OK"
+msgstr "OK"
+
+#: buttons.c:403
+msgid "Cancel"
+msgstr "Peru"
+
+#: buttons.c:411
+msgid "EXIT"
+msgstr "Poistu"
+
+#: buttons.c:419
+msgid "Extra"
+msgstr "Painike"
+
+#: buttons.c:427
+msgid "Help"
+msgstr "Ohje"
+
+#. Headline "Month"
+#: calendar.c:274
+msgid "Month"
+msgstr "Kuukausi"
+
+#. Headline "Year"
+#: calendar.c:294
+msgid "Year"
+msgstr "Vuosi"
+
+#: dialog.c:696
+msgid "Rename"
+msgstr "Nimeä"
+
+#: fselect.c:451
+msgid "Directories"
+msgstr "Kansiot"
+
+#: fselect.c:452
+msgid "Files"
+msgstr "Tiedostot"
+
+#: textbox.c:483
+msgid "Search"
+msgstr "Etsi"
