@@ -3289,6 +3289,9 @@ CONFIG_USER_SSLWRAP_SSLWRAP
 CONFIG_USER_SQUID_SQUID
   The Squid Web proxy cache.
 
+CONFIG_USER_DIALOG_DIALOG
+  Show dialog boxes from shell scripts.
+
 CONFIG_USER_DHRYSTONE_DHRYSTONE
   The dhrystone CPU benchmark program.
 
