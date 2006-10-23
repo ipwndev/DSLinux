@@ -1,0 +1,72 @@
+# Rumantsch (Rhaeto-Romance) [rm] translation of Dialog.
+# This file is distributed under the same license as the dialog package.
+# Copyright (C) 2003-2004,2005 Thomas Dickey.
+# Florian Verdet _goto <fvgoto@linuxbourg.ch>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: dialog 1.0-rel20041222\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-01-19 20:24-0500\n"
+"PO-Revision-Date: 2005-02-06 13:22+0100\n"
+"Last-Translator: Florian Verdet _goto <fvgoto@linuxbourg.ch>\n"
+"Language-Team: Rhaeto-Romance <gnu-rumantsch@guglielmtux.ch>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.2\n"
+
+#: buttons.c:379
+msgid "Yes"
+msgstr "Schi"
+
+#: buttons.c:387
+msgid "No"
+msgstr "Na"
+
+#: buttons.c:395
+msgid "OK"
+msgstr "OK"
+
+#: buttons.c:403
+msgid "Cancel"
+msgstr "Laschar star"
+
+#: buttons.c:411
+msgid "EXIT"
+msgstr "SORTIR"
+
+#: buttons.c:419
+msgid "Extra"
+msgstr "Extra"
+
+#: buttons.c:427
+msgid "Help"
+msgstr "Agüd"
+
+#. Headline "Month"
+#: calendar.c:274
+msgid "Month"
+msgstr "Mais"
+
+#. Headline "Year"
+#: calendar.c:294
+msgid "Year"
+msgstr "On"
+
+#: dialog.c:696
+msgid "Rename"
+msgstr "Müdar nom"
+
+#: fselect.c:451
+#, fuzzy
+msgid "Directories"
+msgstr "Registers"
+
+#: fselect.c:452
+msgid "Files"
+msgstr "Datotecas"
+
+#: textbox.c:483
+msgid "Search"
+msgstr "Tscherchar"

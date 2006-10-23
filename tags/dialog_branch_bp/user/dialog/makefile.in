@@ -1,0 +1,187 @@
+# $Id$
+# template makefile for DIALOG
+#
+SHELL		= /bin/sh
+
+srcdir		= @srcdir@
+VPATH		= @srcdir@
+
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+
+top_builddir	= .
+
+x		= @EXEEXT@
+o		= .@OBJEXT@
+a		= @LIB_SUFFIX@
+
+DESTDIR		=
+bindir		= $(DESTDIR)@bindir@
+includedir	= $(DESTDIR)@includedir@
+libdir		= $(DESTDIR)@libdir@
+mandir		= $(DESTDIR)@mandir@
+MAN1DIR		= $(mandir)/man1
+MAN3DIR		= $(mandir)/man3
+
+# see po/makefile
+localedir       = $(prefix)/@DATADIRNAME@/locale
+
+CFLAGS		= @CFLAGS@
+CPPFLAGS	= @CPPFLAGS@ @DEFS@ -I. -I$(srcdir) -DLOCALEDIR=\"$(localedir)\"
+EXTRA_CFLAGS	= @EXTRA_CFLAGS@
+CC		= @CC@
+AR		= @AR@
+LDFLAGS		= @LDFLAGS@
+LIBS		= @LIBS@ @INTLDIR_MAKE@ @INTLLIBS@
+RANLIB		= @LIB_PREP@
+
+RM		= rm -f
+LINT		= lint
+
+LIBTOOL		= @LIBTOOL@ @ECHO_LT@
+LIBTOOL_CLEAN	= @LIB_CLEAN@
+LIBTOOL_COMPILE	= @LIB_COMPILE@
+LIBTOOL_CREATE	= @LIB_CREATE@
+LIBTOOL_LINK	= @LIB_LINK@
+LIBTOOL_INSTALL	= @LIB_INSTALL@
+LIBTOOL_UNINSTALL = @LIB_UNINSTALL@
+
+INSTALL		= @INSTALL@
+INSTALL_PROGRAM	= $(LIBTOOL_INSTALL) @INSTALL_PROGRAM@
+INSTALL_DATA	= @INSTALL_DATA@
+
+LINK		= $(LIBTOOL_LINK) $(CC)
+
+#
+# Standard .c to .o compile line.
+#
+.SUFFIXES: .c $o
+.c$o :
+@RULE_CC@
+	@ECHO_CC@$(LIBTOOL_COMPILE) $(CC) $(CFLAGS) $(EXTRA_CFLAGS) $(CPPFLAGS) -c $<
+
+EXTRAOBJS = @EXTRAOBJS@
+OBJECTS = $(EXTRAOBJS) \
+	arrows$o \
+	buttons$o \
+	checklist$o \
+	dlg_keys$o \
+	inputbox$o \
+	inputstr$o \
+	menubox$o \
+	mouse$o \
+	mousewget$o \
+	msgbox$o \
+	textbox$o \
+	ui_getc$o \
+	util$o \
+	version$o \
+	yesno$o
+
+LIB_OBJECT = @LIB_OBJECT@
+
+SRCS = $(OBJECTS:$o=.c)
+HDRS = \
+	dialog.h \
+	dlg_colors.h \
+	dlg_config.h \
+	dlg_keys.h
+
+LIB	= @LIB_PREFIX@dialog$a
+PROG	= dialog$x
+ALL	= $(LIB) $(PROG)
+
+BIN_DIRS	= $(bindir) $(MAN1DIR)
+LIB_DIRS	= $(libdir) $(includedir) $(MAN3DIR)
+
+all	:: $(ALL)
+
+@LIBTOOL_MAKE@install	:: install-lib
+@LIBTOOL_MAKE@uninstall	:: uninstall-lib
+
+@INTLDIR_MAKE@@INTLLIBS@ :
+@INTLDIR_MAKE@	@echo "Building GNU gettext library..."
+@INTLDIR_MAKE@	@cd intl && $(MAKE) @cf_cv_makeflags@
+
+dialog$o \
+$(OBJECTS) : $(srcdir)/dialog.h $(srcdir)/dlg_keys.h dlg_config.h VERSION
+
+$(LIB) : $(LIB_OBJECT)
+	$(LIBTOOL_CREATE) $(LIB) $(LIB_OBJECT)
+	$(RANLIB) $@
+
+dialog$x : $(LIB) dialog$o @INTLDIR_MAKE@ @INTLLIBS@
+	$(LINK) -o $@ dialog$o -L. -ldialog $(LDFLAGS) $(LIBS)
+
+clean	\
+distclean \
+install \
+install-strip \
+uninstall ::
+	@echo making $@
+@INTLDIR_MAKE@	@-test -f intl/makefile && cd intl && $(MAKE) @cf_cv_makeflags@ $@
+@MSG_DIR_MAKE@	@-test -f po/makefile && cd po && $(MAKE) @cf_cv_makeflags@ $@
+
+clean	::
+	@- $(RM) -r autom4te.cache
+	- $(RM) *.*cov *.da *.bb *.bbg
+	- $(LIBTOOL_CLEAN) $(RM) *$o $(ALL)
+	- $(RM) headers.sed
+	- $(RM) core *~ tags TAGS
+
+distclean :: clean
+	$(RM) intl/libintl.h intl/po2tbl.sed
+	$(RM) makefile dlg_config.h config.cache config.log config.status
+	$(RM) samples/install/makefile
+
+install :: $(PROG) $(bindir)
+	$(INSTALL_PROGRAM) $(PROG) $(bindir)
+
+install-strip :: $(PROG) $(bindir)
+	$(INSTALL_PROGRAM) -s $(PROG) $(bindir)
+
+install-strip \
+install :: $(MAN1DIR)
+	$(INSTALL_DATA) $(srcdir)/dialog.1 $(MAN1DIR)
+
+uninstall ::
+	$(RM) $(bindir)/$(PROG)
+	$(RM) $(MAN1DIR)/dialog.1
+
+# most users do not want/need the library, so the install rules are distinct.
+install-lib :: $(LIB_DIRS) headers.sed
+	@ echo "** installing library in $(libdir)"
+	$(LIBTOOL_INSTALL) $(INSTALL_DATA) $(LIB) $(libdir)
+	@ echo "** installing headers in $(includedir)"
+	@ $(SHELL) $(srcdir)/headers.sh $(INSTALL_DATA) $(includedir) $(srcdir) dialog.h
+	@ $(SHELL) $(srcdir)/headers.sh $(INSTALL_DATA) $(includedir) $(srcdir) dlg_colors.h
+	@ $(SHELL) $(srcdir)/headers.sh $(INSTALL_DATA) $(includedir) $(srcdir) dlg_keys.h
+	@ $(SHELL) $(srcdir)/headers.sh $(INSTALL_DATA) $(includedir) .         dlg_config.h
+	@ echo "** installing manpage"
+	$(INSTALL_DATA) $(srcdir)/dialog.3 $(MAN3DIR)
+
+uninstall-lib :: $(LIB_DIRS)
+	- $(LIBTOOL_UNINSTALL) $(RM) $(libdir)/$(LIB)
+	$(RM) $(includedir)/dialog.h
+	$(RM) $(includedir)/dlg_colors.h
+	$(RM) $(includedir)/dlg_keys.h
+	$(RM) $(includedir)/dlg_config.h
+	$(RM) $(MAN3DIR)/dialog.3
+
+headers.sed : $(srcdir)/headers.sh
+	$(SHELL) $(srcdir)/headers.sh $(includedir) $(srcdir)
+
+$(MAN1DIR) \
+$(MAN3DIR) \
+$(bindir) \
+$(includedir) \
+$(libdir) : ; $(srcdir)/mkdirs.sh $@
+
+@MAKE_LOWER_TAGS@tags :
+@MAKE_LOWER_TAGS@	ctags $(SRCS) $(HDRS)
+
+@MAKE_LOWER_TAGS@TAGS :
+@MAKE_LOWER_TAGS@	etags $(SRCS) $(HDRS)
+
+lint:
+	$(LINT) $(CPPFLAGS) *.c
