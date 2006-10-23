@@ -1,0 +1,68 @@
+# Dialog
+# Copyright 2001, # Thomas Dickey
+# Morten Brix Pedersen <morten@wtf.dk>, 2001-2005.
+msgid ""
+msgstr ""
+"Project-Id-Version: Dialog\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-01-19 20:24-0500\n"
+"PO-Revision-Date: 2005-01-07 21:02+0200\n"
+"Last-Translator: Morten Brix Pedersen <morten@wtf.dk>\n"
+"Language-Team: Danish <dansk@klid.dk>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: buttons.c:379
+msgid "Yes"
+msgstr "Ja"
+
+#: buttons.c:387
+msgid "No"
+msgstr "Nej"
+
+#: buttons.c:395
+msgid "OK"
+msgstr "O.K."
+
+#: buttons.c:403
+msgid "Cancel"
+msgstr "Anullér"
+
+#: buttons.c:411
+msgid "EXIT"
+msgstr "AFSLUT"
+
+#: buttons.c:419
+msgid "Extra"
+msgstr "Ekstra"
+
+#: buttons.c:427
+msgid "Help"
+msgstr "Hjælp"
+
+#. Headline "Month"
+#: calendar.c:274
+msgid "Month"
+msgstr "Måned"
+
+#. Headline "Year"
+#: calendar.c:294
+msgid "Year"
+msgstr "År"
+
+#: dialog.c:696
+msgid "Rename"
+msgstr "Omdøb"
+
+#: fselect.c:451
+msgid "Directories"
+msgstr "Mapper"
+
+#: fselect.c:452
+msgid "Files"
+msgstr "Filer"
+
+#: textbox.c:483
+msgid "Search"
+msgstr "Søg"
