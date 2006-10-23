@@ -1,0 +1,71 @@
+# Traditional Chinese Messages for dialog
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# This file is distributed under the same license as the dialog package.
+# Wei-Lun Chao <chaoweilun@pcmail.com.tw>, 2005
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: dialog 1.0-rel20041222\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-01-19 20:24-0500\n"
+"PO-Revision-Date: 2005-05-12 15:16+0800\n"
+"Last-Translator: Wei-Lun Chao <chaoweilun@pcmail.com.tw>\n"
+"Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: buttons.c:379
+msgid "Yes"
+msgstr "是"
+
+#: buttons.c:387
+msgid "No"
+msgstr "否"
+
+#: buttons.c:395
+msgid "OK"
+msgstr "確定"
+
+#: buttons.c:403
+msgid "Cancel"
+msgstr "取消"
+
+#: buttons.c:411
+msgid "EXIT"
+msgstr "離開"
+
+#: buttons.c:419
+msgid "Extra"
+msgstr "其他"
+
+#: buttons.c:427
+msgid "Help"
+msgstr "求助"
+
+#. Headline "Month"
+#: calendar.c:274
+msgid "Month"
+msgstr "月"
+
+#. Headline "Year"
+#: calendar.c:294
+msgid "Year"
+msgstr "年"
+
+#: dialog.c:696
+msgid "Rename"
+msgstr "更名"
+
+#: fselect.c:451
+msgid "Directories"
+msgstr "目錄"
+
+#: fselect.c:452
+msgid "Files"
+msgstr "檔案"
+
+#: textbox.c:483
+msgid "Search"
+msgstr "搜尋"
