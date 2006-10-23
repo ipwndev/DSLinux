@@ -1,0 +1,70 @@
+# translation of dialog.po to Polish
+# Jaroslaw Swierczynski <swiergot@intersec.pl>, 2003
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: dialog\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-01-19 20:24-0500\n"
+"PO-Revision-Date: 2003-06-21 17:07+0200\n"
+"Last-Translator: Jaroslaw Swierczynski <swiergot@intersec.pl>\n"
+"Language-Team: Polish <po@lists.intersec.pl>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.0.1\n"
+
+#: buttons.c:379
+msgid "Yes"
+msgstr "Tak"
+
+#: buttons.c:387
+msgid "No"
+msgstr "Nie"
+
+#: buttons.c:395
+msgid "OK"
+msgstr "OK"
+
+#: buttons.c:403
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: buttons.c:411
+msgid "EXIT"
+msgstr "WYJD¬"
+
+#: buttons.c:419
+msgid "Extra"
+msgstr "Ekstra"
+
+#: buttons.c:427
+msgid "Help"
+msgstr "Pomoc"
+
+#. Headline "Month"
+#: calendar.c:274
+msgid "Month"
+msgstr "Miesi±c"
+
+#. Headline "Year"
+#: calendar.c:294
+msgid "Year"
+msgstr "Rok"
+
+#: dialog.c:696
+msgid "Rename"
+msgstr "Zmieñ nazwê"
+
+#: fselect.c:451
+msgid "Directories"
+msgstr "Katalogi"
+
+#: fselect.c:452
+msgid "Files"
+msgstr "Pliki"
+
+#: textbox.c:483
+#, fuzzy
+msgid "Search"
+msgstr "Search"

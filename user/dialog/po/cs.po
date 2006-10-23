@@ -1,0 +1,67 @@
+# From: Martin Povolny <martin@solnet.cz>
+msgid ""
+msgstr ""
+"Project-Id-Version: dialog 0.9a-20010527\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-01-19 20:24-0500\n"
+"PO-Revision-Date: 2004-12-19 20:14-0500\n"
+"Last-Translator: Martin Povolny <martin@solnet.cz>\n"
+"Language-Team:\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: buttons.c:379
+msgid "Yes"
+msgstr "Ano"
+
+#: buttons.c:387
+msgid "No"
+msgstr "Ne"
+
+#: buttons.c:395
+msgid "OK"
+msgstr "OK"
+
+#: buttons.c:403
+msgid "Cancel"
+msgstr "Storno"
+
+#: buttons.c:411
+msgid "EXIT"
+msgstr "Konec"
+
+#: buttons.c:419
+msgid "Extra"
+msgstr ""
+
+#: buttons.c:427
+msgid "Help"
+msgstr ""
+
+#. Headline "Month"
+#: calendar.c:274
+msgid "Month"
+msgstr "Mìsíc"
+
+#. Headline "Year"
+#: calendar.c:294
+msgid "Year"
+msgstr "Rok"
+
+#: dialog.c:696
+msgid "Rename"
+msgstr ""
+
+#: fselect.c:451
+msgid "Directories"
+msgstr "Adresáøe"
+
+#: fselect.c:452
+msgid "Files"
+msgstr "Soubory"
+
+#: textbox.c:483
+#, fuzzy
+msgid "Search"
+msgstr "Search"
