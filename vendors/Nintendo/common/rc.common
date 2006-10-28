@@ -13,6 +13,16 @@ fi
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 export PATH
 
+# create /etc/passwd if it doesn't exist
+if [ ! -f /etc/passwd ]
+then
+	echo "Creating default /etc/passwd"
+	echo "root:xxSVJVBe8UDn2:0:0:Guybrush:/home:/bin/sh" > /etc/passwd
+	echo "bin:x:1:1:bin:/bin:" >> /etc/passwd
+	echo "daemon:x:2:2:daemon:/sbin:" >> /etc/passwd
+	echo "nobody:x:99:99:Nobody:/:" >> /etc/passwd
+fi
+
 # setup networking
 if [ "$enable_network_on_boot" = "YES" ]
 then
