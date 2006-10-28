@@ -31,8 +31,8 @@
 #define	_PATH_NOLOGIN	"/etc/nologin"
 
 #define _PATH_LOGIN	"/bin/login"
-#define _PATH_INITTAB	"/etc/inittab"
-#define _PATH_RC	"/etc/rc"
+#define _PATH_INITTAB	"/boot/inittab"
+#define _PATH_RC	"/boot/rc"
 #define _PATH_REBOOT	"/bin/reboot"
 #define _PATH_SINGLE	"/etc/singleboot"
 #define _PATH_SECURE	"/etc/securesingle"

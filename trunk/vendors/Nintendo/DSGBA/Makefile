@@ -13,7 +13,7 @@ IMAGE    = $(IMAGEDIR)/dslinux.nds.gba
 endif
 
 
-ROMFS_DIRS = bin dev etc etc/rc.d lib mnt proc usr usr/share/udhcpc var sram
+ROMFS_DIRS = bin boot dev etc etc/rc.d lib mnt proc usr usr/share/udhcpc var sram
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
@@ -67,8 +67,8 @@ romfs:
 	$(ROMFSINST) -s /sram/rc.conf /etc/rc.conf
 	$(ROMFSINST) -s /var/hosts /etc/hosts
 	$(ROMFSINST) -s /var/home /home
-	$(ROMFSINST) /etc/rc
-	$(ROMFSINST) /etc/inittab
+	$(ROMFSINST) /boot/rc
+	$(ROMFSINST) /boot/inittab
 	$(ROMFSINST) /etc/issue
 	$(ROMFSINST) $(NDS_COMMON)/rc.common /etc/rc.common
 	$(ROMFSINST) $(NDS_COMMON)/rc.defaults /etc/rc.defaults

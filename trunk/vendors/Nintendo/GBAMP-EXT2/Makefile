@@ -12,7 +12,7 @@ IMAGE    = $(IMAGEDIR)/dslinux.ds.gba
 FATFS	 = gbamp
 
 
-ROMFS_DIRS = bin dev etc proc sbin $(FATFS)
+ROMFS_DIRS = bin boot dev proc sbin $(FATFS)
 
 FS_DIRS = home lib usr/bin usr/share/udhcpc var/tmp var/run
 
@@ -67,8 +67,8 @@ romfs:
 	for i in $(FS_DIRS); do \
 		[ -d $(ROMFSDIR)/$$i ] || mkdir -p $(ROMFSDIR)/$$i; \
 	done
-	$(ROMFSINST) /etc/rc
-	$(ROMFSINST) /etc/inittab
+	$(ROMFSINST) /boot/rc
+	$(ROMFSINST) /boot/inittab
 	$(ROMFSINST) /etc/issue
 	$(ROMFSINST) $(NDS_COMMON)/passwd /etc/passwd
 	$(ROMFSINST) -p +x $(NDS_COMMON)/default.script /usr/share/udhcpc/default.script
