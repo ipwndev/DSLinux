@@ -13,7 +13,7 @@ IMAGE    = $(IMAGEDIR)/dslinux.nds.gba
 endif
 
 
-ROMFS_DIRS = bin boot dev etc etc/rc.d lib mnt proc usr usr/share/udhcpc var sys
+ROMFS_DIRS = bin boot dev etc etc/rc.d lib mnt proc usr/games usr/lib usr/share/udhcpc var sys
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \

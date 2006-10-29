@@ -10,7 +10,7 @@ IMAGE    = $(IMAGEDIR)/dsimage.bin
 FATFS	 = sd
 
 ROMFS_DIRS = bin boot dev lib mnt proc usr usr/share $(FATFS)/linux
-FS_DIRS = etc/rc.d home usr/share/udhcpc var/tmp var/run
+FS_DIRS = etc/rc.d home usr/games usr/lib usr/share/udhcpc var/tmp var/run
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
