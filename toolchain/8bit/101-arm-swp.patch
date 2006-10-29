@@ -1,0 +1,304 @@
+diff -uprN gcc-4.0.2-101/gcc/config/arm/arm.h gcc-4.0.2/gcc/config/arm/arm.h
+--- gcc-4.0.2-101/gcc/config/arm/arm.h	2005-08-25 12:37:19.000000000 +0200
++++ gcc-4.0.2/gcc/config/arm/arm.h	2006-10-29 14:36:23.000000000 +0100
+@@ -214,7 +214,11 @@ extern GTY(()) rtx aof_pic_label;
+ #define ARM_FLAG_APCS_REENT	(1 << 6)
+ 
+   /* FLAG 0x0080 now spare (used to be alignment traps).  */
+-  /* FLAG (1 << 8) is now spare (used to be soft-float).  */
++
++/* Nonzero if swpb instructions should be generated instead of strb.
++   This allows to generate code for 16bit busses without byte write strobes,
++   if the ARM9 writeback cache is enabled. (Nintendo DS).   */
++#define ARM_FLAG_SWP_BYTE_WRITES (1 << 8)
+ 
+ /* Nonzero if we should compile with BYTES_BIG_ENDIAN set to 1.  */
+ #define ARM_FLAG_BIG_END	(1 << 9)
+@@ -267,6 +271,7 @@ extern GTY(()) rtx aof_pic_label;
+ #define TARGET_APCS_STACK		(target_flags & ARM_FLAG_APCS_STACK)
+ #define TARGET_APCS_FLOAT		(target_flags & ARM_FLAG_APCS_FLOAT)
+ #define TARGET_APCS_REENT		(target_flags & ARM_FLAG_APCS_REENT)
++#define TARGET_SWP_BYTE_WRITES		(target_flags & ARM_FLAG_SWP_BYTE_WRITES)
+ #define TARGET_SOFT_FLOAT		(arm_float_abi == ARM_FLOAT_ABI_SOFT)
+ /* Use hardware floating point instructions. */
+ #define TARGET_HARD_FLOAT		(arm_float_abi != ARM_FLOAT_ABI_SOFT)
+@@ -329,6 +334,9 @@ extern GTY(()) rtx aof_pic_label;
+   {"apcs-reentrant",		ARM_FLAG_APCS_REENT,			\
+    N_("Generate re-entrant, PIC code") },				\
+   {"no-apcs-reentrant",	       -ARM_FLAG_APCS_REENT, "" },		\
++  {"swp-byte-writes",		ARM_FLAG_SWP_BYTE_WRITES,		\
++   N_("Use swpb instead of strb for 8 bit writes") },			\
++  {"no-swp-byte-writes",       -ARM_FLAG_SWP_BYTE_WRITES, "" },		\
+   {"big-endian",		ARM_FLAG_BIG_END,			\
+    N_("Assume target CPU is configured as big endian") },		\
+   {"little-endian",	       -ARM_FLAG_BIG_END,			\
+@@ -1389,6 +1397,8 @@ enum reg_class
+    ? vfp_secondary_reload_class (MODE, X)			\
+    : TARGET_ARM							\
+    ? (((MODE) == HImode && ! arm_arch4 && true_regnum (X) == -1) \
++   || ((MODE) == QImode && TARGET_ARM && TARGET_SWP_BYTE_WRITES \
++       && true_regnum (X) == -1)                                \
+     ? GENERAL_REGS : NO_REGS)					\
+    : THUMB_SECONDARY_OUTPUT_RELOAD_CLASS (CLASS, MODE, X))
+ 
+@@ -2493,12 +2503,14 @@ extern int making_const_table;
+        : 0))))
+ 
+ /* Output the address of an operand.  */
++/* SWP_BYTE_WRITES: for REG operands, use [REG] instead of [REG,#0].
++   This is also applicable for swp */
+ #define ARM_PRINT_OPERAND_ADDRESS(STREAM, X)				\
+ {									\
+     int is_minus = GET_CODE (X) == MINUS;				\
+ 									\
+     if (GET_CODE (X) == REG)						\
+-      asm_fprintf (STREAM, "[%r, #0]", REGNO (X));			\
++      asm_fprintf (STREAM, "[%r]", REGNO (X));				\
+     else if (GET_CODE (X) == PLUS || is_minus)				\
+       {									\
+ 	rtx base = XEXP (X, 0);						\
+diff -uprN gcc-4.0.2-101/gcc/config/arm/arm.md gcc-4.0.2/gcc/config/arm/arm.md
+--- gcc-4.0.2-101/gcc/config/arm/arm.md	2005-08-25 12:37:19.000000000 +0200
++++ gcc-4.0.2/gcc/config/arm/arm.md	2006-08-22 17:07:06.000000000 +0200
+@@ -4931,7 +4931,7 @@
+   "@
+    mov%?\\t%0, %1\\t%@ movhi
+    mvn%?\\t%0, #%B1\\t%@ movhi
+-   str%?h\\t%1, %0\\t%@ movhi 
++   str%?h\\t%1, %0\\t%@ movhi
+    ldr%?h\\t%0, %1\\t%@ movhi"
+   [(set_attr "type" "*,*,store1,load1")
+    (set_attr "predicable" "yes")
+@@ -5013,7 +5013,17 @@
+ 	      operands[1] = gen_lowpart (QImode, reg);
+ 	    }
+           if (GET_CODE (operands[0]) == MEM)
+-	    operands[1] = force_reg (QImode, operands[1]);
++	      operands[1] = force_reg (QImode, operands[1]);
++	  if (TARGET_SWP_BYTE_WRITES) 
++            {
++		/* Ensure that operands[0] is (mem(reg ...)) if a memory operand. */
++		if (MEM_P (operands[0]) && !REG_P (XEXP(operands[0], 0)))
++		  operands[0]
++                    = replace_equiv_address(operands[0],
++                          copy_to_reg (XEXP (operands[0], 0)));
++                emit_insn (gen__arm_movqi_insn_swp(operands[0], operands[1]));
++		DONE;
++	    }
+         }
+     }
+   else /* TARGET_THUMB */
+@@ -5061,11 +5071,11 @@
+   "
+ )
+ 
+-
++;; Original arm movqi pattern
+ (define_insn "*arm_movqi_insn"
+   [(set (match_operand:QI 0 "nonimmediate_operand" "=r,r,r,m")
+ 	(match_operand:QI 1 "general_operand" "rI,K,m,r"))]
+-  "TARGET_ARM
++  "TARGET_ARM && !TARGET_SWP_BYTE_WRITES
+    && (   register_operand (operands[0], QImode)
+        || register_operand (operands[1], QImode))"
+   "@
+@@ -5077,6 +5087,89 @@
+    (set_attr "predicable" "yes")]
+ )
+ 
++;; This is primarily a hack for the Nintendo DS external RAM.
++(define_insn "_arm_movqi_insn_swp"
++  [(set (match_operand:QI 0 "reg_or_Qmem_operand" "=r,r,r,Q,Q")
++	(match_operand:QI 1 "general_operand" "rI,K,m,r,r"))
++        (clobber (match_scratch:QI 2 "=X,X,X,&r,1"))]
++  "TARGET_ARM && TARGET_SWP_BYTE_WRITES
++   && (   register_operand (operands[0], QImode)
++       || register_operand (operands[1], QImode))"
++  "@
++   mov%?\\t%0, %1
++   mvn%?\\t%0, #%B1
++   ldr%?b\\t%0, %1
++   swp%?b\\t%2, %1, %0
++   swp%?b\\t%1, %1, %0"
++  [(set_attr "type" "*,*,load1,store1,store1")
++   (set_attr "predicable" "yes")]
++)
++
++(define_insn "_arm_movqi_insn_noswp"
++  [(set (match_operand:QI 0 "register_operand" "=r,r,r")
++	(match_operand:QI 1 "general_operand"  "rI,K,m"))]
++  "TARGET_ARM && TARGET_SWP_BYTE_WRITES
++   && (   register_operand (operands[0], QImode))"
++  "@
++   mov%?\\t%0, %1
++   mvn%?\\t%0, #%B1
++   ldr%?b\\t%0, %1"
++  [(set_attr "type" "*,*,load1")
++   (set_attr "predicable" "yes")]
++)
++
++;; The earlyclobber is required by default_secondary_reload() in targhooks.c.
++;; We may be asked to generate reg->stack moves from what was reg->reg moves.
++;; This requires both a QImode scratch register to trash and a SImode scratch
++;; register to hold the address. Since we can get only one scratch register,
++;; we ask for a DImode scratch register and split it up.
++(define_expand "reload_outqi"
++  [(clobber (match_operand:QI 0 "memory_operand" "=Q"))
++   (clobber (match_operand:DI 2 "register_operand" "=&r"))
++   (set (match_dup 4) (match_dup 5))
++   (parallel [
++   (set (match_dup 6)
++	(match_operand:QI 1 "register_operand" "r"))
++   (clobber (match_dup 3))]
++  )]
++  "TARGET_ARM && TARGET_SWP_BYTE_WRITES"
++{
++  operands[3] = gen_rtx_REG (QImode, REGNO (operands[2]));
++  /* operands[3] = simplify_gen_subreg (QImode, operands[2], DImode, 0); */
++  operands[4] = simplify_gen_subreg (Pmode,  operands[2], DImode, 4);
++  /* If necessary, reload the address. */
++  if (REG_P (XEXP (operands[0], 0)))
++    {
++      operands[5] = operands[4];
++      operands[6] = operands[0];
++    }
++  else
++    {
++      operands[5] = XEXP (operands[0], 0);
++      operands[6] = gen_rtx_MEM (QImode, operands[4]);
++    }
++})
++
++;; The register allocator is often stupid. Try to change
++;;	mov	r2, r1
++;;	swpb	r2, r2, [r0]
++;; into
++;;	swpb	r2, r1, [r0]
++;; (and pretend it is just another way of allocating a scratch register).
++(define_peephole2
++  [(parallel
++  [(set (match_operand:QI 2 "register_operand")
++	(match_operand:QI 1 "register_operand"))
++   (clobber (match_scratch:QI 3))])
++   (parallel [
++   (set (match_operand:QI 0 "memory_operand") (match_dup 2))
++   (clobber (match_dup 2))])]
++  "TARGET_ARM && TARGET_SWP_BYTE_WRITES"
++  [(parallel
++  [(set (match_dup 0) (match_dup 1))
++   (clobber (match_dup 2))])]
++)
++
+ (define_insn "*thumb_movqi_insn"
+   [(set (match_operand:QI 0 "nonimmediate_operand" "=l,l,m,*r,*h,l")
+ 	(match_operand:QI 1 "general_operand"      "l, m,l,*h,*r,I"))]
+@@ -9406,7 +9499,7 @@
+ 	(match_operand:QI 3 "s_register_operand" "r"))
+    (set (match_operand:SI 0 "s_register_operand" "=r")
+ 	(plus:SI (match_dup 1) (match_dup 2)))]
+-  "TARGET_ARM
++  "TARGET_ARM && !TARGET_SWP_BYTE_WRITES
+    && REGNO (operands[0]) != FRAME_POINTER_REGNUM
+    && REGNO (operands[1]) != FRAME_POINTER_REGNUM
+    && (GET_CODE (operands[2]) != REG
+@@ -9422,7 +9515,7 @@
+ 	(match_operand:QI 3 "s_register_operand" "r"))
+    (set (match_operand:SI 0 "s_register_operand" "=r")
+ 	(minus:SI (match_dup 1) (match_dup 2)))]
+-  "TARGET_ARM
++  "TARGET_ARM && !TARGET_SWP_BYTE_WRITES
+    && REGNO (operands[0]) != FRAME_POINTER_REGNUM
+    && REGNO (operands[1]) != FRAME_POINTER_REGNUM
+    && (GET_CODE (operands[2]) != REG
+@@ -9571,7 +9664,7 @@
+    (set (match_operand:SI 0 "s_register_operand" "=r")
+ 	(plus:SI (match_op_dup 2 [(match_dup 3)	(match_dup 4)])
+ 		 (match_dup 1)))]
+-  "TARGET_ARM
++  "TARGET_ARM && !TARGET_SWP_BYTE_WRITES
+    && REGNO (operands[0]) != FRAME_POINTER_REGNUM
+    && REGNO (operands[1]) != FRAME_POINTER_REGNUM
+    && REGNO (operands[3]) != FRAME_POINTER_REGNUM"
+@@ -9589,7 +9682,7 @@
+    (set (match_operand:SI 0 "s_register_operand" "=r")
+ 	(minus:SI (match_dup 1) (match_op_dup 2 [(match_dup 3)
+ 						 (match_dup 4)])))]
+-  "TARGET_ARM
++  "TARGET_ARM && !TARGET_SWP_BYTE_WRITES
+    && REGNO (operands[0]) != FRAME_POINTER_REGNUM
+    && REGNO (operands[1]) != FRAME_POINTER_REGNUM
+    && REGNO (operands[3]) != FRAME_POINTER_REGNUM"
+@@ -9721,7 +9814,7 @@
+ 	(match_operand:QI 2 "s_register_operand" "r"))
+    (set (match_dup 0)
+ 	(plus:SI (match_dup 0) (match_operand:SI 1 "index_operand" "rJ")))]
+-  "TARGET_ARM
++  "TARGET_ARM && !TARGET_SWP_BYTE_WRITES
+    && (REGNO (operands[2]) != REGNO (operands[0]))
+    && (GET_CODE (operands[1]) != REG
+        || (REGNO (operands[1]) != REGNO (operands[0])))"
+@@ -9769,7 +9862,7 @@
+ 			 (match_operand:SI 1 "index_operand" "rJ")))
+ 	(match_operand:QI 2 "s_register_operand" "r"))
+    (set (match_dup 0) (plus:SI (match_dup 0) (match_dup 1)))]
+-  "TARGET_ARM
++  "TARGET_ARM && !TARGET_SWP_BYTE_WRITES
+    && (REGNO (operands[2]) != REGNO (operands[0]))
+    && (GET_CODE (operands[1]) != REG
+        || (REGNO (operands[1]) != REGNO (operands[0])))"
+@@ -9784,7 +9877,7 @@
+ 	(match_operand:QI 3 "s_register_operand" "r"))
+    (set (match_dup 2) (plus:SI (match_op_dup 4 [(match_dup 0) (match_dup 1)])
+ 			       (match_dup 2)))]
+-  "TARGET_ARM
++  "TARGET_ARM && !TARGET_SWP_BYTE_WRITES
+    && (REGNO (operands[3]) != REGNO (operands[2]))
+    && (REGNO (operands[0]) != REGNO (operands[2]))"
+   "str%?b\\t%3, [%2, %0%S4]!"
+diff -uprN gcc-4.0.2-101/gcc/config/arm/predicates.md gcc-4.0.2/gcc/config/arm/predicates.md
+--- gcc-4.0.2-101/gcc/config/arm/predicates.md	2004-09-10 13:55:13.000000000 +0200
++++ gcc-4.0.2/gcc/config/arm/predicates.md	2006-08-14 19:53:45.000000000 +0200
+@@ -467,4 +467,14 @@
+   (and (match_code "const_int")
+        (match_test "((unsigned HOST_WIDE_INT) INTVAL (op)) < 64")))
+ 
+-
++;;-------------------------------------------------------------------------
++;;
++;; Nintendo DS predicates
++;;
++;; Match register operands or memory operands of the form (mem (reg ...)),
++;; as permitted by the "Q" memory constraint.
++(define_predicate "reg_or_Qmem_operand"
++  (ior (match_operand 0 "register_operand")
++       (and (match_code "mem")
++	    (match_test "GET_CODE (XEXP (op, 0)) == REG")))
++)
+diff -uprN gcc-4.0.2-101/gcc/config/arm/t-linux gcc-4.0.2/gcc/config/arm/t-linux
+--- gcc-4.0.2-101/gcc/config/arm/t-linux	2004-05-15 14:41:35.000000000 +0200
++++ gcc-4.0.2/gcc/config/arm/t-linux	2006-10-29 14:54:22.000000000 +0100
+@@ -9,7 +9,23 @@ LIB1ASMFUNCS = _udivsi3 _divsi3 _umodsi3
+ # MULTILIB_OPTIONS = mhard-float/msoft-float
+ # MULTILIB_DIRNAMES = hard-float soft-float
+ 
+-# EXTRA_MULTILIB_PARTS = crtbegin.o crtend.o
++# EXTRA_MULTILIB_PARTS = crtbegin.o crtend.o 
+ 
+ # LIBGCC = stmp-multilib
+ # INSTALL_LIBGCC = install-multilib
++
++# This is special for the different versions of DSLINUX
++
++MULTILIB_OPTIONS       = fpic/fno-pic
++MULTILIB_DIRNAMES      = pic npic
++
++MULTILIB_OPTIONS      += msingle-pic-base/mno-single-pic-base
++MULTILIB_DIRNAMES     += sb mb
++
++MULTILIB_OPTIONS      += mswp-byte-writes/mno-swp-byte-writes
++MULTILIB_DIRNAMES     += swpb strb
++
++EXTRA_MULTILIB_PARTS   = crtbegin.o crtend.o
++
++LIBGCC = stmp-multilib
++INSTALL_LIBGCC = install-multilib
