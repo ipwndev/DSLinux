@@ -388,7 +388,7 @@ $(GCC_SRCDIR)/.stage1-unpacked: $(DISTDIR)/$(GCC_DIST)
 # patch gcc (stage 1)
 $(GCC_SRCDIR)/.stage1-patched: $(GCC_SRCDIR)/.stage1-unpacked
 	# Use Amadeus' ARM code generator that fixes the 8bit write problem
-	$(foreach f,arm.h arm.c arm.md predicates.md t-arm-elf, \
+	$(foreach f,arm.h arm.md predicates.md t-arm-elf, \
 		cp $(EIGHTBIT_DIR)/$(f) $(GCC_SRCDIR)/gcc/config/arm/;)
 	touch $@
 
@@ -435,7 +435,7 @@ $(GCC_SRCDIR)/.stage2-unpacked: $(DISTDIR)/$(GCC_DIST)
 $(GCC_SRCDIR)/.stage2-patched: $(GCC_SRCDIR)/.stage2-unpacked
 	patch -d $(GCC_SRCDIR) -p1 < $(PATCHDIR)/gcc-$(GCC_VER).diff
 	# Use Amadeus' ARM code generator that fixes the 8bit write problem
-	$(foreach f,arm.h arm.c arm.md predicates.md t-arm-elf, \
+	$(foreach f,arm.h arm.md predicates.md t-arm-elf, \
 		cp $(EIGHTBIT_DIR)/$(f) $(GCC_SRCDIR)/gcc/config/arm/;)
 	touch $@
 
