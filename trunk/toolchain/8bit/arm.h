@@ -332,11 +332,11 @@ extern GTY(()) rtx aof_pic_label;
    N_("Pass FP arguments in FP registers") },				\
   {"no-apcs-float",	       -ARM_FLAG_APCS_FLOAT, "" },		\
   {"apcs-reentrant",		ARM_FLAG_APCS_REENT,			\
-   N_("Use swpb instead of strb for 8 bit writes") },			\
-  {"no-swp-byte-writes",       -ARM_FLAG_SWP_BYTE_WRITES, "" },		\
-  {"swp-byte-writes",		ARM_FLAG_SWP_BYTE_WRITES,		\
    N_("Generate re-entrant, PIC code") },				\
   {"no-apcs-reentrant",	       -ARM_FLAG_APCS_REENT, "" },		\
+  {"swp-byte-writes",		ARM_FLAG_SWP_BYTE_WRITES,		\
+   N_("Use swpb instead of strb for 8 bit writes") },			\
+  {"no-swp-byte-writes",       -ARM_FLAG_SWP_BYTE_WRITES, "" },		\
   {"big-endian",		ARM_FLAG_BIG_END,			\
    N_("Assume target CPU is configured as big endian") },		\
   {"little-endian",	       -ARM_FLAG_BIG_END,			\
