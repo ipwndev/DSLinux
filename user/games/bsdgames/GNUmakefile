@@ -1833,76 +1833,76 @@ uninstall TAGS dist:
 info dvi:
 	@echo "This package comes with no Texinfo documentation."
 
-
+GAMESDIR=/usr/games
 romfs:
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_ADVENTURE \
-		adventure/adventure /bin/adventure
+		adventure/adventure $(GAMESDIR)/adventure
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_ARITHMETIC \
-   		arithmetic/arithmetic /bin/arithmetic
+   		arithmetic/arithmetic $(GAMESDIR)/arithmetic
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BACKGAMMON \
-		backgammon/backgammon/backgammon /bin/backgammon
+		backgammon/backgammon/backgammon $(GAMESDIR)/backgammon
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BACKGAMMON \
-		backgammon/teachgammon/teachgammon /bin/teachgammon
+		backgammon/teachgammon/teachgammon $(GAMESDIR)/teachgammon
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BATTLESTAR \
-	    battlestar/battlestar /bin/battlestar
+	    battlestar/battlestar $(GAMESDIR)/battlestar
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BCD \
-	    bcd/bcd /bin/bcd
+	    bcd/bcd $(GAMESDIR)/bcd
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BOGGLE \
-	    boggle/boggle/boggle /bin/boggle
+	    boggle/boggle/boggle $(GAMESDIR)/boggle
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CAESAR \
-	    caesar/caesar /bin/caesar
+	    caesar/caesar $(GAMESDIR)/caesar
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CAESAR \
-	    caesar/rot13 /bin/rot13
+	    caesar/rot13 $(GAMESDIR)/rot13
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CANFIELD \
-	    canfield/canfield/canfield /bin/canfield
+	    canfield/canfield/canfield $(GAMESDIR)/canfield
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CANFIELD \
-	    canfield/cfscores/cfscores /bin/cfscores
+	    canfield/cfscores/cfscores $(GAMESDIR)/cfscores
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CRIBBAGE \
-	    cribbage/cribbage /bin/cribbage
+	    cribbage/cribbage $(GAMESDIR)/cribbage
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_FISH \
-	    fish/fish /bin/fish
+	    fish/fish $(GAMESDIR)/fish
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_GOMOKU \
-	    gomoku/gomoku /bin/gomoku
+	    gomoku/gomoku $(GAMESDIR)/gomoku
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_HACK \
-	    hack/hack /bin/hack
+	    hack/hack $(GAMESDIR)/hack
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_HANGMAN \
-	    hangman/hangman /bin/hangman
+	    hangman/hangman $(GAMESDIR)/hangman
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_MILLE \
-	    mille/mille /bin/mille
+	    mille/mille $(GAMESDIR)/mille
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_MORSE \
-	    morse/morse /bin/morse
+	    morse/morse $(GAMESDIR)/morse
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_NUMBER \
-	    number/number /bin/number
+	    number/number $(GAMESDIR)/number
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_PIG \
-	    pig/pig /bin/pig
+	    pig/pig $(GAMESDIR)/pig
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_POM \
-	    pom/pom /bin/pom
+	    pom/pom $(GAMESDIR)/pom
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_PPT \
-	    ppt/ppt /bin/ppt
+	    ppt/ppt $(GAMESDIR)/ppt
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_PRIMES \
-	    primes/primes /bin/primes
+	    primes/primes $(GAMESDIR)/primes
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_QUIZ \
-	    quiz/quiz /bin/quiz
+	    quiz/quiz $(GAMESDIR)/quiz
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_RAIN \
-	    rain/rain /bin/rain
+	    rain/rain $(GAMESDIR)/rain
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_RANDOM \
-	    random/random /bin/random
+	    random/random $(GAMESDIR)/random
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_ROBOTS \
-	    robots/robots /bin/robots
+	    robots/robots $(GAMESDIR)/robots
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_SAIL \
-	    sail/sail /bin/sail
+	    sail/sail $(GAMESDIR)/sail
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_SNAKE \
-	    snake/snake/snake /bin/snake
+	    snake/snake/snake $(GAMESDIR)/snake
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_SNAKE \
-	    snake/snscore/snscore /bin/snscore
+	    snake/snscore/snscore $(GAMESDIR)/snscore
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_TETRIS \
-   		tetris/tetris /bin/tetris
+   		tetris/tetris $(GAMESDIR)/tetris
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_TREK \
-	    trek/trek /bin/trek
+	    trek/trek $(GAMESDIR)/trek
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_WORM \
-	    worm/worm /bin/worm
+	    worm/worm $(GAMESDIR)/worm
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_WORMS \
-	    worms/worms /bin/worms
+	    worms/worms $(GAMESDIR)/worms
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_WUMP \
-	    wump/wump /bin/wump
+	    wump/wump $(GAMESDIR)/wump
 

@@ -24,6 +24,7 @@
 #define TTYTYPES        "/etc/ttytype"
 #define SECURETTY       "/etc/securetty"
 
+#define DSLINUX_DEFAULT_PATH "/sbin:/bin:/usr/sbin:/usr/bin:/usr/games:/sram:/home/bin"
 /*#define	_PATH_DEFPATH	        "/usr/local/bin:/bin:/usr/bin:."*/
 /*#define	_PATH_DEFPATH_ROOT	"/bin:/usr/bin:" SBINDIR*/
 #define	_PATH_HUSHLOGIN	".hushlogin"

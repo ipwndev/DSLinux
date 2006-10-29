@@ -1,10 +1,10 @@
 # Makefile for dungeon
 
-# Where to install the program
-BINDIR = /bin
+# Where games are installed in DSLinux
+GAMESDIR=/usr/games
 
 # Where to install the data file
-LIBDIR = /lib
+LIBDIR = /usr/lib
 
 # The dungeon program provides a ``more'' facility which tries to
 # figure out how many rows the terminal has.  Several mechanisms are
@@ -67,10 +67,10 @@ dungeon: $(OBJS) dtextc.dat
 	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
 
 romfs:
-	$(ROMFSINST) /bin/dungeon
+	$(ROMFSINST) $(GAMESDIR)/dungeon
 	$(ROMFSINST) dtextc.dat /$(LIBDIR)/dtextc.dat
 	$(ROMFSINST) -e CONFIG_USER_GAMES_DUNGEON \
-		-a "#dungeon stream tcp nowait root /bin/dungeon" /etc/inetd.conf
+		-a "#dungeon stream tcp nowait root $(GAMESDIR)/dungeon" /etc/inetd.conf
 
 clean:
 	rm -f $(OBJS) dungeon core dsave.dat *~ dungeon.gdb dungeon.elf
