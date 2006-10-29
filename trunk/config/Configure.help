@@ -769,6 +769,15 @@ CONFIG_USER_BOA_EMERG
 CONFIG_USER_BOA_WITH_SSL
   Do you want BOA to use SSL for all connections.
 
+CONFIG_USER_DICTIONARY
+  Dictionary file for applications that need a dictionary.
+
+CONFIG_USER_DICTIONARY_AMERICAN
+  Dictionary file for applications that need a dictionary.
+
+CONFIG_USER_DICTIONARY_BRITISH
+  Dictionary file for applications that need a dictionary.
+
 CONFIG_USER_FREESWAN
   The FreeSwan tools and applications
 
