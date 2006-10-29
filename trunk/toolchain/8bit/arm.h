@@ -799,7 +799,6 @@ extern const char * structure_size_string;
 
 /* 1 for registers that have pervasive standard uses
    and are not available for the register allocator.  */
-
 #define FIXED_REGISTERS \
 {                       \
   0,0,0,0,0,0,0,0,	\
@@ -826,7 +825,6 @@ extern const char * structure_size_string;
    Aside from that, you can include as many other registers as you like.
    The CC is not preserved over function calls on the ARM 6, so it is
    easier to assume this for all.  SFP is preserved, since FP is.  */
-
 #define CALL_USED_REGISTERS  \
 {                            \
   1,1,1,1,0,0,0,0,	     \
