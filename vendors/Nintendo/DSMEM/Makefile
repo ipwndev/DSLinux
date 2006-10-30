@@ -67,7 +67,7 @@ romfs:
 	done
 	$(ROMFSINST) -s /$(FATFS)/linux/var /var
 	$(ROMFSINST) -s /$(FATFS)/linux/home /home
-	$(ROMFSINST) -s $(FATFS)/linux/etc /etc
+	$(ROMFSINST) -s /$(FATFS)/linux/etc /etc
 	$(ROMFSINST) -s /bin /sbin
 	$(ROMFSINST) -s /$(FATFS)/linux/usr/share/udhcpc /usr/share/udhcpc
 	$(ROMFSINST) -s /var/tmp /tmp
