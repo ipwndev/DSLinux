@@ -9,8 +9,8 @@ ELFIMAGE = $(IMAGEDIR)/image.elf
 IMAGE    = $(IMAGEDIR)/dsimage.bin
 FATFS	 = sd
 
-ROMFS_DIRS = bin boot dev lib mnt proc usr usr/share $(FATFS)/linux
-FS_DIRS = etc/rc.d home usr/games usr/lib usr/share/udhcpc var/tmp var/run
+ROMFS_DIRS = bin boot dev lib mnt proc usr usr/games usr/lib usr/share $(FATFS)/linux
+FS_DIRS = etc/rc.d home usr/share/udhcpc var/tmp var/run
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
@@ -65,11 +65,11 @@ romfs:
 	for i in $(FS_DIRS); do \
 		[ -d $(ROMFSDIR)/$(FATFS)/linux/$$i ] || mkdir -p $(ROMFSDIR)/$(FATFS)/linux/$$i; \
 	done
-	$(ROMFSINST) -s /$(FATFS)/linux/var /var
-	$(ROMFSINST) -s /$(FATFS)/linux/home /home
-	$(ROMFSINST) -s /$(FATFS)/linux/etc /etc
+	$(ROMFSINST) -s $(FATFS)/linux/var /var
+	$(ROMFSINST) -s $(FATFS)/linux/home /home
+	$(ROMFSINST) -s $(FATFS)/linux/etc /etc
 	$(ROMFSINST) -s /bin /sbin
-	$(ROMFSINST) -s /$(FATFS)/linux/usr/share/udhcpc /usr/share/udhcpc
+	$(ROMFSINST) -s $(FATFS)/linux/usr/share/udhcpc /usr/share/udhcpc
 	$(ROMFSINST) -s /var/tmp /tmp
 	$(ROMFSINST) /boot/rc
 	$(ROMFSINST) /boot/inittab
