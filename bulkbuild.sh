@@ -8,6 +8,8 @@
 
 set -e
 
+export KCONFIG_NOTIMESTAMP=TRUE
+
 if [ "$1" = "-u" ]
 then
 	update_config="CONFIG_DEFAULTS_VENDOR_UPDATE=y"
