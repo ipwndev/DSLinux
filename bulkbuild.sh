@@ -85,9 +85,15 @@ do
 
 	[ -d "$OUTDIR" ] || mkdir -p "$OUTDIR"
 
-	mktopconfig $build && \
-	yes '' | make config && \
-	$fakeroot_cmd make && \
-	cp -v -f ./images/$distfile "$OUTDIR" && \
-	(cd "$OUTDIR" && md5sum $distfile | tee $distfile.md5)
+    if [ "$1" = "-u" ]
+    then
+        mktopconfig $build && \
+        yes '' | make config
+    else
+        mktopconfig $build && \
+        yes '' | make config && \
+        $fakeroot_cmd make && \
+        cp -v -f ./images/$distfile "$OUTDIR" && \
+        (cd "$OUTDIR" && md5sum $distfile | tee $distfile.md5)
+    fi
 done
