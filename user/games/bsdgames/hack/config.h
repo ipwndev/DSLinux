@@ -62,7 +62,8 @@
  */
 
 #include "pathnames.h"
-
+#include <linux/autoconf.h>	// Bradley Remedios<bremedios@gmail.com> for
+				// Font Size defines
 #ifndef CONFIG	/* make sure the compiler doesnt see the typedefs twice */
 
 #define	CONFIG
@@ -160,8 +161,19 @@
 #endif /* CHDIR */
 
 /* size of terminal screen is (at least) (ROWNO+2) by COLNO */
-#define	COLNO	64
-#define	ROWNO	30
+#if defined(CONFIG_FONT_MINI_4x9)
+	#define	COLNO	64
+	#define	ROWNO	19
+#elif defined(CONFIG_FONT_MINI_6x6)
+	#define	COLNO	42
+	#define	ROWNO	30
+#elif defined(CONFIG_FONT_MINI_4x6)
+	#define	COLNO	64
+	#define	ROWNO	30
+#else
+	#define	COLNO	64
+	#define	ROWNO	30
+#endif // FONT SIZE
 
 /*
  * small signed integers (8 bits suffice)

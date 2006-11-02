@@ -69,6 +69,8 @@ __RCSID("$NetBSD: hack.main.c,v 1.9 2004/01/27 20:30:29 jsm Exp $");
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #include "hack.h"
 #include "extern.h"
@@ -104,6 +106,67 @@ main(argc, argv)
 #ifdef CHDIR
 	char           *dir;
 #endif
+
+	{
+		// We will create the full directory required for the record file if it
+		// does not exist already.
+		const char*	full_path	= _PATH_HACK;
+		char		path[256]	= {0};
+		int			path_index	= 0;
+
+		for (;path_index < 255; path_index++)
+		{
+			if (((full_path[path_index] == '/') && (path_index > 0)) ||
+				(full_path[path_index] == '\0'))
+			{
+				path[path_index] = '\0';
+
+				struct stat	stat_data;
+
+				int ret = stat (path, &stat_data);
+
+				// If we cannot stat it, then it does not exist and we cannot
+				// continue.
+				if (ret < 0)
+				{
+					int ret = mkdir (path, 0x777);
+
+					if (ret < 0)
+					{
+						printf ("Failed to Create Directory %s\n", path);
+						return -1;
+					}
+				}
+
+				// If we are not a directory, then nothing will work.
+				if (!S_ISDIR (stat_data.st_mode))
+				{
+					printf ("%s is not a directory\n", path);
+					return -1;
+				}
+
+				if (full_path[path_index] == '\0')
+					break;
+
+			}
+
+			path[path_index] = full_path[path_index];
+		}
+
+		// We will create the file if it needs to be created.
+		int temp_fd = open (	_PATH_HACK"/record",
+								O_RDWR | O_CREAT,
+								S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | \
+								S_IROTH | S_IWOTH);
+
+		if (temp_fd < 0)
+		{
+			printf ("Failed to Create or Write RecordFile (%d)", temp_fd);
+			return -1;
+		}
+
+		close (temp_fd);
+	}
 
 	/* Check for dirty tricks with closed fds 0, 1, 2 */
 	fd = open("/dev/null", O_RDONLY);
