@@ -328,6 +328,10 @@ topten()
 	FILE           *rfile;
 	int 		flg = 0;
 #define	HUP	if(!done_hup)
+
+// Bradley Remedios<bremedios@gmail.com>
+// link will not work with FAT32, so we disable locking here too.
+#if 0
 	while (link(recfile, reclock) == -1) {
 		HUP             perror(reclock);
 		if (!sleepct--) {
@@ -340,6 +344,7 @@ topten()
 		HUP(void) fflush(stdout);
 		sleep(1);
 	}
+#endif
 	if (!(rfile = fopen(recfile, "r"))) {
 		HUP             puts("Cannot open record file!");
 		goto unlock;

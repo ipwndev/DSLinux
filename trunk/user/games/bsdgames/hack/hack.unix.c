@@ -272,6 +272,11 @@ getlock()
 
 	(void) fflush(stdout);
 
+	// Bradley Remedios<bremedios@gmail.com>
+	// We disable the link call with locking so that hack will work.
+	// link will not work on FAT.
+	return;
+	
 	/* we ignore QUIT and INT at this point */
 	if (link(HLOCK, LLOCK) == -1) {
 		int             errnosv = errno;

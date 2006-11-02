@@ -1849,6 +1849,12 @@ romfs:
 	    bcd/bcd $(GAMESDIR)/bcd
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BOGGLE \
 	    boggle/boggle/boggle $(GAMESDIR)/boggle
+	$(ROMFSINST) -d -e CONFIG_USER_GAMES_BSDGAMES_BOGGLE \
+	    boggle/boggle/helpfile /usr/share/games/bsdgames/boggle/helpfile
+	$(ROMFSINST) -d -e CONFIG_USER_GAMES_BSDGAMES_BOGGLE \
+	    boggle/mkdict/dictionary /usr/share/games/bsdgames/boggle/dictionary
+	$(ROMFSINST) -d -e CONFIG_USER_GAMES_BSDGAMES_BOGGLE \
+	    boggle/mkindex/dictindex /usr/share/games/bsdgames/boggle/dictindex
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CAESAR \
 	    caesar/caesar $(GAMESDIR)/caesar
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CAESAR \
@@ -1865,6 +1871,14 @@ romfs:
 	    gomoku/gomoku $(GAMESDIR)/gomoku
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_HACK \
 	    hack/hack $(GAMESDIR)/hack
+	$(ROMFSINST) -d -e CONFIG_USER_GAMES_BSDGAMES_HACK \
+	    hack/data /usr/share/games/bsdgames/hack/data
+	$(ROMFSINST) -d -e CONFIG_USER_GAMES_BSDGAMES_HACK \
+	    hack/help /usr/share/games/bsdgames/hack/help
+	$(ROMFSINST) -d -e CONFIG_USER_GAMES_BSDGAMES_HACK \
+	    hack/hh /usr/share/games/bsdgames/hack/hh
+	$(ROMFSINST) -d -e CONFIG_USER_GAMES_BSDGAMES_HACK \
+	    hack/rumors /usr/share/games/bsdgames/hack/rumors
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_HANGMAN \
 	    hangman/hangman $(GAMESDIR)/hangman
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_MILLE \
@@ -1905,4 +1919,6 @@ romfs:
 	    worms/worms $(GAMESDIR)/worms
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_WUMP \
 	    wump/wump $(GAMESDIR)/wump
+	$(ROMFSINST) -d -e CONFIG_USER_GAMES_BSDGAMES_WUMP \
+	    wump/wump.info /usr/share/games/bsdgames/wump.info
 
