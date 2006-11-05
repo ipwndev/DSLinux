@@ -1,5 +1,5 @@
 #
-#	Makefile -- Build instructions for RAM DEVEL
+#	Makefile -- Build instructions for DSLinux/RAM-DEVEL
 #
 
 include $(LINUX_CONFIG)

@@ -1,5 +1,5 @@
 #
-#	Makefile -- Build instructions for DSMEM for Nintendo DS
+#	Makefile -- Build instructions for DSLinux/DSMEM
 #
 
 include $(LINUX_CONFIG)

@@ -1,5 +1,5 @@
 #
-#	Makefile -- Build instructions for ATMEL/AT91
+#	Makefile -- Build instructions for DSLinux/DSGBA
 #
 
 include $(LINUX_CONFIG)
