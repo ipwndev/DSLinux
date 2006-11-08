@@ -12,14 +12,6 @@
 # run this command to create the copy:
 #	cp /etc/rc.defaults /gbamp/linux/etc/rc.conf
 #
-# If you are using the M3 CF build,
-# run this command to create the copy:
-#	cp /etc/rc.defaults /m3/linux/etc/rc.conf
-#
-# If you are using the SUPERCARD CF or the SUPERCARD SD
-# build, run this command to create the copy:
-#	cp /etc/rc.defaults /supercard/linux/etc/rc.conf
-#
 # If you are using the DSMEM build,
 # run this command to create the copy:
 #	cp /etc/rc.defaults /sd/linux/etc/rc.conf
