@@ -12,6 +12,7 @@ dir_$(CONFIG_USER_GAMES_ADVENT4)        += advent4
 dir_$(CONFIG_USER_GAMES_BSDGAMES)	+= bsdgames
 dir_$(CONFIG_USER_GAMES_DUNGEON)        += dungeon
 dir_$(CONFIG_USER_GAMES_RUBIK)          += rubik
+dir_$(CONFIG_USER_GAMES_SUDOKU)			+= sudoku
 #dir_$(CONFIG_USER_GAMES_XMAME)		    += xmame
 
 all:

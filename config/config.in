@@ -1681,6 +1681,7 @@ fi
 bool 'dungeon'		CONFIG_USER_GAMES_DUNGEON
 # bool 'mame'		CONFIG_USER_GAMES_XMAME
 bool 'rubik'		CONFIG_USER_GAMES_RUBIK
+bool 'sudoku'		CONFIG_USER_GAMES_SUDOKU
 endmenu
 
 #############################################################################
