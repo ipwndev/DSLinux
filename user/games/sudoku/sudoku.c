@@ -1,5 +1,7 @@
 /* sudoku.c - sudoku game
  *
+ * Original notes:
+ *
  * Writing a fun Su-Do-Ku game has turned out to be a difficult exercise.
  * The biggest difficulty is keeping the game fun - and this means allowing
  * the user to make mistakes. The game is not much fun if it prevents the
@@ -28,6 +30,26 @@
  * by Michael Kennett, July 2005. It is provided without any warranty
  * whatsoever, and in no event shall Michael Kennett be liable for
  * any damages of any kind, however caused, arising from this software.
+ *
+ * DSLinux notes:
+ *
+ * This program was modified by Cayenne Boyer (cayennes@gmail.com) for 
+ * running under DSLinux.
+ *
+ * The following changes were made:
+ *
+ *  * removed the help information from the left side of the screen (it
+ *    wouldn't fit) and centered the 
+ *  * made the mini help on the right refer to the d-pad
+ *  * disabled save option because it was broken (this is a problem with the
+ *    unmodified version on my ibook as well)
+ *
+ *  TODO:
+ *  * turn man page into a --help option
+ *  * optimize for actual screen size rather than assuming 4x9 font (this
+ *    will work but leave it uncentered vertically for the 4x6 font and
+ *    probably won't work for the 6x6 font)
+ *  * fix saving
  */
 
 #include <assert.h>
@@ -44,10 +66,10 @@
 
 /* Default file locations */
 #ifndef TEMPLATE
-#define TEMPLATE "/usr/lib/sudoku/template"
+#define TEMPLATE "/usr/share/games/sudoku/template"
 #endif
 #ifndef PRECANNED
-#define PRECANNED "/usr/lib/sudoku/precanned"
+#define PRECANNED "/usr/share/games/sudoku/precanned"
 #endif
 
 static const char * program;        /* argv[0] */
@@ -161,7 +183,7 @@ static int opt_random = 1;
 static int opt_statistics = 0;
 static int opt_spoilerhint = 0;
 static int opt_solve = 0;
-static int opt_restrict = 0;
+/*static int opt_restrict = 0;*/
 
 /* Reset global state */
 static
@@ -1250,13 +1272,17 @@ read_board( FILE * f, int is_tmplt )
  **/
 
 /* Screen geometry */
-#define TITLE_LINE    4
-#define TOP           6
-#define LEFT         27
+/* removing instructions from left and centering the rest on the screen */
+/* assuming 21x64 for now */
+#define WIDTH		 64
+#define TOP          4
+#define TITLE_LINE   TOP-2
+#define HEADER_LINE	 TOP-4
+#define LEFT         8/*27*/
 #define BOTTOM       (TOP+3*4)
 #define RIGHT        (LEFT+3*8)
-#define STATUS_LINE  20
-#define FILE_LINE    21
+#define STATUS_LINE  BOTTOM+2
+#define FILE_LINE    STATUS_LINE+1
 
 /* Maintain some global state - current cursor position */
 static int curx;
@@ -1267,7 +1293,7 @@ static int have_hint;    /* True (non-zero) If hint displayed */
 
 static char statusline[ 80 ];  /* Buffer for status line */
 
-/* Render board background - assume 24x80 screen */
+/* Render board background */
 static
 void
 draw_screen( void )
@@ -1276,7 +1302,7 @@ draw_screen( void )
 
     wclear( stdscr );
     attron( A_BOLD );
-    mvaddstr( 2, 35, "Su-Do-Ku!" );
+    mvaddstr( HEADER_LINE, WIDTH/2-4, "Su-Do-Ku!" );
     attroff( A_BOLD );
 
     for( i = 0 ; i < 3 ; ++i )
@@ -1288,25 +1314,16 @@ draw_screen( void )
     }
     mvaddstr( TOP + 4 * 3, LEFT, "+-------+-------+-------+" );
 
-    mvaddstr( TOP + 3, 0, "Rules:" );
-    mvaddstr( TOP + 5, 1, "Fill the grid so that" );
-    mvaddstr( TOP + 6, 1, "every column, row and" );
-    mvaddstr( TOP + 7, 1, "3x3 box contains each" );
-    mvaddstr( TOP + 8, 1, "of the digits 1 to 9." );
-
-/*    mvaddstr( TOP - 1, RIGHT + 4, "Keys:" ); */
-    mvaddstr( TOP + 0, RIGHT + 8, "k" );
-    mvaddstr( TOP + 1, RIGHT + 4, "  h   l move cursor" );
-    mvaddstr( TOP + 2, RIGHT + 8, "j" );
-    mvaddstr( TOP + 3, RIGHT + 7, "1-9  place digit" );
-    mvaddstr( TOP + 4, RIGHT + 7, "0 .  clear digit" );
-    mvaddstr( TOP + 5, RIGHT + 8, "c   clear board" );
-    mvaddstr( TOP + 6, RIGHT + 8, "f   fix squares" );
-    mvaddstr( TOP + 7, RIGHT + 8, "n   new board" );
-    mvaddstr( TOP + 8, RIGHT + 8, "q   quit game" );
-    i = TOP + 8;
-    if( 0 == opt_restrict )
-        mvaddstr( ++i, RIGHT + 8, "s   save" );
+    mvaddstr( TOP + 1, RIGHT + 6, "d-pad move cursor" );
+    mvaddstr( TOP + 2, RIGHT + 7, "1-9  place digit" );
+    mvaddstr( TOP + 3, RIGHT + 7, "0 .  clear digit" );
+    mvaddstr( TOP + 4, RIGHT + 8, "c   clear board" );
+    mvaddstr( TOP + 5, RIGHT + 8, "f   fix squares" );
+    mvaddstr( TOP + 6, RIGHT + 8, "n   new board" );
+    mvaddstr( TOP + 7, RIGHT + 8, "q   quit game" );
+    i = TOP + 7;
+    /*if( 0 == opt_restrict )
+        mvaddstr( ++i, RIGHT + 8, "s   save" );*/
     mvaddstr( ++i, RIGHT + 8, "u   undo last move" );
     mvaddstr( ++i, RIGHT + 8, "v   solve" );
     mvaddstr( ++i, RIGHT + 8, "?   request hint" );
@@ -1320,7 +1337,7 @@ write_title( /*const*/ char * title )
     move( TITLE_LINE, 0 );
     wclrtoeol( stdscr );
     if( 0 != title )
-        mvaddstr( TITLE_LINE, ( 80 - strlen( title ) ) / 2, title );
+        mvaddstr( TITLE_LINE, ( WIDTH - strlen( title ) ) / 2, title );
 }
 
 /* Move cursor to grid position, and force refresh */
@@ -1357,7 +1374,7 @@ static
 void
 set_status( const char * txt )
 {
-    mvaddstr( STATUS_LINE, ( 80 - strlen( txt ) ) / 2, (char *)txt );
+    mvaddstr( STATUS_LINE, ( WIDTH - strlen( txt ) ) / 2, (char *)txt );
     move_to( curx, cury );
     have_status = 1;
 }
@@ -2030,7 +2047,7 @@ usage( void )
 "                    html\n"
 "    -g[<num>]    generate <num> board(s), and print on stdout\n"
 "    -n           no random boards (requires precanned boards <filename>)\n"
-"    -r           restricted: don't allow boards to be saved\n"
+/*"    -r           restricted: don't allow boards to be saved\n"*//*temporarily disabled until saving is fixed*/
 "    -s           calculate statistics for precanned boards\n"
 "    -t<filename> template file\n"
 "    -v           solve precanned boards\n"
@@ -2123,7 +2140,7 @@ main( int argc, char **argv )
                         break;
                     case 'h': opt_spoilerhint = 1; break;
                     case 'n': opt_random = 0; break;
-                    case 'r': opt_restrict = 1; break;
+                    /*case 'r': opt_restrict = 1; break;*//*temporarily disabled until saving is fixed*/
                     case 's': opt_statistics = 1; break;
                     case 't':
                         if( '\0' == arg[ 1 ] )
@@ -2377,11 +2394,11 @@ main( int argc, char **argv )
         /* The main difficulty with saving a board is managing the
          * user interface.
          */
-        case 's':
+        /*case 's':
             if( 0 == opt_restrict )
                 save_board( );
             break;
-
+		*//*temporarily disabled until saving is fixed*/
         case '?': /* Request hint */
             ++req_hints;
             if( have_hint )
