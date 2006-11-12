@@ -12,7 +12,7 @@ case "$1" in
 	;;
 	stop)
 		echo "Stopping $DAEMON"
-		kill -9 `pidof $DEAMON`
+		kill -9 `pidof $DAEMON`
 	;;	
 	restart)
 		$0 stop
