@@ -51,7 +51,7 @@ static void Wifi_RFInit(void);
 static void Wifi_RxSetup(void);
 static void Wifi_TxSetup(void);
 static void Wifi_CopyMacAddr(volatile void *dest, volatile void *src);
-static void Wifi_SendAuthPacket(void);
+static void Wifi_SendAuthPacket(int wepmode);
 static void Wifi_SendBackChallengeText(u8 * challenge);
 static void Wifi_SendAssocPacket(void);
 static void Wifi_Intr_RxEnd(void);
@@ -366,7 +366,7 @@ static void wifi_try_to_associate(void)
 			    POWER0_LED_FAST);
 	} else {
 		wifi_data.state &= ~WIFI_STATE_AUTHENTICATED;
-		Wifi_SendAuthPacket();
+		Wifi_SendAuthPacket(wifi_data.curWepmode);
 	}
 }
 
@@ -1183,7 +1183,12 @@ static int Wifi_ProcessAuthenticationFrame(int macbase, int framelen)
 				Wifi_SendAssocPacket();
 			}
 		}
-		// else tell the user?
+        // failed
+        else
+        {
+            //Try open system auth
+            Wifi_SendAuthPacket( WEPMODE_NONE );
+        }
 	}
       out:
 	return WFLAG_PACKET_MGT;
@@ -1232,7 +1237,7 @@ static int Wifi_ProcessDeAuthenticationFrame(int macbase, int framelen)
 			    (power_read(POWER_CONTROL) &
 			     ~POWER0_LED_FAST) | POWER0_LED_BLINK);
 
-		Wifi_SendAuthPacket();
+		Wifi_SendAuthPacket(WEPMODE_NONE);
 	}
 
       out:
@@ -1657,7 +1662,7 @@ static int Wifi_GenMgtHeader(u8 * data, u16 headerflags)
 	}
 }
 
-static void Wifi_SendAuthPacket(void)
+static void Wifi_SendAuthPacket(int wepmode)
 {
 	// max size is 12+24+4+6 = 46
 	u8 data[64];
@@ -1668,7 +1673,7 @@ static void Wifi_SendAuthPacket(void)
 
 	fixed_params = (u16 *) (data + i);
 
-	if (wifi_data.curWepmode == WEPMODE_NONE) {
+	if (wepmode == WEPMODE_NONE) {
 		fixed_params[0] = 0;	// Authentication algorithm number (0=open system)
 	} else {
 		fixed_params[0] = 1;	// Authentication algorithm number (1=shared key)
