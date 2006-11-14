@@ -274,7 +274,6 @@ static void Wifi_SetChannel(int channel)
 	Wifi_BBWrite(0x1E, ReadFlashByte(0x146 + channel));
 }
 
-
 void Wifi_RequestChannel(int channel)
 {
 	wifi_data.reqChannel = channel;
@@ -668,13 +667,15 @@ void wifi_close(void)
 void wifi_mac_query(void)
 {
 	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_MAC_QUERY,
-					((0 << 16) |
-					 (((u16 *) wifi_data.MacAddr)[0]))));
+				    ((0 << 16) |
+				     (((u16 *) wifi_data.MacAddr)[0]))));
 	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_MAC_QUERY,
-			  ((1 << 16) | (((u16 *) wifi_data.MacAddr)[1]))));
-	
+				    ((1 << 16) |
+				     (((u16 *) wifi_data.MacAddr)[1]))));
+
 	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_MAC_QUERY,
-			  ((2 << 16) | (((u16 *) wifi_data.MacAddr)[2]))));
+				    ((2 << 16) |
+				     (((u16 *) wifi_data.MacAddr)[2]))));
 }
 
 /* handle a query from kernel for wifi address */
@@ -1026,15 +1027,7 @@ static int Wifi_ProcessBeaconFrame(int macbase, int framelen)
 			    wifi_data.aplist[i].
 			    rssi_past[7] = packetheader.rssi_ & 255;
 		} else {
-			wifi_data.aplist[i].rssi_past[0] =
-			wifi_data.aplist[i].rssi_past[1] =
-			wifi_data.aplist[i].rssi_past[2] =
-			wifi_data.aplist[i].rssi_past[3] =
-			wifi_data.aplist[i].rssi_past[4] =
-			wifi_data.aplist[i].rssi_past[5] =
-			wifi_data.aplist[i].rssi_past[6] =
-			wifi_data.aplist[i].rssi_past[7] =
-			  0;	// update rssi later.
+			wifi_data.aplist[i].rssi_past[0] = wifi_data.aplist[i].rssi_past[1] = wifi_data.aplist[i].rssi_past[2] = wifi_data.aplist[i].rssi_past[3] = wifi_data.aplist[i].rssi_past[4] = wifi_data.aplist[i].rssi_past[5] = wifi_data.aplist[i].rssi_past[6] = wifi_data.aplist[i].rssi_past[7] = 0;	// update rssi later.
 		}
 		wifi_data.aplist[i].channel = channel;
 		for (j = 0; j < 16; j++)
@@ -1183,12 +1176,11 @@ static int Wifi_ProcessAuthenticationFrame(int macbase, int framelen)
 				Wifi_SendAssocPacket();
 			}
 		}
-        // failed
-        else
-        {
-            //Try open system auth
-            Wifi_SendAuthPacket( WEPMODE_NONE );
-        }
+		// failed
+		else {
+			//Try open system auth
+			Wifi_SendAuthPacket(WEPMODE_NONE);
+		}
 	}
       out:
 	return WFLAG_PACKET_MGT;
@@ -1312,11 +1304,11 @@ int Wifi_QueueRxMacData(u32 base, u32 len)
 		wifi_data.stats[WIFI_STATS_RXOVERRUN]++;
 		return 0;
 	}
-	
+
 	wifi_data.stats[WIFI_STATS_RXPACKETS]++;
 	wifi_data.stats[WIFI_STATS_RXDATABYTES] += len;
 
-	Wifi_MACCopy((u16*)rx_packet->data, base, macofs, len);
+	Wifi_MACCopy((u16 *) rx_packet->data, base, macofs, len);
 	rx_packet->len = len;
 	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_RX, 0));
 
@@ -1461,67 +1453,67 @@ void wifi_interrupt(void)
 		if (wIF & 0x0001) {
 			WIFI_IF = 0x0001;
 			Wifi_Intr_RxEnd();
-		}			// 0) Rx End
+		}		// 0) Rx End
 		if (wIF & 0x0002) {
 			WIFI_IF = 0x0002;
 			Wifi_Intr_TxEnd();
-		}			// 1) Tx End
+		}		// 1) Tx End
 		if (wIF & 0x0004) {
 			WIFI_IF = 0x0004;
 			Wifi_Intr_DoNothing();
-		}			// 2) Rx Cntup
+		}		// 2) Rx Cntup
 		if (wIF & 0x0008) {
 			WIFI_IF = 0x0008;
 			Wifi_Intr_TxErr();
-		}			// 3) Tx Err
+		}		// 3) Tx Err
 		if (wIF & 0x0010) {
 			WIFI_IF = 0x0010;
 			Wifi_Intr_CntOverflow();
-		}			// 4) Count Overflow
+		}		// 4) Count Overflow
 		if (wIF & 0x0020) {
 			WIFI_IF = 0x0020;
 			Wifi_Intr_CntOverflow();
-		}			// 5) AckCount Overflow
+		}		// 5) AckCount Overflow
 		if (wIF & 0x0040) {
 			WIFI_IF = 0x0040;
 			Wifi_Intr_DoNothing();
-		}			// 6) Start Rx
+		}		// 6) Start Rx
 		if (wIF & 0x0080) {
 			WIFI_IF = 0x0080;
 			Wifi_Intr_StartTx();
-		}			// 7) Start Tx
+		}		// 7) Start Tx
 		if (wIF & 0x0100) {
 			WIFI_IF = 0x0100;
 			Wifi_Intr_DoNothing();
-		}			// 8) 
+		}		// 8) 
 		if (wIF & 0x0200) {
 			WIFI_IF = 0x0200;
 			Wifi_Intr_DoNothing();
-		}			// 9)
+		}		// 9)
 		if (wIF & 0x0400) {
 			WIFI_IF = 0x0400;
 			Wifi_Intr_DoNothing();
-		}			//10)
+		}		//10)
 		if (wIF & 0x0800) {
 			WIFI_IF = 0x0800;
 			Wifi_Intr_DoNothing();
-		}			//11) RF Wakeup
+		}		//11) RF Wakeup
 		if (wIF & 0x1000) {
 			WIFI_IF = 0x1000;
 			Wifi_Intr_DoNothing();
-		}			//12) MP End
+		}		//12) MP End
 		if (wIF & 0x2000) {
 			WIFI_IF = 0x2000;
 			Wifi_Intr_DoNothing();
-		}			//13) ACT End
+		}		//13) ACT End
 		if (wIF & 0x4000) {
 			WIFI_IF = 0x4000;
 			Wifi_Intr_TBTT();
-		}			//14) TBTT
+		}		//14) TBTT
 		if (wIF & 0x8000) {
 			WIFI_IF = 0x8000;
 			Wifi_Intr_DoNothing();
-		}			//15) PreTBTT
+		}		//15) PreTBTT
 	}
 }
 
@@ -1649,10 +1641,10 @@ static int Wifi_GenMgtHeader(u8 * data, u16 headerflags)
 
 	// fill in wep-specific stuff
 	if (headerflags & 0x4000) {
-		((u16 *)data)[18] =
+		((u16 *) data)[18] =
 		    (WIFI_RANDOM ^ (WIFI_RANDOM << 7) ^ (WIFI_RANDOM << 15)) &
 		    0xFFFF;
-		((u16 *)data)[19] =
+		((u16 *) data)[19] =
 		    ((WIFI_RANDOM ^ (WIFI_RANDOM >> 7)) & 0xFF) | (wifi_data.
 								   wepkeyid <<
 								   14);
@@ -1808,11 +1800,10 @@ void wifi_start_scan(void)
 	wifi_data.scanChannel = 1;
 	Wifi_SetChannel(1);
 
-	REG_TM0CNT_L = (-0x02000000)/(1024 * (1000/WIFI_CHANNEL_SCAN_DWEL));
+	REG_TM0CNT_L = (-0x02000000) / (1024 * (1000 / WIFI_CHANNEL_SCAN_DWEL));
 	REG_TM0CNT_H = NDS_TCR_CLK1024 | NDS_TCR_ENB | NDS_TCR_IRQ;
 	NDS_IE |= IRQ_TIMER0;
 }
-
 
 static void wifi_bump_scan(void)
 {
@@ -1828,7 +1819,6 @@ static void wifi_bump_scan(void)
 	}
 }
 
-
 void wifi_timer_handler(void)
 {
 	if (wifi_data.state & WIFI_STATE_CHANNEL_SCANNING) {
@@ -1839,7 +1829,6 @@ void wifi_timer_handler(void)
 	}
 }
 
-
 void Wifi_SetAPMode(enum WIFI_AP_MODE mode)
 {
 	wifi_data.curMode = mode;
@@ -1847,5 +1836,6 @@ void Wifi_SetAPMode(enum WIFI_AP_MODE mode)
 
 void Wifi_GetAPMode()
 {
-	nds_fifo_send(FIFO_WIFI_CMD(FIFO_WIFI_CMD_GET_AP_MODE, wifi_data.curMode));
+	nds_fifo_send(FIFO_WIFI_CMD
+		      (FIFO_WIFI_CMD_GET_AP_MODE, wifi_data.curMode));
 }
