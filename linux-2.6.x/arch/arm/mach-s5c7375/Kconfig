@@ -1,3 +1,0 @@
-menu "S5C7375 Options"
-	depends on ARCH_S5C7375
-endmenu
