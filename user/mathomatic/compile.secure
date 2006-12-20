@@ -1,6 +1,0 @@
-#!/bin/sh
-# Shell script for creating the executable "mathomatic_secure".
-# The result can safely be used as a telnet app or CGI program.
-
-cc -s -O -DUNIX -DREADLINE -DVERSION=\"`cat VERSION`\" -DSECURE -DTIMEOUT_SECONDS=3600 *.c -lm -lreadline -lncurses -o mathomatic_secure && echo mathomatic_secure created.
-make clean # for any subsequent makes
