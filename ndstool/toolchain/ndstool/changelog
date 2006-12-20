@@ -1,0 +1,40 @@
+Nintendo DS rom tool
+by Rafael Vuijk (aka DarkFader)
+
+CVS admins / additional code:
+	DarkFader <darkfader@xs4all.nl>
+	natrium42 <natrium@gmail.com>
+	WinterMute <wntrmute@gmail.com>
+
+Update version in include/ndstool_version.h
+
+v1.27 - ARM7 executable hooking feature
+v1.26 - wildcards for extraction, changed options handling
+v1.25 - info output fixes, dat file support
+v1.24 - PassMe vhdl generator, default ARM7 hash checking
+v1.23 - update default ARM7 for latest libnds
+	add time to version & date reporting
+	use cpufastset swi for loader
+v1.22 - fixed sound core in default ARM7
+v1.21 - added signature check, CRC32
+v1.20 - fixed filesystem stuff, added overlay support
+v1.19 - some banner information
+v1.18 - default logo is now a PassMe NDS loader
+v1.17 - BMP converter for logo
+v1.16 - added options to set maker code and game code
+v1.15 - 4bpp support for banner icon, logo
+v1.14 - banner version & CRC
+v1.13 - option for unique ID
+v1.12 - extra entry point option
+v1.11 - default arm7 binary internal again
+v1.10 - padding, added filesize and headersize, endianess fix for bmp loader, default arm7 binary external
+v1.09 - added default arm7 binary
+v1.08 - added icon converter
+v1.07 - add/extract header option, filesystem
+v1.06 - changed parameter style, add/extract icon+title data option
+v1.05 - fix CRC option only updates header CRC for easier PassMe calculation
+v1.04 - added option to list files without extracting
+v1.03 - shows if secure area CRC was ok, added function to create NDS file (ELF files for ARM7/9, no filesystem yet)
+v1.02 - added maker codes, logo CRC, cartridge code
+v1.01 - extracts ARM7/ARM9 code, more header info
+v1.00 - shows info, fixes CRC, extracts files
