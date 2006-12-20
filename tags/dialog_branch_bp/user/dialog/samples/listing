@@ -1,7 +1,0 @@
-#!/bin/sh
-while true
-do
-date
-ls -lrt
-sleep 1
-done
