@@ -1,0 +1,97 @@
+The following is a list of files and features that are going to be
+removed in the kernel source tree.  Every entry should contain what
+exactly is going away, why it is happening, and who is going to be doing
+the work.  When the feature is removed from the kernel, it should also
+be removed from this file.
+
+---------------------------
+
+What:	devfs
+When:	July 2005
+Files:	fs/devfs/*, include/linux/devfs_fs*.h and assorted devfs
+	function calls throughout the kernel tree
+Why:	It has been unmaintained for a number of years, has unfixable
+	races, contains a naming policy within the kernel that is
+	against the LSB, and can be replaced by using udev.
+Who:	Greg Kroah-Hartman <greg@kroah.com>
+
+---------------------------
+
+What:	RAW driver (CONFIG_RAW_DRIVER)
+When:	December 2005
+Why:	declared obsolete since kernel 2.6.3
+	O_DIRECT can be used instead
+Who:	Adrian Bunk <bunk@stusta.de>
+
+---------------------------
+
+What:	RCU API moves to EXPORT_SYMBOL_GPL
+When:	April 2006
+Files:	include/linux/rcupdate.h, kernel/rcupdate.c
+Why:	Outside of Linux, the only implementations of anything even
+	vaguely resembling RCU that I am aware of are in DYNIX/ptx,
+	VM/XA, Tornado, and K42.  I do not expect anyone to port binary
+	drivers or kernel modules from any of these, since the first two
+	are owned by IBM and the last two are open-source research OSes.
+	So these will move to GPL after a grace period to allow
+	people, who might be using implementations that I am not aware
+	of, to adjust to this upcoming change.
+Who:	Paul E. McKenney <paulmck@us.ibm.com>
+
+---------------------------
+
+What:	IEEE1394 Audio and Music Data Transmission Protocol driver,
+	Connection Management Procedures driver
+When:	November 2005
+Files:	drivers/ieee1394/{amdtp,cmp}*
+Why:	These are incomplete, have never worked, and are better implemented
+	in userland via raw1394 (see http://freebob.sourceforge.net/ for
+	example.)
+Who:	Jody McIntyre <scjody@steamballoon.com>
+
+---------------------------
+
+What:	raw1394: requests of type RAW1394_REQ_ISO_SEND, RAW1394_REQ_ISO_LISTEN
+When:	November 2005
+Why:	Deprecated in favour of the new ioctl-based rawiso interface, which is
+	more efficient.  You should really be using libraw1394 for raw1394
+	access anyway.
+Who:	Jody McIntyre <scjody@steamballoon.com>
+
+---------------------------
+
+What:	i2c sysfs name change: in1_ref, vid deprecated in favour of cpu0_vid
+When:	November 2005
+Files:	drivers/i2c/chips/adm1025.c, drivers/i2c/chips/adm1026.c
+Why:	Match the other drivers' name for the same function, duplicate names
+	will be available until removal of old names.
+Who:	Grant Coady <gcoady@gmail.com>
+
+---------------------------
+
+What:	PCMCIA control ioctl (needed for pcmcia-cs [cardmgr, cardctl])
+When:	November 2005
+Files:	drivers/pcmcia/: pcmcia_ioctl.c
+Why:	With the 16-bit PCMCIA subsystem now behaving (almost) like a
+	normal hotpluggable bus, and with it using the default kernel
+	infrastructure (hotplug, driver core, sysfs) keeping the PCMCIA
+	control ioctl needed by cardmgr and cardctl from pcmcia-cs is
+	unnecessary, and makes further cleanups and integration of the
+	PCMCIA subsystem into the Linux kernel device driver model more
+	difficult. The features provided by cardmgr and cardctl are either
+	handled by the kernel itself now or are available in the new
+	pcmciautils package available at
+	http://kernel.org/pub/linux/utils/kernel/pcmcia/
+Who:	Dominik Brodowski <linux@brodo.de>
+
+---------------------------
+
+What:	ip_queue and ip6_queue (old ipv4-only and ipv6-only netfilter queue)
+When:	December 2005
+Why:	This interface has been obsoleted by the new layer3-independent
+	"nfnetlink_queue".  The Kernel interface is compatible, so the old
+	ip[6]tables "QUEUE" targets still work and will transparently handle
+	all packets into nfnetlink queue number 0.  Userspace users will have
+	to link against API-compatible library on top of libnfnetlink_queue 
+	instead of the current 'libipq'.
+Who:	Harald Welte <laforge@netfilter.org>
