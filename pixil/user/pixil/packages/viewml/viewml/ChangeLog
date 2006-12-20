@@ -1,0 +1,161 @@
+Removed all warnings, etc. during compilation. -Wall added to
+  viewml/makeinclude to catch this in the future
+Added Chris Hawk's patches for qregexp (to fix reference URLs)
+  and for html.cpp to fix the BIG tag (made it +1 instead of ..
+  what .. 0?)
+Fixed all Redhat 7.1 compilation problems (gcc 2.96)
+Redid qarray to not use the STL vector class
+
+April 11, 2001 (Ouch! Long time between updates!)
+====================================
+A patch provided by Chris Hawks <chrish@syscon-intl.com> to 
+  make the argument parsing much more unix-y and allow a url
+  to be passed without the -u flag (though for
+  backward-combatibility, it still works.)
+Another patch provided by Chris Hawks <chrish@syscon-intl.com> 
+  providing the following enhacements:
+  1. Drop-down lists now show the default choice.
+  2. Radio buttons now look good (using round, instead of diamonds.)
+  3. Some standard colors added. 
+  4. Removed lots of debug cerrs/couts (Thanks!!)
+  5. Listboxes now implemented.
+  6. Using requested font families and colors for buttons, combos,
+     and listboxes.
+  7. And probably more that I missed when patching the code.
+An addition to keep a reference-counted pixmaps. This was 
+  necessary to allow the proper cleanup of tmp files and freeing
+  of images (which wasn't happening in all cases.) This greatly
+  helps stability.
+A fix to qstring in the findRev method that was causing invalid
+  URL parsing in some cases.
+Many fixes to the HTTP classes that make everything much more stable.
+  Basically, everything is now cleaned up properly when a new page is
+  loaded, even if the previous page hadn't finished. Also, some protection
+  is added for pending HTTP GETs performing callbacks to HTMLViews which
+  no longer exist.
+QColor was fixed to provide default color initialization.
+Addition of a atexit handler that properly cleans up the all the
+  objects in the event of a violent Microwindows termination (there
+  is an exit() in the client code if it ever gets a read error.)
+Added support for a proxy server through an environment variable,
+  VIEWML_PROXY. This should be set as follows for a proxy server:
+  export VIEWML_PROXY=http://www-proxy.foo.com:8080 
+  Of course you should use your own proxy server :-)
+
+November 15th, 2000
+====================================
+Got rid of the consts, pixmaps, and other general
+  garbage cluttering up viewml/src/main.cpp. I
+  added viewml/src/vmlapp.cpp, viewml/src/vmlapp.h,
+  viewml/src/pixmaps.h and viewml/src/fltk/qconsts.h
+Fixed support for the X version of FLTK. This hadn't been
+  working properly when the new widget re-org happened.
+Added a new VMLApp class that does some special event
+  handling. FLTK doesn't pass FL_RELEASE events through
+  to children for some reason. I added the same code to
+  qwidget.cpp for the same reason.
+You'll need the newest version of FLNX to make everything
+  work properly with this version under Microwindows. Until
+  this is released, just check it out from CVS.
+Tabs will now take you between widgets in forms.
+
+November 14th, 2000
+====================================
+Finished scrollbar support. This now comes from the
+  KHTMLView class instead of the main UI.
+Implemented buttons, combo-boxes, scrollbars,
+  radio buttons, single and multi-line edits. Some
+  callbacks are not happening.
+Forms are working partially. GETs now do the right
+  thing, but POSTs don't function (something in the 
+  w3c-www lib)
+Massive reorg in the way form widgets are handled. I got
+  rid of the multiple inheritence and replaced it with
+  contained widgets in a parent window that doesn't draw.
+Fixed a bunch of signal handling problems:
+  1. Whitespace is now stripped from slot/signal names.
+  2. initMetaObject is now called automatically when
+     performing a connect with a given object.
+  3. Given the above, I got rid of the hacks in the
+     KDE objects where I called initMetaObject directly.
+Added Fl_Window_Resize which is a new FLNX class that
+  gives an application notice that the window was resized.
+  This helps when running under a window manager under
+  Microwindows where it moves and sometimes tries to 
+  resize your windows.
+All the windows/widgets/scrollbars are now double buffered.
+  This helps when drawing as everything is now flicker-free!
+
+November 2nd, 2000
+====================================
+Added temporary scrollbar support to the main UI.
+Many, many bugfixes in the hierarchy of the classes.
+  Basically, a lot of the multiple inheritance has been
+  removed to permit better organization. 
+Most of the segfaults have been fixed. It now seems to
+  be really stable.
+Tons of bugs were fixed with the Microwindows version of
+  ViewML, most of which were actually changes in FLNX.
+Forward, Back, and reload buttons now work. We keep 
+  proper track of the history now.
+You can now change the size of the window with the
+  constants at the top of main.cpp. Resize support will
+  be added when this is fixed in FLNX.
+Changed the derivation of QWidget, QPaintDevice to be
+  actual FL_Window so children work.
+Images for the buttons now work under Microwindows.
+
+Finished Tasks as of Tuesday, August 22nd
+====================================
+Added small history function to the interface (hit the
+  space bar to cycle through the history list.) This
+  helps greatly when debugging (less typing.)
+Font metrics with Microwindows now works properly.
+  However, font selection is still not working properly
+  under FLTK with Microwindows.
+Fixed misc. seg faults when dealing with multiple timers.
+  This seems to make the thing pretty stable.
+Finished implmentation of the background timers that control
+  the updating of the page when images are loaded. It now
+  draws everything properly.
+src/fltk/qpixmap.cpp now works with images under Microwindows.
+Full URL handling seems to be working.
+
+Finished Tasks as of Tuesday, August 1st
+====================================
+Removed libwww acess from main UI thread, shoving it into
+  the background with the other network access. This will
+  fix some misc. SEGFAULTS as well.
+Made the first port to Microwindows (Nano-X). This only works
+  with the upcoming 0.88 final release (coming soon) with 
+  FLTK (flnx)
+Better handling for relative URLS (still needs some work)
+Background colors for table cells now working properly
+Don't have to type "http://" in front of URLS (it is assumed)
+Clicking on Links now works.
+Even better font matching.
+Much improved memory usage (including fixing of all the
+  auto-deletion stuff for the collection classes.)
+	
+Finished Tasks as of Monday, July 25th
+====================================
+Resizing now works properly. You can drag the corner of the window
+  and the contents will do the right thing.
+Fonts now look correct. All the italics, bold, and most font
+families are supported. Some more minor font updates will be coming
+later this week, but for the most part, it is looking good.
+Images now function (try www.slashdot.com). There is some problem
+with relative URL's not being handled correctly that should be fixed
+by later on today.
+Lots of little code cleanups.
+
+Finished Tasks as of Monday, July 17th
+====================================
+Finish re-implementation of Qt signals
+Re-write URL handling
+Initial redraw bug (Grrrrr)
+
+Fixed color implementation. Still needs some work for default colors
+of table cells.
+All network access was moved to using libwww.
+

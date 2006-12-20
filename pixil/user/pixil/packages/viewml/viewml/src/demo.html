@@ -1,0 +1,1022 @@
+<html>
+
+<head>
+<title>Greg Haerr's Microwindows and NanoGUI Page</title>
+</head>
+
+<body BGCOLOR="#ffffff">
+
+<table border="0" cellpadding="4" cellspacing="10">
+  <tr>
+    <td valign="top"><img border="0" src="images/cat.gif" WIDTH="85" HEIGHT="41"> </td>
+    <td><h1 align="center">The Microwindows Project</h1>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top"><!--left-column contents --> <p><b>Downloads</b> <br>
+    <a href="ftp://microwindows.censoft.com/pub/microwindows/">Source&nbsp;Code</a> <br>
+    <a href="ftp://microwindows.censoft.com/pub/microwindows/ScreenShots">Screen&nbsp;Shots</a>
+    <br>
+    <a href="ftp://microwindows.censoft.com/pub/microwindows/LinuxExamples">Linux&nbsp;Binaries</a>
+    <br>
+    <a href="ftp://microwindows.censoft.com/pub/microwindows/ElksExamples">ELKS&nbsp;Binaries</a>
+    <br>
+    <a href="ftp://microwindows.censoft.com/pub/microwindows/DosExamples">MSDOS&nbsp;Binaries</a>
+    </p>
+    <p><b>Docs</b> <br>
+    <a href="faq.html">FAQ</a> <br>
+    <a href="microwindows_architecture.html">Architecture</a> </p>
+      <p><b>Articles<br>
+      </b><a href="http://www.linuxdevices.com/articles/AT5381373148.html">LinuxDevices</a><b><br>
+      </b><a href="http://www.linuxdevices.com/news/NS2915863199.html">WirelessDevNet<br>
+      LinuxToday<br>
+      Century HostML</a> </p>
+      <p><b>Links<br>
+      </b> <a href="http://linux-vr.org/">Linux&nbsp;VR</a> <br>
+    <a href="http://www.linuxce.org/">Linux&nbsp;CE</a> <br>
+    <a href="http://www.elks.ecs.soton.ac.uk/">ELKS</a> <br>
+    <a href="http://ltc.com/linux-mips">Brad's&nbsp;Linux MIPS&nbsp;Pages</a> <!--end left-column contents --> <br>
+      <a href="http://www.centurysoftware.com">RTEMS Port<br>
+      Monta Vista<br>
+      Century Software</a></td>
+    <td valign="middle"><!--main contents --> <h3>Welcome</h3>
+    <p>Microwindows is an Open Source project aimed at bringing the features of modern
+    graphical windowing environments to smaller devices and platforms.&nbsp; Microwindows
+    allows applications to be built and tested on the Linux desktop, as well as cross-compiled
+    for the target device.&nbsp; Microwindows' genesis was with the NanoGUI project, and has
+    now been combined into a single distribution.&nbsp; The Win32/WinCE API implementation is known
+    as Microwindows, and the Xlib-like API implementation is known as Nano-X. Please read the <a href="faq.html">FAQ</a> for more information.&nbsp; An extensive <a href="microwindows_architecture.html">Architecture</a> document is also available.
+    Check out the Articles that have been written about Microwindows in the left
+    sidebar.&nbsp;
+    To get involved, please join <a href="http://www.linuxhacker.org/nanogui/">the NanoGUI
+    mailing list.</a>&nbsp; There is a full mirror of the mailing list
+    accessible <a href="http://www.linuxhacker.org/cgi-bin/ezmlm-cgi/0">here</a>.</p>
+    <h3>News</h3>
+    <h3>Kaffe and OTI Java port, Version 0.88pre11 released</h3>
+      <p>July 10th, 2000<br>
+      The [hopefully] final prerelease to version 0.88 is now available at:<br>
+      <br>
+      <a href="ftp://microwindows.org/pub/microwindows/microwindows-0.88pre11.tar.gz">ftp://microwindows.org/pub/microwindows/microwindows-0.88pre11.tar.gz</a><br>
+      <br>
+      This version adds a variety of enhancements that enable Microwindows to host some open source
+      and commercial java environments, as well as almost completing our standard set of Win32
+      custom controls.</p>
+      <ul>
+        <li>Microwindows can now be configured in an extremely small configuration
+          by setting the new NOFONTSORCLIPPING option in the config file. This allows Microwindows to be used
+          to just open and setup the&nbsp; screen driver, but not use any of the mid level drawing routines,
+          which is perfect for bringing over applications that perform all their own
+          drawing, but require only a framebuffer or screen driver interface to the hardware.  In addition, support for no
+          fonts is now included if&nbsp; desired.<br>
+        </li>
+        <li>Kevin contributed win32 checkbox, radio and static controls for the win32 api, as well as a
+          not-yet-working combobox control.  This nearly complete's Microwindows' low level
+          custom controls for the Windows api.<br>
+        </li>
+        <li>Simon contributed a horizontally flipped portrait mode driver for systems where the display
+          is upside down.  We should now be able to handle almost all landscape/portrait
+          implementations.<br>
+        </li>
+        <li>Andrew contributed a FreeBSD port of Microwindows, as well as hacking the W Window
+          Systems' terminal emulator to run on Nano-X.  It provides a VT52 terminal emulation so that
+          now any curses based program can be run as a Nano-X client.<br>
+        </li>
+        <li>Other bug fixes and gdi enhancements were added to support the ongoing Kaffe JVM port
+          by Roman.<br>
+        </li>
+        <li>The GrSetFontAttr api changed slightly to allow runtime underlining without requiring a font
+          switch, this change should be invisible to most user programs.<br>
+          <br>
+          I plan on making version 0.88 final in the next few days, it appears that most everything is
+          operational, and I think we need a stable non-prerelease here soon.<br>
+          <br>
+          The complete ChangeLog follows:<br>
+          Version 0.88pre11 (IBM OTI java&amp;Kaffe ports) - 10th July 2000 - greg@censoft.com<br>
+ * added set palette patch from Joe for Embedded Planet /dev/lcd driver<br>
+ * started adding win32 keyboard support (not working yet)<br>
+ * added Andrew's port to FreeBSD, Wt wterm terminal emulator port<br>
+ * fixed convbdf font size error<br>
+ * added Kevin's not working combobox control<br>
+ * added George's Isicad Prisma screen driver and config<br>
+ * added Simon's flipped portrait mode driver (we now have two)<br>
+ * added updated BC5 makefiles from Ming-Lin Kao<br>
+ * added HZK font patches from kevin<br>
+ * added checkbox, radio button and static controls by kevin/cms<br>
+ * changed GrSetFontAttr,GdSetFontAttr api<br>
+ * added underlining to font rendering with GrSetFontAttr/MWTF_UNDERLINE<br>
+ * fix WS_POPUP parent clipping, add owner window handling<br>
+ * fix delete pen/brush/font resources in ReleaseDC, use DeleteObject<br>
+ * fix memory leak in GetDCEx using CS_OWNDC<br>
+ * added nofont.c for null font support<br>
+ * added NOFONTSORCLIPPING config option for screen driver interface only<br>
+ * separated engine open and draw routines for small driver interface<br>
+ * IBM OTI Microview port: no ALPHABLEND, VTSWITCH, FBVGA, EPRINTF chg<br>
+        </li>
+      </ul>
+    <h3>FLTK-pre6 on Nano-X, Version 0.88pre10 released</h3>
+    <p>June 18th, 2000<br>
+    A number of quick bug fixes have been made to the last release, resulting in another prerelease available at:<br>
+    <br>
+      Microwindows except the microwin/src/fonts/chinese directory:<br>
+    <a href="ftp://microwindows.org/pub/microwindows/microwindows-0.88pre10.tar.gz">ftp://microwindows.org/pub/microwindows/microwindows-0.88pre10.tar.gz</a><br>
+    <br>
+    FLTK ported to Nano-X api:<br>
+    <a href="ftp://microwindows.org/pub/microwindows/fltk-nanox-pre6.tar.gz">ftp://microwindows.org/pub/microwindows/fltk-nanox-pre6.tar.gz</a><br>
+    <br>
+    A lot of work was performed to get the FLTK port to Nano-X running well.  It now looks pretty
+    good, though there's still alot to be done.  The Nano-X region routines were slightly revamped
+    to best mirror Xlib calls, the GR_RECT structure was changed, and quite a few bug fixes were made.<br>
+    <br>
+    Tanghao contributed more changes to fltk-nanox, and fixed some expose event problems, added
+    the region code, and added Nano-X to the configure script.<br>
+    <br>
+    In addition, I fixed up the Microwindows win32 listbox, and started work on non-client area
+    scrollbars, which I've added to bin/mdemo.<br>
+    <br>
+    Kevin submitted a patch to get HZK chinese character display working with the t1demo program,
+    and Simon contributed a slider game.<br>
+    <br>
+    Overall, 0.88pre10 and fltk-nanox-pre6 seem to work well.<br>
+    <br>
+    Please check out the new features, and send any bug fixes to the list.  I'll be pretty busy for about
+    the next week.<br>
+    <br>
+    The ChangeLog for 0.88pre10 follows:<br>
+    Version 0.88pre10 (fltk-nx port) - 18th June 2000 - greg@censoft.com<br>
+ * started adding win32 non-client area scrollbars<br>
+ * added Simon's contributed slider game (slider.sh)<br>
+ * added Nano-X GrEqualRegion, GrEmptyRegion, GrOffsetRegion<br>
+ * added GdEqualRegion, GdEmptyRegion<br>
+ * changed GdRectInRegion to return partial intersection values<br>
+ * fixed Nano-X clipping regions relative to drawable<br>
+ * changed GR_RECT struct to match X, not win32<br>
+ * changed GrRectInRegion, GrGetRegionBox, GrUnionRectWithRegion parms<br>
+  to match X<br>
+ * applied Kevin's HZK font sizing fix<br>
+ * removed floating point, ldiv from ported progress bar, fixed bugs<br>
+ * fixed listbox multi-element display code, initial state<br>
+ * fixed PIXELVALTOCOLORVAL macro typo</p>
+    <h3><br>
+    Chinese fonts, window manager, polygon regions, arcs, pies, fltk<br>
+    Version 0.88pre9 released</h3>
+      <p>June 15th, 2000<br>
+      Well, I've finally completed another big prerelease of Microwindows, thanks alot for all the
+      contributions...  I can barely keep up, it seems.  This distribution is split up
+      into a couple files because the contributed chinese fonts are large.  The following files are now available:<br>
+      <br>
+      Microwindows except the microwin/src/fonts/chinese directory:<br>
+      <a href="ftp://microwindows.org/pub/microwindows/microwindows-0.88pre9.tar.gz">ftp://microwindows.org/pub/microwindows/microwindows-0.88pre9.tar.gz</a><br>
+      <br>
+      Chinese fonts (12x12, 16x16 ascii, GB2312 and Unicode-16 and others):<br>
+      <a href="ftp://microwindows.org/pub/microwindows/microwindows-fonts-chinese-0.88pre9.tar.gz">ftp://microwindows.org/pub/microwindows/microwindows-fonts-chinese-0.88pre9.tar.gz</a><br>
+      <br>
+      FLTK ported to mwin32 API:<br>
+      <a href="ftp://microwindows.org/pub/microwindows/fltk-mwin32-pre5.tar.gz">ftp://microwindows.org/pub/microwindows/fltk-mwin32-pre5.tar.gz</a><br>
+      <br>
+      FLTK ported to nano-x API:<br>
+      <a href="ftp://microwindows.org/pub/microwindows/fltk-nanox-pre5.tar.gz">ftp://microwindows.org/pub/microwindows/fltk-nanox-pre5.tar.gz</a><br>
+      <br>
+      I want to merge the two FLTK ports into one, but the Nano-X version was just contributed, and I
+      only had time to make sure that it ran well.  (And it looks great with our new Nano-X Window
+      Manager!)<br>
+      <br>
+      There have been a large number of contributions since the 0.88pre8 cut, and I have included
+      almost everything that has been submitted.  Following&nbsp; are some of the highlights:</p>
+      <ul>
+        <li>Chinese character display is now incorporated within Microwindows. There are a few variations,
+          and the work is still in progress.  We now support disk-based Unicode-16, GB2312 and Big5
+          Chinese national standard encoding with contributed 12x12 and 16x16 Han Zi Ku
+          chinese and ascii  fonts that display well together.  This option is enabled with the HAVE_HZK_SUPPORT
+          config option.&nbsp; Thanks to Tanghao and Jauming for this contribution. Separately,
+          a compiled in chinese font with GB2312 encoding support is enabled with the HAVE_GB2312_SUPPORT
+          option.  Thanks to Guo for this. There are a number of issues with the implementation, and I will
+          follow this up in a separate email.&nbsp;</li>
+        <li>Nano-X now has a working window manager, thanks to Alex Holden.&nbsp;
+          While still a work in progress, it allows movement of windows and paints title bars, close boxes, and resize
+          borders.  This is a great piece of work and I am very impressed.  It runs as a separate
+          process, just like the Nano-X processes do.&nbsp;</li>
+        <li>Complete region support has been added to Nano-X, which we've been needing in order to
+          proceed with the GTK and FLTK-nanox ports.  In addition, full-blown (optional) polygon
+          area regions have been added to our region engine.  Thanks to Murphy for most of this
+          work.</li>
+        <li>Arcs, pies, and outlined arcs have been added to Microwindows and Nano-X.  This was a
+          big pain, although a lot of fun.  There's still some bugs in there but we've now got all our
+          basic drawing functions done. I wrote a new demo to show them off.</li>
+        <li>Kevin contributed ports of MiniGUI's listbox, edit control and progress
+          bar, and I dressed them up and made them look very 3d for the mwin32 api.  The listbox doesn't seem to
+          display more than one item, but more controls will soon be added, like combobox and
+          scrollbars.</li>
+        <li>The MIPS based Osprey board is now supported, along with some changes to the
+          touch-pad calibration program, contrib/GPL/tpcal.</li>
+        <li>Various fixes to get Nano-widgets and C++ objects to compile are included, as well as a
+          palette patch for VNC.  A nasty data corruption bug, only when UPDATEREGIONS was
+          set, is fixed.</li>
+      </ul>
+      <p>The complete ChangeLog for 0.88pre9 follows:<br>
+      Version 0.88pre9 - 15th June 2000 - greg@censoft.com<br>
+ * added Chinese Han Zi Ku font support from Tanghao and Jauming<br>
+  12x12 and 16x16 ascii and chinese fonts<br>
+  Big5, Unicode-16 and GB2312 encoding supported<br>
+  set with config option HAVE_HZK_SUPPORT<br>
+ * added Guo's Chinese GB2312 decoding routines, fonts/gb2312font.c<br>
+  set with config option HAVE_GB2312_SUPPORT<br>
+ * added Jin ke xue's gb16x16song.c font file (no support yet) (and .bdf)<br>
+ * fixed C++ objects to compile<br>
+ * added Rosimildo's RTEMS changes, convbmp allows full paths<br>
+ * added Alex's VERY COOL nano-X window manager! (great job!!) nanowm.sh<br>
+ * added GrSetWMProperties,GrGetWMProperties,GrCloseWindow, GrKillWindow<br>
+ * added Alex's npanel enhancements (solid dragging, zombies)<br>
+ * added Alex's cpu usage reduction to nclock, npanel<br>
+ * added Alex's patch to get nano-widgets to compile<br>
+ * added Alex's PPM file decoder demo6<br>
+ * implemented DT_CENTER, DT_RIGHT for DrawText<br>
+ * added changes in tpcal.c for MIPS Osprey board port, dblclk changes<br>
+ * HAVETEXTMODE #define for Osprey and Embedded Planet ports<br>
+ * added Michael's MINIX port updates<br>
+ * added George's setpalette changes to VNC<br>
+ * added GdAllocPolygonRegion, GrNewPolygonRegion, CreatePolygonRgn<br>
+ * fixed nasty #if UPDATEREGIONS in windows.h compile problem<br>
+ * added Kevin's port of edit, listbox and progressbar from MiniGUI<br>
+ * added GdGetRegionBox, GrGetRegionBox<br>
+ * fixed update regions calc bug<br>
+ * combined GdEllipse and GdFillEllipse and Arc/Pie routines<br>
+ * wrote pie, arc, outline arc routines, win32 Arc,Pie, GrArc,GrArcAngle<br>
+ * added George's patch to fix X11 screen driver setpalette function<br>
+ * added Murphy's region code for Nano-X, also polygon regions<br>
+      </p>
+    <h3>Version 0.88pre8 released</h3>
+    <p>May 23, 2000<br>
+    I have finally put together another release of Microwindows at:<br>
+    <br>
+    <a href="ftp://microwindows.org/pub/microwindows/microwindows-0.88pre8.tar.gz">ftp://microwindows.org/pub/microwindows/microwindows-0.88pre8.tar.gz</a></p>
+    <p>This release has been a while in coming and includes the following major enhancements, including
+    those in the unannounced 0.88pre7 release:<br>
+    <br>
+    o Fixed font issues with FLTK port, things are now starting to look pretty good.  I have released an
+    FLTK snapshot that works well with this release at:<br>
+    <br>
+    <a href="ftp://microwindows.org/pub/microwindows/fltk-pre4.tar.gz">ftp://microwindows.org/pub/microwindows/fltk-pre4.tar.gz<br>
+    </a><br>
+    o Added George's VNC viewer for Nano-X.  This is very, very cool, and it works, although it's
+    not complete.  A Microwindows based system can now communicate with Windows, UNIX and
+    Mac systems and can actually operate any program remotely! This means that handhelds and
+    PDA's can now potentially&nbsp; communicate with servers and have users operate anything,
+    using very little RAM.  Currently this only operates in 8bpp mode, but I plan on enhancing it considerably.<br>
+    <br>
+    o Added Morten's two patches for font selection and external keyboard and mouse input.  These
+    patches are necessary for&nbsp; the Opera port to Nano-X and other things Morten is working
+    on.  The font selection is turned on with a #define FONTMAPPER in device.h and allows for very
+    sophisticated font selection via the new logical font structure filled in by user programs.&nbsp;<br>
+    <br>
+    o Finally fixed the Nano-X server crashing on certain client exits.  Thanks to Kevin Lin for this.<br>
+    <br>
+    o Fixed win32 top/baseline/bottom positioning, required for FLTK.<br>
+    <br>
+    o Added support for DJGPP, BC 5.02, and MINIX.<br>
+    <br>
+    o Completed port to Embedded Planet's PowerPC box.  We now have both touch screen and
+    framebuffer display support when used with Monta Vista's CDK.<br>
+    <br>
+    o Finished cool minesweeper game, complete with bitmaps.<br>
+    <br>
+    o Many bug fixes of all types.<br>
+    <br>
+    We have finally got an initial snapshot of the GTK+/GDK port running on Nano-X.  There's still
+    quite a bit to do, as it barely runs.  There's a snapshot tarball as well as
+    a diff from the gnome.org GTK 1.3 CVS at: ftp://microwindows.org/gtk.  I'm not sure I advise playing
+    with this just yet. Thanks to Paolo for this great work.<br>
+    <br>
+    The ChangeLog for this release since 0.88pre6b is:<br>
+    Version 0.88pre8 - 23rd May 2000 - greg@censoft.com<br>
+ * added Murphy's X vs Microwindows speed tester in contrib/speedtst<br>
+ * fixed convbdf to not emit nonascii characters<br>
+ * added Victor's DJGPP port<br>
+ * removed automatic portrait mode<br>
+ * added extern "C" to nano-X.h<br>
+ * added Kao's patches for BC5, enhanced scr_tc.c, some bug fixes<br>
+ * fixed win32 top/baseline/bottom positioning<br>
+ * added Morten's GrInjectKeyboard/GrInjectPointer patches<br>
+ * added Kevin Lin's fix to Nano-X persisent mode curclient crash<br>
+ * changed GdCreateFont name,height semantics<br>
+ * added Morten's font picker algorithm, turn on w/#define FONTMAPPER 1<br>
+  Note: font selection is currently under development<br>
+  and will likely change<br>
+ * cleaned up source for Michael's MINIX port, replaced convbmp.c -s opt<br>
+ * fixed XYPOINT in mou_tp.c, changes for embedded planet tp driver<br>
+ * added PIXELVALTOCOLORVAL, COLORVALTOPIXELVAL macros, GdTranslateArea<br>
+ * fixed multiple GsSelect() call in GrGetNextEvent in linked client/serv<br>
+ * continued port of VNC to Nano-X, contributed by George<br>
+ * added Rosimildo's patch for RTEMS, MW* fixes, svgalib fade<br>
+    <br>
+    Version 0.88pre7 - 15th April 2000 - greg@censoft.com<br>
+ * added LINUX-POWERPC port for embedded planet linux box<br>
+ * fixed Polygon routine fill/draw reversed, AdjustWindowRectEx<br>
+ * fixed no root window paint without background bitmap<br>
+ * added bitmaps to minesweeper, polished up<br>
+ * added middle button handling for mwin<br>
+ * added GrSetSystemPalette<br>
+ * added user-replaceable GdError, removed all fprintf/printf's<br>
+ * added EPRINTF for all error printfs, DPRINTF for debug printfs<br>
+ * removed HAVE_PERROR config option<br>
+ * changed memmove to memcpy<br>
+      </p>
+      <h3>Interim Version 0.88pre6b</h3>
+      <p>April 5, 2000<br>
+      I've added the patches received since 0.88pre6 and have released another interim version,
+      0.88pre6b:<br>
+      <br>
+      <a href="ftp://microwindows.org/pub/microwindows-0.88pre6b.tar.gz">ftp://microwindows.org/pub/microwindows-0.88pre6b.tar.gz<br>
+      </a><br>
+      The patches received consist mostly of bug fixes,&nbsp; except for Erik's very cool implementation of
+      alpha blending for the X11 screen driver.  Now everyone can check out alpha blending for
+      Microwindows on their X11 desktop.<br>
+      <br>
+      However, there seems to be a big problem in the X11 screen driver when running X in 8bpp
+      mode: Microwindows runs out of colors and starts returning BlackPixel from&nbsp;
+      XAllocColor: thus alpha blending doesn't work in 8bpp mode.  In addition, the t1demo.sh has the same problem.<br>
+      <br>
+      If anybody volunteers to fix this problem in the X11 driver, that would be GREAT!<br>
+      <br>
+      I've also made some small changes for the Kaffe port in progress, and started porting a
+      minesweeper game.<br>
+      <br>
+      Attached is the ChangeLog:<br>
+      Version 0.88pre6b - 5th April 2000 - greg@censoft.com<br>
+ * added PostThreadMessage<br>
+ * started porting minesweeper game<br>
+ * fixed -p persistent mode<br>
+ * added Kao's BC 5.02 fixes, other pre6 fixes from name changes<br>
+ * added Steven's patch for polling drivers, HAVE_PERROR config option<br>
+ * added Erik Hill's alpha blending for X11<br>
+ * fixed jpeg compile bug<br>
+ * removed include &lt;asm/io.h> patch from Shane<br>
+      </p>
+    <h3>Opera, Kaffe, GDK/GTK+ and FLTK ports being supported</h3>
+    <p>April 2, 2000<br>
+    The 0.88pre6 release is now available.&nbsp; Quite a few modifications have
+    been made in order to better support the new work with GDK/GTK+ and Kaffe
+    ports that have just started.&nbsp; The prerelease is available at:<br>
+    <br>
+    <a href="ftp://microwindows.org/pub/microwindows/microwindows-0.88pre6.tar.gz">ftp://microwindows.org/pub/microwindows/microwindows-0.88pre6.tar.gz</a></p>
+    <p>This release contains MAJOR changes to the public header files in an attempt to clean up the exported namespace
+    problems with Microwindows.  All Nano-X exports now start with GR_*, and&nbsp;
+    all client callable routines start with Gr*.  In addition, quite a bit of work was done making sure that only symbols required to be
+    exported are made public.  This should help Microwindows be more suitable for the GDK/TGK+ and FLTK ports now in process.<br>
+    <br>
+    All Microwindows engine typedefs and defines now start with MW*, and have been placed in mwtypes.h rather than in
+    device.h.&nbsp; Most previous Nano-X and Microwindows applications should compile up without change, except that some of
+    the latest font flags have changed from TF_* to GR_TF*, etc.  The public header files for Nano-X and Microwindows
+    remain nano-X.h and windows.h respectively.  Oh - GrUnloadFont is renamed GrDestroyFont.<br>
+    <br>
+    I have created a new GR_LOGFONT (MWLOGFONT) structure for describing fonts more precisely with
+    GrCreateFont.  There are now mechanisms to specify a font's height, width, orientation, weight,
+    family, pitch, and character set.  The current font selection routine only uses the facename and height, however.<br>
+    <br>
+    There are quite a few other small bug fixes included, as well as more Win32 API implementations for the Kaffe port.  A
+    couple more X11 fonts were converted, and 5x7 and 6x13 versions compiled into the
+    base system for better readability with the terminal emulator. The system now automatically runs in portrait mode if yres > xres.<br>
+    <br>
+    I plan on working on the new blitting architecture and getting better kbd support next.<br>
+    <br>
+    Following is the ChangeLog:<br>
+    Version 0.88pre6 - 2nd April 2000 - greg@censoft.com<br>
+ * major header file cleanup, fixing namespace pollution<br>
+  API  typdef procs  data<br>
+  Nano-X:  GR_* Gr*,nx*,(Gs*) nx*<br>
+  Microwindows: MW* Mw*  mw*<br>
+  Engine:  MW* Gd*,Mw*  gr_*, fb*<br>
+ * changed all Nano-X structures and defines to be GR_ prefixed<br>
+  added GR_PIXELVAL, GR_RGB, GR_LOGFONT<br>
+ * MW prefixed all exported typedefs for name space cleanup,<br>
+  split device.h into mwtypes.h for exports<br>
+ * added MWLOGFONT font descriptions<br>
+ * removed BUTTON, MODE, MODIFIER typedefs<br>
+ * added Martin's updates to FreeType renderer, updated ftdemo<br>
+ * added Martin's updated xconfigure for X-based configuration<br>
+ * renamed GrUnloadFont to GrDestroyFont, GdDestroyFont<br>
+ * clean up various unwanted nano-X client library symbol exports<br>
+ * redraw windows on nano-X client disconnect<br>
+ * added -p for nano-x persistent mode, no exit on client disconnect<br>
+ * added Timo's fix in GsAcceptClientFd, ignore SIGPIPE, mult GrClose bug<br>
+ * added automatic portrait mode if screen y resolution > x res<br>
+ * fixed GrReqShmCmds for linked client/server case<br>
+ * implemented freetype renderer ascent/descent calculations<br>
+ * added ascent field to compiled fonts, GrText uses TF_BASELINE default<br>
+ * added 5x7, 6x13 compiled (bdf) fonts, FONT_SYSTEM_FIXED is now 6x13<br>
+ * fixed typo in fonts/convbdf $IMAGEBITS incorrect<br>
+ * added #include &lt;asm/io.h> for outb in 2.3.x systems<br>
+ * added AdjustWindowRectEx, WM_ACTIVATE, IsWindowEnabled<br>
+ * completed GetPixel, added PIXELVAL to COLORVAL conversion macros<br>
+      </p>
+    <h3>TrueType and Adobe T1 fonts now supported</h3>
+    <p>March 19, 2000<br>
+    After an _extremely_ lengthy weekend, I have now got both TrueType and Adobe Type 1 font support
+    integrated into Microwindows.   Release 0.88pre4 is available at:<br>
+    <br>
+    <a href="ftp://microwindows.org/pub/microwindows/microwindows-0.88pre4.tar.gz">ftp://microwindows.org/pub/microwindows/microwindows-0.88pre4.tar.gz</a></p>
+    <p>Big thanks go to Vidar and Martin for contributing the initial work in this area.<br>
+    <br>
+    Version 0.88pre4 has had the font routines heavily rewritten to allow multiple renderer support for fonts.  We now are
+    able to run using compiled-in builtin fonts (converted using supplied bdf or Windows utilities), as well as using the FreeType
+    and T1 libraries for advanced font rendering.  All can be supported simultaneously, if desired.<br>
+    <br>
+    Support for ascii, unicode-16, and unicode-32 is completed, allowing text to be supplied from applications in these
+    formats. UTF8 support is almost supported, but we need a non-LGPL version of a utf8 to unicode-16 converter.  Flags
+    bits to the GrText/GdText routines tell Microwindows how to convert all text before rendering it.  Renderers can request
+    text in any format.<br>
+    <br>
+    Font scaling to any pixel size, as well as rotations in degrees, and antialiasing for 8, 16, 24, and 32bpp is also completed.<br>
+    <br>
+    Two new Nano-X sample programs ftdemo and t1demo are written to show off the new technologies.  The source
+    in microwin/src/engine/devfont.c can be modifed to&nbsp; turn on rotations or turn off antialiasing.&nbsp;</p>
+    <p>There is still some work to do in GdArea, which I will start rewriting soon, as the alphablending and transparency blitting
+    are not performed at the driver level yet, so the antialiasing only works well when you know the final destination color.
+    The plan is to implement two new low level blitters that the font renderers can use, one for alphablending and the other
+    for transparent blitting.<br>
+    <br>
+    Finally, we've added another touch screen driver for the&nbsp; ADS SA1100 ARM evaluation unit, which features a
+    640x480 3"x5" LCD display.  We'll be contributing the kernel driver soon.<br>
+    <br>
+    Have fun checking this out!<br>
+    <br>
+    Here's the ChangeLog:<br>
+    Version 0.88pre4 (truetype/t1 fonts) - 19th March 2000 - greg@censoft.com<br>
+ * implemented text drawing in ascii, utf8, unicode 16 and unicode 32<br>
+ * added font id's for Nano-X, added GrCreateFont, GrUnloadFont<br>
+ * rewrote font subsystem heavily<br>
+ * added alphablender for antialiased fonts for 8, 16, 24 and 32bpp<br>
+ * added GrText, GrGetGCTextSize flags, CreateFontIndirect<br>
+ * added GdText TF_ flags for 8,16,32 bit packing, top/bottom alignment<br>
+ * added Martin's FreeType TrueType font support<br>
+ * added Vidar's t1lib adobe type1 font support, t1demo for Nano-X<br>
+  use HAVE_FREETYPE_SUPPORT config option<br>
+  use HAVE_T1LIB_SUPPORT config option<br>
+ * renamed min/max to mwmin/mwmax<br>
+ * added Fabio's xconfigure patch for VTSWITCH<br>
+ * fixed WM_CREATE lparam bug<br>
+ * added mou_ts.c touch screen driver for ADS ARM port<br>
+ * added GrSetGCFontSize, GdSetFontSize, GdCreateFont, GdUnloadFont<br>
+ * added GWL_USERDATA to Get/SetWindowLong<br>
+ * turboc port screen driver fixes<br>
+ * added nonclient region special paint handling to avoid flicker<br>
+ * added null kbd driver, set with NOKBD=Y<br>
+      </p>
+    <h3>Version 0.88pre3d release, fltk port available</h3>
+    <p>March 12, 2000<br>
+    I have posted another prerelease of Microwindows at:<br>
+    <br>
+    <a href="ftp://microwindows.org/pub/microwindows/microwindows-0.88pre3.tar.gz">ftp://microwindows.org/pub/microwindows/microwindows-0.88pre3d.tar.gz</a></p>
+    <p>This version contains considerable enhancements which are needed to get FLTK (Fast Light Tool Kit, a C++ widget
+    set) ported to Microwindows.  Great progress has been made. Almost all the widgets are at least operational, although more
+    work needs to be done.  Screenshots of <a href="http://www.fltk.org"> FLTK</a> running on Microwindows are available at:<br>
+    <br>
+    <a href="ftp://microwindows.org/pub/microwindows/ScreenShots/FLTK">ftp://microwindows.org/pub/microwindows/ScreenShots/FLTK</a></p>
+    <p>I have posted a cut of fltk 1.0.7 hacked for Microwindows at:<br>
+    <br>
+    <a href="ftp://microwindows.org/pub/microwindows/fltk-pre3d.tar.gz">ftp://microwindows.org/pub/microwindows/fltk-pre3d.tar.gz</a></p>
+    <p>Thanks to Shane for the screen shots and the fonts work.<br>
+    <br>
+    Enhancements to Microwindows in this cut include quite a few win32 API new implementations, including complete region
+    handling including complex regions like round rectangle and ellipses, update regions/clipping, valid/invalid area paint
+    handling, polygon and ellipse drawing, and font routines.<br>
+    <br>
+    In addition I have added the Linux Penguin to the Microwindows demo so that Microwindows can be better shown at
+    various trade shows. (It was recently displayed at the Embedded Systems Conference in Chicago,
+    and will be at several more in the next month)<br>
+    <br>
+    For fun, I have added experimental palette animation.  This works only on 8bpp palettized displays, and the Microwindow
+    screen fades in on startup, as well as between console switches.  It's quite cool.<br>
+    <br>
+    A variety of bug fixes are included in this release, including a nasty one which took many hours to find.  The first 16 colors
+    of the palette were being overwritten if Microwindows was compiled with VTSWITCH=Y.&nbsp;
+    Also, portrait mode is working again.<br>
+    <br>
+    Following is the ChangeLog:<br>
+    Version 0.88pre3d (fltk port) - 12th March 2000 - greg@censoft.com<br>
+ * changed FONTINFO struct, added firstchar, lastchar<br>
+ * added Shane's fonts patches, added CreateFont, GetTextMetrics,<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GetCharWidth, SetAlignText<br>
+ * debugged nasty VTSWITCH palette changed bug<br>
+ * experimental #define ANIMATEPALETTE for cool fade in<br>
+ * added Kyle's patch to get portrait mode working again<br>
+ * fix SetClipRgn/ExtSetClipRgn to take client coords (win32 api doc bug)<br>
+ * added WM_SHOWWINDOW msg<br>
+ * fixed coords to WM_MOVE msg for WS_CHILD windows<br>
+ * added PeekMessage, Ellipse<br>
+ * added Rosimildo's rtemscfg.h patch<br>
+ * added GetUpdateRgn, GetUpdateRect, GdOffsetRegion<br>
+ * added Kyle's GdCopyArea fix<br>
+    Version 0.88pre3c (fltk port) - 8th March 2000 - greg@censoft.com<br>
+ * added CS_OWNDC private DC's<br>
+ * added SetActiveWindow, SetForegroundWindow, BringWindowToTop<br>
+ * added Polygon, PolyPolygon (filled and outline)<br>
+    Version 0.88pre3b (fltk port) - 6th March 2000 - greg@censoft.com<br>
+ * added GetDeviceCaps, Polyline<br>
+ * added extern "C" in windows.h<br>
+ * fixed loop bug in CreateRoundRectRgn<br>
+ * added penguin to bin/mdemo<br>
+ * added ValidateRect, ValidateRgn, InvalidateRgn<br>
+ * completely rewrote UPDATEREGIONS handling for new region fns<br>
+ * added DCX_EXCLUDEUPDATE handling to window clipping<br>
+ * sped up WndSetClipWindow, GsSetClipWindow<br>
+ * added GdSetRectRegionIndirect, GdSubtractRectFromRegion<br>
+ * added SetWindowPos for size,move,show,hide,repaint,zorder<br>
+      </p>
+    <h3>Version 0.88pre3 release, fltk port started</h3>
+ 
+        March 5, 2000<br>
+        There's a new cut of Microwindows, 0.88pre3 at:
+      <p>
+             <a href="ftp://microwindows.censoft.com/pub/microwindows/microwindows-0.88pre3.tar.gz">ftp://microwindows.censoft.com/pub/microwindows/microwindows-0.88pre3.tar.gz</a>
+      &nbsp;</p>
+      <p>
+             This version primarily adds dynamic region clipping support, which will
+        be required for the fltk widget set port that's been started.&nbsp; In
+        addition, at Alan Cox's request, a define can be unset to run under the
+        smaller memory usage static cliprect design, for extremely small
+        systems.</p>
+             The full-blown clip region support is pretty cool, since now
+        Microwindows performs region Intersect, Xor, Subtract, and Union.&nbsp;
+        This made it quite easy to add user-specificed clipping regions that can
+        be added/subtracted from the z-order computed visible region.&nbsp; I've
+        hacked the 3d demo to display only within a circular region, thus
+        testing CreateRoundRectRegion as well as blitting into circles.&nbsp;
+        Try it out, it's kinda cool.&nbsp;
+        <p>In addition, Allistair Riddoch performed an amazing feat in about 50&nbsp;lines
+        of code - he added client-based window management&nbsp;to his Nano-X
+        panel program.&nbsp; Now you can exec programs from the Nano-X server,
+        and move them around!
+           In addition, Rosimildo's Uniform Input Device and MicroFramebuffer
+        Architecture common API for RTEMS and other RTOS's is included. And
+        Victor contributed a TURBOC port, for 16 bit systems, using BGI...&nbsp;<p>Vidar
+      added offscreen drawing support for Nano-X in 0.88pre2, this allows Nano-X
+      programs to draw images offscreen and then use the blitter for flicker
+      free drawing.<p>Version 0.88pre1 introduced a heavily rewritten set of
+      screen drivers for speed, as well as a newly designed interface for
+      offscreen draw handling.&nbsp; With the new interface, the screen driver
+      rather than engine code allocates offscreen buffers, which allows the
+      driver to control how offscreen drawing is initialized and
+      performed.&nbsp; It's alot faster and cleaner.<p>Also, 0.88pre1 introduces
+      the &quot;make install&quot; option, which copies Microwindows and Nano-X
+      header files into /usr/bin/microwin, allowing use of #include
+      &lt;microwin/windows.h&gt; in programs.&nbsp; The libraries are renamed
+      libmw*.a, and released into /usr/lib.&nbsp; This allows developers easy
+      access to Microwindows headers and libraries.
+        <p>
+              Following is the ChangeLog since the last major release:
+             Version 0.88pre3 - 5th March 2000 - <a href="mailto:greg@censoft.com">greg@censoft.com</a><br>
+        &nbsp;* added contributed DOS TURBOC port by Victor<br>
+        &nbsp;* modified bin/mdemo to clip 3d drawing into a circle, added
+        penguin<br>
+        &nbsp;* added GdAllocRectRegion, GdAllocRectRegionIndirect,<br>
+        &nbsp;* added GdSetRectRegion, GdAllocRegion, GdDestroyRegion<br>
+        &nbsp;* added SelectClipRgn, ExtSelectClipRgn, user clip regions!<br>
+        &nbsp;* added DYNAMICREGIONS define for dynamic vs static (small) clip
+        code<br>
+        &nbsp;* added win32 HRGN object and region routines<br>
+        &nbsp;* added GetCursorPos<br>
+        &nbsp;* added Al's update event patches for Nano-X client window manager<br>
+        &nbsp;* added Rosimildo's RTEMS patches for uniform input devices<br>
+        &nbsp;* added George's partial mouse data read fixes (upper level only)<br>
+        Version 0.88pre2 - 29th February 2000 - <a href="mailto:greg@censoft.com">greg@censoft.com</a><br>
+        &nbsp;* added Al's npanel Nano-X program exec'er (cool)<br>
+        &nbsp;* added Al's patch to cleanup windows on Nano-X client exit<br>
+        &nbsp;* added Al's ignore sigpipe for ELKS<br>
+        &nbsp;* added Morten's jpeg grayscale patch<br>
+        &nbsp;* create dword-aligned offscreen bitmaps for speed<br>
+        &nbsp;* removed much of global scrdev<br>
+        &nbsp;* changed screen driver open routine to return psd<br>
+        &nbsp;* added Vidar's patch for offscreen drawing in Nano-X, added<br>
+        &nbsp;&nbsp;GrNewPixmap, GrCopyArea.&nbsp; GrDestroyWindow destroys
+        pixmaps<br>
+        Version 0.88pre1b - 23rd February 2000 - <a href="mailto:greg@censoft.com">greg@censoft.com</a><br>
+        &nbsp;* added Kyle's bug fix for 16 and 32bpp jpeg support<br>
+        Version 0.88pre1 - 22nd February 2000 - <a href="mailto:greg@censoft.com">greg@censoft.com</a><br>
+        &nbsp;* added PSD to GdClip routines, fixing potential offscreen write
+        bug<br>
+        &nbsp;* renamed libraries, added &quot;make install&quot;, hdrs to
+        /usr/include/microwin<br>
+        &nbsp;&nbsp;and libs to /usr/lib/libmw*.a and libnano-X.a<br>
+        &nbsp;* renamed RECT, POINT, CLIPRECT and CLIPREGION types to MWxxx<br>
+        &nbsp;* added Al's ELKS patches for client/server Nano-X on ELKS<br>
+        &nbsp;* renamed xconfigure, updated INSTALL with make instructions<br>
+        &nbsp;* rewrote all fb drivers for speed eliminating multiple function
+        calls<br>
+        &nbsp;* allow GdText count == -1 for strlen()<br>
+        &nbsp;* added GdCalcMemGCAlloc to calculate offscreen allocate size<br>
+        &nbsp;* added three offscreen memory allocation entry points to screen
+        driver<br>
+        &nbsp;* rewrote vga16 driver to use outw rather than outb for speed<br>
+        &nbsp;* adjusted fb drivers to always draw last point for
+        drawhorz/drawvert<br>
+        &nbsp;* rewrote VT switching code, removed from fb driver to separate
+        file<br>
+        &nbsp;* added SetIOPermissions in scrdev for pthreads create i/o bitmap
+        bug<br>
+        &nbsp;* fixed parms named &quot;min&quot; in demos for ELKS bcc compiler<br>
+        &nbsp;* changed VT switch signal to SIGUNUSED for pthreads compatibility<br>
+        &nbsp;* added Brad's touch panel/mouse calibrator to contrib/GPL/tpcal<br>
+        &nbsp;* fixed up SVGAlib driver for 256 colors, added screen to screen
+        blit<br>
+        &nbsp;* process all mouse messages before next select: better mouse
+        speed<br>
+        &nbsp;* added HTBORDER hit testing<br>
+        &nbsp;* fixed FBVGA blitting, wrong scrdev used on memdc
+       <h3>Version 0.87 release</h3>
+    <p>February 13, 2000<br>
+    Microwindows version 0.87 is (finally) released.  Source code is available at:<br>
+    <br>
+    <a href="ftp://microwindows.censoft.com/pub/microwindows-0.87.tar.gz">ftp://microwindows.censoft.com/pub/microwindows-0.87.tar.gz</a></p>
+    <p>Version 0.87 is fairly stable and seems to work well.  It's been a long time
+    in coming since the 0.86 release at the end of October, 1999.&nbsp;
+    Following are some of the major additions:</p>
+      <ul>
+        <li>The 0.87 release now runs on Linux framebuffer, Linux SVGAlib, X11, Solaris,
+          RTEMS, ELKS, MSDOS 32 bit with DJGPP, and MSDOS 16 bit with MSC and PACIFIC C (free).  The X11 screen
+          driver supports emulating a target screen driver in 1, 2, 4, 8, 16, 24, and 32bpp, without
+          having to cross-compile and run the application on the target device.&nbsp;</li>
+        <li>The framebuffer screen drivers have been tested well, and now offer support for 1 through 32 bits per
+          pixel, as well as high speed (software) blitting, and alpha blending.  1 though 8 bpp palettized modes,
+          as well as 16, 24 and 32bpp truecolor modes are supported.  The framebuffer
+          drivers have been tuned for speed, although more enhancements are planned.&nbsp;</li>
+        <li>The new make system is completed, and a config file now controls all
+          options for specifying target architecture and features options.  Cross-
+          compilation support for x86, MIPS, ARM Linux, Solaris, ELKS, DJGPP and RTEMS is included.  All demos and libraries are built at
+          once, so it's much easier to link Microwindows when developing an application.  A C++ object frameworks has been added.
+          Support for displaying JPEG and BMP file types has been added.&nbsp;</li>
+      </ul>
+      <p>Thanks to everyone for the contributions - it was getting overwhelming for
+      a bit there, but almost all contributions have been added to this release.&nbsp;<br>
+      <br>
+      I will now start work on getting the tree into CVS, as well as merging contributions for Truetype font support,
+      as well as some cleanups with the screen device structure for speed.  In addition, as a result of the press
+      we've been getting, a number of folks are interested getting Microwindows running with their hardware and
+      software.&nbsp;<br>
+      <br>
+      Following is the detailed ChangeLog:<br>
+      Version 0.87 - 13th February 2000 - <a href="mailto:greg@censoft.com">greg@censoft.com</a><br>
+ * added VTSWITCH in config to include virtual terminal switch code<br>
+ * added support for 24bpp, wrote 24bpp fb driver<br>
+ * fixed 8/8/8 color macros: RGB2PIXEL888, COLOR2PIXEL888, PIXEL888RED<br>
+ * fixed 32bpp fb bug with psd->ncolors, 32bpp alpha blit bugs<br>
+ * added fb driver support for FB_VISUAL_DIRECTCOLOR cards (ATI)<br>
+ * sped up 16, 32bpp blitters by using memcpy<br>
+ * added large font patches from Kyle<br>
+ * added PACIFIC C compiler support from Victor<br>
+ * default UPDATEREGIONS=N in config file for alpha blend demo<br>
+ * removed XORMOVE from config, requires only ERASEMOVE=N<br>
+ * wrote alpha blending demo (requires UPDATEREGIONS=N)<br>
+ * rewrote void *pixels in devdraw.c, won't compile on ansi compilers<br>
+ * fixed PF_TRUECOLOR0888 bug in GdArea<br>
+ * added DJGPP as config ARCH option, Victor's patches for DJGPP<br>
+ * finalized alpha blending blit routines for 8, 16, and 32bpp<br>
+ * added SetTimer/KillTimer api (single timer only)<br>
+ * added Chris' SetSysColor api, C++ object frameworks patch to mwin/<br>
+ * added Rosimildo's make patches for RTEMS<br>
+ * added Martin's make/configure patches<br>
+      </p>
+    <h3>Microwindows competes with Win2000 and MAC OS X??</h3>
+      <p>February 5, 2000<br>
+      Microwindows offers features that only the latest Windows 2000 and
+      upcoming MAC OS X have - translucent windows.&nbsp; This feature,
+      sometimes called alpha blending, is being touted by the press as one of
+      the coolest features of these new operating systems, and now we have it
+      (well, almost).&nbsp; Check out this screen shot for what's coming:</p>
+      <p><a href="ftp://microwindows.censoft.com/pub/microwindows/ScreenShots/Microwindows-alphablend.gif">ftp://microwindows.censoft.com/pub/microwindows/ScreenShots/Microwindows-alphablend.gif</a></p>
+      <p>The application shown in the screen shot requires applications
+      programming for the effect.&nbsp; Soon, you'll just be able to set a
+      window style bit and get it automatically.&nbsp; Keep posted for details.</p>
+      <h3>Feature story in LinuxDevices.com</h3>
+      <p>February 1, 2000<br>
+      LinuxDevices.com featured an article on Microwindows, entitled &quot;Linux
+      + Microwindows: challenger to WinCE&quot;.&nbsp; The news feature spoke
+      highly of the Microwindows Project and our ability to offer a WinCE-compatible
+      graphics API now for embedded systems developers.&nbsp; The article was
+      picked up additionally by LinuxDev.net and GeekNews.net.&nbsp; The article
+      can be seen at <a href="http://www.linuxdevices.com/cgi-bin/article_view.cgi?artid=AT5381373148">http://www.linuxdevices.com/cgi-bin/article_view.cgi?artid=AT5381373148</a>.<br>
+      </p>
+      <h3>Version 0.87pre6 release</h3>
+      <p>January 31, 2000<br>
+      YAP (yet another prerelease) of Microwindows 0.87 is available at:<br>
+      <br>
+      <a href="ftp://microwindows.censoft.com/pub/microwindows/microwindows-0.87pre6.tar.gz">ftp://microwindows.censoft.com/pub/microwindows/microwindows-0.87pre6.tar.gz</a></p>
+      <p>There have been so many contributions that I feel necessary to release this
+      for quality reasons.  I want 0.87 to be quite stable, and I think the Makefile
+      system is now approaching it.  Following are the main additions:</p>
+      <ul>
+        <li>Martin contributed an updated X11 based configure program,&nbsp; allowing users to configure various options of
+          Microwindows    graphically.</li>
+        <li>I've added experimental alpha blending support, just to test the    concept.  This works on 8, 16 and 32bpp displays.  More
+          will    be coming in the 0.88 release.&nbsp;</li>
+        <li>Morten has contributed GrArea enhancements for high speed    rendering, including some 16bpp alpha blending support.&nbsp;</li>
+        <li>Chris has contributed a C++ objects framework, which can    be enabled via the OBJFRAMEWORK config option.&nbsp;&nbsp;</li>
+        <li>Many, many makefile changes and some small bugfixes.</li>
+      </ul>
+      <p>I plan to go final within the next few days, after contributors have had a chance to sign off on the release, if desired.<br>
+      <br>
+      I want to thank the growing list of contributors to Microwindows. It's really getting fun.  I've been working on getting
+      some trade press for the project, and this should be coming real soon, so our efforts will be visible to a much larger
+      group of people.</p>
+      <p>Following is the ChangeLog:<br>
+      Version 0.87pre6 - 31st January 2000 - greg@censoft.com<br>
+ * added C++ objects framework from Chris<br>
+ * added support for multiple read/write/except fd's from Chris<br>
+ * added Martin's X11 configure program and various Makefile fixes<br>
+ * added compile time warnings patches from Chris<br>
+ * added Morten's drawarea patch pre5mr1<br>
+ * added experimental 8, 16 and 32bpp constant alpha blending to bitblit<br>
+  (#define ALPHABLEND in device.h and run bin/mterm for demo)<br>
+ * changed distance-cubed find nearest color to use abs() for speed<br>
+ * fixed max character height/width alloc; max now 128x128 (configurable)<br>
+ * small bugfix DRAWON/DRAWOFF in mempl4.c<br>
+      </p>
+      <h3>Version 0.87pre5 release</h3>
+      <p>January 26, 2000<br>
+      Thanks to everyone for the large number of contributions to Microwindows this last week.  The quantity was large
+      enough that I feel we need yet another preprelease before 0.87 can go final, since I want the releases to be pretty
+      bug free and stable.  This latest prerelease is available at:<br>
+      <br>
+      <a href="ftp://microwindows.censoft.com/pub/microwindows/microwindows-0.87pre5.tar.gz">ftp://microwindows.censoft.com/pub/microwindows/microwindows-0.87pre5.tar.gz</a></p>
+      <p>There are quite a few bug fixes and enhancements to the Makefile system, which since pre4 uses config files to set all options.
+      This release includes prebuilt config files for framebuffer, x11, and SVGAlib, in addition to RTEMS builds.&nbsp;
+      Notable additions, aside from many Makefile modifications include:</p>
+      <ul>
+        <li>bug fixed XOR drawing code for 1, 2, and 4bpp fb, thanks to Manuel Teira Paz.  In addition, I optimized quite
+          a few routines when I discovered that gcc doesn't generate a shift right for
+          int/2 constructs (try it).</li>
+        <li>Morten contributed sizeable changes to the GdArea routine, including a 16bpp drawarea driver for fast GdArea drawing.</li>
+        <li>Chris contributed changes moving architecture information out from Makefile.rules to Arch.rules, as well as adding
+          the SetWindowLong function for using window extra bytes. In addition, config files can be kept in a user's
+          home/microwin directory so that the distribution can remain read only.</li>
+        <li>Kyle contributed changes for arbitrary-width character drawing in Microwindows by submitting a newly hacked perl script
+          that will translate any width character, along with the appropriate driver modifications.  Cool!  We now support characters
+          up to 128 bits wide.</li>
+        <li>Finally, an innocuous problem regarding unsigned short to int promotion fixed the DJGPP port.</li>
+      </ul>
+      <p>Some patches didn't apply well and overlapped.  I will be sending individual email to each contributor with
+      more detailed information.  I hope to wrap up 0.87 before Friday.<br>
+      <br>
+      Following is the detailed Changelog:<br>
+      Version 0.87pre5 - 26th January 2000 - greg@censoft.com<br>
+ * prepared prebuilt config files for fb, x11, svga<br>
+ * added Morten's drawarea driver patch (16bpp only)<br>
+ * fixed XOR drawing for 1, 2, 4bpp, improved speed with x>>2 not x/4<br>
+ * applied Chris' FBVGA patch<br>
+ * applied Rosilmildo's RTEMS compiling patch<br>
+ * applied Morten's SCREEN_PIXTYPE X11 Makefile patch<br>
+ * added Chris' SetWindowLong and $(HOME)config and Arch.rules patch<br>
+ * completed fix for DJGPP compiled mou_dos.c driver<br>
+ * added Kyle's patches for arbitrarily wide text chars</p>
+    <h3>Version 0.87pre4 release</h3>
+      <p>January 18, 2000<br>
+      The final prerelease of version 0.87 is now available at:<br>
+      <br>
+      <a href="ftp://microwindows.censoft.com/pub/microwindows/microwindows-0.87pre4.tar.gz">ftp://microwindows.censoft.com/pub/microwindows/microwindows-0.87pre4.tar.gz</a><br>
+      <br>
+      This release contains quite a few small changes, and a big change to the Makefile system.  Morten Jolicoeur contributed
+      a config-based Makefile system back in October, and I've finally caught up enough to make it all work with all the changes since
+      then. This new system allows separate config files to be used to control different machine targets, operating systems, and
+      features without modifying the Makefiles.  Martin also wrote a X wish based gui
+      config generator, but I haven't been able to test that.  Please check out the config system and let me know how well it works.&nbsp;&nbsp;</p>
+      <ul>
+        <li>&nbsp;Martin's contributed JPEG and BMP file reader/display routines,
+          so that disk based images can be displayed.&nbsp;</li>
+        <li>&nbsp;Morten's variable sized PIXELVAL mods, so the servers can be compiled using 8, 16 and 32-bit sized
+          PIXELVALs, for best memory utilization, and allowing applications to create
+          and display images in the native hardware format.&nbsp;</li>
+        <li>PF_TRUECOLOR0888 (note that 0) was added for&nbsp; 4 byte pixel packing.&nbsp;</li>
+        <li>Victor Rogach contributed a DJGPP port of Microwindows based on the GRX graphics package.  GRX sets up
+          enhanced video modes under 32-bit protected mode so that Microwindows now runs on 32-bit DOS.&nbsp;</li>
+        <li>Rosimildo contributed changes for the RTEMS operating system, allowing the scr_bios vga driver to be used without
+          making _any_ bios calls.&nbsp;</li>
+        <li>Kyle Harris contributed fixes to the 16 and 32bpp framebuffer blitter routines, they didn't work for non-zero offsets.&nbsp;&nbsp;</li>
+        <li>Added Dan's GrReparentWindow routine, allowing window managers to be written.</li>
+      </ul>
+      <blockquote>
+        <p>Full Changelog:<br>
+        <br>
+        Version 0.87pre4 - 18th January 2000 - <a href="mailto:greg@censoft.com">greg@censoft.com</a><br>
+ * added Martin's new config-based Makefile system<br>
+ * added Martin's JPEG and BMP file reading/display routines<br>
+ * added Morten's variable PIXELVAL size mods<br>
+ * added contributed DJGPP/GRX port by Victor Rogachev<br>
+ * fixed 16bpp and 32bpp fb blit routines, by Kyle Harris<br>
+ * added Rosimildo's RTEMS changes, scr_bios now runs without bios<br>
+ * added Dan's GrReparentWindow, fixed GetWindowInfo bug<br>
+ * added PF_TRUECOLOR0888 for 4 byte packing<br>
+ * updated doc directory with html faq, architecture<br>
+        </p>
+      </blockquote>
+      <h3>Version 0.87pre3 release</h3>
+      <p>December 19, 1999<br>
+      A hopefully final prerelease for version 0.87 has been released, and is
+      available for download at:<br>
+      <a href="ftp://microwindows.censoft.com/pub/microwindows/microwindows-0.87pre3.tar.gz">ftp://microwindows.censoft.com/pub/microwindows/microwindows-0.87pre3.tar.gz</a>.&nbsp;
+      This prerelease covers most issues discussed on the NanoGUI list the past
+      couple of weeks.&nbsp; Changes include:</p>
+      <ul>
+        <li>Directory reorganization started.&nbsp; .&nbsp; The Microwindows and
+          Nano-X specific source code, as well as the common engine routines are
+          now in their own directories.&nbsp; Include files are placed in a
+          common directory, etc.&nbsp; Although the source file rearrangement is
+          nearly complete, I still haven't added Martin's new Makefile system
+          (that will be coming, next cut). Thus, there still aren't separate bin
+          and lib directories, but&nbsp; the source organization should make
+          learning easier.</li>
+        <li>GrArea() modified to allow different types of pixel data to be
+          displayed.&nbsp; Most of this is discussed in previous email lists.&nbsp;
+          It all works and should be enough for Morten to use as a base for his
+          work.&nbsp; This involved quite a bit of work, but is worth it since
+          Nano-X now supports drawing in device dependent and device-independent
+          manners.</li>
+        <li>Quite a few bug fixes, including the Nano-X 64k request packet fix,
+          the GrMoveWindow fix for Nano-X allowing windows to be moved and
+          clipped properly, fixing portrait mode in Microwindows offscreen
+          blitting, and the assert() fix that caused Microwindows to exit
+          sometimes.<br>
+          <br>
+          For the next cut I plan on adding Martin's make system, which allows
+          for much better configurability, as well as all demos and libraries to
+          be made at once.&nbsp; In addition, I'm probably going to take a swipe
+          at creating a window manager base for Nano-X, so that it's windows can
+          look as cool as Microwindows API, if desired. (No, this won't add much
+          code).<br>
+          <br>
+          Following is the detailed ChangeLog:<br>
+          <br>
+          Version 0.87pre3 - 19th December 1999 - <a href="mailto:greg@censoft.com">greg@censoft.com</a><br>
+          &nbsp;* started directory reorganization<br>
+          &nbsp;* changed LINUX meaning in Makefile, added UNIX for SOLARIS<br>
+          &nbsp;* fix negative blit index bug found under X11 by Piotr<br>
+          &nbsp;* set rootwp-&gt;parent = NULL for nano-X, fixes GrMoveWindow
+          clip bug<br>
+          &nbsp;* added COLORVAL&lt;-&gt;PIXELVAL conversion macros<br>
+          &nbsp;* modified GrArea to take packed pixel values of 8, 16 and 24
+          bits<br>
+          &nbsp;* modified GrArea to take RGB COLORVALs as well as PIXELVALs<br>
+          &nbsp;* renamed PF_TRUECOLOR24 to PF_TRUECOLOR888<br>
+          &nbsp;* added tunable MAXREQUESTSZ to limit max request length<br>
+          &nbsp;* modified Nano-X demo.c to GrArea() &gt; 64k pixelvals for
+          testing<br>
+          &nbsp;* fix client/server 64k length bug (request can be 24 bits in
+          length)<br>
+          &nbsp;* fixed portrait mode in CreateCompatibleBitmap<br>
+        </li>
+      </ul>
+    <h3>Version 0.87pre2 release</h3>
+      <p>December 14, 1999<br>
+      The second prerelease for version 0.87 has just been released, and is
+      available for download at:<br>
+      <a href="ftp://microwindows.censoft.com/pub/microwindows/microwindows-0.87pre2.tar.gz">ftp://microwindows.censoft.com/pub/microwindows/microwindows-0.87pre2.tar.gz</a>&nbsp;
+      This release is primarily intended for inspection and testing of the
+      changes before the directory tree reorganization, planned next.<br>
+      The major enhancements include:</p>
+      <ul>
+        <li>Portrait mode driver for framebuffer systems.&nbsp; This is a big
+          win for handhelds and palmtops, many of which require portrait mode
+          for normal operation.&nbsp; All graphics output, including mouse
+          movement, hotspots, and text output, are rotated and displayed in
+          portrait mode.&nbsp; In addition, your Microwindows applications can
+          be viewed in portrait mode on the desktop.&nbsp; Try moving the mouse
+          without holding your head sideways!</li>
+        <li>The RTEMS operating system port source has been integrated with the
+          main tree.</li>
+        <li>Fixes to allow Microwindows to be run on big-endian machines are now
+          included.</li>
+        <li>Various bug fixes including the Microwindows terminal emulator pty
+          fix for X11, and Nano-X GrMovewindow fixes for child windows.&nbsp;
+          There are still some issues relating to Nano-X clipping during window
+          movement.</li>
+      </ul>
+    <h3>RTEMS Port</h3>
+    <p>December 3, 1999<br>
+    There's been alot of interest and development with Microwindows lately.&nbsp; Rosimildo
+    daSilva has ported Microwindows 0.86 to the RTEMS operating system, available at <a href="http://members.xoom.com/rosimildo/rtems_gui.htm">http://members.xoom.com/rosimildo/rtems_gui.htm</a>.
+    &nbsp; <a href="http://www.oarcorp.com/">RTEMS</a> is a POSIX-threads compliant real time
+    multitasking operating system which runs on Intel, Motorola, Hitachi, Mips, and many other
+    CPUs.</p>
+    <h3>Version 0.87pre1 release</h3>
+    <p>December 2, 1999<br>
+    I have prepared an interim release of Microwindows and Nano-X enhancements, which
+    completes many things folks have asked for, version 0.87pre1. This is available for
+    download at <a href="ftp://microwindows.censoft.com/pub/microwindows/microwindows-0.87pre1.tar.gz">ftp://microwindows.censoft.com/pub/microwindows/microwindows-0.87pre1.tar.gz</a>
+    <br>
+    The major enhancements include:<ul>
+      <li>Support for running under X11. Microwindows and Nano-X can now run as a user-defined
+        (default 640x480) window under X Windows. The graphics output and look and feel are
+        identical to framebuffer, but will run on any X display server.</li>
+    </ul>
+    <ul>
+      <li>Compile-time options allow configuration to emulate any of the Microwindows truecolor or
+        palette modes, in any pixel depth, including grayscale. This allows a Microwindows or
+        Nano-X application to be emulated exactly, regardless of the host's or target's
+        framebuffer characteristics. Thanks to Tony Rogvall for the X11 driver.<br>
+      </li>
+      <li>The client/server network code has been completely rewritten for speed!!!
+        I studied the
+        X11 Xlib implementation and came up with a similar implementation. By queuing all client
+        data until an event or reply is required, Nano-X now runs at extremely high speed.
+        For benchmarking, use the world demo, which plots several thousand
+        points.&nbsp; This demo now runs extremely quickly.&nbsp; Unlike
+        the Xlib implementation, Nano-X still runs synchronously per client, meaning that once a
+        client request packet is sent, the server waits until the whole packet has arrived until
+        servicing another client. This keeps the server code immensely simpler, while still
+        running very quickly.&nbsp; I urge interested folks to check out the implementation, in
+        mwin/src/nanox/nxproto.{ch}, and mwin/src/nanox/client.c.<br>
+      </li>
+      <li>Routines were added to allow Nano-X to be used as a &quot;passive library&quot;, meaning
+        that an application with it's own main loop can now call into Nano-X occasionally
+        (after a
+        select returns a file descriptor that Nano-X is interested in), and it will all work. This
+        was done for Morten. See mwin/src/nanox/client.c, functions GrPrepareSelect(),
+        GrServiceSelect(), GrMainLoop(). <br>
+      </li>
+      <li>Routines were added to get the system palette, and translate an RGB color to a PIXELVAL
+        palette index. This was for Richard and the Opera browser. See mwin/src/nanox/srvfunc.c,
+        functions GrGetSystemPalette, GrFindColor(). <br>
+      </li>
+      <li>A null mouse driver was added for systems without a mouse, by setting NOMOUSE=1 in
+        Makefile.<br>
+        <br>
+        This is released as 0.87pre1 because I still haven't finished the directory tree
+        reorganization, and adding Martin's cool X11 graphics makefile configuration tool. The
+        client/server code rewrite took alot more time than expected. I am also working on getting
+        all source on CVS. </li>
+    </ul>
+    <h3>NanoGUI combined with Microwindows</h3>
+    <p>November 13, 1999<br>
+    Alex Holden, the originator of the NanoGUI project, officially handed over his role to
+    Greg Haerr, so that the NanoGUI and Microwindows projects can officially be available as a
+    single distribution.&nbsp; Alex continues to host the Microwindows/NanoGUI mailing list.
+    &nbsp; Although the releases have been maintained for some time by Greg Haerr, the
+    official distribution site is now moved here.&nbsp; A big thanks goes to Alex for thinking
+    up the NanoGUI idea and hosting the initial web site.</p>
+    <h3>Opera Web Browser ported to Microwindows</h3>
+    <p>November 11, 1999<br>
+    <a href="http://www.opera.com">The Opera Web Browser</a>, a browser known for it's small
+    footprint and operation on different operating systems, including Windows, BeOS, Linux,
+    Solaris, MacOS and OS/2, has announced they have completed initial work porting Opera to
+    Microwindows.&nbsp; This is a crticial milestone for Microwindows, since it shows that
+    larger, graphics intensive applications can run on top of the Microwindows graphics
+    engine.&nbsp; The Opera port uses the Nano-X api and features jpeg and gif image support,
+    as well as transparent image drawing.&nbsp; The codefile size is 670k.&nbsp; The current
+    Microwindows footprint is less than 100k with no compiled-in images.</p>
+    <h3>Version 0.86 release</h3>
+    <p>October 28, 1999<br>
+    Thanks to Brad LaRonde for helping me get this web page out.&nbsp; I have posted an update
+    v0.86 to Microwindows/Nano-X at: </p>
+    <blockquote>
+      <a href="ftp://microwindows.censoft.com/pub/microwindows/microwindows-0.86.tar.gz"><p>ftp://microwindows.censoft.com/pub/microwindows/microwindows-0.86.tar.gz</a>
+      </p>
+    </blockquote>
+    <p>This version completes a major effort, that of implementing off-screen drawing, as well
+    as screen-to-screen blitting. The screen driver interface had to change to accommodate
+    this, and I had to rewrite all the screen drivers. In addition, the blitting routines were
+    written for 1, 2, 4, 8, 16 and 32bpp linear framebuffer devices, as well as the 16 color 4
+    planes vga (this was a royal pain...) The blitting uses a clipping region traversal
+    algorithm so that blitting is always high speed, even when the destination window is
+    partly obscured. </p>
+    <p>This release also auto-detects most Linux framebuffer implementations, and should have
+    a compiled in driver for it. </p>
+    <p>The standard Microwindows demo is now a graphical terminal emulator, mterm. (No, it
+    doesn't run vi yet, and it doesn't repaint it's screen contents, but it will ;-) This demo
+    requires screen-to-screen blitting for scrolling. The 3d graphics demo now uses offscreen
+    blitting to enhance (read no flicker) the display. Check it out. </p>
+    <p>There is also some experimental full-blown region handling code included, which uses
+    X11's y-x banding region algorithms. (This stuff is truly for those with extra time and
+    brains). It is currently not compiled in, but can be included by replacing devclip.c with
+    devclip2.c. In the next release, arbitrary multi-rectangle clipping regions will be
+    available. I also plan on implementing separate clip regions from update regions for
+    windows, with the system computing the update region as a subset of the clip region.
+    Anyway, this sophisticated region handling is required for smart window painting as well
+    as higher end graphics primitives. Eventually, this will also allow separate source and
+    destination clipping for bitblit operations. Only destination clipping is working now. </p>
+    <p>The next release will have a reorganized directory structure, allowing separate
+    development of Nano-X, widgets, core engine, and Microwindows. I plan on moving the whole
+    thing to a CVS soon. BTW, Microwindows now supports three processor families, according to
+    reports emailed me. We've got i386, 8086, MIPS Vr41xx, and ARM families running ;-) </p>
+    <p>Following is a summary of the ChangeLog: <br>
+    Version 0.86 - 28th October 1999 - greg@censoft.com <ul>
+      <li>merged framebuffer, elks and msdos vga 16 color 4 planes drivers </li>
+      <li>wrote vga bitbit routines (a herculean effort) </li>
+      <li>optimized bitblit by traversing window clip region </li>
+      <li>added experimental multi-rectangle dynamically allocated regions </li>
+      <li>wrote scrolling terminal emulator demo for microwindows </li>
+      <li>added WM_FDINPUT msg, WndRegisterFdInput call for terminal emulator </li>
+      <li>changed SCREENINFO struct, removed black/white, added bpp, planes </li>
+      <li>added offscreen (memory DC) drawing to microwindows </li>
+      <li>added BitBlt, CreateCompatibleBitmap, CreateCompatibleDC, DeleteDC </li>
+      <li>retired BOGL library, must use new interface for blitting </li>
+      <li>converted framebuffer, svgalib, elks and msdos screen drivers (we need blit routines for
+        herc and svgalib still) </li>
+      <li>major screen driver interface change, old drivers not compatible </li>
+    </ul>
+    <p>Page maintained by Greg Haerr &lt;<a href="mailto:greg@censoft.com">greg@censoft.com</a>&gt;</td>
+  </tr>
+  <tr>
+    <td valign="top"></td>
+    <td></td>
+  </tr>
+</table>
+</body>
+</html>

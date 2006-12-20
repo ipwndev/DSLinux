@@ -1,0 +1,157 @@
+PIXIL Packages Documentation
+----------------------------
+
+This file describes the methods used to add a new package to the
+pixil/packages subsystem and  add it to the menu configuration system.
+
+There are three main steps to adding a package to PIXIL: 
+
+1. Create a new pixil/pakages/<package>  directory that contains an unpacked
+   copy of your source.
+
+2. Create Config.in and Makefiles for your new package in the
+   pixil/packages/<package> directory.
+
+3. Add your new config entries into the menu configuration system and to the
+   default config files.
+
+For the purpose of these instructions, we'll be working with the fictional
+package "Snoop", a network sniffer.
+
+
+Create a New Package Directory
+-------------------------------
+
+Under the pixil/packages directory, create a new subdirectory using the name
+of your package. For instance, snoop. Within this directory, untar your
+package sources, so that another directory is created underneath. When
+completed, it should look something like this:
+
+pixil/packages/snoop/snoop-1.0.4
+
+The reason for the extra directory (instead of say, putting everything in
+pixil/packages/snoop-1.0.4) is to allow for the creation of the
+PIXIL-compatible Makefiles and Config.in for the menu configuration
+system.
+
+Creating Config.in and Your New Makefile
+-----------------------------------------
+
+  A. Config.in
+
+The Config.in file contains information about your project that is used for the
+menu configuration system of PIXIL. This includes such things as
+an English description of the package, whether it is turned on by default, etc.
+
+For Snoop, we'll keep it simple by creating Config.in in the
+pixil/packages/snoop directory, and placing the following contents in it:
+
+config CONFIG_SNOOP
+        bool "Snoop the Network Sniffer (Shhhh!)"
+        default n
+
+Note the name of the config entry. This name must be chosen when adding the
+packages. This is the same name that ends up the config files looking like
+one of the following:
+
+CONFIG_SNOOP=y
+
+or
+
+# CONFIG_SNOOP is not set
+
+The text description is self-explanatory, and the default is either y or n
+depending on whethere or not your package should be turned on by default or
+not.
+
+There are a multitude of other options for the Config.in entries that this 
+document can't hope to cover. For some real-life examples, see the Config.in
+files in the pixil/packages/viewml and pixil/packages/flash for additional
+options such as package dependencies and optional settings.
+
+When your Config.in is complete, you need to add an entry in the Config.in
+located in pixil/packages. You can place your entry in any of the menus
+present in the PIXIL system. By default, pixil/packages/Config.in contains
+entries for Applications and Games (as you'll see when you edit the files.)
+For other categories, look at the other Config.in files, particularly in the 
+pixil/apps subdirectory. 
+
+For Snoop, we'll add a like like the following under "Nano-X Applications":
+
+source packages/snoop/Config.in
+
+And finally, in the pixil/packages/pkg.conf file, we add a line like the
+following:
+
+CONFIG_SNOOP snoop
+
+Where CONFIG_SNOOP is the previously chosen configuration option ( in
+pixil/packages/snoop/Config.in) and snoop is the subdirectory containing
+your package.
+
+  B. Makefile
+
+We need to add a new PIXIL-compatible makefile as the interface between your
+new package (which probably does things differently) and the PIXIL build
+system.
+
+This new Makefile should have three main targets: all, clean, and install.
+
+The all target should configure (if needed) your package, and then proceed
+to perform all build steps. This of course, will call your existing 
+package configuration and use your existing Makefiles.
+
+The clean target should actually perform what is normally called a distclean.
+That is, it should remove and configurations, auto-generated makefiles,
+etc., as well as binary targets, libraries and object files. A good guideline
+for this is that after a clean, a configuration step should be performed again
+during the next make all.
+
+The install target should take any binaries present and install them into the
+appropriate locations, along with any support files. Keep in mind that this
+will typically happen multiple times, so support for overwriting files 
+should be included. 
+
+The bestway to get started is to copy an existing Makefile and modify it
+for your package. The Makefile located in pixil/packages/nxdoom is a good
+place to start, as it contains very basic targets, as well as the most 
+important make variables.
+
+The following lists some of the more common make variables and their meaning:
+
+TARGET_CROSS		If you're building a using a cross-compiler, this
+			will be set to something like "arm-linux-". This
+			is commonly used to set the toolchain variables
+			(CC, CXX, etc.) that are passed to configuration 
+			scripts and whatnot.
+
+INSTALL_DIR		This is the location of the installation directory.
+			This is what was set in the config file as
+			INSTALL_PREFIX
+
+SYS			The target system prefix. For ARM, this will be 
+			arm-linux, for x86, something like i386-linux or
+			i686-linux. Useful for passing as the --host 
+			parameter to standard configure scripts.
+
+BUILD_SYS		The system on which you are building. For x86 systems,
+			this will be something like i386-linux or i686-linux.
+			Useful for passing as the --build parameter to
+			standard configure scripts.
+
+Menu Configuration and Default Config Files
+--------------------------------------------
+
+At this point, running make menuconfig at the top level of pixil will display
+the standard menus for configuration, and under the packages subtree will
+be your new entry, in the menu name that you specified. In addition, it should
+be selected if you set your default to "y" in your Config.in, or off otherwise.
+
+Writing your config file upon exit from make menuconfig will cause your new entry
+to be written to the config file.
+
+The last step is to add an appropriate entry to the default configuration files
+located in pixil/scripts/sysdep. The files are called 
+defconfig* and are pretty self-explanatory. They are the same format as the top
+level config files and can be hand-edited. Just add your CONFIG_SNOOP=y to
+the same place as it was put in your top level config file.

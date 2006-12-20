@@ -1,0 +1,25 @@
+menu "Pixil Desktop"
+
+config CONFIG_PIXILDT
+       bool "Build the PixilDT application"
+       default y
+
+config CONFIG_PIXILDT_FLTK
+	bool "Use external FLTK for PixilDT"
+	default n
+
+config CONFIG_PIXILDT_FLTKDIR
+	string "External FLTK directory"
+	depends CONFIG_PIXILDT_FLTK
+	default "/usr/local/"
+	
+config CONFIG_PIXILDT_INTERNATIONAL
+        bool "Build gettext support into PixilDT"
+        default n
+        depends CONFIG_PIXILDT
+
+config CONFIG_PIXILDT_DEBUG
+	bool "Build PixilDT with debugging symbols"
+	default n
+	depends CONFIG_PIXILDT
+endmenu

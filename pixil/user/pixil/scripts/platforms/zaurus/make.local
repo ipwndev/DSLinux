@@ -1,0 +1,8 @@
+PAR_TEMPLATE=defaults.xml.in
+DEST_DIR=/usr/pixil/
+
+all:
+	cat $(PAR_TEMPLATE) | sed -e s%@prefix@%$(DEST_DIR)%g \
+	> local.xml
+	
+	../../../build/bin/native/xmlimport -i local.xml local.db

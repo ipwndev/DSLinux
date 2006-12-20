@@ -1,0 +1,10 @@
+add configure script mod for --with-nanox
+	(change x11 dir to nanox)
+add 15bpp to mwin
+add rmask,gmask,bmask
+add bytesperline
+add endianness LSBFirst
+add direct client side fb mapping
+
+add fast x blitting
+add SDL-style direct draw and then updaterects
