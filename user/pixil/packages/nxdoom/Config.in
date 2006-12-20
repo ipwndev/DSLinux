@@ -1,4 +1,0 @@
-config CONFIG_NXDOOM
-	bool "Nano-X Doom Clone"
-	depends CONFIG_NANOX 
-	default n
