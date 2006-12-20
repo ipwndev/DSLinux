@@ -1,0 +1,60 @@
+Autologin 0.99.0
+================
+(c) 2000 Red Hat, Inc.
+Written by Bernhard Rosenkraenzer <bero@redhat.com>
+
+
+What is it?
+===========
+Autologin is a tool that lets you bypass the login screens on a unix system.
+It needs to be installed and configured by root (it is definitely not a
+cracking tool ;) ).
+Possible uses include providing a simple end-user system as well as creating
+a one-purpose (e.g. web browsing) station that returns to where it's supposed
+to be after a reboot or power outage without any intervention.
+
+autologin affects only local users - it doesn't open up any leaks for crackers
+from the outside world.
+
+
+How is it configured?
+=====================
+Create the file /etc/sysconfig/autologin, containing the following settings:
+
+USER=[username]
+	Start the session as the user specified here.
+	This setting is mandatory. If omitted, autologin will not run.
+	If autologin was compiled with --enable-paranoid, autologin will
+	not run if the user specified has UID or GID 0.
+EXEC=[script or program]
+	The script or program listed here will be executed as the user
+	specified above.
+	If this setting is omitted, /usr/X11R6/bin/startx will be used.
+AUTOLOGIN={yes,no}
+	You can use this setting to turn off autologin even if it is
+	installed and the config file exists and is considered safe.
+	If this setting is omitted, "yes" is assumed.
+
+/etc/sysconfig/autologin must not be writable by anyone but root. If it is,
+it is detected as a possible cracking attempt and autologin will not run.
+
+
+Do I need to do anything else?
+==============================
+Yes - you need to have runlevel 5 start autologin. Starting from the
+initscripts 5.15 package, Red Hat Linux does this for you.
+If you are running a prior version or a different OS, simply replace
+the call to kdm, gdm or xdm with a call to autologin, or better yet, to
+a script that calls autologin and falls back to [kgx]dm if autologin fails.
+
+
+Is it safe?
+===========
+I think so. Read the source to make sure.
+
+
+Patches etc
+===========
+Send patches, comments, suggestions, big CPUs, money etc to bero@redhat.com,
+SPAM to /dev/null.
+
