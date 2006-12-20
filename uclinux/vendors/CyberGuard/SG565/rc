@@ -1,0 +1,50 @@
+echo "/etc/rc processing ..."
+echo "Starting watchdog ..."
+watchdog /dev/watchdog
+hostname SG565
+echo "Making Filesystems ..."
+expand /etc/ramfs.img /dev/ram2
+echo "Mounting Filesystems ..."
+mount -t proc proc /proc
+echo 2 > /proc/cpu/alignment
+mount -t devpts devpts /dev/pts
+mount -t tmpfs -o size=33m tmpfs /var
+mount -t ext2 /dev/ram2 /etc/config
+mkdir -m 1777 /var/tmp
+mkdir -m 755 /var/log
+mkdir -m 755 /var/run
+mkdir -m 1777 /var/lock
+mkdir -m 755 /var/empty
+mkdir -m 755 /var/mnt
+echo "Processing Config Filesystem ..."
+flatfsd -r
+echo "Setting system clock ..."
+hwclock --hctosys --utc
+logd boot
+echo "Loading network drivers."
+modprobe ixp400
+if [ -f /etc/IxNpeMicrocode.dat ]; then
+	# Using Intel CSR-2.0 library
+	cat /etc/IxNpeMicrocode.dat > /dev/ixNpe
+	modprobe ixp400_eth
+else
+	# Using older CSR-1.x library code
+	modprobe ixp425_npe
+	rmmod ixp425_npe
+	modprobe ixp425_eth
+fi
+setmac -o 0x1c000
+modprobe rt2500ap
+modprobe ipsec
+echo "Loading USB drivers."
+modprobe usbcore
+modprobe ehci-hcd
+modprobe usb-ohci
+modprobe ohci-hcd
+modprobe crc32
+modprobe mii
+mount -t usbdevfs none /proc/bus/usb
+modprobe authd
+initconf -v
+ifconfig lo 127.0.0.1
+echo "/etc/rc complete."

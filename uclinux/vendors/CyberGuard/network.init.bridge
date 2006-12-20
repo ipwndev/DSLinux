@@ -1,0 +1,15 @@
+verbose "Initialising bridged on eth0/eth1"
+set eth0dev [config ref ethernet<devname=eth0>]
+set eth1dev [config ref ethernet<devname=eth1>]
+
+set bridge [config new bridge]
+set lanelem [config new $bridge.elements interface $eth0dev]
+config set $lanelem fwclass lan
+set wanelem [config new $bridge.elements interface $eth1dev]
+config set $wanelem fwclass wan
+
+set brlan [config new dhcp_client interface $bridge]
+config set $brlan name "Bridge"
+config set $bridge conn $brlan
+set bralias [config new $brlan.alias]
+config set $bralias ipaddr 192.168.0.1 index 0
