@@ -1,0 +1,76 @@
+#! /bin/sh
+# retawq/tool/tgmode - calculate text/graphics mode information
+# This file is part of retawq (<http://retawq.sourceforge.net/>), a network
+# client created by Arne Thomassen; retawq is basically released under certain
+# versions of the GNU General Public License and WITHOUT ANY WARRANTY.
+# Read the file COPYING for license details, README for program information.
+# Copyright (C) 2004-2005 Arne Thomassen <arne@arne-thomassen.de>
+
+# This shell script is automatically executed during configuration of the
+# program, to prepare compilation. Don't start it manually.
+
+# step 1: prepare
+
+#me=`echo "$0" | sed 's,.*[/],,'`
+me="$0"
+
+case "x$0" in
+  xtool/tgmode) ;;
+  *) echo "$me: must be executed as 'tool/tgmode'" >&2; (exit 1); exit 1 ;;
+esac
+
+case "x$#" in
+  x2) ;;
+  *) echo "$me: usage: $me <task> <OPTION_TG>" >&2; (exit 1); exit 1 ;;
+esac
+
+task="$1"
+option_tg="$2"
+
+# step 2: calculate information
+
+liblink=
+headinc=
+objs=
+rszt=
+config_tg=0 # TG_INVALID
+
+case "A$option_tg" in
+  Acurses)
+    liblink='-lcurses'; rszt='curses'; headinc='<curses.h>';
+    config_tg=3 ;; # TG_CURSES
+  Ancurses)
+    liblink='-lncurses'; rszt='ncurses'; headinc='<ncurses.h>';
+    config_tg=4 ;; # TG_NCURSES
+  Axcurses)
+    liblink='-L/usr/X11R6/lib -lX11'; headinc='"cursesx.h"'; objs='cursesx.o';
+    config_tg=5 ;; # TG_XCURSES
+  Abicurses)
+    headinc='"cursesbi.h"'; objs='cursesbi.o';
+    config_tg=6 ;; # TG_BICURSES
+  Acurses:*:*)
+    what=`expr "$option_tg" : 'curses\:\(.*\)'`
+    h=`expr "$what" : '\([^\:]*\)\:'`
+    l=`expr "$what" : '[^\:]*\:\(.*\)'`
+    liblink="-l$l"; rszt="$l"; headinc="<$h>"
+    config_tg=7 ;; # TG_FLEXCURSES
+  *) echo "$me: bad OPTION_TG parameter" >&2; (exit 1); exit 1 ;;
+esac
+
+case "A$headinc" in
+  A) ;;
+  *) headinc="#include $headinc" ;;
+esac
+
+# step 3: look what to do with the calculated information
+
+case "A$task" in
+  A--init) echo "$headinc" >tgmode.inc ;;
+  A--cftg) echo "$config_tg" ;;
+  A--libs) echo "$liblink" ;;
+  A--objs) echo "$objs" ;;
+  A--rszt) echo "$rszt" ;;
+  *) echo "$me: bad task parameter" >&2; (exit 1); exit 1 ;;
+esac
+
+:; exit 0
