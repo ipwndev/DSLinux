@@ -1,0 +1,10 @@
+# Microsoft NMAKE Makefile
+
+DEFINES=-DTEMPLATE=\"template\" -DPRECANNED=\"precanned\"
+
+sudoku: sudoku.c win32\curses.c win32\termios.c win32\unistd.c
+	$(CC) /Iwin32 $(DEFINES) $**
+
+clean:
+	del /F sudoku.exe *.obj
+
