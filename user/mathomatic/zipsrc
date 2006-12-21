@@ -1,7 +1,0 @@
-#!/bin/sh
-# Create a zip file containing the Mathomatic source distribution.
-
-rm -f ~/am.zip
-rm -f lib/*.o
-zip -r ~/am.zip *.c *.h makefile* compile* *.txt VERSION COPYING mathomatic.* zipsrc doc primes tests lib fact >/dev/null
-echo ~/am.zip created.
