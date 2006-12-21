@@ -1,0 +1,81 @@
+This is ../../doc/sed.info, produced by makeinfo version 4.5 from
+../../doc/sed.texi.
+
+INFO-DIR-SECTION Text creation and manipulation
+START-INFO-DIR-ENTRY
+* sed: (sed).                   Stream EDitor.
+
+END-INFO-DIR-ENTRY
+
+This file documents version 4.1.5 of GNU `sed', a stream editor.
+
+   Copyright (C) 1998, 1999, 2001, 2002, 2003, 2004 Free Software
+Foundation, Inc.
+
+   This document is released under the terms of the GNU Free
+Documentation License as published by the Free Software Foundation;
+either version 1.1, or (at your option) any later version.
+
+   You should have received a copy of the GNU Free Documentation
+License along with GNU `sed'; see the file `COPYING.DOC'.  If not,
+write to the Free Software Foundation, 59 Temple Place - Suite 330,
+Boston, MA 02110-1301, USA.
+
+   There are no Cover Texts and no Invariant Sections; this text, along
+with its equivalent in the printed manual, constitutes the Title Page.
+
+Indirect:
+sed.info-1: 935
+sed.info-2: 50405
+
+Tag Table:
+(Indirect)
+Node: Top935
+Node: Introduction3816
+Node: Invoking sed4370
+Ref: Invoking sed-Footnote-19396
+Ref: Invoking sed-Footnote-29588
+Node: sed Programs9691
+Node: Execution Cycle10838
+Ref: Execution Cycle-Footnote-112011
+Node: Addresses12322
+Node: Regular Expressions17061
+Node: Common Commands24610
+Node: The "s" Command26608
+Ref: The "s" Command-Footnote-130940
+Node: Other Commands31012
+Ref: Other Commands-Footnote-136149
+Node: Programming Commands36221
+Node: Extended Commands37130
+Node: Escapes40705
+Ref: Escapes-Footnote-143711
+Node: Examples43902
+Node: Centering lines44997
+Node: Increment a number45909
+Ref: Increment a number-Footnote-147489
+Node: Rename files to lower case47609
+Node: Print bash environment50405
+Node: Reverse chars of lines51185
+Ref: Reverse chars of lines-Footnote-152202
+Node: tac52424
+Node: cat -n53206
+Node: cat -b55063
+Node: wc -c55815
+Ref: wc -c-Footnote-157748
+Node: wc -w57817
+Node: wc -l59289
+Node: head59526
+Node: tail59850
+Node: uniq61534
+Node: uniq -d62330
+Node: uniq -u63054
+Node: cat -s63778
+Node: Limitations65667
+Node: Other Resources66507
+Node: Reporting Bugs67433
+Ref: Reporting Bugs-Footnote-173962
+Node: Extended regexps74033
+Node: Concept Index75200
+Node: Command and Option Index85215
+
+End Tag Table
