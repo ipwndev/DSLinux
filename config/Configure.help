@@ -329,6 +329,9 @@ CONFIG_USER_SASH_SHUTDOWN
   Command to shutdown the system.
   Approx. binary size: 5k
 
+CONFIG_USER_SED_SED
+  GNU sed - The UNIX stream editor
+
 CONFIG_USER_SETSERIAL_SETSERIAL
   User level serial port configuration tool.
   Approx binary size: 18k

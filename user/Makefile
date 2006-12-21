@@ -303,6 +303,7 @@ dir_$(CONFIG_USER_SASH_REBOOT)              += sash
 dir_$(CONFIG_USER_SASH_SH)                  += sash
 dir_$(CONFIG_USER_SASH_SHUTDOWN)            += sash
 dir_$(CONFIG_USER_SASH_REBOOT_SNAPGEAR)     += sash
+dir_$(CONFIG_USER_SED_SED)                  += sed
 dir_$(CONFIG_USER_SER_SER)                  += ser
 dir_$(CONFIG_USER_SER_RTPPROXY)             += ser
 dir_$(CONFIG_USER_SETHDLC_SETHDLC)          += sethdlc
