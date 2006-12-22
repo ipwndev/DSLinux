@@ -111,7 +111,7 @@ config.tk: config.in
 		echo '#!'"/usr/bin/wish -f" > config.tk; \
 	fi
 	cat $(SCRIPTSDIR)/header.tk >> ./config.tk
-	cat config.tmp >> config.tk
+	-find . -depth -type d | grep -v .svn | xargs rmdir > /dev/null 2>&1 || exit 0
 	rm -f config.tmp
 	echo "set defaults \"/dev/null\"" >> config.tk
 	echo "set help_file \"config/Configure.help\"" >> config.tk
