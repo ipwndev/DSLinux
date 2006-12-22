@@ -28,7 +28,7 @@ LINKHDRS = \
 	$(ROOTDIR)/lib/libidn/lib/*.h,. \
 	$(ROOTDIR)/lib/libcurl/include/curl/*.h,curl \
 	$(ROOTDIR)/lib/libpcap/net/bpf.h,net \
-	$(ROOTDIR)/lib/libssl/include/*,. \
+	$(ROOTDIR)/lib/libssl/src/include/*,. \
 	$(ROOTDIR)/lib/zlib/*.h,. \
 	$(ROOTDIR)/lib/libbzip2/bzlib.h,. \
 	$(ROOTDIR)/prop/libsnapgear/include/*.h,. \

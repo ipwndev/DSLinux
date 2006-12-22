@@ -154,7 +154,7 @@ LINKLIBS=\
 	$(ROOTDIR)/lib/libidn/build/lib/.libs/libidn.a \
 	$(ROOTDIR)/lib/libcurl/build/lib/.libs/libcurl.a \
 	$(ROOTDIR)/lib/libcurl/build/lib/.libs/libcurl.so \
-	$(ROOTDIR)/lib/libssl/*.so* $(ROOTDIR)/lib/libssl/*.a \
+	$(ROOTDIR)/lib/libssl/src/*.so* $(ROOTDIR)/lib/libssl/src/*.a \
 	$(ROOTDIR)/lib/zlib/libz.a \
 	$(ROOTDIR)/lib/libbzip2/libbz2.so* \
 	$(ROOTDIR)/lib/libatm/src/lib/*.so* $(ROOTDIR)/lib/libatm/src/lib/*.a \
