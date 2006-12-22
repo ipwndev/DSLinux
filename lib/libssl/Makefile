@@ -9,11 +9,12 @@ all: .compiled
 	touch $@
 
 .compiled: .configured
-	cd src && make depend && make
+	$(MAKE) -C src depend
+	$(MAKE) -C src
 	touch $@
 
 clean:
-	cd src && $(MAKE) clean
+	-[ -f src/Makefile ] && $(MAKE) -C src clean
 	rm -f .configured .compiled
 
 # Empty romfs target since we only statically link with libraries
