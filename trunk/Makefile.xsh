@@ -16,6 +16,9 @@ include config.arch
 .PHONY: xsh
 xsh:
 	@echo "Spawning cross-compilation shell. Happy hacking! :-)"
+	@echo "Type exit to get out of here"
+	@echo "YOU CANNOT COMPILE ALL OF DSLinux FROM THIS SHELL!"
+	@echo "It is for suitable only for porting applications and libraries."
 	@echo "------ Environment: ----------------------------------------------------"
 	@echo "CC       =   $(CC)"
 	@echo "CFLAGS   =   $(CFLAGS)"
@@ -23,5 +26,5 @@ xsh:
 	@echo "LDFLAGS  =   $(LDFLAGS)"
 	@echo "------------------------------------------------------------------------"
 	@(echo "$(PATH)" | grep toolchain) 2>&1 >/dev/null || \
-		echo "Remember to put the toolchain binaries in your PATH"
+		echo "Remember to put the toolchain binaries in your PATH!"
 	@env PS1=" -xsh- \w > " /bin/sh
