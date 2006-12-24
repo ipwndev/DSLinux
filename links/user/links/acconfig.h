@@ -123,3 +123,7 @@
 
 /* */
 #undef RENAME_OVER_EXISTING_FILES
+
+/* */
+#undef HAVE_SOCKLEN_T
+

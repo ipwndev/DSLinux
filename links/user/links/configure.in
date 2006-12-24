@@ -5,7 +5,7 @@
 
 AC_INIT(main.c)
 
-AM_INIT_AUTOMAKE(links, 2.1pre21)
+AM_INIT_AUTOMAKE(links, 2.1pre26)
 
 ACLOCAL="./missing aclocal"
 AUTOCONF="./missing autoconf"
@@ -22,6 +22,11 @@ AC_PROG_CC
 #AC_PROG_AWK
 #AM_PROG_LEX
 #AC_PROG_YACC
+
+if test -n "`uname|grep -i bsd`"; then
+	CPPFLAGS="$CPPFLAGS -I/usr/local/include"
+	LDFLAGS="$LDFLAGS -L/usr/local/lib"
+fi
 
 AC_HEADER_STDC
 AC_PROG_GCC_TRADITIONAL
@@ -72,6 +77,21 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_C_INLINE
 AC_TYPE_SIZE_T
+AC_CACHE_CHECK([for socklen_t], ac_cv_have_socklen_t,
+	AC_TRY_COMPILE([
+	#include <sys/types.h>
+	#include <sys/socket.h>
+	], [
+	int main() {
+		socklen_t a = 0;
+		return a;
+	}
+	], ac_cv_have_socklen_t=yes, ac_cv_have_socklen_t=no)
+)
+if test "$ac_cv_have_socklen_t" = yes; then
+	AC_DEFINE(HAVE_SOCKLEN_T)
+fi
+
 AC_HEADER_TIME
 AC_STRUCT_TM
 
@@ -157,6 +177,7 @@ AC_HAVE_FUNCS(getpid setpgid)
 AC_HAVE_FUNCS(popen)
 AC_HAVE_FUNCS(uname)
 AC_HAVE_FUNCS(getpagesize)
+AC_HAVE_FUNCS(tempnam)
 AC_HAVE_FUNCS(strptime)
 AC_HAVE_FUNCS(setlocale)
 AC_HAVE_FUNCS(nl_langinfo)
@@ -246,6 +267,11 @@ if test "$cf_use_javascript" = yes; then
 	fi
 
 	reg_exp_mode="NONE"
+	PKG_CHECK_MODULES(LIBPCRE,libpcre,pkgconfig_libpcre=yes,pkgconfig_libpcre=no)
+	if test "$pkgconfig_libpcre" = "yes"; then
+		CPPFLAGS="$CPPFLAGS $LIBPCRE_CFLAGS"
+		LIBS="$LIBPCRE_LIBS $LIBS"
+	fi
 	AC_CHECK_LIB(pcre, pcre_compile)
 	AC_CHECK_HEADERS(pcre.h)
 	if test "$ac_cv_lib_pcre_pcre_compile" = yes && test "$ac_cv_header_pcre_h" = yes; then
@@ -337,8 +363,8 @@ if test -z "$disable_ssl"; then
 	PKG_CHECK_MODULES(OPENSSL,openssl,pkgconfig_openssl=yes,pkgconfig_openssl=no)
 	if test "$pkgconfig_openssl" = "yes"; then
 		AC_MSG_CHECKING([for OpenSSL])
-		CPPFLAGS="$CPPFLAGS `pkg-config openssl --cflags-only-I`"
-		LIBS="`pkg-config openssl --libs` $LIBS"
+		CPPFLAGS="$CPPFLAGS $OPENSSL_CFLAGS"
+		LIBS="$OPENSSL_LIBS $LIBS"
 		AC_TRY_LINK([#include <openssl/ssl.h>], [OpenSSL_add_all_algorithms()], cf_result=yes, cf_result=no)
 		if test "$cf_result" != yes; then
 			AC_TRY_LINK([#include <openssl/ssl.h>], [SSLeay_add_ssl_algorithms()], cf_result=yes, cf_result=no)
@@ -388,7 +414,7 @@ AC_ARG_WITH(svgalib, [  --without-svgalib       compile without svgalib graphics
 AC_ARG_WITH(x, [  --without-x             compile without X Window System graphics driver],[if test "$withval" = no; then disable_x=yes; else disable_x=no; fi])
 AC_ARG_WITH(fb, [  --without-fb            compile without Linux Framebuffer graphics driver],[if test "$withval" = no; then disable_fb=yes; else disable_fb=no; fi])
 AC_ARG_WITH(directfb, [  --without-directfb      compile without DirectFB graphics driver],[if test "$withval" = no; then disable_directfb=yes; else disable_directfb=no; fi])
-AC_ARG_WITH(sdl, [  --without-sdl           compile without SDL graphics driver],[if test "$withval" = no; then disable_sdl=yes; else disable_sdl=no; fi])
+dnl AC_ARG_WITH(sdl, [  --without-sdl           compile without SDL graphics driver],[if test "$withval" = no; then disable_sdl=yes; else disable_sdl=no; fi])
 AC_ARG_WITH(pmshell, [  --without-pmshell       compile without PMShell graphics driver],[if test "$withval" = no; then disable_pmshell=yes; else disable_pmshell=no; fi])
 AC_ARG_WITH(atheos, [  --without-atheos        compile without Atheos graphics driver],[if test "$withval" = no; then disable_atheos=yes; else disable_atheos; fi])
 
@@ -408,13 +434,6 @@ if test "$disable_svgalib" != yes ; then
 		drivers="$drivers SVGALIB"
 	fi
 fi
-
-dnl		braine, tohle jsem predelal
-dnl 	AC_CACHE_CHECK([for framebuffer], ac_cv_have_fb,
-dnl 		AC_TRY_RUN([#include <stdio.h>
-dnl 		#include <fcntl.h>
-dnl 		main(){return open("/dev/fb",O_RDWR)==-1;}], ac_cv_have_fb=yes, ac_cv_have_fb=no, ac_cv_have_fb=no)
-dnl 	)
 
 if test "$disable_fb" != yes ; then
 	AC_CHECK_HEADERS(linux/fb.h)
@@ -466,25 +485,25 @@ if test "$disable_x" != yes ; then
 	fi
 fi
 
-if test "$disable_sdl" != yes ; then
-	AC_PATH_PROG(SDL_CONFIG, sdl-config, no)
-	if test "$SDL_CONFIG" != "no"; then
-	        AC_MSG_CHECKING(for SDL >= 1.2.0)
-        	sdl_version="`$SDL_CONFIG --version`"
-		if expr "$sdl_version" \>= 1.2.0 >/dev/null; then
-			AC_MSG_RESULT(yes)
-			SDL_CFLAGS="`$SDL_CONFIG --cflags`"
-			SDL_LIBS="`$SDL_CONFIG --libs`"
-	           	AC_DEFINE(GRDRV_SDL)
-        	   	drivers="$drivers SDL"
-			CPPFLAGS="$CPPFLAGS $SDL_CFLAGS"
-			AC_CHECK_LIB(Xext, XextAddDisplay)
-			LIBS="$SDL_LIBS $LIBS"
-		else
-			AC_MSG_RESULT(no)
-		fi
-	fi
-fi
+dnl if test "$disable_sdl" != yes ; then
+dnl 	AC_PATH_PROG(SDL_CONFIG, sdl-config, no)
+dnl 	if test "$SDL_CONFIG" != "no"; then
+dnl 	        AC_MSG_CHECKING(for SDL >= 1.2.0)
+dnl         	sdl_version="`$SDL_CONFIG --version`"
+dnl 		if expr "$sdl_version" \>= 1.2.0 >/dev/null; then
+dnl 			AC_MSG_RESULT(yes)
+dnl 			SDL_CFLAGS="`$SDL_CONFIG --cflags`"
+dnl 			SDL_LIBS="`$SDL_CONFIG --libs`"
+dnl 	           	AC_DEFINE(GRDRV_SDL)
+dnl         	   	drivers="$drivers SDL"
+dnl 			CPPFLAGS="$CPPFLAGS $SDL_CFLAGS"
+dnl 			AC_CHECK_LIB(Xext, XextAddDisplay)
+dnl 			LIBS="$SDL_LIBS $LIBS"
+dnl 		else
+dnl 			AC_MSG_RESULT(no)
+dnl 		fi
+dnl 	fi
+dnl fi
 
 if test "$disable_pmshell" != yes ; then
 	AC_CACHE_CHECK([for pmshell], ac_cv_have_pmshell,
@@ -534,6 +553,17 @@ if test "$disable_atheos" != yes ; then
 fi
 
 	AC_CHECK_LIB(z, inflate)
+	PKG_CHECK_MODULES(LIBPNG,libpng >= 1.0.0,pkgconfig_libpng=yes,pkgconfig_libpng=no)
+	if test "$pkgconfig_libpng" = "yes"; then
+		CPPFLAGS="$CPPFLAGS $LIBPNG_CFLAGS"
+		LIBS="$LIBPNG_LIBS $LIBS"
+	else
+		PKG_CHECK_MODULES(LIBPNG12,libpng12,pkgconfig_libpng12=yes,pkgconfig_libpng12=no)
+		if test "$pkgconfig_libpng12" = "yes"; then
+			CPPFLAGS="$CPPFLAGS $LIBPNG12_CFLAGS"
+			LIBS="$LIBPNG12_LIBS $LIBS"
+		fi
+	fi
 	AC_CHECK_HEADERS(png.h libpng/png.h)
 	AC_CHECK_LIB(png, png_create_info_struct)
 	if test "$ac_cv_header_png_h" != yes && test "$ac_cv_header_libpng_png_h" != yes || test "$ac_cv_lib_png_png_create_info_struct" != yes; then

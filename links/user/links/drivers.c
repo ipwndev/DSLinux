@@ -206,7 +206,7 @@ struct graphics_device *init_virtual_device()
 	return NULL;
 }
 
-void virtual_device_timer_fn(void *p)
+static void virtual_device_timer_fn(void *p)
 {
 	virtual_device_timer = -1;
 	if (current_virtual_device && current_virtual_device->redraw_handler) {
@@ -217,8 +217,20 @@ void virtual_device_timer_fn(void *p)
 
 void switch_virtual_device(int i)
 {
+	if (i == VD_NEXT) {
+		int j;
+		int t = 0;
+		for (j = 0; j < n_virtual_devices * 2; j++)
+			if (virtual_devices[j % n_virtual_devices] == current_virtual_device) t = 1;
+			else if (virtual_devices[j % n_virtual_devices] && t) {
+				current_virtual_device = virtual_devices[j % n_virtual_devices];
+				goto ok_switch;
+			}
+		return;
+	}
 	if (i < 0 || i >= n_virtual_devices || !virtual_devices[i]) return;
 	current_virtual_device = virtual_devices[i];
+	ok_switch:
 	if (virtual_device_timer == -1)
 		virtual_device_timer = install_timer(0, virtual_device_timer_fn, NULL);
 }

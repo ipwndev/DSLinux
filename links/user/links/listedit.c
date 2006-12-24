@@ -827,8 +827,10 @@ static void delete_ok(void * data)
 	struct redraw_data rd;
 
 	/* strong premise: we can't delete head of the list */
-	if (ld->current_pos->next!=ld->list)
+	if (ld->current_pos->next!=ld->list) {
+		if (ld->current_pos == ld->win_offset) ld->win_offset = ld->current_pos->next;
 		ld->current_pos=ld->current_pos->next;
+	}
 	else  /* last item */
 	{
 		if (!(ld->win_pos))  /* only one line on the screen */
@@ -866,8 +868,10 @@ static void delete_folder_recursively(void * data)
 	}
 		
 	/* strong premise: we can't delete head of the list */
-	if (ld->current_pos->next!=ld->list)
+	if (ld->current_pos->next!=ld->list) {
+		if (ld->current_pos == ld->win_offset) ld->win_offset = ld->current_pos->next;
 		ld->current_pos=ld->current_pos->next;
+	}
 	else  /* last item */
 	{
 		if (!(ld->win_pos))  /* only one line on the screen */

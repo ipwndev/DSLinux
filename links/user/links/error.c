@@ -35,11 +35,32 @@ void do_not_optimize_here(void *p)
 }
 
 #ifdef LEAK_DEBUG
+
 long mem_amount = 0;
 long last_mem_amount = -1;
-#ifdef LEAK_DEBUG_LIST
+#define ALLOC_MAGIC		0xa110c
+#define ALLOC_FREE_MAGIC	0xf4ee
+#define ALLOC_REALLOC_MAGIC	0x4ea110c
+
+#ifndef LEAK_DEBUG_LIST
+struct alloc_header {
+	int magic;
+	int size;
+};
+#else
+struct alloc_header {
+	struct alloc_header *next;
+	struct alloc_header *prev;
+	int magic;
+	int size;
+	int line;
+	unsigned char *file;
+	unsigned char *comment;
+};
 struct list_head memory_list = { &memory_list, &memory_list };
 #endif
+
+#define L_D_S ((sizeof(struct alloc_header) + 15) & ~15)
 #endif
 
 static inline void force_dump(void)

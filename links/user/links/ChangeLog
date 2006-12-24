@@ -1,3 +1,207 @@
+=== RELEASE 2.1pre26 ===
+
+Tue Nov 28 23:13:38 MET 2006 mikulas:
+
+	Fixed severe security bug: '"' and ';' in smb:// url could be used for
+	remote command execution.
+
+=== RELEASE 2.1pre25 ===
+
+Wed Nov 22 23:55:21 MET 2006 mikulas:
+
+	DirectFB no longer causes internal error on unsupported color depth.
+	Normal error reporting and trying other drivers is be done.
+
+Wed Nov 22 22:26:58 MET 2006 Jakub Bogusz <qboosh@pld-linux.org>:
+
+	Updated Polish Translation
+
+Sun Nov 12 17:23:46 MET 2006 user:
+
+	Fixed memory leak in http authentication
+
+=== RELEASE 2.1pre24 ===
+
+Mon Nov  6 02:13:48 cet 2006 mikulas:
+
+	Fixed incorrect page displayed when search string ended with space and
+	the word was last on page
+
+Thu Oct 26 16:10:01 MET 2006 user:
+
+	More strict parsing of ftp list, fixes ftp.su.se
+
+Sun Oct 15 22:55:28 MET DST 2006 mikulas:
+
+	Allow cookie path to point to file, not only directory
+
+Wed Oct 11 00:17:27 MET DST 2006 mikulas:
+
+	Fixed quirk with displaying of links in text mode
+
+Mon Oct  9 23:33:03 MET 2006 Jakub Bogusz <qboosh@pld-linux.org>:
+
+	Updated Polish translation
+
+Mon Oct  9 21:55:24 MET 2006 Jindrich Makovicka <makovick@gmail.com>:
+
+	Fixed memory corruption when redirecting URLs with user:password
+
+Mon Sep 11 02:43:32 MET DST 2006 mikulas:
+
+	Test for socklen_t
+	Work without PF_INET (for Minix 3)
+	Cleaned up use of AF_ and PF_ constants
+
+Sat Sep  9 00:05:16 MET 2006 user:
+
+	Fixed double-to-string conversion for config files
+
+Fri Aug 25 00:48:05 MET 2006 user:
+
+	Parsing ftp directories starts to be difficult because fixing one bug
+	introduces other. Previous fix sometimes mistook size for year :-/
+
+Sun Aug 20 05:06:57 cet 2006 mikulas:
+
+	Correctly translate character set of "label" attribute
+
+Thu Aug 17 19:57:34 MET 2006 user:
+
+	Fixed incremental loading of XBM images
+
+Mon Aug  7 05:11:47 CEST 2006 Matthew Fischer <futhark@mchsi.com>:
+
+	Fixed Japanese fonts
+
+Mon Jul 31 00:32:58 MET 2006 user:
+
+	More cygwin fixes
+
+=== RELEASE 2.1pre23 ===
+
+Thu Jul 27 04:53:01 CEST 2006 mikulas:
+
+	Fixed pagedown and search bugs in braille terminal introduced in
+	links-2.1pre20
+
+Sun Jul 16 16:35:54 cet 2006 mikulas:
+
+	Link to "" redirects to current file rather than current directory
+		(fixes some forms)
+
+Sun Jul 16 00:08:30 cet 2006 mikulas:
+
+	Better ftp directory parsing (process correctly file names starting with
+		year)
+
+Sat Jul 15 16:37:36 MET 2006 user:
+
+	Bigger default textarea
+
+Mon Jul 10 22:53:09 MET DST 2006 mikulas:
+
+	Use pkg-config to search for libpng and pcre
+
+Tue Jun 27 23:50:43 cet 2006 mikulas:
+
+	Fixed display of multiple consecutive spaces when searching
+
+Tue Jun 27 23:14:35 cet 2006 mikulas:
+
+	View &nbsp; as space when searching
+
+Sun Jun 18 16:11:57 MET 2006 user:
+
+	Command "kill background connections" aborts also keepalive connections
+
+Sat Jun 17 21:43:01 cet 2006 mikulas:
+
+	Removed SDL support until someone fixes it.
+	Remaining bugs:
+		palette not installed with 256-color svgalib support
+		drawing doesn't synchronize with softcursor (seen on svgalib)
+		stupid keyboard handling (SDL has the ability to query
+			operating system keymap and translate keys to unicode
+			but this driver didn't use it)
+		doesn't support virtual devices with Alt-1 ... Alt-0, like
+			svgalib and framebuffer
+		reportedly crashes with sdl-1.2.10
+	If you want SDL support continued, take file sdl.c from previous
+	version of links, fix the above issues and resubmit it.
+
+Sat Jun 17 21:08:04 cet 2006 mikulas:
+
+	Fixed exponential memory consumption with table cell colspan/rowspan
+
+Sat Jun 17 20:30:49 cet 2006 mikulas:
+
+	Do not try to interpret <script src=...> if server returns HTTP error
+
+Sat Jun 10 23:52:00 cet 2006 mikulas:
+
+	Decode %AB sequences in position tags
+
+Fri Jun  9 18:32:55 cet 2006 mikulas:
+
+	Accept broken meta refresh tags (fixes www.seznam.cz)
+
+Fri Jun  9 02:14:42 MET 2006 user:
+
+	Shift-Q exits without question
+
+Sat Jun  3 21:47:19 cet 2006 mikulas:
+
+	Fixed a bug that <body onload=...> was not processed when there were no
+	other scripts on that page
+
+Sat Jun  3 19:31:35 CEST 2006 mikulas:
+
+	Fixed crash in javascript regular expressions
+
+Wed May 31 18:25:32 CEST 2006 mikulas
+
+	Fixed mouse in Cygwin
+	Allowed to run in xterm or rxvt in Cygwin
+
+=== RELEASE 2.1pre22 ===
+
+Wed May 24 20:03:59 MET DST 2006 mikulas:
+
+	sponsored by Alex Poylisher <sher@komkon.org>
+	Use 8-bit gamma correction on machines with slow FPU (or with FPU
+	emulation) --- this significantly reduces startup time
+
+Fri May 12 04:23:58 MET DST 2006 Lech Lorens <lech_lorens@interia.pl>:
+
+	Optional scrollbars in frames
+
+Sat Apr 29 18:06:05 CEST 2006 clock:
+	
+	Implemented porn mode (bare image autoscaling aka fullscreen).
+
+Sat Apr 29 12:45:07 CEST 2006 clock:
+	
+	Fixed ignorance of aspect ratio for images where only one dimension
+	is specified.
+
+Thu Apr 27 03:08:27 MET 2006 user:
+
+	Fixed crash when deleting item at the top of the window in bookmarks
+	or associations or extensions
+
+Thu Apr 20 18:27:07 MET 2006 user:
+
+	Ignore space at the end of url
+
+Wed Apr  5 04:28:09 cet 2006 mikulas:
+
+	Fixed memory leak on image with no src attribute and usemap attribute
+
+Tue Apr  4 00:37:49 MET 2006 user:
+
+	Support 4th and 6th mouse button on svgalib
+
 === RELEASE 2.1pre21 ===
 
 Sun Apr  2 19:37:50 MET 2006 user:

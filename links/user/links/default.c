@@ -1,6 +1,8 @@
 /* default.c
  * (c) 2002 Mikulas Patocka, Petr 'Brain' Kulhavy
  * This file is a part of the Links program, released under GPL
+ *
+ * Does the configuration file.
  */
 
 #include "links.h"
@@ -420,6 +422,9 @@ void load_config(void)
 	load_config_file(links_home, "user.cfg");
 }
 
+/* prefix: directory
+ * name: name of the configuration file (typ. links.cfg)
+ */
 int write_config_data(unsigned char *prefix, unsigned char *name, struct option *o, struct terminal *term)
 {
 	int err;
@@ -499,9 +504,6 @@ void num_wr(struct option *o, unsigned char **s, int *l)
 	add_knum_to_str(s, l, *(int *)o->ptr);
 }
 
-#define DBL_PRECISION 10000
-
-
 unsigned char *dbl_rd(struct option *o, unsigned char *c)
 {
 	unsigned char *tok = get_token(&c);
@@ -526,13 +528,11 @@ unsigned char *dbl_rd(struct option *o, unsigned char *c)
 
 void dbl_wr(struct option *o, unsigned char **s, int *l)
 {
-	long y=*(double*)o->ptr;
-	long x=((*(double*)o->ptr)-y)*DBL_PRECISION;
+	char number[80];
+	snprintf(number, sizeof number, "%.4f", *(double*)o->ptr);
 
 	add_nm(o, s, l);
-	add_knum_to_str(s, l, y);
-	add_chr_to_str(s, l, '.');
-	add_knum_to_str(s, l, x);
+	add_to_str(s, l, number);
 }
 
 unsigned char *str_rd(struct option *o, unsigned char *c)
@@ -1003,7 +1003,7 @@ fprintf(stdout, "%s%s%s%s%s%s\n",
 "\n"
 " -driver <driver name>\n"
 "  Graphics driver to use. Drivers are: x, svgalib, fb, directfb, pmshell,\n"
-"    atheos, sdl.\n"
+"    atheos.\n"
 "  List of drivers will be shown if you give it an unknown driver.\n"
 "  Available drivers depend on your operating system and available libraries.\n"
 "\n"
@@ -1213,6 +1213,13 @@ fprintf(stdout, "%s%s%s%s%s%s\n",
 " -display-optimize <0>/<1>/<2>\n"
 "  Optimize for CRT (0), LCD RGB (1), LCD BGR (2).\n"
 "\n"
+" -gamma correction <0>/<1>/<2>\n"
+"  Type of gamma correction:\n"
+"    (default 2)\n"
+"  0 - 8-bit (fast).\n"
+"  1 - 16-bit (slow).\n"
+"  2 - automatically detect according to speed of FPU.\n"
+"\n"
 " -enable-javascript <0>/<1>\n"
 "  Enable javascript.\n"
 "\n"
@@ -1268,6 +1275,9 @@ fprintf(stdout, "%s%s%s%s%s%s\n",
 "\n"
 " -html-image-scale <percent>\n"
 "  Scale images in graphics mode.\n"
+"\n"
+" -html-bare-image-autoscale <0>/<1>\n"
+"  Autoscale images displayed on full screen.\n"
 "\n"
 " -html-numbered-links <0>/<1>\n"
 "  Number links in text mode. Allow quick link selection by typing\n"
@@ -1396,7 +1406,10 @@ long image_cache_size = 1048576;
 int enable_html_tables = 1;
 int enable_html_frames = 1;
 
-struct document_setup dds = { 0, 0, 1, 1, 0, 0, 3, 0, 0, 0, 18, 1, 100, 0 };
+struct document_setup dds = { 0, 0, 1, 1, 0, 0, 3, 0, 0, 0, 18, 1, 
+	100, /* Image scale */
+	0, /* Porn enable */
+	0 };
 
 struct rgb default_fg = { 191, 191, 191, 0 };
 struct rgb default_bg = { 0, 0, 0, 0 };
@@ -1421,6 +1434,7 @@ int js_global_resolve=1;	/* resolvovani v globalnim adresnim prostoru, kdyz BFU 
 int js_manual_confirmation=1; /* !0==annoying dialog on every goto url etc. */
 
 int display_optimize=0;	/*0=CRT, 1=LCD RGB, 2=LCD BGR */
+int gamma_bits=2;	/*0 --- 8, 1 --- 16, 2 --- auto */
 double bfu_aspect=1; /* 0.1 to 10.0, 1.0 default. >1 makes circle wider */
 int aspect_on=1;
 
@@ -1501,6 +1515,7 @@ struct option links_options[] = {
 	{1, gen_cmd, num_rd, num_wr, 0, 1, &dither_letters, "dither_letters", "dither-letters"},
 	{1, gen_cmd, num_rd, num_wr, 0, 1, &dither_images, "dither_images", "dither-images"},
 	{1, gen_cmd, num_rd, num_wr, 0, 2, &display_optimize, "display_optimize", "display-optimize"},
+	{1, gen_cmd, num_rd, num_wr, 0, 2, &gamma_bits, "gamma_correction", "gamma-correction"},
 	{1, gen_cmd, num_rd, num_wr, 0, 1, &js_enable, "enable_javascript", "enable-javascript"},
 	{1, gen_cmd, num_rd, num_wr, 0, 1, &js_verbose_errors, "verbose_javascript_errors", "js.verbose-errors"},
 	{1, gen_cmd, num_rd, num_wr, 0, 1, &js_verbose_warnings, "verbose_javascript_warnings", "js.verbose-warnings"},
@@ -1534,6 +1549,7 @@ struct option html_options[] = {
 	{1, gen_cmd, num_rd, num_wr, 0, 1, &dds.image_names, "html_image_names", "html-image-names"},
 	{1, gen_cmd, num_rd, num_wr, 0, 1, &dds.display_images, "html_display_images", "html-display-images"},
 	{1, gen_cmd, num_rd, num_wr, 1, 500, &dds.image_scale, "html_image_scale", "html-image-scale"},
+	{1, gen_cmd, num_rd, num_wr, 0, 1, &dds.porn_enable, "html_bare_image_autoscale", "html-bare-image-autoscale"},
 	{1, gen_cmd, num_rd, num_wr, 0, 1, &dds.num_links, "html_numbered_links", "html-numbered-links"},
 	{1, gen_cmd, num_rd, num_wr, 0, 1, &dds.table_order, "html_table_order", "html-table-order"},
 	{1, gen_cmd, num_rd, num_wr, 0, 1, &dds.auto_refresh, "html_auto_refresh", "html-auto-refresh"},

@@ -44,7 +44,7 @@ int check_protocol(unsigned char *p, int l)
 {
 	int i;
 	for (i = 0; protocols[i].prot; i++)
-		if (!casecmp(protocols[i].prot, p, l)) {
+		if (!casecmp(protocols[i].prot, p, l) && strlen(protocols[i].prot) == l) {
 			return i;
 		}
 	return -1;
@@ -312,7 +312,7 @@ unsigned char *join_urls(unsigned char *base, unsigned char *rel)
 	unsigned char *p, *n, *pp, *ch;
 	int l;
 	int lo = !casecmp(base, "file://", 7);
-	if (rel[0] == '#') {
+	if (rel[0] == '#' || !rel[0]) {
 		n = stracpy(base);
 		for (p = n; *p && *p != POST_CHAR && *p != '#'; p++) ;
 		*p = 0;
@@ -396,6 +396,13 @@ unsigned char *translate_url(unsigned char *url, unsigned char *cwd)
 	unsigned char *ch;
 	unsigned char *nu, *da;
 	while (*url == ' ') url++;
+	if (*url && url[strlen(url) - 1] == ' ') {
+		nu = stracpy(url);
+		while (*nu && nu[strlen(nu) - 1] == ' ') nu[strlen(nu) - 1] = 0;
+		ch = translate_url(nu, cwd);
+		mem_free(nu);
+		return ch;
+	}
 	if (!casecmp("proxy://", url, 8)) return NULL;
 	if (!parse_url(url, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, &da, NULL, NULL)) {
 		nu = stracpy(url);
@@ -493,7 +500,7 @@ void get_filename_from_url(unsigned char *url, unsigned char **s, int *l)
 	*l = uu - *s;
 }
 
-#define accept_char(x)	((x) != '"' && (x) != '&' && (x) != '/' && (x) != '<' && (x) != '>')
+#define accept_char(x)	((x) != '"' && (x) != '\'' && (x) != '&' && (x) != '<' && (x) != '>')
 #define special_char(x)	((x) == '%' || (x) == '#')
 
 void add_conv_str(unsigned char **s, int *l, unsigned char *b, int ll, int encode_special)
@@ -505,7 +512,6 @@ void add_conv_str(unsigned char **s, int *l, unsigned char *b, int ll, int encod
 			sprintf(h, "%%%02X", (unsigned)*b & 0xff);
 			add_to_str(s, l, h);
 		} else if (*b == '%' && encode_special <= -1 && ll > 2 && ((b[1] >= '0' && b[1] <= '9') || (b[1] >= 'A' && b[1] <= 'F') || (b[1] >= 'a' && b[1] <= 'f'))) {
-			
 			unsigned char h = 0;
 			int i;
 			for (i = 1; i < 3; i++) {

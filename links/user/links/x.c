@@ -1397,7 +1397,7 @@ static int x_get_filled_bitmap(struct bitmap *bmp, long color)
 		mem_free(pixmap);
 		p->type=X_TYPE_IMAGE;
 		bmp->data=malloc(bmp->skip*bmp->y);
-		if (!bmp->data)internal("Cannot allocate memory for image.\n");
+		if (!bmp->data)malloc_oom();
 		image=XCreateImage(x_display,x_default_visual,x_depth,ZPixmap,0,0,bmp->x,bmp->y,x_bitmap_scanline_pad<<3,bmp->skip);
 		if (!image)internal("Cannot create image.\n");
 		image->data=bmp->data;
@@ -1434,7 +1434,7 @@ static int x_get_empty_bitmap(struct bitmap *bmp)
 	pad=x_bitmap_scanline_pad-((bmp->x*x_bitmap_bpp)%x_bitmap_scanline_pad);
 	if (pad==x_bitmap_scanline_pad)pad=0;
 	bmp->skip=bmp->x*x_bitmap_bpp+pad;
-	bmp->data=malloc(bmp->skip*bmp->y);
+	if (!(bmp->data=malloc(bmp->skip*bmp->y))) malloc_oom();
 	/* on error bmp->data should point to NULL */
 	bmp->flags=0;
 	return 0;
@@ -1845,7 +1845,7 @@ void *x_prepare_strip(struct bitmap *bmp, int top, int lines)
 		image=XCreateImage(x_display,x_default_visual,x_depth,ZPixmap,0,0,bmp->x,lines,x_bitmap_scanline_pad<<3,bmp->skip);
 		if (!image)internal("x_prepare_strip: Cannot alloc image.\n");
 		image->data=malloc(bmp->skip*lines);
-		if (!(image->data))internal("x_prepare_strip: Cannot alloc image.\n");
+		if (!(image->data))malloc_oom();
 		bmp->data=image;
 		return image->data;
 

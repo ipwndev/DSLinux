@@ -128,6 +128,7 @@ void make_green_table(int, int, int, int);
 void make_blue_table(int, int, int, int);
 void make_round_tables(void);
 
+int slow_fpu = -1;
 
 #define LIN \
 	r+=(int)(in[0]);\
@@ -226,7 +227,7 @@ void make_round_tables(void);
 		int *bptr;\
 		int skip=out->skip-SKIP_CODE;\
 \
-		o=o;\
+		o=0; /*warning go away */\
 		switch(out->x){\
 \
 			case 0:\
@@ -260,7 +261,7 @@ void make_round_tables(void);
 		unsigned char *outp=out->data;\
 		int skip=out->skip-SKIP_CODE;\
 	\
-		o=o;\
+		o=0; /*warning go away */\
 		for (y=out->y;y;y--){\
 			for (x=out->x;x;x--){\
 				rt=red_table[in[0]];\
@@ -677,11 +678,37 @@ void make_16_table(int *table, int bits, int pos,double gamma, int dump_t2c,
 	double voltage;
 	double rev_gamma=1/gamma;
 	const double t=((double)1)/65535;
-	int last_grade=-1;
-	int last_content=0;
+	int last_grade, last_content;
+	ttime start_time = get_time();
+	int sample_state = 0;
+	int x_slow_fpu = slow_fpu;
+	if (gamma_bits != 2) x_slow_fpu = !gamma_bits;
+
+	repeat_loop:
+	last_grade=-1;
+	last_content=0;
 
 	for (j=0;j<65536;j++){
-
+		if (x_slow_fpu) {
+			if (x_slow_fpu == 1) {
+				if (j & 255) {
+					table[j] = last_content;
+					continue;
+				}
+			} else {
+				if (!(j & (j - 1))) {
+					ttime now = get_time();
+					if (!sample_state) {
+						if (now != start_time) start_time = now, sample_state = 1;
+					} else {
+						if (now - start_time > SLOW_FPU_DETECT_THRESHOLD && (now - start_time) * 65536 / j > SLOW_FPU_MAX_STARTUP / 3) {
+							x_slow_fpu = 1;
+							goto repeat_loop;
+						}
+					}
+				}
+			}
+		}
 		voltage=pow(j*t,rev_gamma);
 		/* Determine which monitor input voltage is equivalent
 		 * to said photon flux level
@@ -739,6 +766,9 @@ void make_16_table(int *table, int bits, int pos,double gamma, int dump_t2c,
 		table[j]=last_content;
 		/* Save index and photon flux. */
 	}
+	if (x_slow_fpu == -1) slow_fpu = 0;	/* if loop passed once without
+		detecting slow fpu, always assume fast FPU */
+	if (gamma_bits == 2 && x_slow_fpu == 1) slow_fpu = 1;
 }
 
 void make_red_table(int bits, int pos, int dump_t2c, int be)
@@ -910,9 +940,8 @@ void init_dither(int depth)
 		break;
 
 		default: 
-		fprintf(stderr,"init_dither: unsupported depth %d\n",depth);
 		internal("Graphics driver returned unsupported \
-pixel memory organisation");
+pixel memory organisation %d",depth);
 	}
 	make_round_tables();
 }

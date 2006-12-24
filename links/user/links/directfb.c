@@ -81,7 +81,7 @@ directfb_fb_init_driver (unsigned char *param, unsigned char *display)
   if (dfb)
     return NULL;
 
-  DirectFBInit (&g_argc, (char ***) &g_argv);
+  DirectFBInit (&g_argc, (char ***)(void *)&g_argv);
   ret = DirectFBCreate (&dfb);
 
   if (ret)
@@ -104,6 +104,24 @@ directfb_fb_init_driver (unsigned char *param, unsigned char *display)
   /* endian test */
   if (htons (0x1234) == 0x1234)
     directfb_driver.depth |= 0x100;
+
+  switch (directfb_driver.depth) {
+  	case 33:
+	case 65:
+	case 122:
+	case 130:
+	case 386:
+	case 451:
+	case 195:
+	case 452:
+	case 196:
+	case 708:
+		break;
+	default:
+		layer->Release(layer);
+		dfb->Release(dfb);
+		return stracpy("Unsupported color depth.\n");
+  }
 
   directfb_driver.x = config.width;
   directfb_driver.y = config.height;

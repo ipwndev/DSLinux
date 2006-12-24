@@ -1,6 +1,8 @@
 /* pomocny.c
  * (c) 2002 Martin 'PerM' Pergel
  * This file is a part of the Links program, released under GPL.
+ *
+ * Ponocny je casto nemocny.
  */
 
 #include "cfg.h"

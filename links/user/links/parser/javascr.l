@@ -36,7 +36,8 @@ static void yy_fatal_error(yyconst char msg[])
 {
 }
 
-void js_fake_function_to_stop_silly_warnings()
+void js_fake_function_to_stop_silly_warnings(void);
+void js_fake_function_to_stop_silly_warnings(void)
 { yy_last_accepting_state=0;
   yy_last_accepting_cpos=0;
   yy_n_chars=0;
@@ -70,7 +71,7 @@ void js_fake_function_to_stop_silly_warnings()
 #define YY_ALWAYS_INTERACTIVE 1
 #define getc mygetc
 #define ungetc myungetc
-void yyparse(); /* stops silly warning - hope prototype isn't buggy! */
+void yyparse(void); /* stops silly warning - hope prototype isn't buggy! */
 
 char * js_get_char;
 char * js_get_char_upto;

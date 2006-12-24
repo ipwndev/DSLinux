@@ -516,11 +516,16 @@ void jsint_scan_script_tags(struct f_data_c *fd)
 	if ((val = get_attr_val(attr, "src"))) {
 		unsigned char *url;
 		if (fd->f_data->script_href_base && ((url = join_urls(fd->f_data->script_href_base, val)))) {
+			int code, version;
 			struct additional_file *af = request_additional_file(fd->f_data, url);
 			mem_free(url);
 			mem_free(val);
 			if (!af || !af->rq) goto se;
 			if (af->rq->state >= 0) goto ret;
+			if (!af->rq->ce) goto se;
+			if (!get_http_code(af->rq->ce->head, &code, &version)) {
+				if (code < 200 || code >= 300) goto se;
+			}
 			get_file(af->rq, &start, &end);
 			if (start == end) goto se;
 		} else {
@@ -2663,6 +2668,8 @@ void js_upcall_submit(void *bidak, long document_id, long form_id)
 	if (!js_ctx)internal("js_upcall_submit called with NULL context pointer\n");
 	fd=jsint_find_document(document_id);
 	if (!fd||!jsint_can_access(js_ctx,fd))return;
+
+	if (fd->ses->rq && fd->ses->defered_url) return;
 
 	if ((form_id&JS_OBJ_MASK)!=JS_OBJ_T_FORM)return;
 	form=jsint_find_object(fd,form_id);

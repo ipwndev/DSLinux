@@ -778,12 +778,14 @@ void abort_background_connections(void)
 	while (1) {
 		int j;
 		struct connection *c = (void *)&queue;
-		for (j = 0; j <= i; j++) if ((c = c->next) == (void *)&queue) return;
+		for (j = 0; j <= i; j++) if ((c = c->next) == (void *)&queue) goto brk;
 		if (getpri(c) >= PRI_CANCEL) {
 			setcstate(c, S_INTERRUPTED);
 			abort_connection(c);
 		} else i++;
 	}
+	brk:
+	abort_all_keepalive_connections();
 }
 
 int is_entry_used(struct cache_entry *e)

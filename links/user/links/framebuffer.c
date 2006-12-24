@@ -41,6 +41,10 @@
 
 #include "arrow.inc"
 
+#ifndef MAP_FAILED
+#define MAP_FAILED	((void *)-1L)
+#endif
+
 #ifdef GPM_HAVE_SMOOTH
 #define gpm_smooth GPM_SMOOTH
 #else
@@ -599,7 +603,7 @@ static inline void place_mouse_composite(void)
 /* This moves the mouse a sophisticated way when the old and new position of the
  * cursor overlap.
  */
-static inline void redraw_mouse_sophisticated()
+static inline void redraw_mouse_sophisticated(void)
 {
 	int new_background_x, new_background_y;
 
@@ -863,7 +867,7 @@ static void fb_switch_shutdown(void)
 	ioctl(TTY,VT_SETMODE, &vt_omode);
 }
 
-void fb_shutdown_palette()
+static void fb_shutdown_palette(void)
 {
 	if (have_cmap)
 	{
@@ -873,7 +877,7 @@ void fb_shutdown_palette()
 	}
 }
 
-void fb_ctrl_c(struct itrm *i)
+static void fb_ctrl_c(struct itrm *i)
 {
 	kbd_ctrl_c();
 }
@@ -902,9 +906,9 @@ void fb_mouse_setsize()
 }
 #endif
 
-void unhandle_fb_mouse();
+void unhandle_fb_mouse(void);
 
-void fb_gpm_in(void *nic)
+static void fb_gpm_in(void *nic)
 {
 #ifndef USE_GPM_DX
 	static int lx = -1, ly = -1;
@@ -979,7 +983,7 @@ void fb_gpm_in(void *nic)
 	redraw_mouse();
 }
 
-int handle_fb_mouse()
+static int handle_fb_mouse(void)
 {
 	Gpm_Connect conn;
 #ifndef USE_GPM_DX
@@ -1022,7 +1026,7 @@ int handle_fb_mouse()
 	return 0;
 }
 
-void unhandle_fb_mouse()
+void unhandle_fb_mouse(void)
 {
 	if (fb_hgpm >= 0) set_handlers(fb_hgpm, NULL, NULL, NULL, NULL);
 #ifndef USE_GPM_DX
@@ -1044,7 +1048,8 @@ void unhandle_fb_mouse()
 #endif
 }
 
-void block_fb_mouse()
+#ifndef USE_GPM_DX
+static void block_fb_mouse(void)
 {
 	if (fb_hgpm >= 0) set_handlers(fb_hgpm, NULL, NULL, NULL, NULL);
 #ifndef USE_GPM_DX
@@ -1054,7 +1059,7 @@ void block_fb_mouse()
 #endif
 }
 
-void unblock_fb_mouse()
+static void unblock_fb_mouse(void)
 {
 	if (fb_hgpm >= 0) set_handlers(fb_hgpm, fb_gpm_in, NULL, NULL, NULL);
 #ifndef USE_GPM_DX
@@ -1064,8 +1069,9 @@ void unblock_fb_mouse()
 	}
 #endif
 }
+#endif
 
-unsigned char *fb_init_driver(unsigned char *param, unsigned char *ignore)
+static unsigned char *fb_init_driver(unsigned char *param, unsigned char *ignore)
 {
 	unsigned char *e;
 	struct stat st;
@@ -1310,7 +1316,7 @@ unsigned char *fb_init_driver(unsigned char *param, unsigned char *ignore)
 	return NULL;
 }
 
-void fb_shutdown_driver(void)
+static void fb_shutdown_driver(void)
 {
 	mem_free(mouse_buffer);
 	mem_free(background_buffer);
@@ -1375,22 +1381,22 @@ static int fb_get_filled_bitmap(struct bitmap *dest, long color)
 }
 */
 
-void fb_register_bitmap(struct bitmap *bmp)
+static void fb_register_bitmap(struct bitmap *bmp)
 {
 }
 
-void fb_unregister_bitmap(struct bitmap *bmp)
+static void fb_unregister_bitmap(struct bitmap *bmp)
 {
 	mem_free(bmp->data);
 }
 
-void *fb_prepare_strip(struct bitmap *bmp, int top, int lines)
+static void *fb_prepare_strip(struct bitmap *bmp, int top, int lines)
 {
 	return ((char *)bmp->data)+bmp->skip*top;
 }
 
 
-void fb_commit_strip(struct bitmap *bmp, int top, int lines)
+static void fb_commit_strip(struct bitmap *bmp, int top, int lines)
 {
 	return;
 }
@@ -1412,7 +1418,7 @@ void fb_draw_bitmap(struct graphics_device *dev,struct bitmap* hndl, int x, int 
 }
 
 
-void fb_draw_bitmaps(struct graphics_device *dev, struct bitmap **hndls, int n, int x, int y)
+static void fb_draw_bitmaps(struct graphics_device *dev, struct bitmap **hndls, int n, int x, int y)
 {
 	TEST_INACTIVITY
 
@@ -1432,7 +1438,7 @@ void fb_draw_bitmaps(struct graphics_device *dev, struct bitmap **hndls, int n, 
 
 
 
-void fb_fill_area(struct graphics_device *dev, int left, int top, int right, int bottom, long color)
+static void fb_fill_area(struct graphics_device *dev, int left, int top, int right, int bottom, long color)
 {
 	unsigned char *dest;
 	int y;
@@ -1448,7 +1454,7 @@ void fb_fill_area(struct graphics_device *dev, int left, int top, int right, int
 }
 
 
-void fb_draw_hline(struct graphics_device *dev, int left, int y, int right, long color)
+static void fb_draw_hline(struct graphics_device *dev, int left, int y, int right, long color)
 {
 	unsigned char *dest;
 	HLINE_CLIP_PREFACE
@@ -1459,7 +1465,7 @@ void fb_draw_hline(struct graphics_device *dev, int left, int y, int right, long
 }
 
 
-void fb_draw_vline(struct graphics_device *dev, int x, int top, int bottom, long color)
+static void fb_draw_vline(struct graphics_device *dev, int x, int top, int bottom, long color)
 {
 	unsigned char *dest;
 	int y;
@@ -1474,7 +1480,7 @@ void fb_draw_vline(struct graphics_device *dev, int x, int top, int bottom, long
 }
 
 
-int fb_hscroll(struct graphics_device *dev, struct rect_set **ignore, int sc)
+static int fb_hscroll(struct graphics_device *dev, struct rect_set **ignore, int sc)
 {
 	unsigned char *dest, *src;
 	int y;
@@ -1506,7 +1512,7 @@ int fb_hscroll(struct graphics_device *dev, struct rect_set **ignore, int sc)
 }
 
 
-int fb_vscroll(struct graphics_device *dev, struct rect_set **ignore, int sc)
+static int fb_vscroll(struct graphics_device *dev, struct rect_set **ignore, int sc)
 {
 	unsigned char *dest, *src;
 	int y;
@@ -1540,7 +1546,7 @@ int fb_vscroll(struct graphics_device *dev, struct rect_set **ignore, int sc)
 }
 
 
-void fb_set_clip_area(struct graphics_device *dev, struct rect *r)
+static void fb_set_clip_area(struct graphics_device *dev, struct rect *r)
 {
 	memcpy(&dev->clip, r, sizeof(struct rect));
 	if (dev->clip.x1>=dev->clip.x2||dev->clip.y2<=dev->clip.y1||dev->clip.y2<=0||dev->clip.x2<=0||dev->clip.x1>=fb_xsize
@@ -1555,7 +1561,7 @@ void fb_set_clip_area(struct graphics_device *dev, struct rect *r)
 	}
 }
 
-int fb_block(struct graphics_device *dev)
+static int fb_block(struct graphics_device *dev)
 {
 	if (fb_old_vd) return 1;
 	unhandle_fb_mouse();
@@ -1568,7 +1574,7 @@ int fb_block(struct graphics_device *dev)
 	return 0;
 }
 
-void fb_unblock(struct graphics_device *dev)
+static void fb_unblock(struct graphics_device *dev)
 {
 #ifdef DEBUG
 	if (current_virtual_device) {

@@ -129,6 +129,7 @@ static inline void put_eight(struct cached_image *cimg,int bits)
 	{
 		memcpy(cimg->buffer+deco->image_pos*3,deco->barvicky+((deco->actual_eight)&1)*3,3);
 		deco->actual_eight>>=1;
+		cimg->rows_added=1;
 	}
 	if (deco->line_pos==cimg->width)
 		deco->line_pos=0,deco->actual_eight=0;

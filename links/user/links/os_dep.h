@@ -38,13 +38,6 @@
 #endif
 #endif
 
-#ifdef __EMX__
-#define strcasecmp stricmp
-#define strncasecmp strnicmp
-#define read _read
-#define write _write
-#endif
-
 #if defined(UNIX)
 
 static inline int dir_sep(char x) { return x == '/'; }

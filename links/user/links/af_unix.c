@@ -26,7 +26,7 @@ void af_unix_connection(void *);
 
 struct sockaddr *s_unix_acc = NULL;
 struct sockaddr *s_unix = NULL;
-int s_unix_l;
+socklen_t s_unix_l;
 int s_unix_fd = -1;
 
 #ifdef USE_AF_UNIX
@@ -50,7 +50,7 @@ int get_address(void)
 	mem_free(path);
 	s_unix = (struct sockaddr *)su;
 	s_unix_l = (char *)&su->sun_path - (char *)su + strlen(su->sun_path) + 1;
-	return AF_UNIX;
+	return PF_UNIX;
 }
 
 void unlink_unix(void)
@@ -74,7 +74,7 @@ int get_address(void)
 	sin->sin_addr.s_addr = htonl(0x7f000001);
 	s_unix = (struct sockaddr *)sin;
 	s_unix_l = sizeof(struct sockaddr_in);
-	return AF_INET;
+	return PF_INET;
 }
 
 void unlink_unix(void)
@@ -138,7 +138,7 @@ int bind_to_af_unix(void)
 
 void af_unix_connection(void *xxx)
 {
-	int l = s_unix_l;
+	socklen_t l = s_unix_l;
 	int ns;
 	memset(s_unix_acc, 0, l);
 	ns = accept(s_unix_fd, (struct sockaddr *)s_unix_acc, &l);

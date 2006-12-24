@@ -10,11 +10,11 @@ for i in $codepages; do
 	echo -n $i' ' 1>&2
 	echo
 	echo 'struct table_entry table_'$i' [] = {'
-	tail +3 $i.cp | sed 's/#.*$//' | grep '^0x[89a-zA-Z]' | sed 's/[ 	][ 	]*/ /g' | sed 's/[ 	]*$/ },/' | sed 's/ /, /' | sed 's/^[ 	]*/	{ /' | grep '.*,.*,'
+	tail -n +3 $i.cp | sed 's/#.*$//' | grep '^0x[89a-zA-Z]' | sed 's/[ 	][ 	]*/ /g' | sed 's/[ 	]*$/ },/' | sed 's/ /, /' | sed 's/^[ 	]*/	{ /' | grep '.*,.*,'
 	echo '	{ 0, 0 }'
 	echo '};'
 	echo
-	echo 'unsigned char *aliases_'$i' [] = {'`head -2 $i.cp | tail +2`', NULL };'
+	echo 'unsigned char *aliases_'$i' [] = {'`head -2 $i.cp | tail -n +2`', NULL };'
 	n=`expr $n + 1`
 done
 echo
@@ -24,10 +24,8 @@ for i in $codepages; do
 done
 echo '	{ NULL, NULL, NULL }'
 echo '};'
-echo '#define N_CODEPAGES '$n | sed 's/
-//g' > ../codepage.h
-) | sed 's/
-//g' > ../codepage.inc
+echo '#define N_CODEPAGES '$n | sed 's///g' > ../codepage.h
+) | sed 's///g' > ../codepage.inc
 echo
 echo Done.
 fi

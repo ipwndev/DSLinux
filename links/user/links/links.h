@@ -28,9 +28,9 @@
 #ifndef _LINKS_H
 #define _LINKS_H
 
-#define LINKS_COPYRIGHT "(C) 1999 - 2005 Mikulas Patocka\n(C) 2000 - 2005 Petr Kulhavy, Karel Kulhavy, Martin Pergel"
-#define LINKS_COPYRIGHT_8859_1 "(C) 1999 - 2005 Mikulás Patocka\n(C) 2000 - 2005 Petr Kulhavý, Karel Kulhavý, Martin Pergel"
-#define LINKS_COPYRIGHT_8859_2 "(C) 1999 - 2005 Mikulá¹ Patoèka\n(C) 2000 - 2005 Petr Kulhavý, Karel Kulhavý, Martin Pergel"
+#define LINKS_COPYRIGHT "(C) 1999 - 2006 Mikulas Patocka\n(C) 2000 - 2006 Petr Kulhavy, Karel Kulhavy, Martin Pergel"
+#define LINKS_COPYRIGHT_8859_1 "(C) 1999 - 2006 Mikulás Patocka\n(C) 2000 - 2006 Petr Kulhavý, Karel Kulhavý, Martin Pergel"
+#define LINKS_COPYRIGHT_8859_2 "(C) 1999 - 2006 Mikulá¹ Patoèka\n(C) 2000 - 2006 Petr Kulhavý, Karel Kulhavý, Martin Pergel"
 
 #ifndef __EXTENSIONS__
 #define __EXTENSIONS__
@@ -119,7 +119,9 @@ x #endif*/
 #endif
 #ifdef HAVE_SETJMP_H
 #ifndef DONT_INCLUDE_SETJMP
+#ifndef _SETJMP_H
 #include <setjmp.h>
+#endif /* _SETJMP_H */
 #endif
 #endif
 
@@ -156,15 +158,26 @@ x #endif*/
 #endif /* #if defined(HAVE_PNG_H) */
 #endif /* #if defined(G) */
 
+#include <termios.h>
+
 #ifdef HAVE_LONG_LONG
 #define longlong long long
 #else
 #define longlong double
 #endif
 
-#define my_intptr_t long
+#ifndef HAVE_SOCKLEN_T
+#define socklen_t int
+#endif
 
-#include <termios.h>
+#ifndef PF_INET
+#define PF_INET AF_INET
+#endif
+#ifndef PF_UNIX
+#define PF_UNIX AF_UNIX
+#endif
+
+#define my_intptr_t long
 
 #include "os_depx.h"
 
@@ -210,6 +223,9 @@ size_t strcspn(const char *s, const char *reject);
 #endif
 #ifndef HAVE_STRSTR
 char *strstr(const char *haystack, const char *needle);
+#endif
+#ifndef HAVE_TEMPNAM
+char *tempnam(const char *dir, const char *pfx);
 #endif
 
 #define option option_dirty_workaround_for_name_clash_with_include_on_cygwin
@@ -300,30 +316,14 @@ do {									\
 extern long mem_amount;
 extern long last_mem_amount;
 
-#define ALLOC_MAGIC		0xa110c
-#define ALLOC_FREE_MAGIC	0xf4ee
-#define ALLOC_REALLOC_MAGIC	0x4ea110c
-
-#ifndef LEAK_DEBUG_LIST
-struct alloc_header {
-	int magic;
-	int size;
-};
-#else
-struct alloc_header {
-	struct alloc_header *next;
-	struct alloc_header *prev;
-	int magic;
-	int size;
-	int line;
-	unsigned char *file;
-	unsigned char *comment;
-};
 #endif
 
-#define L_D_S ((sizeof(struct alloc_header) + 15) & ~15)
-
-#endif
+static inline void malloc_oom(void)
+{
+	error((unsigned char *)"ERROR: out of memory (malloc returned NULL)\n");
+	fatal_tty_exit();
+	exit(RET_FATAL);
+}
 
 #ifdef LEAK_DEBUG
 
@@ -347,9 +347,7 @@ static inline void *mem_alloc(size_t size)
 	if (!size) return DUMMY;
 	if (size > MAXINT) overalloc();
 	if (!(p = malloc(size))) {
-		error((unsigned char *)"ERROR: out of memory (malloc returned NULL)\n");
-		fatal_tty_exit();
-		exit(RET_FATAL);
+		malloc_oom();
 	}
 	return p;
 }
@@ -1277,6 +1275,9 @@ void mms_func(struct session *, unsigned char *);
 #define B_LEFT		0
 #define B_MIDDLE	1
 #define B_RIGHT		2
+#define B_FOURTH	3
+#define B_FIFTH		4
+#define B_SIXTH		5
 #define B_WHEELUP	8
 #define B_WHEELDOWN	9
 #define B_WHEELUP1	10
@@ -1561,6 +1562,7 @@ extern struct graphics_device *current_virtual_device;
 
 int init_virtual_devices(struct graphics_driver *, int);
 struct graphics_device *init_virtual_device(void);
+#define VD_NEXT		-1
 void switch_virtual_device(int);
 void shutdown_virtual_device(struct graphics_device *dev);
 void shutdown_virtual_devices(void);
@@ -1766,6 +1768,8 @@ extern unsigned char *links_icon;
 /* dither.c */
 
 #ifdef G
+
+extern int slow_fpu;	/* -1 --- don't know, 0 --- no, 1 --- yes */
 
 /* Dithering functions (for blocks of pixels being dithered into bitmaps) */
 void dither (unsigned short *in, struct bitmap *out);
@@ -2275,6 +2279,7 @@ struct document_setup {
 	int font_size;
 	int display_images;
 	int image_scale;
+	int porn_enable;
 	int target_in_new_window;
 };
 
@@ -2302,6 +2307,7 @@ struct document_options {
 	int font_size;
 	int display_images;
 	int image_scale;
+	int porn_enable;
 	double bfu_aspect; /* 0.1 to 10.0, 1.0 default. >1 makes circle wider */
 	int aspect_on;
 	int real_cp;	/* codepage of document. Does not really belong here. Must not be compared. Used only in get_attr_val */
@@ -2322,6 +2328,7 @@ static inline void ds2do(struct document_setup *ds, struct document_options *doo
 	doo->font_size = ds->font_size;
 	doo->display_images = ds->display_images;
 	doo->image_scale = ds->image_scale;
+	doo->porn_enable = ds->porn_enable;
 }
 
 struct node {
@@ -2347,6 +2354,7 @@ struct frame_desc {
 	int marginheight;
 	int line;
 	int xw, yw;
+	unsigned char scrolling;
 };
 
 struct frameset_desc {
@@ -2396,6 +2404,7 @@ struct f_data_c;
 #define G_OBJ_ALIGN_TOP		(MAXINT - 1)
 
 struct g_object {
+	/* public data --- must be same in all g_object* structures */
 	void (*mouse_event)(struct f_data_c *, struct g_object *, int, int, int);
 		/* pos is relative to object */
 	void (*draw)(struct f_data_c *, struct g_object *, int, int);
@@ -2408,12 +2417,14 @@ struct g_object {
 };
 
 struct g_object_text {
+	/* public data --- must be same in all g_object* structures */
 	void (*mouse_event)(struct f_data_c *, struct g_object_text *, int, int, int);
 	void (*draw)(struct f_data_c *, struct g_object_text *, int, int);
 	void (*destruct)(struct g_object_text *);
 	void (*get_list)(struct g_object_text *, void (*)(struct g_object *parent, struct g_object *child));
 	int x, y, xw, yw;
 	struct g_object *parent;
+	/* must be same in g_object_image */
 	int link_num;
 	int link_order;
 	struct image_map *map;
@@ -2426,24 +2437,28 @@ struct g_object_text {
 };
 
 struct g_object_line {
+	/* public data --- must be same in all g_object* structures */
 	void (*mouse_event)(struct f_data_c *, struct g_object_line *, int, int, int);
 	void (*draw)(struct f_data_c *, struct g_object_line *, int, int);
 	void (*destruct)(struct g_object_line *);
 	void (*get_list)(struct g_object_line *, void (*)(struct g_object *parent, struct g_object *child));
 	int x, y, xw, yw;
 	struct g_object *parent;
+	/* private data */
 	struct background *bg;
 	int n_entries;
 	struct g_object *entries[1];
 };
 
 struct g_object_area {
+	/* public data --- must be same in all g_object* structures */
 	void (*mouse_event)(struct f_data_c *, struct g_object_area *, int, int, int);
 	void (*draw)(struct f_data_c *, struct g_object_area *, int, int);
 	void (*destruct)(struct g_object_area *);
 	void (*get_list)(struct g_object_area *, void (*)(struct g_object *parent, struct g_object *child));
 	int x, y, xw, yw;
 	struct g_object *parent;
+	/* private data */
 	struct background *bg;
 	int n_lfo;
 	struct g_object **lfo;
@@ -2454,16 +2469,19 @@ struct g_object_area {
 };
 
 struct g_object_table {
+	/* public data --- must be same in all g_object* structures */
 	void (*mouse_event)(struct f_data_c *, struct g_object_table *, int, int, int);
 	void (*draw)(struct f_data_c *, struct g_object_table *, int, int);
 	void (*destruct)(struct g_object_table *);
 	void (*get_list)(struct g_object_table *, void (*)(struct g_object *parent, struct g_object *child));
 	int x, y, xw, yw;
 	struct g_object *parent;
+	/* private data */
 	struct table *t;
 };
 
 struct g_object_tag {
+	/* public data --- must be same in all g_object* structures */
 	void (*mouse_event)(struct f_data_c *, struct g_object *, int, int, int);
 		/* pos is relative to object */
 	void (*draw)(struct f_data_c *, struct g_object *, int, int);
@@ -2493,6 +2511,8 @@ struct g_object_tag {
 #define IM_TIFF 8
 #endif /* #ifdef HAVE_TIFF */
 
+#define MEANING_DIMS      0
+#define MEANING_AUTOSCALE 1
 struct cached_image {
 	struct cached_image *next;
 	struct cached_image *prev;
@@ -2501,17 +2521,27 @@ struct cached_image {
 	int background_color; /* nezaokrouhlené pozadí: 
 			       * sRGB, (r<<16)+(g<<8)+b */
 	unsigned char *url;
-	int wanted_xw, wanted_yw;
-	int scale;
-	int aspect; /* What aspect ratio the image is for */
+	int wanted_xw, wanted_yw; /* This is what is written in the alt.
+				     If some dimension is omitted, then
+				     it's <0. This is what was requested
+				     when the image was created. */
+	int wanted_xyw_meaning; /* MEANING_DIMS or MEANING_AUTOSCALE.
+				   The meaning of wanted_xw and wanted_yw. */
+	int scale; /* How is the image scaled */
+	int aspect; /* What aspect ratio the image is for. But the
+		       PNG aspect is ignored :( */
 
-	int xww, yww;
+	int xww, yww; /* This is the resulting dimensions on the screen
+			 measured in screen pixels. */
 
 	int width, height; /* From image header. 
 			    * If the buffer is allocated, 
 			    * it is always allocated to width*height.
 			    * If the buffer is NULL then width and height
-			    * are garbage.
+			    * are garbage. We assume these dimensions
+			    * are given in the meter space (not pixel space).
+			    * Which is true for all images except aspect
+			    * PNG, but we don't support aspect PNG yet.
 			    */
 	unsigned char image_type; /* IM_??? constant */
 	unsigned char *buffer; /* Buffer with image data */
@@ -2551,11 +2581,14 @@ struct cached_image {
 };
 
 struct g_object_image {
+	/* public data --- must be same in all g_object* structures */
 	void (*mouse_event)(struct f_data_c *, struct g_object_text *, int, int, int);
 	void (*draw)(struct f_data_c *, struct g_object_image *, int, int);
 	void (*destruct)(struct g_object *);
 	void (*get_list)(struct g_object *, void (*)(struct g_object *parent, struct g_object *child));
-	int x, y, xw, yw;
+	int x, y, xw, yw; /* x,y: coordinates
+			     xw, yw: width on the screen, or <0 if
+			     not yet known. Already scaled. */
 	/* For html parser. If xw or yw are zero, then entries
                background_color
                af
@@ -2576,6 +2609,7 @@ struct g_object_image {
       	*/
 
 	struct g_object *parent;
+	/* must be same in g_object_text */
 	int link_num;
 	int link_order;
 	struct image_map *map;
@@ -2596,6 +2630,7 @@ struct g_object_image {
 	int background; /* Remembered background from insert_image
 			 * (g_part->root->bg->u.sRGB)
 			 */
+	int xyw_meaning;
 };
 
 void refresh_image(struct f_data_c *fd, struct g_object *img, ttime tm);
@@ -2792,6 +2827,7 @@ struct f_data_c {
 #ifdef JS
 	unsigned char *onload_frameset_code;
 #endif
+	unsigned char scrolling;
 };
 
 struct location {
@@ -2878,11 +2914,10 @@ struct session {
 	int defered_data;	/* for submit: form number, jinak -1 */
 	tcount defered_seq;
 
-	int locked_link;	/* for graphics - when link is locked on FIELD/AREA */
-
 	int brl_cursor_mode;
 
 #ifdef G
+	int locked_link;	/* for graphics - when link is locked on FIELD/AREA */
 	int scrolling;
 	int scrolltype;
 	int scrolloff;
@@ -3392,6 +3427,7 @@ void query_exit(struct session *ses);
 
 extern int gamma_stamp;
 extern int display_optimize;	/*0=CRT, 1=LCD RGB, 2=LCD BGR */
+extern int gamma_bits;
 
 #endif
 
@@ -3564,7 +3600,8 @@ void tiff_finish(struct cached_image *cimg);
 
 struct image_description {
 	unsigned char *url;		/* url=completed url */
-	int xsize, ysize;		/* -1 --- unknown size */
+	int xsize, ysize;		/* -1 --- unknown size. Space:pixel
+					   space of the screen */
 	int link_num;
 	int link_order;
 	unsigned char *name;
@@ -3576,6 +3613,10 @@ struct image_description {
 	int insert_flag;		/* pokud je 1, ma se vlozit do seznamu obrazku ve f_data */
 
 	unsigned char *usemap;
+	unsigned autoscale_x, autoscale_y; /* Requested autoscale dimensions
+					      (maximum allowed rectangle), 0,0
+					      means turned off. 0,something or
+					      something,0 not allowed. */
 };
 
 struct gif_table_entry
@@ -3687,7 +3728,7 @@ int known_image_type(char *type);
 void init_imgcache(void);
 int imgcache_info(int type);
 struct cached_image *find_cached_image(int bg, unsigned char *url, int xw, int
-		yw, int scale, int aspect);
+		yw, int xyw_meaning, int scale, int aspect);
 void add_image_to_cache(struct cached_image *ci);
 
 #endif
@@ -3940,6 +3981,7 @@ struct frame_param {
 	unsigned char *url;
 	int marginwidth;
 	int marginheight;
+	unsigned char scrolling;
 };
 
 struct refresh_param {
@@ -4272,5 +4314,9 @@ void save_bookmarks(void);
 
 /* Launches bookmark manager */
 void menu_bookmark_manager(struct terminal *, void *, struct session *);
+
+#define SCROLLING_NO	0
+#define SCROLLING_YES	1
+#define SCROLLING_AUTO	2
 
 #endif /* #ifndef _LINKS_H */

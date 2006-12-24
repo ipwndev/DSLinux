@@ -118,8 +118,6 @@ int set_cookie(struct terminal *term, unsigned char *url, unsigned char *str)
 			}
 		*/
 	} else {
-		if (!cookie->path[0] || cookie->path[strlen(cookie->path) - 1] != '/')
-			add_to_strn(&cookie->path, "/");
 		if (cookie->path[0] != '/') {
 			add_to_strn(&cookie->path, "x");
 			memmove(cookie->path + 1, cookie->path, strlen(cookie->path) - 1);
@@ -250,8 +248,10 @@ int is_path_prefix(unsigned char *d, unsigned char *s)
 {
 	int dl = strlen(d);
 	int sl = strlen(s);
+	if (!dl) return 1;
 	if (dl > sl) return 0;
-	return !memcmp(d, s, dl);
+	if (memcmp(d, s, dl)) return 0;
+	return d[dl - 1] == '/' || !s[dl] || s[dl] == '/' || s[dl] == POST_CHAR || s[dl] == '?' || s[dl] == '&';
 }
 
 int cookie_expired(struct cookie *c)	/* parse_http_date is broken */

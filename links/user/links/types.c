@@ -24,6 +24,7 @@ void ext_edit_item_fn(struct dialog_data *);
 void ext_edit_done(void *);
 void ext_edit_abort(struct dialog_data *);
 int is_in_list(unsigned char *, unsigned char *, int);
+unsigned char *get_content_type_by_extension(unsigned char *url);
 
 
 struct list assoc={&assoc,&assoc,0,-1,NULL};

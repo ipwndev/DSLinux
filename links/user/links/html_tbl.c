@@ -598,7 +598,7 @@ struct table *parse_table(unsigned char *html, unsigned char *eof, unsigned char
 		if (w != W_AUTO) set_td_width(t, x, w, 0);
 	}
 	qqq = t->x;
-	for (i = 1; csp != -1 ? i < csp : i < qqq; i++) {
+	for (i = 1; csp != -1 ? i < csp : x + i < qqq; i++) {
 		struct table_cell *sc;
 		if (!(sc = new_cell(t, x + i, y)) || sc->used) {
 			csp = i;
@@ -612,7 +612,7 @@ struct table *parse_table(unsigned char *html, unsigned char *eof, unsigned char
 		sc->my = y;
 	}
 	qqq = t->y;
-	for (j = 1; rsp != -1 ? j < rsp : j < qqq; j++) {
+	for (j = 1; rsp != -1 ? j < rsp : y + j < qqq; j++) {
 		for (k = 0; k < i; k++) {
 			struct table_cell *sc;
 			if (!(sc = new_cell(t, x + k, y + j)) || sc->used) {
