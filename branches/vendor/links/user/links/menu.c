@@ -979,8 +979,9 @@ unsigned char *video_msg[] = {
 	TEXT(T_DISPLAY_OPTIMIZATION_LCD_BGR),
 	TEXT(T_DITHER_LETTERS),
 	TEXT(T_DITHER_IMAGES),
-	"",
-	"",
+	TEXT(T_8_BIT_GAMMA_CORRECTION),
+	TEXT(T_16_BIT_GAMMA_CORRECTION),
+	TEXT(T_AUTO_GAMMA_CORRECTION),
 };
 
 void videoopt_fn(struct dialog_data *dlg)
@@ -991,10 +992,10 @@ void videoopt_fn(struct dialog_data *dlg)
 	int y = gf_val(-1, -G_BFU_FONT_SIZE);
 	max_text_width(term, video_msg[0], &max, AL_LEFT);
 	min_text_width(term, video_msg[0], &min, AL_LEFT);
-	max_group_width(term, video_msg + 1, dlg->items, 11, &max);
-	min_group_width(term, video_msg + 1, dlg->items, 11, &min);
-	max_buttons_width(term, dlg->items + 11, 2, &max);
-	min_buttons_width(term, dlg->items + 11, 2, &min);
+	max_group_width(term, video_msg + 1, dlg->items, 14, &max);
+	min_group_width(term, video_msg + 1, dlg->items, 14, &min);
+	max_buttons_width(term, dlg->items + 14, 2, &max);
+	min_buttons_width(term, dlg->items + 14, 2, &min);
 	w = dlg->win->term->x * 9 / 10 - 2 * DIALOG_LB;
 	if (w > max) w = max;
 	if (w < min) w = min;
@@ -1005,9 +1006,9 @@ void videoopt_fn(struct dialog_data *dlg)
 	y += gf_val(1, G_BFU_FONT_SIZE);
 	dlg_format_group(dlg, NULL, video_msg + 1, dlg->items, 5, 0, &y, w, &rw);
 	y += gf_val(1, G_BFU_FONT_SIZE);
-	dlg_format_checkboxes(dlg, NULL, dlg->items+5, 6, dlg->x + DIALOG_LB, &y, w, &rw, video_msg+6);
+	dlg_format_checkboxes(dlg, NULL, dlg->items+5, 9, dlg->x + DIALOG_LB, &y, w, &rw, video_msg+6);
 	y += gf_val(1, G_BFU_FONT_SIZE);
-	dlg_format_buttons(dlg, NULL, dlg->items + 11, 2, 0, &y, w, &rw, AL_CENTER);
+	dlg_format_buttons(dlg, NULL, dlg->items + 14, 2, 0, &y, w, &rw, AL_CENTER);
 	w = rw;
 	dlg->xw = w + 2 * DIALOG_LB;
 	dlg->yw = y + 2 * DIALOG_TB;
@@ -1018,9 +1019,9 @@ void videoopt_fn(struct dialog_data *dlg)
 	y += gf_val(2, G_BFU_FONT_SIZE);
 	dlg_format_group(dlg, term, video_msg + 1, dlg->items, 5, dlg->x + DIALOG_LB, &y, w, NULL);
 	y += gf_val(1, G_BFU_FONT_SIZE);
-	dlg_format_checkboxes(dlg, term, dlg->items+5, 6, dlg->x + DIALOG_LB, &y, w, NULL, video_msg+6);
+	dlg_format_checkboxes(dlg, term, dlg->items+5, 9, dlg->x + DIALOG_LB, &y, w, NULL, video_msg+6);
 	y += gf_val(1, G_BFU_FONT_SIZE);
-	dlg_format_buttons(dlg, term, &dlg->items[11], 2, dlg->x + DIALOG_LB, &y, w, NULL, AL_CENTER);
+	dlg_format_buttons(dlg, term, &dlg->items[14], 2, dlg->x + DIALOG_LB, &y, w, NULL, AL_CENTER);
 }
 
 void remove_zeroes(unsigned char *string)
@@ -1046,7 +1047,7 @@ void video_options(struct terminal *term, void *xxx, struct session *ses)
 	remove_zeroes(user_g);
 	snprintf(aspect_str, VO_GAMMA_LEN, "%f", bfu_aspect);
 	remove_zeroes(aspect_str);
-	d = mem_calloc(sizeof(struct dialog) + 14 * sizeof(struct dialog_item));
+	d = mem_calloc(sizeof(struct dialog) + 17 * sizeof(struct dialog_item));
 	d->title = TEXT(T_VIDEO_OPTIONS);
 	d->fn = videoopt_fn;
 	d->refresh = (void (*)(void *))refresh_video;
@@ -1112,15 +1113,30 @@ void video_options(struct terminal *term, void *xxx, struct session *ses)
 	d->items[10].gid = 0;
 	d->items[10].dlen = sizeof(int);
 	d->items[10].data = (void *)&dither_images;
-	d->items[11].type = D_BUTTON;
-	d->items[11].gid = B_ENTER;
-	d->items[11].fn = ok_dialog;
-	d->items[11].text = TEXT(T_OK);
-	d->items[12].type = D_BUTTON;
-	d->items[12].gid = B_ESC;
-	d->items[12].fn = cancel_dialog;
-	d->items[12].text = TEXT(T_CANCEL);
-	d->items[13].type = D_END;
+	d->items[11].type = D_CHECKBOX;
+	d->items[11].gid = 2;
+	d->items[11].gnum = 0;
+	d->items[11].dlen = sizeof(int);
+	d->items[11].data = (void *)&gamma_bits;
+	d->items[12].type = D_CHECKBOX;
+	d->items[12].gid = 2;
+	d->items[12].gnum = 1;
+	d->items[12].dlen = sizeof(int);
+	d->items[12].data = (void *)&gamma_bits;
+	d->items[13].type = D_CHECKBOX;
+	d->items[13].gid = 2;
+	d->items[13].gnum = 2;
+	d->items[13].dlen = sizeof(int);
+	d->items[13].data = (void *)&gamma_bits;
+	d->items[14].type = D_BUTTON;
+	d->items[14].gid = B_ENTER;
+	d->items[14].fn = ok_dialog;
+	d->items[14].text = TEXT(T_OK);
+	d->items[15].type = D_BUTTON;
+	d->items[15].gid = B_ESC;
+	d->items[15].fn = cancel_dialog;
+	d->items[15].text = TEXT(T_CANCEL);
+	d->items[16].type = D_END;
 	do_dialog(term, d, getml(d, NULL));
 }
 
@@ -1561,7 +1577,13 @@ void html_refresh(struct session *ses)
 }
 
 #ifdef G
-unsigned char *html_texts_g[] = { TEXT(T_DISPLAY_TABLES), TEXT(T_DISPLAY_FRAMES), TEXT(T_DISPLAY_LINKS_TO_IMAGES), TEXT(T_DISPLAY_IMAGE_FILENAMES), TEXT(T_DISPLAY_IMAGES), TEXT(T_AUTO_REFRESH), TEXT(T_TARGET_IN_NEW_WINDOW), TEXT(T_TEXT_MARGIN), "", TEXT(T_IGNORE_CHARSET_INFO_SENT_BY_SERVER), TEXT(T_USER_FONT_SIZE), TEXT(T_SCALE_ALL_IMAGES_BY) };
+unsigned char *html_texts_g[] = { TEXT(T_DISPLAY_TABLES),
+	TEXT(T_DISPLAY_FRAMES), TEXT(T_DISPLAY_LINKS_TO_IMAGES),
+	TEXT(T_DISPLAY_IMAGE_FILENAMES), TEXT(T_DISPLAY_IMAGES),
+	TEXT(T_AUTO_REFRESH), TEXT(T_TARGET_IN_NEW_WINDOW), TEXT(T_TEXT_MARGIN),
+	"", TEXT(T_IGNORE_CHARSET_INFO_SENT_BY_SERVER), TEXT(T_USER_FONT_SIZE),
+	TEXT(T_SCALE_ALL_IMAGES_BY), TEXT(T_PORN_ENABLE)
+};
 #endif
 
 unsigned char *html_texts[] = { TEXT(T_DISPLAY_TABLES), TEXT(T_DISPLAY_FRAMES), TEXT(T_DISPLAY_LINKS_TO_IMAGES), TEXT(T_DISPLAY_IMAGE_FILENAMES), TEXT(T_LINK_ORDER_BY_COLUMNS), TEXT(T_NUMBERED_LINKS), TEXT(T_AUTO_REFRESH), TEXT(T_TARGET_IN_NEW_WINDOW), TEXT(T_TEXT_MARGIN), "", TEXT(T_IGNORE_CHARSET_INFO_SENT_BY_SERVER) };
@@ -1588,7 +1610,7 @@ void menu_html_options(struct terminal *term, void *xxx, struct session *ses)
 		d = mem_calloc(sizeof(struct dialog) + 14 * sizeof(struct dialog_item));
 #ifdef G
 	}else{
-		d = mem_calloc(sizeof(struct dialog) + 16 * sizeof(struct dialog_item));
+		d = mem_calloc(sizeof(struct dialog) + 17 * sizeof(struct dialog_item));
 		snprintf(html_font_str,4,"%d",ses->ds.font_size);
 		snprintf(image_scale_str,6,"%d",ses->ds.image_scale);
 #endif
@@ -1688,6 +1710,10 @@ void menu_html_options(struct terminal *term, void *xxx, struct session *ses)
 		d->items[a].fn = check_number;
 		d->items[a].gid = 1;
 		d->items[a].gnum = 500;
+		a++;
+		d->items[a].type = D_CHECKBOX;
+		d->items[a].data = (unsigned char *) &ses->ds.porn_enable;
+		d->items[a].dlen = sizeof(int);
 		a++;
 		d->items[a].type = D_BUTTON;
 		d->items[a].gid = B_ENTER;

@@ -21,7 +21,7 @@ extern int c_radku;
 int yyerror(char*); /* This only stops warning - hope it isn't buggy! */
 vrchol* js_last=0;
 extern js_context*js_context_ptr;
-int yylex(); /* This kills warning -hope is'nt buggy! */
+int yylex(void); /* This kills warning -hope is'nt buggy! */
 
 void js_warning_fn(struct dialog_data *dlg);
 int __js_shut_up_pressed(struct dialog_data *dlg, struct dialog_item_data* di);

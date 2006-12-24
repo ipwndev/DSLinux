@@ -39,7 +39,7 @@ void r_xpand_spaces(struct part *, int);
 int split_line(struct part *);
 int put_chars_conv(struct part *, unsigned char *, int);
 void html_form_control(struct part *, struct form_control *);
-void add_frameset_entry(struct frameset_desc *, struct frameset_desc *, unsigned char *, unsigned char *, int, int);
+void add_frameset_entry(struct frameset_desc *, struct frameset_desc *, unsigned char *, unsigned char *, int, int, unsigned char);
 void *html_special(struct part *, int, ...);
 void do_format(char *, char *, struct part *, unsigned char *);
 void release_part(struct part *);
@@ -435,9 +435,10 @@ static inline void move_links(struct part *p, int xf, int yf, int xt, int yt)
 		int i;
 		struct link *link = &p->data->links[n];
 			/*printf("ml: %d %d %d %d",link->pos[0].x,link->pos[0].y,X(xf),Y(yf));fflush(stdout);sleep(1);*/
-		for (i = 0; i < link->n; i++) if (link->pos[i].y == Y(yf)) {
+		/*for (i = 0; i < link->n; i++) fprintf(stderr, "%d.%d -> %d.%d: %d.%d : %d %d\n", X(xf), Y(yf), X(xt), yt != -1 ? Y(yt) : -1, n, i, link->pos[i].x, link->pos[i].y);*/
+		for (i = 0; i < link->n; i++) if (link->pos[i].y >= Y(yf)) {
 			w = 1;
-			if (link->pos[i].x >= X(xf)) {
+			if (link->pos[i].y == Y(yf) && link->pos[i].x >= X(xf)) {
 				if (yt >= 0) link->pos[i].y = Y(yt), link->pos[i].x += -xf + xt;
 				else memmove(&link->pos[i], &link->pos[i+1], (link->n-i-1) * sizeof(struct point)), link->n--, i--;
 			}
@@ -573,13 +574,19 @@ struct link *new_link(struct f_data *f)
 void html_tag(struct f_data *f, unsigned char *t, int x, int y)
 {
 	struct tag *tag;
+	unsigned char *tt;
+	int ll;
 	if (!f) return;
-	tag = mem_alloc(sizeof(struct tag) + strlen(t) + 1);
+	tt = init_str();
+	ll = 0;
+	add_conv_str(&tt, &ll, t, strlen(t), -2);
+	tag = mem_alloc(sizeof(struct tag) + strlen(tt) + 1);
 	tag->x = x;
 	tag->y = y;
-	strcpy(tag->name, t);
+	strcpy(tag->name, tt);
 	add_to_list(f->tags, tag);
 	if ((void *)last_tag_for_newline == &f->tags) last_tag_for_newline = tag;
+	mem_free(tt);
 }
 
 unsigned char *last_link = NULL;
@@ -877,7 +884,7 @@ void html_form_control(struct part *p, struct form_control *fc)
 	add_to_list(p->data->forms, fc);
 }
 
-void add_frameset_entry(struct frameset_desc *fsd, struct frameset_desc *subframe, unsigned char *name, unsigned char *url, int marginwidth, int marginheight)
+void add_frameset_entry(struct frameset_desc *fsd, struct frameset_desc *subframe, unsigned char *name, unsigned char *url, int marginwidth, int marginheight, unsigned char scrolling)
 {
 	if (fsd->yp >= fsd->y) return;
 	fsd->f[fsd->xp + fsd->yp * fsd->x].subframe = subframe;
@@ -885,6 +892,7 @@ void add_frameset_entry(struct frameset_desc *fsd, struct frameset_desc *subfram
 	fsd->f[fsd->xp + fsd->yp * fsd->x].url = stracpy(url);
 	fsd->f[fsd->xp + fsd->yp * fsd->x].marginwidth = marginwidth;
 	fsd->f[fsd->xp + fsd->yp * fsd->x].marginheight = marginheight;
+	fsd->f[fsd->xp + fsd->yp * fsd->x].scrolling = scrolling;
 	if (++fsd->xp >= fsd->x) fsd->xp = 0, fsd->yp++;
 }
 
@@ -906,7 +914,7 @@ struct frameset_desc *create_frameset(struct f_data *fda, struct frameset_param 
 		fd->f[i].xw = fp->xw[i % fp->x];
 		fd->f[i].yw = fp->yw[i / fp->x];
 	}
-	if (fp->parent) add_frameset_entry(fp->parent, fd, NULL, NULL, -1, -1);
+	if (fp->parent) add_frameset_entry(fp->parent, fd, NULL, NULL, -1, -1, SCROLLING_AUTO);
 	else if (!fda->frame_desc) fda->frame_desc = fd;
 	     else mem_free(fd), fd = NULL;
 	return fd;
@@ -914,12 +922,12 @@ struct frameset_desc *create_frameset(struct f_data *fda, struct frameset_param 
 
 void create_frame(struct frame_param *fp)
 {
-	add_frameset_entry(fp->parent, NULL, fp->name, fp->url, fp->marginwidth, fp->marginheight);
+	add_frameset_entry(fp->parent, NULL, fp->name, fp->url, fp->marginwidth, fp->marginheight, fp->scrolling);
 }
 
 void process_script(struct f_data *f, unsigned char *t)
 {
-	if (!f->script_href_base) f->script_href_base = stracpy(format.href_base);
+	if (t && !f->script_href_base) f->script_href_base = stracpy(format.href_base);
 	if (!d_opt->js_enable) return;
 	if (t) {
 		unsigned char *u;
@@ -1359,6 +1367,7 @@ int compare_opt(struct document_options *o1, struct document_options *o2)
 	    o1->font_size == o2->font_size &&
 	    o1->display_images == o2->display_images &&
 	    o1->image_scale == o2->image_scale &&
+	    o1->porn_enable == o2->porn_enable &&
 	    o1->aspect_on == o2->aspect_on &&
 	    !memcmp(&o1->default_fg, &o2->default_fg, sizeof(struct rgb)) &&
 	    !memcmp(&o1->default_bg, &o2->default_bg, sizeof(struct rgb)) &&
@@ -1418,6 +1427,11 @@ void sort_srch(struct f_data *f)
 	mem_free(max);
 }
 
+static inline int is_spc(chr c)
+{
+	return (unsigned char)c <= ' ' || c & ATTR_FRAME;
+}
+
 int get_srch(struct f_data *f)
 {
 	struct node *n;
@@ -1432,7 +1446,7 @@ int get_srch(struct f_data *f)
 			int ns = 1;
 			for (x = n->x; x < xm && x < f->data[y].l; x++) {
 				unsigned char c = f->data[y].d[x];
-				if (c < ' ' || f->data[y].d[x] & ATTR_FRAME) c = ' ';
+				if (is_spc(f->data[y].d[x])) c = ' ';
 				if (c == ' ' && ns) continue;
 				c = charset_upcase(c, f->opt.cp);
 				if (ns) {
@@ -1445,7 +1459,7 @@ int get_srch(struct f_data *f)
 					       else cnt++;
 				else {
 					int xx;
-					for (xx = x + 1; xx < xm && xx < f->data[y].l; xx++) if ((unsigned char) f->data[y].d[xx] >= ' ') goto ja_uz_z_toho_programovani_asi_zcvoknu;
+					for (xx = x + 1; xx < xm && xx < f->data[y].l; xx++) if (!is_spc(f->data[y].d[xx])) goto ja_uz_z_toho_programovani_asi_zcvoknu;
 					xx = x;
 					ja_uz_z_toho_programovani_asi_zcvoknu:
 					if (!cc) add_srch_chr(f, ' ', x, y, xx - x);

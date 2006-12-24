@@ -37,6 +37,7 @@ void cfmakeraw(struct termios *t);
 
 #ifdef __EMX__
 #define strcasecmp stricmp
+#define strncasecmp strnicmp
 #define read _read
 #define write _write
 #endif

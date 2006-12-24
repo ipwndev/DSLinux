@@ -42,6 +42,15 @@ SSL *getSSL(void)
 		context = SSL_CTX_new(SSLv23_client_method());
 		SSL_CTX_set_options(context, SSL_OP_ALL);
 		SSL_CTX_set_default_verify_paths(context);
+/* needed for systems without /dev/random, but obviously kills security. */
+		/*{
+			char pool[32768];
+			int i;
+			struct timeval tv;
+			gettimeofday(&tv, NULL);
+			for (i = 0; i < sizeof pool; i++) pool[i] = random() ^ tv.tv_sec ^ tv.tv_usec;
+			RAND_add(pool, sizeof pool, sizeof pool);
+		}*/
 	}
 	return (SSL_new(context));
 }

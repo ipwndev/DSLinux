@@ -672,12 +672,14 @@ void http_got_header(struct connection *c, struct read_buffer *rb)
 			unsigned char *newuser, *newpassword;
 			if (!parse_url(d, NULL, &user, NULL, NULL, NULL, &ins, NULL, NULL, NULL, NULL, NULL, NULL) && !user && ins && (newuser = get_user_name(host))) {
 				if (*newuser) {
+					int ins_off = ins - d;
 					newpassword = get_pass(host);
 					if (!newpassword) newpassword = stracpy("");
 					add_to_strn(&newuser, ":");
 					add_to_strn(&newuser, newpassword);
 					add_to_strn(&newuser, "@");
 					extend_str(&d, strlen(newuser));
+					ins = d + ins_off;
 					memmove(ins + strlen(newuser), ins, strlen(ins) + 1);
 					memcpy(ins, newuser, strlen(newuser));
 					mem_free(newpassword);
@@ -707,7 +709,7 @@ void http_got_header(struct connection *c, struct read_buffer *rb)
 #if defined(HAVE_STRTOLL)
 				long long f = strtoll(d + 6, NULL, 10);
 #elif defined(HAVE_STRTOQ)
-				quad_t f = strtoq(d + 6, NULL, 10);
+				longlong f = strtoq(d + 6, NULL, 10);
 #else
 				long f = strtol(d + 6, NULL, 10);
 				if (f == MAXLONG) f = -1;
@@ -728,7 +730,7 @@ void http_got_header(struct connection *c, struct read_buffer *rb)
 #if defined(HAVE_STRTOLL)
 		long long l = strtoll(d, (char **)(void *)&ep, 10);
 #elif defined(HAVE_STRTOQ)
-		quad_t l = strtoq(d, (char **)(void *)&ep, 10);
+		longlong l = strtoq(d, (char **)(void *)&ep, 10);
 #else
 		long l = strtol(d, (char **)(void *)&ep, 10);
 		if (l == MAXLONG) l = -1;

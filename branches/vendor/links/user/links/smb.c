@@ -11,7 +11,7 @@ struct smb_connection_info {
 	int list;
 	int cl;
 	int ntext;
-	char text[1];
+	unsigned char text[1];
 };
 
 void smb_got_data(struct connection *);
@@ -22,6 +22,7 @@ void smb_read_text(struct connection *, int);
 
 void smb_func(struct connection *c)
 {
+	int i;
 	int po[2];
 	int pe[2];
 	unsigned char *host, *user, *pass, *port, *data1, *data, *share, *dir;
@@ -45,6 +46,20 @@ void smb_func(struct connection *c)
 	if (!(data1 = get_url_data(c->url))) data1 = "";
 	data = init_str(), datal = 0;
 	add_conv_str(&data, &datal, data1, strlen(data1), -2);
+
+	for (i = 0; data[i]; i++) if (data[i] < 32 || data[i] == ';' || (data[i] == '"' && smb_client == SMBCLIENT)) {
+/* ';' shouldn't cause security problems but samba doesn't like it */
+/* '"' is allowed for smbc */
+		mem_free(host);
+		mem_free(port);
+		mem_free(user);
+		mem_free(pass);
+		mem_free(data);
+		setcstate(c, S_BAD_URL);
+		abort_connection(c);
+		return;
+	}
+
 	if ((p = strchr(data, '/'))) share = memacpy(data, p - data), dir = p + 1;
 	else if (*data) {
 		if (!c->cache && get_cache_entry(c->url, &c->cache)) {
@@ -166,7 +181,7 @@ void smb_func(struct connection *c)
 			}
 			if (*share) {
 				if (!*dir || dir[strlen(dir) - 1] == '/' || dir[strlen(dir) - 1] == '\\') {
-					if (dir) {
+					if (*dir) {
 						v[n++] = "-D";
 						v[n++] = dir;
 					}
@@ -233,6 +248,7 @@ void smb_func(struct connection *c)
 		v[n++] = NULL;
 		execvp(v[0], (char **)v);
 		fprintf(stderr, "client not found");
+		fflush(stderr);
 		_exit(1);
 	}
 	c->pid = r;
@@ -518,7 +534,7 @@ void end_smb_connection(struct connection *c)
 							if (!WHITECHAR(*llll)) lll = llll + 1;
 						}
 						add_conv_str(&t, &l, lx, ll - lx, 0);
-						add_to_str(&t, &l, "<a href=\"");
+						add_to_str(&t, &l, "<a href=\"/");
 						add_conv_str(&t, &l, ll, lll - ll, 1);
 						add_to_str(&t, &l, "/\">");
 						add_conv_str(&t, &l, ll, lll - ll, 0);
@@ -564,7 +580,7 @@ void end_smb_connection(struct connection *c)
 							}
 							pp++;
 						}
-						add_to_str(&t, &l, "  <a href=\"");
+						add_to_str(&t, &l, "  <a href=\"./");
 						add_conv_str(&t, &l, ls + 2, p - (ls + 2), 1);
 						if (dir) add_chr_to_str(&t, &l, '/');
 						add_to_str(&t, &l, "\">");
@@ -584,7 +600,7 @@ void end_smb_connection(struct connection *c)
 					}
 					d += 9;
 					add_conv_str(&t, &l, ls, d - ls, 0);
-					add_to_str(&t, &l, "<a href=\"");
+					add_to_str(&t, &l, "<a href=\"./");
 					add_conv_str(&t, &l, d, le2 - d, 1);
 					if (ls[4] == 'D') add_chr_to_str(&t, &l, '/');
 					add_to_str(&t, &l, "\">");

@@ -16,11 +16,12 @@ struct list_head image_cache = { &image_cache, &image_cache };
 int image_size(struct cached_image *);
 int shrink_image_cache(int);
 
+/* xyw_meaning either MEANING_DIMS or MEANING_AUTOSCALE. */
 struct cached_image *find_cached_image(int bg, unsigned char *url, int xw, int
-		yw, int scale, int aspect)
+		yw, int xyw_meaning, int scale, int aspect)
 {
 	struct cached_image *i;
-	if (xw>=0&&yw>=0){
+	if (xw>=0&&yw>=0&&xyw_meaning==MEANING_DIMS){
 		/* The xw and yw is already scaled so that scale and
 		 * aspect don't matter.
 		 */
@@ -28,7 +29,9 @@ struct cached_image *find_cached_image(int bg, unsigned char *url, int xw, int
 			if (i->background_color == bg
 				&& !strcmp(i->url, url)
 				&& i->wanted_xw==xw
-				&& i->wanted_yw==yw) goto hit;
+				&& i->wanted_yw==yw
+				&& i->wanted_xyw_meaning==xyw_meaning
+				) goto hit;
 		}
 	}else{
 		foreach (i, image_cache) {
@@ -36,9 +39,10 @@ struct cached_image *find_cached_image(int bg, unsigned char *url, int xw, int
 				&& !strcmp(i->url, url)
 				&& i->wanted_xw==xw
 				&& i->wanted_yw==yw
+				&& i->wanted_xyw_meaning==xyw_meaning 
 				&& i->scale==scale
 				&& i->aspect==aspect) goto hit;
-	}
+		}
 	}
 	return NULL;
 

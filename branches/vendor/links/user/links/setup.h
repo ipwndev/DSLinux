@@ -32,7 +32,7 @@
 
 #define LINKS_MANUAL_URL		(!strcmp(language_name(current_language),"Czech") || !strcmp(language_name(current_language),"Slovak")?\
 					"http://links.twibright.com/user.html":\
-					"http://links.sourceforge.net/docs/manual-0.90-en/")
+					"http://links.twibright.com/user_en.html")
 #define LINKS_HOMEPAGE_URL		(!strcmp(language_name(current_language),"Czech") || !strcmp(language_name(current_language),"Slovak")?\
 					"http://links.twibright.com/index_cz.php":\
 					"http://links.twibright.com/")
@@ -53,6 +53,8 @@
 
 #define MAX_REDIRECTS			10
 #define MAX_CACHED_REDIRECTS		5
+
+#define DOWNLOAD_NAME_TRIES		10000
 
 #define MEMORY_CACHE_GC_PERCENT		9/10
 #define MAX_CACHED_OBJECT		1/4
@@ -147,6 +149,9 @@
 
 #define G_IMG_REFRESH			1	/* Karle, nedavej sem 0 */
 
+#define SLOW_FPU_DETECT_THRESHOLD	1000
+#define SLOW_FPU_MAX_STARTUP		5000
+
 #define ESC_TIMEOUT			200
 
 #define DISPLAY_TIME_MIN		200
@@ -166,6 +171,8 @@
 #define HTML_FRAME_CHAR_HEIGHT		16
 #define HTML_TABLE_2ND_PASS
 #define HTML_DEFAULT_INPUT_SIZE		20
+#define HTML_DEFAULT_TEXTAREA_WIDTH	40
+#define HTML_DEFAULT_TEXTAREA_HEIGHT	7
 
 #define MAX_INPUT_URL_LEN		4096
 

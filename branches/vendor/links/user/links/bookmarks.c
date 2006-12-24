@@ -604,11 +604,11 @@ void create_initial_bookmarks(void)
 	add_bookmark("English",NULL,1);
 	add_bookmark("Calibration Procedure","http://atrey.karlin.mff.cuni.cz/~clock/twibright/links/calibration.html",2);
 	add_bookmark("Links Homepage","http://atrey.karlin.mff.cuni.cz/~clock/twibright/links/",2);
-	add_bookmark("Links Manual","http://links.sourceforge.net/docs/manual-0.90-en/",2);
+	add_bookmark("Links Manual","http://links.twibright.com/user_en.html",2);
 	add_bookmark("Èesky",NULL,1);
 	add_bookmark("Kalibraèní procedura","http://atrey.karlin.mff.cuni.cz/~clock/twibright/links/kalibrace.html",2);
 	add_bookmark("Links: domácí stránka","http://atrey.karlin.mff.cuni.cz/~clock/twibright/links/index_cz.html",2);
-	add_bookmark("Manuál k Linksu","http://links.sourceforge.net/docs/manual-0.90-en/",2);
+	add_bookmark("Manuál k Linksu","http://links.twibright.com/user.html",2);
 }
 
 void load_bookmarks(void)

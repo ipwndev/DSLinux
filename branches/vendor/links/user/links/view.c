@@ -349,7 +349,16 @@ void set_link(struct f_data_c *f)
 int find_tag(struct f_data *f, unsigned char *name)
 {
 	struct tag *tag;
-	foreach(tag, f->tags) if (!strcasecmp(tag->name, name) || (tag->name[0] == '#' && !strcasecmp(tag->name + 1, name))) return tag->y;
+	unsigned char *tt;
+	int ll;
+	tt = init_str();
+	ll = 0;
+	add_conv_str(&tt, &ll, name, strlen(name), -2);
+	foreach(tag, f->tags) if (!strcasecmp(tag->name, tt) || (tag->name[0] == '#' && !strcasecmp(tag->name + 1, tt))) {
+		mem_free(tt);
+		return tag->y;
+	}
+	mem_free(tt);
 	return -1;
 }
 
@@ -629,7 +638,9 @@ int is_in_range(struct f_data *f, int y, int yw, unsigned char *txt, int *min, i
 			continue;
 		}
 		for (i = 1; i < l; i++) if (s1[i].c != txt[i]) goto unable_to_handle_kernel_paging_request___oops;
-		if (s1[i].y < y || s1[i].y >= y + yw) continue;
+		for (i = 0; i < l; i++) if (s1[i].y >= y && s1[i].y < y + yw && s1[i].n) goto in_view;
+		continue;
+		in_view:
 		if (!min && !max) return 1;
 		found = 1;
 		for (i = 0; i < l; i++) if (s1[i].n) {
@@ -1386,8 +1397,11 @@ void find_link(struct f_data_c *f, int p, int s)
 
 void page_down(struct session *ses, struct f_data_c *f, int a)
 {
-	if (f->vs->view_pos + f->f_data->opt.yw < f->f_data->y) f->vs->view_pos += f->f_data->opt.yw, f->vs->orig_view_pos = f->vs->view_pos, find_link(f, 1, a);
-	else {
+	if (f->vs->view_pos + f->f_data->opt.yw < f->f_data->y) {
+		f->vs->view_pos += f->f_data->opt.yw;
+		f->vs->orig_view_pos = f->vs->view_pos;
+		if (!ses->term->spec->braille) find_link(f, 1, a);
+	} else {
 		if (!ses->term->spec->braille) find_link(f, -1, a);
 		else if (f->f_data->y) f->vs->brl_y = f->f_data->y - 1;
 	}
@@ -2255,7 +2269,11 @@ int enter(struct session *ses, struct f_data_c *f, int a)
 		if (!has_form_submit(f->f_data, link->form) && (!a || !F)) goto submit;
 #ifdef JS
 		/* process onfocus handler */
-		if (!ses->locked_link&&f->vs&&f->f_data&&f->vs->current_link>=0&&f->vs->current_link<f->f_data->nlinks)
+		if (
+#ifdef G
+		    !ses->locked_link&&
+#endif
+		    f->vs&&f->f_data&&f->vs->current_link>=0&&f->vs->current_link<f->f_data->nlinks)
 		{
 			struct link *lnk=&(f->f_data->links[f->vs->current_link]);
 			if (lnk->js_event&&lnk->js_event->focus_code)
@@ -2880,7 +2898,7 @@ void find_next(struct session *ses, struct f_data_c *f, int a)
 			}
 			f->vs->orig_view_pos = f->vs->view_pos;
 			f->vs->orig_view_posx = f->vs->view_posx;
-			set_link(f);
+			if (!ses->term->spec->braille) set_link(f);
 			find_next_link_in_search(f, ses->search_direction * 2);
 			return;
 		}
@@ -3264,6 +3282,9 @@ void next_frame(struct session *ses, int p)
 	struct f_data_c *fd, *fdd;
 
 	if (!(fd = current_frame(ses))) return;
+#ifdef G
+	ses->locked_link = 0;
+#endif
 	while ((fd = fd->parent)) {
 		n = 0;
 		foreach(fdd, fd->subframes) n++;
@@ -3288,6 +3309,16 @@ void next_frame(struct session *ses, int p)
 		else vs->frame_pos = 0;
 		goto next_sub;
 	}
+#ifdef G
+	if (F && (fd = current_frame(ses)) && fd->vs && fd->f_data) {
+		if (fd->vs->current_link >= 0 && fd->vs->current_link < fd->f_data->nlinks) {
+			/*fd->vs->g_display_link = 1;*/
+			if (fd->vs->g_display_link && (fd->f_data->links[fd->vs->current_link].type == L_FIELD || fd->f_data->links[fd->vs->current_link].type == L_AREA)) {
+				if ((fd->f_data->locked_on = fd->f_data->links[fd->vs->current_link].obj)) fd->ses->locked_link = 1;
+			}
+		}
+	}
+#endif
 }
 
 void do_for_frame(struct session *ses, void (*f)(struct session *, struct f_data_c *, int), int a)
@@ -3428,7 +3459,7 @@ void send_event(struct session *ses, struct event *ev)
 			goto x;
 		}
 		if ((upcase(ev->x) == 'Q' && !(ev->y & (KBD_CTRL | KBD_ALT))) || ev->x == KBD_CTRL_C) {
-		  exit_prog(ses->term, (void *)(my_intptr_t)(ev->x == KBD_CTRL_C), ses);
+			exit_prog(ses->term, (void *)(my_intptr_t)(ev->x == KBD_CTRL_C || ev->x == 'Q'), ses);
 			goto x;
 		}
 		if (ev->x == KBD_CLOSE){
@@ -3449,6 +3480,11 @@ void send_event(struct session *ses, struct event *ev)
 		}
 	}
 	if (ev->ev == EV_MOUSE) {
+		if (ev->b == (B_DOWN | B_FOURTH)) {
+			go_back(ses);
+			goto x;
+		}
+#ifdef G
 		if (ses->locked_link) {
 			if ((ev->b & BM_ACT) != B_MOVE) {
 				ses->locked_link = 0;
@@ -3472,6 +3508,7 @@ void send_event(struct session *ses, struct event *ev)
 				draw_formatted(ses);
 			} else return;
 		}
+#endif
 		if (ev->y < gf_val(1, G_BFU_FONT_SIZE) && (ev->b & BM_ACT) == B_DOWN) {
 #ifdef G
 			if (F && ev->x < ses->back_size) {
@@ -3744,7 +3781,7 @@ void save_formatted(struct session *ses, unsigned char *file)
 	int h;
 	struct f_data_c *f;
 	if (!(f = current_frame(ses)) || !f->f_data) return;
-	if ((h = create_download_file(ses->term, file, 0)) == -1) return;
+	if ((h = create_download_file(ses->term, file, 0)) < 0) return;
 	if (dump_to_file(f->f_data, h)) msg_box(ses->term, NULL, TEXT(T_SAVE_ERROR), AL_CENTER, TEXT(T_ERROR_WRITING_TO_FILE), NULL, 1, TEXT(T_CANCEL), NULL, B_ENTER | B_ESC);
 	close(h);
 }

@@ -12,10 +12,10 @@
        grafickych dat do X serveru z hlediska zaalokovane pameti.
  TODO: dodelat stripy do jpegu a png a tiff.
  */
-#include "cfg.h"
+
+#include "links.h"
 
 #ifdef G
-#include "links.h"
 
 #ifdef HAVE_ENDIAN_H
 /* Max von Sydow */
@@ -184,10 +184,10 @@ void img_destruct_cached_image(struct cached_image *cimg)
 	mem_free(cimg);
 }
 
-/* You thorow in a vertical dimension of image and it returns
+/* You throw in a vertical dimension of image and it returns
  * new dimension according to the aspect ratio and user-set image
  * scaling factor. When scaling factor is 100% and screen pixels
- * are non-square, the pixture will be always in one dimension
+ * are non-square, the picture will be always in one dimension
  * untouched and in the second _ENLARGED_. So that no information
  * in the picture will be lost.
  * Input may be <0. In this case output=input
@@ -215,6 +215,30 @@ int img_scale_v(unsigned scale, int in){
 	out=((unsigned long)in*(scale*256)+(divisor>>1))/divisor;
 	if (out<1) out=1;
 	return out;
+}
+
+/* Returns height (pixels) for prescribed width (pixels). Honours aspect. */
+static int width2height(float width_px, float width_mm, float height_mm)
+{
+	int height_px;
+
+	if (width_px<=0) return width_px;
+	height_px=(height_mm*width_px*65536)/(aspect*width_mm);
+	if (height_px<1) height_px=1;
+	return height_px;
+
+}
+
+/* Returns width (pixels) for prescribed height (pixels). Honours aspect. */
+static int height2width(float height_px, float width_mm, float height_mm)
+{
+	int width_px;
+
+	if (height_px<=0) return height_px;
+	width_px=(width_mm*height_px*aspect)/(65536*height_mm);
+	if (width_px<1) width_px=1;
+	return width_px;
+
 }
 
 /* Compute 8-bit background for filling buffer with cimg->*_gamma
@@ -273,23 +297,39 @@ void header_dimensions_known(struct cached_image *cimg)
 	if (cimg->wanted_xw<0){
 		/* Unspecified width */
 		if (cimg->wanted_yw<0){
-			/* Unspecified width and height */
+			/* Unspecified neither width nor height */
 			cimg->xww=img_scale_h(cimg->scale, cimg->width);
 			cimg->yww=img_scale_v(cimg->scale, cimg->height);
 		}else{
 			/* Unspecified width specified height */
-			cimg->xww=(cimg->yww
-				*cimg->width+(cimg->height>>1))
-				/cimg->height;
+			cimg->xww=height2width(cimg->yww,
+					cimg->width, cimg->height);
 			if (cimg->xww<=0) cimg->xww=1;
 			
 		}
 	}else{
+		/* Specified width */
 		if (cimg->wanted_yw<0){
-			/* Specified width unspecified height */
-			cimg->yww=(cimg->xww
-				*cimg->height+(cimg->width>>1))
-				/cimg->width;
+			/* Unspecified height, specified width */
+			cimg->yww=width2height(cimg->xww,
+					cimg->width, cimg->height);
+			if (cimg->yww<=0) cimg->yww=1;
+		}else if (cimg->wanted_xyw_meaning==MEANING_AUTOSCALE){
+			/* Specified height and width and autoscale meant */
+			/* Try first to nail the height */
+			cimg->yww=cimg->wanted_yw;
+			cimg->xww=height2width(cimg->yww,
+					cimg->width, cimg->height);
+			if (cimg->xww>cimg->wanted_xw)
+			{
+				/* Width too much, we nail the width */
+				cimg->xww=cimg->wanted_xw;
+				cimg->yww=width2height(cimg->xww,
+						cimg->width, cimg->height);
+			}
+			
+			/* Some sanity checks */
+			if (cimg->xww<=0) cimg->xww=1;
 			if (cimg->yww<=0) cimg->yww=1;
 		}
 	}
@@ -854,10 +894,7 @@ int img_process_download(struct g_object_image *goi, struct f_data_c *fdatac)
 		/* Type still unknown */
 		ctype=get_content_type(goi->af->rq->ce->head,
 			goi->af->rq->url);
-#ifdef DEBUG
-		if (!ctype)
-			internal("NULL ctype in process_download()");
-#endif /* #ifdef DEBUG */
+		if (!ctype) ctype = stracpy("application/octet-stream");
 		type(cimg,ctype);
 	}
 		
@@ -1129,8 +1166,9 @@ void img_draw_image (struct f_data_c *fdatac, struct g_object_image *goi,
 }
 
 /* Prior to calling this function you have to fill out
- * image -> xw
- * image -> yw
+ * image -> xw (<0 means not known)
+ * image -> yw (<0 means not known)
+ * image -> xyw meaning (MEANING_AUTOSCALE or MEANING_DIMS)
  * image -> background
  * 
  * The URL will not be freed.
@@ -1141,7 +1179,7 @@ void find_or_make_cached_image(struct g_object_image *image, unsigned char *url,
 	struct cached_image *cimg;
 
 	if (!(cimg = find_cached_image(image->background, url, image->xw,
-		image->yw, scale, aspect))){
+		image->yw, image->xyw_meaning,scale, aspect))){
 		/* We have to make a new image cache entry */
 		cimg = mem_alloc(sizeof(*cimg));
 		cimg->refcount = 1;
@@ -1156,6 +1194,7 @@ find_or_make_cached_image");
 		cimg->url = stracpy(url);
 		cimg->wanted_xw = image->xw;
 		cimg->wanted_yw = image->yw;
+		cimg->wanted_xyw_meaning=image->xyw_meaning;
 		cimg->xww = image->xw<0?img_scale_h(cimg->scale, 32):cimg->wanted_xw;
 		cimg->yww = image->yw<0?img_scale_v(cimg->scale, 32):cimg->wanted_yw;
 		cimg->state=0;
@@ -1173,6 +1212,10 @@ find_or_make_cached_image");
 	global_cimg=image->cimg=cimg;
 }
 
+/* The original (unscaled, in pixels pace) size is requested in im->xsize and im->ysize.
+ * <0 means unknown. Autoscale is requested in autoscale. When autoscale is on,
+ * the requested dimensions are not scaled and they mean maximum allowed
+ * dimensions. */
 struct g_object_image *insert_image(struct g_part *p, struct image_description *im)
 {
 	struct g_object_image *image;
@@ -1194,8 +1237,19 @@ struct g_object_image *insert_image(struct g_part *p, struct image_description *
 	*/
 	if (im->align == AL_MIDDLE) image->y = G_OBJ_ALIGN_MIDDLE;
 	if (im->align == AL_TOP) image->y = G_OBJ_ALIGN_TOP;
-	image->xw=img_scale_h(d_opt->image_scale, im->xsize);
-	image->yw=img_scale_v(d_opt->image_scale, im->ysize);
+
+	if (im->autoscale_x&&im->autoscale_y)
+	{
+		/* Autoscale requested */
+		image->xw=im->autoscale_x;
+		image->yw=im->autoscale_y;
+		image->xyw_meaning=MEANING_AUTOSCALE;
+	}else{
+		/* Autoscale not requested */
+		image->xw=img_scale_h(d_opt->image_scale, im->xsize);
+		image->yw=img_scale_v(d_opt->image_scale, im->ysize);
+		image->xyw_meaning=MEANING_DIMS;
+	}
 
 	/* Put the data for javascript inside */
 	image->id=(current_f_data->n_images)++;

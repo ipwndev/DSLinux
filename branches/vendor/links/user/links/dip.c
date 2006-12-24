@@ -37,11 +37,13 @@ double sRGB_gamma=0.45455;      /* For HTML, which runs
 				 */
 
 unsigned long aspect=65536; /* aspect=65536 for 320x240
-		        * aspect=157286 for 640x200
+		        * aspect=157286 for 640x200 (tall pixels)
                         * Defines aspect ratio of screen pixels. 
 		        * aspect=(196608*xsize+ysize<<1)/(ysize<<1);
 		        * Default is 65536 because we assume square pixel
-			* when not specified otherwise. */
+			* when not specified otherwise. Aspect is ratio of
+			* the pixel height (in milimeters) to pixel width,
+			* multiplied by 65536. */
 unsigned long aspect_native=65536; /* Like aspect, but not influenced by
 			* user, just determined by graphics driver.
 			*/
@@ -2144,7 +2146,9 @@ void get_links_icon(unsigned char **data, int *width, int* height, int depth)
 	*width=b.x;
 	*height=b.y;
 	b.skip=b.x*(depth&7);
-	b.data=*data=malloc(b.skip*b.y);
+	if (!(b.data=*data=malloc(b.skip*b.y))) {
+		malloc_oom();
+	}
 	tmp1=mem_alloc(6*b.y*b.x);
         apply_gamma_exponent_24_to_48(tmp1,links_icon,b.x*b.y,g,g,g);
 	dither(tmp1, &b);

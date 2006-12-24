@@ -1,5 +1,5 @@
 .\" Process this file with groff -man -Tascii links.1
-.TH LINKS 1 "Dec, 2000"
+.TH LINKS 1 "Aug, 2006"
 .SH NAME
 links \- lynx-like alternative character mode WWW browser
 .SH SYNOPSIS
@@ -37,7 +37,7 @@ Run in text mode (overrides previous -g).
 .TP
 \f3-driver \f2<driver name>\f1
 Graphics driver to use. Drivers are: x, svgalib, fb, directfb, pmshell,
-atheos, sdl.
+atheos.
 List of drivers will be shown if you give it an unknown driver.
 Available drivers depend on your operating system and available libraries.
 
@@ -290,6 +290,14 @@ Optimize for CRT (0), LCD RGB (1), LCD BGR (2).
 Enable javascript.
 
 .TP
+\f3-gamma-correction \f2<0>/<1>/<2>\f1
+Type of gamma correction:
+(default 2)
+0 - 8-bit (fast).
+1 - 16-bit (slow).
+2 - automatically detect according to speed of FPU.
+
+.TP
 \f3-js.verbose-errors \f2<0>/<1>\f1
 Display javascript errors.
 
@@ -361,6 +369,10 @@ Display images in graphics mode.
 Scale images in graphics mode.
 
 .TP
+\f3-html-bare-image-autoscale \f2<0>/<1>\f1
+Autoscale images displayed in full screen.
+
+.TP
 \f3-html-numbered-links \f2<0>/<1>\f1
 Number links in text mode. Allow quick link selection by typing
 link number and enter.
@@ -415,7 +427,7 @@ menu
 file menu
 .TP
 .B TAB
-next frame (text mode only)
+next frame
 .TP
 .B PGDN
 page down

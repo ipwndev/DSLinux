@@ -176,6 +176,9 @@
 /* Define if you have the strtoul function.  */
 #undef HAVE_STRTOUL
 
+/* Define if you have the tempnam function.  */
+#undef HAVE_TEMPNAM
+
 /* Define if you have the uname function.  */
 #undef HAVE_UNAME
 
@@ -334,9 +337,6 @@
 
 /* Define if you have the X11 library (-lX11).  */
 #undef HAVE_LIBX11
-
-/* Define if you have the Xext library (-lXext).  */
-#undef HAVE_LIBXEXT
 
 /* Define if you have the atheos library (-latheos).  */
 #undef HAVE_LIBATHEOS
@@ -506,3 +506,7 @@
 
 /* */
 #undef RENAME_OVER_EXISTING_FILES
+
+/* */
+#undef HAVE_SOCKLEN_T
+

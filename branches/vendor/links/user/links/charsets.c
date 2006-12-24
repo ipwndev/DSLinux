@@ -589,10 +589,22 @@ int compare_case_utf8(unsigned char *u1, unsigned char *u2)
 	while (1) {
 		GET_UTF_8(u2, c2);
 		if (!c2) return u1 - uu1;
+		skip_discr:
 		GET_UTF_8(u1, c1);
 		BIN_SEARCH(sizeof(unicode_upcase) / sizeof(*unicode_upcase), UP_EQUAL, UP_ABOVE, c1, cc1);
 		if (cc1 != -1) c1 = unicode_upcase[cc1].up;
+		if (c1 == 0xad) goto skip_discr;
 		if (c1 != c2) return 0;
+		if (c1 == ' ') {
+			unsigned char *x1;
+			do {
+				x1 = u1;
+				GET_UTF_8(u1, c1);
+				BIN_SEARCH(sizeof(unicode_upcase) / sizeof(*unicode_upcase), UP_EQUAL, UP_ABOVE, c1, cc1);
+				if (cc1 != -1) c1 = unicode_upcase[cc1].up;
+			} while (c1 == ' ');
+			u1 = x1;
+		}
 	}
 }
 

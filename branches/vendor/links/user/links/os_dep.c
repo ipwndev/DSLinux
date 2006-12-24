@@ -298,7 +298,7 @@ int can_twterm(void) /* Check if it make sense to call a twterm. */
 }
 
 
-#if defined(UNIX) || defined(WIN32) || defined(SPAD)
+#if defined(UNIX) || defined(SPAD)
 
 int is_xterm(void)
 {
@@ -312,6 +312,15 @@ int is_xterm(void)
 int is_xterm(void)
 {
 	return 0;
+}
+
+#elif defined(WIN32)
+
+int is_xterm(void)
+{
+	static int xt = -1;
+	if (xt == -1) xt = !!getenv("WINDOWID");
+	return xt;
 }
 
 #elif defined(RISCOS)
@@ -361,7 +370,7 @@ int exe(char *path, int fg)
 int exe(char *path, int fg)
 {
 	int r;
-	unsigned char *x1 = !GETSHELL ? DEFAULT_SHELL : GETSHELL;
+	unsigned char *x1 = DEFAULT_SHELL;
 	unsigned char *x = *path != '"' ? " /c start /wait " : " /c start /wait \"\" ";
 	unsigned char *p = malloc((strlen(x1) + strlen(x) + strlen(path)) * 2 +
 1);
@@ -1358,6 +1367,8 @@ int get_input_handle(void)
 	static int ti = -1, tp = -1;
 	pthread_t pthrInput;
 
+	if (is_xterm()) return 0;
+
 	if (ti != -1) return ti;
 	if (c_pipe (fd) < 0) return 0;
 	ti = fd[0] ;
@@ -1378,6 +1389,8 @@ int get_input_handle(void)
 	int	fd[2] ;
 	static int ti = -1, tp = -1;
 	pid_t	pid ;
+
+	if (is_xterm()) return 0;
 
 	if (ti != -1) return ti;
 	if (c_pipe (fd) < 0) return 0;
@@ -1432,7 +1445,7 @@ struct gpm_mouse_spec {
 	void *data;
 };
 
-void gpm_mouse_in(struct gpm_mouse_spec *gms)
+static void gpm_mouse_in(struct gpm_mouse_spec *gms)
 {
 	Gpm_Event gev;
 	struct event ev;
@@ -1858,5 +1871,32 @@ char *strstr(const char *haystack, const char *needle)
 		haystack++, hs--;
 	}
 	return NULL;
+}
+#endif
+#ifndef HAVE_TEMPNAM
+char *tempnam(const char *dir, const char *pfx)
+{
+	static int counter = 0;
+	unsigned char *d, *s, *a;
+	int l;
+	if (!(d = getenv("TMPDIR"))) {
+		if (dir) d = (unsigned char *)dir;
+		else if (!(d = getenv("TMP")) && !(d = getenv("TEMP"))) {
+#ifdef P_tmpdir
+			d = P_tmpdir;
+#else
+			d = "/tmp";
+#endif
+		}
+	}
+	l = 0;
+	s = init_str();
+	add_to_str(&s, &l, d);
+	if (s[0] && s[strlen(s) - 1] != '/') add_chr_to_str(&s, &l, '/');
+	add_to_str(&s, &l, (unsigned char *)pfx);
+	add_num_to_str(&s, &l, counter++);
+	a = strdup(s);
+	mem_free(s);
+	return a;
 }
 #endif

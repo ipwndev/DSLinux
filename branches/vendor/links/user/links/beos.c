@@ -96,11 +96,11 @@ int be_pipe(int *fd)
 	struct sockaddr_in sa1, sa2;
 	int retry_count = 0;
 	again:
-	if ((s1 = be_socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
+	if ((s1 = be_socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
 		/*perror("socket1");*/
 		goto fatal_retry;
 	}
-	if ((s2 = be_socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
+	if ((s2 = be_socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
 		/*perror("socket2");*/
 		be_close(s1);
 		goto fatal_retry;

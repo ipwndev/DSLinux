@@ -47,19 +47,20 @@ void input_function (int fd)
 	hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	hStdIn = GetStdHandle(STD_INPUT_HANDLE);
 
-	/* set up mouse and window input */
-	bSuccess = GetConsoleMode(hStdIn, &dwMode);
-
-	bSuccess = SetConsoleMode(hStdIn, (dwMode & ~(ENABLE_LINE_INPUT |
-			ENABLE_ECHO_INPUT)) | ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT);
-
-	cci.dwSize = 100;
-	cci.bVisible = TRUE ;
-	bSuccess = SetConsoleCursorInfo(hStdOut, &cci);
 	/* This is the main input loop. Read from the input queue and process */
 	/* the events read */
 	do
 	{
+		/* set up mouse and window input */
+		bSuccess = GetConsoleMode(hStdIn, &dwMode);
+
+		bSuccess = SetConsoleMode(hStdIn, (dwMode & ~(ENABLE_LINE_INPUT |
+				ENABLE_ECHO_INPUT)) | ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT);
+
+		cci.dwSize = 100;
+		cci.bVisible = TRUE ;
+		bSuccess = SetConsoleCursorInfo(hStdOut, &cci);
+
 		/* read an input events from the input event queue */
 		bSuccess = ReadConsoleInput(hStdIn, &inputBuffer, 1, &dwInputEvents);
 		switch (inputBuffer.EventType)
@@ -87,17 +88,23 @@ void input_function (int fd)
 			if (inputBuffer.Event.MouseEvent.dwEventFlags == 0 &&
 				inputBuffer.Event.MouseEvent.dwButtonState)
 			{
+				int x, y;
+				CONSOLE_SCREEN_BUFFER_INFO cb;
 				char	mstr[] = "\E[Mxxx" ;
-				mstr[3] = ' ' | 0 ;
-				mstr[4] = ' ' + 1 +
-					inputBuffer.Event.MouseEvent.dwMousePosition.X ;
-				mstr[5] = ' ' + 1 +
-					inputBuffer.Event.MouseEvent.dwMousePosition.Y ;
-				if (write (fd, mstr, 6) < 0)
-					bSuccess = FALSE ;
-				mstr[3] = ' ' | 3 ;
-				if (write (fd, mstr, 6) < 0)
-					bSuccess = FALSE ;
+				if (!GetConsoleScreenBufferInfo(hStdOut, &cb)) break;
+				get_terminal_size(1, &x, &y);
+				x = inputBuffer.Event.MouseEvent.dwMousePosition.X;
+				y = inputBuffer.Event.MouseEvent.dwMousePosition.Y - cb.dwSize.Y + y;
+				if ((unsigned)x < 256 && (unsigned)y < 256) {
+					mstr[3] = ' ' | 0 ;
+					mstr[4] = ' ' + 1 + x;
+					mstr[5] = ' ' + 1 + y;
+					if (write (fd, mstr, 6) < 0)
+						bSuccess = FALSE ;
+					mstr[3] = ' ' | 3 ;
+					if (write (fd, mstr, 6) < 0)
+						bSuccess = FALSE ;
+				}
 			}
 			break;
 		case WINDOW_BUFFER_SIZE_EVENT:

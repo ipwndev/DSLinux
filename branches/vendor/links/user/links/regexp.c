@@ -167,7 +167,7 @@ regexp_replace(char * from, char *to, char *text)
 #else /* HAVE_PCRE */
 	pom = mem_alloc(strlen(from)+1);
 #endif /* HAVE_PCRE */
-	if(*from != '/')
+	if(*from != '/' || !from[1])
 	{
 		strcpy(pom, from);
 		global = 0;

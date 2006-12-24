@@ -512,6 +512,7 @@ void g_get_search(struct f_data *f, unsigned char *s)
 	if (!(f->last_search = stracpy(s))) return;
 	for (i = 0; i < f->srch_string_size; i++) {
 		int len;
+		/*debug("%d: %d", i, f->srch_string[i]);*/
 		if ((s[0] | f->srch_string[i]) < 0x80) {
 			if ((f->srch_string[i] ^ s[0]) & 0xdf) continue;
 			if (s[1] != 0 && (s[1] ^ f->srch_string[i + 1]) < 0x80) {
@@ -533,11 +534,10 @@ void g_get_search(struct f_data *f, unsigned char *s)
 
 void draw_graphical_doc(struct terminal *t, struct f_data_c *scr, int active)
 {
-	int i;
 	int r = 0;
 	struct rect old;
 	struct view_state *vs = scr->vs;
-	struct rect_set *rs1, *rs2;
+	struct rect_set *rs;
 	int xw = scr->xw;
 	int yw = scr->yw;
 	int vx, vy;
@@ -559,6 +559,16 @@ void draw_graphical_doc(struct terminal *t, struct f_data_c *scr, int active)
 	vx = vs->view_posx;
 	vy = vs->view_pos;
 	restrict_clip_area(t->dev, &old, scr->xp, scr->yp, scr->xp + xw, scr->yp + yw);
+	if(scr->scrolling == SCROLLING_NO)
+	{
+		scr->f_data->vsb = 0;
+		scr->f_data->hsb = 0;
+	}
+	else if(scr->scrolling == SCROLLING_YES)
+	{
+		scr->f_data->vsb = 1;
+		scr->f_data->hsb = 1;
+	}
 	if (scr->f_data->vsb) draw_vscroll_bar(t->dev, scr->xp + xw - G_SCROLL_BAR_WIDTH, scr->yp, yw - scr->f_data->hsb * G_SCROLL_BAR_WIDTH, scr->f_data->y, yw - scr->f_data->hsb * G_SCROLL_BAR_WIDTH, vs->view_pos);
 	if (scr->f_data->hsb) draw_hscroll_bar(t->dev, scr->xp, scr->yp + yw - G_SCROLL_BAR_WIDTH, xw - scr->f_data->vsb * G_SCROLL_BAR_WIDTH, scr->f_data->x, xw - scr->f_data->vsb * G_SCROLL_BAR_WIDTH, vs->view_posx);
 	if (scr->f_data->vsb && scr->f_data->hsb) drv->fill_area(t->dev, scr->xp + xw - G_SCROLL_BAR_WIDTH, scr->yp + yw - G_SCROLL_BAR_WIDTH, scr->xp + xw, scr->yp + yw, scroll_bar_frame_color);
@@ -571,15 +581,26 @@ void draw_graphical_doc(struct terminal *t, struct f_data_c *scr, int active)
 	    scr->yl - vy > yw || vy - scr->yl > yw) {
 		goto rrr;
 	}
-	rs1 = rs2 = NULL;
-	if (scr->xl != vx)
-		r |= drv->hscroll(t->dev, &rs1, scr->xl - vx);
+	if (scr->xl != vx) {
+		rs = NULL;
+		r |= drv->hscroll(t->dev, &rs, scr->xl - vx);
+		if (rs) {
+			int j;
+			for (j = 0; j < rs->m; j++) {
+				struct rect *r = &rs->r[j];
+				struct rect clip1;
+				/*fprintf(stderr, "scroll: %d,%d %d,%d\n", r->x1, r->y1, r->x2, r->y2);*/
+				restrict_clip_area(t->dev, &clip1, r->x1, r->y1, r->x2, r->y2);
+				scr->f_data->root->draw(scr, scr->f_data->root, scr->xp - vs->view_posx, scr->yp - vs->view_pos - (scr->yl - vy));
+				drv->set_clip_area(t->dev, &clip1);
+			}
+			mem_free(rs);
+		}
+	}
 	
-	if (scr->yl != vy)
-		r |= drv->vscroll(t->dev, &rs2, scr->yl - vy);
-	
-	if (rs1 || rs2) for (i = 0; i < 2; i++) {
-		struct rect_set *rs = !i ? rs1 : rs2;
+	if (scr->yl != vy) {
+		rs = NULL;
+		r |= drv->vscroll(t->dev, &rs, scr->yl - vy);
 		if (rs) {
 			int j;
 			for (j = 0; j < rs->m; j++) {
@@ -593,7 +614,6 @@ void draw_graphical_doc(struct terminal *t, struct f_data_c *scr, int active)
 			mem_free(rs);
 		}
 	}
-
 	
 	if (r) {
 		struct rect clip1;
@@ -661,19 +681,23 @@ void draw_one_object_fn(struct terminal *t, struct draw_data *d)
 	drv->set_clip_area(t->dev, &clip);
 }
 
-void draw_one_object(struct f_data_c *fd, struct g_object *o)
+void draw_one_object(struct f_data_c *scr, struct g_object *o)
 {
 	struct draw_data d;
 	int *h1, *h2, h3;
-	d.fd = fd;
+	d.fd = scr;
 	d.o = o;
 	h1 = highlight_positions;
 	h2 = highlight_lengths;
 	h3 = n_highlight_positions;
-	highlight_positions = fd->f_data->search_positions;
-	highlight_lengths = fd->f_data->search_lengths;
-	n_highlight_positions = fd->f_data->n_search_positions;
-	draw_to_window(fd->ses->win, (void (*)(struct terminal *, void *))draw_one_object_fn, &d);
+	if (scr->ses->search_word && scr->ses->search_word[0]) {
+		g_get_search_data(scr->f_data);
+		g_get_search(scr->f_data, scr->ses->search_word);
+		highlight_positions = scr->f_data->search_positions;
+		highlight_lengths = scr->f_data->search_lengths;
+		n_highlight_positions = scr->f_data->n_search_positions;
+	}
+	draw_to_window(scr->ses->win, (void (*)(struct terminal *, void *))draw_one_object_fn, &d);
 	highlight_positions = h1;
 	highlight_lengths = h2;
 	n_highlight_positions = h3;
@@ -1371,6 +1395,7 @@ void get_searched_sub(struct g_object *p, struct g_object *c)
 
 void g_get_search_data(struct f_data *f)
 {
+	int i;
 	srch_f_data = f;
 	if (f->srch_string) return;
 	f->srch_string = init_str();
@@ -1379,6 +1404,7 @@ void g_get_search_data(struct f_data *f)
 	while (f->srch_string_size && f->srch_string[f->srch_string_size - 1] == ' ') {
 		f->srch_string[--f->srch_string_size] = 0;
 	}
+	for (i = 0; i < f->srch_string_size; i++) if (f->srch_string[i] == 1) f->srch_string[i] = ' ';
 }
 
 static struct g_object_text *fnd_obj;

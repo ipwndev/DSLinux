@@ -92,7 +92,7 @@ int get_pasv_socket(struct connection *c, int cc, int *sock, unsigned char *port
 	int s;
 	struct sockaddr_in sa;
 	struct sockaddr_in sb;
-	int len = sizeof(sa);
+	socklen_t len = sizeof(sa);
 	memset(&sa, 0, sizeof sa);
 	memset(&sb, 0, sizeof sb);
 	if (getsockname(cc, (struct sockaddr *)&sa, &len)) {
@@ -101,7 +101,7 @@ int get_pasv_socket(struct connection *c, int cc, int *sock, unsigned char *port
 		retry_connection(c);
 		return -1;
 	}
-	if ((s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) goto e;
+	if ((s = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) goto e;
 	*sock = s;
 	fcntl(s, F_SETFL, O_NONBLOCK);
 	memcpy(&sb, &sa, sizeof(struct sockaddr_in));
@@ -145,7 +145,7 @@ void dns_found(struct connection *c, int state)
 		abort_connection(c);
 		return;
 	}
-	if ((s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) {
+	if ((s = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) {
 		setcstate(c, -errno);
 		retry_connection(c);
 		return;
@@ -153,7 +153,7 @@ void dns_found(struct connection *c, int state)
 	*b->sock = s;
 	fcntl(s, F_SETFL, O_NONBLOCK);
 	memset(&b->sa, 0, sizeof(struct sockaddr_in));
-	b->sa.sin_family = PF_INET;
+	b->sa.sin_family = AF_INET;
 	b->sa.sin_addr.s_addr = b->addr;
 	b->sa.sin_port = htons(b->port);
 	if (connect(s, (struct sockaddr *)&b->sa, sizeof b->sa)) {
@@ -196,7 +196,7 @@ void connected(struct connection *c)
 	struct conn_info *b = c->buffer;
 	void (*func)(struct connection *) = b->func;
 	int err = 0;
-	int len = sizeof(int);
+	socklen_t len = sizeof(int);
 	/*if (!connect(*b->sock, (struct sockaddr *)&b->sa, sizeof b->sa) || errno == EISCONN) {
 		mem_free(b);
 		func(c);

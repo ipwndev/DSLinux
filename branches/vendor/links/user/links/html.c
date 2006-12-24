@@ -794,6 +794,7 @@ int get_num(unsigned char *a, unsigned char *n)
 	return -1;
 }
 
+/* trunc somehow clips the maximum values. Use 0 to disable truncastion. */
 int parse_width(unsigned char *w, int trunc)
 {
 	unsigned char *end;
@@ -830,6 +831,7 @@ int parse_width(unsigned char *w, int trunc)
 	return s;
 }
 
+/* trunc somehow clips the maximum values. Use 0 to disable truncastion. */
 int get_width(unsigned char *a, unsigned char *n, int trunc)
 {
 	int r;
@@ -1078,6 +1080,15 @@ void html_img(unsigned char *a)
 		*/
 		i.xsize = get_width(a, "width", 2);
 		i.ysize = get_width(a, "height", 3);
+		if (d_opt->porn_enable && i.xsize < 0 && i.ysize < 0 && d_opt->plain == 2) {
+			/* Strict checking for porn condition ;-) */
+			i.autoscale_x = d_opt->xw;
+			i.autoscale_y = d_opt->yw;
+		} else {
+			/* Turn off autoscale */
+			i.autoscale_x = 0;
+			i.autoscale_y = 0; 
+		}
 		/*debug("%s, %s -> %d, %d", get_attr_val(a, "width"), get_attr_val(a, "height"), i.xsize, i.ysize);*/
 		i.hspace = get_num(a, "hspace");
 		i.vspace = get_num(a, "vspace");
@@ -1094,6 +1105,7 @@ void html_img(unsigned char *a)
 			mem_free(u);
 		}
 		if (i.url) special_f(ff, SP_IMAGE, &i), mem_free(i.url);
+		if (i.usemap) mem_free(i.usemap);
 		if (i.name) mem_free(i.name);
 		if (i.alt) mem_free(i.alt);
 		if (i.src) mem_free(i.src);
@@ -1155,6 +1167,7 @@ void html_body(unsigned char *a)
 	get_color(a, "text", &format.fg);
 	get_color(a, "link", &format.clink);
 	get_color(a, "vlink", &format.vlink);
+	if (has_attr(a, "onload")) special_f(ff, SP_SCRIPT, NULL);
 	/*
 	get_bgcolor(a, &format.bg);
 	get_bgcolor(a, &par_format.bgcolor);
@@ -2019,7 +2032,10 @@ int do_html_select(unsigned char *attr, unsigned char *html, unsigned char *eof,
 			val = mem_realloc(val, (order + ALLOC_GR) * sizeof(unsigned char *));
 		}
 		val[order++] = v;
-		if ((vx = get_attr_val(t_attr, "label"))) new_menu_item(vx, order - 1, 0);
+		if ((vx = get_attr_val(t_attr, "label"))) {
+			new_menu_item(convert_string(ct, vx, strlen(vx), d_opt), order - 1, 0);
+			mem_free(vx);
+		}
 		if (!v || !vx) {
 			lbl = init_str(), lbl_l = 0;
 			vlbl = init_str(), vlbl_l = 0;
@@ -2039,7 +2055,8 @@ int do_html_select(unsigned char *attr, unsigned char *html, unsigned char *eof,
 	if (t_namelen == 8 && !casecmp(t_name, "OPTGROUP", 8)) {
 		char *la;
 		if (!(la = get_attr_val(t_attr, "label"))) la = stracpy("");
-		new_menu_item(la, -1, 0);
+		new_menu_item(convert_string(ct, la, strlen(la), d_opt), -1, 0);
+		mem_free(la);
 		group = 1;
 	}
 	goto see;
@@ -2122,9 +2139,9 @@ void do_html_textarea(unsigned char *attr, unsigned char *html, unsigned char *e
 	fc->type = FC_TEXTAREA;;
 	fc->ro = has_attr(attr, "disabled") ? 2 : has_attr(attr, "readonly") ? 1 : 0;
 	fc->default_value = memacpy(html, p - html);
-	if ((cols = get_num(attr, "cols")) <= 0) cols = HTML_DEFAULT_INPUT_SIZE;
+	if ((cols = get_num(attr, "cols")) <= 0) cols = HTML_DEFAULT_TEXTAREA_WIDTH;
 	cols++;
-	if ((rows = get_num(attr, "rows")) <= 0) rows = 1;
+	if ((rows = get_num(attr, "rows")) <= 0) rows = HTML_DEFAULT_TEXTAREA_HEIGHT;
 	if (!F) {
 		if (d_opt->xw && cols > d_opt->xw) cols = d_opt->xw;
 		if (d_opt->yw && rows > d_opt->yw) rows = d_opt->yw;
@@ -2201,11 +2218,20 @@ void html_frame(unsigned char *a)
 	if (!d_opt->frames || !html_top.frameset) put_link_line("Frame: ", name, url, "");
 	else {
 		struct frame_param fp;
+		char *scroll = get_attr_val(a, "scrolling");
 		fp.name = name;
 		fp.url = url;
 		fp.parent = html_top.frameset;
 		fp.marginwidth = get_num(a, "marginwidth");
 		fp.marginheight = get_num(a, "marginheight");
+		fp.scrolling = SCROLLING_AUTO;
+		if (scroll) {
+			if (!strcasecmp(scroll, "no"))
+				fp.scrolling = SCROLLING_NO;
+			else if (!strcasecmp(scroll, "yes"))
+				fp.scrolling = SCROLLING_YES;
+			mem_free(scroll);
+		}
 		if (special_f(ff, SP_USED, NULL)) special_f(ff, SP_FRAME, &fp);
 	}
 	mem_free(name);
@@ -2398,7 +2424,7 @@ struct element_info {
 	char *name;
 	void (*func)(unsigned char *);
 	int linebreak;
-	int nopair;
+	int nopair; /* Somehow relates to paired elements */
 };
 
 struct element_info elements[] = {
@@ -2510,12 +2536,13 @@ void process_head(unsigned char *head)
 	struct refresh_param rp;
 	if ((r = parse_http_header(head, "Refresh", NULL))) {
 		if (!d_opt->auto_refresh) {
-			if ((p = parse_header_param(r, "URL"))) {
+			if ((p = parse_header_param(r, "URL")) || (p = parse_header_param(r, ""))) {
 				put_link_line("Refresh: ", p, p, d_opt->framename);
 				mem_free(p);
 			}
 		} else {
 			rp.url = parse_header_param(r, "URL");
+			if (!rp.url) rp.url = parse_header_param(r, "");
 			rp.time = atoi(r);
 			if (rp.time < 1) rp.time = 1;
 			special_f(ff, SP_REFRESH, &rp);
@@ -2551,6 +2578,7 @@ void parse_html(unsigned char *html, unsigned char *eof, int (*put_chars)(void *
 {
 	/*unsigned char *start = html;*/
 	unsigned char *lt;
+
 	html_format_changed = 1;
 	putsp = -1;
 	line_breax = table_level ? 2 : 1;

@@ -642,7 +642,7 @@ static void set_palette(struct irgb *palette)
 	}
 }
 
-void svga_shutdown_driver(void)
+static void svga_shutdown_driver(void)
 {
 	if (scroll_buffer) mem_free(scroll_buffer);
 	if (mouse_works){
@@ -664,11 +664,11 @@ void svga_shutdown_driver(void)
 	install_signal_handler(SIGINT, NULL, NULL, 0);
 }
 
-void svga_register_bitmap(struct bitmap *bmp)
+static void svga_register_bitmap(struct bitmap *bmp)
 {
 }
 
-void svga_unregister_bitmap(struct bitmap *bmp)
+static void svga_unregister_bitmap(struct bitmap *bmp)
 {
 	mem_free(bmp->data);
 }
@@ -751,7 +751,7 @@ static inline void paged_memcpy(int lina, unsigned char *src, int len)
 }
 
 
-inline void draw_bitmap_drawscansegment(struct graphics_device *dev, struct bitmap* hndl, int x, int y)
+static inline void draw_bitmap_drawscansegment(struct graphics_device *dev, struct bitmap* hndl, int x, int y)
 {
 	int ys0;
 
@@ -1843,7 +1843,19 @@ static void svgalib_key_in(void *p, struct event *ev, int size)
 	if (current_virtual_device && current_virtual_device->keyboard_handler) current_virtual_device->keyboard_handler(current_virtual_device, ev->x, ev->y);
 }
 
-#define BUTTON_MASK (MOUSE_RIGHTBUTTON | MOUSE_MIDDLEBUTTON | MOUSE_LEFTBUTTON )
+#ifndef MOUSE_FOURTHBUTTON
+#define MOUSE_FOURTHBUTTON	0
+#endif
+
+#ifndef MOUSE_FIFTHBUTTON
+#define MOUSE_FIFTHBUTTON	0
+#endif
+
+#ifndef MOUSE_SIXTHBUTTON
+#define MOUSE_SIXTHBUTTON	0
+#endif
+
+#define BUTTON_MASK (MOUSE_RIGHTBUTTON | MOUSE_MIDDLEBUTTON | MOUSE_LEFTBUTTON | MOUSE_FOURTHBUTTON | MOUSE_FIFTHBUTTON /*| MOUSE_SIXTHBUTTON*/)
 
 static inline void mouse_aggregate_flush(void)
 {
@@ -1878,7 +1890,7 @@ static void mouse_event_handler(int button, int dx, int dy, int dz, int drx, int
 	moved=(old_mouse_x!=mouse_x||old_mouse_y!=mouse_y);
 	
 	/* Test movement without buttons */
-	if (!(mouse_buttons & BUTTON_MASK) &&moved ){
+	if (!(mouse_buttons & BUTTON_MASK) && moved) {
 		mouse_aggregate_flag=1;
 		mouse_aggregate_action=B_MOVE;
 	}
@@ -1896,6 +1908,19 @@ static void mouse_event_handler(int button, int dx, int dy, int dz, int drx, int
 		mouse_aggregate_flush();
 		if (mh) mh(cd,mouse_x, mouse_y,B_RIGHT|B_DOWN);
 	}
+	if ((button&MOUSE_FOURTHBUTTON)&&!(mouse_buttons&MOUSE_FOURTHBUTTON)){
+		mouse_aggregate_flush();
+		if (mh) mh(cd,mouse_x, mouse_y,B_RIGHT|B_FOURTH);
+	}
+	if ((button&MOUSE_FIFTHBUTTON)&&!(mouse_buttons&MOUSE_FIFTHBUTTON)){
+		mouse_aggregate_flush();
+		if (mh) mh(cd,mouse_x, mouse_y,B_RIGHT|B_FIFTH);
+	}
+	if ((button&MOUSE_SIXTHBUTTON)&&!(mouse_buttons&MOUSE_SIXTHBUTTON)){
+		mouse_aggregate_flush();
+		/*if (mh) mh(cd,mouse_x, mouse_y,B_RIGHT|B_SIXTH);*/
+		switch_virtual_device(VD_NEXT);
+	}
 
 	/* Test releases */
 	if (!(button&MOUSE_LEFTBUTTON)&&(mouse_buttons&MOUSE_LEFTBUTTON)){
@@ -1910,6 +1935,18 @@ static void mouse_event_handler(int button, int dx, int dy, int dz, int drx, int
 		mouse_aggregate_flush();
 		if (mh) mh(cd,mouse_x, mouse_y,B_RIGHT|B_UP);
 	}
+	if (!(button&MOUSE_FOURTHBUTTON)&&(mouse_buttons&MOUSE_FOURTHBUTTON)){
+		mouse_aggregate_flush();
+		if (mh) mh(cd,mouse_x, mouse_y,B_FOURTH|B_UP);
+	}
+	if (!(button&MOUSE_FIFTHBUTTON)&&(mouse_buttons&MOUSE_FIFTHBUTTON)){
+		mouse_aggregate_flush();
+		if (mh) mh(cd,mouse_x, mouse_y,B_FIFTH|B_UP);
+	}
+	if (!(button&MOUSE_SIXTHBUTTON)&&(mouse_buttons&MOUSE_SIXTHBUTTON)){
+		mouse_aggregate_flush();
+		/*if (mh) mh(cd,mouse_x, mouse_y,B_SIXTH|B_UP);*/
+	}
 	
 	if (drx < 0 && mh) mh(cd, mouse_x, mouse_y, B_MOVE | B_WHEELUP);
 	if (drx > 0 && mh) mh(cd, mouse_x, mouse_y, B_MOVE | B_WHEELDOWN);
@@ -1921,10 +1958,14 @@ static void mouse_event_handler(int button, int dx, int dy, int dz, int drx, int
 	if (! ((button^mouse_buttons) & BUTTON_MASK ) && moved && (button &
 		BUTTON_MASK)){
 		mouse_aggregate_flag=1;
-		mouse_aggregate_action=(button&MOUSE_RIGHTBUTTON?B_RIGHT:0)|
-				      (button&MOUSE_MIDDLEBUTTON?B_MIDDLE:0)|
-				      (button&MOUSE_LEFTBUTTON?B_LEFT:0)|
-				      B_DRAG;
+		mouse_aggregate_action=(
+				      button&MOUSE_LEFTBUTTON?B_LEFT:
+				      button&MOUSE_RIGHTBUTTON?B_RIGHT:
+				      button&MOUSE_MIDDLEBUTTON?B_MIDDLE:
+				      button&MOUSE_FOURTHBUTTON?B_FOURTH:
+				      button&MOUSE_FIFTHBUTTON?B_FIFTH:
+				      /*button&MOUSE_SIXTHBUTTON?B_SIXTH:*/
+				      0) | B_DRAG;
 	}
 	mouse_buttons=button;
 }
@@ -2200,7 +2241,7 @@ static inline void place_mouse_composite(void)
 /* This moves the mouse a sophisticated way when the old and new position of the
  * cursor overlap.
  */
-static inline void redraw_mouse_sophisticated()
+static inline void redraw_mouse_sophisticated(void)
 {
 	int new_background_x, new_background_y;
 
@@ -2248,7 +2289,7 @@ static unsigned char *svga_get_driver_param(void)
 	return svga_driver_param;
 }
 
-void generate_palette_outer(void)
+static void generate_palette_outer(void)
 {
 	if (vga_colors==16||vga_colors==256){
 		struct irgb *palette;
@@ -2262,7 +2303,7 @@ void generate_palette_outer(void)
 
 /* This is to be called after vga_setmode and sets up accelerator,
  * svgalib functions */
-void setup_mode(int mode)
+static void setup_mode(int mode)
 {
 	vga_modeinfo *i;
 	int sig;
@@ -2326,7 +2367,7 @@ void setup_mode(int mode)
 }
 
 #ifndef __SPAD__
-void vtswitch_handler(void * nothing)
+static void vtswitch_handler(void * nothing)
 {
 	int oktowrite;
 
@@ -2344,7 +2385,7 @@ void vtswitch_handler(void * nothing)
 }
 #endif
 
-void svga_ctrl_c(struct itrm *i)
+static void svga_ctrl_c(struct itrm *i)
 {
 	kbd_ctrl_c();
 }
@@ -2481,7 +2522,7 @@ static int svga_get_empty_bitmap(struct bitmap *dest)
 	return 0;
 }
 
-int vga_block(struct graphics_device *dev)
+static int vga_block(struct graphics_device *dev)
 {
 	int overridden;
 
@@ -2503,7 +2544,7 @@ int vga_block(struct graphics_device *dev)
 	return overridden;
 }
 
-void vga_unblock(struct graphics_device *dev)
+static void vga_unblock(struct graphics_device *dev)
 {
 #ifdef DEBUG
 	if (current_virtual_device) {
@@ -2525,13 +2566,13 @@ void vga_unblock(struct graphics_device *dev)
 			,&current_virtual_device->size);
 }
 
-void *svga_prepare_strip(struct bitmap *bmp, int top, int lines)
+static void *svga_prepare_strip(struct bitmap *bmp, int top, int lines)
 {
 	return ((char *)bmp->data)+bmp->skip*top;
 }
 
 
-void svga_commit_strip(struct bitmap *bmp, int top, int lines)
+static void svga_commit_strip(struct bitmap *bmp, int top, int lines)
 {
 	return;
 }

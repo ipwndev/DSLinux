@@ -337,7 +337,7 @@ void file_func(struct connection *c)
 #endif
 			/*add_to_str(&file, &fl, "   ");*/
 			add_to_str(&file, &fl, dir[i].s);
-			add_to_str(&file, &fl, "<a href=\"");
+			add_to_str(&file, &fl, "<a href=\"./");
 			add_conv_str(&file, &fl, dir[i].f, strlen(dir[i].f), 1);
 			if (dir[i].s[0] == 'd') add_to_str(&file, &fl, "/");
 			else if (lnk) {
