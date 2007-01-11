@@ -48,14 +48,14 @@ static int getcoord(int);
 
 /* how to position us on player board */
 #define PYBASE	3
-#define PXBASE	3
+#define PXBASE	2
 #define PY(y)	(PYBASE + (y))
 #define PX(x)	(PXBASE + (x)*3)
 #define pgoto(y, x)	(void)move(PY(y), PX(x))
 
 /* how to position us on cpu board */
 #define CYBASE	3
-#define CXBASE	48
+#define CXBASE	34
 #define CY(y)	(CYBASE + (y))
 #define CX(x)	(CXBASE + (x)*3)
 #define CYINV(y)	((y) - CYBASE)
@@ -65,17 +65,17 @@ static int getcoord(int);
 #define ONBOARD(x, y)	(x >= 0 && x < BWIDTH && y >= 0 && y < BDEPTH)
 
 /* other board locations */
-#define COLWIDTH	80
+#define COLWIDTH	64
 #define PROMPTLINE	21	/* prompt line */
 #define SYBASE		CYBASE + BDEPTH + 3	/* move key diagram */
-#define SXBASE		63
+#define SXBASE		52
 #define MYBASE		SYBASE - 1	/* diagram caption */
-#define MXBASE		64
+#define MXBASE		52
 #define HYBASE		SYBASE - 1	/* help area */
 #define HXBASE		0
 
 /* this will need to be changed if BWIDTH changes */
-static char numbers[] = "   0  1  2  3  4  5  6  7  8  9";
+static char numbers[] = "  0  1  2  3  4  5  6  7  8  9";
 
 static char carrier[] = "Aircraft Carrier";
 static char battle[] = "Battleship";
@@ -313,7 +313,7 @@ initgame(void)
     ship_t *ss;
 
     (void) clear();
-    (void) mvaddstr(0, 35, "BATTLESHIPS");
+    (void) mvaddstr(0, (COLWIDTH - 11) / 2, "BATTLESHIPS");
     (void) move(PROMPTLINE + 2, 0);
     announceopts();
 
@@ -339,62 +339,60 @@ initgame(void)
 
     /* draw empty boards */
     (void) mvaddstr(PYBASE - 2, PXBASE + 5, "Main Board");
-    (void) mvaddstr(PYBASE - 1, PXBASE - 3, numbers);
+    (void) mvaddstr(PYBASE - 1, PXBASE - 2, numbers);
     for (i = 0; i < BDEPTH; ++i) {
-	(void) mvaddch(PYBASE + i, PXBASE - 3, (chtype) (i + 'A'));
+	(void) mvaddch(PYBASE + i, PXBASE - 2, (chtype) (i + 'A'));
 #ifdef A_COLOR
 	if (has_colors())
 	    attron(COLOR_PAIR(COLOR_BLUE));
 #endif /* A_COLOR */
-	(void) addch(' ');
 	for (j = 0; j < BWIDTH; j++)
 	    (void) addstr(" . ");
 #ifdef A_COLOR
 	attrset(0);
 #endif /* A_COLOR */
-	(void) addch(' ');
 	(void) addch((chtype) (i + 'A'));
     }
-    (void) mvaddstr(PYBASE + BDEPTH, PXBASE - 3, numbers);
-    (void) mvaddstr(CYBASE - 2, CXBASE + 7, "Hit/Miss Board");
-    (void) mvaddstr(CYBASE - 1, CXBASE - 3, numbers);
+    (void) mvaddstr(PYBASE + BDEPTH, PXBASE - 2, numbers);
+    (void) mvaddstr(CYBASE - 2, CXBASE + 9, "Hit/Miss Board");
+    (void) mvaddstr(CYBASE - 1, CXBASE - 2, numbers);
     for (i = 0; i < BDEPTH; ++i) {
-	(void) mvaddch(CYBASE + i, CXBASE - 3, (chtype) (i + 'A'));
+	(void) mvaddch(CYBASE + i, CXBASE - 2, (chtype) (i + 'A'));
 #ifdef A_COLOR
 	if (has_colors())
 	    attron(COLOR_PAIR(COLOR_BLUE));
 #endif /* A_COLOR */
-	(void) addch(' ');
 	for (j = 0; j < BWIDTH; j++)
 	    (void) addstr(" . ");
 #ifdef A_COLOR
 	attrset(0);
 #endif /* A_COLOR */
-	(void) addch(' ');
 	(void) addch((chtype) (i + 'A'));
     }
 
-    (void) mvaddstr(CYBASE + BDEPTH, CXBASE - 3, numbers);
+    (void) mvaddstr(CYBASE + BDEPTH, CXBASE - 2, numbers);
 
     (void) mvprintw(HYBASE, HXBASE,
-		    "To position your ships: move the cursor to a spot, then");
+		    "To position your ships: move the cursor to a spot,");
     (void) mvprintw(HYBASE + 1, HXBASE,
-		    "type the first letter of a ship type to select it, then");
+		    "then type the first letter of a ship type to");
     (void) mvprintw(HYBASE + 2, HXBASE,
-		    "type a direction ([hjkl] or [4862]), indicating how the");
+		    "select it, then type a direction ([hjkl] or");
     (void) mvprintw(HYBASE + 3, HXBASE,
-		    "ship should be pointed. You may also type a ship letter");
+		    "[4862]), indicating how the ship should be pointed.");
     (void) mvprintw(HYBASE + 4, HXBASE,
-		    "followed by `r' to position it randomly, or type `R' to");
+		    "You may also type a ship letter followed by `r' to");
     (void) mvprintw(HYBASE + 5, HXBASE,
-		    "place all remaining ships randomly.");
+		    "position it randomly, or type `R' to place all");
+    (void) mvprintw(HYBASE + 6, HXBASE,
+		    "remaining ships randomly.");
 
     (void) mvaddstr(MYBASE, MXBASE, "Aiming keys:");
-    (void) mvaddstr(SYBASE, SXBASE, "y k u    7 8 9");
-    (void) mvaddstr(SYBASE + 1, SXBASE, " \\|/      \\|/ ");
-    (void) mvaddstr(SYBASE + 2, SXBASE, "h-+-l    4-+-6");
-    (void) mvaddstr(SYBASE + 3, SXBASE, " /|\\      /|\\ ");
-    (void) mvaddstr(SYBASE + 4, SXBASE, "b j n    1 2 3");
+    (void) mvaddstr(SYBASE, SXBASE, "y k u  7 8 9");
+    (void) mvaddstr(SYBASE + 1, SXBASE, " \\|/    \\|/ ");
+    (void) mvaddstr(SYBASE + 2, SXBASE, "h-+-l  4-+-6");
+    (void) mvaddstr(SYBASE + 3, SXBASE, " /|\\    /|\\ ");
+    (void) mvaddstr(SYBASE + 4, SXBASE, "b j n  1 2 3");
 
     /* have the computer place ships */
     for (ss = cpuship; ss < cpuship + SHIPTYPES; ss++) {
@@ -493,17 +491,19 @@ initgame(void)
     turn = rnd(2);
 
     (void) mvprintw(HYBASE, HXBASE,
-		    "To fire, move the cursor to your chosen aiming point   ");
+		    "To fire, move the cursor to your chosen aiming      ");
     (void) mvprintw(HYBASE + 1, HXBASE,
-		    "and strike any key other than a motion key.            ");
+		    "point and strike any key other than a motion key.   ");
     (void) mvprintw(HYBASE + 2, HXBASE,
-		    "                                                       ");
+		    "                                                    ");
     (void) mvprintw(HYBASE + 3, HXBASE,
-		    "                                                       ");
+		    "                                                    ");
     (void) mvprintw(HYBASE + 4, HXBASE,
-		    "                                                       ");
+		    "                                                    ");
     (void) mvprintw(HYBASE + 5, HXBASE,
-		    "                                                       ");
+		    "                                                    ");
+    (void) mvprintw(HYBASE + 6, HXBASE,
+		    "                                                    ");
 
     (void) prompt(0, "Press any key to start...", "");
     (void) getch();
@@ -1099,13 +1099,13 @@ playagain(void)
 	++cpuwon;
     else
 	++plywon;
-    j = 18 + strlen(name);
+    j = 15 + strlen(name);
     if (plywon >= 10)
 	++j;
     if (cpuwon >= 10)
 	++j;
     (void) mvprintw(1, (COLWIDTH - j) / 2,
-		    "%s: %d     Computer: %d", name, plywon, cpuwon);
+		    "%s: %d  Computer: %d", name, plywon, cpuwon);
 
     prompt(2, (awinna())? "Want to be humiliated again, %s [yn]? "
 	   : "Going to give me a chance for revenge, %s [yn]? ", name);

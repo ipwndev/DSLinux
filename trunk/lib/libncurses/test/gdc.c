@@ -14,7 +14,7 @@
 #include <time.h>
 
 #define YBASE	10
-#define XBASE	10
+#define XBASE	5
 #define XLENGTH	54
 #define YDEPTH	5
 

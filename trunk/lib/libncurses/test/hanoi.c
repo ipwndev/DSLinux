@@ -26,9 +26,9 @@
 #define TOPLINE			6
 #define BASELINE		16
 #define STATUSLINE		(LINES-3)
-#define LEFTPEG			19
-#define MIDPEG			39
-#define RIGHTPEG		59
+#define LEFTPEG			12
+#define MIDPEG			32
+#define RIGHTPEG		52
 
 #define LENTOIND(x)		(((x)-1)/2)
 #define OTHER(a,b)		(3-((a)+(b)))
@@ -199,11 +199,11 @@ DisplayTiles(void)
     char TileBuf[BUFSIZ];
 
     erase();
-    mvaddstr(1, 24, "T O W E R S   O F   H A N O I");
-    mvaddstr(3, 34, "SJR 1990");
+    mvaddstr(1, 17, "T O W E R S   O F   H A N O I");
+    mvaddstr(3, 27, "SJR 1990");
     mvprintw(19, 5, "Moves : %d", NMoves);
     attrset(A_REVERSE);
-    mvaddstr(BASELINE, 8,
+    mvaddstr(BASELINE, 1,
 	     "                                                               ");
 
     for (Line = TOPLINE; Line < BASELINE; Line++) {

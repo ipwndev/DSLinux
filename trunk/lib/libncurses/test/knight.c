@@ -17,14 +17,14 @@
 
 /* where to start the instructions */
 #define INSTRY	2
-#define INSTRX	35
+#define INSTRX	34
 
 /* corner of board */
 #define BOARDY	2
 #define BOARDX	0
 
 /* notification line */
-#define NOTIFYY	21
+#define NOTIFYY	25
 
 /* virtual color values */
 #define TRAIL_COLOR	1
@@ -111,21 +111,27 @@ static void
 help1(void)
 /* game explanation -- initial help screen */
 {
-    (void) waddstr(helpwin, "Knight's move is a solitaire puzzle.  Your\n");
-    (void) waddstr(helpwin, "objective is to visit each square of the  \n");
-    (void) waddstr(helpwin, "chessboard exactly once by making knight's\n");
-    (void) waddstr(helpwin, "moves (one square right or left followed  \n");
-    (void) waddstr(helpwin, "by two squares up or down, or two squares \n");
-    (void) waddstr(helpwin, "right or left followed by one square up or\n");
-    (void) waddstr(helpwin, "down).  You may start anywhere.\n\n");
+    (void) waddstr(helpwin, "Knight's move is a solitaire\n");
+    (void) waddstr(helpwin, "puzzle. Your objective is to\n");
+    (void) waddstr(helpwin, "visit each square of the\n");
+    (void) waddstr(helpwin, "chessboard exactly once by\n");
+    (void) waddstr(helpwin, "making knight's moves (one\n");
+    (void) waddstr(helpwin, "square right or left followed\n");
+    (void) waddstr(helpwin, "by two squares up or down, or\n");
+    (void) waddstr(helpwin, "two squares right or left\n");
+    (void) waddstr(helpwin, "followed by one square up or\n");
+    (void) waddstr(helpwin, "down).You may start anywhere.\n\n");
 
-    (void) waddstr(helpwin, "Use arrow keys to move the cursor around.\n");
-    (void) waddstr(helpwin, "When you want to move your knight to the \n");
-    (void) waddstr(helpwin, "cursor location, press <space> or Enter.\n");
-    (void) waddstr(helpwin, "Illegal moves will be rejected with an  \n");
-    (void) waddstr(helpwin, "audible beep.\n\n");
-    (void) waddstr(helpwin, "The program will detect if you solve the\n");
-    (void) waddstr(helpwin, "puzzle; also inform you when you run out\n");
+    (void) waddstr(helpwin, "Use arrow keys to move the\n");
+    (void) waddstr(helpwin, "cursor around. When you want\n");
+    (void) waddstr(helpwin, "to move your knight to the\n");
+    (void) waddstr(helpwin, "cursor location,press <space>\n");
+    (void) waddstr(helpwin, "or Enter. Illegal moves will\n");
+    (void) waddstr(helpwin, "be rejected with an audible\n");
+    (void) waddstr(helpwin, "beep.\n\n");
+    (void) waddstr(helpwin, "The program will detect if\n");
+    (void) waddstr(helpwin, "you solve the puzzle; also\n");
+    (void) waddstr(helpwin, "inform you when you run out\n");
     (void) waddstr(helpwin, "of legal moves.\n\n");
 
     (void) mvwaddstr(helpwin, NOTIFYY - INSTRY, 0,
@@ -136,23 +142,28 @@ static void
 help2(void)
 /* keystroke help screen */
 {
-    (void) waddstr(helpwin, "Possible moves are shown with `-'.\n\n");
+    (void) waddstr(helpwin, "Possible moves are shown with `-'.\n");
 
-    (void) waddstr(helpwin, "You can move around with the arrow keys or\n");
-    (void) waddstr(helpwin, "with the rogue/hack movement keys.  Other\n");
-    (void) waddstr(helpwin, "commands allow you to undo moves or redraw.\n");
-    (void) waddstr(helpwin, "Your mouse may work; try left-button to\n");
-    (void) waddstr(helpwin, "move to the square under the pointer.\n\n");
+    (void) waddstr(helpwin, "You can move around with the\n");
+    (void) waddstr(helpwin, "arrow keys or with the rogue/\n");
+    (void) waddstr(helpwin, "hack movement keys.  Other\n");
+    (void) waddstr(helpwin, "commands allow you to undo\n");
+    (void) waddstr(helpwin, "moves or redraw.\n");
+    (void) waddstr(helpwin, "Your mouse may work;try left-\n");
+    (void) waddstr(helpwin, "button to move to the square\n");
+    (void) waddstr(helpwin, "under the pointer.\n\n");
 
-    (void) waddstr(helpwin, "x,q -- exit             y k u    7 8 9\n");
-    (void) waddstr(helpwin, "r -- redraw screen       \\|/      \\|/ \n");
-    (void) waddstr(helpwin, "bksp -- undo move       h-+-l    4-+-6\n");
-    (void) waddstr(helpwin, "a -- autojump            /|\\      /|\\ \n");
-    (void) waddstr(helpwin, "                        b j n    1 2 3\n");
+    (void) waddstr(helpwin, "x,q - exit        y k u 7 8 9\n");
+    (void) waddstr(helpwin, "r - redraw screen  \\|/   \\|/\n");
+    (void) waddstr(helpwin, "bksp - undo move  h-+-l 4-+-6\n");
+    (void) waddstr(helpwin, "a - autojump       /|\\   /|\\\n");
+    (void) waddstr(helpwin, "                  b j n 1 2 3\n");
 
-    (void) waddstr(helpwin, "\nYou can place your knight on the selected\n");
-    (void) waddstr(helpwin, "square with spacebar, Enter, or the keypad\n");
-    (void) waddstr(helpwin, "center key.  Use F/B to review the path.\n");
+    (void) waddstr(helpwin, "\nYou can place your knight\n");
+    (void) waddstr(helpwin, "on the selected square with\n");
+    (void) waddstr(helpwin, "spacebar, Enter or the keypad\n");
+    (void) waddstr(helpwin, "center key.  Use F/B to\n");
+    (void) waddstr(helpwin, "review the path.\n");
 
     (void) mvwaddstr(helpwin, NOTIFYY - INSTRY, 0,
 		     "Press `?' to go to game explanation");
