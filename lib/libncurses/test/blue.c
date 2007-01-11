@@ -175,7 +175,6 @@ printcard(int value)
 	addch(ranks[value % SUIT_LENGTH][1] | COLOR_PAIR(BLUE_ON_WHITE));
 	addch(suits[value / SUIT_LENGTH]);
     }
-    (void) addch(' ');
 }
 
 static void
@@ -196,17 +195,20 @@ display_cards(int deal)
     move(PROMPTROW + 2, 0);
     refresh();
 #define P(x)	(void)printw("%s\n", x)
-    P("   This 52-card solitaire starts with  the entire deck shuffled and dealt");
-    P("out in four rows.  The aces are then moved to the left end of the layout,");
-    P("making 4 initial free spaces.  You may move to a space only the card that");
-    P("matches the left neighbor in suit, and is one greater in rank.  Kings are");
-    P("high, so no cards may be placed to their right (they create dead spaces).");
-    P("  When no moves can be made,  cards still out of sequence are  reshuffled");
-    P("and dealt face up after the ends of the partial sequences, leaving a card");
-    P("space after each sequence, so that each row looks like a partial sequence");
-    P("followed by a space, followed by enough cards to make a row of 14.       ");
-    P("  A moment's reflection will show that this game cannot take more than 13");
-    P("deals. A good score is 1-3 deals, 4-7 is average, 8 or more is poor.     ");
+    P("   This 52-card solitaire starts with  the entire deck shuffled");
+    P("and dealt out in four rows. The aces are then moved to the left");
+    P("end of the layout,  making 4 initial free spaces.  You may move");
+    P("to a space only the card  that  matches  the left  neighbor  in");
+    P("suit, and is one greater in rank.   Kings are high, so no cards");
+    P("may be placed to their right (they create dead spaces).");
+    P("   When no moves  can be made,  cards still out of sequence are");
+    P("reshuffled  and  dealt  face  up  after the ends of the partial");
+    P("sequences,  leaving  a card space after each  sequence, so that");
+    P("each  row looks  like a partial sequence  followed  by a space,");
+    P("followed by enough cards to make a row of 14.");
+    P("   A  moment's  reflection will show that this game cannot take");
+    P("more than 13 deals.  A good score is 1-3 deals, 4-7 is average,");
+    P("8 or more is poor.");
 #undef P
     refresh();
 }
@@ -230,10 +232,10 @@ movecard(int src, int dst)
     grid[dst] = grid[src];
     grid[src] = NOCARD;
 
-    move(BASEROW + (dst / GRID_WIDTH) * 2 + 2, (dst % GRID_WIDTH) * 5 + 1);
+    move(BASEROW + (dst / GRID_WIDTH) * 2 + 2, (dst % GRID_WIDTH) * 4 + 1);
     printcard(grid[dst]);
 
-    move(BASEROW + (src / GRID_WIDTH) * 2 + 2, (src % GRID_WIDTH) * 5 + 1);
+    move(BASEROW + (src / GRID_WIDTH) * 2 + 2, (src % GRID_WIDTH) * 4 + 1);
     printcard(grid[src]);
 
     refresh();
@@ -268,7 +270,7 @@ play_game(void)
 	    for (i = 0; i < 4; i++) {
 		if (selection[i] != NOCARD) {
 		    move(BASEROW + (selection[i] / GRID_WIDTH) * 2 + 3,
-			 (selection[i] % GRID_WIDTH) * 5);
+			 (selection[i] % GRID_WIDTH) * 4);
 		    (void) printw("   %c ", *lp++ = 'a' + i);
 		}
 	    };
@@ -301,8 +303,8 @@ play_game(void)
 	    for (j = 0; j < 4; j++)
 		if (selection[j] != NOCARD) {
 		    move(BASEROW + (selection[j] / GRID_WIDTH) * 2 + 3,
-			 (selection[j] % GRID_WIDTH) * 5);
-		    (void) printw("     ");
+			 (selection[j] % GRID_WIDTH) * 4);
+		    (void) printw("    ");
 		}
 
 	    if (c == 'r')
