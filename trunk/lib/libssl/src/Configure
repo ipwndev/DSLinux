@@ -355,7 +355,7 @@ my %table=(
 "linux-alpha+bwx-ccc","ccc:-fast -readonly_strings -DL_ENDIAN -DTERMIO::-D_REENTRANT:::SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_INT DES_PTR DES_RISC1 DES_UNROLL:${no_asm}",
 
 # DSLinux
-"dslinux","$ENV{'CC'}:$ENV{'CFLAGS'} -DL_ENDIAN -DTERMIO -Wall:::::::::-fPIC::",
+"dslinux","$ENV{'CC'}:$ENV{'CFLAGS'}:::::BN_LLONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${no_asm}:dlfcn::::",
 
 #### *BSD [do see comment about ${BSDthreads} above!]
 "BSD-generic32","gcc:-DTERMIOS -O3 -fomit-frame-pointer -Wall::${BSDthreads}:::BN_LLONG RC2_CHAR RC4_INDEX DES_INT DES_UNROLL:${no_asm}:dlfcn:bsd-gcc-shared:-fPIC::.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR)",
@@ -1292,7 +1292,7 @@ while (<IN>)
 	s/^CONFIGURE_ARGS=.*$/CONFIGURE_ARGS=$argvstring/;
 	s/^CC=.*$/CC= $cc/;
 	s/^MAKEDEPPROG=.*$/MAKEDEPPROG= $cc/ if $cc eq "gcc";
-	s/^CFLAGS=.*$/CFLAGS= $cflags/;
+	s/^CFLAG=.*$/CFLAG= $cflags/;
 	s/^DEPFLAG=.*$/DEPFLAG= $depflags/;
 	s/^EX_LIBS=.*$/EX_LIBS= $lflags/;
 	s/^EXE_EXT=.*$/EXE_EXT= $exe_ext/;
@@ -1345,7 +1345,7 @@ rename($Makefile,"$Makefile.bak") || die "unable to rename $Makefile\n" if -e $M
 rename("$Makefile.new",$Makefile) || die "unable to rename $Makefile.new\n";
 
 print "CC            =$cc\n";
-print "CFLAGS        =$cflags\n";
+print "CFLAG         =$cflags\n";
 print "EX_LIBS       =$lflags\n";
 print "CPUID_OBJ     =$cpuid_obj\n";
 print "BN_ASM        =$bn_obj\n";
