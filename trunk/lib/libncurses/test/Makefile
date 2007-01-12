@@ -725,8 +725,8 @@ depend : $(AUTO_SRC)
 
 romfs :
 	#$(ROMFSINST) /bin/background
-	$(ROMFSINST) /bin/blue
-	$(ROMFSINST) /bin/bs
+	$(ROMFSINST) /usr/games/blue
+	$(ROMFSINST) /usr/games/bs
 	$(ROMFSINST) /bin/cardfile
 	#$(ROMFSINST) /bin/color_set
 	#$(ROMFSINST) /bin/demo_defkey
@@ -736,28 +736,28 @@ romfs :
 	#$(ROMFSINST) /bin/demo_panels
 	#$(ROMFSINST) /bin/demo_termcap
 	$(ROMFSINST) /bin/ditto
-	$(ROMFSINST) /bin/dots
+	$(ROMFSINST) /usr/games/dots
 	$(ROMFSINST) /bin/filter
-	$(ROMFSINST) /bin/firework
+	$(ROMFSINST) /usr/games/firework
 	#$(ROMFSINST) /bin/firstlast
 	$(ROMFSINST) /bin/gdc
-	$(ROMFSINST) /bin/hanoi
+	$(ROMFSINST) /usr/games/hanoi
 	#$(ROMFSINST) /bin/hashtest
 	#$(ROMFSINST) /bin/ins_wide
 	#$(ROMFSINST) /bin/inserts
 	#$(ROMFSINST) /bin/keynames
-	$(ROMFSINST) /bin/knight
+	$(ROMFSINST) /usr/games/knight
 	#$(ROMFSINST) /bin/lrtest
 	#$(ROMFSINST) /bin/ncurses
 	#$(ROMFSINST) /bin/newdemo
-	$(ROMFSINST) /bin/railroad
-	$(ROMFSINST) /bin/rain
+	$(ROMFSINST) /usr/games/railroad
+	$(ROMFSINST) /usr/games/rain
 	$(ROMFSINST) /bin/tclock
 	#$(ROMFSINST) /bin/testaddch
 	#$(ROMFSINST) /bin/testcurs
 	#$(ROMFSINST) /bin/testscanw
 	$(ROMFSINST) /bin/view
-	$(ROMFSINST) /bin/worm
-	$(ROMFSINST) /bin/xmas
+	$(ROMFSINST) /usr/games/worm
+	$(ROMFSINST) /usr/games/xmas
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
