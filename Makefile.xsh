@@ -18,7 +18,7 @@ xsh:
 	@echo "Spawning cross-compilation shell. Happy hacking! :-)"
 	@echo "Type exit to get out of here"
 	@echo "YOU CANNOT COMPILE ALL OF DSLinux FROM THIS SHELL!"
-	@echo "It is for suitable only for porting applications and libraries."
+	@echo "It is suitable only for porting applications and libraries."
 	@echo "------ Environment: ----------------------------------------------------"
 	@echo "CC       =   $(CC)"
 	@echo "CFLAGS   =   $(CFLAGS)"
