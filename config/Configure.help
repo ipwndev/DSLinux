@@ -836,6 +836,9 @@ CONFIG_USER_RP_PPPOE_PPPOE_SERVER
 
 CONFIG_USER_WGET
   Web site downloading utility.
+
+CONFIG_USER_WNC_WNC
+  Wireless network configuration tool.
   
 CONFIG_USER_ZEBRA_ZEBRA_ZEBRA
   The GNU Zebra routing daemon server process.
