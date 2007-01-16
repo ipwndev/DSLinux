@@ -386,6 +386,7 @@ dir_$(CONFIG_USER_W3CAM_W3CAMD)             += w3cam
 dir_$(CONFIG_USER_WGET)                     += wget
 dir_$(CONFIG_USER_WIRELESS_TOOLS)           += wireless_tools
 dir_$(CONFIG_USER_WLAN_NG)                  += wlan-ng
+dir_$(CONFIG_USER_WNC_WNC)                  += wnc
 dir_$(CONFIG_USER_ZEBRA_BGPD_BGPD)          += zebra
 dir_$(CONFIG_USER_ZEBRA_OSPFD_OSPFD)        += zebra
 dir_$(CONFIG_USER_ZEBRA_RIPD_RIPD)          += zebra

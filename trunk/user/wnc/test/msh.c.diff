@@ -1,0 +1,38 @@
+--- busybox-1.2.0/shell/msh.c	2006-07-01 00:42:05.000000000 +0200
++++ busybox-1.2.0.msh/shell/msh.c	2006-09-03 14:44:01.000000000 +0200
+@@ -759,6 +759,7 @@
+ static int iounit = IODEFAULT;
+ static YYSTYPE yylval;
+ static char *elinep = line + sizeof(line) - 5;
++static int grave_exitstatus = -1; /* exitstatus of command run by grave() */
+ 
+ static struct ioarg temparg = { 0, 0, 0, AFID_NOBUF, 0 };	/* temporary for PUSHIO */
+ static struct ioarg ioargstack[NPUSH];
+@@ -2842,7 +2843,13 @@
+ 		if (cp == NULL && t->ioact == NULL) {
+ 			while ((cp = *owp++) != NULL && assign(cp, COPYV));
+ 			DBGPRINTF(("FORKEXEC: returning setstatus()\n"));
+-			return (setstatus(0));
++			if (grave_exitstatus != -1) {
++				i = grave_exitstatus;
++				grave_exitstatus = -1;
++				return (setstatus(i));
++			} else {
++				return (setstatus(0));
++			}
+ 		} else if (cp != NULL) {
+ 			shcom = inbuilt(cp);
+ 		}
+@@ -4287,7 +4294,11 @@
+ 		return (0);
+ 	}
+ 	if (i != 0) {
+-		waitpid(i, NULL, 0);
++		waitpid(i, &grave_exitstatus, 0);
++		if WIFEXITED(grave_exitstatus)
++			grave_exitstatus = WEXITSTATUS(grave_exitstatus);
++		else
++			grave_exitstatus = 0;
+ 		e.iop->argp->aword = ++cp;
+ 		close(pf[1]);
+ 		PUSHIO(afile, remap(pf[0]),
