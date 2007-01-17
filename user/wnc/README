@@ -23,3 +23,6 @@ testing with ksh instead. To do this search for ksh in wnc.sh and comment
 out any lines marked "for ksh testing", then run "sh test/testwnc.sh ksh".
 
 wnc is *not* compatible with bash or pdksh (see wnc.sh for details).
+
+To use a wnc profile with /etc/rc.d/network, you can put something like this in rc.conf:
+ NETWORK_CONFIG="/var/wncsh/profiles/myprofile"
