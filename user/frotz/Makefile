@@ -283,4 +283,4 @@ help:
 	@echo
 
 romfs:
-	$(ROMFSINST) /bin/frotz
+	$(ROMFSINST) /usr/games/frotz

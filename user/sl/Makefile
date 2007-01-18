@@ -37,6 +37,6 @@ install::
 	$(INSTALL) -m 644 sl-h.6de $(MANDIR)/de/man6/sl-h.6
 
 romfs:
-	$(ROMFSINST) /bin/sl
-	$(ROMFSINST) /bin/sl-h
+	$(ROMFSINST) /usr/games/sl
+	$(ROMFSINST) /usr/games/sl-h
 
