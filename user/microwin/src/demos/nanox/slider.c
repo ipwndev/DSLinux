@@ -19,10 +19,13 @@
 #define MAX_TILES	(WIDTH_IN_TILES * HEIGHT_IN_TILES)
 #define USE_IMAGE	1
 
+#define BUTTON_HEIGHT	25
+#define MARGIN		3
+
 static	int	value[WIDTH_IN_TILES][HEIGHT_IN_TILES];
 static	int	calc_width, calc_height;
-static	int	tile_width = 40;
-static	int	tile_height = 40;
+static	int	tile_width = 35;
+static	int	tile_height = 35;
 
 #if USE_IMAGE
 static	void *	image_addr;
@@ -73,18 +76,18 @@ main(int argc,char **argv)
 #endif
 	
 	/* calculate size of tile area */
- 	calc_width = 10 + (WIDTH_IN_TILES * tile_width);
- 	calc_height = 15 + 35 + (HEIGHT_IN_TILES * tile_height);
+ 	calc_width = MARGIN + (WIDTH_IN_TILES * tile_width) + MARGIN;
+ 	calc_height = MARGIN + BUTTON_HEIGHT + MARGIN + (HEIGHT_IN_TILES * tile_height) + MARGIN;
 #if 0
 	/* enforce minimum size */
 	if (calc_width < 240) calc_width=240;
 	if (calc_height < 320) calc_height=320;
 #endif
 	master = GrNewWindow(GR_ROOT_WINDOW_ID, 0, 0, calc_width, calc_height, 1, RED, WHITE);
- 	buttons = GrNewWindow((GR_WINDOW_ID) master, 5, 5, (calc_width - 5), 35, 1, RED, RED);
+ 	buttons = GrNewWindow((GR_WINDOW_ID) master, MARGIN, MARGIN, (calc_width - MARGIN), BUTTON_HEIGHT, 1, RED, RED);
 
 	tiles = GrNewWindow((GR_WINDOW_ID) master, (calc_width/2) - (WIDTH_IN_TILES * tile_width /2),
- 	 	45 + ((calc_height - 50)/2) - (HEIGHT_IN_TILES * tile_height /2),
+ 	 	BUTTON_HEIGHT + MARGIN * 2 + ((calc_height - BUTTON_HEIGHT - MARGIN * 3)/2) - (HEIGHT_IN_TILES * tile_height /2),
 		(WIDTH_IN_TILES * tile_width), (HEIGHT_IN_TILES * tile_height), 1, RED, RED);
 
 	GrMapWindow(master);
@@ -223,15 +226,15 @@ RefreshWindow()
 	GrSetGCBackground(gc1, RED);
 
 	/* draw the buttons */
-	GrRect(buttons, gc1, 0, 0, (calc_width - 12)/2, 34);
-	GrRect(buttons, gc1, (calc_width - 8)/2, 0, (calc_width - 12)/2, 34);
+	GrRect(buttons, gc1, 0, 0, (calc_width - MARGIN * 2 - 2)/2, BUTTON_HEIGHT - 1);
+	GrRect(buttons, gc1, (calc_width - MARGIN * 2 + 2)/2, 0, (calc_width - MARGIN * 2 - 2)/2, BUTTON_HEIGHT - 1);
 
 #if 0	/* for when center align text works */
-	GrText(buttons, gc1, (calc_width - 10)/4, 22, "Again", 5, 0);
-	GrText(buttons, gc1, (calc_width - 10)*3/4, 22, "Quit", 4, 0);
+	GrText(buttons, gc1, (calc_width - MARGIN * 2)/4, 22, "Again", 5, 0);
+	GrText(buttons, gc1, (calc_width - MARGIN * 2)*3/4, 22, "Quit", 4, 0);
 #else
-	GrText(buttons, gc1, 5, 22, "Again", 5, 0);
-	GrText(buttons, gc1, (calc_width / 2) + 5, 22, "Quit", 4, 0);
+	GrText(buttons, gc1, MARGIN, BUTTON_HEIGHT / 2 + MARGIN, "Again", 5, 0);
+	GrText(buttons, gc1, (calc_width / 2), BUTTON_HEIGHT / 2 + MARGIN, "Quit", 4, 0);
 #endif
 	
 	/* draw the tiles */
