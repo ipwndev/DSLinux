@@ -71,30 +71,30 @@ __RCSID("$NetBSD: canfield.c,v 1.20 2004/11/05 21:30:31 dsl Exp $");
 #define	decksize	52
 #define originrow	0
 #define origincol	0
-#define	basecol		1
-#define	boxcol		42
+#define	basecol		0
+#define	boxcol		(basecol+31)
 #define	tboxrow		2
 #define	bboxrow		17
-#define	movecol		43
+#define	movecol		(basecol+37)
 #define	moverow		16
-#define	msgcol		43
+#define	msgcol		(basecol+37)
 #define	msgrow		15
-#define	titlecol	30
+#define	titlecol	24
 #define	titlerow	0
 #define	sidecol		1
 #define	ottlrow		6
-#define	foundcol	11
+#define	foundcol	(basecol+8)
 #define	foundrow	3
 #define	stockcol	2
 #define	stockrow	8
-#define	fttlcol		10
+#define	fttlcol		(basecol+7)
 #define	fttlrow		1
 #define	taloncol	2
 #define	talonrow	13
 #define	tabrow		8
 #define ctoprow		21
 #define cbotrow		23
-#define cinitcol	14
+#define cinitcol	9
 #define cheightcol	1
 #define cwidthcol	4
 #define handstatrow	21
@@ -107,10 +107,10 @@ __RCSID("$NetBSD: canfield.c,v 1.20 2004/11/05 21:30:31 dsl Exp $");
 #define	Jack		11
 #define	Queen		12
 #define	King		13
-#define	atabcol		11
-#define	btabcol		18
-#define	ctabcol		25
-#define	dtabcol		32
+#define	atabcol		(fttlcol+1)
+#define	btabcol		(fttlcol+7)
+#define	ctabcol		(fttlcol+13)
+#define	dtabcol		(fttlcol+19)
 
 #define	spades		's'
 #define	clubs		'c'
@@ -268,9 +268,9 @@ movebox()
 		break;
 	}
 	move(moverow, boxcol);
-	printw("|                                  |");
+	printw("|                                ");
 	move(msgrow, boxcol);
-	printw("|                                  |");
+	printw("|                                ");
 	switch (status) {
 	case BETTINGBOX:
 		printbottombettingbox();
@@ -292,31 +292,31 @@ void
 printtopinstructions()
 {
 	    move(tboxrow, boxcol);
-	    printw("*----------------------------------*");
+	    printw("*--------------------------------");
 	    move(tboxrow + 1, boxcol);
-	    printw("|         MOVES                    |");
+	    printw("|         MOVES                  ");
 	    move(tboxrow + 2, boxcol);
-	    printw("|s# = stock to tableau             |");
+	    printw("|s# = stock to tableau           ");
 	    move(tboxrow + 3, boxcol);
-	    printw("|sf = stock to foundation          |");
+	    printw("|sf = stock to foundation        ");
 	    move(tboxrow + 4, boxcol);
-	    printw("|t# = talon to tableau             |");
+	    printw("|t# = talon to tableau           ");
 	    move(tboxrow + 5, boxcol);
-	    printw("|tf = talon to foundation          |");
+	    printw("|tf = talon to foundation        ");
 	    move(tboxrow + 6, boxcol);
-	    printw("|## = tableau to tableau           |");
+	    printw("|## = tableau to tableau         ");
 	    move(tboxrow + 7, boxcol);
-	    printw("|#f = tableau to foundation        |");
+	    printw("|#f = tableau to foundation      ");
 	    move(tboxrow + 8, boxcol);
-	    printw("|ht = hand to talon                |");
+	    printw("|ht = hand to talon              ");
 	    move(tboxrow + 9, boxcol);
-	    printw("|c = toggle card counting          |");
+	    printw("|c = toggle card counting        ");
 	    move(tboxrow + 10, boxcol);
-	    printw("|b = present betting information   |");
+	    printw("|b = present betting information ");
 	    move(tboxrow + 11, boxcol);
-	    printw("|q = quit to end the game          |");
+	    printw("|q = quit to end the game        ");
 	    move(tboxrow + 12, boxcol);
-	    printw("|==================================|");
+	    printw("|================================");
 }
 
 /*
@@ -327,31 +327,31 @@ printtopbettingbox()
 {
 
 	    move(tboxrow, boxcol);
-	    printw("*----------------------------------*");
+	    printw("*--------------------------------");
 	    move(tboxrow + 1, boxcol);
-	    printw("|Costs        Hand   Game    Total |");
+	    printw("|Costs        Hand   Game   Total");
 	    move(tboxrow + 2, boxcol);
-	    printw("| Hands                            |");
+	    printw("| Hands                          ");
 	    move(tboxrow + 3, boxcol);
-	    printw("| Inspections                      |");
+	    printw("| Inspections                    ");
 	    move(tboxrow + 4, boxcol);
-	    printw("| Games                            |");
+	    printw("| Games                          ");
 	    move(tboxrow + 5, boxcol);
-	    printw("| Runs                             |");
+	    printw("| Runs                           ");
 	    move(tboxrow + 6, boxcol);
-	    printw("| Information                      |");
+	    printw("| Information                    ");
 	    move(tboxrow + 7, boxcol);
-	    printw("| Think time                       |");
+	    printw("| Think time                     ");
 	    move(tboxrow + 8, boxcol);
-	    printw("|Total Costs                       |");
+	    printw("|Total Costs                     ");
 	    move(tboxrow + 9, boxcol);
-	    printw("|Winnings                          |");
+	    printw("|Winnings                        ");
 	    move(tboxrow + 10, boxcol);
-	    printw("|Net Worth                         |");
+	    printw("|Net Worth                       ");
 	    move(tboxrow + 11, boxcol);
-	    printw("|Return                            |");
+	    printw("|Return                          ");
 	    move(tboxrow + 12, boxcol);
-	    printw("|==================================|");
+	    printw("|================================");
 }
 
 /*
@@ -364,10 +364,10 @@ clearabovemovebox()
 
 	for (i = 0; i <= 11; i++) {
 		move(tboxrow + i, boxcol);
-		printw("                                    ");
+		printw("                                 ");
 	}
 	move(tboxrow + 12, boxcol);
-	printw("*----------------------------------*");
+	printw("*--------------------------------");
 }
 
 /*
@@ -377,11 +377,11 @@ void
 printbottominstructions()
 {
 	    move(bboxrow, boxcol);
-	    printw("|Replace # with the number of the  |");
+	    printw("|Replace # with the number of the");
 	    move(bboxrow + 1, boxcol);
-	    printw("|tableau you want.                 |");
+	    printw("|tableau you want.               ");
 	    move(bboxrow + 2, boxcol);
-	    printw("*----------------------------------*");
+	    printw("*--------------------------------");
 }
 
 /*
@@ -391,11 +391,11 @@ void
 printbottombettingbox()
 {
 	    move(bboxrow, boxcol);
-	    printw("|x = toggle information box        |");
+	    printw("|x = toggle information box      ");
 	    move(bboxrow + 1, boxcol);
-	    printw("|i = list playing instructions     |");
+	    printw("|i = list playing instructions   ");
 	    move(bboxrow + 2, boxcol);
-	    printw("*----------------------------------*");
+	    printw("*--------------------------------");
 }
 
 /*
@@ -407,10 +407,10 @@ clearbelowmovebox()
 	int i;
 
 	move(bboxrow, boxcol);
-	printw("*----------------------------------*");
+	printw("*--------------------------------");
 	for (i = 1; i <= 2; i++) {
 		move(bboxrow + i, boxcol);
-		printw("                                    ");
+		printw("                                 ");
 	}
 }
 
@@ -427,13 +427,13 @@ makeboard()
 	move(fttlrow, fttlcol);
 	printw("foundation");
 	move(foundrow - 1, fttlcol);
-	printw("=---=  =---=  =---=  =---=");
+	printw("=---= =---= =---= =---=");
 	move(foundrow, fttlcol);
-	printw("|   |  |   |  |   |  |   |");
+	printw("|   | |   | |   | |   |");
 	move(foundrow + 1, fttlcol);
-	printw("=---=  =---=  =---=  =---=");
+	printw("=---= =---= =---= =---=");
 	move(ottlrow, sidecol);
-	printw("stock     tableau");
+	printw("stock  tableau");
 	move(stockrow - 1, sidecol);
 	printw("=---=");
 	move(stockrow, sidecol);
@@ -449,7 +449,7 @@ makeboard()
 	move(talonrow + 1, sidecol);
 	printw("=---=");
 	move(tabrow - 1, atabcol);
-	printw("-1-    -2-    -3-    -4-");
+	printw("-1-   -2-   -3-   -4-");
 	movebox();
 }
 
@@ -487,7 +487,7 @@ cleanupboard()
 	move(talonrow, sidecol);
 	printw("|   |");
 	move(foundrow, fttlcol);
-	printw("|   |  |   |  |   |  |   |");
+	printw("|   | |   | |   | |   |");
 	for (cnt = 0; cnt < 4; cnt++) {
 		switch(cnt) {
 		case 0:
@@ -1163,27 +1163,27 @@ updatebettinginfo()
 	if (status != BETTINGBOX)
 		return;
 	move(tboxrow + 2, boxcol + 13);
-	printw("%4ld%8ld%9ld", this.hand, game.hand, total.hand);
+	printw("%4ld%8ld%8ld", this.hand, game.hand, total.hand);
 	move(tboxrow + 3, boxcol + 13);
-	printw("%4ld%8ld%9ld", this.inspection, game.inspection,
+	printw("%4ld%8ld%8ld", this.inspection, game.inspection,
 	    total.inspection);
 	move(tboxrow + 4, boxcol + 13);
-	printw("%4ld%8ld%9ld", this.game, game.game, total.game);
+	printw("%4ld%8ld%8ld", this.game, game.game, total.game);
 	move(tboxrow + 5, boxcol + 13);
-	printw("%4ld%8ld%9ld", this.runs, game.runs, total.runs);
+	printw("%4ld%8ld%8ld", this.runs, game.runs, total.runs);
 	move(tboxrow + 6, boxcol + 13);
-	printw("%4ld%8ld%9ld", this.information, game.information,
+	printw("%4ld%8ld%8ld", this.information, game.information,
 		total.information);
 	move(tboxrow + 7, boxcol + 13);
-	printw("%4ld%8ld%9ld", this.thinktime, game.thinktime, total.thinktime);
+	printw("%4ld%8ld%8ld", this.thinktime, game.thinktime, total.thinktime);
 	move(tboxrow + 8, boxcol + 13);
-	printw("%4ld%8ld%9ld", thiscosts, gamecosts, totalcosts);
+	printw("%4ld%8ld%8ld", thiscosts, gamecosts, totalcosts);
 	move(tboxrow + 9, boxcol + 13);
-	printw("%4ld%8ld%9ld", this.wins, game.wins, total.wins);
+	printw("%4ld%8ld%8ld", this.wins, game.wins, total.wins);
 	move(tboxrow + 10, boxcol + 13);
-	printw("%4ld%8ld%9ld", this.worth, game.worth, total.worth);
+	printw("%4ld%8ld%8ld", this.worth, game.worth, total.worth);
 	move(tboxrow + 11, boxcol + 13);
-	printw("%4.0f%%%7.1f%%%8.1f%%", thisreturn, gamereturn, totalreturn);
+	printw("%4.0f%%%7.1f%%%6.0f%%", thisreturn, gamereturn, totalreturn);
 }
 
 /*
