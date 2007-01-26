@@ -602,28 +602,28 @@ $(TOP)/bin $(TOP)/lib:
 # Compilation target for bmp file conversion
 #
 %.c:%.bmp $(TOP)/bin/convbmp
-	echo "Generating $@ from bitmap file ..."
+	@echo "Generating $@ from bitmap file ..."
 	$(TOP)/bin/convbmp -o $@ $<
 
 #
 # Compilation target for tool that does bmp file conversion
 #
 $(TOP)/bin/convbmp: $(TOP)/mwin/bmp/convbmp.c
-	echo "Building $@ tool ..."
+	@echo "Building $@ tool ..."
 	$(HOSTCC) $(HOSTCFLAGS) $< -o $@
 
 #
 # Compilation target for bdf font file conversion
 #
 %.c:%.bdf $(TOP)/bin/convbdf
-	echo "Generating $@ from font file ..."
+	@echo "Generating $@ from font file ..."
 	$(TOP)/bin/convbdf -c -o $@ $<
 
 #
 # Compilation target for tool that does bdf font file conversion
 #
 $(TOP)/bin/convbdf: $(TOP)/fonts/convbdf.c
-	echo "Building $@ tool ..."
+	@echo "Building $@ tool ..."
 	$(HOSTCC) $(HOSTCFLAGS) $< -o $@
 
 xconfig:
@@ -658,9 +658,9 @@ cleandepend: cleandepend-notsubdir
 
 install: default
 	$(INSTALL_DIR) $(HDRINSTALLDIR)
-	echo "Copying hdrs to $(HDRINSTALLDIR)"
+	@echo "Copying hdrs to $(HDRINSTALLDIR)"
 	$(INSTALL_HDR) include/*.h $(HDRINSTALLDIR)
-	echo "Copying libs to $(LIBINSTALLDIR)"
+	@echo "Copying libs to $(LIBINSTALLDIR)"
 	$(INSTALL_DIR) $(LIBINSTALLDIR)
 	$(INSTALL_LIB) lib/*.a $(LIBINSTALLDIR)
 ifeq ($(SHAREDLIBS), Y)
@@ -668,7 +668,7 @@ ifeq ($(SHAREDLIBS), Y)
 endif
 ifeq ($(NANOX), Y)
 ifeq ($(LINK_APP_INTO_SERVER), N)
-	echo "Copying binaries to $(BININSTALLDIR)"
+	@echo "Copying binaries to $(BININSTALLDIR)"
 	$(INSTALL_DIR) $(BININSTALLDIR)
 	$(INSTALL_BIN) bin/nano-X $(BININSTALLDIR)
 else
@@ -677,7 +677,7 @@ endif
 else
 	rm -f $(BININSTALLDIR)/nano-X
 endif
-	echo "Installation completed successfully."
+	@echo "Installation completed successfully."
 
 tags:
 	-rm -f TAGS

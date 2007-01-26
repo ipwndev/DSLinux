@@ -288,8 +288,8 @@ linux linux%_only:
 
 .PHONY: subdirs
 subdirs: linux
-	echo "Build start unix"
-	echo $(BUILD_START_UNIX)
+	@echo "Build start unix"
+	@echo $(BUILD_START_UNIX)
 	for dir in $(DIRS) ; do [ ! -d $$dir ] || $(MAKEARCH_KERNEL) -C $$dir || exit 1 ; done
 
 dep:
