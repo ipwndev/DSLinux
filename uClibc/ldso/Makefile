@@ -26,14 +26,14 @@ all: headers
 ifeq ($(strip $(BUILD_UCLIBC_LDSO)),y)
 	$(MAKE) -C ldso;
 else
-	echo "Not building ld-uClibc"
+	@echo "Not building ld-uClibc"
 endif
 
 shared:
 ifeq ($(strip $(BUILD_UCLIBC_LDSO)),y)
 	$(MAKE) -C libdl;
 else
-	echo "Not building libdl"
+	@echo "Not building libdl"
 endif
 
 include/dl-progname.h: Makefile
