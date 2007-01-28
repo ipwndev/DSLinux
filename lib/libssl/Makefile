@@ -9,8 +9,8 @@ all: .compiled
 	touch $@
 
 .compiled: .configured
-	$(MAKE) -C src depend
-	$(MAKE) -C src
+	$(MAKE) -C src Makefile
+	$(MAKE) -C src build_libs
 	touch $@
 
 clean:
