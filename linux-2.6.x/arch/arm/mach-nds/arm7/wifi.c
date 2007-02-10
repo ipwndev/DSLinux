@@ -268,29 +268,23 @@ static void Wifi_SetChannel(int channel)
 	if (!(wifi_data.state & WIFI_STATE_UP))
 		return;
 
-	switch(ReadFlashByte(0x40)) {
-		case 2:
-		case 5:
-			Wifi_RFWrite(ReadFlashBytes(0xf2 + channel * 6, 3));
-			Wifi_RFWrite(ReadFlashBytes(0xf5 + channel * 6, 3));
-			for (i = 0; i < 20000; i++)
-				i++;
-			Wifi_BBWrite(0x1E, ReadFlashByte(0x146 + channel));
-			break;
-		case 3:
-			n=ReadFlashByte(0x42);
-			n+=0xCF;
-			for(i=0;i<=ReadFlashByte(0x43);i++) {
-				Wifi_BBWrite(ReadFlashByte(n),ReadFlashByte(n+channel+1));
-				n+=15;
-			}
-			for(i=0;i<ReadFlashByte(0x43);i++) {
-				Wifi_RFWrite( (ReadFlashByte(n)<<8) | ReadFlashByte(n+channel+1) | 0x050000 );
-				n+=15;
-			}
-			break;
-		default:
-			break;
+	if (ReadFlashByte(0x40) == 3) {
+		n=ReadFlashByte(0x42);
+		n+=0xCF;
+		for(i=0;i<=ReadFlashByte(0x43);i++) {
+			Wifi_BBWrite(ReadFlashByte(n),ReadFlashByte(n+channel+1));
+			n+=15;
+		}
+		for(i=0;i<ReadFlashByte(0x43);i++) {
+			Wifi_RFWrite( (ReadFlashByte(n)<<8) | ReadFlashByte(n+channel+1) | 0x050000 );
+			n+=15;
+		}
+	} else {
+		Wifi_RFWrite(ReadFlashBytes(0xf2 + channel * 6, 3));
+		Wifi_RFWrite(ReadFlashBytes(0xf5 + channel * 6, 3));
+		for (i = 0; i < 20000; i++)
+			i++;
+		Wifi_BBWrite(0x1E, ReadFlashByte(0x146 + channel));
 	}
 }
 
