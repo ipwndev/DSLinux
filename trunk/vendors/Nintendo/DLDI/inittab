@@ -1,0 +1,2 @@
+tty1::linux:/usr/bin/agetty -n -l /bin/autologin 38400 tty1
+

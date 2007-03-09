@@ -344,7 +344,7 @@ CONFIG_MTD_FIRMWARE=y
 # CONFIG_BLK_DEV_RAM is not set
 CONFIG_BLK_DEV_RAM_COUNT=16
 # CONFIG_CDROM_PKTCDVD is not set
-# CONFIG_NDS_DLDI is not set
+CONFIG_NDS_DLDI=y
 
 #
 # IO Schedulers
@@ -358,14 +358,13 @@ CONFIG_IOSCHED_NOOP=y
 #
 # ATA/ATAPI/MFM/RLL support
 #
-CONFIG_IDE=y
-CONFIG_BLK_DEV_IDE=y
+# CONFIG_IDE is not set
 
 #
 # Please see Documentation/ide.txt for help/info on IDE drives
 #
 # CONFIG_BLK_DEV_IDE_SATA is not set
-CONFIG_BLK_DEV_IDEDISK=y
+# CONFIG_BLK_DEV_IDEDISK is not set
 # CONFIG_IDEDISK_MULTI_MODE is not set
 # CONFIG_BLK_DEV_IDECD is not set
 # CONFIG_BLK_DEV_IDETAPE is not set
@@ -375,12 +374,12 @@ CONFIG_BLK_DEV_IDEDISK=y
 #
 # IDE chipset support/bugfixes
 #
-CONFIG_IDE_GENERIC=y
-CONFIG_IDE_ARM=y
+# CONFIG_IDE_GENERIC is not set
+# CONFIG_IDE_ARM is not set
 # CONFIG_IDE_NDS_GBAMP is not set
 # CONFIG_IDE_NDS_M3 is not set
 # CONFIG_IDE_NDS_SUPERCARD is not set
-CONFIG_IDE_NDS_MAX_MEDIA_PLAYER=y
+# CONFIG_IDE_NDS_MAX_MEDIA_PLAYER is not set
 # CONFIG_BLK_DEV_IDEDMA is not set
 # CONFIG_IDEDMA_AUTO is not set
 # CONFIG_BLK_DEV_HD is not set
