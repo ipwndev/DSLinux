@@ -38,7 +38,7 @@ EOF
 
 OUTDIR=${OUTDIR:-"./bulkbuild"}
 
-for build in DSGBA DSMEM GBAMP GBAMP_EXT2 NDS RAM
+for build in DSGBA DSMEM GBAMP GBAMP_EXT2 NDS RAM DLDI
 do
 	if [ "$build" = "GBAMP_EXT2" ]
 	then
@@ -76,6 +76,9 @@ do
 		;;	
 		RAM)
 			distfile=dslinux-ram.tgz
+		;;	
+		DLDI)
+			distfile=dslinux-dldi.tgz
 		;;
 		*)
 			echo
