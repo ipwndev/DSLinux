@@ -21,6 +21,7 @@
 #include <linux/genhd.h>
 #include <linux/blkdev.h>
 #include <linux/bio.h>
+#include <linux/workqueue.h>
 
 MODULE_LICENSE("GPL");
 
@@ -56,11 +57,18 @@ static int nsectors   = (2*1024*1024*2);	/* 2 GBytes */
  */
 #define dldi_MINORS	5
 
+#define SECTOR_SIZE	512
+
+#define REQ_SIZE	64
+
 /*
  * The internal representation of our device.
  */
 struct dldi_dev {
         int size;                       /* Device size in bytes */
+        spinlock_t lock;                /* For mutual exclusion */
+	struct work_struct dldi_work;	/* For deferred start */
+	int running;			
         struct request_queue *queue;    /* The device request queue */
         struct gendisk *gd;             /* The gendisk structure */
 };
@@ -90,38 +98,112 @@ static void dldi_transfer(struct dldi_dev *dev, unsigned long sector,
 }
 
 /*
- * Transfer a single BIO.
+ * Delayed request function. This function is a complex one because
+ * I want to merge requests here: I have found that for FAT file
+ * systems, I will get 512 bytes per request, and this is faaar to slow.
  */
-static int dldi_xfer_bio(struct dldi_dev *dev, struct bio *bio)
+static void dldi_do_request(void *arg)
 {
-	int i;
-	struct bio_vec *bvec;
-	sector_t sector = bio->bi_sector;
+	struct dldi_dev *dev = (struct dldi_dev *)arg;
+	request_queue_t *q = dev->queue;
+	struct request *req;
+	struct request *next;
+	struct request *requests[REQ_SIZE];
+	int index;
 
-	/* Do each segment independently. */
-	bio_for_each_segment(bvec, bio, i) {
-		char *buffer = __bio_kmap_atomic(bio, i, KM_USER0);
-		dldi_transfer(dev, sector, bio_cur_sectors(bio),
-				buffer, bio_data_dir(bio) == WRITE);
-		sector += bio_cur_sectors(bio);
-		__bio_kunmap_atomic(bio, KM_USER0);
+	long dir;
+	sector_t sector;
+	int nr_sec;
+	void *buffer;
+
+	spin_lock(&dev->lock);
+	dev->running = 0;
+
+	// printk (KERN_NOTICE "do_request\n");
+
+	next = NULL;
+
+	/* search the first fs request */
+again:	while (1) {
+		if (next) {
+			req = next;
+			next = NULL;
+		} else {
+			req = elv_next_request(q);
+			if (!req)
+				/* no request found */
+				break;
+			blkdev_dequeue_request(req);
+		}
+		if (blk_fs_request(req))
+			/* fs request found */
+			break;
+		/* skip non-fs requests */
+		end_request(req, 0);
 	}
-	return 0; /* Always "succeed" */
+	if (req) {
+		/* setup r/w parameters for first request */
+		dir 	= rq_data_dir(req);
+		sector  = req->sector;
+		nr_sec  = req->current_nr_sectors;
+		buffer  = req->buffer;
+		/* store first request for later signaling */
+		memset(requests, 0, sizeof(requests));
+		index = 0;
+		requests[0] = req;
+		/* walk through the requests and try to merge */
+		index++;
+		while (index < REQ_SIZE) {
+			req = elv_next_request(q);
+			if (!req)
+				/* end of requests */
+				break;
+			blkdev_dequeue_request(req);
+			requests[index++] = req;
+			if (!blk_fs_request(req))
+				/* skip non-fs requests */
+				continue;
+			/* test for possible merge */
+			if ((dir == rq_data_dir(req))
+			  &&((sector + nr_sec) == req->sector)
+			  &&((buffer + nr_sec*SECTOR_SIZE) == req->buffer)) {
+				/* do the merge */
+				nr_sec += req->current_nr_sectors;
+			} else {
+				/* no merge possible */
+				next = req;
+				requests[--index] = NULL;
+				break;
+			}	
+		}	
+		/* do the transfer */
+		dldi_transfer(dev, sector, nr_sec, buffer, dir);
+ 		/* send completion to all requests */
+		for (index = 0; index < REQ_SIZE; index++) {
+			req = requests[index];
+			if (!req)
+				break;
+			end_request(req, blk_fs_request(req));
+		}
+		/* try the next request */
+		goto again;
+	}
+	spin_unlock(&dev->lock);
 }
 
 
 /*
- * The direct make request version.
+ * Request function. Defer action to have the chance to group requests together.
  */
-static int dldi_make_request(request_queue_t *q, struct bio *bio)
+static void dldi_request(request_queue_t *q)
 {
-	struct dldi_dev *dev = q->queuedata;
-	int status;
-
-	status = dldi_xfer_bio(dev, bio);
-	bio_endio(bio, bio->bi_size, status);
-	return 0;
-}
+	struct dldi_dev *dev = Devices;
+	
+	if (!dev->running) {
+		dev->running = 1;
+		schedule_work(&dev->dldi_work);
+	}
+}	
 
 
 /*
@@ -194,18 +276,25 @@ static void setup_device(struct dldi_dev *dev, int which)
 	 * Get some memory.
 	 */
 	memset (dev, 0, sizeof (struct dldi_dev));
-	dev->size = nsectors*512;
-	
+	dev->size = nsectors*SECTOR_SIZE;
+	spin_lock_init(&dev->lock);
+	INIT_WORK(&dev->dldi_work, dldi_do_request, dev);
+	dev->running = 0;
+
 	/*
 	 * The I/O queue, depending on whether we are using our own
 	 * make_request function or not.
 	 */
-	dev->queue = blk_alloc_queue(GFP_KERNEL);
+	dev->queue = blk_init_queue(dldi_request, &dev->lock);
 	if (dev->queue == NULL)
 		return;
-	blk_queue_make_request(dev->queue, dldi_make_request);
 
-	blk_queue_hardsect_size(dev->queue, 512);
+	blk_queue_hardsect_size(dev->queue, SECTOR_SIZE);
+	blk_queue_max_phys_segments(dev->queue, 1);
+	blk_queue_max_sectors(dev->queue, 128);
+	blk_queue_max_hw_segments(dev->queue, 1);
+	blk_queue_max_segment_size(dev->queue, SECTOR_SIZE * 128);
+	blk_queue_dma_alignment(dev->queue, 3);
 	dev->queue->queuedata = dev;
 	/*
 	 * And the gendisk structure.
@@ -271,6 +360,8 @@ static void dldi_exit(void)
 {
 	int ret;
 	struct dldi_dev *dev = Devices;
+
+	cancel_delayed_work(&dev->dldi_work);
 
 	/* Shutdown the interface */
 	ret = _io_dldi.fn_shutdown();
