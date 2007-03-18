@@ -46,11 +46,20 @@ struct IO_INTERFACE_STRUCT {
 
 extern struct IO_INTERFACE_STRUCT _io_dldi;
 
-/* This is the major number of /dev/hda */
-static int dldi_major = 3;
+struct dldi_params {
+	void *oldstack;
+	void *oldlink;
+	long para1;
+	long para2;
+	long para3;
+	void *function;
+};
 
-/* We don't know how big the medium is. So we take some big number, */
-static int nsectors   = (2*1024*1024*2);	/* 2 GBytes */
+extern struct dldi_params _param_dldi;
+
+extern int _call_dldi(void);
+
+extern char _buf_dldi[];
 
 /*
  * Minor number.
@@ -60,6 +69,14 @@ static int nsectors   = (2*1024*1024*2);	/* 2 GBytes */
 #define SECTOR_SIZE	512
 
 #define REQ_SIZE	64
+
+#define BUF_SIZE	2048
+
+/* This is the major number of /dev/hda */
+static int dldi_major = 3;
+
+/* We don't know how big the medium is. So we take some big number, */
+static int nsectors   = (2*1024*1024*2);	/* 2 GBytes */
 
 /*
  * The internal representation of our device.
@@ -75,6 +92,7 @@ struct dldi_dev {
 
 static struct dldi_dev *Devices = NULL;
 
+
 /*
  * Handle an I/O request.
  */
@@ -82,18 +100,36 @@ static void dldi_transfer(struct dldi_dev *dev, unsigned long sector,
 		unsigned long nsect, char *buffer, int write)
 {
 	int ret = 0;
+	unsigned long sectors;
+	while (nsect > 0) {
+		sectors = nsect;
+		if (sectors > (BUF_SIZE/SECTOR_SIZE))
+			sectors = (BUF_SIZE/SECTOR_SIZE);
+		
+		_param_dldi.para1 = sector;
+		_param_dldi.para2 = sectors;
+		_param_dldi.para3 = (long)_buf_dldi;
 
-	if (write) {
-		// printk(KERN_ERR "Write Sector %ld, %ld Blocks\n", sector, nsect);
-		ret = _io_dldi.fn_writeSectors(sector, nsect, buffer);
-	} else {
-		// printk(KERN_ERR "Read Sector %ld, %ld Blocks\n", sector, nsect);
-		ret = _io_dldi.fn_readSectors(sector, nsect, buffer);
-	}
-	if (ret == 0) {
- 		printk(KERN_ERR "dldi_transfer failure\n");
-	} else {
-		// printk(KERN_ERR "all OK\n");
+		if (write) {
+			// printk(KERN_ERR "Write Sector %ld, %ld Blocks\n", sector, nsect);
+			memcpy(_buf_dldi, buffer, sectors * SECTOR_SIZE);
+			_param_dldi.function = _io_dldi.fn_writeSectors;
+		} else {
+			// printk(KERN_ERR "Read Sector %ld, %ld Blocks\n", sector, nsect);
+			_param_dldi.function = _io_dldi.fn_readSectors;
+		}
+		ret = _call_dldi();
+		if (ret == 0) {
+ 			printk(KERN_ERR "dldi_transfer failure\n");
+		} else {
+			// printk(KERN_ERR "all OK\n");
+		}
+		if (!write)
+			memcpy(buffer, _buf_dldi, sectors * SECTOR_SIZE);
+
+		sector += sectors;
+		nsect  -= sectors;
+		buffer += (sectors * SECTOR_SIZE);
 	}
 }
 
@@ -337,9 +373,10 @@ static int __init dldi_init(void)
 		return -ENOMEM;
 	}
 	setup_device(Devices, 0);
-    
+
 	/* Start the interface */
-	ret = _io_dldi.fn_startup();
+	_param_dldi.function = _io_dldi.fn_startup;
+	ret = _call_dldi();
 	if (ret == 0) {
 		printk(KERN_ERR "dldi: fn_startup failure\n");
 		if (Devices->gd) {
@@ -364,7 +401,8 @@ static void dldi_exit(void)
 	cancel_delayed_work(&dev->dldi_work);
 
 	/* Shutdown the interface */
-	ret = _io_dldi.fn_shutdown();
+	_param_dldi.function = _io_dldi.fn_shutdown;
+	ret = _call_dldi();
 	if (ret == 0) {
 		printk(KERN_ERR "dldi: fn_shutdown failure\n");
 	}

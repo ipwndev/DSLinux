@@ -6,17 +6,12 @@ include $(LINUX_CONFIG)
 
 ROMFSIMG = $(IMAGEDIR)/romfs.img
 ELFIMAGE = $(IMAGEDIR)/image.elf
-ifdef CONFIG_XIP_KERNEL
-IMAGE    = $(IMAGEDIR)/dslinux.ds.gba
-else
-IMAGE    = $(IMAGEDIR)/dslinux.nds.gba
-endif
 FATFS	 = media
 
 
 ROMFS_DIRS = boot dev proc sbin $(FATFS)/linux
 
-FS_DIRS = etc/rc.d home lib usr/bin usr/games usr/lib usr/share/udhcpc var/tmp var/run etc etc/rc.d
+FS_DIRS = etc/rc.d home lib usr/bin usr/games usr/lib usr/share/udhcpc var/tmp var/run
 
 DEVICES = \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
@@ -33,6 +28,7 @@ DEVICES = \
 	dsp,c,14,3\
 	\
 	fb0,c,29,0\
+	fb1,c,29,1\
 	\
 	psaux,c,10,1   mouse0,c,13,32\
 	\
@@ -78,12 +74,13 @@ romfs:
 	$(ROMFSINST) -s /var/tmp /tmp
 	$(ROMFSINST) /boot/rc
 	$(ROMFSINST) /boot/inittab
-	$(ROMFSINST) /etc/issue
+	$(ROMFSINST) /$(FATFS)/linux/etc/issue
 	$(ROMFSINST) $(NDS_COMMON)/rc.common /$(FATFS)/linux/etc/rc.common
 	$(ROMFSINST) $(NDS_COMMON)/rc.defaults /$(FATFS)/linux/etc/rc.defaults
 	for f in $(NDS_COMMON)/rc.d/*; do \
 		[ -d $$f ] || $(ROMFSINST) $$f /$(FATFS)/linux/etc/rc.d/ ; \
 	done
+
 	$(ROMFSINST) -p +x $(NDS_COMMON)/default.script /usr/share/udhcpc/default.script
 	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
 
@@ -103,36 +100,29 @@ image:
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/login $(ROMFSDIR)/bin
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/init $(ROMFSDIR)/bin
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/autologin $(ROMFSDIR)/bin
+	# move MADPLAY into internal RAM and make it XIP, to gain the processing power
+	# for undisturbed audio.
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/madplay $(ROMFSDIR)/bin
+	$(CROSS)flthdr -R $(ROMFSDIR)/bin/madplay
 	$(CROSS_COMPILE)flthdr -Z $(ROMFSDIR)/bin/*
 	-rm -r $(IMAGEDIR)/linux
 	mv $(ROMFSDIR)/$(FATFS)/linux $(IMAGEDIR)
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
-	if [ "$(CONFIG_XIP_KERNEL)" != "y" ]; then \
-		BSS=`$(CROSS_COMPILE)objdump --headers $(ROOTDIR)/$(LINUXDIR)/linux | \
-		grep .bss` && \
-		BSSADDR=`set -- $${BSS} ; echo 0x$${4}` && \
-		BSSSIZE=`set -- $${BSS} ; echo 0x$${3}` && \
-		ADDR=`echo $${BSSADDR} $${BSSSIZE} | \
-		perl -ane 'printf "0x%x\n",hex($$F[0]) + hex($$F[1])' ` && \
-		echo "BSS=$${BSSADDR},$${BSSSIZE} ADDR=$${ADDR}" && \
-		$(CROSS_COMPILE)objcopy --add-section=.romfs=$(ROMFSIMG) \
-		--adjust-section-vma=.romfs=$${ADDR} --no-adjust-warnings \
-		--set-section-flags=.romfs=alloc,load,data   \
-		$(ROOTDIR)/$(LINUXDIR)/linux $(ELFIMAGE) 2> /dev/null && \
-		$(CROSS_COMPILE)objcopy -O binary $(ELFIMAGE) $(IMAGEDIR)/arm9.bin && \
-		ndstool -c $(IMAGEDIR)/dslinux.nds -9 $(IMAGEDIR)/arm9.bin \
-			-r9 0x02000000 -e9 0x02000000  \
-			-7 $(ROOTDIR)/$(LINUXDIR)/arch/arm/mach-nds/arm7.bin \
-		       	-r7 0x03800000 -e7 0x03800000  \
-			-b $(NDS_COMMON)/tux.bmp "DSLinux;Port of Linux;to the DS!" && \
-		( cd $(IMAGEDIR); tar -cvzf dslinux-dldi.tgz linux dslinux.nds ) ;\
-	else \
-	        $(CROSS_COMPILE)objcopy -O binary \
-                        --remove-section=.text --remove-section=.init \
-                        $(ROOTDIR)/$(LINUXDIR)/linux $(IMAGEDIR)/linux.data && \
-		$(CROSS_COMPILE)objcopy -O binary \
-                        -j .init -j .text \
-                        $(ROOTDIR)/$(LINUXDIR)/linux $(IMAGEDIR)/linux.text && \
-		cat $(IMAGEDIR)/linux.text $(IMAGEDIR)/linux.data $(ROMFSIMG) > $(IMAGE) ; \
-	fi
-
+	BSS=`$(CROSS_COMPILE)objdump --headers $(ROOTDIR)/$(LINUXDIR)/linux | \
+	grep .bss` && \
+	BSSADDR=`set -- $${BSS} ; echo 0x$${4}` && \
+	BSSSIZE=`set -- $${BSS} ; echo 0x$${3}` && \
+	ADDR=`echo $${BSSADDR} $${BSSSIZE} | \
+	perl -ane 'printf "0x%x\n",hex($$F[0]) + hex($$F[1])' ` && \
+	echo "BSS=$${BSSADDR},$${BSSSIZE} ADDR=$${ADDR}" && \
+	$(CROSS_COMPILE)objcopy --add-section=.romfs=$(ROMFSIMG) \
+	--adjust-section-vma=.romfs=$${ADDR} --no-adjust-warnings \
+	--set-section-flags=.romfs=alloc,load,data   \
+	$(ROOTDIR)/$(LINUXDIR)/linux $(ELFIMAGE) 2> /dev/null && \
+	$(CROSS_COMPILE)objcopy -O binary $(ELFIMAGE) $(IMAGEDIR)/arm9.bin && \
+	ndstool -c $(IMAGEDIR)/dslinux.nds -9 $(IMAGEDIR)/arm9.bin \
+		-r9 0x02000000 -e9 0x02000000  \
+		-7 $(ROOTDIR)/$(LINUXDIR)/arch/arm/mach-nds/arm7.bin \
+	       	-r7 0x03800000 -e7 0x03800000  \
+		-b $(NDS_COMMON)/tux.bmp "DSLinux;Port of Linux;to the DS!" && \
+	( cd $(IMAGEDIR); tar -cvzf dslinux-dldi.tgz linux dslinux.nds ) ;

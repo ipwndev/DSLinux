@@ -211,6 +211,9 @@ _entry:
 #if defined(CONFIG_MMC_M3SD) || defined(CONFIG_IDE_NDS_M3) || defined(CONFIG_NDS_BLK_M3CF)
 	m3_set_ram	@ switch to RAM mode
 #endif
+#ifdef CONFIG_NDS_DLDI
+	op_set_ram	@ switch to RAM mode
+#endif
 	@ more activation for other cards here
 
 #endif
@@ -285,6 +288,17 @@ _entry:
 	@ NOTE: this code must be synchronous with include/asm-arm/arch-nds/gbarom-macros.S
 #ifdef CONFIG_NDS_ROM8BIT
 	ldr	r0,=0b10000010
+#ifdef CONFIG_NDS_DLDI
+	@ test if there is actually a RAM-based card in the GBA slot.
+	@ Only enable data cache if there is RAM, because we would totally disable
+	@ the DLDI drivers for non-ram-based slot2 devices.
+	ldr	r1,=0x09000000
+	ldr	r2,=0xF00D
+	strh	r2, [r1]
+	ldrh	r3, [r1]
+	cmp	r2, r3
+	ldrne	r0,=0b00000010
+#endif
 #else
 	ldr	r0,=0b00000010
 #endif
