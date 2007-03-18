@@ -80,6 +80,21 @@ fixup_nds(struct machine_desc *desc, struct tag *tags,
 	mi->bank[0].node  = 0;
 	mi->nr_banks = 1;
 #ifdef CONFIG_NDS_ROM8BIT
+#ifdef CONFIG_NDS_DLDI
+	{
+		/* test for opera RAM extension.
+		   If OK, continue to enabling the RAM.
+		   If not, simply return. */
+		volatile u16 *test = (volatile u16 *) 0x09000000;
+		u16 old = *test;
+		u16 new;
+		*test = 0xF00D;
+		new = *test;
+		*test = old;
+		if (new != 0xF00D)
+			return;
+	}
+#endif
 	mi->bank[1].start = CONFIG_FLASH_MEM_BASE;
 	mi->bank[1].size  = CONFIG_FLASH_SIZE;
 	mi->bank[1].node  = 0;

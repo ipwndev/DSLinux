@@ -1,7 +1,7 @@
 /*
  *  include/asm-arm/arch-nds/gbarom-macro.S - GBA ROM switching macros
  *
- *  Copyright (C) 2006 Amadeus, All Rights Reserved.
+ *  Copyright (C) 2007 Amadeus, All Rights Reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -191,6 +191,23 @@
 	ldrh	ip, [r3]
 	ldr	r3, =0x09000000
 	ldrh	ip, [r3]
+	.endm
+
+/*****************************************************************************/
+/*
+ * Opera memory expansion pack Disk/RAM switching.
+ */
+
+	.macro	op_set_disk
+	ldr	r3, =0x08240000
+	mov	ip, #0x0000
+	strh	ip, [r3]
+	.endm
+
+	.macro	op_set_ram
+	ldr	r3, =0x08240000
+	mov	ip, #0x0001
+	strh	ip, [r3]
 	.endm
 
 /*****************************************************************************/

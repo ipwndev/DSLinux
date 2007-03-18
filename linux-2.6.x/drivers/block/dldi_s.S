@@ -2,11 +2,16 @@
 	.align	4
 	.arm
 	.global _io_dldi
+	.global _param_dldi
+	.global	_call_dldi
+	.global _buf_dldi
+
 @---------------------------------------------------------------------------------
 .equ FEATURE_MEDIUM_CANREAD,		0x00000001
 .equ FEATURE_MEDIUM_CANWRITE,		0x00000002
 .equ FEATURE_SLOT_GBA,			0x00000010
 .equ FEATURE_SLOT_NDS,			0x00000020
+.equ NDS_IME,				0x04000208
 
 _dldi_start:
 
@@ -68,5 +73,43 @@ _DLDI_shutdown:
 .space 32632						@ Fill to 32KiB
 
 _dldi_end:
+
+@---------------------------------------------------------------------------------
+
+	.align
+_param_dldi:
+	.space	6*4
+
+	.align
+_call_dldi:
+	@ Disable interrupts (problems with stack switching without)
+	ldr	r3, =NDS_IME		@ interrupt mask register
+	mov	ip, #0			@ 0 = disable
+	strh	ip, [r3]
+	ldr	ip,=_param_dldi		@ ip = IO parameter block
+	str	sp,[ip]			@ store old stack pointer
+	str	lr,[ip,#4]		@ store old link register
+	ldr	r0,[ip,#8]		@ read parameter 1
+	ldr	r1,[ip,#12]		@ read parameter 2
+	ldr	r2,[ip,#16]		@ read parameter 3
+	ldr	r3,[ip,#20]		@ read pointer to function
+	ldr	sp,=_stack_dldi		@ set new stack
+	blx	r3			@ execute the function
+	ldr	ip,=_param_dldi		@ ip = IO parameter block
+	ldr	sp,[ip]			@ restore stack
+	ldr	lr,[ip,#4]		@ restore link register
+	@ enable interrupts
+	ldr	r3, =NDS_IME		@ interrupt mask register
+	mov	ip, #1			@ 1 = enable
+	strh	ip, [r3]
+	bx	lr			@ return
+
+	.pool
+	.align
+	.space	1024			@ allows for allocating 1 sector on stack
+_stack_dldi:
+	.space	4			@ for safety
+_buf_dldi:
+	.space	2048			@ allows for 1 physical sector on NAND flash
 	.end
 @---------------------------------------------------------------------------------
