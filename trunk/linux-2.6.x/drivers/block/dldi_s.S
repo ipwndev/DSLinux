@@ -86,6 +86,11 @@ _call_dldi:
 	ldr	r3, =NDS_IME		@ interrupt mask register
 	mov	ip, #0			@ 0 = disable
 	strh	ip, [r3]
+	mcr	p15, 0, ip, c7, c10, 4	@ drain write buffer for IME to take effect.
+	@ Disable Write Buffer for all except main RAM
+	@	      gGViWDMI
+	ldr	r0,=0b00000010
+	mcr	p15, 0, r0, c3, c0, 0
 	ldr	ip,=_param_dldi		@ ip = IO parameter block
 	str	sp,[ip]			@ store old stack pointer
 	str	lr,[ip,#4]		@ store old link register
@@ -98,6 +103,10 @@ _call_dldi:
 	ldr	ip,=_param_dldi		@ ip = IO parameter block
 	ldr	sp,[ip]			@ restore stack
 	ldr	lr,[ip,#4]		@ restore link register
+	@ Restore Write Buffer
+	@	      gGViWDMI
+	ldr	r0,=0b11111010
+	mcr	p15, 0, r0, c3, c0, 0
 	@ enable interrupts
 	ldr	r3, =NDS_IME		@ interrupt mask register
 	mov	ip, #1			@ 1 = enable
@@ -106,7 +115,7 @@ _call_dldi:
 
 	.pool
 	.align
-	.space	1024			@ allows for allocating 1 sector on stack
+	.space	4096	
 _stack_dldi:
 	.space	4			@ for safety
 _buf_dldi:
