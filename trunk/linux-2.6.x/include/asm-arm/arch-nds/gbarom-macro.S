@@ -211,3 +211,25 @@
 	.endm
 
 /*****************************************************************************/
+/*
+ * EZ-V Expansion pack RAM switching.
+ */
+	.macro	ez_set_ram
+	ldr	r2, =0xd200
+	ldr	r3, =0x1500
+	ldr	ip, =0x9fe0000
+	strh	r2, [ip]
+	ldr	ip, =0x8000000
+	strh	r3, [ip]
+	ldr	ip, =0x8020000
+	strh	r2, [ip]
+	ldr	ip, =0x8040000
+	strh	r3, [ip]
+	ldr	r2, =0xA500
+	ldr	ip, =0x9C40000
+	strh	r2, [ip]
+	ldr	ip, =0x9fc0000
+	strh	r3, [ip]
+	.endm
+
+/*****************************************************************************/
