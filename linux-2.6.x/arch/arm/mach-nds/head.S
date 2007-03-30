@@ -213,6 +213,7 @@ _entry:
 #endif
 #ifdef CONFIG_NDS_DLDI
 	op_set_ram	@ switch to RAM mode
+	ez_set_ram	@ the EZ-V Expansion pack
 #endif
 	@ more activation for other cards here
 

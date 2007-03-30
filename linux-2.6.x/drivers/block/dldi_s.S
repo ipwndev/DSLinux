@@ -105,8 +105,8 @@ _call_dldi:
 	ldr	lr,[ip,#4]		@ restore link register
 	@ Restore Write Buffer
 	@	      gGViWDMI
-	ldr	r0,=0b11111010
-	mcr	p15, 0, r0, c3, c0, 0
+	ldr	ip,=0b11111010
+	mcr	p15, 0, ip, c3, c0, 0
 	@ enable interrupts
 	ldr	r3, =NDS_IME		@ interrupt mask register
 	mov	ip, #1			@ 1 = enable
@@ -115,7 +115,7 @@ _call_dldi:
 
 	.pool
 	.align
-	.space	4096	
+	.space	1024			@ allows for one physical sector and more	
 _stack_dldi:
 	.space	4			@ for safety
 _buf_dldi:
