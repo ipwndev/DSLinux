@@ -215,21 +215,40 @@
  * EZ-V Expansion pack RAM switching.
  */
 	.macro	ez_set_ram
+	@   SetRompage(0x300)
 	ldr	r2, =0xd200
 	ldr	r3, =0x1500
 	ldr	ip, =0x9fe0000
-	strh	r2, [ip]
+	strh	r2, [ip]        @ 0x9FE0000 = d200
 	ldr	ip, =0x8000000
-	strh	r3, [ip]
+	strh	r3, [ip]	@ 0x8000000 = 1500
 	ldr	ip, =0x8020000
-	strh	r2, [ip]
+   	strh	r2, [ip]	@ 0x8020000 = d200
 	ldr	ip, =0x8040000
-	strh	r3, [ip]
-	ldr	r2, =0xA500
+	strh	r3, [ip]        @ 0x8040000 = 1500
+	mcr	p15, 0, r3, c7, c10, 4	@ drain write buffer
+	mov	r2, #0x300
+	mov	r2, r2, LSL#16	@ consume time ?
+	mov	r2, r2, LSR#16	@ consume time ?
+	ldr	ip, =0x9880000
+	strh	r2, [ip]	@ 0x9880000 = 0300
+	ldr	ip, =0x9FC0000
+	strh	r3, [ip]	@ 0x9FC0000 = 1500
+	@   OpenNorWrite()
+	ldr	r2, =0xd200
+	ldr	ip, =0x9fe0000
+	strh	r2, [ip]        @ 0x9FE0000 = d200
+	ldr	ip, =0x8000000
+	strh	r3, [ip]	@ 0x8000000 = 1500
+	ldr	ip, =0x8020000
+   	strh	r2, [ip]	@ 0x8020000 = d200
+	ldr	ip, =0x8040000
+	strh	r3, [ip]        @ 0x8040000 = 1500
+	mcr	p15, 0, r3, c7, c10, 4	@ drain write buffer
 	ldr	ip, =0x9C40000
-	strh	r2, [ip]
-	ldr	ip, =0x9fc0000
-	strh	r3, [ip]
+	str	r3, [ip]	@ 0x9c40000 = 1500
+	ldr	ip, =0x9FC0000
+	str	r3, [ip]        @ 0x9FC0000 = 1500
 	.endm
 
 /*****************************************************************************/

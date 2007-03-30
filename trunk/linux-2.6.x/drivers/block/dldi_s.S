@@ -115,7 +115,7 @@ _call_dldi:
 
 	.pool
 	.align
-	.space	1024			@ allows for one physical sector and more	
+	.space	4096			@ maybe better to have some more...
 _stack_dldi:
 	.space	4			@ for safety
 _buf_dldi:
