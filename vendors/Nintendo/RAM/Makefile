@@ -131,4 +131,4 @@ image:
 		-7 $(ROOTDIR)/$(LINUXDIR)/arch/arm/mach-nds/arm7.bin \
 		-r7 0x03800000 -e7 0x03800000  \
 		-b $(NDS_COMMON)/tux.bmp "DSLinux;Port of Linux;to the DS!" && \
-	( cd $(IMAGEDIR); tar -cvzf dslinux-ram.tgz linux dslinux.nds ) ; 
+	( cd $(IMAGEDIR); fakeroot tar -cvzf dslinux-ram.tgz linux dslinux.nds ) ; 
