@@ -7,9 +7,10 @@ include $(LINUX_CONFIG)
 ROMFSIMG = $(IMAGEDIR)/romfs.img
 ELFIMAGE = $(IMAGEDIR)/image.elf
 
-MEDIAFS	 = media
+FATFS	 = media
 
-ROMFS_DIRS = boot dev proc sbin $(MEDIAFS)/linux
+
+ROMFS_DIRS = boot dev proc sbin $(FATFS)/linux
 
 FS_DIRS = etc/rc.d home lib usr/bin usr/games usr/lib usr/share/udhcpc var/tmp var/run
 
@@ -19,9 +20,8 @@ DEVICES = \
 	mem,c,1,1      kmem,c,1,2         null,c,1,3       ram0,b,1,0 \
 	ram1,b,1,1 \
 	\
-	mmc,b,254,0 \
-	mmc1,b,254,1 \
-	mmc2,b,254,2 \
+	mmcblk0,b,254,0 \
+	mmcblk1,b,254,1 \
 	\
 	hda,b,3,0      hda1,b,3,1         hda2,b,3,2	   hda3,b,3,3 \
 	hda4,b,3,4 \
@@ -69,22 +69,22 @@ romfs:
 	# on non-ptmx ptys
 	chmod 620 $(ROMFSDIR)/dev/@[pt]ty[pqrsPQRS][0-9a-f],*
 	for i in $(FS_DIRS); do \
-		[ -d $(ROMFSDIR)/$(MEDIAFS)/linux/$$i ] || mkdir -p $(ROMFSDIR)/$(MEDIAFS)/linux/$$i; \
+		[ -d $(ROMFSDIR)/$(FATFS)/linux/$$i ] || mkdir -p $(ROMFSDIR)/$(FATFS)/linux/$$i; \
 	done
-	$(ROMFSINST) -s $(MEDIAFS)/linux/var /var
-	$(ROMFSINST) -s $(MEDIAFS)/linux/lib /lib
-	$(ROMFSINST) -s $(MEDIAFS)/linux/usr /usr
-	$(ROMFSINST) -s $(MEDIAFS)/linux/usr/bin /bin
-	$(ROMFSINST) -s $(MEDIAFS)/linux/home /home
-	$(ROMFSINST) -s $(MEDIAFS)/linux/etc /etc
+	$(ROMFSINST) -s $(FATFS)/linux/var /var
+	$(ROMFSINST) -s $(FATFS)/linux/lib /lib
+	$(ROMFSINST) -s $(FATFS)/linux/usr /usr
+	$(ROMFSINST) -s $(FATFS)/linux/usr/bin /bin
+	$(ROMFSINST) -s $(FATFS)/linux/home /home
+	$(ROMFSINST) -s $(FATFS)/linux/etc /etc
 	$(ROMFSINST) -s /var/tmp /tmp
 	$(ROMFSINST) /boot/rc
 	$(ROMFSINST) /boot/inittab
-	$(ROMFSINST) /$(MEDIAFS)/linux/etc/issue
-	$(ROMFSINST) $(NDS_COMMON)/rc.common /$(MEDIAFS)/linux/etc/rc.common
-	$(ROMFSINST) $(NDS_COMMON)/rc.defaults /$(MEDIAFS)/linux/etc/rc.defaults
+	$(ROMFSINST) /$(FATFS)/linux/etc/issue
+	$(ROMFSINST) $(NDS_COMMON)/rc.common /$(FATFS)/linux/etc/rc.common
+	$(ROMFSINST) $(NDS_COMMON)/rc.defaults /$(FATFS)/linux/etc/rc.defaults
 	for f in $(NDS_COMMON)/rc.d/*; do \
-		[ -d $$f ] || $(ROMFSINST) $$f /$(MEDIAFS)/linux/etc/rc.d/ ; \
+		[ -d $$f ] || $(ROMFSINST) $$f /$(FATFS)/linux/etc/rc.d/ ; \
 	done
 
 	$(ROMFSINST) -p +x $(NDS_COMMON)/default.script /usr/share/udhcpc/default.script
@@ -98,21 +98,21 @@ image:
 	mkdir $(ROMFSDIR)/bin
 	-for i in `sort $(ROOTDIR)/user/busybox/busybox.links` ; do\
 		j=`basename $$i` ; \
-		mv $(ROMFSDIR)/$(MEDIAFS)/linux/usr/bin/$$j $(ROMFSDIR)/bin ; \
+		mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/$$j $(ROMFSDIR)/bin ; \
 	done
-	-mv $(ROMFSDIR)/$(MEDIAFS)/linux/usr/bin/busybox $(ROMFSDIR)/bin
-	-mv $(ROMFSDIR)/$(MEDIAFS)/linux/usr/bin/mount $(ROMFSDIR)/bin
-	-mv $(ROMFSDIR)/$(MEDIAFS)/linux/usr/bin/sh $(ROMFSDIR)/bin
-	-mv $(ROMFSDIR)/$(MEDIAFS)/linux/usr/bin/login $(ROMFSDIR)/bin
-	-mv $(ROMFSDIR)/$(MEDIAFS)/linux/usr/bin/init $(ROMFSDIR)/bin
-	-mv $(ROMFSDIR)/$(MEDIAFS)/linux/usr/bin/autologin $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/busybox $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/mount $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/sh $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/login $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/init $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/autologin $(ROMFSDIR)/bin
 	# move MADPLAY into internal RAM and make it XIP, to gain the processing power
 	# for undisturbed audio.
-	-mv $(ROMFSDIR)/$(MEDIAFS)/linux/usr/bin/madplay $(ROMFSDIR)/bin
+	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/madplay $(ROMFSDIR)/bin
 	$(CROSS)flthdr -R $(ROMFSDIR)/bin/madplay
 	$(CROSS_COMPILE)flthdr -Z $(ROMFSDIR)/bin/*
 	-rm -r $(IMAGEDIR)/linux
-	mv $(ROMFSDIR)/$(MEDIAFS)/linux $(IMAGEDIR)
+	mv $(ROMFSDIR)/$(FATFS)/linux $(IMAGEDIR)
 	genromfs -v -V "ROMdisk" -f $(ROMFSIMG) -d $(ROMFSDIR)
 	BSS=`$(CROSS_COMPILE)objdump --headers $(ROOTDIR)/$(LINUXDIR)/linux | \
 	grep .bss` && \
@@ -131,4 +131,4 @@ image:
 		-7 $(ROOTDIR)/$(LINUXDIR)/arch/arm/mach-nds/arm7.bin \
 		-r7 0x03800000 -e7 0x03800000  \
 		-b $(NDS_COMMON)/tux.bmp "DSLinux;Port of Linux;to the DS!" && \
-	( cd $(IMAGEDIR); fakeroot tar -cvzf dslinux-ram.tgz linux dslinux.nds ) ; 
+	( cd $(IMAGEDIR); tar -cvzf dslinux-ram.tgz linux dslinux.nds ) ; 

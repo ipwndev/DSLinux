@@ -1,47 +1,22 @@
 #!/bin/sh
 
 mount -t proc none /proc
-
-echo "Trying to mount a filesystem on CF/SD card."
-
-# Try mounting SD cards first, then try CF
-fs_found=notyet
-for dev in hda mmc
-do
-	# Do we have an ext2 filesystem in the second partition?
-	mount -t ext2 -o noatime /dev/${dev}2 /media
-	if [ $? = 0 ]
-	then
-		echo "Mounted /dev/${dev}2 on /media (ext2)"
-		fs_found=yes
-		break
-	fi
-
-	# No ext2, fallback to vfat on first partition
-	mount -t vfat -o noatime /dev/${dev}1 /media
-	if [ $? = 0 ]
-	then
-		echo "Mounted /dev/${dev}1 on /media (vfat)"
-		fs_found=yes
-		break
-	fi
-
-	# Mmmh. Maybe we have a card without a partition table?
-	mount -t vfat -o noatime /dev/${dev} /media
-	if [ $? = 0 ]
-	then
-		echo "Mounted /dev/${dev} on /media (vfat)"
-		fs_found=yes
-		break
-	fi
-
-done
-
-if [ "${fs_found}" != "yes" ]
+mount -t vfat -o noatime /dev/mmcblk1 /media
+if [ "$?" != "0" ]
 then
-	echo "Sorry, failed to mount your CF/SD card."
-	echo "Dropping you into a shell..."
-	exec /bin/sh
+	mount -t vfat -o noatime /dev/hda1 /media
+	if [ "$?" != "0" ]
+	then
+		# some CF cards do not have a partition table
+		# try mounting /dev/hda
+		mount -t vfat -o noatime /dev/hda /media
+		if [ "$?" != "0" ]
+		then
+			# some SD cards do not have a partition table
+			# try mounting /dev/mmcblk0
+			mount -t vfat -o noatime /dev/mmcblk0 /media
+			[ "$?" = "0" ] || echo "Sorry, failed to mount your CF/SD card."
+		fi
+	fi
 fi
-
 . /etc/rc.common

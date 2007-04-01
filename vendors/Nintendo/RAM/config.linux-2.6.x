@@ -1,7 +1,6 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
-# Sat Mar 31 23:56:00 2007
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
@@ -339,13 +338,13 @@ CONFIG_MTD_FIRMWARE=y
 #
 # Block devices
 #
-# CONFIG_NDS_DLDI is not set
 # CONFIG_BLK_DEV_COW_COMMON is not set
 # CONFIG_BLK_DEV_LOOP is not set
 # CONFIG_BLK_DEV_NBD is not set
 # CONFIG_BLK_DEV_RAM is not set
 CONFIG_BLK_DEV_RAM_COUNT=16
 # CONFIG_CDROM_PKTCDVD is not set
+# CONFIG_NDS_DLDI is not set
 
 #
 # IO Schedulers
@@ -673,9 +672,7 @@ CONFIG_MMC_SCSD=y
 #
 # File systems
 #
-CONFIG_EXT2_FS=y
-# CONFIG_EXT2_FS_XATTR is not set
-# CONFIG_EXT2_FS_XIP is not set
+# CONFIG_EXT2_FS is not set
 # CONFIG_EXT3_FS is not set
 # CONFIG_JBD is not set
 # CONFIG_REISERFS_FS is not set
