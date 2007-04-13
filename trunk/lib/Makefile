@@ -173,7 +173,8 @@ LINKLIBS=\
 	$(ROOTDIR)/lib/flex/build/*.a \
 	$(ROOTDIR)/lib/libgmp/*.a  \
 	$(ROOTDIR)/lib/libid3tag/*.a \
-	$(ROOTDIR)/lib/libmad/*.a 
+	$(ROOTDIR)/lib/libmad/*.a \
+	$(ROOTDIR)/user/gpm/src/lib/*.a
 
 ##############################################################################
 
