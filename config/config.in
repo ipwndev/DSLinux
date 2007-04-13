@@ -773,6 +773,7 @@ bool 'gdbreplay'		CONFIG_USER_GDB_GDBREPLAY
 bool 'gdbserver'		CONFIG_USER_GDB_GDBSERVER
 bool 'gdbreplay (old)'		CONFIG_USER_GDBSERVER_GDBREPLAY
 bool 'gdbserver (old)'		CONFIG_USER_GDBSERVER_GDBSERVER
+bool 'gpm'			CONFIG_USER_GPM_GPM
 bool 'grep'			CONFIG_USER_GREP_GREP
 bool 'hd'			CONFIG_USER_HD_HD
 bool 'hexedit'			CONFIG_USER_HEXEDIT_HEXEDIT

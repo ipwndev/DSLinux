@@ -58,7 +58,8 @@ LINKHDRS = \
 	$(ROOTDIR)/modules/ocf/cryptodev.h,crypto \
 	$(ROOTDIR)/prop/smgrd/unixware/cmd/sscep/sscep_error_codes.h,. \
 	$(ROOTDIR)/lib/libid3tag/id3tag.h,. \
-	$(ROOTDIR)/lib/libmad/mad.h,. 
+	$(ROOTDIR)/lib/libmad/mad.h,. \
+	$(ROOTDIR)/user/gpm/src/headers/gpm.h,.
 
 
 #
