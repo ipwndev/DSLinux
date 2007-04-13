@@ -9,5 +9,5 @@ then
 	mount -t vfat -o noatime /dev/hda /media
 	[ "$?" = "0" ] || echo "Sorry, failed to mount DLDI device."
 fi
-
+mount -t ramfs none /var/run
 . /etc/rc.common
