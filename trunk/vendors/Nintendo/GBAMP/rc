@@ -9,5 +9,5 @@ then
 	mount -t vfat -o noatime /dev/hda /gbamp
 	[ "$?" = "0" ] || echo "Sorry, failed to mount your CF card."
 fi
-
+mount -t ramfs none /var/run
 . /etc/rc.common

@@ -19,4 +19,5 @@ then
 		fi
 	fi
 fi
+mount -t ramfs none /var/run
 . /etc/rc.common
