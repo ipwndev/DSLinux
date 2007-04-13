@@ -1,0 +1,68 @@
+/* src/headers/config.h.in.  Generated automatically from configure.in by autoheader.  */
+/* Copyright (C) 1998 Ian Zimmerman <itz@transbay.net> */
+/* Copyright (C) 2002 Nico Schottelius <nico@schottelius.org> */
+
+
+/* Define if using alloca.c.  */
+#undef C_ALLOCA
+
+/* Define to one of _getb67, GETB67, getb67 for Cray-2 and Cray-YMP systems.
+   This function is required for alloca.c support on those systems.  */
+#undef CRAY_STACKSEG_END
+
+/* Define if you have alloca, as a function or macro.  */
+#undef HAVE_ALLOCA
+
+/* Define if you have <alloca.h> and it should be used (not on Ultrix).  */
+#undef HAVE_ALLOCA_H
+
+/* If using the C implementation of alloca, define if you know the
+   direction of stack growth for your system; otherwise it will be
+   automatically deduced at run-time.
+ STACK_DIRECTION > 0 => grows toward higher addresses
+ STACK_DIRECTION < 0 => grows toward lower addresses
+ STACK_DIRECTION = 0 => direction of growth unknown
+ */
+#undef STACK_DIRECTION
+
+/* GPM release number as a string. */
+#define GPM_RELEASE ""
+
+/* release date as a string. */
+#define GPM_RELEASE_DATE ""
+
+/* define if the __u32 type exists either in sys/types.h or in linux/types.h */
+#undef HAVE___U32
+
+/* Define if you have the syslog function.  */
+#undef HAVE_SYSLOG
+
+/* Define if you have the vsyslog function.  */
+#undef HAVE_VSYSLOG
+
+/* Define if you have the <curses.h> header file.  */
+#undef HAVE_CURSES_H
+
+/* Define if you have the <linux/input.h> header file.  */
+#undef HAVE_LINUX_INPUT_H
+
+/* Define if you have the <linux/joystick.h> header file.  */
+#undef HAVE_LINUX_JOYSTICK_H
+
+/* Define if you have the <linux/major.h> header file.  */
+#undef HAVE_LINUX_MAJOR_H
+
+/* Define if you have the <linux/tty.h> header file.  */
+#undef HAVE_LINUX_TTY_H
+
+/* Define if you have the <ncurses.h> header file.  */
+#undef HAVE_NCURSES_H
+
+/* Define if you have the <ncurses/curses.h> header file.  */
+#undef HAVE_NCURSES_CURSES_H
+
+/* Define if you have the <sys/sysmacros.h> header file.  */
+#undef HAVE_SYS_SYSMACROS_H
+
+/* Define if you have the <syslog.h> header file.  */
+#undef HAVE_SYSLOG_H
