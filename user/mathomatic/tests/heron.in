@@ -1,6 +1,0 @@
-; This is Heron's formula for the area
-; of any triangle, given side lengths a, b, and c.
-
-2s = a+b+c
-area = (s*(s-a)*(s-b)*(s-c))^.5
-eliminate s
