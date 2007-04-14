@@ -50,7 +50,7 @@ extern "C" {
 #endif
 
 #ifndef _PATH_DEV
-#define _PATH_DEV	"/var/run/" /* /dev/ is read-only on DSLinux*/
+#define _PATH_DEV	"/dev"
 #endif
 
 #define GPM_NODE_DIR      _PATH_VARRUN
@@ -62,14 +62,14 @@ extern "C" {
 #define GPM_NODE_DIR_MODE 0775
 
 #define GPM_NODE_PID      GPM_NODE_DIR	"gpm.pid"
-#define GPM_NODE_DEV      _PATH_DEV	"gpmctl"
+#define GPM_NODE_DEV      _PATH_VARRUN	"gpmctl"
 
 /* itz Wed Jul 1 12:09:29 PDT 1998 let's simplify this by placing the
    file always in /dev whether it's a device or socket.  It doesn't
    really belong to /var/run anyway. */
 
 #define GPM_NODE_CTL      GPM_NODE_DEV
-#define GPM_NODE_FIFO     _PATH_DEV	"gpmdata"
+#define GPM_NODE_FIFO     _PATH_VARRUN	"gpmdata"
 
 /*....................................... Cfg buttons */
 
