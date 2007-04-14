@@ -86,7 +86,7 @@ romfs:
 	done
 	$(ROMFSINST) -p +x $(NDS_COMMON)/default.script /usr/share/udhcpc/default.script
 	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
-	touch $(ROMFSDIR)/$(FATFS)/linux/var/run/.keep
+	for i in `find $(ROMFSDIR)/$(FATFS)/linux -type d -empty` ; do touch $$i/.keep; done
 image:
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
 	[ -d $(IMAGEDIR)/linux ] || mkdir -p $(IMAGEDIR)/linux
