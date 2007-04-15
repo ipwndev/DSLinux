@@ -1,4 +1,0 @@
-CFLAGS="-Os -g -fomit-frame-pointer -fno-common -fno-builtin -Wall -DEMBED -D__PIC__ -fpic -msingle-pic-base -Dlinux -D__linux__ -Dunix -D__uClinux__ -I../../lib/libncurses/include" ; ./configure --prefix=/usr --with-included-gettext \
-  --without-included-slang --without-ext2undel --with-gpm-mouse \
-  --without-vfs --with-ncurses
-  
