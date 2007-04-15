@@ -85,7 +85,7 @@ wfc)
 		wfcdump -c$x 2>/dev/null | while read line
 		do
 			case "$line" in
-			essid=*) eval "$line"; args="$x \"essid: $essid\"" ;;
+			essid=*) eval "$line"; args="$args $x \"essid: $essid\"" ;;
 			esac
 		done
 		IFS="$OLDIFS"
