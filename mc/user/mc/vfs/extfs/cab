@@ -1,0 +1,62 @@
+#! /bin/sh
+#
+# Written by Guus Jansman
+#
+# This is a parser for Cabinet archives in Midnight Commander. You need
+# the GPL cabextract program (version >= 1.0) written by Stuart Caie.
+
+# Limitations:
+# - Archives can only be viewed
+# - Problems with empty directories as created by MsCab (non-standard cab files)
+
+UNCAB=cabextract
+
+
+mccabfs_list ()
+{
+$UNCAB -lq "$1" 2>/dev/null | gawk -v uuid=${UID-0} '
+BEGIN { flag=0; date="JanFebMarAprMayJunJulAugSepOctNovDec" }
+/^-------/ { flag++; if (flag > 1) exit 0; next }
+/^$/ { next }
+{
+  if (flag == 0) next
+  perm="-rw-r--r--"
+  uid=uuid
+  gid=0
+  line=substr($0, index($0, "|")+2)
+  day=substr(line, 1, 2)
+  month=substr(date, (substr(line, 4, 2)-1)*3+1, 3)
+  year=substr(line, 7, 4)
+  hour=substr(line, 12, 2)
+  minute=substr(line, 15, 2)
+  size=$1
+  if (substr(size, length(size)) == "|")
+    size=substr(size, 1, length(size)-1)
+  name=substr(line, 23)
+  gsub(/\\/, "/", name)
+  if (substr(name, length(name)) == "/")
+  {
+    name=substr(name, 1, length(name)-1)
+    perm="drwxr-xr-x"
+  }
+  printf "%s    1 %-8d %-8d %8d %3s %02d %04d %02d:%02d %s\n", perm, uid, 
+gid, size, month, day, year, hour, minute, name
+}'
+}
+
+
+mccabfs_copyout ()
+{
+  $UNCAB -F "$2" -p "$1" > "$3" 2>/dev/null
+}
+
+
+umask 077
+cmd="$1"
+shift
+case "$cmd" in
+    list)    mccabfs_list    "$@" ;;
+    copyout) mccabfs_copyout "$@" ;;
+    *)       exit 1 ;;
+esac
+exit 0

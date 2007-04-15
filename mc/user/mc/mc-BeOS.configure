@@ -1,0 +1,2 @@
+CFLAGS=-O2 ; ./configure --prefix=/boot/home/config --with-slang --without-gpm-mouse --with-vfs --with-edit
+  
