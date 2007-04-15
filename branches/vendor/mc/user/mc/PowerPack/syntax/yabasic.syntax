@@ -1,0 +1,312 @@
+# YaBasic syntax
+#
+# Martin Mevald, martinmv@penguin.cz
+# www.penguin.cz/~martinmv/index_eng.html
+#
+#
+#
+# lightgray   - default
+# yellow      - YaBasic keyword
+# green       - YaBasic comment/documentation
+# brightgreen - YaBasic function
+# white       - YaBasic declaration
+# brigthred   - library keyword
+# brightcyan  - library function
+
+context default lightgray/25
+#    keyword whole &*; brightgreen/16
+#context <!-- --> white/26
+
+#context < > brightcyan/17
+#    keyword "http:*" magenta/22
+#    keyword "ftp:*" magenta/22
+#    keyword "mailto:*" magenta/22
+#    keyword "gopher:*" magenta/22
+#    keyword "telnet:*" magenta/22
+#    keyword "file:*" magenta/22
+#    keyword "*.gif" brightred/19
+#    keyword "*.jpg" brightred/19
+#    keyword "*.png" brightred/19
+#    keyword "*" cyan/5
+
+#library TEA
+
+keyword whole tea_code brightred/19
+keyword whole tea_decode brightred/19
+keyword whole tea_create_key brightred/19
+keyword whole tea_create_block brightred/19
+keyword whole tea_create_block_hex brightred/19
+keyword whole tea_cbc_init brightred/19
+keyword whole tea_cbc_xor brightred/19
+keyword whole tea_cbc_store brightred/19
+
+keyword whole lxor brightcyan/11
+keyword whole tea_create_text$ brightcyan/11
+keyword whole tea_create_text_hex$ brightcyan/11
+
+#library replaces
+
+keyword whole replace$ brightcyan/11
+keyword whole replacei$ brightcyan/11
+keyword whole replace_repeat$ brightcyan/11
+keyword whole replacei_repeat$ brightcyan/11
+keyword whole replace_array$ brightcyan/11
+keyword whole replacei_array$ brightcyan/11
+keyword whole replacei_array_repeat$ brightcyan/11
+keyword whole replace_array_repeat$ brightcyan/11
+keyword whole replace_filecopy brightcyan/11
+keyword whole replacei_filecopy brightcyan/11
+keyword whole replacei_repeat_filecopy brightcyan/11
+keyword whole replace_repeat_filecopy brightcyan/11
+keyword whole replace_array_filecopy brightcyan/11
+keyword whole replace_array_repeat_filecopy brightcyan/11
+keyword whole replacei_array_filecopy brightcyan/11
+keyword whole replacei_array_repeat_filecopy brightcyan/11
+ 
+
+#library bfile
+keyword whole bf_open brightcyan/11
+keyword whole bf_input$ brightcyan/11
+keyword whole bf_eof brightcyan/11
+keyword whole bf_hexread$ brightcyan/11
+keyword whole bf_close brightred/19
+
+#library random
+
+keyword whole random brightcyan/11
+
+#library math
+
+keyword whole langrange brightcyan/11
+
+#library hosts
+
+keyword whole env$ brightcyan/11
+keyword whole host2ip$ brightcyan/11
+
+#library preg_compiler
+
+keyword whole changeescape brightred/19
+keyword whole insertrecord brightred/19
+keyword whole saverecords  brightred/19
+keyword whole repeatrecord brightred/19
+keyword whole printcounter brightred/19
+#library winreg
+
+keyword whole loadsection brightred/19
+keyword whole getregistryvalue$ brightcyan/11
+keyword whole findproxy$ brightcyan/11
+
+# library tempname
+
+keyword whole stempname$  brightred/19
+keyword whole tempname$  brightred/19
+keyword whole deletefile brightred/19
+
+# library oct
+
+keyword whole oct$ brightcyan/11
+keyword whole decoct brightcyan/11
+
+# library colorcalc
+
+    keyword whole  gamma_init brightred/19
+    keyword whole  gamma brightcyan/11
+
+     keyword whole degree2radian brightcyan/11
+     keyword whole radian2degree brightcyan/11
+
+     keyword whole c1 brightcyan/11
+     keyword whole c2 brightcyan/11
+     keyword whole c3 brightcyan/11
+     keyword whole c4 brightcyan/11
+     
+     keyword whole xyz2rgb  brightcyan/11
+     keyword whole rgb2xyz brightcyan/11
+     keyword whole xyz2yxy brightcyan/11
+     keyword whole yxy2xyz brightcyan/11
+     keyword whole xyz2hunter_lab brightcyan/11
+     keyword whole hunter_lab2xyz brightcyan/11
+     keyword whole xyz2cieLab brightcyan/11
+     keyword whole cielab2xyz brightcyan/11
+     keyword whole cielab2cielch brightcyan/11
+     keyword whole cielch2cielab brightcyan/11
+     keyword whole rgb2cmy brightcyan/11
+     keyword whole cmy2rgb brightcyan/11
+     keyword whole cmy2cmyk brightcyan/11
+     keyword whole cmyk2cmy brightcyan/11
+     keyword whole rgb2cmyk brightcyan/11
+     keyword whole cmyk2rgb brightcyan/11
+     
+
+# YaBasic keywords
+
+    keyword whole print yellow/22
+    keyword whole docu$ green/24
+    keyword whole docu green/24
+    keyword whole REM  green/24
+    keyword whole rem green/24
+    keyword whole # green/24
+    keyword whole import yellow/22
+    keyword whole export yellow/22
+    keyword whole sub    yellow/22
+    keyword whole end    yellow/22
+    keyword whole local  white/22
+    
+    keyword whole abs brightgreen/10 
+    keyword whole acos brightgreen/10
+    keyword whole and brightgreen/10
+    keyword whole AND brightgreen/10
+    keyword whole arraydim brightgreen/10
+    keyword whole arraysize brightgreen/10
+    keyword whole asc  brightgreen/10
+    keyword whole asin brightgreen/10
+    keyword whole at yellow/22
+    keyword whole atan brightgreen/10
+    
+    keyword whole beep yellow/22 
+    keyword whole bell yellow/22
+    keyword whole bin$ brightgreen/10
+    keyword whole break yellow/22 
+
+keyword whole case  yellow/22
+keyword whole chr$ brightgreen/10
+keyword whole circle yellow/22
+keyword whole clear yellow/22
+keyword whole close yellow/22
+keyword whole colour brightgreen/10
+keyword whole color brightgreen/10
+keyword whole compile yellow/22
+keyword whole continue yellow/22
+keyword whole cos brightgreen/10
+keyword whole curve yellow/22
+
+keyword whole date$ brightgreen/10
+keyword whole data green/24
+keyword whole dec brightgreen/10
+keyword whole dim yellow/22
+keyword whole do yellow/22
+keyword whole doc green/24
+keyword whole dot yellow/22
+
+keyword whole else yellow/22
+keyword whole elsif yellow/22
+keyword whole endif yellow/22
+keyword whole eof brightgreen/10
+keyword whole eor brightgreen/10
+keyword whole error yellow/22
+keyword whole euler brightgreen/10
+keyword whole execute$ brightgreen/10
+keyword whole execute  brightgreen/10
+keyword whole exit yellow/22
+keyword whole exp brightgreen/10
+
+keyword whole false brightgreen/10
+keyword whole fi yellow/22
+keyword whole fill yellow/22
+keyword whole for yellow/22
+keyword whole frac brightgreen/10
+keyword whole getbit$ brightgreen/10
+keyword whole getscreen$ brightgreen/10
+keyword whole glob brightgreen/10
+keyword whole gosub yellow/22
+keyword whole goto yellow/22
+
+keyword whole hex$ brightgreen/10
+keyword whole if yellow/22
+keyword whole inkey$  brightgreen/10
+keyword whole input yellow/22
+keyword whole instr brightgreen/10
+keyword whole int brightgreen/10
+keyword whole interrupt yellow/22
+
+keyword whole label yellow/22
+keyword whole left$ brightgreen/10
+keyword whole len brightgreen/10
+keyword whole line yellow/22
+keyword whole log brightgreen/10
+keyword whole loop yellow/22
+keyword whole lower$ brightgreen/10
+keyword whole ltrim$ brightgreen/10
+
+keyword whole map brightgreen/10
+keyword whole mapx brightgreen/10
+keyword whole mapy brightgreen/10
+keyword whole max brightgreen/10
+keyword whole mid$ brightgreen/10
+keyword whole min brightgreen/10
+keyword whole mod brightgreen/10
+keyword whole mouseb brightgreen/10
+keyword whole mousemod brightgreen/10
+keyword whole mousex brightgreen/10
+keyword whole mousey brightgreen/10
+
+keyword whole new yellow/22
+keyword whole curve yellow/22
+keyword whole next yellow/22
+keyword whole not brightgreen/10
+keyword whole numparams  brightgreen/10
+keyword whole on yellow/22
+keyword whole open yellow/22
+keyword whole or brightgreen/10
+keyword whole origin  brightgreen/10
+
+keyword whole pause yellow/22
+keyword whole peek$ brightgreen/10
+keyword whole peek brightgreen/10
+keyword whole pi brightgreen/10
+keyword whole poke yellow/22
+keyword whole print yellow/22
+keyword whole using yellow/22
+keyword whole putbit yellow/22
+keyword whole putscreen yellow/22
+
+keyword whole ran brightgreen/10
+keyword whole rectangle yellow/22
+keyword whole read yellow/22
+keyword whole redim yellow/22
+keyword whole repeat yellow/22
+keyword whole restore  yellow/22
+keyword whole return yellow/22
+keyword whole reverse yellow/22
+keyword whole right$ brightgreen/10
+keyword whole rinstr brightgreen/10
+keyword whole rtrim$ brightgreen/10
+
+keyword whole seek yellow/22
+keyword whole sig brightgreen/10
+keyword whole sin brightgreen/10
+keyword whole static yellow/22
+keyword whole step yellow/22
+keyword whole split brightgreen/10
+keyword whole sqr brightgreen/10
+keyword whole sqrt brightgreen/10
+keyword whole str$ brightgreen/10
+keyword whole sub yellow/22
+keyword whole switch yellow/22
+keyword whole system$ brightgreen/10
+keyword whole system brightgreen/10
+
+keyword whole tan brightgreen/10
+keyword whole tell  brightgreen/10
+keyword whole text yellow/22
+keyword whole then yellow/22
+keyword whole time$ brightgreen/10
+keyword whole to yellow/22
+keyword whole token brightgreen/10
+keyword whole trim$ brightgreen/10
+keyword whole true brightgreen/10
+
+keyword whole until yellow/22
+keyword whole upper$ brightgreen/10
+keyword whole using yellow/22
+keyword whole val brightgreen/10
+
+keyword whole wait yellow/22
+keyword whole wend yellow/22
+keyword whole while yellow/22
+keyword whole window yellow/22
+
+keyword whole xor brightgreen/10
+
+    

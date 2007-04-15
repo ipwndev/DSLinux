@@ -1,0 +1,69 @@
+#HEADER=
+<HTML>
+<HEAD>
+  <TITLE>%1</TITLE>
+</HEAD>
+<BODY BACKGROUND="backgr.jpg" BGPROPERTIES=FIXED BGCOLOR="\#A8B1E1" TEXT="\#000000" LINK="\#025ADA" VLINK="\#036BEB" ALINK="\#FF0000" TOPMARGIN="0" LEFTMARGIN="0">
+#
+
+#COUNTER=<!--\#exec cmd="/var/www/htdocs/arpi/szamlalo.cgi" -->#
+
+#FOOTER=
+<P><FONT SIZE="+1"><BR>
+Send comments, questions and ideas to the authors.
+</FONT></P>
+
+</BODY>
+</HTML>
+#
+
+#R=<BR>#
+#B=<B>%1</B>#
+#I=<I>%1</I>#
+#U=<U>%1</U>#
+#P=<P ALIGN=JUSTIFY>#
+#ENDP=</P>#
+#BI=<B><I>%1</I></B>#
+#FONT=<FONT SIZE="%1">#
+#ENDF=</FONT>#
+
+#TITLE=$U($FONT(+2)%1$ENDF)$R#
+#BEGIN=$P$TITLE("%1")$FONT(1)#
+#END=$ENDF$ENDP#
+
+#LINK2=<A HREF="%1">%2</A>#
+#LINK1=$LINK2(%1,%1)#
+#EMAIL=$LINK2("mailto://%1","%2 &lt;%1&gt;")#
+
+#DOMAIN=esp-team.scene.hu#
+#A_ARPI=$EMAIL("arpi@$DOMAIN","A'rpi")#
+#A_PILU=$EMAIL("gpilaszy@$DOMAIN","Pilu")#
+
+`--------------------------------------------------------------------`
+$HEADER("Tools for LINUX and UNIX")
+$COUNTER
+
+#P=<P>#
+
+$BEGIN("GyikSoft Mailer for UNIX:")
+
+This is a simple e-mail reader program for UNIX, based on the original DOS
+version called $I(GyikSoft Mailer for DOS v3.4) written in Borland Pascal.
+Currently Pegasus Mail for DOS (.PMM files) and standard UNIX folders
+(and so Netscape's Inbox as well) are supported for reading.$R
+
+$B(Features:)$R
+ - hello $R
+ - rulez $R
+
+$B(Author:) $A_ARPI and $A_PILU
+
+$END
+
+
+`--------------------------------------------------------------------`
+
+$FOOTER
+
+
+
