@@ -1,0 +1,964 @@
+# Don't edit this syntax file - it is generated from a perl script(./css.pl)
+# Edit the perl script instead.
+
+wholechars ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_
+context default
+    keyword url(+) white/27
+    keyword url( white/27
+
+    keyword whole @import white/27
+    keyword whole :link cyan/16
+    keyword whole :active cyan/16
+    keyword whole :visited cyan/16
+    keyword whole :first-letter cyan/16
+    keyword whole :first-line cyan/16
+    keyword \{:.,{}\} brightmagenta/17
+    keyword ; brightred/18
+    keyword whole word-spacing: cyan/16
+    keyword whole width: cyan/16
+    keyword whole white-space: cyan/16
+    keyword whole vertical-align: cyan/16
+    keyword whole text-transform: cyan/16
+    keyword whole text-indent: cyan/16
+    keyword whole text-decoration: cyan/16
+    keyword whole text-align: cyan/16
+    keyword whole padding-top: cyan/16
+    keyword whole padding-right: cyan/16
+    keyword whole padding-left: cyan/16
+    keyword whole padding-bottom: cyan/16
+    keyword whole padding: cyan/16
+    keyword whole margin-top: cyan/16
+    keyword whole margin-right: cyan/16
+    keyword whole margin-left: cyan/16
+    keyword whole margin-bottom: cyan/16
+    keyword whole margin: cyan/16
+    keyword whole list-style-type: cyan/16
+    keyword whole list-style-position: cyan/16
+    keyword whole list-style-image: cyan/16
+    keyword whole list-style: cyan/16
+    keyword whole line-height: cyan/16
+    keyword whole letter-spacing: cyan/16
+    keyword whole height: cyan/16
+    keyword whole font-weight: cyan/16
+    keyword whole font-variant: cyan/16
+    keyword whole font-style: cyan/16
+    keyword whole font-size: cyan/16
+    keyword whole font-family: cyan/16
+    keyword whole font: cyan/16
+    keyword whole float: cyan/16
+    keyword whole display: cyan/16
+    keyword whole color: cyan/16
+    keyword whole clear: cyan/16
+    keyword whole border-width: cyan/16
+    keyword whole border-top-width: cyan/16
+    keyword whole border-top: cyan/16
+    keyword whole border-style: cyan/16
+    keyword whole border-right-width: cyan/16
+    keyword whole border-right: cyan/16
+    keyword whole border-left-width: cyan/16
+    keyword whole border-left: cyan/16
+    keyword whole border-color: cyan/16
+    keyword whole border-bottom-width: cyan/16
+    keyword whole border-bottom: cyan/16
+    keyword whole border: cyan/16
+    keyword whole background-repeat: cyan/16
+    keyword whole background-position: cyan/16
+    keyword whole background-image: cyan/16
+    keyword whole background-color: cyan/16
+    keyword whole background-attachment: cyan/16
+    keyword whole background: cyan/16
+
+context /\* \*/ brown/22
+
+context exclusive word-spacing: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole normal brightmagenta/17
+
+context exclusive width: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]% brightmagenta/17
+    keyword whole auto brightmagenta/17
+
+context exclusive white-space: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole normal brightmagenta/17
+    keyword whole pre brightmagenta/17
+    keyword whole nowrap brightmagenta/17
+
+context exclusive vertical-align: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole baseline brightmagenta/17
+    keyword whole sub brightmagenta/17
+    keyword whole super brightmagenta/17
+    keyword whole top brightmagenta/17
+    keyword whole text-top brightmagenta/17
+    keyword whole middle brightmagenta/17
+    keyword whole bottom brightmagenta/17
+
+context exclusive text-transform: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole capitalize brightmagenta/17
+    keyword whole uppercase brightmagenta/17
+    keyword whole lowercase brightmagenta/17
+    keyword whole none brightmagenta/17
+
+context exclusive text-indent: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]% brightmagenta/17
+
+context exclusive text-decoration: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole none brightmagenta/17
+    keyword whole underline brightmagenta/17
+    keyword whole overline brightmagenta/17
+    keyword whole line-through brightmagenta/17
+    keyword whole blink brightmagenta/17
+
+context exclusive text-align: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole left brightmagenta/17
+    keyword whole right brightmagenta/17
+    keyword whole center brightmagenta/17
+    keyword whole justify brightmagenta/17
+
+context exclusive padding-top: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]% brightmagenta/17
+
+context exclusive padding-right: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]% brightmagenta/17
+
+context exclusive padding-left: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]% brightmagenta/17
+
+context exclusive padding-bottom: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]% brightmagenta/17
+
+context exclusive padding: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]% brightmagenta/17
+
+context exclusive margin-top: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]% brightmagenta/17
+    keyword whole auto brightmagenta/17
+
+context exclusive margin-right: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]% brightmagenta/17
+    keyword whole auto brightmagenta/17
+
+context exclusive margin-left: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]% brightmagenta/17
+    keyword whole auto brightmagenta/17
+
+context exclusive margin-bottom: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]% brightmagenta/17
+    keyword whole auto brightmagenta/17
+
+context exclusive margin: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]% brightmagenta/17
+    keyword whole auto brightmagenta/17
+
+context exclusive list-style-type: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole disc brightmagenta/17
+    keyword whole circle brightmagenta/17
+    keyword whole square brightmagenta/17
+    keyword whole decimal brightmagenta/17
+    keyword whole lower-roman brightmagenta/17
+    keyword whole upper-roman brightmagenta/17
+    keyword whole lower-alpha brightmagenta/17
+    keyword whole upper-alpha brightmagenta/17
+    keyword whole none brightmagenta/17
+
+context exclusive list-style-position: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole inside brightmagenta/17
+    keyword whole outside brightmagenta/17
+
+context exclusive list-style-image: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword url(+) white/27
+    keyword url( white/27
+    keyword whole none brightmagenta/17
+
+context exclusive list-style: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole disc brightmagenta/17
+    keyword whole circle brightmagenta/17
+    keyword whole square brightmagenta/17
+    keyword whole decimal brightmagenta/17
+    keyword whole lower-roman brightmagenta/17
+    keyword whole upper-roman brightmagenta/17
+    keyword whole lower-alpha brightmagenta/17
+    keyword whole upper-alpha brightmagenta/17
+    keyword whole none brightmagenta/17
+    keyword url(+) white/27
+    keyword url( white/27
+    keyword whole none brightmagenta/17
+    keyword whole inside brightmagenta/17
+    keyword whole outside brightmagenta/17
+
+context exclusive line-height: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]% brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\] brightmagenta/17
+    keyword whole normal brightmagenta/17
+
+context exclusive letter-spacing: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole normal brightmagenta/17
+
+context exclusive height: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole auto brightmagenta/17
+
+context exclusive font-weight: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole normal brightmagenta/17
+    keyword whole bold brightmagenta/17
+    keyword whole bolder brightmagenta/17
+    keyword whole lighter brightmagenta/17
+    keyword whole 100 brightmagenta/17
+    keyword whole 200 brightmagenta/17
+    keyword whole 300 brightmagenta/17
+    keyword whole 400 brightmagenta/17
+    keyword whole 500 brightmagenta/17
+    keyword whole 600 brightmagenta/17
+    keyword whole 700 brightmagenta/17
+    keyword whole 800 brightmagenta/17
+    keyword whole 900 brightmagenta/17
+
+context exclusive font-variant: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole normal brightmagenta/17
+    keyword whole small-caps brightmagenta/17
+
+context exclusive font-style: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole normal brightmagenta/17
+    keyword whole italic brightmagenta/17
+    keyword whole oblique brightmagenta/17
+
+context exclusive font-size: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]% brightmagenta/17
+    keyword whole xx-small brightmagenta/17
+    keyword whole x-small brightmagenta/17
+    keyword whole small brightmagenta/17
+    keyword whole medium brightmagenta/17
+    keyword whole large brightmagenta/17
+    keyword whole x-large brightmagenta/17
+    keyword whole xx-large brightmagenta/17
+    keyword whole smaller brightmagenta/17
+    keyword whole larger brightmagenta/17
+
+context exclusive font-family: ;
+    keyword whole !\[\s\t\]important yellow/26
+# The next line complains if multiple font names are not comma-separated:
+    keyword \{ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-\}\[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-\]\{\s\t\}\[\s\t\]\{ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-\}\[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-\]\[\s\t\]\{,;\} brightred/18 black/0
+    keyword whole serif brightmagenta/17
+    keyword whole sans-serif brightmagenta/17
+    keyword whole cursive brightmagenta/17
+    keyword whole fantasy brightmagenta/17
+    keyword whole monospace brightmagenta/17
+    keyword "*" cyan/16
+    keyword \{",\} white/27
+    keyword whole \{ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\}+ cyan/16
+
+context exclusive font: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole  brightmagenta/17
+    keyword whole serif brightmagenta/17
+    keyword whole sans-serif brightmagenta/17
+    keyword whole cursive brightmagenta/17
+    keyword whole fantasy brightmagenta/17
+    keyword whole monospace brightmagenta/17
+    keyword "*" cyan/16
+    keyword \{",\} white/27
+    keyword whole \{ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\}+ cyan/16
+    keyword whole normal brightmagenta/17
+    keyword whole small-caps brightmagenta/17
+    keyword whole normal brightmagenta/17
+    keyword whole bold brightmagenta/17
+    keyword whole bolder brightmagenta/17
+    keyword whole lighter brightmagenta/17
+    keyword whole 100 brightmagenta/17
+    keyword whole 200 brightmagenta/17
+    keyword whole 300 brightmagenta/17
+    keyword whole 400 brightmagenta/17
+    keyword whole 500 brightmagenta/17
+    keyword whole 600 brightmagenta/17
+    keyword whole 700 brightmagenta/17
+    keyword whole 800 brightmagenta/17
+    keyword whole 900 brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]% brightmagenta/17
+    keyword whole xx-small brightmagenta/17
+    keyword whole x-small brightmagenta/17
+    keyword whole small brightmagenta/17
+    keyword whole medium brightmagenta/17
+    keyword whole large brightmagenta/17
+    keyword whole x-large brightmagenta/17
+    keyword whole xx-large brightmagenta/17
+    keyword whole smaller brightmagenta/17
+    keyword whole larger brightmagenta/17
+
+context exclusive float: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole left brightmagenta/17
+    keyword whole right brightmagenta/17
+    keyword whole none brightmagenta/17
+
+context exclusive display: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole block brightmagenta/17
+    keyword whole inline brightmagenta/17
+    keyword whole list-item brightmagenta/17
+    keyword whole none brightmagenta/17
+
+context exclusive color: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword rgb(\[0123456789.%\],\[0123456789.%\],\[0123456789.%\]) white/27
+    keyword rgb(\[0123456789.%\],\[0123456789.%\], white/27
+    keyword rgb(\[0123456789.%\], white/27
+    keyword rgb( white/27
+    keyword whole #\[123456789abcdef\] white/27
+    keyword whole aqua brightmagenta/17
+    keyword whole black brightmagenta/17
+    keyword whole blue brightmagenta/17
+    keyword whole fuchsia brightmagenta/17
+    keyword whole gray brightmagenta/17
+    keyword whole green brightmagenta/17
+    keyword whole lime brightmagenta/17
+    keyword whole maroon brightmagenta/17
+    keyword whole navy brightmagenta/17
+    keyword whole olive brightmagenta/17
+    keyword whole purple brightmagenta/17
+    keyword whole red brightmagenta/17
+    keyword whole silver brightmagenta/17
+    keyword whole teal brightmagenta/17
+    keyword whole white brightmagenta/17
+    keyword whole yellow brightmagenta/17
+
+context exclusive clear: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole none brightmagenta/17
+    keyword whole left brightmagenta/17
+    keyword whole right brightmagenta/17
+    keyword whole both brightmagenta/17
+
+context exclusive border-width: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole thin brightmagenta/17
+    keyword whole medium brightmagenta/17
+    keyword whole thick brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+
+context exclusive border-top-width: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole thin brightmagenta/17
+    keyword whole medium brightmagenta/17
+    keyword whole thick brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+
+context exclusive border-top: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole thin brightmagenta/17
+    keyword whole medium brightmagenta/17
+    keyword whole thick brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole none brightmagenta/17
+    keyword whole dotted brightmagenta/17
+    keyword whole dashed brightmagenta/17
+    keyword whole solid brightmagenta/17
+    keyword whole double brightmagenta/17
+    keyword whole groove brightmagenta/17
+    keyword whole ridge brightmagenta/17
+    keyword whole inset brightmagenta/17
+    keyword whole outset brightmagenta/17
+    keyword rgb(\[0123456789.%\],\[0123456789.%\],\[0123456789.%\]) white/27
+    keyword rgb(\[0123456789.%\],\[0123456789.%\], white/27
+    keyword rgb(\[0123456789.%\], white/27
+    keyword rgb( white/27
+    keyword whole #\[123456789abcdef\] white/27
+    keyword whole aqua brightmagenta/17
+    keyword whole black brightmagenta/17
+    keyword whole blue brightmagenta/17
+    keyword whole fuchsia brightmagenta/17
+    keyword whole gray brightmagenta/17
+    keyword whole green brightmagenta/17
+    keyword whole lime brightmagenta/17
+    keyword whole maroon brightmagenta/17
+    keyword whole navy brightmagenta/17
+    keyword whole olive brightmagenta/17
+    keyword whole purple brightmagenta/17
+    keyword whole red brightmagenta/17
+    keyword whole silver brightmagenta/17
+    keyword whole teal brightmagenta/17
+    keyword whole white brightmagenta/17
+    keyword whole yellow brightmagenta/17
+
+context exclusive border-style: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole none brightmagenta/17
+    keyword whole dotted brightmagenta/17
+    keyword whole dashed brightmagenta/17
+    keyword whole solid brightmagenta/17
+    keyword whole double brightmagenta/17
+    keyword whole groove brightmagenta/17
+    keyword whole ridge brightmagenta/17
+    keyword whole inset brightmagenta/17
+    keyword whole outset brightmagenta/17
+
+context exclusive border-right-width: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole thin brightmagenta/17
+    keyword whole medium brightmagenta/17
+    keyword whole thick brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+
+context exclusive border-right: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole thin brightmagenta/17
+    keyword whole medium brightmagenta/17
+    keyword whole thick brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole none brightmagenta/17
+    keyword whole dotted brightmagenta/17
+    keyword whole dashed brightmagenta/17
+    keyword whole solid brightmagenta/17
+    keyword whole double brightmagenta/17
+    keyword whole groove brightmagenta/17
+    keyword whole ridge brightmagenta/17
+    keyword whole inset brightmagenta/17
+    keyword whole outset brightmagenta/17
+    keyword rgb(\[0123456789.%\],\[0123456789.%\],\[0123456789.%\]) white/27
+    keyword rgb(\[0123456789.%\],\[0123456789.%\], white/27
+    keyword rgb(\[0123456789.%\], white/27
+    keyword rgb( white/27
+    keyword whole #\[123456789abcdef\] white/27
+    keyword whole aqua brightmagenta/17
+    keyword whole black brightmagenta/17
+    keyword whole blue brightmagenta/17
+    keyword whole fuchsia brightmagenta/17
+    keyword whole gray brightmagenta/17
+    keyword whole green brightmagenta/17
+    keyword whole lime brightmagenta/17
+    keyword whole maroon brightmagenta/17
+    keyword whole navy brightmagenta/17
+    keyword whole olive brightmagenta/17
+    keyword whole purple brightmagenta/17
+    keyword whole red brightmagenta/17
+    keyword whole silver brightmagenta/17
+    keyword whole teal brightmagenta/17
+    keyword whole white brightmagenta/17
+    keyword whole yellow brightmagenta/17
+
+context exclusive border-left-width: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole thin brightmagenta/17
+    keyword whole medium brightmagenta/17
+    keyword whole thick brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+
+context exclusive border-left: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole thin brightmagenta/17
+    keyword whole medium brightmagenta/17
+    keyword whole thick brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole none brightmagenta/17
+    keyword whole dotted brightmagenta/17
+    keyword whole dashed brightmagenta/17
+    keyword whole solid brightmagenta/17
+    keyword whole double brightmagenta/17
+    keyword whole groove brightmagenta/17
+    keyword whole ridge brightmagenta/17
+    keyword whole inset brightmagenta/17
+    keyword whole outset brightmagenta/17
+    keyword rgb(\[0123456789.%\],\[0123456789.%\],\[0123456789.%\]) white/27
+    keyword rgb(\[0123456789.%\],\[0123456789.%\], white/27
+    keyword rgb(\[0123456789.%\], white/27
+    keyword rgb( white/27
+    keyword whole #\[123456789abcdef\] white/27
+    keyword whole aqua brightmagenta/17
+    keyword whole black brightmagenta/17
+    keyword whole blue brightmagenta/17
+    keyword whole fuchsia brightmagenta/17
+    keyword whole gray brightmagenta/17
+    keyword whole green brightmagenta/17
+    keyword whole lime brightmagenta/17
+    keyword whole maroon brightmagenta/17
+    keyword whole navy brightmagenta/17
+    keyword whole olive brightmagenta/17
+    keyword whole purple brightmagenta/17
+    keyword whole red brightmagenta/17
+    keyword whole silver brightmagenta/17
+    keyword whole teal brightmagenta/17
+    keyword whole white brightmagenta/17
+    keyword whole yellow brightmagenta/17
+
+context exclusive border-color: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword rgb(\[0123456789.%\],\[0123456789.%\],\[0123456789.%\]) white/27
+    keyword rgb(\[0123456789.%\],\[0123456789.%\], white/27
+    keyword rgb(\[0123456789.%\], white/27
+    keyword rgb( white/27
+    keyword whole #\[123456789abcdef\] white/27
+    keyword whole aqua brightmagenta/17
+    keyword whole black brightmagenta/17
+    keyword whole blue brightmagenta/17
+    keyword whole fuchsia brightmagenta/17
+    keyword whole gray brightmagenta/17
+    keyword whole green brightmagenta/17
+    keyword whole lime brightmagenta/17
+    keyword whole maroon brightmagenta/17
+    keyword whole navy brightmagenta/17
+    keyword whole olive brightmagenta/17
+    keyword whole purple brightmagenta/17
+    keyword whole red brightmagenta/17
+    keyword whole silver brightmagenta/17
+    keyword whole teal brightmagenta/17
+    keyword whole white brightmagenta/17
+    keyword whole yellow brightmagenta/17
+
+context exclusive border-bottom-width: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole thin brightmagenta/17
+    keyword whole medium brightmagenta/17
+    keyword whole thick brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+
+context exclusive border-bottom: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole thin brightmagenta/17
+    keyword whole medium brightmagenta/17
+    keyword whole thick brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole none brightmagenta/17
+    keyword whole dotted brightmagenta/17
+    keyword whole dashed brightmagenta/17
+    keyword whole solid brightmagenta/17
+    keyword whole double brightmagenta/17
+    keyword whole groove brightmagenta/17
+    keyword whole ridge brightmagenta/17
+    keyword whole inset brightmagenta/17
+    keyword whole outset brightmagenta/17
+    keyword rgb(\[0123456789.%\],\[0123456789.%\],\[0123456789.%\]) white/27
+    keyword rgb(\[0123456789.%\],\[0123456789.%\], white/27
+    keyword rgb(\[0123456789.%\], white/27
+    keyword rgb( white/27
+    keyword whole #\[123456789abcdef\] white/27
+    keyword whole aqua brightmagenta/17
+    keyword whole black brightmagenta/17
+    keyword whole blue brightmagenta/17
+    keyword whole fuchsia brightmagenta/17
+    keyword whole gray brightmagenta/17
+    keyword whole green brightmagenta/17
+    keyword whole lime brightmagenta/17
+    keyword whole maroon brightmagenta/17
+    keyword whole navy brightmagenta/17
+    keyword whole olive brightmagenta/17
+    keyword whole purple brightmagenta/17
+    keyword whole red brightmagenta/17
+    keyword whole silver brightmagenta/17
+    keyword whole teal brightmagenta/17
+    keyword whole white brightmagenta/17
+    keyword whole yellow brightmagenta/17
+
+context exclusive border: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole thin brightmagenta/17
+    keyword whole medium brightmagenta/17
+    keyword whole thick brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole none brightmagenta/17
+    keyword whole dotted brightmagenta/17
+    keyword whole dashed brightmagenta/17
+    keyword whole solid brightmagenta/17
+    keyword whole double brightmagenta/17
+    keyword whole groove brightmagenta/17
+    keyword whole ridge brightmagenta/17
+    keyword whole inset brightmagenta/17
+    keyword whole outset brightmagenta/17
+    keyword rgb(\[0123456789.%\],\[0123456789.%\],\[0123456789.%\]) white/27
+    keyword rgb(\[0123456789.%\],\[0123456789.%\], white/27
+    keyword rgb(\[0123456789.%\], white/27
+    keyword rgb( white/27
+    keyword whole #\[123456789abcdef\] white/27
+    keyword whole aqua brightmagenta/17
+    keyword whole black brightmagenta/17
+    keyword whole blue brightmagenta/17
+    keyword whole fuchsia brightmagenta/17
+    keyword whole gray brightmagenta/17
+    keyword whole green brightmagenta/17
+    keyword whole lime brightmagenta/17
+    keyword whole maroon brightmagenta/17
+    keyword whole navy brightmagenta/17
+    keyword whole olive brightmagenta/17
+    keyword whole purple brightmagenta/17
+    keyword whole red brightmagenta/17
+    keyword whole silver brightmagenta/17
+    keyword whole teal brightmagenta/17
+    keyword whole white brightmagenta/17
+    keyword whole yellow brightmagenta/17
+
+context exclusive background-repeat: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole no-repeat brightmagenta/17
+    keyword whole repeat-x brightmagenta/17
+    keyword whole repeat-y brightmagenta/17
+    keyword whole repeat brightmagenta/17
+
+context exclusive background-position: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]% brightmagenta/17
+    keyword whole top brightmagenta/17
+    keyword whole center brightmagenta/17
+    keyword whole bottom brightmagenta/17
+    keyword whole left brightmagenta/17
+    keyword whole right brightmagenta/17
+
+context exclusive background-image: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword url(+) white/27
+    keyword url( white/27
+    keyword whole none brightmagenta/17
+
+context exclusive background-color: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword rgb(\[0123456789.%\],\[0123456789.%\],\[0123456789.%\]) white/27
+    keyword rgb(\[0123456789.%\],\[0123456789.%\], white/27
+    keyword rgb(\[0123456789.%\], white/27
+    keyword rgb( white/27
+    keyword whole #\[123456789abcdef\] white/27
+    keyword whole aqua brightmagenta/17
+    keyword whole black brightmagenta/17
+    keyword whole blue brightmagenta/17
+    keyword whole fuchsia brightmagenta/17
+    keyword whole gray brightmagenta/17
+    keyword whole green brightmagenta/17
+    keyword whole lime brightmagenta/17
+    keyword whole maroon brightmagenta/17
+    keyword whole navy brightmagenta/17
+    keyword whole olive brightmagenta/17
+    keyword whole purple brightmagenta/17
+    keyword whole red brightmagenta/17
+    keyword whole silver brightmagenta/17
+    keyword whole teal brightmagenta/17
+    keyword whole white brightmagenta/17
+    keyword whole yellow brightmagenta/17
+    keyword whole transparent brightmagenta/17
+
+context exclusive background-attachment: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword whole scroll brightmagenta/17
+    keyword whole fixed brightmagenta/17
+
+context exclusive background: ;
+    keyword whole !\[\s\t\]important yellow/26
+    keyword rgb(\[0123456789.%\],\[0123456789.%\],\[0123456789.%\]) white/27
+    keyword rgb(\[0123456789.%\],\[0123456789.%\], white/27
+    keyword rgb(\[0123456789.%\], white/27
+    keyword rgb( white/27
+    keyword whole #\[123456789abcdef\] white/27
+    keyword whole aqua brightmagenta/17
+    keyword whole black brightmagenta/17
+    keyword whole blue brightmagenta/17
+    keyword whole fuchsia brightmagenta/17
+    keyword whole gray brightmagenta/17
+    keyword whole green brightmagenta/17
+    keyword whole lime brightmagenta/17
+    keyword whole maroon brightmagenta/17
+    keyword whole navy brightmagenta/17
+    keyword whole olive brightmagenta/17
+    keyword whole purple brightmagenta/17
+    keyword whole red brightmagenta/17
+    keyword whole silver brightmagenta/17
+    keyword whole teal brightmagenta/17
+    keyword whole white brightmagenta/17
+    keyword whole yellow brightmagenta/17
+    keyword whole transparent brightmagenta/17
+    keyword url(+) white/27
+    keyword url( white/27
+    keyword whole none brightmagenta/17
+    keyword whole no-repeat brightmagenta/17
+    keyword whole repeat-x brightmagenta/17
+    keyword whole repeat-y brightmagenta/17
+    keyword whole repeat brightmagenta/17
+    keyword whole scroll brightmagenta/17
+    keyword whole fixed brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]em brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]ex brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]px brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]in brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]cm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]mm brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pt brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]pc brightmagenta/17
+    keyword whole \[+-\]0 brightmagenta/17
+    keyword whole \[+-\]\{0123456789.\}\[0123456789.\]% brightmagenta/17
+    keyword whole top brightmagenta/17
+    keyword whole center brightmagenta/17
+    keyword whole bottom brightmagenta/17
+    keyword whole left brightmagenta/17
+    keyword whole right brightmagenta/17
+

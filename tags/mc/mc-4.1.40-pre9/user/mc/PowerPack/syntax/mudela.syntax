@@ -1,0 +1,158 @@
+# Hi,
+# 
+# Here's an updated version of Cooledit syntax highlighting for Mudela (the
+# input language for the GNU Lilypond music typesetter).
+# 
+# Regards,
+# -- 
+# David (dpchan@sheetmusic.org.uk)
+# 
+# ==========================
+
+context default
+wholechars left \\ 
+wholechars right abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789_$
+
+    keyword \{-^_\}\[0123456789\+>.\] white/26
+    keyword \{|~=\*\} yellow/24
+    keyword \\" yellow/24
+
+    keyword \{()<>[]\} white/26
+    keyword \{abcdefgis\}\[abcdefgis\]\[,'\]\{!?\} white/26
+    keyword \{abcdefgis\}\[abcdefgis\]\{,'\}\[,'\] white/26
+    keyword \{{}\} brightcyan/17
+    keyword ; brightmagenta/23
+    keyword \{0123456789\}. brightgreen/16
+    keyword \{0123456789\} brightgreen/16
+
+    keyword whole \\Gourlay brightred/19
+    keyword whole \\Wordwrap brightred/19
+    keyword whole \\accepts brightred/19
+    keyword whole \\addlyrics brightred/19
+    keyword whole \\aeolian brightred/19
+    keyword whole \\alternative brightred/19
+    keyword whole \\bar brightred/19
+    keyword whole \\beamposfree brightred/19
+    keyword whole \\beamposnormal brightred/19
+    keyword whole \\beampostraditional brightred/19
+    keyword whole \\beamslopedamped brightred/19
+    keyword whole \\beamslopeproportional brightred/19
+    keyword whole \\beamslopezero brightred/19
+    keyword whole \\break brightred/19
+    keyword whole \\breathe brightred/19
+    keyword whole \\breve brightred/19
+    keyword whole \\cadenza brightred/19
+    keyword whole \\center brightred/19
+    keyword whole \\chordmodifiers brightred/19
+    keyword whole \\chords brightred/19
+    keyword whole \\clef brightred/19
+    keyword whole \\cm brightred/19
+    keyword whole \\consists brightred/19
+    keyword whole \\consistsend brightred/19
+    keyword whole \\context brightred/19
+    keyword whole \\cr brightred/19
+    keyword whole \\decr brightred/19
+    keyword whole \\dorian brightred/19
+    keyword whole \\down brightred/19
+    keyword whole \\duration brightred/19
+    keyword whole \\f brightred/19
+    keyword whole \\fermata brightred/19
+    keyword whole \\ff brightred/19
+    keyword whole \\fff brightred/19
+    keyword whole \\font brightred/19
+    keyword whole \\fp brightred/19
+    keyword whole \\free brightred/19
+    keyword whole \\grace brightred/19
+    keyword whole \\header brightred/19
+    keyword whole \\in brightred/19
+    keyword whole \\infinity brightred/19
+    keyword whole \\input brightred/19
+    keyword whole \\ionian brightred/19
+    keyword whole \\key brightred/19
+    keyword whole \\keysignature brightred/19
+    keyword whole \\left brightred/19
+    keyword whole \\locrian brightred/19
+    keyword whole \\longa brightred/19
+    keyword whole \\lydian brightred/19
+    keyword whole \\lyrics brightred/19
+    keyword whole \\major brightred/19
+    keyword whole \\mark brightred/19
+    keyword whole \\mf brightred/19
+    keyword whole \\midi brightred/19
+    keyword whole \\minor brightred/19
+    keyword whole \\mixolydian brightred/19
+    keyword whole \\mm brightred/19
+    keyword whole \\mp brightred/19
+    keyword whole \\musicalpitch brightred/19
+    keyword whole \\name brightred/19
+    keyword whole \\nobreak brightred/19
+    keyword whole \\none brightred/19
+    keyword whole \\normal brightred/19
+    keyword whole \\notenames brightred/19
+    keyword whole \\notes brightred/19
+    keyword whole \\p brightred/19
+    keyword whole \\paper brightred/19
+    keyword whole \\partial brightred/19
+    keyword whole \\penalty brightred/19
+    keyword whole \\phrygian brightred/19
+    keyword whole \\pp brightred/19
+    keyword whole \\ppp brightred/19
+    keyword whole \\property brightred/19
+    keyword whole \\pt brightred/19
+    keyword whole \\rc brightred/19
+    keyword whole \\rced brightred/19
+    keyword whole \\relative brightred/19
+    keyword whole \\remove brightred/19
+    keyword whole \\repeat brightred/19
+    keyword whole \\repetitions brightred/19
+    keyword whole \\rfz brightred/19
+    keyword whole \\right brightred/19
+    keyword whole \\scm brightred/19
+    keyword whole \\scmfile brightred/19
+    keyword whole \\score brightred/19
+    keyword whole \\script brightred/19
+    keyword whole \\sequential brightred/19
+    keyword whole \\sf brightred/19
+    keyword whole \\sff brightred/19
+    keyword whole \\sfz brightred/19
+    keyword whole \\shape brightred/19
+    keyword whole \\shift brightred/19
+    keyword whole \\simultaneous brightred/19
+    keyword whole \\skip brightred/19
+    keyword whole \\slurboth brightred/19
+    keyword whole \\slurdotted brightred/19
+    keyword whole \\slurdown brightred/19
+    keyword whole \\slurnormal brightred/19
+    keyword whole \\slurup brightred/19
+    keyword whole \\spanrequest brightred/19
+    keyword whole \\specialkey brightred/19
+    keyword whole \\spp brightred/19
+    keyword whole \\sp brightred/19
+    keyword whole \\start brightred/19
+    keyword whole \\stemboth brightred/19
+    keyword whole \\stemdown brightred/19
+    keyword whole \\stemup brightred/19
+    keyword whole \\stop brightred/19
+    keyword whole \\tempo brightred/19
+    keyword whole \\textscript brightred/19
+    keyword whole \\time brightred/19
+    keyword whole \\times brightred/19
+    keyword whole \\traditional brightred/19
+    keyword whole \\translator brightred/19
+    keyword whole \\transpose brightred/19
+    keyword whole \\trill brightred/19
+    
+    keyword whole \\type brightred/19
+    keyword whole \\up brightred/19
+    keyword whole \\version brightred/19
+    keyword whole \\+ brightcyan/17
+
+########
+context %{ %} brown/22
+context % \n brown/22
+context " " green/6
+    keyword \\\\ brightgreen/16
+    keyword \\" brightgreen/16
+
+# ==========================
+

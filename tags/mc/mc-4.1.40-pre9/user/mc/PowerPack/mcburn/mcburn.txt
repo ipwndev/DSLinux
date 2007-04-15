@@ -1,0 +1,70 @@
+MC-Burn version
+===============
+
+Author: Bart Friederichs
+Version: 0.1b
+Date: September 16, 2001
+
+1. What is MC-Burn?
+-------------------
+MC-Burn is a Midnight Commander extension to mkisofs and cdrecord. It makes it possible to write a CD right from the menu of the Midnight Commander. MC-Burn takes settings from a file or dialog and issues the mkisofs and cdrecord commands for you.
+
+2. Why?
+-------
+That question is pretty easy to answer: because typing in the mkisofs and cdrecord command every time you want to burn a CD is annoying, especially when it is 99% of the time the same command (burn a dir to a CD; nothing fancy). Because I had lots of trouble getting the GUI burning tools to work (xcdrgtk and the like) because burning had to be done with root privileges, I searched for console apps. When I couldn't find one that did what I wanted, I decided to write my own in the style of MC. For I didn't feel like starting from scratch with file-copying, moving, directory creation etc, I dove into the MC code to see if I could maybe make en extension to MC. I could, I did, MC-Burn.
+
+3. How does it work?
+--------------------
+Very easy, as that was the intention. It uses settings that can be set per session or saved in a configfile. Furthermore, you can select a directory by putting the selection bar on it and choose the 'Burn this dir' option in the 'Commands' menu. It then shows you the settings with which it will burn and you can choose 'Burn' or 'Cancel'. When you choose 'Burn', MC-Burn will invoke the mkisofs and cdrecord commands and burn your CD.
+
+4. Features
+-----------
+MC-Burn now supports very limited features of mkisofs and cdrecord. Fact is that I don't use a lot of options anyway and this only adds to the simplicity. Feel free to add any options if you like.
+
+mkisofs options possible:
+- Joliet extensions
+- RockRidge extensions
+
+cdrecord options available:
+- speed setting
+- dummy write
+- multisession support
+
+MC-Burn options:
+- make an intermediate image
+
+5. Dependencies
+---------------
+mkisofs and cdrecord must be installed and in the PATH of the user invoking MC. MC-Burn will check for those programs and run them with their full path. MC-Burn assumes there is a CD-Writer present in the system and will select the first CD-ROM in the list of 'cdrecord -scanbus'. I suspect this can give problems on some systems, but I haven't tested it. For this to work, the CD-Writer must be configured correctly.
+
+When 'make intermediate image' is selected, there will be created a file called 'mcburn.iso' in the user's homedir. MC-Burn assumes there is enough space to store that file (can be up to 700MB!)
+
+6. TODOs
+--------
+- Checking for free space when 'make intermediate image' is selected.
+- Multi-burner/CD-ROM support
+- Beautify the burner dialog
+- Check for mcburn.iso when image is selected
+
+7. How to patch your existing MC
+--------------------------------
+1. From mcburn-0.1/src copy the following files into the other MC version's src/ dir:
+   mcburn.c, mcburn.h, Makefile.in
+2. From mcburn-0.1/gnome copy the following files into the other MC version's gnome/ dir:
+   Makefile.in
+3. Remove config.cache from the other MC version's rootdir (mc-VERSION/)
+4. Run ./configure; make
+5. (as root) run make install
+6. Your mc should now have two extra options, one in the 'Options' menu and one in 'Command'
+
+If anyone has an easier way to do this, email (bart@friesoft.nl) me.
+
+8. Thanks
+---------
+Of course to the authors of MC, without whom this was not at all possible.
+
+Have fun,
+Bart Friederichs
+bart@friesoft.nl
+
+

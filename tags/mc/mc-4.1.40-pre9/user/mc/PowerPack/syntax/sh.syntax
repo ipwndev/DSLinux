@@ -1,0 +1,508 @@
+
+context default
+    keyword whole for yellow/24
+    keyword whole in yellow/24
+    keyword whole do yellow/24
+    keyword whole done yellow/24
+    keyword whole select yellow/24
+    keyword whole case yellow/24
+    keyword whole esac yellow/24
+    keyword whole if yellow/24
+    keyword whole then yellow/24
+    keyword whole elif yellow/24
+    keyword whole else yellow/24
+    keyword whole fi yellow/24
+    keyword whole while yellow/24
+    keyword whole until yellow/24
+    keyword ;; brightred/18
+    keyword \\@ brightred/18
+    keyword \\$ brightred/18
+    keyword \\\\ brightred/18
+    keyword \\" brightred/18
+    keyword \\' brightred/18
+    keyword \\` brightred/18
+    keyword ` brightred/18
+    keyword ; brightcyan/17
+    keyword $(*) brightgreen/16
+    keyword ${*} brightgreen/16
+    keyword { white
+    keyword } white
+
+#    keyword whole linestart #!\[\s\]/bin/\[abkpct\]sh brightcyan/17 brown/0
+
+    keyword $\* brightred/18
+    keyword $@ brightred/18
+    keyword $# brightred/18
+    keyword $? brightred/18
+    keyword $- brightred/18
+    keyword $$ brightred/18
+    keyword $! brightred/18
+    keyword $_ brightred/18
+
+    keyword wholeright $\[0123456789\]0 brightred/18
+    keyword wholeright $\[0123456789\]1 brightred/18
+    keyword wholeright $\[0123456789\]2 brightred/18
+    keyword wholeright $\[0123456789\]3 brightred/18
+    keyword wholeright $\[0123456789\]4 brightred/18
+    keyword wholeright $\[0123456789\]5 brightred/18
+    keyword wholeright $\[0123456789\]6 brightred/18
+    keyword wholeright $\[0123456789\]7 brightred/18
+    keyword wholeright $\[0123456789\]8 brightred/18
+    keyword wholeright $\[0123456789\]9 brightred/18
+
+    keyword wholeright $+A brightgreen/16
+    keyword wholeright $+B brightgreen/16
+    keyword wholeright $+C brightgreen/16
+    keyword wholeright $+D brightgreen/16
+    keyword wholeright $+E brightgreen/16
+    keyword wholeright $+F brightgreen/16
+    keyword wholeright $+G brightgreen/16
+    keyword wholeright $+H brightgreen/16
+    keyword wholeright $+I brightgreen/16
+    keyword wholeright $+J brightgreen/16
+    keyword wholeright $+K brightgreen/16
+    keyword wholeright $+L brightgreen/16
+    keyword wholeright $+M brightgreen/16
+    keyword wholeright $+N brightgreen/16
+    keyword wholeright $+O brightgreen/16
+    keyword wholeright $+P brightgreen/16
+    keyword wholeright $+Q brightgreen/16
+    keyword wholeright $+R brightgreen/16
+    keyword wholeright $+S brightgreen/16
+    keyword wholeright $+T brightgreen/16
+    keyword wholeright $+U brightgreen/16
+    keyword wholeright $+V brightgreen/16
+    keyword wholeright $+W brightgreen/16
+    keyword wholeright $+X brightgreen/16
+    keyword wholeright $+Y brightgreen/16
+    keyword wholeright $+Z brightgreen/16
+
+    keyword wholeright $+a brightgreen/16
+    keyword wholeright $+b brightgreen/16
+    keyword wholeright $+c brightgreen/16
+    keyword wholeright $+d brightgreen/16
+    keyword wholeright $+e brightgreen/16
+    keyword wholeright $+f brightgreen/16
+    keyword wholeright $+g brightgreen/16
+    keyword wholeright $+h brightgreen/16
+    keyword wholeright $+i brightgreen/16
+    keyword wholeright $+j brightgreen/16
+    keyword wholeright $+k brightgreen/16
+    keyword wholeright $+l brightgreen/16
+    keyword wholeright $+m brightgreen/16
+    keyword wholeright $+n brightgreen/16
+    keyword wholeright $+o brightgreen/16
+    keyword wholeright $+p brightgreen/16
+    keyword wholeright $+q brightgreen/16
+    keyword wholeright $+r brightgreen/16
+    keyword wholeright $+s brightgreen/16
+    keyword wholeright $+t brightgreen/16
+    keyword wholeright $+u brightgreen/16
+    keyword wholeright $+v brightgreen/16
+    keyword wholeright $+w brightgreen/16
+    keyword wholeright $+x brightgreen/16
+    keyword wholeright $+y brightgreen/16
+    keyword wholeright $+z brightgreen/16
+
+    keyword wholeright $+0 brightgreen/16
+    keyword wholeright $+1 brightgreen/16
+    keyword wholeright $+2 brightgreen/16
+    keyword wholeright $+3 brightgreen/16
+    keyword wholeright $+4 brightgreen/16
+    keyword wholeright $+5 brightgreen/16
+    keyword wholeright $+6 brightgreen/16
+    keyword wholeright $+7 brightgreen/16
+    keyword wholeright $+8 brightgreen/16
+    keyword wholeright $+9 brightgreen/16
+
+    keyword $ brightgreen/16
+
+    keyword wholeleft function*() brightblue/11
+
+wholechars right abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._
+wholechars left abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._
+
+    keyword whole arch brightmagenta
+    keyword whole ash brightmagenta
+    keyword whole awk brightmagenta
+    keyword whole basename brightmagenta
+    keyword whole bash brightmagenta
+    keyword whole basnemae brightmagenta
+    keyword whole bg_backup brightmagenta
+    keyword whole bg_restore brightmagenta
+    keyword whole bsh brightmagenta
+    keyword whole cat brightmagenta
+    keyword whole chgrp brightmagenta
+    keyword whole chmod brightmagenta
+    keyword whole chown brightmagenta
+    keyword whole cp brightmagenta
+    keyword whole cpio brightmagenta
+    keyword whole csh brightmagenta
+    keyword whole date brightmagenta
+    keyword whole dd brightmagenta
+    keyword whole df brightmagenta
+    keyword whole dmesg brightmagenta
+    keyword whole dnsdomainname brightmagenta
+    keyword whole doexec brightmagenta
+    keyword whole domainname brightmagenta
+    keyword whole echo brightmagenta
+    keyword whole ed brightmagenta
+    keyword whole egrep brightmagenta
+    keyword whole ex brightmagenta
+    keyword whole false brightmagenta
+    keyword whole fgrep brightmagenta
+    keyword whole fsconf brightmagenta
+    keyword whole gawk brightmagenta
+    keyword whole grep brightmagenta
+    keyword whole gunzip brightmagenta
+    keyword whole gzip brightmagenta
+    keyword whole hostname brightmagenta
+    keyword whole igawk brightmagenta
+    keyword whole ipcalc brightmagenta
+    keyword whole kill brightmagenta
+    keyword whole ksh brightmagenta
+    keyword whole linuxconf brightmagenta
+    keyword whole ln brightmagenta
+    keyword whole login brightmagenta
+    keyword whole lpdconf brightmagenta
+    keyword whole ls brightmagenta
+    keyword whole mail brightmagenta
+    keyword whole mkdir brightmagenta
+    keyword whole mknod brightmagenta
+    keyword whole mktemp brightmagenta
+    keyword whole more brightmagenta
+    keyword whole mount brightmagenta
+    keyword whole mt brightmagenta
+    keyword whole mv brightmagenta
+    keyword whole netconf brightmagenta
+    keyword whole netstat brightmagenta
+    keyword whole nice brightmagenta
+    keyword whole nisdomainname brightmagenta
+    keyword whole ping brightmagenta
+    keyword whole ps brightmagenta
+    keyword whole pwd brightmagenta
+    keyword whole red brightmagenta
+    keyword whole remadmin brightmagenta
+    keyword whole rm brightmagenta
+    keyword whole rmdir brightmagenta
+    keyword whole rpm brightmagenta
+    keyword whole sed brightmagenta
+    keyword whole setserial brightmagenta
+    keyword whole sh brightmagenta
+    keyword whole sleep brightmagenta
+    keyword whole sort brightmagenta
+    keyword whole stty brightmagenta
+    keyword whole su brightmagenta
+    keyword whole sync brightmagenta
+    keyword whole taper brightmagenta
+    keyword whole tar brightmagenta
+    keyword whole tcsh brightmagenta
+    keyword whole touch brightmagenta
+    keyword whole true brightmagenta
+    keyword whole umount brightmagenta
+    keyword whole uname brightmagenta
+    keyword whole userconf brightmagenta
+    keyword whole usleep brightmagenta
+    keyword whole vi brightmagenta
+    keyword whole view brightmagenta
+    keyword whole vim brightmagenta
+    keyword whole xconf brightmagenta
+    keyword whole ypdomainname brightmagenta
+    keyword whole zcat brightmagenta
+    keyword whole zsh brightmagenta
+
+wholechars right abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_
+wholechars left abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_
+
+context linestart #!/ \n yellow blue
+
+context # \n brown/22
+
+context exclusive whole <\[\s\\\]EOF EOF green/6
+
+context ' ' green/6
+
+context " " green/6
+    keyword \\* brightgreen/16
+    keyword \\@ brightgreen/16
+    keyword \\$ brightgreen/16
+    keyword \\\\ brightgreen/16
+    keyword \\` brightgreen/16
+    keyword \\" brightgreen/16
+    keyword $(*) brightgreen/16
+    keyword ${*} brightgreen/16
+    keyword $\* brightred/18
+    keyword $@ brightred/18
+    keyword $# brightred/18
+    keyword $? brightred/18
+    keyword $- brightred/18
+    keyword $$ brightred/18
+    keyword $! brightred/18
+    keyword $_ brightred/18
+    keyword wholeright $\[0123456789\]0 brightred/18
+    keyword wholeright $\[0123456789\]1 brightred/18
+    keyword wholeright $\[0123456789\]2 brightred/18
+    keyword wholeright $\[0123456789\]3 brightred/18
+    keyword wholeright $\[0123456789\]4 brightred/18
+    keyword wholeright $\[0123456789\]5 brightred/18
+    keyword wholeright $\[0123456789\]6 brightred/18
+    keyword wholeright $\[0123456789\]7 brightred/18
+    keyword wholeright $\[0123456789\]8 brightred/18
+    keyword wholeright $\[0123456789\]9 brightred/18
+
+    keyword wholeright $+A brightgreen/16
+    keyword wholeright $+B brightgreen/16
+    keyword wholeright $+C brightgreen/16
+    keyword wholeright $+D brightgreen/16
+    keyword wholeright $+E brightgreen/16
+    keyword wholeright $+F brightgreen/16
+    keyword wholeright $+G brightgreen/16
+    keyword wholeright $+H brightgreen/16
+    keyword wholeright $+I brightgreen/16
+    keyword wholeright $+J brightgreen/16
+    keyword wholeright $+K brightgreen/16
+    keyword wholeright $+L brightgreen/16
+    keyword wholeright $+M brightgreen/16
+    keyword wholeright $+N brightgreen/16
+    keyword wholeright $+O brightgreen/16
+    keyword wholeright $+P brightgreen/16
+    keyword wholeright $+Q brightgreen/16
+    keyword wholeright $+R brightgreen/16
+    keyword wholeright $+S brightgreen/16
+    keyword wholeright $+T brightgreen/16
+    keyword wholeright $+U brightgreen/16
+    keyword wholeright $+V brightgreen/16
+    keyword wholeright $+W brightgreen/16
+    keyword wholeright $+X brightgreen/16
+    keyword wholeright $+Y brightgreen/16
+    keyword wholeright $+Z brightgreen/16
+
+    keyword wholeright $+a brightgreen/16
+    keyword wholeright $+b brightgreen/16
+    keyword wholeright $+c brightgreen/16
+    keyword wholeright $+d brightgreen/16
+    keyword wholeright $+e brightgreen/16
+    keyword wholeright $+f brightgreen/16
+    keyword wholeright $+g brightgreen/16
+    keyword wholeright $+h brightgreen/16
+    keyword wholeright $+i brightgreen/16
+    keyword wholeright $+j brightgreen/16
+    keyword wholeright $+k brightgreen/16
+    keyword wholeright $+l brightgreen/16
+    keyword wholeright $+m brightgreen/16
+    keyword wholeright $+n brightgreen/16
+    keyword wholeright $+o brightgreen/16
+    keyword wholeright $+p brightgreen/16
+    keyword wholeright $+q brightgreen/16
+    keyword wholeright $+r brightgreen/16
+    keyword wholeright $+s brightgreen/16
+    keyword wholeright $+t brightgreen/16
+    keyword wholeright $+u brightgreen/16
+    keyword wholeright $+v brightgreen/16
+    keyword wholeright $+w brightgreen/16
+    keyword wholeright $+x brightgreen/16
+    keyword wholeright $+y brightgreen/16
+    keyword wholeright $+z brightgreen/16
+
+    keyword wholeright $+0 brightgreen/16
+    keyword wholeright $+1 brightgreen/16
+    keyword wholeright $+2 brightgreen/16
+    keyword wholeright $+3 brightgreen/16
+    keyword wholeright $+4 brightgreen/16
+    keyword wholeright $+5 brightgreen/16
+    keyword wholeright $+6 brightgreen/16
+    keyword wholeright $+7 brightgreen/16
+    keyword wholeright $+8 brightgreen/16
+    keyword wholeright $+9 brightgreen/16
+
+    keyword $ brightgreen/16
+
+context exclusive ` ` white blue
+    keyword '*' green/6
+    keyword " green/6
+    keyword ; brightcyan/17
+    keyword $(*) brightgreen/16
+    keyword ${*} brightgreen/16
+    keyword { brightcyan/14
+    keyword } brightcyan/14
+
+    keyword $\* brightred/18
+    keyword $@ brightred/18
+    keyword $# brightred/18
+    keyword $? brightred/18
+    keyword $- brightred/18
+    keyword $$ brightred/18
+    keyword $! brightred/18
+    keyword $_ brightred/18
+
+    keyword wholeright $\[0123456789\]0 brightred/18
+    keyword wholeright $\[0123456789\]1 brightred/18
+    keyword wholeright $\[0123456789\]2 brightred/18
+    keyword wholeright $\[0123456789\]3 brightred/18
+    keyword wholeright $\[0123456789\]4 brightred/18
+    keyword wholeright $\[0123456789\]5 brightred/18
+    keyword wholeright $\[0123456789\]6 brightred/18
+    keyword wholeright $\[0123456789\]7 brightred/18
+    keyword wholeright $\[0123456789\]8 brightred/18
+    keyword wholeright $\[0123456789\]9 brightred/18
+
+    keyword wholeright $+A brightgreen/16
+    keyword wholeright $+B brightgreen/16
+    keyword wholeright $+C brightgreen/16
+    keyword wholeright $+D brightgreen/16
+    keyword wholeright $+E brightgreen/16
+    keyword wholeright $+F brightgreen/16
+    keyword wholeright $+G brightgreen/16
+    keyword wholeright $+H brightgreen/16
+    keyword wholeright $+I brightgreen/16
+    keyword wholeright $+J brightgreen/16
+    keyword wholeright $+K brightgreen/16
+    keyword wholeright $+L brightgreen/16
+    keyword wholeright $+M brightgreen/16
+    keyword wholeright $+N brightgreen/16
+    keyword wholeright $+O brightgreen/16
+    keyword wholeright $+P brightgreen/16
+    keyword wholeright $+Q brightgreen/16
+    keyword wholeright $+R brightgreen/16
+    keyword wholeright $+S brightgreen/16
+    keyword wholeright $+T brightgreen/16
+    keyword wholeright $+U brightgreen/16
+    keyword wholeright $+V brightgreen/16
+    keyword wholeright $+W brightgreen/16
+    keyword wholeright $+X brightgreen/16
+    keyword wholeright $+Y brightgreen/16
+    keyword wholeright $+Z brightgreen/16
+
+    keyword wholeright $+a brightgreen/16
+    keyword wholeright $+b brightgreen/16
+    keyword wholeright $+c brightgreen/16
+    keyword wholeright $+d brightgreen/16
+    keyword wholeright $+e brightgreen/16
+    keyword wholeright $+f brightgreen/16
+    keyword wholeright $+g brightgreen/16
+    keyword wholeright $+h brightgreen/16
+    keyword wholeright $+i brightgreen/16
+    keyword wholeright $+j brightgreen/16
+    keyword wholeright $+k brightgreen/16
+    keyword wholeright $+l brightgreen/16
+    keyword wholeright $+m brightgreen/16
+    keyword wholeright $+n brightgreen/16
+    keyword wholeright $+o brightgreen/16
+    keyword wholeright $+p brightgreen/16
+    keyword wholeright $+q brightgreen/16
+    keyword wholeright $+r brightgreen/16
+    keyword wholeright $+s brightgreen/16
+    keyword wholeright $+t brightgreen/16
+    keyword wholeright $+u brightgreen/16
+    keyword wholeright $+v brightgreen/16
+    keyword wholeright $+w brightgreen/16
+    keyword wholeright $+x brightgreen/16
+    keyword wholeright $+y brightgreen/16
+    keyword wholeright $+z brightgreen/16
+
+    keyword wholeright $+0 brightgreen/16
+    keyword wholeright $+1 brightgreen/16
+    keyword wholeright $+2 brightgreen/16
+    keyword wholeright $+3 brightgreen/16
+    keyword wholeright $+4 brightgreen/16
+    keyword wholeright $+5 brightgreen/16
+    keyword wholeright $+6 brightgreen/16
+    keyword wholeright $+7 brightgreen/16
+    keyword wholeright $+8 brightgreen/16
+    keyword wholeright $+9 brightgreen/16
+
+    keyword $ brightgreen/16
+
+wholechars right abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._
+wholechars left abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._
+
+    keyword whole arch brightmagenta
+    keyword whole ash brightmagenta
+    keyword whole awk brightmagenta
+    keyword whole basename brightmagenta
+    keyword whole bash brightmagenta
+    keyword whole basnemae brightmagenta
+    keyword whole bg_backup brightmagenta
+    keyword whole bg_restore brightmagenta
+    keyword whole bsh brightmagenta
+    keyword whole cat brightmagenta
+    keyword whole chgrp brightmagenta
+    keyword whole chmod brightmagenta
+    keyword whole chown brightmagenta
+    keyword whole cp brightmagenta
+    keyword whole cpio brightmagenta
+    keyword whole csh brightmagenta
+    keyword whole date brightmagenta
+    keyword whole dd brightmagenta
+    keyword whole df brightmagenta
+    keyword whole dmesg brightmagenta
+    keyword whole dnsdomainname brightmagenta
+    keyword whole doexec brightmagenta
+    keyword whole domainname brightmagenta
+    keyword whole echo brightmagenta
+    keyword whole ed brightmagenta
+    keyword whole egrep brightmagenta
+    keyword whole ex brightmagenta
+    keyword whole false brightmagenta
+    keyword whole fgrep brightmagenta
+    keyword whole fsconf brightmagenta
+    keyword whole gawk brightmagenta
+    keyword whole grep brightmagenta
+    keyword whole gunzip brightmagenta
+    keyword whole gzip brightmagenta
+    keyword whole hostname brightmagenta
+    keyword whole igawk brightmagenta
+    keyword whole ipcalc brightmagenta
+    keyword whole kill brightmagenta
+    keyword whole ksh brightmagenta
+    keyword whole linuxconf brightmagenta
+    keyword whole ln brightmagenta
+    keyword whole login brightmagenta
+    keyword whole lpdconf brightmagenta
+    keyword whole ls brightmagenta
+    keyword whole mail brightmagenta
+    keyword whole mkdir brightmagenta
+    keyword whole mknod brightmagenta
+    keyword whole mktemp brightmagenta
+    keyword whole more brightmagenta
+    keyword whole mount brightmagenta
+    keyword whole mt brightmagenta
+    keyword whole mv brightmagenta
+    keyword whole netconf brightmagenta
+    keyword whole netstat brightmagenta
+    keyword whole nice brightmagenta
+    keyword whole nisdomainname brightmagenta
+    keyword whole ping brightmagenta
+    keyword whole ps brightmagenta
+    keyword whole pwd brightmagenta
+    keyword whole red brightmagenta
+    keyword whole remadmin brightmagenta
+    keyword whole rm brightmagenta
+    keyword whole rmdir brightmagenta
+    keyword whole rpm brightmagenta
+    keyword whole sed brightmagenta
+    keyword whole setserial brightmagenta
+    keyword whole sh brightmagenta
+    keyword whole sleep brightmagenta
+    keyword whole sort brightmagenta
+    keyword whole stty brightmagenta
+    keyword whole su brightmagenta
+    keyword whole sync brightmagenta
+    keyword whole taper brightmagenta
+    keyword whole tar brightmagenta
+    keyword whole tcsh brightmagenta
+    keyword whole touch brightmagenta
+    keyword whole true brightmagenta
+    keyword whole umount brightmagenta
+    keyword whole uname brightmagenta
+    keyword whole userconf brightmagenta
+    keyword whole usleep brightmagenta
+    keyword whole vi brightmagenta
+    keyword whole view brightmagenta
+    keyword whole vim brightmagenta
+    keyword whole xconf brightmagenta
+    keyword whole ypdomainname brightmagenta
+    keyword whole zcat brightmagenta
+    keyword whole zsh brightmagenta
+
+###############################################################################
