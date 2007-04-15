@@ -447,7 +447,16 @@ fi
 bool 'l2tpd'			CONFIG_USER_L2TPD_L2TPD
 bool 'links'		CONFIG_USER_LINKS_LINKS
 if [ "$CONFIG_USER_LINKS_LINKS" = "y" ]; then
-    define_bool CONFIG_LIB_LIBSSL y
+	define_bool CONFIG_LIB_LIBSSL y
+    	bool '  links with mouse'	CONFIG_USER_LINKS_WITH_GPM
+	if [ "$CONFIG_USER_LINKS_WITH_GPM" = "y" ]; then
+		define_bool CONFIG_USER_GPM_GPM y
+	fi
+    	bool '  links with graphics'	CONFIG_USER_LINKS_WITH_GRAPHICS
+	if [ "$CONFIG_USER_LINKS_WITH_GRAPHICS" = "y" ]; then
+		define_bool CONFIG_LIB_LIBPNG y
+		define_bool CONFIG_LIB_LIBJPEG y
+	fi
 fi
 bool 'linux-igd'        CONFIG_USER_LINUXIGD_LINUXIGD
 if [ "$CONFIG_USER_LINUXIGD_LINUXIGD" = "y" ]; then
@@ -789,6 +798,9 @@ bool 'mathstests'		CONFIG_USER_MATH_TEST
 bool 'mathomatic'		CONFIG_USER_MATHOMATIC
 bool 'mawk'			CONFIG_USER_MAWK_AWK
 bool 'mc'			CONFIG_USER_MC
+if [ "$CONFIG_USER_MC" = "y" ]; then
+	define_bool CONFIG_USER_GPM_GPM y
+fi
 bool 'mpc'			CONFIG_USER_MPC
 bool 'mysql'			CONFIG_USER_MYSQL
 if [ "$CONFIG_USER_MYSQL" = "y" ]; then

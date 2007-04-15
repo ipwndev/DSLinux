@@ -7665,10 +7665,12 @@ EOF
 
 
 	if test -z "$drivers" && test "$cf_use_graphics" = yes; then
-		{ echo "configure: error: No graphics drivers found." 1>&2; exit 1; }
+		cat >> confdefs.h <<EOF
+#define GRDRV_FB 1
+EOF
+		drivers="$drivers FB"; 
 	fi
 fi
-
 
 
 

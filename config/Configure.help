@@ -1063,6 +1063,15 @@ CONFIG_USER_LISSA_LISSA
 CONFIG_USER_LINKS_LINKS
   Nice text mode WWW browser.
 
+CONFIG_USER_LINKS_WITH_GPM
+  Enable mouse support in the Links WWW browser.
+
+CONFIG_USER_LINKS_WITH_GRAPHICS
+  Enable graphic support in the Links WWW browser.
+  Links will use a different font and show images on web
+  sites if you pick this option.
+  Note that this feature needs tons of memory.
+
 CONFIG_USER_LINUXIGD_LINUXIGD
   Linux Internet Gateway Device. A UPnP-IGD NAT-based 
   Daemon. 
