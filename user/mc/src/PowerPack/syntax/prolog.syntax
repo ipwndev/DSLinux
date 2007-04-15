@@ -1,0 +1,121 @@
+#
+# Prolog syntax hilighting
+#
+#   Carlos Rodrigues <a9566@lei.di.fct.unl.pt>
+#
+
+context default
+    keyword whole atom white
+    keyword whole integer white
+    keyword whole atomic white
+    keyword whole constant white
+    keyword whole functor white
+    keyword whole arg white
+    keyword whole var white
+    keyword whole nonvar white
+    keyword whole assert white
+    keyword whole assertz white
+    keyword whole asserta white
+    keyword whole retract white
+    keyword whole abolish white
+    keyword whole consult white
+    keyword whole reconsult white
+    keyword whole clause white
+    keyword whole listing white
+    keyword whole read white
+    keyword whole sread white
+    keyword whole write white
+    keyword whole writeq white
+    keyword whole display white
+    keyword whole displayq white
+    keyword whole displayl white
+    keyword whole print white
+    keyword whole see white
+    keyword whole seeing white
+    keyword whole tell white
+    keyword whole telling white
+    keyword whole told white
+    keyword whole flush white
+    keyword whole get white
+    keyword whole get0 white
+    keyword whole put white
+    keyword whole tab white
+    keyword whole nl white
+    keyword whole skip white
+    keyword whole ttyget white
+    keyword whole ttyput white
+    keyword whole ttynl white
+    keyword whole ttyskip white
+    keyword whole ttytab white
+    keyword whole op white
+    keyword whole save white
+    keyword whole log white
+    keyword whole trace white
+    keyword whole true white
+    keyword whole fail white
+    keyword whole exit white
+    keyword whole abort white
+    keyword whole call white
+    keyword whole not white
+    keyword whole name white
+    keyword whole repeat white
+    keyword whole system white
+    keyword whole systemp white
+    keyword whole save_term white
+    keyword whole unsave_term white
+    keyword whole member white
+    keyword whole append white
+    keyword whole iterate white
+    keyword whole fork_exec white
+    keyword whole ancestor white
+    keyword whole cutg white
+    keyword whole retry white
+
+    keyword /\* brown/22
+    keyword \*/ brown/22
+
+    keyword :- brightred/18
+    keyword wholeright . brightred/18
+
+    keyword whole ! brightgreen/6
+    keyword whole _ brightgreen/6
+
+    keyword ( brightgreen/6
+    keyword ) brightgreen/6
+
+    keyword , brightmagenta
+    keyword ; brightmagenta
+    keyword =.. brightmagenta
+    keyword = brightmagenta
+    keyword \\= brightmagenta
+    keyword == brightmagenta
+    keyword \\== brightmagenta
+
+    keyword < brightmagenta
+    keyword > brightmagenta
+    keyword =\\= brightmagenta
+    keyword >= brightmagenta
+    keyword =< brightmagenta
+    keyword =:= brightmagenta
+    keyword := brightmagenta
+    keyword whole is brightmagenta
+    keyword \+ brightmagenta
+    keyword \\\+ brightmagenta
+    keyword - brightmagenta
+    keyword \* brightmagenta
+    keyword / brightmagenta
+    keyword whole mod brightmagenta
+
+    keyword [ yellow/24
+    keyword ] yellow/24
+
+context exclusive [ ] cyan
+    keyword , yellow/25
+    keyword | yellow/25
+    keyword _ brightgreen/6
+
+context exclusive /\* \*/ brown/22
+context % \n brown/22
+
+context ' ' magenta/19
+context " " yellow/24

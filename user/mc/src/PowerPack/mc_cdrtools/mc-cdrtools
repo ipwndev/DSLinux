@@ -1,0 +1,53 @@
+##########################################################################
+# mc-cdrtools
+# $Id: mc-cdrtools 1.1 Fri, 19 Feb 1999 20:43:51 +0200 ssl $
+##########################################################################
+# Sami Lempinen <ssl@snowman.sgic.fi>
+# Four MC user menu entries for manipulating CD-Rs
+# Licenced under the GNU General Public Licence.
+##########################################################################
+# This entry creates an ISO 9660 image of the currently selected directory
+# in directory indicated by the other panel.
++ t d
+m       Make CD image (single session or first session)
+        COMMAND="mkisofs -a -f -o %D/cdimage.raw -r -J %f"
+	echo Executing: ${COMMAND}
+	echo [CTRL+C to abort, ENTER to continue]
+	read
+	${COMMAND}
+	echo [ENTER to continue]
+	read
+
+# Like above, but uses the current CD to create a multisession image.
++ t d
+M       Make CD image (multi)
+        COMMAND="mkisofs -a -f -o %D/cdimage.raw -r -J -C \
+		`cdrecord -msinfo dev=0,0` -M /dev/scd0 %f"
+	echo Executing: ${COMMAND}
+	echo [CTRL+C to abort, ENTER to continue]
+	read
+	${COMMAND}
+	echo [ENTER to continue]
+	read
+
+# Writes an ISO 9660 image (*.raw) onto a CD-R, closing the disk.
++ f *.raw & t r
+b       Burn image to CD (single or last session)
+	COMMAND="cdrecord -v speed=2 -eject dev=0,0 %f"
+	echo Executing: ${COMMAND}
+	echo [CTRL+C to abort, ENTER to continue]
+	read
+	${COMMAND}
+	echo [ENTER to continue]
+	read
+
+# Like above, but leaves the disk open for further sessions.
++ f *.raw & t r
+B       Burn image to CD (multi)
+	COMMAND="cdrecord -v speed=2 -eject dev=0,0 -multi %f"
+	echo Executing: ${COMMAND}
+	echo [CTRL+C to abort, ENTER to continue]
+	read
+	${COMMAND}
+	echo [ENTER to continue]
+	read

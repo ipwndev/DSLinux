@@ -1,0 +1,112 @@
+context default
+    keyword whole absolute brightmagenta
+    keyword whole and brightmagenta
+    keyword whole array brightmagenta
+    keyword whole as brightmagenta
+    keyword whole asm brightmagenta
+    keyword whole assembler brightmagenta
+    keyword whole begin brightmagenta
+    keyword whole break brightmagenta
+    keyword whole case brightmagenta
+    keyword whole class brightmagenta
+    keyword whole const brightmagenta
+    keyword whole continue brightmagenta
+    keyword whole constructor brightmagenta
+    keyword whole destructor brightmagenta
+    keyword whole dispose brightmagenta
+    keyword whole div brightmagenta
+    keyword whole do brightmagenta
+    keyword whole downto brightmagenta
+    keyword whole else brightmagenta
+    keyword whole end brightmagenta
+    keyword whole except brightmagenta
+    keyword whole exit brightmagenta
+    keyword whole export brightmagenta
+    keyword whole exports brightmagenta
+    keyword whole external brightmagenta
+    keyword whole fail brightmagenta
+    keyword whole far brightmagenta
+    keyword whole false brightmagenta
+    keyword whole file brightmagenta
+    keyword whole finally brightmagenta
+    keyword whole for brightmagenta
+    keyword whole forward brightmagenta
+    keyword whole function brightmagenta
+    keyword whole goto brightmagenta
+    keyword whole if brightmagenta
+    keyword whole implementation brightmagenta
+    keyword whole in brightmagenta
+    keyword whole inherited brightmagenta
+    keyword whole initialization brightmagenta
+    keyword whole inline brightmagenta
+    keyword whole interface brightmagenta
+    keyword whole interrupt brightmagenta
+    keyword whole is brightmagenta
+    keyword whole label brightmagenta
+    keyword whole library brightmagenta
+    keyword whole mod brightmagenta
+    keyword whole near brightmagenta
+    keyword whole new brightmagenta
+    keyword whole nil brightmagenta
+    keyword whole not brightmagenta
+    keyword whole object brightmagenta
+    keyword whole of brightmagenta
+    keyword whole on brightmagenta
+    keyword whole operator brightmagenta
+    keyword whole or brightmagenta
+    keyword whole otherwise brightmagenta
+    keyword whole packed brightmagenta
+    keyword whole procedure brightmagenta
+    keyword whole program brightmagenta
+    keyword whole property brightmagenta
+    keyword whole raise brightmagenta
+    keyword whole record brightmagenta
+    keyword whole repeat brightmagenta
+    keyword whole self brightmagenta
+    keyword whole set brightmagenta
+    keyword whole shl brightmagenta
+    keyword whole shr brightmagenta
+    keyword whole string brightmagenta
+    keyword whole then brightmagenta
+    keyword whole to brightmagenta
+    keyword whole true brightmagenta
+    keyword whole try brightmagenta
+    keyword whole type brightmagenta
+    keyword whole unit brightmagenta
+    keyword whole until brightmagenta
+    keyword whole uses brightmagenta
+    keyword whole var brightmagenta
+    keyword whole virtual brightmagenta
+    keyword whole while brightmagenta
+    keyword whole with brightmagenta
+    keyword whole xor brightmagenta
+    keyword whole .. brightmagenta
+    
+    keyword > white
+    keyword < white
+    keyword \+ white
+    keyword - white
+    keyword / white
+    keyword % white
+    keyword = white
+    keyword [ white
+    keyword ] white
+    keyword ( white
+    keyword ) white
+    keyword , white
+    keyword . white
+    keyword : white
+    keyword ; white
+    keyword {$*} brightred/19
+
+context ' ' brightgreen
+context // \n brown/22
+context (\* \*) brown/22
+# context {$ } brightred/19
+#    keyword \[ABCDEFGHIJKLMNOPQRSTUVWXYZ\]\[-\+\] brightgreen/16
+#    keyword $* brightgreen/16
+context { } lightgray/22
+
+
+###############################################################################
+
