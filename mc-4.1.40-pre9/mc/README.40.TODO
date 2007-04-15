@@ -1,0 +1,116 @@
+Advanced Midnight Commander mc-4.1.x-MP       [by  Olegarch]
+=======================================
+Send ideas and bugreports to: olegarch@linuxinside.com
+Download latest: http://mc.linuxinside.com/
+
+ToDo:
+    Possible-NEAR TODO:
+	- DESIGN: Fix Chown, Achown, Chmod dialogs.
+	- VFS: Check and fix FTP and RPM & [cpio|tar] VFS as soon as possible!
+	- VFS: Check and "mkdir" errno: if user doesn't have rights to create 
+	       dir (errno = 13), message about dir existence (errno = 17) :-E
+
+	- DOCUMENTATION: all documents must be finished, reworked and updated
+
+	- GLOBAL: Catch bugs!
+	- GLOBAL: Realize "Processes list" dialog with possibility to send 
+		  signals. Possible - with tree view, but not necessary.
+	- GLOBAL: Realize "I.P.C. Control" dialog for Shared Memories, 
+		  Semaphores and Message Queues
+	
+	- DESIGN questions:
+	
+	? We need second, alternative design for FTP connect dialog,-
+	  need to separate laying of ftp "bucket" string
+	  "ftp://username:password@server:port"
+	  by fields: Username, Password, Server, Port + Mode, etc.
+
+##############################################################################
+We can use original idea of "FTP Link" dialog implementation variant 
+by Thomas Kuiper <tkuiper@t-online.fr> 
+
+[with design and behaviour suggestions by Olegarch]
+
+Prework:
+
++ In "vfs settings", adds option "use extended ftp link dialog"
++ All FTP profiles stored in the config file, or separate cfgs
+  in the user's home dir, and profiles could be listed in the panel, 
+  and edited by F4 key (as text), or by Enter key (shows our new FTP 
+  Link dialog in this case):
+
+-------------------------------------------------
+| ------------------ FTP Link ----------------- |
+|    Profile Name:     ____________________[^]  |
+|    Host:             ____________________     |
+|    User Name:        ____________________     |
+|    Password:         ____________________     |
+|    Port:             22__________________     |
+|    Init. Remote Dir: ____________________     |
+|    Comment:          ____________________     |
+|                                               |
+|    [ ] Use proxy server                       |
+|                                               |
+|    [ ] Use passive transfer                   |
+|    [x] Don't store password in profile        |
+|-----------------------------------------------|
+|     [< Connect >]  [ Store ]  [ Cancel ]      |
+-------------------------------------------------
+
+Behaviour:
+
++ If no Username was specified, user "anonymous" is used with password
+  configured under Options->"Virtual File System Settings".
++ Profile gets automatically saved when changed or name specified.
++ If the password isn't supposed to be stored in the profile its asked
+  in a new dialog.
++ Returns to the dialog in case a connection failed or canceled.
+##############################################################################
+ 
+	? We need new redesign project for MountPoints dialog: we need to get 
+	  most useful laying of elements: mountpoint name, free space, 
+	  path and another items, if necessary. Suggestions?
+	  
+	? I think, that "#" in VFS must be reverted by ":". What you think?
+
+	- VIEWER: Gray "+"/Gray "-" - viewer loads next/previous text file from 
+	  current directory (for fidonet/@-news readers). Hatred's idea.
+
+	- PORTS: Check and correct BeOS port (term, BackgroundTasks, Ix86/PPC):
+          * Needs STRONG code revision of mountlist menu in BeOS
+	  * Needs code revision of Background operations in BeOS
+	  * Panels switch-off realisation in BeOS's beterm is necessary
+	  * Unicode support for BeOS beterm
+	
+	- BeOS port questions:
+
+	  ? Who knows, how we can determine BeOS PE5 & BeOS Dan0? How we can 
+	    differentiate it one from another by #ifdef? These systems contain
+	    same (BONE) headers in differetn places, and there is a problem.
+
+	  ? Must we use only BONE, or "classical BeOS" realisation of network 
+	    functions (adopt for NetServer) is necessary too ?
+
+	  ? How about BeOS Zeta? Is mc-MP builds correctly? What improvements 
+	    are required?
+	    
+	- SCRIPTS: Inspect and correct .po, .ext, menu and documentation files
+	- SCRIPTS: "configure" script needs revision
+
+    Possible-FAR TODO:
+	- VFS: Samba, FISH and SFTP realisations as VFS or plugin modules
+	- PORTS: Check and correct platform-oriented ports (WIN32, QNX, Solaris 
+	  with native SUN compilers, etc)
+	- VIEWER: realize separate stream/tail viewer for realtime viewing 
+		  updatable log-files 
+	- VIEWER: TCR/FB2/RB/PDB/RTF ebooks & texts formats support for viewer 
+	  (trough filters?)
+	- VFS: UUE/XXE/Base64 support as vfs
+	- VFS: TCR/FB2/RB/PDB/PDC support as vfs
+	- VFS: MAC archives (sit, bin, hqx, dmg, sea) support as vfs
+	- VFS: PDA interfaces with vfs (Psion, Palm, Symbian, PocketPC, Linux)
+	- VFS: Mobile Phone interfaces with vfs (Siemens, Nokia, Sony Ericsson)
+	- VFS: All vfs scripts must be realized in sh+awk or in c/cc.
+	       Perl, Python, Ruby, Lisp and Java must not be used!
+	- SCRIPTS: Nedit -> mcedit syntax files converter (program|script)
+	- GLOBAL: Unicode support [as later as possible!]

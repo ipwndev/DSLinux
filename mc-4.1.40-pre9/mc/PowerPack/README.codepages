@@ -1,0 +1,13 @@
+Format of codepages index file (Index.txt):
+	Two tab-separated columns
+	Column #1 is codepage filename without "cp" suffix
+	Column #2 is descriptive codepage name
+Warning:
+	First line MUST be 7-bit ASCII!
+	
+Format of codepage files (*.cp):
+
+	Three tab-separated columns
+	Column #1 is the ISO/IEC 8859-5 code (in hex as 0xXX)
+	Column #2 is the Unicode (in hex as 0xXXXX)
+	Column #3 the Unicode name (follows a comment sign, '#')

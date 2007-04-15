@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# Written by Arpad Gereoffy 1999
+#
+# (C) 1995 The Free Software Foundation.
+#
+#
+
+case "$1" in
+  list) unesp vm "$2"; exit 0;;
+  copyout)
+    unesp eym "$2" "$4" /"$3" >2 /dev/null
+    exit 0;;
+esac
+exit 1
