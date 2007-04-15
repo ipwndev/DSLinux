@@ -798,9 +798,6 @@ bool 'mathstests'		CONFIG_USER_MATH_TEST
 bool 'mathomatic'		CONFIG_USER_MATHOMATIC
 bool 'mawk'			CONFIG_USER_MAWK_AWK
 bool 'mc'			CONFIG_USER_MC
-if [ "$CONFIG_USER_MC" = "y" ]; then
-	define_bool CONFIG_USER_GPM_GPM y
-fi
 bool 'mpc'			CONFIG_USER_MPC
 bool 'mysql'			CONFIG_USER_MYSQL
 if [ "$CONFIG_USER_MYSQL" = "y" ]; then
