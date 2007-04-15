@@ -788,6 +788,7 @@ bool 'mcf5272 iso client'       CONFIG_USER_USBISO_USBISO
 bool 'mathstests'		CONFIG_USER_MATH_TEST
 bool 'mathomatic'		CONFIG_USER_MATHOMATIC
 bool 'mawk'			CONFIG_USER_MAWK_AWK
+bool 'mc'			CONFIG_USER_MC
 bool 'mpc'			CONFIG_USER_MPC
 bool 'mysql'			CONFIG_USER_MYSQL
 if [ "$CONFIG_USER_MYSQL" = "y" ]; then

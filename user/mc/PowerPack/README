@@ -1,0 +1,30 @@
+PowerPack for Midnight Commander      (C) 1999-2000 A'rpi/ESP-team
+================================
++Updated PowerPack for mc-MP          (C) 2002-2004 Oleg "Olegarch" Konovalov
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+New Syntax-hilighting files  -  syntax hi-lighting files for built-in editor
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Required: MC-4.1.X-MP or MC-4.5.X, MC-4.6.X
+Install: copy the whole syntax directory to /usr/lib/mc (or /usr/local/lib/mc)
+Running MC's editor will create ~/.cedit/Sytnax file. If you already
+has this file, you have to delete it to allow MCedit to create it.
+
+MP3rename:  -  User-menu (F2) entry for MP3 files renamer utility
+~~~~~~~~~~
+Required: MC-4.1.x or MC-4.5.x
+See details in mp3rename/README.
+
+MC Burn:    -  MC menu-driven cd-burning utility
+~~~~~~~~
+Required: MC-4.1.x-MP
+See details in mcburn/README.
+
+MCCDRtools: -  MC usermenu driven cd-burning frontends ro cdrtools by Sami Lempinen <ssl@snowman.sgic.fi>
+~~~~~~~~~~~
+
+filters:    -  Some MC filters and converters (for future)
+~~~~~~~
+
+
+

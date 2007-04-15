@@ -1,0 +1,30 @@
+# modified by A'rpi/ESP-team  <arpi@esp-team.scene.hu>
+
+context default
+    keyword whole &*; brightgreen/16
+    keyword <BR> yellow/24
+    keyword <P> yellow/24
+    keyword <P\s*> yellow/24
+    keyword </P> yellow/24
+context <!-- --> white/26
+# context <B> </B> white/26
+# context <I> </I> white/26
+
+context <A\s > brightmagenta/19
+
+context < > green
+    keyword "*.gif" brightred/19
+    keyword "*.jpg" brightred/19
+    keyword "*.png" brightred/19
+    keyword "http:*" brightmagenta/19
+    keyword "ftp:*" brightmagenta/19
+    keyword "mailto:*" brightmagenta/19
+    keyword "gopher:*" brightmagenta/19
+    keyword "telnet:*" brightmagenta/19
+    keyword "file:*" brightmagenta/19
+    keyword HREF="*" brightmagenta/19
+    keyword href="*" brightmagenta/19
+    keyword whole "*" cyan/5
+    keyword "*" cyan/5
+
+###############################################################################

@@ -1,0 +1,200 @@
+# modified by A'rpi/ESP-team  <arpi@esp-team.scene.hu>
+
+context default
+
+    keyword whole auto white/26
+    keyword whole break white/26
+    keyword whole case white/26
+    keyword whole char white/26
+    keyword whole const white/26
+    keyword whole continue white/26
+    keyword whole default white/26
+    keyword whole do white/26
+    keyword whole double white/26
+    keyword whole else white/26
+    keyword whole enum white/26
+    keyword whole extern white/26
+    keyword whole float white/26
+    keyword whole for white/26
+    keyword whole goto white/26
+    keyword whole if white/26
+    keyword whole int white/26
+    keyword whole long white/26
+    keyword whole register white/26
+    keyword whole return white/26
+    keyword whole short white/26
+    keyword whole signed white/26
+    keyword whole sizeof white/26
+    keyword whole static white/26
+    keyword whole struct white/26
+    keyword whole switch white/26
+    keyword whole typedef white/26
+    keyword whole union white/26
+    keyword whole unsigned white/26
+    keyword whole void white/26
+    keyword whole volatile white/26
+    keyword whole while white/26
+    keyword whole asm white/26
+    keyword whole catch white/26
+    keyword whole class white/26
+    keyword whole friend white/26
+    keyword whole delete white/26
+    keyword whole inline white/26
+    keyword whole new white/26
+    keyword whole operator white/26
+    keyword whole private white/26
+    keyword whole protected white/26
+    keyword whole public white/26
+    keyword whole this white/26
+    keyword whole throw white/26
+    keyword whole template white/26
+    keyword whole try white/26
+    keyword whole virtual white/26
+    keyword whole bool white/26
+    keyword whole const_cast white/26
+    keyword whole dynamic_cast white/26
+    keyword whole explicit white/26
+    keyword whole false white/26
+    keyword whole mutable white/26
+    keyword whole namespace white/26
+    keyword whole reinterpret_cast white/26
+    keyword whole static_cast white/26
+    keyword whole true white/26
+    keyword whole typeid white/26
+    keyword whole typename white/26
+    keyword whole using white/26
+    keyword whole wchar_t white/26
+    keyword whole ... white/26
+
+# main STDIO and STDLIB functions:    
+    keyword whole main yellow/24
+    keyword whole printf yellow/24
+    keyword whole sprintf yellow/24
+    keyword whole fprintf yellow/24
+    keyword whole scanf yellow/24
+    keyword whole fscanf yellow/24
+    keyword whole sscanf yellow/24
+    keyword whole FILE yellow/24
+    keyword whole fopen yellow/24
+    keyword whole fread yellow/24
+    keyword whole fwrite yellow/24
+    keyword whole fclose yellow/24
+    keyword whole getchar yellow/24
+    keyword whole putchar yellow/24
+    keyword whole gets yellow/24
+    keyword whole fgets yellow/24
+    keyword whole puts yellow/24
+    keyword whole fputs yellow/24
+# STRING functions:    
+    keyword whole index yellow/24
+    keyword whole rindex yellow/24
+    keyword whole strcasecmp yellow/24
+    keyword whole strcat yellow/24
+    keyword whole strchr yellow/24
+    keyword whole strcmp yellow/24
+    keyword whole strcoll yellow/24
+    keyword whole strcpy yellow/24
+    keyword whole strcspn yellow/24
+    keyword whole strdup yellow/24
+    keyword whole strfry yellow/24
+    keyword whole strlen yellow/24
+    keyword whole strncat yellow/24
+    keyword whole strncmp yellow/24
+    keyword whole strncpy yellow/24
+    keyword whole strncasecmp yellow/24
+    keyword whole strpbrk yellow/24
+    keyword whole strrchr yellow/24
+    keyword whole strsep yellow/24
+    keyword whole strspn yellow/24
+    keyword whole strstr yellow/24
+    keyword whole strtok yellow/24
+    keyword whole strxfrm yellow/24
+    
+    keyword /\* brown/22
+    keyword \*/ brown/22
+
+    keyword '\s' brightgreen/16
+    keyword '+' brightgreen/16
+    keyword > yellow/24
+    keyword < yellow/24
+    keyword \+ yellow/24
+    keyword - yellow/24
+    keyword \* yellow/24
+#    keyword / yellow/24
+    keyword % yellow/24
+    keyword = yellow/24
+    keyword != yellow/24
+    keyword == yellow/24
+    keyword { white/25
+    keyword } white/25
+    keyword ( white/25
+    keyword ) white/25
+    keyword [*] cyan/25
+#    keyword ] white/25
+    keyword , white/25
+    keyword : white/25
+#    keyword ; brightmagenta/19
+    keyword ; lightgray/19
+    
+    keyword linestart #*define brightred/18
+    keyword linestart #*if brightred/18
+    keyword linestart #*else brightred/18
+    keyword linestart #*endif brightred/18
+
+context exclusive /\* \*/ brown/22
+context // \n brown/19
+
+context linestart #include \n brightred/18
+    keyword <+> white/26
+    keyword "+" white/26
+    keyword /\**\*/ brown/22
+
+context linestart # \n brightred/18
+
+# context linestart # \n brightred/18
+#    keyword \\\n yellow/24
+#    keyword \s \n lightgrey/22
+#    keyword /\**\*/ lightgrey/22
+#    keyword "+" red/19
+#    keyword <+> red/19
+
+#context linestart # \n brightred/18
+#    keyword /\**\*/ green/22
+#    keyword \s*\n brightcyan/14
+
+#context linestart # \n brightcyan/14
+#    keyword #*define brightred/18
+#    keyword #*if brightred/18
+#    keyword /\**\*/ green/22
+#    keyword \s*\n brightcyan/14
+
+context " " green/6
+    keyword \\" brightgreen/16
+    keyword %% brightgreen/16
+    keyword %\[#0\s-\+,\]\[0123456789\]\[.\]\[0123456789\]\[L\]e brightgreen/16
+    keyword %\[#0\s-\+,\]\[0123456789\]\[.\]\[0123456789\]\[L\]E brightgreen/16
+    keyword %\[#0\s-\+,\]\[0123456789\]\[.\]\[0123456789\]\[L\]f brightgreen/16
+    keyword %\[#0\s-\+,\]\[0123456789\]\[.\]\[0123456789\]\[L\]g brightgreen/16
+    keyword %\[#0\s-\+,\]\[0123456789\]\[.\]\[0123456789\]\[L\]G brightgreen/16
+    keyword %\[0\s-\+,\]\[0123456789\]\[.\]\[0123456789\]\[hl\]d brightgreen/16
+    keyword %\[0\s-\+,\]\[0123456789\]\[.\]\[0123456789\]\[hl\]i brightgreen/16
+    keyword %\[#0\s-\+,\]\[0123456789\]\[.\]\[0123456789\]\[hl\]o brightgreen/16
+    keyword %\[0\s-\+,\]\[0123456789\]\[.\]\[0123456789\]\[hl\]u brightgreen/16
+    keyword %\[#0\s-\+,\]\[0123456789\]\[.\]\[0123456789\]\[hl\]x brightgreen/16
+    keyword %\[#0\s-\+,\]\[0123456789\]\[.\]\[0123456789\]\[hl\]X brightgreen/16
+    keyword %\[hl\]n brightgreen/16
+    keyword %\[.\]\[0123456789\]s brightgreen/16
+    keyword %[*] brightgreen/16
+    keyword %c brightgreen/16
+    keyword \\\\ brightgreen/16
+    keyword \\' brightgreen/16
+    keyword \\a brightgreen/16
+    keyword \\b brightgreen/16
+    keyword \\t brightgreen/16
+    keyword \\n brightgreen/16
+    keyword \\v brightgreen/16
+    keyword \\f brightgreen/16
+    keyword \\r brightgreen/16
+    keyword \\0 brightgreen/16
+
+###############################################################################
