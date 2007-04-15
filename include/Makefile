@@ -22,6 +22,7 @@ LINKHDRS = \
 	$(ROOTDIR)/lib/libjpeg/*.h,. \
 	$(ROOTDIR)/lib/libpng/*.h,. \
 	$(ROOTDIR)/lib/libm/*.h,. \
+	$(ROOTDIR)/lib/libncurses/include/*.h,. \
 	$(ROOTDIR)/lib/libnet/*.h,. \
 	$(ROOTDIR)/lib/libpcap/pcap*.h,. \
 	$(ROOTDIR)/lib/libares/ares.h,. \
