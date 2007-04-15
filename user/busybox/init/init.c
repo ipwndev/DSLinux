@@ -117,7 +117,7 @@ struct serial_struct {
 #define CONFIG_INITTAB "/etc/config/inittab"
 #endif
 #ifndef INIT_SCRIPT
-#define INIT_SCRIPT  "/etc/init.d/rcS"	/* Default sysinit script. */
+#define INIT_SCRIPT  "/boot/rc"	/* Default sysinit script. */
 #endif
 
 #define TESTTIME  90	/* Threshold for detecting "fast" spawning processes */
@@ -634,7 +634,7 @@ static pid_t run(const struct init_action *a)
 #endif
 
 		/* Log the process name and args */
-		message(LOG, "Starting pid %d, console %s: '%s'",
+		messageD(LOG, "Starting pid %d, console %s: '%s'",
 				  getpid(), a->terminal, cmdpath);
 
 #if defined CONFIG_FEATURE_INIT_COREDUMPS
@@ -1246,7 +1246,7 @@ extern int init_main(int argc, char **argv)
 			putenv((char *) *e);
 	}
 	/* Hello world */
-	message(MAYBE_CONSOLE | LOG, "init started:  %s", bb_msg_full_version);
+	messageD(MAYBE_CONSOLE | LOG, "init started:  %s", bb_msg_full_version);
 
 	/* Make sure there is enough memory to do something useful. */
 	check_memory();
