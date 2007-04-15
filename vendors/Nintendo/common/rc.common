@@ -55,6 +55,12 @@ hostname $hostname
 # set up /etc/hosts so networking tools will work
 echo "127.0.0.1 $hostname" > /etc/hosts
 
+# if we have a gpm binary, enable the mouse cursor
+if [ -x /usr/bin/gpm ]
+then
+	/usr/bin/gpm -m /dev/mouse0 -t ps2 &
+fi
+
 # show firmware version if configured
 [ "$show_firmware_version" = "YES" ] && fwver
 
