@@ -1,0 +1,44 @@
+# modified by A'rpi/ESP-team  <arpi@esp-team.scene.hu>
+
+context default
+    keyword $(*) yellow/24
+    keyword ${*} brightgreen/16
+    keyword whole linestart include magenta
+    keyword whole linestart ifdef magenta
+    keyword whole linestart endif magenta
+    keyword whole linestart ifeq magenta
+    keyword whole linestart ifneq magenta
+    keyword whole linestart else magenta
+    keyword linestart \t lightgray/13 red
+    keyword whole .PHONY green/25
+    keyword whole .NOEXPORT green/25
+    keyword = white/25
+    keyword : yellow/24
+    keyword \\\n yellow/24
+# this handles strange cases like @something@@somethingelse@ properly
+    keyword whole @+@ brightmagenta/23
+    keyword @+@ brightmagenta/23
+
+context linestart # \n brown/22
+    keyword whole @+@ brightmagenta/23
+    keyword @+@ brightmagenta/23
+
+context exclusive = \n white/17
+    keyword \\\n yellow/24
+    keyword $(*) yellow/24
+    keyword ${*} brightgreen/16
+    keyword linestart \t lightgray/13 red
+    keyword whole @+@ brightmagenta/23
+    keyword @+@ brightmagenta/23
+
+context exclusive linestart \t \n
+    keyword \\\n yellow/24
+    keyword $(*) yellow/24
+    keyword ${*} brightgreen/16
+    keyword linestart \t lightgray/13 red
+    keyword whole @+@ brightmagenta/23
+    keyword @+@ brightmagenta/23
+
+###############################################################################
+
+

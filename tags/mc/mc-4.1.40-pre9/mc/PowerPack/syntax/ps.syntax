@@ -1,0 +1,477 @@
+# PostScript syntax by Olegarch  <olegarch@mail.ru>
+# GPL v2
+#
+# (c) 2003
+#
+
+context default
+
+# Operators 1:
+    keyword whole abs white
+    keyword whole add brightgreen
+    keyword whole aload white
+    keyword whole anchorsearch white
+    keyword whole and white
+    keyword whole arc white
+    keyword whole arcn white
+    keyword whole arcto white
+    keyword whole array white
+    keyword whole ashow white
+    keyword whole astore white
+    keyword whole atan white
+    keyword whole awidthshow white
+    keyword whole begin white
+    keyword whole bind white
+    keyword whole bitshift white
+    keyword whole bytesavailable white
+    keyword whole cachestatus white
+    keyword whole ceiling white
+    keyword whole charpath white
+    keyword whole clear white
+    keyword whole cleardictstack white
+    keyword whole cleartomark white
+    keyword whole clip white
+    keyword whole clippath white
+    keyword whole closefile white
+    keyword whole closepath white
+    keyword whole concat white
+    keyword whole concatmatrix white
+    keyword whole copy white
+    keyword whole copypage white
+    keyword whole cos white
+    keyword whole count white
+    keyword whole countdictstack white
+    keyword whole countexecstack white
+    keyword whole counttomark white
+    keyword whole currentdash white
+    keyword whole currentdict white
+    keyword whole currentfile white
+    keyword whole currentflat white
+    keyword whole currentfont white
+    keyword whole currentgray lightgray
+    keyword whole currenthsbcolor white
+    keyword whole currentlinecap white
+    keyword whole currentlinejoin white
+    keyword whole currentlinewidth white
+    keyword whole currentmatrix white
+    keyword whole currentmiterlimit white
+    keyword whole currentpoint white
+    keyword whole currentrgbcolor white
+    keyword whole currentscreen white
+    keyword whole currenttransfer white
+    keyword whole curveto white
+    keyword whole cvi white
+    keyword whole cvlit white
+    keyword whole cvn white
+    keyword whole cvr white
+    keyword whole cvrs white
+    keyword whole cvs white
+    keyword whole cvx white
+    keyword whole def white
+    keyword whole defaultmatrix white
+    keyword whole definefont white
+    keyword whole dict white
+    keyword whole dictstack white
+    keyword whole div brightblue
+    keyword whole dtransform white
+    keyword whole dup white
+    keyword whole echo white
+    keyword whole eexec white
+    keyword whole end white
+    keyword whole eoclip white
+    keyword whole eofill white
+    keyword whole eq yellow
+    keyword whole erasepage white
+    keyword whole errordict white
+    keyword whole exch white
+    keyword whole exec white
+    keyword whole execstack white
+    keyword whole executeonly white
+    keyword whole executive white
+    keyword whole exit white
+    keyword whole exitserver white
+    keyword whole exp white
+    keyword whole false white
+    keyword whole file white
+    keyword whole fill white
+    keyword whole findfont white
+    keyword whole flattenpath white
+    keyword whole floor white
+    keyword whole flush
+    keyword whole flushfile white
+    keyword whole FontDirectory white
+    keyword whole fontdirectory yellow red
+    keyword whole for white
+    keyword whole forall white
+    keyword whole ge yellow
+    keyword whole get white
+    keyword whole getinterval white
+    keyword whole grestore white
+    keyword whole grestoreall white
+    keyword whole gsave white
+    keyword whole gt white
+    keyword whole handleerror white
+    keyword whole identmatrix white
+    keyword whole idiv white
+    keyword whole idtransform white
+    keyword whole if white
+    keyword whole ifelse white
+    keyword whole image white
+    keyword whole imagemask white
+    keyword whole index white
+    keyword whole initclip white
+    keyword whole initgraphics white
+    keyword whole initmatrix white
+    keyword whole internaldict white
+    keyword whole invertmatrix white
+    keyword whole itransform white
+    keyword whole known white
+    keyword whole kshow white
+    keyword whole le yellow
+    keyword whole length white
+    keyword whole lineto white
+    keyword whole ln white
+    keyword whole load white
+    keyword whole log white
+    keyword whole loop white
+    keyword whole lt white
+    keyword whole makefont white
+    keyword whole mark white
+    keyword whole matrix white
+    keyword whole maxlength white
+    keyword whole mod white
+    keyword whole moveto white
+    keyword whole mul brightblue
+    keyword whole ne yellow
+    keyword whole neg white
+    keyword whole newpath white
+    keyword whole noaccess white
+    keyword whole not white
+    keyword whole null white
+    keyword whole nulldevice white
+    keyword whole or white
+    keyword whole pathbbox white
+    keyword whole pathforall white
+    keyword whole pop white
+    keyword whole print white
+    keyword whole prompt white
+    keyword whole pstack white
+    keyword whole put white
+    keyword whole putinterval white
+    keyword whole quit white
+    keyword whole rand white
+    keyword whole rcheck white
+    keyword whole rcurveto white
+    keyword whole read white
+    keyword whole readhexstring white
+    keyword whole readline white
+    keyword whole readonly white
+    keyword whole readstring white
+    keyword whole repeat white
+    keyword whole resetfile white
+    keyword whole restore white
+    keyword whole reversepath white
+    keyword whole rlineto white
+    keyword whole rmoveto white
+    keyword whole roll white
+    keyword whole rotate white
+    keyword whole round white
+    keyword whole rrand white
+    keyword whole run white
+    keyword whole save white
+    keyword whole scale white
+    keyword whole scalefont white
+    keyword whole search white
+    keyword whole serverdict white
+    keyword whole setcachedevice white
+    keyword whole setcachelimit white
+    keyword whole setcharwidth white
+    keyword whole setdash white
+    keyword whole setflat white
+    keyword whole setfont white
+    keyword whole setgray lightgray
+    keyword whole sethsbcolor white
+    keyword whole setlinecap white
+    keyword whole setlinejoin white
+    keyword whole setlinewidth white
+    keyword whole setmatrix white
+    keyword whole setmiterlimit white
+    keyword whole setrgbcolor white
+    keyword whole setscreen white
+    keyword whole settransfer white
+    keyword whole show white
+    keyword whole showpage white
+    keyword whole sin white
+    keyword whole sqrt white
+    keyword whole srand white
+    keyword whole stack white
+    keyword whole StandardEncoding white
+    keyword whole standardencoding yellow red
+    keyword whole start white
+    keyword whole status white
+    keyword whole statusdict white
+    keyword whole stop white
+    keyword whole stopped white
+    keyword whole store white
+    keyword whole string white
+    keyword whole stringwidth white
+    keyword whole stroke white
+    keyword whole strokepath white
+    keyword whole sub brightgreen
+    keyword whole systemdict white
+    keyword whole token white
+    keyword whole transform white
+    keyword whole translate white
+    keyword whole true white
+    keyword whole truncate white
+    keyword whole type white
+    keyword whole userdict white
+    keyword whole usertime white
+    keyword whole version white
+    keyword whole vmstatus white
+    keyword whole wcheck white
+    keyword whole where white
+    keyword whole widthshow white
+    keyword whole write white
+    keyword whole writehexstring white
+    keyword whole writestring white
+    keyword whole xcheck white
+    keyword whole xor white
+# Operators 2:
+    keyword whole arct yellow
+    keyword whole colorimage yellow
+    keyword whole cshow yellow
+    keyword whole currentblackgeneration yellow
+    keyword whole currentcacheparams yellow
+    keyword whole currentcmykcolor yellow
+    keyword whole currentcolor yellow
+    keyword whole currentcolorrendering yellow
+    keyword whole currentcolorscreen yellow
+    keyword whole currentcolorspace yellow
+    keyword whole currentcolortransfer yellow
+    keyword whole currentdevparams yellow
+    keyword whole currentglobal yellow
+    keyword whole currentgstate yellow
+    keyword whole currenthalftone yellow
+    keyword whole currentobjectformat yellow
+    keyword whole currentoverprint yellow
+    keyword whole currentpacking yellow
+    keyword whole currentpagedevice yellow
+    keyword whole currentshared yellow
+    keyword whole currentstrokeadjust yellow
+    keyword whole currentsystemparams yellow
+    keyword whole currentundercolorremoval yellow
+    keyword whole currentuserparams yellow
+    keyword whole defineresource yellow
+    keyword whole defineuserobject yellow
+    keyword whole deletefile yellow
+    keyword whole execform yellow
+    keyword whole execuserobject yellow
+    keyword whole filenameforall yellow
+    keyword whole fileposition yellow
+    keyword whole filter yellow
+    keyword whole findencoding yellow
+    keyword whole findresource yellow
+    keyword whole gcheck yellow
+    keyword whole globaldict yellow
+    keyword whole GlobalFontDirectory yellow
+    keyword whole globalfontdirectory yellow red
+    keyword whole glyphshow yellow
+    keyword whole gstate yellow
+    keyword whole ineofill yellow
+    keyword whole infill yellow
+    keyword whole instroke yellow
+    keyword whole inueofill yellow
+    keyword whole inufill yellow
+    keyword whole inustroke yellow
+    keyword whole ISOLatin1Encoding yellow
+    keyword whole isolatin1encoding yellow red
+    keyword whole languagelevel yellow
+    keyword whole makepattern yellow
+    keyword whole packedarray yellow
+    keyword whole printobject yellow
+    keyword whole product yellow
+    keyword whole realtime yellow
+    keyword whole rectclip yellow
+    keyword whole rectfill yellow
+    keyword whole rectstroke yellow
+    keyword whole renamefile yellow
+    keyword whole resourceforall yellow
+    keyword whole resourcestatus yellow
+    keyword whole revision yellow
+    keyword whole rootfont yellow
+    keyword whole scheck yellow
+    keyword whole selectfont yellow
+    keyword whole serialnumber yellow
+    keyword whole setbbox yellow
+    keyword whole setblackgeneration yellow
+    keyword whole setcachedevice2 yellow
+    keyword whole setcacheparams yellow
+    keyword whole setcmykcolor yellow
+    keyword whole setcolor yellow
+    keyword whole setcolorrendering yellow
+    keyword whole setcolorscreen yellow
+    keyword whole setcolorspace yellow
+    keyword whole setcolortransfer yellow
+    keyword whole setdevparams yellow
+    keyword whole setfileposition yellow
+    keyword whole setglobal yellow
+    keyword whole setgstate yellow
+    keyword whole sethalftone yellow
+    keyword whole setobjectformat yellow
+    keyword whole setoverprint yellow
+    keyword whole setpacking yellow
+    keyword whole setpagedevice yellow
+    keyword whole setpattern yellow
+    keyword whole setshared yellow
+    keyword whole setstrokeadjust yellow
+    keyword whole setsystemparams yellow
+    keyword whole setucacheparams yellow
+    keyword whole setundercolorremoval yellow
+    keyword whole setuserparams yellow
+    keyword whole setvmthreshold yellow
+    keyword whole shareddict yellow
+    keyword whole SharedFontDirectory yellow
+    keyword whole sharedfontdirectory yellow red
+    keyword whole startjob yellow
+    keyword whole uappend yellow
+    keyword whole ucache yellow
+    keyword whole ucachestatus yellow
+    keyword whole ueofill yellow
+    keyword whole ufill yellow
+    keyword whole undef yellow
+    keyword whole undefinefont yellow
+    keyword whole undefineresource yellow
+    keyword whole undefineuserobject yellow
+    keyword whole upath yellow
+    keyword whole UserObjects yellow
+    keyword whole userobjects yellow red
+    keyword whole ustroke yellow
+    keyword whole ustrokepath yellow
+    keyword whole vmreclaim yellow
+    keyword whole writeobject yellow
+    keyword whole xshow yellow
+    keyword whole xyshow yellow
+    keyword whole yshow yellow
+# Operators 3:
+    keyword whole GetHalftoneName brightmagenta 
+    keyword whole GetPageDeviceName brightmagenta 
+    keyword whole GetSubstituteCRD brightmagenta 
+    keyword whole StartData brightmagenta 
+    keyword whole addglyph brightmagenta 
+    keyword whole beginbfchar brightmagenta 
+    keyword whole beginbfrange brightmagenta 
+    keyword whole begincidchar brightmagenta 
+    keyword whole begincidrange brightmagenta 
+    keyword whole begincmap brightmagenta 
+    keyword whole begincodespacerange brightmagenta 
+    keyword whole beginnotdefchar brightmagenta 
+    keyword whole beginnotdefrange brightmagenta 
+    keyword whole beginrearrangedfont brightmagenta 
+    keyword whole beginusematrix brightmagenta 
+    keyword whole cliprestore brightmagenta 
+    keyword whole clipsave brightmagenta 
+    keyword whole composefont brightmagenta 
+    keyword whole currentsmoothness brightmagenta 
+    keyword whole currenttrapparams brightmagenta 
+    keyword whole endbfchar brightmagenta 
+    keyword whole endbfrange brightmagenta 
+    keyword whole endcidchar brightmagenta 
+    keyword whole endcidrange brightmagenta 
+    keyword whole endcmap brightmagenta 
+    keyword whole endcodespacerange brightmagenta 
+    keyword whole endnotdefchar brightmagenta 
+    keyword whole endnotdefrange brightmagenta 
+    keyword whole endrearrangedfont brightmagenta 
+    keyword whole endusematrix brightmagenta 
+    keyword whole findcolorrendering brightmagenta 
+    keyword whole removeall brightmagenta 
+    keyword whole removeglyphs brightmagenta 
+    keyword whole setsmoothness brightmagenta 
+    keyword whole settrapparams brightmagenta 
+    keyword whole settrapzone brightmagenta 
+    keyword whole shfill brightmagenta 
+    keyword whole usecmap brightmagenta 
+    keyword whole usefont brightmagenta 
+#Old operators:
+    keyword whole condition brightgreen
+    keyword whole currentcontext brightgreen
+    keyword whole currenthalftonephase brightgreen
+    keyword whole defineusername brightgreen
+    keyword whole detach brightgreen
+    keyword whole deviceinfo brightgreen
+    keyword whole eoviewclip brightgreen
+    keyword whole fork brightgreen
+    keyword whole initviewclip brightgreen
+    keyword whole join brightgreen
+    keyword whole lock brightgreen
+    keyword whole monitor brightgreen
+    keyword whole notify brightgreen
+    keyword whole rectviewclip brightgreen
+    keyword whole sethalftonephase brightgreen
+    keyword whole viewclip brightgreen
+    keyword whole viewclippath brightgreen
+    keyword whole wait brightgreen
+    keyword whole wtranslation brightgreen
+    keyword whole yield brightgreen
+
+################################################
+
+    keyword \\ brightred
+    keyword - yellow
+    keyword | yellow
+    keyword \+ yellow
+    keyword \* yellow
+    keyword ~ yellow
+    keyword = yellow
+    keyword != yellow
+    keyword ! yellow
+    keyword ? yellow
+    keyword == yellow
+    keyword { white
+    keyword } white
+# ASCII 85 string:
+    keyword <~ lightgray
+    keyword ~> lightgray
+# Dictionary:
+    keyword << brightgreen
+    keyword >> brightgreen
+# Hex string:
+    keyword whole <\[^0123456789abcdefHABCDEFH\]> magenta
+    keyword whole ( green
+    keyword whole ) green
+    keyword whole [ cyan
+    keyword whole ] cyan
+    keyword , yellow
+    keyword . yellow
+    keyword : yellow
+    keyword ; brightred
+    keyword ` brightred
+    keyword ' brightmagenta
+    keyword ^ brightmagenta
+    keyword $ brightred
+    keyword " brightgreen
+
+context ( ) green
+    keyword [*] cyan
+    keyword <*> magenta
+    keyword \\\{nrtbf\\|()\} cyan
+
+context /( ) green
+
+context / \s brightred
+
+# Included EPS file:
+context %%\{Bb\}egin\{Dd\}ata %%\{Ee\}nd\{Dd\}ata cyan
+# ASCII 85 string:
+    keyword <~ lightgray
+    keyword ~> lightgray
+# Dictionary:
+    keyword << brightgreen
+    keyword >> brightgreen
+# Hex string:
+    keyword whole <\[^0123456789abcdefHABCDEFH\]> magenta
+
+# Comment:
+context linestart %! \n yellow brown
+context  % \n brown
