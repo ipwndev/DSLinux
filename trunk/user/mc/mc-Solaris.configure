@@ -1,0 +1,4 @@
+CFLAGS=-O2 ; ./configure --prefix=/usr --without-gpm-mouse \
+--with-edit  --with-included-gettext --with-included-slang \
+--with-vfs
+  

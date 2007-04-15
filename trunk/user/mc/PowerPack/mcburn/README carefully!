@@ -1,0 +1,45 @@
+MC Burn v0.1-beta by Bart Friederichs
+~~~~~~~~~~~~~~~~~
+!!! See original mcburn.txt AFTER you read THIS README file !!!
+
+
+NOTE from Olegarch:
+~~~~~~~~~~~~~~~~~~~
+Someone send me these source files, and I adopt it for my branch of MC.
+It's too wet to include it into distro, but, if someone needs this, take 
+it, integrate and use. :)
+
+HOWTO integrate MC-Burn with mc-MP:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As wrote author of this patch/plugin/update, we need to copy "Makefile.in" into 
+"src" dir, go to upper level, rm configure.cache and start "mc.configure".
+
+It's no enough.
+
+Need to make some additins into mc body to see mcburn "in work".
+
+
+First of all - add this string after all of includes in main.c:
+
+#include "mcburn.h"
+
+Later add in menu "command" in main.c:
+
+    { ' ', N_("Write CD"),                      'R', burn_cmd },
+    { ' ', "", ' ', 0 },
+
+Add in menu "options" in main.c:
+
+    { ' ', "", ' ', 0 },
+    { ' ', N_("CD bu&Rning..."),       'R', burn_config },
+    { ' ', "", ' ', 0 },
+
+Add this function for working process:
+
+int burn_cmd (void)
+{
+    do_burn (cpanel);
+}
+
+now compile it ind celebrate.

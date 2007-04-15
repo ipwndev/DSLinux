@@ -1,0 +1,100 @@
+#Nathan Whitehead
+#Lua homepage is at http://www.tecgraf.puc-rio.br/lua/
+
+context default
+    keyword whole and yellow/24
+    keyword whole end yellow/24
+    keyword whole nil yellow/24
+    keyword whole return yellow/24
+    keyword whole do yellow/24
+    keyword whole function yellow/24
+    keyword whole not yellow/24
+    keyword whole then yellow/24
+    keyword whole else yellow/24
+    keyword whole if yellow/24
+    keyword whole or yellow/24
+    keyword whole until yellow/24
+    keyword whole elseif yellow/24
+    keyword whole local yellow/24
+    keyword whole repeat yellow/24
+    keyword whole while yellow/24
+
+    keyword whole call yellow/24
+    keyword whole collectgarbage yellow/24
+    keyword whole dofile yellow/24
+    keyword whole dostring yellow/24
+    keyword whole newtag yellow/24
+    keyword whole next yellow/24
+    keyword whole nextvar yellow/24
+    keyword whole tostring yellow/24
+    keyword whole print yellow/24
+    keyword whole _ALERT yellow/24
+    keyword whole tonumber yellow/24
+    keyword whole type yellow/24
+    keyword whole tag yellow/24
+    keyword whole settag yellow/24
+    keyword whole assert yellow/24
+    keyword whole error yellow/24
+    keyword whole rawgettable yellow/24
+    keyword whole rawsettable yellow/24
+    keyword whole rawsetglobal yellow/24
+    keyword whole setglobal yellow/24
+    keyword whole settagmethod yellow/24
+    keyword whole gettagmethod yellow/24
+    keyword whole copytagmethods yellow/24
+    keyword whole getn yellow/24
+    keyword whole foreach yellow/24
+    keyword whole foreachi yellow/24
+    keyword whole foreachvar yellow/24
+    keyword whole tinsert yellow/24
+    keyword whole tremove yellow/24
+    keyword whole sort yellow/24
+
+    keyword -- brown/22
+
+    keyword '\\\{abtnvfr\}' brightgreen/16
+    keyword '\\\{0123\}\{01234567\}\{01234567\}' brightgreen/16
+    keyword '\\'' brightgreen/16
+    keyword '\\\\' brightgreen/16
+    keyword '\\0' brightgreen/16
+    keyword '\{\s!"#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ\}' brightgreen/16
+
+    keyword > yellow/24
+    keyword < yellow/24
+    keyword \+ yellow/24
+    keyword - yellow/24
+    keyword \* yellow/24
+    keyword = yellow/24
+    keyword ~= yellow/24
+    keyword == yellow/24
+    keyword { white
+    keyword } white
+    keyword ( white
+    keyword ) white
+    keyword [ white
+    keyword ] white
+    keyword , white
+    keyword : white
+    keyword ; brightmagenta/19
+context exclusive -- \n brown/22
+    spellcheck
+context linestart # \n brightred/18
+context linestart $ \n brightred/18
+    keyword \\\n yellow/24
+    keyword "+" red/19
+    keyword <+> red/19
+context " " green/6
+    spellcheck
+    keyword \\" brightgreen/16
+    keyword \\\n brightgreen/16
+    keyword %% brightgreen/16
+    keyword %\[#0\s-\+,\]\[0123456789\]\[.\]\[0123456789\]\[L\]\{eEfgGoxX\} brightgreen/16
+    keyword %\[0\s-\+,\]\[0123456789\]\[.\]\[0123456789\]\[hl\]\{diu\} brightgreen/16
+    keyword %\[hl\]n brightgreen/16
+    keyword %\[.\]\[0123456789\]s brightgreen/16
+    keyword %[*] brightgreen/16
+    keyword %c brightgreen/16
+    keyword \\\{0123\}\{01234567\}\{01234567\} brightgreen/16
+    keyword \\\\ brightgreen/16
+    keyword \\' brightgreen/16
+    keyword \\\{abtnvfr\} brightgreen/16
