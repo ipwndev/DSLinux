@@ -1,0 +1,209 @@
+# BAssPasC syntax definitions v1.0 for Midnight Commander 4.1.35 and 4.5.x
+# (C) 1999 by A'rpi/ESP-team  <arpi@esp-team.scene.hu>
+# BAPC is a programming language, visit http://esp-team.scene.hu for details!
+
+context default
+
+# main BAPC commands:
+    keyword whole VAR white/26
+    keyword whole CONST white/26
+
+    keyword whole USES white/26
+    keyword whole INDIRECT white/26
+    keyword whole INDIRECTALL white/26
+    keyword whole INCLUDEPROC white/26
+    keyword whole INCLUDE white/26
+    keyword wholeleft INCLUDED white/26
+    keyword whole ALIGN white/26
+
+    keyword whole SMOV white/26
+    keyword whole RMOV white/26
+    keyword whole LDDM white/26
+    keyword whole SDDM white/26
+    keyword whole LDD white/26
+    keyword whole SDD white/26
+
+# IF-EQU
+    keyword whole if white/26
+    keyword whole ifn white/26
+    keyword whole else white/26
+    keyword whole endif white/26
+    
+# BAPC conditionals:
+    keyword whole IF white/26
+    keyword whole IFS white/26
+    keyword whole IFN white/26
+    keyword whole IFNS white/26
+    keyword whole DO white/26
+    keyword whole DOCMD white/26
+    keyword whole THEN white/26
+    keyword whole THENCMD white/26
+    keyword whole ELSE white/26
+    keyword whole ENDIF white/26
+    keyword whole WHILE white/26
+    keyword whole ENDWHILE white/26
+    keyword whole REPEAT white/26
+    keyword whole UNTIL white/26
+    keyword whole WITH white/26
+    keyword whole ENDWITH white/26
+    keyword whole CASE white/26
+    keyword whole END white/26
+    keyword whole ENDCASE white/26
+    keyword whole ENDM white/26
+# FOR is too complex, include only the most importants:
+    keyword whole FOR white/26
+    keyword whole FORL(+) white/26
+    keyword whole FORLP(+) white/26
+    keyword whole TO white/26
+    keyword whole STEP white/26
+    keyword whole NEXT white/26
+
+    keyword whole FLAG white/26
+    keyword whole CXZ white/26
+    keyword wholeright \s+:S white/26
+    keyword wholeright \s+:NS white/26
+    keyword whole AND white/26
+    keyword whole OR white/26
+    keyword whole NOT white/26
+    keyword whole IN[*] white/26
+    keyword whole NIN[*] white/26
+
+# one-line commands:
+    keyword wholeleft REP\*+\s white/26
+    keyword whole REP(+) white/26
+    keyword whole REP32 white/26
+    keyword whole PUSH(*) white/26
+    keyword whole PUSH white/26
+    keyword whole POP(*) white/26
+    keyword whole POP white/26
+
+# BAPC types:
+    keyword whole OFS white/26
+    keyword whole STROFS white/26
+    keyword whole OFSSTR white/26
+    keyword whole BPT white/26
+    keyword whole WPT white/26
+    keyword whole DPT white/26
+    keyword whole QPT white/26
+    keyword whole TPT white/26
+    keyword whole DB white/26
+    keyword whole DW white/26
+    keyword whole DD white/26
+    keyword whole DQ white/26
+    keyword whole DT white/26
+    keyword whole DT white/26
+    keyword whole PROC white/26
+    keyword whole NEAR white/26
+    keyword whole FAR white/26
+    keyword whole SHORT white/26
+
+# STDBAPC instructions
+    keyword whole WRITE yellow/24
+    keyword whole WRITELN yellow/24
+    keyword whole WRITESTR yellow/24
+    keyword whole GOTOXY yellow/24
+    keyword whole WHEREXY yellow/24
+    keyword whole UPCASE yellow/24
+    keyword whole ALDIV yellow/24
+    keyword whole DOSEXIT yellow/24
+    keyword whole EXIT yellow/24
+
+    keyword whole WAITKEY yellow/24
+    keyword whole READKEY yellow/24
+    keyword whole READSHIFT yellow/24
+    keyword wholeleft GETKEY yellow/24
+    keyword whole KEYPRESSED yellow/24
+    keyword whole KEYPRESSEDP yellow/24
+    
+    keyword whole FILEOPEN yellow/24
+    keyword whole FILEREAD yellow/24
+    keyword whole FILEWRITE yellow/24
+    keyword whole FILECLOSE yellow/24
+    keyword whole FILEPOS yellow/24
+    keyword whole FILEAPPEND yellow/24
+
+# BAPC library instructions
+# TOO MANY TO INCLUDE HERE :(
+
+# C-style comments:  /* ... */    
+    keyword /\* green/22
+    keyword \*/ green/22
+# BAPC1-style comments:					! fix it !
+    keyword whole linestart .COMMENT green/22
+    keyword whole linestart .ENDCOMM green/22
+    keyword whole linestart .ENDCOMMENT green/22
+    keyword whole linestart .comment green/22
+    keyword whole linestart .endcomm green/22
+    keyword whole linestart .endcomment green/22
+
+# BAPC command separator:
+    keyword // brightmagenta/18
+
+    keyword {+\s brightmagenta/18
+    keyword {+\n brightmagenta/18
+    keyword } brightmagenta/18
+
+# BAPC operators:
+    keyword := white/25
+    keyword equ white/25
+    keyword EQU white/25
+    keyword -> white/25
+    keyword => white/25
+    keyword ?= white/25
+    keyword >> white/25
+    keyword << white/25
+    keyword >0> white/25
+    keyword <0< white/25
+    keyword >C> white/25
+    keyword <C< white/25
+    keyword \+= white/25
+    keyword -= white/25
+    keyword \+\+ white/25
+    keyword -- white/25
+    keyword ! yellow/24
+
+# strings:
+    keyword '*' brightgreen/16
+
+# addressing:
+    keyword [*] cyan/25
+    
+# other operators:    
+    keyword \+ yellow/24
+    keyword > yellow/24
+    keyword < yellow/24
+    keyword \* yellow/24
+#    keyword / yellow/24
+    keyword % yellow/24
+    keyword != yellow/24
+    keyword == yellow/24
+
+    keyword ( white/25
+    keyword ) white/25
+
+    keyword = white/25
+    keyword - yellow/24
+    
+    keyword , white/25
+    keyword : white/25
+    
+# one-line comment:
+    keyword ;*\n lightgray/19
+
+context exclusive /\* \*/ lightgray/22
+
+# These rules don't work :(  but why?????
+# context exclusive linestart .COMMENT .ENDCOMM lightgray/22
+# context exclusive linestart .comment .endcomm lightgray/22
+
+# Compiler control:
+context linestart . \n brightred/18
+    keyword ;*\n lightgray/22
+    keyword \s+\n white/26
+    keyword \s+\s white/26
+
+# macro def.:
+context linestart # \n brightred/18
+
+
+###############################################################################
