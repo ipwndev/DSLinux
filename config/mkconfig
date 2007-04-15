@@ -49,6 +49,9 @@ echo "comment 'selection menu and press return.'"
 echo "comment 'See the help menu inside the selection menu if you'"
 echo "comment 'are not sure what type of build you want.'"
 
+# XXX Make sure the build choice menu shows up...
+echo "CONFIG_DEFAULTS_NINTENDO=y"
+
 oldv=
 def=
 find vendors -name config.arch -print | sed -e 's?/? ?g' | \
