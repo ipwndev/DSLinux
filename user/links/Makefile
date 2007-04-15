@@ -16,7 +16,8 @@ LINKS_CONFIGURE_FLAGS+=--with-gpm
 endif
 
 .configured:
-	cd src && env "CFLAGS=$(CFLAGS) -Wno-pointer-sign" \
+	cd src && env CFLAGS="$(CFLAGS) -Wno-pointer-sign" \
+		 PKG_CONFIG=no \
 		./configure --target=$(CROSS) \
 		--prefix=/nonexistent $(LINKS_CONFIGURE_FLAGS)
 	touch $@
@@ -26,11 +27,8 @@ endif
 	touch $@
 
 clean:
-	-[ -f src/Makefile ] && $(MAKE) -C src clean
-	rm -f src/config.cache
+	-[ -f src/Makefile ] && $(MAKE) -C src distclean
 	rm -f .configured .compiled
 
-# Empty romfs target since we only statically link with libraries
-# and don't need to install them
 romfs:
 	$(ROMFSINST) src/links /bin/links
