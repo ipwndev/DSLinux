@@ -1,0 +1,32 @@
+#!/bin/bash
+#-------------------------------------------------------#----------------------#
+#    Department of Theoretical & Mathematical Physics   # GNU            LINUX #
+#            at FMFI at Comenius University             #          .~.         #
+# Author     : Maro\v s RAJNOCH  (HiæR SILVANNA)        #          /V\         #
+# Email      : rajnoch@sophia.dtp.fmph.uniba.sk         #         // \\/       #
+# Homeserver : http://sophia.dtp.fmph.uniba.sk/~rajnoch #        /(   )        #
+# Altersite  : www.hiaer.sk  &  Email:  hiaer@hiaer.sk  #         ^`~'^        #
+# Version    : Thu Mar  6 11:05:42 2003                 #     B E   F R E E    #
+#=======================================================#======================#
+readonly  COMMAND="${1:?'External Error: null command for virtual filesystem'}"
+shift
+
+function  isofs_list()
+{
+  isoinfo -R -l -i "${1}"   |\
+  gawk '
+  BEGIN                     { PATH=""                                    }
+  /^(d|$)/                  {                                  next      }
+  /^Directory listing of /  { PATH=substr($0,23)             ; next      }
+                            { sub(/\[[^[]*\]  /, PATH , $0 ) ;
+                              sub(/^0$/        , "1"  , $2 ) ;
+                              sub(/ $/         , ""   , $0 ) ; print($0) }
+       '
+}
+
+case  "${COMMAND}"  in
+  list    ) isofs_list    "${1}"                     2> /dev/null ; exit $? ;;
+  copyout ) isoinfo -R -i "${1}" -x "/${2}" > "${3}" 2> /dev/null ; exit $? ;;
+esac
+
+exit 1

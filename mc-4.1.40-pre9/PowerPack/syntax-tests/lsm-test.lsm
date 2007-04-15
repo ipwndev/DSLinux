@@ -1,0 +1,22 @@
+
+Begin3
+Title:          ELF Disassembler
+Version:        0.1
+Entered-date:   13MAY99
+Description:    EDisAsm is a usefull tool for disassembling Linux programs
+                without sources. Based on NDISASM from NASM package.
+		Features:
+                - ELF file (executable/object/shared library) reading
+                - load and use STATIC and DYNAMIC symbol table if present
+                - display ASCIIZ text constants from ".rodata" section
+                - signed hex values ([ebp-0x2] instead of [ebp+0xfffffffe])
+Keywords:       debug, disassembler, ELF, cracking
+Author:         arpi@esp.kign.org (Arpad Gereoffy)
+Maintained-by:  arpi@esp.kign.org (Arpad Gereoffy)
+Primary-site:   ftp://esp.kign.org/esp-team/linux
+		60.1kB	elfdisasm-0.1.tar.gz
+Alternate-site: 
+Original-site:  ftp.kernel.org /pub/software/devel/nasm/sources/
+Platforms:      LINUX - Intel x86
+Copying-policy: GPL/CrackWare
+End
