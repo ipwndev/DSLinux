@@ -1,0 +1,230 @@
+
+context default
+    spellcheck
+    keyword \\fP brightgreen/6
+    keyword \\fR brightgreen/6
+    keyword \\fB brightgreen/6
+    keyword \\fI brightgreen/6
+    keyword linestart .AS white/5
+    keyword linestart .Ar white/5
+    keyword linestart .At white/5
+    keyword linestart .BE white/5
+    keyword linestart .BH white/5
+    keyword linestart .BI white/5
+    keyword linestart .BR white/5
+    keyword linestart .BS white/5
+    keyword linestart .Bd white/5
+    keyword linestart .Bk white/5
+    keyword linestart .Bl white/5
+    keyword linestart .Bu white/5
+    keyword linestart .Bx white/5
+    keyword linestart .CE white/5
+    keyword linestart .CM white/5
+    keyword linestart .CS white/5
+    keyword linestart .CT white/5
+    keyword linestart .CW white/5
+    keyword linestart .Cm white/5
+    keyword linestart .Co white/5
+    keyword linestart .DA white/5
+    keyword linestart .DE white/5
+    keyword linestart .DS white/5
+    keyword linestart .DT white/5
+    keyword linestart .Dd white/5
+    keyword linestart .De white/5
+    keyword linestart .Dl white/5
+    keyword linestart .Dq white/5
+    keyword linestart .Ds white/5
+    keyword linestart .Dt white/5
+    keyword linestart .Dv white/5
+    keyword linestart .EE white/5
+    keyword linestart .EN white/5
+    keyword linestart .EQ white/5
+    keyword linestart .EX white/5
+    keyword linestart .Ed white/5
+    keyword linestart .Ee white/5
+    keyword linestart .Ek white/5
+    keyword linestart .El white/5
+    keyword linestart .Em white/5
+    keyword linestart .En white/5
+    keyword linestart .Ev white/5
+    keyword linestart .Ex white/5
+    keyword linestart .FI white/5
+    keyword linestart .FL white/5
+    keyword linestart .FN white/5
+    keyword linestart .FT white/5
+    keyword linestart .Fi white/5
+    keyword linestart .Fl white/5
+    keyword linestart .Fn white/5
+    keyword linestart .HP white/5
+    keyword linestart .HS white/5
+    keyword linestart .Hh white/5
+    keyword linestart .Hi white/5
+    keyword linestart .IB white/5
+    keyword linestart .IP white/5
+    keyword linestart .IR white/5
+    keyword linestart .IX white/5
+    keyword linestart .Ic white/5
+    keyword linestart .Id white/5
+    keyword linestart .Ip white/5
+    keyword linestart .It white/5
+    keyword linestart .LI white/5
+    keyword linestart .LO white/5
+    keyword linestart .LP white/5
+    keyword linestart .LR white/5
+    keyword linestart .Li white/5
+    keyword linestart .MF white/5
+    keyword linestart .ML white/5
+    keyword linestart .MU white/5
+    keyword linestart .MV white/5
+    keyword linestart .NF white/5
+    keyword linestart .Nd white/5
+    keyword linestart .Nm white/5
+    keyword linestart .No white/5
+    keyword linestart .OP white/5
+    keyword linestart .Oc white/5
+    keyword linestart .Oo white/5
+    keyword linestart .Op white/5
+    keyword linestart .Os white/5
+    keyword linestart .PD white/5
+    keyword linestart .PN white/5
+    keyword linestart .PP white/5
+    keyword linestart .PU white/5
+    keyword linestart .Pa white/5
+    keyword linestart .Pf white/5
+    keyword linestart .Pp white/5
+    keyword linestart .Pq white/5
+    keyword linestart .Pr white/5
+    keyword linestart .Ps white/5
+    keyword linestart .Ql white/5
+    keyword linestart .RB white/5
+    keyword linestart .RE white/5
+    keyword linestart .RI white/5
+    keyword linestart .RS white/5
+    keyword linestart .RT white/5
+    keyword linestart .Re white/5
+    keyword linestart .Rs white/5
+    keyword linestart .SB white/5
+    keyword linestart .SH white/5
+    keyword linestart .SM white/5
+    keyword linestart .SP white/5
+    keyword linestart .SS white/5
+    keyword linestart .Sa white/5
+    keyword linestart .Sh white/5
+    keyword linestart .Sm white/5
+    keyword linestart .Sp white/5
+    keyword linestart .Sq white/5
+    keyword linestart .Ss white/5
+    keyword linestart .St white/5
+    keyword linestart .Sx white/5
+    keyword linestart .Sy white/5
+    keyword linestart .TE white/5
+    keyword linestart .TH white/5
+    keyword linestart .TP white/5
+    keyword linestart .TQ white/5
+    keyword linestart .TS white/5
+    keyword linestart .Tn white/5
+    keyword linestart .Tp white/5
+    keyword linestart .UC white/5
+    keyword linestart .Uh white/5
+    keyword linestart .Ux white/5
+    keyword linestart .VE white/5
+    keyword linestart .VS white/5
+    keyword linestart .Va white/5
+    keyword linestart .Vb white/5
+    keyword linestart .Ve white/5
+    keyword linestart .Xc white/5
+    keyword linestart .Xe white/5
+    keyword linestart .Xr white/5
+    keyword linestart .YN white/5
+    keyword linestart .ad white/5
+    keyword linestart .am white/5
+    keyword linestart .bd white/5
+    keyword linestart .bp white/5
+    keyword linestart .br white/5
+    keyword linestart .ce white/5
+    keyword linestart .cs white/5
+    keyword linestart .de white/5
+    keyword linestart .ds white/5
+    keyword linestart .ec white/5
+    keyword linestart .eh white/5
+    keyword linestart .el white/5
+    keyword linestart .eo white/5
+    keyword linestart .ev white/5
+    keyword linestart .fc white/5
+    keyword linestart .fi white/5
+    keyword linestart .ft white/5
+    keyword linestart .hy white/5
+    keyword linestart .iX white/5
+    keyword linestart .ie white/5
+    keyword linestart .if white/5
+    keyword linestart .ig white/5
+    keyword linestart .in white/5
+    keyword linestart .ll white/5
+    keyword linestart .lp white/5
+    keyword linestart .ls white/5
+    keyword linestart .mk white/5
+    keyword linestart .na white/5
+    keyword linestart .ne white/5
+    keyword linestart .nf white/5
+    keyword linestart .nh white/5
+    keyword linestart .nr white/5
+    keyword linestart .ns white/5
+    keyword linestart .oh white/5
+    keyword linestart .ps white/5
+    keyword linestart .re white/5
+    keyword linestart .rm white/5
+    keyword linestart .rn white/5
+    keyword linestart .rr white/5
+    keyword linestart .so white/5
+    keyword linestart .sp white/5
+    keyword linestart .ss white/5
+    keyword linestart .ta white/5
+    keyword linestart .ti white/5
+    keyword linestart .tm white/5
+    keyword linestart .tr white/5
+    keyword linestart .ul white/5
+    keyword linestart .vs white/5
+    keyword linestart .zZ white/5
+    keyword linestart .B white/5
+    keyword linestart .F white/5
+    keyword linestart .I white/5
+    keyword linestart .R white/5
+    keyword linestart .P white/5
+    keyword linestart .L white/5
+    keyword linestart .V white/5
+    keyword linestart .F white/5
+    keyword linestart .T white/5
+    keyword linestart .X white/5
+    keyword linestart .Y white/5
+    keyword linestart .b white/5
+    keyword linestart .l white/5
+    keyword linestart .i white/5
+
+context exclusive linestart .SH \n brightred/18
+    keyword \\fB*\\fP magenta/23
+    keyword \\fI*\\fP yellow/24
+    spellcheck
+context exclusive linestart .TH \n brightred/18
+    keyword \\fB*\\fP magenta/23
+    keyword \\fI*\\fP yellow/24
+    spellcheck
+context exclusive linestart .B \n magenta/23
+    keyword \\fI*\\fP yellow/24
+    spellcheck
+context exclusive linestart .I \n yellow/24
+    keyword \\fB*\\fP magenta/23
+    spellcheck
+context exclusive linestart .nf linestart .fi green/15
+    keyword \\fB*\\fP magenta/23
+    keyword \\fI*\\fP yellow/24
+    spellcheck
+
+# font changes should end in a \fP
+context exclusive \\fB \\f\{PR\} magenta/23
+    spellcheck
+context exclusive \\fI \\f\{PR\} yellow/24
+    spellcheck
+context linestart .\\" \n brown/22
+    spellcheck
+
+

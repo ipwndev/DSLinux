@@ -1,0 +1,33 @@
+7bit		7-bit ASCII
+8859_1		ISO/IEC 8859-1 (Latin1)
+8859_2		ISO/IEC 8859-2 (Latin2)
+8859_4		ISO/IEC 8859-4 (Latin4)
+8859_5		ISO/IEC 8859-5 (Cyrillic)
+8859_7		ISO/IEC 8859-7 (ELOT-928)
+8859_9		ISO/IEC 8859-9
+8859_13		ISO/IEC 8859-13 (Latin 7)
+cp437		CP 437 (DOS LatinUS)
+cp500		CP 500 (IBM International)
+cp737		CP 737 (DOS Greek)
+cp850		CP 850 (DOS Latin1)
+cp852		CP 852 (DOS Latin2)
+cp855		CP 855 (DOS Cyrillic)
+cp857		CP 857 (DOS Turkish)
+cp866		CP 866 (DOS CyrillicRussian)
+cp875		CP 875 (IBM Greek)
+cp1026		CP 1125 (IBM Latin5 Turkish)
+cp1125		CP 1125 (DOS Cyrillic Ukrainian)
+cp1252		CP 1252 (WinLatin1)
+cp1250		CP 1250 (WinLatin2)
+cp1251		CP 1251 (WinRussian)
+cp1257		CP 1257 (WinBaltic)
+kamen		Kamenicky Brothers
+koi8_r		KOI8-R (Unix Cyrillic Russian)
+koi8_u		KOI8-U (Unix Cyrillic Ukrainian)
+mac_lat2	MacLatin2
+macroman	MacRoman 2000
+maccyr		MacCyrillic
+gsm0338		GSM 03.38 (SMS/WAP)
+tcvn5712	TCVN-1 (Vietnamise)
+viscii		VISCII (Vietnamise)
+u-0400		U-0400 (Unicode Cyrillic)

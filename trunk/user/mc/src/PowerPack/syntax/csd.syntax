@@ -1,0 +1,625 @@
+context default
+
+    keyword \\\n yellow/24
+    keyword ) yellow/24
+    keyword ( yellow/24
+    keyword ] yellow/24
+    keyword [ yellow/24
+    keyword , brightmagenta/19
+
+
+#  0. *.csd tags; header
+    keyword whole <CsoundSynthesizer> brightblue/14
+    keyword whole </CsoundSynthesizer> brightblue/14
+    keyword whole <CsOptions> brightblue/14
+    keyword whole </CsOptions> brightblue/14
+    keyword whole <CsInstruments> brightblue/14
+    keyword whole </CsInstruments> brightblue/14
+    keyword whole <CsScore> brightblue/14
+    keyword whole </CsScore> brightblue/14
+    keyword whole <CsVersion> brightblue/14
+    keyword whole </CsVersion> brightblue/14
+    keyword wholeleft <CsMidifileB\sfilename brightblue/14
+    keyword wholeleft <CsSampleB\sfilename brightblue/14
+    keyword wholeright > brightblue/14
+    keyword wholeright > brightblue/14
+
+    keyword whole sr brightmagenta/23
+    keyword whole kr brightmagenta/23
+    keyword whole ksmps brightmagenta/23
+    keyword whole nchnls brightmagenta/23
+
+
+#  1. section_marks & labels
+    keyword whole instr\s\[\s\]\{123456789\}\[0123456789\] black/0 brightgreen/15
+    keyword whole endin black/0 brightred/1818
+
+    keyword whole \[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\]: brightred/18
+
+
+#  2. opcodes ( !!! currently from versions up to 4.10 !!! )
+    keyword whole active brightmagenta/23
+    keyword whole adsr brightmagenta/23
+    keyword whole adsyn brightmagenta/23
+    keyword whole adsynt brightmagenta/23
+    keyword whole aftouch brightmagenta/23
+    keyword whole alpass brightmagenta/23
+    keyword whole ampdb brightmagenta/23
+    keyword whole ampmidi brightmagenta/23
+    keyword whole areson brightmagenta/23
+    keyword whole aresonk brightmagenta/23
+    keyword whole atone brightmagenta/23
+    keyword whole atonek brightmagenta/23
+    keyword whole atonex brightmagenta/23
+    keyword whole balance brightmagenta/23
+    keyword whole betarand brightmagenta/23
+    keyword whole bexprnd brightmagenta/23
+    keyword whole biquad brightmagenta/23
+    keyword whole birnd brightmagenta/23
+    keyword whole babo brightmagenta/23
+    keyword whole butbp brightmagenta/23
+    keyword whole butbr brightmagenta/23
+    keyword whole buthp brightmagenta/23
+    keyword whole butlp brightmagenta/23
+    keyword whole butterbp brightmagenta/23
+    keyword whole butterbr brightmagenta/23
+    keyword whole butterhp brightmagenta/23
+    keyword whole butterlp brightmagenta/23
+    keyword whole button brightmagenta/23
+    keyword whole buzz brightmagenta/23
+    keyword whole cauchy brightmagenta/23
+    keyword whole chanctrl brightmagenta/23
+    keyword whole checkbox brightmagenta/23
+    keyword whole clear brightmagenta/23
+    keyword whole clip brightmagenta/23
+    keyword whole clockoff brightmagenta/23
+    keyword whole clockoff brightmagenta/23
+    keyword whole clockon brightmagenta/23
+    keyword whole comb brightmagenta/23
+    keyword whole control brightmagenta/23
+    keyword whole convle brightmagenta/23
+    keyword whole convolve brightmagenta/23
+    keyword whole cps2pch brightmagenta/23
+    keyword whole cpsmidi brightmagenta/23
+    keyword whole cpsmidib brightmagenta/23
+    keyword whole cpsoct brightmagenta/23
+    keyword whole cpspch brightmagenta/23
+    keyword whole cpstmid brightmagenta/23
+    keyword whole cpsxpch brightmagenta/23
+    keyword whole cpuprc brightmagenta/23
+    keyword whole cross2 brightmagenta/23
+    keyword whole ctrl14 brightmagenta/23
+    keyword whole ctrl21 brightmagenta/23
+    keyword whole ctrl7 brightmagenta/23
+    keyword whole ctrlinit brightmagenta/23
+    keyword whole cvanal brightmagenta/23
+    keyword whole dam brightmagenta/23
+    keyword whole dbamp brightmagenta/23
+    keyword whole dcblock brightmagenta/23
+    keyword whole delay brightmagenta/23
+    keyword whole delay1 brightmagenta/23
+    keyword whole delayr brightmagenta/23
+    keyword whole delayw brightmagenta/23
+    keyword whole deltap brightmagenta/23
+    keyword whole deltap3 brightmagenta/23
+    keyword whole deltapi brightmagenta/23
+    keyword whole deltapn brightmagenta/23
+    keyword whole diff brightmagenta/23
+    keyword whole diskin brightmagenta/23
+    keyword whole dispfft brightmagenta/23
+    keyword whole display brightmagenta/23
+    keyword whole distort1 brightmagenta/23
+    keyword whole divz brightmagenta/23
+    keyword whole downsamp brightmagenta/23
+    keyword whole dumpk brightmagenta/23
+    keyword whole dumpk2 brightmagenta/23
+    keyword whole dumpk3 brightmagenta/23
+    keyword whole dumpk4 brightmagenta/23
+    keyword whole envlpx brightmagenta/23
+    keyword whole envlpxr brightmagenta/23
+    keyword whole expon brightmagenta/23
+    keyword whole exprand brightmagenta/23
+    keyword whole expseg brightmagenta/23
+    keyword whole expsega brightmagenta/23
+    keyword whole expsegr brightmagenta/23
+    keyword whole filter2 brightmagenta/23
+    keyword whole fin brightmagenta/23
+    keyword whole fini brightmagenta/23
+    keyword whole fink brightmagenta/23
+    keyword whole fiopen brightmagenta/23
+    keyword whole flanger brightmagenta/23
+    keyword whole fmb3 brightmagenta/23
+    keyword whole fmbell brightmagenta/23
+    keyword whole fmmetal brightmagenta/23
+    keyword whole fmpercfl brightmagenta/23
+    keyword whole fmrhode brightmagenta/23
+    keyword whole fmvoice brightmagenta/23
+    keyword whole fmwurlie brightmagenta/23
+    keyword whole fof brightmagenta/23
+    keyword whole fof2 brightmagenta/23
+    keyword whole fog brightmagenta/23
+    keyword whole fold brightmagenta/23
+    keyword whole follow brightmagenta/23
+    keyword whole follow2 brightmagenta/23
+    keyword whole foscil brightmagenta/23
+    keyword whole foscili brightmagenta/23
+    keyword whole fout brightmagenta/23
+    keyword whole foutk brightmagenta/23
+    keyword whole fouti brightmagenta/23
+    keyword whole foutir brightmagenta/23
+    keyword whole ftgen brightmagenta/23
+    keyword whole ftlen brightmagenta/23
+    keyword whole ftlptim brightmagenta/23
+    keyword whole ftsr brightmagenta/23
+    keyword whole gain brightmagenta/23
+    keyword whole gauss brightmagenta/23
+    keyword whole gbuzz brightmagenta/23
+    keyword whole gogobel brightmagenta/23
+    keyword whole goto brightmagenta/23
+    keyword whole grain brightmagenta/23
+    keyword whole granule brightmagenta/23
+    keyword whole harmon brightmagenta/23
+    keyword whole hetro brightmagenta/23
+    keyword whole hilbert brightmagenta/23
+    keyword whole hrtfer brightmagenta/23
+    keyword whole hsboscil brightmagenta/23
+    keyword whole if brightmagenta/23
+    keyword whole igoto brightmagenta/23
+    keyword whole ihold brightmagenta/23
+    keyword whole in brightmagenta/23
+    keyword whole in32 brightmagenta/23
+    keyword whole inc brightmagenta/23
+    keyword whole inh brightmagenta/23
+    keyword whole init brightmagenta/23
+    keyword whole initc14 brightmagenta/23
+    keyword whole initc21 brightmagenta/23
+    keyword whole initc7 brightmagenta/23
+    keyword whole ino brightmagenta/23
+    keyword whole inq brightmagenta/23
+    keyword whole ins brightmagenta/23
+    keyword whole instimek brightmagenta/23
+    keyword whole instimes brightmagenta/23
+    keyword whole integ brightmagenta/23
+    keyword whole interp brightmagenta/23
+    keyword whole inx brightmagenta/23
+    keyword whole inz brightmagenta/23
+    keyword whole kgoto brightmagenta/23
+    keyword whole lfo brightmagenta/23
+    keyword whole limit brightmagenta/23
+    keyword whole line brightmagenta/23
+    keyword whole linen brightmagenta/23
+    keyword whole linenr brightmagenta/23
+    keyword whole linrand brightmagenta/23
+    keyword whole linseg brightmagenta/23
+    keyword whole linsegr brightmagenta/23
+    keyword whole locsend brightmagenta/23
+    keyword whole locsig brightmagenta/23
+    keyword whole lorenz brightmagenta/23
+    keyword whole loscil brightmagenta/23
+    keyword whole loscil3 brightmagenta/23
+    keyword whole lowpass2 brightmagenta/23
+    keyword whole lowres brightmagenta/23
+    keyword whole lowresx brightmagenta/23
+    keyword whole lpanal brightmagenta/23
+    keyword whole lpf18 brightmagenta/23
+    keyword whole lpfreson brightmagenta/23
+    keyword whole lpinterp brightmagenta/23
+    keyword whole lposcil brightmagenta/23
+    keyword whole lposcil3 brightmagenta/23
+    keyword whole lpread brightmagenta/23
+    keyword whole lpreson brightmagenta/23
+    keyword whole lpslot brightmagenta/23
+    keyword whole mac brightmagenta/23
+    keyword whole maca brightmagenta/23
+    keyword whole madsr brightmagenta/23
+    keyword whole mandol brightmagenta/23
+    keyword whole marimba brightmagenta/23
+    keyword whole massign brightmagenta/23
+    keyword whole maxalloc brightmagenta/23
+    keyword whole mclock brightmagenta/23
+    keyword whole mdelay brightmagenta/23
+    keyword whole midic14 brightmagenta/23
+    keyword whole midic21 brightmagenta/23
+    keyword whole midic7 brightmagenta/23
+    keyword whole midictrl brightmagenta/23
+    keyword whole midictrlsc brightmagenta/23
+    keyword whole midiin brightmagenta/23
+    keyword whole midion brightmagenta/23
+    keyword whole midion2 brightmagenta/23
+    keyword whole midiout brightmagenta/23
+    keyword whole mirror brightmagenta/23
+    keyword whole moog brightmagenta/23
+    keyword whole moogvcf brightmagenta/23
+    keyword whole moscil brightmagenta/23
+    keyword whole mpulse brightmagenta/23
+    keyword whole mrtmsg brightmagenta/23
+    keyword whole multitap brightmagenta/23
+    keyword whole mxadsr brightmagenta/23
+    keyword whole nestedap brightmagenta/23
+    keyword whole nlfilt brightmagenta/23
+    keyword whole noise brightmagenta/23
+    keyword whole noteoff brightmagenta/23
+    keyword whole noteon brightmagenta/23
+    keyword whole noteondur brightmagenta/23
+    keyword whole noteondur2 brightmagenta/23
+    keyword whole notnum brightmagenta/23
+    keyword whole np brightmagenta/23
+    keyword whole nreverb brightmagenta/23
+    keyword whole nrpn brightmagenta/23
+    keyword whole nsamp brightmagenta/23
+    keyword whole ntrpol brightmagenta/23
+    keyword whole octcps brightmagenta/23
+    keyword whole octmidi brightmagenta/23
+    keyword whole octmidib brightmagenta/23
+    keyword whole octpch brightmagenta/23
+    keyword whole oscil brightmagenta/23
+    keyword whole oscil1 brightmagenta/23
+    keyword whole oscil1i brightmagenta/23
+    keyword whole oscil3 brightmagenta/23
+    keyword whole oscili brightmagenta/23
+    keyword whole osciln brightmagenta/23
+    keyword whole out brightmagenta/23
+    keyword whole out32 brightmagenta/23
+    keyword whole outc brightmagenta/23
+    keyword whole outch brightmagenta/23
+    keyword whole outh brightmagenta/23
+    keyword whole outiat brightmagenta/23
+    keyword whole outic brightmagenta/23
+    keyword whole outic14 brightmagenta/23
+    keyword whole outipat brightmagenta/23
+    keyword whole outipb brightmagenta/23
+    keyword whole outipc brightmagenta/23
+    keyword whole outkat brightmagenta/23
+    keyword whole outkc brightmagenta/23
+    keyword whole outkc14 brightmagenta/23
+    keyword whole outkpat brightmagenta/23
+    keyword whole outkpb brightmagenta/23
+    keyword whole outkpc brightmagenta/23
+    keyword whole outo brightmagenta/23
+    keyword whole outq brightmagenta/23
+    keyword whole outq1 brightmagenta/23
+    keyword whole outq2 brightmagenta/23
+    keyword whole outq3 brightmagenta/23
+    keyword whole outq4 brightmagenta/23
+    keyword whole outs brightmagenta/23
+    keyword whole outs1 brightmagenta/23
+    keyword whole outs2 brightmagenta/23
+    keyword whole outx brightmagenta/23
+    keyword whole outz brightmagenta/23
+    keyword whole pan brightmagenta/23
+    keyword whole pareq brightmagenta/23
+    keyword whole pcauchy brightmagenta/23
+    keyword whole pchbend brightmagenta/23
+    keyword whole pchmidi brightmagenta/23
+    keyword whole pchmidib brightmagenta/23
+    keyword whole pchoct brightmagenta/23
+    keyword whole peak brightmagenta/23
+    keyword whole phaser1 brightmagenta/23
+    keyword whole phaser2 brightmagenta/23
+    keyword whole phasor brightmagenta/23
+    keyword whole phasorbnk brightmagenta/23
+    keyword whole pinkish brightmagenta/23
+    keyword whole pitch brightmagenta/23
+    keyword whole pitchamdf brightmagenta/23
+    keyword whole planet brightmagenta/23
+    keyword whole pluck brightmagenta/23
+    keyword whole poisson brightmagenta/23
+    keyword whole port brightmagenta/23
+    keyword whole portk brightmagenta/23
+    keyword whole poscil brightmagenta/23
+    keyword whole poscil3 brightmagenta/23
+    keyword whole pow brightmagenta/23
+    keyword whole pp brightmagenta/23
+    keyword whole prealloc brightmagenta/23
+    keyword whole print brightmagenta/23
+    keyword whole printk brightmagenta/23
+    keyword whole printk2 brightmagenta/23
+    keyword whole printks brightmagenta/23
+    keyword whole product brightmagenta/23
+    keyword whole pset brightmagenta/23
+    keyword whole pvadd brightmagenta/23
+    keyword whole pvanal brightmagenta/23
+    keyword whole pvbufread brightmagenta/23
+    keyword whole pvcross brightmagenta/23
+    keyword whole pvinterp brightmagenta/23
+    keyword whole pvlook brightmagenta/23
+    keyword whole pvoc brightmagenta/23
+    keyword whole pvread brightmagenta/23
+    keyword whole rand brightmagenta/23
+    keyword whole randh brightmagenta/23
+    keyword whole randi brightmagenta/23
+    keyword whole readclock brightmagenta/23
+    keyword whole readk brightmagenta/23
+    keyword whole readk2 brightmagenta/23
+    keyword whole readk3 brightmagenta/23
+    keyword whole readk4 brightmagenta/23
+    keyword whole reinit brightmagenta/23
+    keyword whole release brightmagenta/23
+    keyword whole repluck brightmagenta/23
+    keyword whole reson brightmagenta/23
+    keyword whole resonk brightmagenta/23
+    keyword whole resonr brightmagenta/23
+    keyword whole resonx brightmagenta/23
+    keyword whole resony brightmagenta/23
+    keyword whole resonz brightmagenta/23
+    keyword whole reverb brightmagenta/23
+    keyword whole reverb2 brightmagenta/23
+    keyword whole rezzy brightmagenta/23
+    keyword whole rigoto brightmagenta/23
+    keyword whole rireturn brightmagenta/23
+    keyword whole rms brightmagenta/23
+    keyword whole rnd brightmagenta/23
+    keyword whole s16b14 brightmagenta/23
+    keyword whole s32b14 brightmagenta/23
+    keyword whole samphold brightmagenta/23
+    keyword whole scans brightmagenta/23
+    keyword whole scanu brightmagenta/23
+    keyword whole schedule brightmagenta/23
+    keyword whole schedkwhen brightmagenta/23
+    keyword whole schedwhen brightmagenta/23
+    keyword whole sdif2ads brightmagenta/23
+    keyword whole seed brightmagenta/23
+    keyword whole sensekey brightmagenta/23
+    keyword whole setctrl brightmagenta/23
+    keyword whole sfload brightmagenta/23
+    keyword whole sfpassign brightmagenta/23
+    keyword whole sfpreset brightmagenta/23
+    keyword whole sfplist brightmagenta/23
+    keyword whole sfilist brightmagenta/23
+    keyword whole sfplay brightmagenta/23
+    keyword whole sfplaym brightmagenta/23
+    keyword whole sfinstr brightmagenta/23
+    keyword whole sfinstrm brightmagenta/23
+    keyword whole shaker brightmagenta/23
+    keyword whole slider16 brightmagenta/23
+    keyword whole slider16f brightmagenta/23
+    keyword whole slider32 brightmagenta/23
+    keyword whole slider32f brightmagenta/23
+    keyword whole slider64 brightmagenta/23
+    keyword whole slider64f brightmagenta/23
+    keyword whole slider8 brightmagenta/23
+    keyword whole slider8f brightmagenta/23
+    keyword whole sndinfo brightmagenta/23
+    keyword whole sndwarp brightmagenta/23
+    keyword whole sndwarpst brightmagenta/23
+    keyword whole soundin brightmagenta/23
+    keyword whole soundout brightmagenta/23
+    keyword whole soundouts brightmagenta/23
+    keyword whole space brightmagenta/23
+    keyword whole spdist brightmagenta/23
+    keyword whole specaddm brightmagenta/23
+    keyword whole specdiff brightmagenta/23
+    keyword whole specdisp brightmagenta/23
+    keyword whole specfilt brightmagenta/23
+    keyword whole spechist brightmagenta/23
+    keyword whole specptrk brightmagenta/23
+    keyword whole specscal brightmagenta/23
+    keyword whole specsum brightmagenta/23
+    keyword whole spectrum brightmagenta/23
+    keyword whole spsend brightmagenta/23
+    keyword whole streson brightmagenta/23
+    keyword whole strset brightmagenta/23
+    keyword whole sum brightmagenta/23
+    keyword whole svfilter brightmagenta/23
+    keyword whole table brightmagenta/23
+    keyword whole table3 brightmagenta/23
+    keyword whole tablecopy brightmagenta/23
+    keyword whole tablegpw brightmagenta/23
+    keyword whole tablei brightmagenta/23
+    keyword whole tableicopy brightmagenta/23
+    keyword whole tableigpw brightmagenta/23
+    keyword whole tableikt brightmagenta/23
+    keyword whole tableimix brightmagenta/23
+    keyword whole tableiw brightmagenta/23
+    keyword whole tablekt brightmagenta/23
+    keyword whole tablemix brightmagenta/23
+    keyword whole tableng brightmagenta/23
+    keyword whole tablera brightmagenta/23
+    keyword whole tableseg brightmagenta/23
+    keyword whole tablew brightmagenta/23
+    keyword whole tablewa brightmagenta/23
+    keyword whole tablewkt brightmagenta/23
+    keyword whole tablexseg brightmagenta/23
+    keyword whole taninv2 brightmagenta/23
+    keyword whole tbvcf brightmagenta/23
+    keyword whole tempest brightmagenta/23
+    keyword whole tempo brightmagenta/23
+    keyword whole tigoto brightmagenta/23
+    keyword whole timek brightmagenta/23
+    keyword whole times brightmagenta/23
+    keyword whole timout brightmagenta/23
+    keyword whole tival brightmagenta/23
+    keyword whole tone brightmagenta/23
+    keyword whole tonek brightmagenta/23
+    keyword whole tonex brightmagenta/23
+    keyword whole transeg brightmagenta/23
+    keyword whole trigger brightmagenta/23
+    keyword whole trirand brightmagenta/23
+    keyword whole turnoff brightmagenta/23
+    keyword whole turnon brightmagenta/23
+    keyword whole unirand brightmagenta/23
+    keyword whole upsamp brightmagenta/23
+    keyword whole vbaplsinit brightmagenta/23
+    keyword whole vbap4 brightmagenta/23
+    keyword whole vbap8 brightmagenta/23
+    keyword whole vbap16 brightmagenta/23
+    keyword whole vbap4move brightmagenta/23
+    keyword whole vbap8move brightmagenta/23
+    keyword whole vbap16move brightmagenta/23
+    keyword whole vbapz brightmagenta/23
+    keyword whole vbapzmove brightmagenta/23
+    keyword whole vco brightmagenta/23
+    keyword whole vdelay brightmagenta/23
+    keyword whole vdelay3 brightmagenta/23
+    keyword whole veloc brightmagenta/23
+    keyword whole vibes brightmagenta/23
+    keyword whole vincr brightmagenta/23
+    keyword whole vlowres brightmagenta/23
+    keyword whole voice brightmagenta/23
+    keyword whole vpvoc brightmagenta/23
+    keyword whole weibull brightmagenta/23
+    keyword whole wgbow brightmagenta/23
+    keyword whole wgbowedbar brightmagenta/23
+    keyword whole wgbrass brightmagenta/23
+    keyword whole wgclar brightmagenta/23
+    keyword whole wgflute brightmagenta/23
+    keyword whole wgpluck brightmagenta/23
+    keyword whole wgpluck2 brightmagenta/23
+    keyword whole wguide1 brightmagenta/23
+    keyword whole wguide2 brightmagenta/23
+    keyword whole wrap brightmagenta/23
+    keyword whole xadsr brightmagenta/23
+    keyword whole xtratim brightmagenta/23
+    keyword whole xyin brightmagenta/23
+    keyword whole zacl brightmagenta/23
+    keyword whole zakinit brightmagenta/23
+    keyword whole zamod brightmagenta/23
+    keyword whole zar brightmagenta/23
+    keyword whole zarg brightmagenta/23
+    keyword whole zaw brightmagenta/23
+    keyword whole zawm brightmagenta/23
+    keyword whole zfilter2 brightmagenta/23
+    keyword whole zir brightmagenta/23
+    keyword whole ziw brightmagenta/23
+    keyword whole ziwm brightmagenta/23
+    keyword whole zkcl brightmagenta/23
+    keyword whole zkmod brightmagenta/23
+    keyword whole zkr brightmagenta/23
+    keyword whole zkw brightmagenta/23
+    keyword whole zkwm brightmagenta/23
+
+
+#  3. orchestra variables
+    keyword whole i\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\] green/03
+    keyword whole a\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\] cyan/25
+    keyword whole k\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\] cyan/16
+    keyword whole x\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\] gray/13
+
+    keyword whole gi\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\] green/03 black/0
+    keyword whole ga\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\] cyan/25 black/0
+    keyword whole gk\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\] cyan/16 black/0
+    keyword whole gx\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789\] gray/13 black/0
+
+    keyword i\[\s\]. green/03
+
+
+#  4. parameter_fields
+    keyword whole p\[0123456789\] brightgreen/15
+
+
+#  5. conditional value operators
+    keyword > white/8
+    keyword < white/8
+    keyword >= white/8
+    keyword <= white/8
+    keyword == white/8
+    keyword != white/8
+    keyword ? white/8
+    keyword : white/8
+    keyword = white/8
+
+
+#  6. arithmetic and logic operators
+    keyword - yellow/24
+    keyword \+ yellow/24
+    keyword && yellow/24
+    keyword || yellow/24
+    keyword \* yellow/24
+    keyword / yellow/24
+    keyword ^ yellow/24
+    keyword % yellow/24
+    keyword whole abs yellow/24
+    keyword whole cos yellow/24
+    keyword whole cosh yellow/24
+    keyword whole cosinv yellow/24
+    keyword whole exp yellow/24
+    keyword whole frac yellow/24
+    keyword whole i yellow/24
+    keyword whole int yellow/24
+    keyword whole log yellow/24
+    keyword whole log10 yellow/24
+    keyword whole logbtwo yellow/24
+    keyword whole powoftwo yellow/24
+    keyword whole sin yellow/24
+    keyword whole sqrt yellow/24
+    keyword whole sinh yellow/24
+    keyword whole sininv yellow/24
+    keyword whole tan yellow/24
+    keyword whole tanh yellow/24
+    keyword whole taninv yellow/24
+
+
+#  7. macros
+    keyword whole #define red/9
+    keyword whole #include red/9
+    keyword whole #undef red/9
+    keyword whole #\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_\] red/9
+    keyword whole $\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_\] red/9
+    keyword whole $\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_\]. red/9
+
+
+#  8. score statements
+    keyword whole i\[\s\]\{123456789\}\[0123456789\] green/03
+    keyword whole np\[0123456789\] brightgreen/15
+    keyword whole pp\[0123456789\] brightgreen/15
+    keyword whole . yellow/24
+
+    keyword whole f\[\s\]\[0123456789\] brightmagenta/23
+
+    keyword whole s brightred/18
+    keyword whole linestart \[\s\t\]r brightred/18
+    keyword whole linestart \[\s\t\]m\s\[\sabcdefghijklmnopqrstuvwxyz0123456789] brightred/18
+    keyword whole linestart \[\s\t\]n\s\[\sabcdefghijklmnopqrstuvwxyz0123456789] brightred/18
+
+    keyword wholeleft t cyan/25
+    keyword wholeleft v cyan/25
+    keyword wholeleft a cyan/25
+    keyword wholeleft b cyan/25
+
+    keyword whole e black/ brightred/18
+
+
+
+#   *.csd tags contexts
+context exclusive <CsMidifileB\sfilename > magenta/
+    keyword = white/8
+
+context exclusive <CsSampleB\sfilename > magenta/
+    keyword = white/8
+
+context exclusive <CsOptions> </CsOptions> lightgray/
+    keyword linestart #*\n brown/22
+    keyword linestart ;*\n brown/22
+
+context exclusive <CsVersion> </CsVersion> lightgray/
+    keyword linestart ;*\n brown/22
+
+
+# macros with arguments
+context #define\s\[\s\]\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_\] ) red/9
+    keyword ( yellow/24
+    keyword ) yellow/24
+    keyword ' yellow/24
+
+
+# score xpressions evaluation
+context exclusive [ ] lightgray/26
+    keyword whole $\{abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_\]. red/9
+    keyword - yellow/24
+    keyword \+ yellow/24
+    keyword \* yellow/24
+    keyword / yellow/24
+    keyword ^ yellow/24
+    keyword % yellow/24
+    keyword @ yellow/24
+    keyword @@ yellow/24
+    keyword ( white/8
+    keyword ) white/8
+
+
+# filenames
+context " " magenta/12
+
+
+# comments
+context ; \n brown/22
