@@ -17,7 +17,7 @@ fix_name()
 # the header of the config
 #
 
-echo "mainmenu_name 'SnapGear Embedded Linux Configuration'"
+echo "mainmenu_name 'DSLinux Configuration'"
 
 #############################################################################
 #
@@ -26,25 +26,28 @@ echo "mainmenu_name 'SnapGear Embedded Linux Configuration'"
 #
 
 echo "mainmenu_option next_comment"
-echo "comment 'Vendor/Product Selection'"
-echo "comment 'Select the Vendor you wish to target'"
-echo -n "choice 'Vendor' \""
-
-oldv=
-find vendors -name config.arch -print | sed -e 's?/? ?g' | \
-		sort | while read t1 v p t2
-do
-	[ "$v" = "config" ] && continue
-	[ "$v" = "$oldv" ] && continue
-	echo "${v} CONFIG_DEFAULTS_`fix_name ${v}` \\"
-	oldv=$v
-done
-echo "\" SnapGear"
+echo "comment 'DSLinux build type selection'"
+#echo "comment 'Select the Vendor you wish to target'"
+#echo -n "choice 'Vendor' \""
+#
+#oldv=
+#find vendors -name config.arch -print | sed -e 's?/? ?g' | \
+#		sort | while read t1 v p t2
+#do
+#	[ "$v" = "config" ] && continue
+#	[ "$v" = "$oldv" ] && continue
+#	echo "${v} CONFIG_DEFAULTS_`fix_name ${v}` \\"
+#	oldv=$v
+#done
+#echo "\" SnapGear"
 #echo "endmenu"
 
 # echo "mainmenu_option next_comment"
 # echo "comment 'Product Selection'"
-echo "comment 'Select the Product you wish to target'"
+echo "comment 'To pick a build, move the cursor all the way down to the'"
+echo "comment 'selection menu and press return.'"
+echo "comment 'See the help menu inside the selection menu if you'"
+echo "comment 'are not sure what type of build you want.'"
 
 oldv=
 def=
@@ -58,7 +61,7 @@ do
 		[ "$def" -o "$v" = END ] && echo "fi"
 		[ "$v" = END ] && break
 		echo "if [ \"\$CONFIG_DEFAULTS_`fix_name ${v}`\" = \"y\" ]; then"
-		echo -n "choice '${v} Products' \""
+		echo -n "choice '' \""
 		def="${p}"
 	fi
 	if [ -f "vendors/$v/$p/config.languages" ]

@@ -9,6 +9,41 @@
 # characters. Use emacs' kfill.el to edit this file or you lose.
 #
 
+CONFIG_DEFAULTS_NINTENDO_DATEL
+  DATEL: Build for Max Media Dock.
+         THE DATEL BUILD IS BROKEN! Try DLDI instead.
+
+  DLDI: Build for devices that are supported by DLDI. Mainly
+        useful for running DSLinux from slot-1 (NDS game slot)
+        devices. See http://chishm.drunkencoders.com/DLDI/ for
+        a list of devices supported by DLDI.
+        Also read the DLDI documentation!
+
+  DSGBA: Build for GBA flash carts.
+
+  DSMEM: Build for Amadeus' DSMEM device. Few people have this device.
+
+  GBAMP: Build for the GBA Movie Player version 2 (CF version only).
+
+  GBAMP-EXT2: Build for the GBA Movie Player version 2 (CF version only).
+              This build uses an ext2 root filesystem instead of romfs
+              and FAT.
+
+  NDS: A minimal but generic build. Should work on most devices
+       and even some Nintendo DS emulators.
+
+  RAM: Build for all slot-2 (GBA game slot) M3 and Supercard devices,
+       except the Supercard Rumble. This build has the most features.
+       This build uses the 32MB of RAM found in supported devices,
+       and has drivers for both CF and SD media included.
+       Many programs included here do not run on other builds because
+       of memory constraints.
+
+  RAM-DEVEL: Used for development purposes only. You don't want to
+             use this unless you are doing low-level device
+             support hacking.
+
+
 Prompt to override the current config settings
 CONFIG_DEFAULTS_OVERRIDE
   Set the defaults for building to the settings that are stored in the
