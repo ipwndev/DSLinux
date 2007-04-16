@@ -7,7 +7,7 @@
 # Copyright (C) 2001,2002 Nico Schottelius <nico@schottelius.org>
 #
 
-srcdir = $(ROOTDIR)/user/gpm/src
+srcdir = $(ROOTDIR)/lib/gpm/src
 top_builddir = ..
 
 include $(top_builddir)/Makefile.include

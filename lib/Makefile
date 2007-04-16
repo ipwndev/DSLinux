@@ -36,6 +36,8 @@ endif
 #
 dir_$(CONFIG_LIB_FLEX)         += flex
 dir_$(CONFIG_LIB_FLEX_FORCE)   += flex
+dir_$(CONFIG_LIB_GPM)          += gpm
+dir_$(CONFIG_LIB_GPM_FORCE)    += gpm
 dir_$(CONFIG_LIB_LIBAES)       += libaes
 dir_$(CONFIG_LIB_LIBAES_FORCE) += libaes
 dir_$(CONFIG_LIB_LIBDES)       += libdes
@@ -174,7 +176,7 @@ LINKLIBS=\
 	$(ROOTDIR)/lib/libgmp/*.a  \
 	$(ROOTDIR)/lib/libid3tag/*.a \
 	$(ROOTDIR)/lib/libmad/*.a \
-	$(ROOTDIR)/user/gpm/src/lib/*.a
+	$(ROOTDIR)/lib/gpm/src/lib/*.a
 
 ##############################################################################
 

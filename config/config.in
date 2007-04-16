@@ -82,6 +82,7 @@ comment 'Library Configuration'
 
 comment 'Force build (Normally built when required)'
 bool 'Build flex'		CONFIG_LIB_FLEX_FORCE
+bool 'Build gpm'		CONFIG_LIB_GPM_FORCE
 bool 'Build libAES'		CONFIG_LIB_LIBAES_FORCE
 bool 'Build libDES'		CONFIG_LIB_LIBDES_FORCE
 bool 'Build libSSL'		CONFIG_LIB_LIBSSL_FORCE
@@ -450,7 +451,7 @@ if [ "$CONFIG_USER_LINKS_LINKS" = "y" ]; then
 	define_bool CONFIG_LIB_LIBSSL y
     	bool '  links with mouse'	CONFIG_USER_LINKS_WITH_GPM
 	if [ "$CONFIG_USER_LINKS_WITH_GPM" = "y" ]; then
-		define_bool CONFIG_USER_GPM_GPM y
+		define_bool CONFIG_LIB_GPM y
 	fi
     	bool '  links with graphics'	CONFIG_USER_LINKS_WITH_GRAPHICS
 	if [ "$CONFIG_USER_LINKS_WITH_GRAPHICS" = "y" ]; then
@@ -782,7 +783,8 @@ bool 'gdbreplay'		CONFIG_USER_GDB_GDBREPLAY
 bool 'gdbserver'		CONFIG_USER_GDB_GDBSERVER
 bool 'gdbreplay (old)'		CONFIG_USER_GDBSERVER_GDBREPLAY
 bool 'gdbserver (old)'		CONFIG_USER_GDBSERVER_GDBSERVER
-bool 'gpm'			CONFIG_USER_GPM_GPM
+# gpm provides both a lib and an app so it lives in lib/
+bool 'gpm'			CONFIG_LIB_GPM_FORCE
 bool 'grep'			CONFIG_USER_GREP_GREP
 bool 'hd'			CONFIG_USER_HD_HD
 bool 'hexedit'			CONFIG_USER_HEXEDIT_HEXEDIT
@@ -1611,6 +1613,9 @@ if [ "$CONFIG_USER_MICROWIN" = "y" ]; then
 	bool 'Cleopatra VGA' CONFIG_USER_MICROWIN_CLEOVGA
 	comment 'Mouse/Touch Screen'
     bool 'GPM Mouse'       CONFIG_USER_MICROWIN_GPMMOUSE
+    if [ "$CONFIG_USER_MICROWIN_GPMMOUSE" = "y" ]; then
+        define_bool CONFIG_LIB_GPM y
+    fi
     bool 'Serial Mouse'    CONFIG_USER_MICROWIN_SERMOUSE
     bool 'TP Mouse'        CONFIG_USER_MICROWIN_TPMOUSE
     bool 'TP Helio'        CONFIG_USER_MICROWIN_TPHELIO

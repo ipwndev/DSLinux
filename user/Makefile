@@ -147,7 +147,6 @@ dir_$(CONFIG_USER_GDBSERVER_GDBSERVER)      += gdbserver
 dir_$(CONFIG_USER_GDB_GDBREPLAY)            += gdb
 dir_$(CONFIG_USER_GDB_GDBSERVER)            += gdb
 dir_$(CONFIG_USER_GETTYD_GETTYD)            += gettyd
-dir_$(CONFIG_USER_GPM_GPM)                  += gpm
 dir_$(CONFIG_USER_GREP_GREP)                += grep
 dir_$(CONFIG_USER_HD_HD)                    += hd
 dir_$(CONFIG_USER_HOSTAP_HOSTAP)            += hostap
