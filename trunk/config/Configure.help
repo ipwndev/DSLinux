@@ -482,9 +482,11 @@ CONFIG_USER_GDBSERVER_GDBSERVER
   server. (old version - mk68k targets only)
   Approx. binary size: 14k
 
-CONFIG_USER_GPM_GPM
-  The General Purpose Mouse daemon.
-  With this daemon you can use the mouse on the DSLinux console.
+CONFIG_LIB_GPM_FORCE
+  The General Purpose Mouse daemon and library.
+  With the daemon you can use the mouse on the DSLinux console.
+  Apps like Links and Midnight Commander use the library to talk
+  to the daemon.
 
 CONFIG_USER_GREP_GREP
   GNU grep, egrep and fgrep

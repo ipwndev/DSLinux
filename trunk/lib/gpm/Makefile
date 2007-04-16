@@ -8,8 +8,8 @@
 #
 
 SHELL = /bin/sh
-srcdir = $(ROOTDIR)/user/gpm
-top_srcdir = $(ROOTDIR)/user/gpm
+srcdir = $(ROOTDIR)/lib/gpm
+top_srcdir = $(ROOTDIR)/lib/gpm
 top_builddir = .
 
 include Makefile.include
