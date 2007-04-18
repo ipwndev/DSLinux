@@ -31,7 +31,11 @@ static struct input_dev ndsbutton_dev;
 static short ndsbuttons[] = { 
 	KEY_ENTER, KEY_SPACE, BTN_SELECT, BTN_START,
        	KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN,
+	#ifndef CONFIG_NDS_SWAP_LR
 	KEY_RIGHTCTRL, KEY_LEFTSHIFT
+	#else
+	KEY_RIGHTSHIFT, KEY_LEFTCTRL
+	#endif
 };
 static short ndsbuttons2[] = { 
 	KEY_PAGEUP, KEY_PAGEDOWN
