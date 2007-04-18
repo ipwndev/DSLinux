@@ -67,4 +67,13 @@ config	NDS_BLK_SCCF
 	 Saying Y here will include a block driver for the Supercard CF.
 	 If unsure, say N.
 
+config NDS_SWAP_LR
+	bool "Swap L and R buttons"
+	depends on ARCH_NDS
+	default n
+	help
+	  Saying Y will swap the L and R hardware buttons so that R is shift 
+	      and L is control.
+	  This is useful if you are left handed or your L button is broken.
+
 endmenu
