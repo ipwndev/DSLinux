@@ -1,7 +1,6 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
-# Sun Apr 15 12:23:21 2007
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
@@ -102,6 +101,7 @@ CONFIG_FLASH_SIZE=0x02000000
 CONFIG_NDS_ROM8BIT=y
 CONFIG_NDS_BLK_M3CF=y
 CONFIG_NDS_BLK_SCCF=y
+# CONFIG_NDS_SWAP_LR is not set
 
 #
 # Processor Type
