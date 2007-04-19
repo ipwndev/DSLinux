@@ -101,6 +101,7 @@ CONFIG_FLASH_SIZE=0x00800000
 CONFIG_NDS_ROM8BIT=y
 # CONFIG_NDS_BLK_M3CF is not set
 # CONFIG_NDS_BLK_SCCF is not set
+# CONFIG_NDS_SWAP_LR is not set
 
 #
 # Processor Type
@@ -122,7 +123,7 @@ CONFIG_CPU_ARM946_CPU_IDLE=y
 #
 # Bus support
 #
-# CONFIG_ISA_DMA_API is not set
+CONFIG_ISA_DMA_API=y
 
 #
 # PCCARD (PCMCIA/CardBus) support
@@ -338,13 +339,13 @@ CONFIG_MTD_FIRMWARE=y
 #
 # Block devices
 #
+CONFIG_NDS_DLDI=y
 # CONFIG_BLK_DEV_COW_COMMON is not set
 # CONFIG_BLK_DEV_LOOP is not set
 # CONFIG_BLK_DEV_NBD is not set
 # CONFIG_BLK_DEV_RAM is not set
 CONFIG_BLK_DEV_RAM_COUNT=16
 # CONFIG_CDROM_PKTCDVD is not set
-CONFIG_NDS_DLDI=y
 
 #
 # IO Schedulers
@@ -359,30 +360,6 @@ CONFIG_IOSCHED_NOOP=y
 # ATA/ATAPI/MFM/RLL support
 #
 # CONFIG_IDE is not set
-
-#
-# Please see Documentation/ide.txt for help/info on IDE drives
-#
-# CONFIG_BLK_DEV_IDE_SATA is not set
-# CONFIG_BLK_DEV_IDEDISK is not set
-# CONFIG_IDEDISK_MULTI_MODE is not set
-# CONFIG_BLK_DEV_IDECD is not set
-# CONFIG_BLK_DEV_IDETAPE is not set
-# CONFIG_BLK_DEV_IDEFLOPPY is not set
-# CONFIG_IDE_TASK_IOCTL is not set
-
-#
-# IDE chipset support/bugfixes
-#
-# CONFIG_IDE_GENERIC is not set
-# CONFIG_IDE_ARM is not set
-# CONFIG_IDE_NDS_GBAMP is not set
-# CONFIG_IDE_NDS_M3 is not set
-# CONFIG_IDE_NDS_SUPERCARD is not set
-# CONFIG_IDE_NDS_MAX_MEDIA_PLAYER is not set
-# CONFIG_BLK_DEV_IDEDMA is not set
-# CONFIG_IDEDMA_AUTO is not set
-# CONFIG_BLK_DEV_HD is not set
 
 #
 # SCSI device support
@@ -673,7 +650,7 @@ CONFIG_SND_NDS=y
 #
 # USB support
 #
-# CONFIG_USB_ARCH_HAS_HCD is not set
+CONFIG_USB_ARCH_HAS_HCD=y
 # CONFIG_USB_ARCH_HAS_OHCI is not set
 # CONFIG_USB is not set
 
@@ -839,7 +816,7 @@ CONFIG_NLS_ISO8859_1=y
 # CONFIG_PRINTK_TIME is not set
 # CONFIG_DEBUG_KERNEL is not set
 CONFIG_LOG_BUF_SHIFT=14
-# CONFIG_FRAME_POINTER is not set
+CONFIG_FRAME_POINTER=y
 # CONFIG_DEBUG_USER is not set
 
 #
