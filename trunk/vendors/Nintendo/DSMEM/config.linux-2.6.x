@@ -101,6 +101,7 @@ CONFIG_NDS_FASTGBA=y
 # CONFIG_NDS_ROM8BIT is not set
 # CONFIG_NDS_BLK_M3CF is not set
 # CONFIG_NDS_BLK_SCCF is not set
+# CONFIG_NDS_SWAP_LR is not set
 
 #
 # Processor Type
@@ -339,13 +340,13 @@ CONFIG_MTD_FIRMWARE=y
 #
 # Block devices
 #
+# CONFIG_NDS_DLDI is not set
 # CONFIG_BLK_DEV_COW_COMMON is not set
 # CONFIG_BLK_DEV_LOOP is not set
 # CONFIG_BLK_DEV_NBD is not set
 # CONFIG_BLK_DEV_RAM is not set
 CONFIG_BLK_DEV_RAM_COUNT=16
 # CONFIG_CDROM_PKTCDVD is not set
-# CONFIG_NDS_DLDI is not set
 
 #
 # IO Schedulers
