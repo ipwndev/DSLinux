@@ -82,7 +82,7 @@ comment 'Library Configuration'
 
 comment 'Force build (Normally built when required)'
 bool 'Build flex'		CONFIG_LIB_FLEX_FORCE
-bool 'Build gpm'		CONFIG_LIB_GPM
+bool 'Build gpm'		CONFIG_LIB_GPM_FORCE
 bool 'Build libAES'		CONFIG_LIB_LIBAES_FORCE
 bool 'Build libDES'		CONFIG_LIB_LIBDES_FORCE
 bool 'Build libSSL'		CONFIG_LIB_LIBSSL_FORCE
@@ -783,8 +783,6 @@ bool 'gdbreplay'		CONFIG_USER_GDB_GDBREPLAY
 bool 'gdbserver'		CONFIG_USER_GDB_GDBSERVER
 bool 'gdbreplay (old)'		CONFIG_USER_GDBSERVER_GDBREPLAY
 bool 'gdbserver (old)'		CONFIG_USER_GDBSERVER_GDBSERVER
-# gpm provides both a lib and an app so it lives in lib/
-bool 'gpm'			CONFIG_LIB_GPM
 bool 'grep'			CONFIG_USER_GREP_GREP
 bool 'hd'			CONFIG_USER_HD_HD
 bool 'hexedit'			CONFIG_USER_HEXEDIT_HEXEDIT
