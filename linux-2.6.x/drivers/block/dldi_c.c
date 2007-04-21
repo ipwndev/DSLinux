@@ -72,8 +72,8 @@ extern char _buf_dldi[];
 
 #define BUF_SIZE	2048
 
-/* This is the major number of /dev/hda */
-static int dldi_major = 3;
+/* This is the major number of /dev/dldi */
+static int dldi_major = 240;
 
 /* We don't know how big the medium is. So we take some big number, */
 static int nsectors   = (2*1024*1024*2);	/* 2 GBytes */
