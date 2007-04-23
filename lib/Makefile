@@ -37,6 +37,7 @@ endif
 dir_$(CONFIG_LIB_FLEX)         += flex
 dir_$(CONFIG_LIB_FLEX_FORCE)   += flex
 dir_$(CONFIG_LIB_GPM)          += gpm
+dir_$(CONFIG_LIB_GPM_FORCE)    += gpm
 dir_$(CONFIG_LIB_LIBAES)       += libaes
 dir_$(CONFIG_LIB_LIBAES_FORCE) += libaes
 dir_$(CONFIG_LIB_LIBDES)       += libdes
