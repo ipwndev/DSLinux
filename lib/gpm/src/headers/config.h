@@ -42,7 +42,7 @@
 #define HAVE_VSYSLOG 1
 
 /* Define if you have the <curses.h> header file.  */
-#define HAVE_CURSES_H 1
+/* #define HAVE_CURSES_H 1 */
 
 /* Define if you have the <linux/input.h> header file.  */
 #define HAVE_LINUX_INPUT_H 1
