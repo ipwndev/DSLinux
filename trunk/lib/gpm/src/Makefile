@@ -21,7 +21,7 @@ GOBJ = $(GSRC:.c=.o) report.o tools.o
 
 LSRC = lib/liblow.c lib/libhigh.c lib/libxtra.c lib/report-lib.c
 
-LOBJ = $(LSRC:.c=.o) tools.o lib/libcurses.o
+LOBJ = $(LSRC:.c=.o) tools.o
 
 PICS = $(LOBJ:.o=.lo)
 
