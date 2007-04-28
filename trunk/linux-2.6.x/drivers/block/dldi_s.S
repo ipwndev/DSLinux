@@ -1,3 +1,7 @@
+
+/* common macros for all NDS GBA ROM device drivers */
+#include <asm/arch/gbarom-macro.S>
+
 @---------------------------------------------------------------------------------
 	.align	4
 	.arm
@@ -6,12 +10,14 @@
 	.global	_call_dldi
 	.global _buf_dldi
 
+	.global gba_set_io
+	.global gba_set_ram
+
 @---------------------------------------------------------------------------------
 .equ FEATURE_MEDIUM_CANREAD,		0x00000001
 .equ FEATURE_MEDIUM_CANWRITE,		0x00000002
 .equ FEATURE_SLOT_GBA,			0x00000010
 .equ FEATURE_SLOT_NDS,			0x00000020
-.equ NDS_IME,				0x04000208
 
 _dldi_start:
 
@@ -78,44 +84,39 @@ _dldi_end:
 
 	.align
 _param_dldi:
-	.space	6*4
+	.space	7*4
 
 	.align
 _call_dldi:
-	@ Disable interrupts (problems with stack switching without)
-	ldr	r3, =NDS_IME		@ interrupt mask register
-	mov	ip, #0			@ 0 = disable
-	strh	ip, [r3]
-	mcr	p15, 0, ip, c7, c10, 4	@ drain write buffer for IME to take effect.
-	@ Disable Write Buffer for all except main RAM
-	@	      gGViWDMI
-	ldr	r0,=0b00000010
-	mcr	p15, 0, r0, c3, c0, 0
 	ldr	ip,=_param_dldi		@ ip = IO parameter block
 	str	sp,[ip]			@ store old stack pointer
 	str	lr,[ip,#4]		@ store old link register
+	gba_prefix
+	ldr	sp,=_stack_dldi		@ set new stack (in main memory!)
+	ldr	ip,=gba_set_io		@ retrieve GBA IO switch function
+	ldr	r3,[ip]
+	blx	r3			@ execute the function
+	ldr	ip,=_param_dldi		@ ip = IO parameter block
 	ldr	r0,[ip,#8]		@ read parameter 1
 	ldr	r1,[ip,#12]		@ read parameter 2
 	ldr	r2,[ip,#16]		@ read parameter 3
 	ldr	r3,[ip,#20]		@ read pointer to function
-	ldr	sp,=_stack_dldi		@ set new stack
+	blx	r3			@ execute the function
+	ldr	ip,=_param_dldi		@ ip = IO parameter block
+	str	r0,[ip,#24]		@ store result
+	ldr	ip,=gba_set_ram		@ retrieve GBA RAM switch function
+	ldr	r3,[ip]
 	blx	r3			@ execute the function
 	ldr	ip,=_param_dldi		@ ip = IO parameter block
 	ldr	sp,[ip]			@ restore stack
 	ldr	lr,[ip,#4]		@ restore link register
-	@ Restore Write Buffer
-	@	      gGViWDMI
-	ldr	ip,=0b11111010
-	mcr	p15, 0, ip, c3, c0, 0
-	@ enable interrupts
-	ldr	r3, =NDS_IME		@ interrupt mask register
-	mov	ip, #1			@ 1 = enable
-	strh	ip, [r3]
+	ldr	r0,[ip,#24]		@ restore result
+	gba_suffix
 	bx	lr			@ return
 
 	.pool
 	.align
-	.space	4096			@ maybe better to have some more...
+	.space	1024			@ Allows for 1 physical sector and some more
 _stack_dldi:
 	.space	4			@ for safety
 _buf_dldi:
