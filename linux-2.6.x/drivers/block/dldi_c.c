@@ -53,6 +53,7 @@ struct dldi_params {
 	long para2;
 	long para3;
 	void *function;
+	int result;
 };
 
 extern struct dldi_params _param_dldi;
@@ -345,7 +346,7 @@ static void setup_device(struct dldi_dev *dev, int which)
 	dev->gd->fops = &dldi_ops;
 	dev->gd->queue = dev->queue;
 	dev->gd->private_data = dev;
-	snprintf (dev->gd->disk_name, 32, "hd%c", which + 'a');
+	snprintf (dev->gd->disk_name, 32, "dldi");
 	set_capacity(dev->gd, nsectors);
 	add_disk(dev->gd);
 	return;
