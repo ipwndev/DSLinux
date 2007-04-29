@@ -34,7 +34,7 @@ extern u32 gba_start;
 /* Length in Bytes of the GBA RAM area */
 extern u32 gba_length;
 
-/* Try to activate GBA RAM and the the variables above */
+/* Try to activate GBA RAM and set the variables above */
 extern int gba_activate_ram(void);
 
 
