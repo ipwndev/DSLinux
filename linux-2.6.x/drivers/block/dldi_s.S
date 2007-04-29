@@ -50,14 +50,14 @@ _dldi_start:
 @---------------------------------------------------------------------------------
 @ IO_INTERFACE data -- 32 bytes
 _io_dldi:
-	.ascii	"DLDI"					@ ioType
-	.word	0x00000000				@ Features
-	.word	_DLDI_startup			@ 
-	.word	_DLDI_isInserted		@ 
-	.word	_DLDI_readSectors		@   Function pointers to standard device driver functions
-	.word	_DLDI_writeSectors		@ 
-	.word	_DLDI_clearStatus		@ 
-	.word	_DLDI_shutdown			@ 
+	.ascii	"DLDI"			@ ioType
+	.word	0x00000000		@ Features
+	.word	_DLDI_startup		@ 
+	.word	_DLDI_isInserted	@ 
+	.word	_DLDI_readSectors	@   Function pointers to standard device driver functions
+	.word	_DLDI_writeSectors	@ 
+	.word	_DLDI_clearStatus	@ 
+	.word	_DLDI_shutdown		@ 
 	
 @---------------------------------------------------------------------------------
 
@@ -67,8 +67,8 @@ _DLDI_readSectors:
 _DLDI_writeSectors:
 _DLDI_clearStatus:
 _DLDI_shutdown:
-	mov		r0, #0x00				@ Return false for every function
-	bx		lr
+	mov	r0, #0x00		@ Return false for every function
+	bx	lr
 
 
 
@@ -76,7 +76,7 @@ _DLDI_shutdown:
 	.align
 	.pool
 
-.space 32632						@ Fill to 32KiB
+.space 32632				@ Fill to 32KiB
 
 _dldi_end:
 
