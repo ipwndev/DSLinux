@@ -48,27 +48,21 @@ static u16 sc_save_value;
 /* Set the mode of Supercard CF/SD to I/O */
 static void sc_set_io(void)
 {
-	register volatile u16* p = (volatile u16*)0x09FFFFFE;
-	register u16 pattern = 0xA55A;
-	sc_save_value = *p;
-	*p = pattern;
-	*p = pattern;
-	pattern = 0x03;
-	*p = pattern;
-	*p = pattern;
+	sc_save_value = readw(0x09FFFFFE);
+	writew(0xA55A, 0x09FFFFFE);
+	writew(0xA55A, 0x09FFFFFE);
+	writew(0x0003, 0x09FFFFFE);
+	writew(0x0003, 0x09FFFFFE);
 }
 
 /* Set the mode of Supercard CF/SD to RAM */
 static void sc_set_ram(void)
 {
-	register volatile u16* p = (volatile u16*)0x09FFFFFE;
-	register u16 pattern = 0xA55A;
-	*p = pattern;
-	*p = pattern;
-	pattern = 0x05;
-	*p = pattern;
-	*p = pattern;
-	*p = sc_save_value;
+	writew(0xA55A, 0x09FFFFFE);
+	writew(0xA55A, 0x09FFFFFE);
+	writew(0x0005, 0x09FFFFFE);
+	writew(0x0005, 0x09FFFFFE);
+	writew(sc_save_value, 0x09FFFFFE);
 }
 
 //==========================================================================
@@ -80,35 +74,33 @@ static void sc_set_ram(void)
 /* Set the mode of M3 CF/SD to I/O */
 static void m3_set_io(void)
 {
-	register volatile u16 dummy;
-	dummy = *(volatile u16*)0x08e00002;
-	dummy = *(volatile u16*)0x0800000e;
-	dummy = *(volatile u16*)0x08801ffc;
-	dummy = *(volatile u16*)0x0800104a;
-	dummy = *(volatile u16*)0x08800612;
-	dummy = *(volatile u16*)0x08000000;
-	dummy = *(volatile u16*)0x08801b66;
-	dummy = *(volatile u16*)0x08800006;	// mode MEDIA
-	dummy = *(volatile u16*)0x0800080e;
-	dummy = *(volatile u16*)0x08000000;
-	dummy = *(volatile u16*)0x09000000;
+	(void)readw(0x08e00002);
+	(void)readw(0x0800000e);
+	(void)readw(0x08801ffc);
+	(void)readw(0x0800104a);
+	(void)readw(0x08800612);
+	(void)readw(0x08000000);
+	(void)readw(0x08801b66);
+	(void)readw(0x08800006);	// mode MEDIA
+	(void)readw(0x0800080e);
+	(void)readw(0x08000000);
+	(void)readw(0x09000000);
 }
 
 /* Set the mode of M3 CF/SD to RAM */
 static void m3_set_ram(void)
 {
-	register volatile u16 dummy;
-	dummy = *(volatile u16*)0x08e00002;
-	dummy = *(volatile u16*)0x0800000e;
-	dummy = *(volatile u16*)0x08801ffc;
-	dummy = *(volatile u16*)0x0800104a;
-	dummy = *(volatile u16*)0x08800612;
-	dummy = *(volatile u16*)0x08000000;
-	dummy = *(volatile u16*)0x08801b66;
-	dummy = *(volatile u16*)0x0880000C;	// mode RAM (RW) 
-	dummy = *(volatile u16*)0x0800080e;
-	dummy = *(volatile u16*)0x08000000;
-	dummy = *(volatile u16*)0x09000000;
+	(void)readw(0x08e00002);
+	(void)readw(0x0800000e);
+	(void)readw(0x08801ffc);
+	(void)readw(0x0800104a);
+	(void)readw(0x08800612);
+	(void)readw(0x08000000);
+	(void)readw(0x08801b66);
+	(void)readw(0x0880000C);	// mode RAM (RW) 
+	(void)readw(0x0800080e);
+	(void)readw(0x08000000);
+	(void)readw(0x09000000);
 }
 
 //==========================================================================
@@ -120,13 +112,13 @@ static void m3_set_ram(void)
 /* Set the mode of Opera Extension to I/O */
 static void op_set_io(void)
 {
-	*(volatile u16*)0x08240000 = 0;
+	writew(0, 0x08240000);
 }
 
 /* Set the mode of Opera Extension to RAM */
 static void op_set_ram(void)
 {
-	*(volatile u16*)0x08240000 = 1;
+	writew(1, 0x08240000);
 }
 
 //==========================================================================

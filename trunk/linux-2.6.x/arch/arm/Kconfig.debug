@@ -6,14 +6,14 @@ source "lib/Kconfig.debug"
 # If you know what you are doing and are willing to live without stack
 # traces, you can get a slightly smaller kernel by setting this option to
 # n, but then RMK will have to kill you ;).
-config FRAME_POINTER
-	bool
-	default y
-	help
-	  If you say N here, the resulting kernel will be slightly smaller and
-	  faster. However, when a problem occurs with the kernel, the
-	  information that is reported is severely limited. Most people
-	  should say Y here.
+# config FRAME_POINTER
+#	bool
+#	default y
+#	help
+#	  If you say N here, the resulting kernel will be slightly smaller and
+#	  faster. However, when a problem occurs with the kernel, the
+#	  information that is reported is severely limited. Most people
+#	  should say Y here.
 
 config DEBUG_USER
 	bool "Verbose user fault messages"
