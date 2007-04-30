@@ -124,6 +124,59 @@ static void op_set_ram(void)
 //==========================================================================
 
 /*
+ * EZ-4 and EZ-5 Tripple Pack Memory Extension RAM/IO switching.
+ */
+
+/* Set the mode of EZ to I/O */
+static void ez_set_io(void)
+{
+	writew(0xd200, 0x9fe0000);
+	writew(0x1500, 0x8000000);
+	writew(0xd200, 0x8020000);
+	writew(0x1500, 0x8040000);
+
+	writew(0x0001, 0x9400000);
+
+	writew(0x1500, 0x9C40000);
+	writew(0x1500, 0x9fc0000);
+}
+
+/* Set the mode of EZ to PSRAM */
+static void ez_set_ram(void)
+{
+	// CloseNorWrite()
+	writew(0xd200, 0x9fe0000);
+	writew(0x1500, 0x8000000);
+	writew(0xd200, 0x8020000);
+	writew(0x1500, 0x8040000);
+
+	writew(0x0000, 0x9400000);	// and DisableSD
+
+	writew(0xd200, 0x9C40000);
+	writew(0x1500, 0x9fc0000);
+
+	// SetRomPage(384) == PSRAM
+	writew(0xd200, 0x9fe0000);
+	writew(0x1500, 0x8000000);
+	writew(0xd200, 0x8020000);
+	writew(0x1500, 0x8040000);
+
+	writew(384,    0x9880000);
+	writew(0x1500, 0x9fc0000);
+
+	// OpenNorWrite()
+	writew(0xd200, 0x9fe0000);
+	writew(0x1500, 0x8000000);
+	writew(0xd200, 0x8020000);
+	writew(0x1500, 0x8040000);
+
+	writew(0x1500, 0x9C40000);
+	writew(0x1500, 0x9fc0000);
+}
+
+//==========================================================================
+
+/*
  * Test if the memory area is working RAM.
  * @param	addr	Start address of area
  * @param	length	Area length in bytes
@@ -185,6 +238,8 @@ int gba_activate_ram(void)
 	if (gba_testcard(m3_set_ram, m3_set_io, 0x08000000, 0x02000000)) goto activated;
 	/* test Opera Memory Extension */
 	if (gba_testcard(op_set_ram, op_set_io, 0x09000000, 0x00800000)) goto activated;
+	/* test EZ Memory Extension */
+	if (gba_testcard(ez_set_ram, ez_set_io, 0x08000000, 0x01000000)) goto activated;
 
 	/* insert other adaptors here */
 
