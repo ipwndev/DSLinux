@@ -358,6 +358,14 @@ static int __init dldi_init(void)
 {
 	int ret;
 
+	/* Start the interface */
+	_param_dldi.function = _io_dldi.fn_startup;
+	ret = _call_dldi();
+	if (ret == 0) {
+		printk(KERN_ERR "dldi: fn_startup failure\n");
+		return -EIO;
+	}		
+
 	/*
 	 * Get registered.
 	 */
@@ -365,6 +373,7 @@ static int __init dldi_init(void)
 		printk(KERN_WARNING "dldi: unable to get major number\n");
 		return -EBUSY;
 	}
+
 	/*
 	 * Allocate the device array, and initialize each one.
 	 */
@@ -374,22 +383,6 @@ static int __init dldi_init(void)
 		return -ENOMEM;
 	}
 	setup_device(Devices, 0);
-
-	/* Start the interface */
-	_param_dldi.function = _io_dldi.fn_startup;
-	ret = _call_dldi();
-	if (ret == 0) {
-		printk(KERN_ERR "dldi: fn_startup failure\n");
-		if (Devices->gd) {
-			del_gendisk(Devices->gd);
-			put_disk(Devices->gd);
-		}
-		if (Devices->queue) {
-			blk_put_queue(Devices->queue);
-		}
-		unregister_blkdev(dldi_major, "dldi");
-		return -EIO;
-	}
 
 	return 0;
 }
