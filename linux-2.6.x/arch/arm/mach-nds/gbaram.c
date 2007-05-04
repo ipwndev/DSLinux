@@ -130,13 +130,22 @@ static void op_set_ram(void)
 /* Set the mode of EZ to I/O */
 static void ez_set_io(void)
 {
+	// SetRomPage()
+	writew(0xd200, 0x9fe0000);
+	writew(0x1500, 0x8000000);
+	writew(0xd200, 0x8020000);
+	writew(0x1500, 0x8040000);
+	
+	writew(0x8000, 0x9880000);      // PSRAM-1 (16MB) to 0x8400000-0x9400000
+	writew(0x1500, 0x9fc0000);
+
+	// OpenWrite() + DisableSD()
 	writew(0xd200, 0x9fe0000);
 	writew(0x1500, 0x8000000);
 	writew(0xd200, 0x8020000);
 	writew(0x1500, 0x8040000);
 
 	writew(0x0001, 0x9400000);
-
 	writew(0x1500, 0x9C40000);
 	writew(0x1500, 0x9fc0000);
 }
@@ -144,38 +153,71 @@ static void ez_set_io(void)
 /* Set the mode of EZ to PSRAM */
 static void ez_set_ram(void)
 {
-	// CloseNorWrite()
+	// SetRomPage()
 	writew(0xd200, 0x9fe0000);
 	writew(0x1500, 0x8000000);
 	writew(0xd200, 0x8020000);
 	writew(0x1500, 0x8040000);
-
-	writew(0x0000, 0x9400000);	// and DisableSD
-
-	writew(0xd200, 0x9C40000);
+	
+	writew(0x8000, 0x9880000);      // PSRAM-1 (16MB) to 0x8400000-0x9400000
 	writew(0x1500, 0x9fc0000);
 
-	// SetRomPage(384) == PSRAM
+	// OpenWrite() + DisableSD()
 	writew(0xd200, 0x9fe0000);
 	writew(0x1500, 0x8000000);
 	writew(0xd200, 0x8020000);
 	writew(0x1500, 0x8040000);
 
-	writew(384,    0x9880000);
-	writew(0x1500, 0x9fc0000);
-
-	// OpenNorWrite()
-	writew(0xd200, 0x9fe0000);
-	writew(0x1500, 0x8000000);
-	writew(0xd200, 0x8020000);
-	writew(0x1500, 0x8040000);
-
+	writew(0x0000, 0x9400000);
 	writew(0x1500, 0x9C40000);
 	writew(0x1500, 0x9fc0000);
 }
 
 //==========================================================================
 
+/*
+ * G6
+ */
+
+/* Set the mode of G6 to I/O */
+static void g6_set_io(void)
+{
+	(void)readw(0x09000000);
+	(void)readw(0x09FFFFE0);
+	(void)readw(0x09FFFFEC);
+	(void)readw(0x09FFFFEC);
+	(void)readw(0x09FFFFEC);
+	(void)readw(0x09FFFFFC);
+	(void)readw(0x09FFFFFC);
+	(void)readw(0x09FFFFFC);
+	(void)readw(0x09FFFF4A);
+	(void)readw(0x09FFFF4A);
+	(void)readw(0x09FFFF4A);
+	(void)readw(0x09200006);
+	(void)readw(0x09FFFFF0);
+	(void)readw(0x09FFFFE8);
+}
+
+/* Set the mode of G6 to RAM */
+static void g6_set_ram(void)
+{
+	(void)readw(0x09000000);
+	(void)readw(0x09FFFFE0);
+	(void)readw(0x09FFFFEC);
+	(void)readw(0x09FFFFEC);
+	(void)readw(0x09FFFFEC);
+	(void)readw(0x09FFFFFC);
+	(void)readw(0x09FFFFFC);
+	(void)readw(0x09FFFFFC);
+	(void)readw(0x09FFFF4A);
+	(void)readw(0x09FFFF4A);
+	(void)readw(0x09FFFF4A);
+	(void)readw(0x0920000C);
+	(void)readw(0x09FFFFF0);
+	(void)readw(0x09FFFFE8);
+}
+
+//==========================================================================
 /*
  * Test if the memory area is working RAM.
  * @param	addr	Start address of area
@@ -232,6 +274,9 @@ static int gba_testcard( void (*set_ram)(void), void (*set_io)(void), u32 start,
 //==========================================================================
 int gba_activate_ram(void)
 {
+	/* Disable RAM extensions which are R/W at startup time */
+	// ,,,
+
 	/* test supercard CF/SD */
 	if (gba_testcard(sc_set_ram, sc_set_io, 0x08000000, 0x02000000)) goto activated;
 	/* test M3 adaptor CF/SD */
@@ -239,7 +284,9 @@ int gba_activate_ram(void)
 	/* test Opera Memory Extension */
 	if (gba_testcard(op_set_ram, op_set_io, 0x09000000, 0x00800000)) goto activated;
 	/* test EZ Memory Extension */
-	if (gba_testcard(ez_set_ram, ez_set_io, 0x08000000, 0x01000000)) goto activated;
+	if (gba_testcard(ez_set_ram, ez_set_io, 0x08400000, 0x01000000)) goto activated;
+	/* test G6 */
+	if (gba_testcard(g6_set_ram, g6_set_io, 0x08000000, 0x02000000)) goto activated;
 
 	/* insert other adaptors here */
 
