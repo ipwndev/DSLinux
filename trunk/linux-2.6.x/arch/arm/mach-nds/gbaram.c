@@ -127,50 +127,62 @@ static void op_set_ram(void)
  * EZ-4 and EZ-5 Tripple Pack Memory Extension RAM/IO switching.
  */
 
+static inline void ez_OpenNorWrite(void)
+{
+	writew(0xd200, 0x9fe0000);
+	writew(0x1500, 0x8000000);
+	writew(0xd200, 0x8020000);
+	writew(0x1500, 0x8040000);
+	writew(0x1500, 0x9C40000);
+	writew(0x1500, 0x9fc0000);
+}
+
+static inline void ez_CloseNorWrite(void)
+{
+	writew(0xd200, 0x9fe0000);
+	writew(0x1500, 0x8000000);
+	writew(0xd200, 0x8020000);
+	writew(0x1500, 0x8040000);
+	writew(0xd200, 0x9C40000);
+	writew(0x1500, 0x9fc0000);
+}
+
+static inline void ez_SetRompage(u16 page)
+{
+	writew(0xd200, 0x9fe0000);
+	writew(0x1500, 0x8000000);
+	writew(0xd200, 0x8020000);
+	writew(0x1500, 0x8040000);
+	writew(page,   0x9880000);
+	writew(0x1500, 0x9fc0000);
+}
+
+static inline void ez_SetNandControl(u16 control)
+{
+	writew(0xd200, 0x9fe0000);
+	writew(0x1500, 0x8000000);
+	writew(0xd200, 0x8020000);
+	writew(0x1500, 0x8040000);
+	writew(control,0x9400000);
+	writew(0x1500, 0x9fc0000);
+}
+
 /* Set the mode of EZ to I/O */
 static void ez_set_io(void)
 {
-	// SetRomPage()
-	writew(0xd200, 0x9fe0000);
-	writew(0x1500, 0x8000000);
-	writew(0xd200, 0x8020000);
-	writew(0x1500, 0x8040000);
-	
-	writew(0x8000, 0x9880000);      // PSRAM-1 (16MB) to 0x8400000-0x9400000
-	writew(0x1500, 0x9fc0000);
-
-	// OpenWrite() + DisableSD()
-	writew(0xd200, 0x9fe0000);
-	writew(0x1500, 0x8000000);
-	writew(0xd200, 0x8020000);
-	writew(0x1500, 0x8040000);
-
-	writew(0x0001, 0x9400000);
-	writew(0x1500, 0x9C40000);
-	writew(0x1500, 0x9fc0000);
+	ez_OpenNorWrite();
+	ez_SetNandControl(1);
 }
 
 /* Set the mode of EZ to PSRAM */
 static void ez_set_ram(void)
 {
-	// SetRomPage()
-	writew(0xd200, 0x9fe0000);
-	writew(0x1500, 0x8000000);
-	writew(0xd200, 0x8020000);
-	writew(0x1500, 0x8040000);
-	
-	writew(0x8000, 0x9880000);      // PSRAM-1 (16MB) to 0x8400000-0x9400000
-	writew(0x1500, 0x9fc0000);
-
-	// OpenWrite() + DisableSD()
-	writew(0xd200, 0x9fe0000);
-	writew(0x1500, 0x8000000);
-	writew(0xd200, 0x8020000);
-	writew(0x1500, 0x8040000);
-
-	writew(0x0000, 0x9400000);
-	writew(0x1500, 0x9C40000);
-	writew(0x1500, 0x9fc0000);
+	ez_CloseNorWrite();
+	ez_SetNandControl(0);
+	/* Map EZ PSRAM at 0x08000000 */
+	ez_SetRompage(384);
+	/* Switch ON */
+	ez_OpenNorWrite();
 }
 
 //==========================================================================
@@ -275,7 +287,7 @@ static int gba_testcard( void (*set_ram)(void), void (*set_io)(void), u32 start,
 int gba_activate_ram(void)
 {
 	/* Disable RAM extensions which are R/W at startup time */
-	// ,,,
+	ez_CloseNorWrite();
 
 	/* test supercard CF/SD */
 	if (gba_testcard(sc_set_ram, sc_set_io, 0x08000000, 0x02000000)) goto activated;
@@ -284,7 +296,7 @@ int gba_activate_ram(void)
 	/* test Opera Memory Extension */
 	if (gba_testcard(op_set_ram, op_set_io, 0x09000000, 0x00800000)) goto activated;
 	/* test EZ Memory Extension */
-	if (gba_testcard(ez_set_ram, ez_set_io, 0x08400000, 0x01000000)) goto activated;
+	if (gba_testcard(ez_set_ram, ez_set_io, 0x08000000, 0x01000000)) goto activated;
 	/* test G6 */
 	if (gba_testcard(g6_set_ram, g6_set_io, 0x08000000, 0x02000000)) goto activated;
 
