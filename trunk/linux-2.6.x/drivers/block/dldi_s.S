@@ -88,6 +88,16 @@ _param_dldi:
 
 	.align
 _call_dldi:
+@ test the data cache control if we have RAM at GBA ROM space
+	mrc	p15, 0, r0, c2, c0, 0
+	tst	r0,#0b10000000		@ (this must be synchronous to head.S)
+	beq	_call_dldi_direct	@ data cache inactiv: no need to do the bankswitching stuff
+@ test the DLDI descriptor if this is a slot-1 device
+	ldr	ip,=_io_dldi		@ Address of DLDI descriptor
+	ldr	r0,[ip,#4]		@ read the features word
+	tst	r0,#FEATURE_SLOT_NDS	@ is it a slot 1 card?
+	bne	_call_dldi_stack	@ yes: no need to do the bankswitching, but need a stack in main memory
+@ this is a slot 2 card with RAM in the GBA slot area. Do all the stack and bankswitching magic.
 	ldr	ip,=_param_dldi		@ ip = IO parameter block
 	str	sp,[ip]			@ store old stack pointer
 	str	lr,[ip,#4]		@ store old link register
@@ -113,6 +123,41 @@ _call_dldi:
 	ldr	r0,[ip,#24]		@ restore result
 	gba_suffix
 	bx	lr			@ return
+@ this is a slot 1 card with a slot 2 ram extension. As DLDI drivers are not compiled with
+@ -mswp-byte-writes, we need to allocate a stack in main memory. And we need to disable interrupts,
+@ because linux is not able to have interrupts with a manipulated stack.
+_call_dldi_stack:
+	ldr	ip,=_param_dldi		@ ip = IO parameter block
+	str	sp,[ip]			@ store old stack pointer
+	str	lr,[ip,#4]		@ store old link register
+	ldr	r3, =NDS_IME		@ interrupt mask register
+	mov	ip, #0			@ 0 = disable
+	strh	ip, [r3]
+	mcr	p15, 0, ip, c7, c10, 4	@ drain write buffer for IME to take effect.
+	ldr	sp,=_stack_dldi		@ set new stack (in main memory!)
+	ldr	ip,=_param_dldi		@ ip = IO parameter block
+	ldr	r0,[ip,#8]		@ read parameter 1
+	ldr	r1,[ip,#12]		@ read parameter 2
+	ldr	r2,[ip,#16]		@ read parameter 3
+	ldr	r3,[ip,#20]		@ read pointer to function
+	blx	r3			@ execute the function
+	ldr	ip,=_param_dldi		@ ip = IO parameter block
+	ldr	sp,[ip]			@ restore stack
+	ldr	lr,[ip,#4]		@ restore link register
+	mov	ip, #0			@ be safe that all switching commands before are executed
+	mcr	p15, 0, ip, c7, c10, 4	@ drain write buffer
+	ldr	r3, =NDS_IME		@ interrupt mask register
+	mov	ip, #1			@ 1 = enable
+	strh	ip, [r3]
+	bx	lr			@ return
+@ direct call without bankswitching.
+_call_dldi_direct:
+	ldr	ip,=_param_dldi		@ ip = IO parameter block
+	ldr	r0,[ip,#8]		@ read parameter 1
+	ldr	r1,[ip,#12]		@ read parameter 2
+	ldr	r2,[ip,#16]		@ read parameter 3
+	ldr	r3,[ip,#20]		@ read pointer to function
+	bx	r3			@ execute function, return to caller
 
 	.pool
 	.align

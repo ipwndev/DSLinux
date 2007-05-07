@@ -281,7 +281,7 @@ _entry:
 	@ Disable data cache for GBA ROM, unless we have full 8bit write support.
 	@	      gGViWDMI
 	@ NOTE: this code must be synchronous with include/asm-arm/arch-nds/gbarom-macros.S
-	@ and with gbaram.c
+	@ and with gbaram.c and with dldi_s.S
 #if defined(CONFIG_NDS_ROM8BIT) && !defined(CONFIG_NDS_DLDI) 
 	ldr	r0,=0b10000010
 #else
