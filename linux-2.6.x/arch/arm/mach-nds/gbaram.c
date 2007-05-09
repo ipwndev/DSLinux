@@ -311,6 +311,8 @@ int gba_activate_ram(void)
 
 activated:
 
+/* It is very difficult to detect the ability for fast RAM access reliable */
+#if 0
 	/* the TURBO mode: try to lower the access time to GBA ROM space */
 #define WAIT_CR 	0x04000204
 
@@ -326,7 +328,7 @@ activated:
 		/* failure: stay slow */
 	        writew( readw(WAIT_CR) & ~0x0010, WAIT_CR);
 	}
-
+#endif
 	/* Activate the data cache for GBA ROM space so CONFIG_NDS_ROM8BIT can work */
 	{
 		/* this is the same pattern used in head.S */
