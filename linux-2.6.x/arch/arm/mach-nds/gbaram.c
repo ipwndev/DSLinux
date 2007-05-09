@@ -311,7 +311,7 @@ int gba_activate_ram(void)
 
 activated:
 
-/* It is very difficult to detect the ability for fast RAM access reliable */
+/* It is very difficult to detect support for fast RAM access reliably */
 #if 0
 	/* the TURBO mode: try to lower the access time to GBA ROM space */
 #define WAIT_CR 	0x04000204
