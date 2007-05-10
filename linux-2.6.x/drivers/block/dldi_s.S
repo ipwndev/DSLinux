@@ -161,7 +161,7 @@ _call_dldi_direct:
 
 	.pool
 	.align
-	.space	1024			@ Allows for 1 physical sector and some more
+	.space	2048			@ EZ DLDI drivers need more than 1 KByte
 _stack_dldi:
 	.space	4			@ for safety
 _buf_dldi:
