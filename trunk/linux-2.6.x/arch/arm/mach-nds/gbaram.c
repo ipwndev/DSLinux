@@ -179,8 +179,8 @@ static void ez_set_ram(void)
 {
 	ez_CloseNorWrite();
 	ez_SetNandControl(0);
-	/* Map EZ PSRAM at 0x08000000 */
-	ez_SetRompage(384);
+	/* Map EZ PSRAM at 0x08400000 */
+	ez_SetRompage(352);
 	/* Switch ON */
 	ez_OpenNorWrite();
 }
@@ -296,7 +296,7 @@ int gba_activate_ram(void)
 	/* test Opera Memory Extension */
 	if (gba_testcard(op_set_ram, op_set_io, 0x09000000, 0x00800000)) goto activated;
 	/* test EZ Memory Extension */
-	if (gba_testcard(ez_set_ram, ez_set_io, 0x08000000, 0x01000000)) goto activated;
+	if (gba_testcard(ez_set_ram, ez_set_io, 0x08400000, 0x01000000)) goto activated;
 	/* test G6 */
 	if (gba_testcard(g6_set_ram, g6_set_io, 0x08000000, 0x02000000)) goto activated;
 
