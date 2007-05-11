@@ -179,7 +179,8 @@ static void ez_set_ram(void)
 {
 	ez_CloseNorWrite();
 	ez_SetNandControl(0);
-	/* Map EZ PSRAM at 0x08400000 */
+	/* Map EZ PSRAM at 0x08400000. This is the "natural" address of the EZ.
+           All IO addresses are outside this area. */
 	ez_SetRompage(352);
 	/* Switch ON */
 	ez_OpenNorWrite();
