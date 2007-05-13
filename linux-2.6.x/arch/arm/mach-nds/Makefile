@@ -36,7 +36,7 @@ $(obj)/arm7.bin: $(obj)/arm7.elf
 arm7obj = $(obj)/arm7/head.o $(obj)/arm7/main.o $(obj)/arm7/time.o $(obj)/arm7/spi.o $(obj)/arm7/sound.o $(obj)/arm7/wifi.o $(obj)/arm7/divide.o
 
 $(obj)/arm7.elf: $(arm7obj) $(src)/arm7/arm7.lds
-	$(CC) -nostartfiles -nostdlib -o $(obj)/arm7.elf $(arm7obj) -T $(src)/arm7/arm7.lds
+	$(LD) -nostartfiles -nostdlib -o $(obj)/arm7.elf $(arm7obj) -T $(src)/arm7/arm7.lds
 
 clean:
 	rm -f arm7.elf arm7.bin *.o
