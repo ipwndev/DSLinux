@@ -167,11 +167,43 @@ static inline void ez_SetNandControl(u16 control)
 	writew(0x1500, 0x9fc0000);
 }
 
+/* This is from the EZ-4 driver.
+   Obviously, this is the combination of
+   OpenNorWrite() and NandControl(1).
+*/
+static inline void ez_SD_Enable(void)
+{
+	writew(0xd200, 0x9fe0000);
+	writew(0x1500, 0x8000000);
+	writew(0xd200, 0x8020000);
+	writew(0x1500, 0x8040000);
+	writew(0x0001, 0x9400000);
+	writew(0x1500, 0x9C40000);
+	writew(0x1500, 0x9fc0000);
+}
+
+/* This is from the EZ-4 driver.
+   Obviously, this is the combination of
+   CloseNorWrite() and NandControl(0).
+*/
+static inline void ez_SD_Disable(void)
+{
+	writew(0xd200, 0x9fe0000);
+	writew(0x1500, 0x8000000);
+	writew(0xd200, 0x8020000);
+	writew(0x1500, 0x8040000);
+	writew(0x0000, 0x9400000);
+	writew(0xd200, 0x9C40000);
+	writew(0x1500, 0x9fc0000);
+}
+
 /* Set the mode of EZ to I/O */
 static void ez_set_io(void)
 {
 	ez_OpenNorWrite();
 	ez_SetNandControl(1);
+	/* again for EZ-4 */
+	ez_SD_Enable();
 }
 
 /* Set the mode of EZ to PSRAM */
@@ -179,6 +211,8 @@ static void ez_set_ram(void)
 {
 	ez_CloseNorWrite();
 	ez_SetNandControl(0);
+	/* again for EZ-4 */
+	ez_SD_Disable();
 	/* Map EZ PSRAM at 0x08400000. This is the "natural" address of the EZ.
            All IO addresses are outside this area. */
 	ez_SetRompage(352);
@@ -288,7 +322,7 @@ static int gba_testcard( void (*set_ram)(void), void (*set_io)(void), u32 start,
 int gba_activate_ram(void)
 {
 	/* Disable RAM extensions which are R/W at startup time */
-	ez_CloseNorWrite();
+	ez_set_io();
 
 	/* test supercard CF/SD */
 	if (gba_testcard(sc_set_ram, sc_set_io, 0x08000000, 0x02000000)) goto activated;
