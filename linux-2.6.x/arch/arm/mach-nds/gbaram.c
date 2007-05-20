@@ -200,24 +200,13 @@ static inline void ez_SD_Disable(void)
 /* Set the mode of EZ to I/O */
 static void ez_set_io(void)
 {
-	ez_OpenNorWrite();
-	ez_SetNandControl(1);
-	/* again for EZ-4 */
-	ez_SD_Enable();
+	/* seems that nothing is needed for the EZ-4 */
 }
 
 /* Set the mode of EZ to PSRAM */
 static void ez_set_ram(void)
 {
-	ez_CloseNorWrite();
-	ez_SetNandControl(0);
-	/* again for EZ-4 */
-	ez_SD_Disable();
-	/* Map EZ PSRAM at 0x08400000. This is the "natural" address of the EZ.
-           All IO addresses are outside this area. */
-	ez_SetRompage(352);
-	/* Switch ON */
-	ez_OpenNorWrite();
+	/* seems that nothing is needed for the EZ-4 */
 }
 
 //==========================================================================
@@ -319,10 +308,41 @@ static int gba_testcard( void (*set_ram)(void), void (*set_io)(void), u32 start,
 }
 
 //==========================================================================
+/*
+ * Special detection function for the EZ cards.
+ */
+int ez_detect(void)
+{
+	u32 len;
+
+	// switch to OS mode
+	ez_SetRompage(0x8000);
+	// enable writing
+	ez_OpenNorWrite();
+
+	// first step: below 0x08400000, there must be no RAM
+	if (gba_testram(0x08000000, 256)) 
+		return 0;
+	// second: at 0x08400000, there must be RAM
+	if (!gba_testram(0x08400000, 256)) 
+		return 0;
+	// test for end address (129MB PSRAM or only 64 MB?)
+	len = 0x00800000;
+	if (gba_testram(len, 256))
+		len = 0x01000000;
+	// fill in result values
+	gba_set_ram = ez_set_ram;
+	gba_set_io  = ez_set_io;
+	gba_start   = 0x08400000;
+	gba_length  = len;
+	return 1;
+}
+
+//==========================================================================
 int gba_activate_ram(void)
 {
-	/* Disable RAM extensions which are R/W at startup time */
-	ez_set_io();
+	/* Test EZ first */
+	if (ez_detect()) goto activated;
 
 	/* test supercard CF/SD */
 	if (gba_testcard(sc_set_ram, sc_set_io, 0x08000000, 0x02000000)) goto activated;
@@ -330,8 +350,6 @@ int gba_activate_ram(void)
 	if (gba_testcard(m3_set_ram, m3_set_io, 0x08000000, 0x02000000)) goto activated;
 	/* test Opera Memory Extension */
 	if (gba_testcard(op_set_ram, op_set_io, 0x09000000, 0x00800000)) goto activated;
-	/* test EZ Memory Extension */
-	if (gba_testcard(ez_set_ram, ez_set_io, 0x08400000, 0x01000000)) goto activated;
 	/* test G6 */
 	if (gba_testcard(g6_set_ram, g6_set_io, 0x08000000, 0x02000000)) goto activated;
 
