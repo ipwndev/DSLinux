@@ -315,18 +315,30 @@ int ez_detect(void)
 {
 	u32 len;
 
-	// switch to OS mode
+	// EZ4:switch to OS mode
 	ez_SetRompage(0x8000);
 	// enable writing
 	ez_OpenNorWrite();
 
-	// first step: below 0x08400000, there must be no RAM
-	if (gba_testram(0x08000000, 256)) 
-		return 0;
-	// second: at 0x08400000, there must be RAM
-	if (!gba_testram(0x08400000, 256)) 
-		return 0;
-	// test for end address (129MB PSRAM or only 64 MB?)
+	// detect PSRAM starting at 0x08400000
+	if (!gba_testram(0x08000000, 256) && gba_testram(0x08400000, 256))
+		goto ez_ok;
+
+	// EZ5 3in1 has no OS mode
+	ez_CloseNorWrite();
+	// EZ5:switch PSRAM start to 0x08400000
+	ez_SetRompage(352);
+	// enable writing
+	ez_OpenNorWrite();
+
+	// detect PSRAM starting at 0x08400000
+	if (!gba_testram(0x08000000, 256) && gba_testram(0x08400000, 256))
+		goto ez_ok;
+
+	// nothing found
+	return 0;
+
+ez_ok:	// test for end address (129MB PSRAM or only 64 MB?)
 	len = 0x00800000;
 	if (gba_testram(0x08400000+len, 256))
 		len = 0x01000000;
