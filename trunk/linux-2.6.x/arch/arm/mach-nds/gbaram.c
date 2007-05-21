@@ -328,7 +328,7 @@ int ez_detect(void)
 		return 0;
 	// test for end address (129MB PSRAM or only 64 MB?)
 	len = 0x00800000;
-	if (gba_testram(len, 256))
+	if (gba_testram(0x08400000+len, 256))
 		len = 0x01000000;
 	// fill in result values
 	gba_set_ram = ez_set_ram;
