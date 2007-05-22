@@ -320,7 +320,7 @@ int ez_detect(void)
 	// enable writing
 	ez_OpenNorWrite();
 
-	// detect PSRAM starting at 0x08400000
+	// detect EZ4 PSRAM starting at 0x08400000
 	if (!gba_testram(0x08000000, 256) && gba_testram(0x08400000, 256))
 		goto ez_ok;
 
@@ -331,8 +331,9 @@ int ez_detect(void)
 	// enable writing
 	ez_OpenNorWrite();
 
-	// detect PSRAM starting at 0x08400000
-	if (!gba_testram(0x08000000, 256) && gba_testram(0x08400000, 256))
+	// detect EZ5 3in1 PSRAM starting at 0x08400000
+	// EZ5 has mirrored PSRAM from 0x08000000 to 0x08400000
+	if (gba_testram(0x08400000, 256))
 		goto ez_ok;
 
 	// nothing found
