@@ -9,10 +9,7 @@
 # characters. Use emacs' kfill.el to edit this file or you lose.
 #
 
-CONFIG_DEFAULTS_NINTENDO_DATEL
-  DATEL: Build for Max Media Dock.
-         THE DATEL BUILD IS BROKEN! Try DLDI instead.
-
+CONFIG_DEFAULTS_NINTENDO_DLDI
   DLDI: Build for devices that are supported by DLDI. Mainly
         useful for running DSLinux from slot-1 (NDS game slot)
         devices. See http://chishm.drunkencoders.com/DLDI/ for
