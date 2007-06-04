@@ -14,7 +14,7 @@
 # libtool.m4 - Configure libtool for the host system. -*-Autoconf-*-
 
 # serial 47 AC_PROG_LIBTOOL
-# Debian $Rev: 192 $
+# Debian $Rev$
 
 
 # AC_PROVIDE_IFELSE(MACRO-NAME, IF-PROVIDED, IF-NOT-PROVIDED)
@@ -5942,38 +5942,6 @@ AC_DEFUN([AM_AUTOMAKE_VERSION], [am__api_version="1.8"])
 AC_DEFUN([AM_SET_CURRENT_AUTOMAKE_VERSION],
 	 [AM_AUTOMAKE_VERSION([1.8.2])])
 
-# Figure out how to run the assembler.             -*- Autoconf -*-
-
-# serial 3
-
-# Copyright (C) 2001, 2003, 2004 Free Software Foundation, Inc.
-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2, or (at your option)
-# any later version.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
-# 02111-1307, USA.
-
-# AM_PROG_AS
-# ----------
-AC_DEFUN([AM_PROG_AS],
-[# By default we simply use the C compiler to build assembly code.
-AC_REQUIRE([AC_PROG_CC])
-test "${CCAS+set}" = set || CCAS=$CC
-test "${CCASFLAGS+set}" = set || CCASFLAGS=$CFLAGS
-AC_ARG_VAR([CCAS],      [assembler compiler command (defaults to CC)])
-AC_ARG_VAR([CCASFLAGS], [assembler compiler flags (defaults to CFLAGS)])
-])
-
 # AM_AUX_DIR_EXPAND
 
 # Copyright (C) 2001, 2003 Free Software Foundation, Inc.
@@ -6847,3 +6815,30 @@ fi
 INSTALL_STRIP_PROGRAM="\${SHELL} \$(install_sh) -c -s"
 AC_SUBST([INSTALL_STRIP_PROGRAM])])
 
+m4_include([m4/codeset.m4])
+m4_include([m4/gettext.m4])
+m4_include([m4/glibc21.m4])
+m4_include([m4/iconv.m4])
+m4_include([m4/intdiv0.m4])
+m4_include([m4/intmax.m4])
+m4_include([m4/inttypes-pri.m4])
+m4_include([m4/inttypes.m4])
+m4_include([m4/inttypes_h.m4])
+m4_include([m4/lcmessage.m4])
+m4_include([m4/lib-ld.m4])
+m4_include([m4/lib-link.m4])
+m4_include([m4/lib-prefix.m4])
+m4_include([m4/longdouble.m4])
+m4_include([m4/longlong.m4])
+m4_include([m4/nls.m4])
+m4_include([m4/po.m4])
+m4_include([m4/printf-posix.m4])
+m4_include([m4/progtest.m4])
+m4_include([m4/signed.m4])
+m4_include([m4/size_max.m4])
+m4_include([m4/stdint_h.m4])
+m4_include([m4/uintmax_t.m4])
+m4_include([m4/ulonglong.m4])
+m4_include([m4/wchar_t.m4])
+m4_include([m4/wint_t.m4])
+m4_include([m4/xsize.m4])

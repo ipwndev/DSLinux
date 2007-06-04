@@ -14,7 +14,7 @@
 # libtool.m4 - Configure libtool for the host system. -*-Autoconf-*-
 
 # serial 47 AC_PROG_LIBTOOL
-# Debian $Rev: 192 $
+# Debian $Rev$
 
 
 # AC_PROVIDE_IFELSE(MACRO-NAME, IF-PROVIDED, IF-NOT-PROVIDED)
@@ -6815,30 +6815,3 @@ fi
 INSTALL_STRIP_PROGRAM="\${SHELL} \$(install_sh) -c -s"
 AC_SUBST([INSTALL_STRIP_PROGRAM])])
 
-m4_include([m4/codeset.m4])
-m4_include([m4/gettext.m4])
-m4_include([m4/glibc21.m4])
-m4_include([m4/iconv.m4])
-m4_include([m4/intdiv0.m4])
-m4_include([m4/intmax.m4])
-m4_include([m4/inttypes-pri.m4])
-m4_include([m4/inttypes.m4])
-m4_include([m4/inttypes_h.m4])
-m4_include([m4/lcmessage.m4])
-m4_include([m4/lib-ld.m4])
-m4_include([m4/lib-link.m4])
-m4_include([m4/lib-prefix.m4])
-m4_include([m4/longdouble.m4])
-m4_include([m4/longlong.m4])
-m4_include([m4/nls.m4])
-m4_include([m4/po.m4])
-m4_include([m4/printf-posix.m4])
-m4_include([m4/progtest.m4])
-m4_include([m4/signed.m4])
-m4_include([m4/size_max.m4])
-m4_include([m4/stdint_h.m4])
-m4_include([m4/uintmax_t.m4])
-m4_include([m4/ulonglong.m4])
-m4_include([m4/wchar_t.m4])
-m4_include([m4/wint_t.m4])
-m4_include([m4/xsize.m4])
