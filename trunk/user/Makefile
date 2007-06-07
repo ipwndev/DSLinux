@@ -362,6 +362,7 @@ dir_$(CONFIG_USER_THTTPD_THTTPD)            += thttpd
 dir_$(CONFIG_USER_TINYIRC_TINYIRC)          += tinyirc
 dir_$(CONFIG_USER_TINYLOGIN_CRYPT_CRYPT)    += tinylogin
 dir_$(CONFIG_USER_TINYLOGIN_TINYLOGIN)      += tinylogin
+dir_$(CONFIG_USER_TINYSID_TINYSID)          += tinysid
 dir_$(CONFIG_USER_TINYTCL_TCLSH)            += tinytcl
 dir_$(CONFIG_USER_TIP_TIP)                  += tip
 dir_$(CONFIG_USER_TIMEPEG_TPT)              += tpt

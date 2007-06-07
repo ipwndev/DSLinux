@@ -3,7 +3,7 @@ DEFS = -Wall
 CFLAGS = $(DEFS) -O
 LDFLAGS =
 LIBS = -lpthread
-CC = gcc
+#CC = gcc
 
 OBJECTS_A = tinysid.o sidengine.o soundcard.o
 
@@ -20,5 +20,9 @@ soundcard.o: soundcard.c
 		
 clean:
 	echo Cleaning up...
-	rm *.o
+	rm tinysid tinysid.gdb *.o
 	echo OK.
+
+romfs:
+		$(ROMFSINST) /bin/tinysid
+		#$(ROMFSINST) /home/Freeze.sid

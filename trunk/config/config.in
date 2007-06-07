@@ -828,6 +828,7 @@ fi
 bool 'pThreads threaddemos'	CONFIG_USER_THREADDEMOS_THREADDEMOS
 bool 'tip'			CONFIG_USER_TIP_TIP
 bool 'tripwire'			CONFIG_USER_TRIPWIRE_TRIPWIRE
+bool 'tinysid'                  CONFIG_USER_TINYSID_TINYSID
 bool 'unrar'			CONFIG_USER_UNRAR_UNRAR
 bool 'unzip'			CONFIG_USER_UNZIP_UNZIP
 if [ "$CONFIG_USER_UNZIP_UNZIP" = "y" ]; then
