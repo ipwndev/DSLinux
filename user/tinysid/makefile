@@ -1,7 +1,7 @@
 # TinySID makefile
 DEFS = -Wall
-CFLAGS = $(DEFS) -O
-LDFLAGS =
+CFLAGS += $(DEFS) -O
+LDFLAGS +=
 LIBS = -lpthread
 #CC = gcc
 
