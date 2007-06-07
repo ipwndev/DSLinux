@@ -1201,6 +1201,9 @@ CONFIG_USER_MP3PLAY_SWAP_WD
 CONFIG_USER_MUSICBOX_MUSICBOX
   Front-end for mp3play and mixer
 
+CONFIG_USER_TINYSID_TINYSID
+  TinySID is the smallest SID player for c64 SID music.
+
 CONFIG_USER_NULL_NULL
   NULL
   
