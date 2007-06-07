@@ -1,5 +1,0 @@
-add_custfields
-#1 0,"Custom1"
-#2 1,"Custom2"
-#3 2,"Custom3"
-#4 3,"Custom4"
