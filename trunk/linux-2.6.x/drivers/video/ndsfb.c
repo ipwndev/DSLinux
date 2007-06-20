@@ -261,7 +261,7 @@ static irqreturn_t ndsfb_interrupt(int irq, void *dev_id, struct pt_regs *regs)
      *  This means it doesn't alter par but it does use hardware
      *  data from it to check this var. 
      */
-
+int scale=0;int xwidth=256;int yheight=192;
 static int ndsfb_check_var(struct fb_var_screeninfo *var, struct fb_info *info)
 {
 	/*
@@ -278,10 +278,23 @@ static int ndsfb_check_var(struct fb_var_screeninfo *var, struct fb_info *info)
 	/*
 	 *  Some very basic checks
 	 */
-	if (var->xres != 256)
-		return -EINVAL;
-	if (var->yres != 192)
-		return -EINVAL;
+
+	if ((var->xres == var->xres_virtual) && (var->yres == var->yres_virtual))
+	{
+		scale=1;
+		xwidth=var->xres;
+		yheight=var->yres;
+		var->xres_virtual = 256;
+		var->yres_virtual = 512;
+	}
+	else
+	{
+		scale=0;
+		if (var->xres != 256)
+			return -EINVAL;
+		if (var->yres != 192)
+			return -EINVAL;
+	}
 
 	if (var->bits_per_pixel != 16 && var->bits_per_pixel != 8)
 		return -EINVAL;
@@ -379,12 +392,24 @@ static int ndsfb_set_par(struct fb_info *info)
 		else
 			BG2_CR = BG_BMP8_256x256 | BG_BMP_BASE(0);
 
-		BG2_XDX = 1 << 8;
-		BG2_XDY = 0;
-		BG2_YDX = 0;
-		BG2_YDY = 1 << 8;
-		BG2_CX = (info->var.xoffset) << 8;
-		BG2_CY = (info->var.yoffset) << 8;
+		if (scale==1){
+			BG2_XDX = ((xwidth / 256) << 8) | (xwidth % 256) ; 
+			BG2_YDY = ((yheight / 192) << 8) | ((yheight % 192) + (yheight % 192) / 3) ;
+			BG2_XDY = 0;
+			BG2_YDX = 0;
+			BG2_CX  = 0;
+			BG2_CY  = 0;
+		}
+		else
+		{
+			BG2_XDX = 1 << 8;
+			BG2_YDY = 1 << 8;
+			BG2_XDY = 0;
+			BG2_YDX = 0;
+			BG2_CX = (info->var.xoffset) << 8;
+			BG2_CY = (info->var.yoffset) << 8;
+		}
+
 	} else {
 		SUB_DISPLAY_CR = MODE_5_2D | DISPLAY_BG3_ACTIVE;
 		writeb(VRAM_ENABLE | VRAM_C_SUB_BG_0x6200000, VRAM_C_CR);
