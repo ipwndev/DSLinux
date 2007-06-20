@@ -7,7 +7,10 @@ if [ -e /etc/rc.conf ]
 then
 	. /etc/rc.conf
 else
-	echo "/etc/rc.conf does not exist on your system - see /etc/rc.defaults"
+	echo "The file /etc/rc.conf does not exist on your system,"
+	echo "so the default configuration will be used."
+	echo "The file /etc/rc.defaults contains instructions on how"
+	echo "to create /etc/rc.conf to customise your dslinux installation."
 fi
 
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
@@ -17,7 +20,7 @@ export PATH
 if [ ! -f /etc/passwd ]
 then
 	echo "Creating default /etc/passwd"
-	echo "root:xxSVJVBe8UDn2:0:0:Guybrush:/home:/bin/sh" > /etc/passwd
+	echo "root:xxSVJVBe8UDn2:0:0:Tim Bisley:/home:/bin/sh" > /etc/passwd
 	echo "bin:x:1:1:bin:/bin:" >> /etc/passwd
 	echo "daemon:x:2:2:daemon:/sbin:" >> /etc/passwd
 	echo "nobody:x:99:99:Nobody:/:" >> /etc/passwd
@@ -35,6 +38,7 @@ then
 else
 	echo "Not configuring network:"
 	echo "enable_network_on_boot is set to \"$enable_network_on_boot\""
+	echo "To configure wireless edit /etc/rc.conf or run 'wnc'."
 	__network_up="NO"
 fi
 

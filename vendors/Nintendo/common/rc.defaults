@@ -2,9 +2,10 @@
 #
 #	INSTRUCTIONS
 #
+# IMPORTANT: This file is read-only!
 # You have to make a copy of this file so you can edit it.
 #
-# If you are using the RAM or the RAM-DEVEL build,
+# If you are using the DLDI build,
 # run this command to create the copy:
 #	cp /etc/rc.defaults /media/linux/etc/rc.conf
 #
@@ -22,7 +23,7 @@
 # NOTE THAT /var/rc.conf WILL NOT BE PRESERVED ACROSS
 # REBOOTS ON THE NDS BUILD!
 #
-# If you are using the .ds.gba version of DSLinux,
+# If you are using the DSGBA version of DSLinux,
 # run this command to create the copy:
 #	cp /etc/rc.defaults /sram/rc.conf.
 # The /sram filesystem needs to be initialised before
@@ -47,6 +48,9 @@ hostname="NintendoDS"
 
 # By default, wireless networking is not started on boot.
 # If you want to enable it at boot time, set this flag to "YES".
+# Note that before you enable this you should configure wireless
+# networking. You can either do so further below in this file
+# or use the 'wnc' program to configure wireless automatically.
 enable_network_on_boot="NO"
 
 # You can start networking anytime by running:
@@ -118,7 +122,8 @@ start_telnetd="NO"
 # set this to "YES". By default, the firmware version is shown.
 show_firmware_version="YES"
 
-# 
+# If you want to start nanoX at boot, set this to "YES".
+# Note that nanoX is not really useful at this point.
 start_nanox="NO"
 
 # End of file.
