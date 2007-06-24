@@ -491,6 +491,9 @@ CONFIG_USER_GREP_GREP
 CONFIG_USER_HEXEDIT_HEXEDIT
   A nice hex editor
 
+CONFIG_USER_LCALC_LCALC
+  A simple, 4 function calculator
+
 CONFIG_USER_ROUTE_IFCONFIG
   Required to configure network interfaces.
   Approx. binary size: 28k

@@ -176,6 +176,7 @@ dir_$(CONFIG_USER_KENDIN_CONFIG)            += kendin-config
 dir_$(CONFIG_USER_KLAXON_KLAXON)            += klaxon
 dir_$(CONFIG_USER_L2TPD_L2TPD)              += l2tpd
 dir_$(CONFIG_USER_LANG_A60)                 += a60
+dir_$(CONFIG_USER_LCALC_LCALC)              += lcalc
 dir_$(CONFIG_USER_LCD_LCD)                  += lcd
 dir_$(CONFIG_USER_LEDCON_LEDCON)            += ledcon
 dir_$(CONFIG_USER_LEVEE_VI)                 += levee
