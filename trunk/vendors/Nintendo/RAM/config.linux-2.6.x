@@ -1,6 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
+# Sun Jun 24 13:07:55 2007
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
@@ -822,7 +823,6 @@ CONFIG_NLS_ISO8859_1=y
 # CONFIG_PRINTK_TIME is not set
 # CONFIG_DEBUG_KERNEL is not set
 CONFIG_LOG_BUF_SHIFT=14
-CONFIG_FRAME_POINTER=y
 # CONFIG_DEBUG_USER is not set
 
 #
