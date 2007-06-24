@@ -9,7 +9,8 @@ simp
 copy
 f
 simp symb
-#6
+6
 deri z
 f
+simp symb
 simp symb

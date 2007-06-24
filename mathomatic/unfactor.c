@@ -1,7 +1,7 @@
 /*
- * Algebraic manipulator unfactorizing (expanding) routines.
+ * Mathomatic unfactorizing (expanding) routines.
  *
- * Copyright (c) 1987-2005 George Gesslein II.
+ * Copyright (C) 1987-2007 George Gesslein II.
  */
 
 #include "includes.h"
@@ -12,7 +12,7 @@ static int	unf_sub();
  * Totally unfactor equation side and simplify.
  */
 uf_simp(equation, np)
-token_type	*equation;	/* equation side pointer */
+token_type	*equation;	/* pointer to beginning of equation side */
 int		*np;		/* pointer to length of equation side */
 {
 	if (*np == 0)
@@ -285,8 +285,8 @@ int		ii;
 	double		d1, d2;
 
 	switch (equation[loc].token.operatr) {
-	case DIVIDE:
 	case TIMES:
+	case DIVIDE:
 		if (ii != 1)
 			break;
 		for (i = b1 + 1; i < e1; i += 2) {
@@ -315,14 +315,14 @@ u_again:
 				if (len + (eb1 - b1) + (i - b2) + (e1 - be1) + 1 > n_tokens) {
 					error_huge();
 				}
-				blt(&scratch[len], &equation[b1], (eb1 - b1) * sizeof(*equation));
+				blt(&scratch[len], &equation[b1], (eb1 - b1) * sizeof(token_type));
 				j = len;
 				len += (eb1 - b1);
 				for (; j < len; j++)
 					scratch[j].level++;
-				blt(&scratch[len], &equation[b2], (i - b2) * sizeof(*equation));
+				blt(&scratch[len], &equation[b2], (i - b2) * sizeof(token_type));
 				len += (i - b2);
-				blt(&scratch[len], &equation[be1], (e1 - be1) * sizeof(*equation));
+				blt(&scratch[len], &equation[be1], (e1 - be1) * sizeof(token_type));
 				j = len;
 				len += (e1 - be1);
 				for (; j < len; j++)
@@ -341,9 +341,9 @@ u_again:
 					if (*np - (e1 - b1) + len > n_tokens) {
 						error_huge();
 					}
-					blt(&equation[b1+len], &equation[e1], (*np - e1) * sizeof(*equation));
+					blt(&equation[b1+len], &equation[e1], (*np - e1) * sizeof(token_type));
 					*np += len - (e1 - b1);
-					blt(&equation[b1], scratch, len * sizeof(*equation));
+					blt(&equation[b1], scratch, len * sizeof(token_type));
 					return true;
 				}
 			}
@@ -367,9 +367,9 @@ u1_again:
 				if (len + (i - b2) + (e1 - loc) + 1 > n_tokens) {
 					error_huge();
 				}
-				blt(&scratch[len], &equation[b2], (i - b2) * sizeof(*equation));
+				blt(&scratch[len], &equation[b2], (i - b2) * sizeof(token_type));
 				len += (i - b2);
-				blt(&scratch[len], &equation[loc], (e1 - loc) * sizeof(*equation));
+				blt(&scratch[len], &equation[loc], (e1 - loc) * sizeof(token_type));
 				j = len;
 				len += (e1 - loc);
 				for (; j < len; j++)
@@ -388,9 +388,9 @@ u1_again:
 					if (*np - (e1 - b1) + len > n_tokens) {
 						error_huge();
 					}
-					blt(&equation[b1+len], &equation[e1], (*np - e1) * sizeof(*equation));
+					blt(&equation[b1+len], &equation[e1], (*np - e1) * sizeof(token_type));
 					*np += len - (e1 - b1);
-					blt(&equation[b1], scratch, len * sizeof(*equation));
+					blt(&equation[b1], scratch, len * sizeof(token_type));
 					return true;
 				}
 			}
@@ -414,11 +414,11 @@ u2_again:
 					error_huge();
 				}
 				j = len;
-				blt(&scratch[len], &equation[b1], (loc + 1 - b1) * sizeof(*equation));
+				blt(&scratch[len], &equation[b1], (loc + 1 - b1) * sizeof(token_type));
 				len += (loc + 1 - b1);
 				for (; j < len; j++)
 					scratch[j].level++;
-				blt(&scratch[len], &equation[b2], (i - b2) * sizeof(*equation));
+				blt(&scratch[len], &equation[b2], (i - b2) * sizeof(token_type));
 				len += (i - b2);
 				if (i < e1) {
 					scratch[len].level = level;
@@ -438,9 +438,9 @@ u2_again:
 					if (*np - (e1 - b1) + len > n_tokens) {
 						error_huge();
 					}
-					blt(&equation[b1+len], &equation[e1], (*np - e1) * sizeof(*equation));
+					blt(&equation[b1+len], &equation[e1], (*np - e1) * sizeof(token_type));
 					*np += len - (e1 - b1);
-					blt(&equation[b1], scratch, len * sizeof(*equation));
+					blt(&equation[b1], scratch, len * sizeof(token_type));
 					return true;
 				}
 			}
@@ -519,7 +519,7 @@ int		*np, i;
 		equation[j].level++;
 	}
 	i++;
-	blt(&equation[i+2], &equation[i], (*np - i) * sizeof(*equation));
+	blt(&equation[i+2], &equation[i], (*np - i) * sizeof(token_type));
 	*np += 2;
 	equation[i].level = level + 1;
 	equation[i].kind = CONSTANT;
@@ -607,7 +607,7 @@ int		*np, i;
 	for (k = j; k < i; k++) {
 		equation[k].level++;
 	}
-	blt(&equation[j+2], &equation[j], (*np - j) * sizeof(*equation));
+	blt(&equation[j+2], &equation[j], (*np - j) * sizeof(token_type));
 	*np += 2;
 	equation[j].level = level + 1;
 	equation[j].kind = CONSTANT;
@@ -641,7 +641,7 @@ int		*np;
 					if ((*np + 2) > n_tokens) {
 						error_huge();
 					}
-					blt(&equation[i+3], &equation[i+1], (*np - (i + 1)) * sizeof(*equation));
+					blt(&equation[i+3], &equation[i+1], (*np - (i + 1)) * sizeof(token_type));
 					*np += 2;
 					equation[i].token.constant = -equation[i].token.constant;
 					i++;
@@ -693,10 +693,11 @@ int		*np;
 					equation[i+3].token.constant -= 1.0;
 					blt(&equation[i+2], &equation[i], (*np - i) * sizeof(token_type));
 					*np += 2;
-					equation[i+1].level = level - 1;
-					equation[i+1].kind = CONSTANT;
-					equation[i+1].token.constant = equation[i+3].token.constant;
-					i += 2;
+					i++;
+					equation[i].level = level - 1;
+					equation[i].kind = CONSTANT;
+					equation[i].token.constant = equation[i+2].token.constant;
+					i++;
 				} else {
 					equation[i].token.operatr = TIMES;
 					equation[i+1].token.constant = 1.0 / equation[i+1].token.constant;

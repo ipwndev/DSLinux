@@ -1,7 +1,7 @@
 /*
  * Group and combine denominators.
  *
- * Copyright (c) 1987-2005 George Gesslein II.
+ * Copyright (C) 1987-2007 George Gesslein II.
  */
 
 #include "includes.h"
@@ -14,21 +14,21 @@ static void	group_recurse();
  * Combine denominators in equation side.
  * This means converting "a/b+c/d" to "(a*d+c*b)/b/d".
  *
- * If start_flag is false, only combine denominators to simplify complex fractions.
+ * If start_flag is 0, only combine denominators to simplify complex fractions.
  *
- * If start_flag is true, always combine denominators.
+ * If start_flag is 1, always combine denominators.
  *
- * If start_flag is 2, combine denominators if they don't have a GCD in common.
- * Note that this wipes out tlhs and trhs.  This prevents making a more complicated
- * algebraic fraction.  This needs to be improved to combine denominators and remove
- * the GCD.
+ * If start_flag is 2, always combine denominators and remove any polynomial GCD between them.
+ * Note that this wipes out tlhs and trhs.  This simplifies all algebraic fractions
+ * into a single simple fraction and prevents making a more complicated (or larger)
+ * algebraic fraction.
  *
  * Return true if equation side was modified.
  */
 int
 super_factor(equation, np, start_flag)
-token_type	*equation;
-int		*np;
+token_type	*equation;	/* pointer to the beginning of the equation side */
+int		*np;		/* pointer to the length of the equation side */
 int		start_flag;
 {
 	int	rv;
@@ -51,8 +51,7 @@ int		*np, loc, level, start_flag;
 
 	if (!start_flag) {
 		for (i = loc + 1; i < *np && equation[i].level >= level; i += 2) {
-			if (equation[i].level == level
-			    && equation[i].token.operatr == DIVIDE) {
+			if (equation[i].level == level && equation[i].token.operatr == DIVIDE) {
 				start_flag = true;
 				break;
 			}
@@ -102,27 +101,23 @@ sf_sub(equation, np, loc, i1, n1, i2, n2, level, check_flag)
 token_type	*equation;
 int		*np, loc, i1, n1, i2, n2, level, check_flag;
 {
-	int	i, j, k;
-	int	b1, b2;
-	int	len;
-	int	e1, e2;
-	int	op1, op2;
-	int	div_flag1 = false, div_flag2 = false;
+	int		i, j, k;
+	int		b1, b2;
+	int		len;
+	int		e1, e2;
+	int		op1, op2;
+	token_type	*p1, *p2;
+	int		np1, np2;
+	int		div_flag1 = false, div_flag2 = false;
 
 	e1 = i1 + n1;
 	e2 = i2 + n2;
 	op2 = equation[i2-1].token.operatr;
-	switch (op2) {
-	case PLUS:
-	case MINUS:
-		break;
-	default:
-		return false;
-	}
 	if (i1 <= loc) {
 		op1 = PLUS;
-	} else
+	} else {
 		op1 = equation[i1-1].token.operatr;
+	}
 	for (i = i1 + 1; i < e1; i += 2) {
 		if (equation[i].level == level && equation[i].token.operatr == DIVIDE) {
 			div_flag1 = true;
@@ -152,14 +147,24 @@ int		*np, loc, i1, n1, i2, n2, level, check_flag;
 	if (!div_flag1 && !div_flag2)
 		return false;
 	if (check_flag && div_flag1 && div_flag2) {
-		if (poly2_gcd(&equation[b1], i - b1, &equation[b2], j - b2, 0L)
-		    || poly2_gcd(&equation[b2], j - b2, &equation[b1], i - b1, 0L)) {
-			return false;
+		if (poly2_gcd(&equation[b1], i - b1, &equation[b2], j - b2, 0L)) {
+			p1 = tlhs;
+			np1 = n_tlhs;
+			p2 = trhs;
+			np2 = n_trhs;
+			goto do_gcd;
+		}
+		if (poly2_gcd(&equation[b2], j - b2, &equation[b1], i - b1, 0L)) {
+			p1 = trhs;
+			np1 = n_trhs;
+			p2 = tlhs;
+			np2 = n_tlhs;
+			goto do_gcd;
 		}
 	}
-	if (n1 + n2 + (i - b1) + (j - b2) + 8 > n_tokens) {
-		error_huge();
-	}
+        if (n1 + n2 + (i - b1) + (j - b2) + 8 > n_tokens) {
+                error_huge();
+        } 
 	if (!div_flag1) {
 		for (k = i1; k < e1; k++)
 			equation[k].level++;
@@ -168,8 +173,8 @@ int		*np, loc, i1, n1, i2, n2, level, check_flag;
 		for (k = i2; k < e2; k++)
 			equation[k].level++;
 	}
-	len = (b1 - 1) - i1;
-	blt(scratch, &equation[i1], len * sizeof(*equation));
+	len = b1 - i1 - 1;
+	blt(scratch, &equation[i1], len * sizeof(token_type));
 	if (op1 == MINUS) {
 		scratch[len].level = level;
 		scratch[len].kind = OPERATOR;
@@ -181,7 +186,7 @@ int		*np, loc, i1, n1, i2, n2, level, check_flag;
 		len++;
 	}
 	if (div_flag1) {
-		blt(&scratch[len], &equation[i], (e1 - i) * sizeof(*equation));
+		blt(&scratch[len], &equation[i], (e1 - i) * sizeof(token_type));
 		len += e1 - i;
 	}
 	if (div_flag2) {
@@ -189,7 +194,7 @@ int		*np, loc, i1, n1, i2, n2, level, check_flag;
 		scratch[len].kind = OPERATOR;
 		scratch[len].token.operatr = TIMES;
 		len++;
-		blt(&scratch[len], &equation[b2], (j - b2) * sizeof(*equation));
+		blt(&scratch[len], &equation[b2], (j - b2) * sizeof(token_type));
 		len += j - b2;
 	}
 	for (k = 0; k < len; k++)
@@ -199,10 +204,10 @@ int		*np, loc, i1, n1, i2, n2, level, check_flag;
 	scratch[len].token.operatr = op2;
 	len++;
 	k = len;
-	blt(&scratch[len], &equation[i2], (b2 - i2 - 1) * sizeof(*equation));
+	blt(&scratch[len], &equation[i2], (b2 - i2 - 1) * sizeof(token_type));
 	len += b2 - i2 - 1;
 	if (div_flag2) {
-		blt(&scratch[len], &equation[j], (e2 - j) * sizeof(*equation));
+		blt(&scratch[len], &equation[j], (e2 - j) * sizeof(token_type));
 		len += e2 - j;
 	}
 	if (div_flag1) {
@@ -210,7 +215,7 @@ int		*np, loc, i1, n1, i2, n2, level, check_flag;
 		scratch[len].kind = OPERATOR;
 		scratch[len].token.operatr = TIMES;
 		len++;
-		blt(&scratch[len], &equation[b1], (i - b1) * sizeof(*equation));
+		blt(&scratch[len], &equation[b1], (i - b1) * sizeof(token_type));
 		len += i - b1;
 	}
 	for (; k < len; k++)
@@ -221,7 +226,7 @@ int		*np, loc, i1, n1, i2, n2, level, check_flag;
 	len++;
 	k = len;
 	if (div_flag1) {
-		blt(&scratch[len], &equation[b1], (i - b1) * sizeof(*equation));
+		blt(&scratch[len], &equation[b1], (i - b1) * sizeof(token_type));
 		len += i - b1;
 	}
 	if (div_flag1 && div_flag2) {
@@ -231,29 +236,110 @@ int		*np, loc, i1, n1, i2, n2, level, check_flag;
 		len++;
 	}
 	if (div_flag2) {
-		blt(&scratch[len], &equation[b2], (j - b2) * sizeof(*equation));
+		blt(&scratch[len], &equation[b2], (j - b2) * sizeof(token_type));
 		len += j - b2;
 	}
 	for (; k < len; k++)
 		scratch[k].level++;
+end_mess:
 	if (*np + len - n1 - (n2 + 1) > n_tokens) {
 		error_huge();
 	}
 	if (op1 == MINUS) {
 		equation[i1-1].token.operatr = PLUS;
 	}
-	blt(&equation[i2-1], &equation[e2], (*np - e2) * sizeof(*equation));
+	blt(&equation[i2-1], &equation[e2], (*np - e2) * sizeof(token_type));
 	*np -= n2 + 1;
-	blt(&equation[i1+len], &equation[e1], (*np - e1) * sizeof(*equation));
+	blt(&equation[i1+len], &equation[e1], (*np - e1) * sizeof(token_type));
 	*np += len - n1;
-	blt(&equation[i1], scratch, len * sizeof(*equation));
+	blt(&equation[i1], scratch, len * sizeof(token_type));
 	return true;
+
+do_gcd:
+	if (5 - i1 + e1 + (2*np2) + b2 - i2 + e2 - j + np1 > n_tokens) {
+		error_huge();
+	}
+	for (k = 0; k < np1; k++) {
+		p1[k].level += level;
+	}
+	for (k = 0; k < np2; k++) {
+		p2[k].level += level;
+	}
+	len = b1 - i1 - 1;
+	blt(scratch, &equation[i1], len * sizeof(token_type));
+	if (op1 == MINUS) {
+		scratch[len].level = level;
+		scratch[len].kind = OPERATOR;
+		scratch[len].token.operatr = TIMES;
+		len++;
+		scratch[len].level = level;
+		scratch[len].kind = CONSTANT;
+		scratch[len].token.constant = -1.0;
+		len++;
+	}
+/*	if (div_flag1) { */
+		blt(&scratch[len], &equation[i], (e1 - i) * sizeof(token_type));
+		len += e1 - i;
+/*	} */
+/*	if (div_flag2) { */
+		scratch[len].level = level;
+		scratch[len].kind = OPERATOR;
+		scratch[len].token.operatr = TIMES;
+		len++;
+		blt(&scratch[len], p2, np2 * sizeof(token_type));
+		len += np2;
+/*	} */
+	for (k = 0; k < len; k++)
+		scratch[k].level += 2;
+	scratch[len].level = level + 1;
+	scratch[len].kind = OPERATOR;
+	scratch[len].token.operatr = op2;
+	len++;
+	k = len;
+	blt(&scratch[len], &equation[i2], (b2 - i2 - 1) * sizeof(token_type));
+	len += b2 - i2 - 1;
+/*	if (div_flag2) { */
+		blt(&scratch[len], &equation[j], (e2 - j) * sizeof(token_type));
+		len += e2 - j;
+/*	} */
+/*	if (div_flag1) { */
+		scratch[len].level = level;
+		scratch[len].kind = OPERATOR;
+		scratch[len].token.operatr = TIMES;
+		len++;
+		blt(&scratch[len], p1, np1 * sizeof(token_type));
+		len += np1;
+/*	} */
+	for (; k < len; k++)
+		scratch[k].level += 2;
+	scratch[len].level = level;
+	scratch[len].kind = OPERATOR;
+	scratch[len].token.operatr = DIVIDE;
+	len++;
+	k = len;
+/*	if (div_flag1) { */
+		blt(&scratch[len], &equation[b1], (i - b1) * sizeof(token_type));
+		len += (i - b1);
+/*	} */
+/*	if (div_flag1 && div_flag2) { */
+		scratch[len].level = level;
+		scratch[len].kind = OPERATOR;
+		scratch[len].token.operatr = TIMES;
+		len++;
+/*	} */
+/*	if (div_flag2) { */
+		blt(&scratch[len], p2, np2 * sizeof(token_type));
+		len += np2;
+/*	} */
+	for (; k < len; k++)
+		scratch[k].level++;
+	goto end_mess;
 }
 
 /*
- * This function is the guts of the "flist" command.
+ * This function is the guts of the display command.
  */
-group_sub(n)
+make_fractions_and_group(n)
 int	n;
 {
 	if (n_lhs[n] <= 0)
@@ -270,7 +356,7 @@ int	n;
 }
 
 /*
- * Group denominators.
+ * Group denominators together.
  * Grouping here means converting "a/b/c" to "a/(b*c)".
  */
 group_proc(equation, np)
@@ -313,8 +399,7 @@ int		*np, loc, level;
 				}
 				grouper = true;
 				for (len = i + 2; len < e1; len += 2) {
-					if (equation[len].level == level
-					    && equation[len].token.operatr != DIVIDE)
+					if (equation[len].level == level && equation[len].token.operatr != DIVIDE)
 						break;
 				}
 				len -= i;
@@ -323,9 +408,9 @@ int		*np, loc, level;
 					edi = i;
 					continue;
 				}
-				blt(scratch, &equation[i], len * sizeof(*equation));
-				blt(&equation[di+len], &equation[di], (i - di) * sizeof(*equation));
-				blt(&equation[di], scratch, len * sizeof(*equation));
+				blt(scratch, &equation[i], len * sizeof(token_type));
+				blt(&equation[di+len], &equation[di], (i - di) * sizeof(token_type));
+				blt(&equation[di], scratch, len * sizeof(token_type));
 				edi += len;
 				i += len - 2;
 			} else {

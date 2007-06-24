@@ -1,7 +1,7 @@
 /*
- * Algebraic manipulator differentiation routines and commands.
+ * Mathomatic differentiation routines and commands.
  *
- * Copyright (c) 1987-2005 George Gesslein II.
+ * Copyright (C) 1987-2007 George Gesslein II.
  */
 
 #include "includes.h"
@@ -60,8 +60,8 @@ long		v;
 
 	if (equation[loc].level < level) {
 /* First differentiate if it is a single variable or constant. */
-/* If it is the specified variable, change it to the constant "1.0", */
-/* otherwise change it to "0.0". */
+/* If it is the specified variable, change it to the constant 1, */
+/* otherwise change it to the constant 0. */
 		if (equation[loc].kind == VARIABLE
 		    && ((v == MATCH_ANY && (equation[loc].token.variable & VAR_MASK) > SIGN)
 		    || equation[loc].token.variable == v)) {
@@ -73,8 +73,7 @@ long		v;
 		}
 		return true;
 	}
-	op = 0;
-	for (endloc = loc + 1; endloc < *np && equation[endloc].level >= level; endloc += 2) {
+	for (op = 0, oploc = endloc = loc + 1; endloc < *np && equation[endloc].level >= level; endloc += 2) {
 		if (equation[endloc].level == level) {
 			switch (op) {
 			case 0:
@@ -120,9 +119,9 @@ long		v;
 		return true;
 	}
 /* Differentiate PLUS and MINUS operators. */
-/* Use rule: d(u+v) = d(u) + d(v), */
-/* where "d()" is the derivative function, */
-/* "u" and "v" are expressions. */
+/* Use addition rule: d(u+v) = d(u) + d(v), */
+/* where "d()" is the derivative function */
+/* and "u" and "v" are expressions. */
 	for (i = loc; i < *np && equation[i].level >= level;) {
 		if (equation[i].kind != OPERATOR) {
 			if (!d_recurse(equation, np, i, level + 1, v))
@@ -137,7 +136,7 @@ long		v;
 	return true;
 d_times:
 /* Differentiate TIMES operator. */
-/* Use rule: d(u*v) = u*d(v) + v*d(u). */
+/* Use product rule: d(u*v) = u*d(v) + v*d(u). */
 	if (*np + 1 + (endloc - loc) > n_tokens) {
 		error_huge();
 	}
@@ -153,7 +152,7 @@ d_times:
 	return(d_recurse(equation, np, loc, level + 2, v));
 d_divide:
 /* Differentiate DIVIDE operator. */
-/* Use rule: d(u/v) = (v*d(u) - u*d(v))/v^2. */
+/* Use quotient rule: d(u/v) = (v*d(u) - u*d(v))/v^2. */
 	if (*np + 3 + (endloc - loc) + (endloc - oploc) > n_tokens) {
 		error_huge();
 	}
@@ -186,7 +185,7 @@ d_divide:
 	return(d_recurse(equation, np, loc, level + 3, v));
 d_power:
 /* Differentiate POWER operator. */
-/* Since we don't have logarithms, just do what we can without them. */
+/* Since we don't have symbolic logarithms, do all we can without them. */
 	for (i = oploc; i < endloc; i++) {
 		if (equation[i].kind == VARIABLE
 		    && ((v == MATCH_ANY && (equation[i].token.variable & VAR_MASK) > SIGN)
@@ -288,8 +287,8 @@ int
 derivative_cmd(cp)
 char	*cp;
 {
+	int		i;
 	long		v = 0;
-	int		i, j;
 	long		l1, order = 1;
 	token_type	*source, *dest;
 	int		n1, *nps, *np;
@@ -309,12 +308,13 @@ char	*cp;
 		dest = lhs[i];
 		np = &n_lhs[i];
 	}
+/* parse the command line or prompt: */
 	if (*cp) {
 		if (is_all(cp)) {
 			cp = skip_param(cp);
 			v = MATCH_ANY;
 		} else {
-			if (!(isascii(*cp) && isdigit(*cp))) {
+			if (!isdigit(*cp)) {
 				cp = parse_var2(&v, cp);
 				if (cp == NULL) {
 					return false;
@@ -329,21 +329,9 @@ char	*cp;
 			return false;
 		}
 	}
-	if (v == 0) {
-		for (j = 0; j < *nps; j += 2) {
-			if (source[j].kind == VARIABLE) {
-				if ((source[j].token.variable & VAR_MASK) <= SIGN)
-					continue;
-				if (v) {
-					if (v != source[j].token.variable) {
-						v = 0;
-						break;
-					}
-				} else {
-					v = source[j].token.variable;
-				}
-			}
-		}
+	if (no_vars(source, *nps, &v)) {
+		error(_("Current expression contains no variables, result would be zero."));
+		return false;
 	}
 	if (v == 0) {
 		if (!prompt_var(&v)) {
@@ -351,7 +339,7 @@ char	*cp;
 		}
 	}
 	if (v != MATCH_ANY && !found_var(source, *nps, v)) {
-		error(_("Variable not found.  Result would be zero."));
+		error(_("Variable not found, result would be zero."));
 		return false;
 	}
 #if	!SILENT
@@ -365,6 +353,7 @@ char	*cp;
 #endif
 	blt(dest, source, *nps * sizeof(token_type));
 	n1 = *nps;
+/* do the actual differentiating and simplifying: */
 	for (l1 = 0; l1 < order; l1++) {
 		if (!differentiate(dest, &n1, v)) {
 			error(_("Differentiation failed."));
@@ -378,8 +367,7 @@ char	*cp;
 	}
 	*np = n1;
 	cur_equation = i;
-	return_result(cur_equation);
-	return true;
+	return return_result(cur_equation);
 }
 
 /*
@@ -389,8 +377,9 @@ int
 extrema_cmd(cp)
 char	*cp;
 {
-	int		i, j;
+	int		i;
 	long		v = 0;
+	long		l1, order = 1;
 	token_type	want;
 	token_type	*source;
 	int		n;
@@ -410,29 +399,23 @@ char	*cp;
 		n = n_lhs[cur_equation];
 	}
 	if (*cp) {
-		cp = parse_var2(&v, cp);
-		if (cp == NULL) {
-			return false;
+		if (!isdigit(*cp)) {
+			cp = parse_var2(&v, cp);
+			if (cp == NULL) {
+				return false;
+			}
 		}
-		if (extra_garbage(cp)) {
+		if (*cp) {
+			order = decstrtol(cp, &cp);
+		}
+		if (*cp || order <= 0) {
+			error(_("The order must be a positive integer."));
 			return false;
 		}
 	}
-	if (v == 0) {
-		for (j = 0; j < n; j += 2) {
-			if (source[j].kind == VARIABLE) {
-				if ((source[j].token.variable & VAR_MASK) <= SIGN)
-					continue;
-				if (v) {
-					if (v != source[j].token.variable) {
-						v = 0;
-						break;
-					}
-				} else {
-					v = source[j].token.variable;
-				}
-			}
-		}
+	if (no_vars(source, n, &v)) {
+		error(_("Current expression contains no variables, there are no extrema."));
+		return false;
 	}
 	if (v == 0) {
 		if (!prompt_var(&v)) {
@@ -445,19 +428,24 @@ char	*cp;
 	}
 	i = next_espace();
 	blt(rhs[i], source, n * sizeof(token_type));
+/* take derivatives with respect to the specified variable and simplify: */
+	for (l1 = 0; l1 < order; l1++) {
+		if (!differentiate(rhs[i], &n, v)) {
+			error(_("Differentiation failed."));
+			return false;
+		}
+		simpa_side(rhs[i], &n, true);
+	}
+	if (!found_var(rhs[i], n, v)) {
+		error(_("There are no solutions."));
+		return false;
+	}
 	n_rhs[i] = n;
-	if (!differentiate(rhs[i], &n_rhs[i], v)) {
-		error(_("Differentiation failed."));
-		return false;
-	}
-	simpa_side(rhs[i], &n_rhs[i], true);
-	if (!found_var(rhs[i], n_rhs[i], v)) {
-		error(_("There are no extrema for this equation."));
-		return false;
-	}
+/* set equal to zero: */
 	n_lhs[i] = 1;
 	lhs[i][0] = zero_token;
 	cur_equation = i;
+/* lastly, solve for the specified variable and simplify: */
 	want.level = 1;
 	want.kind = VARIABLE;
 	want.token.variable = v;
@@ -466,8 +454,7 @@ char	*cp;
 		return false;
 	}
 	simpa_side(rhs[i], &n_rhs[i], false);
-	return_result(cur_equation);
-	return true;
+	return return_result(cur_equation);
 }
 
 /*
@@ -513,7 +500,7 @@ char	*cp;
 		dest = lhs[i];
 		np = &n_lhs[i];
 	}
-	if (*cp && !(isascii(*cp) && isdigit(*cp))) {
+	if (*cp && !isdigit(*cp)) {
 		cp = parse_var2(&v, cp);
 		if (cp == NULL) {
 			return false;
@@ -527,25 +514,14 @@ char	*cp;
 		}
 		cp = cp1;
 	}
-	if (v == 0) {
-		for (j = 0; j < *nps; j += 2) {
-			if (source[j].kind == VARIABLE) {
-				if ((source[j].token.variable & VAR_MASK) <= SIGN)
-					continue;
-				if (v) {
-					if (v != source[j].token.variable) {
-						v = 0;
-						break;
-					}
-				} else {
-					v = source[j].token.variable;
-				}
-			}
-		}
+	if (no_vars(source, *nps, &v)) {
+		error(_("Current expression contains no variables."));
+		return false;
 	}
 	if (v == 0) {
-		if (!prompt_var(&v))
+		if (!prompt_var(&v)) {
 			return false;
+		}
 	}
 	if (!found_var(source, *nps, v)) {
 		error(_("Variable not found."));
@@ -565,16 +541,15 @@ char	*cp;
 		if ((cp = parse_section(lhs[our], &our_nlhs, cp)) == NULL || our_nlhs <= 0) {
 			return false;
 		}
-		if (extra_garbage(cp))
+		if (extra_characters(cp))
 			return false;
 	} else {
 #if	!SILENT
 		list_var(v, 0);
-		printf(_("Taylor series expansion about (%s) = point.\n"), var_str);
+		printf(_("Taylor series expansion about %s = point.\n"), var_str);
 #endif
 		my_strlcpy(prompt_str, _("Enter point: "), sizeof(prompt_str));
 		if (!get_expr(lhs[our], &our_nlhs)) {
-			error(_("Enter 0 if you don't know."));
 			return false;
 		}
 	}
@@ -657,7 +632,7 @@ loop_again:
 	for (; i1 < n1; i1++)
 		dest[i1].level++;
 	simp_loop(dest, &n1);
-	side_debug(1, dest, n1);
+/*	side_debug(1, dest, n1); */
 	if (n < order) {
 		if (n > 0) {
 			if (!differentiate(rhs[our], &our_nrhs, v)) {
@@ -682,13 +657,15 @@ loop_again:
 			goto loop_again;
 		}
 	}
+#if	!SILENT
+	printf(_("%ld derivative%s applied.\n"), n, (n == 1) ? "" : "s");
+#endif
 	if (n_rhs[cur_equation]) {
 		n_lhs[i] = n_lhs[cur_equation];
 	}
 	*np = n1;
 	cur_equation = i;
-	return_result(cur_equation);
-	return true;
+	return return_result(cur_equation);
 }
 
 /*
@@ -699,10 +676,9 @@ limit_cmd(cp)
 char	*cp;
 {
 	int		i, j, k;
-	long		v;
+	long		v = 0;
 	token_type	solved_v, want;
 	char		*cp_start;
-	int		nl;
 	int		infinity_flag, found_den, complex_den, num, den;
 	int		level;
 
@@ -711,25 +687,31 @@ char	*cp;
 		return false;
 	}
 	if (n_rhs[cur_equation] == 0) {
+/* make expression into an equation: */
 		blt(rhs[cur_equation], lhs[cur_equation], n_lhs[cur_equation] * sizeof(token_type));
 		n_rhs[cur_equation] = n_lhs[cur_equation];
 		n_lhs[cur_equation] = 1;
 		lhs[cur_equation][0].level = 1;
 		lhs[cur_equation][0].kind = VARIABLE;
-		lhs[cur_equation][0].token.variable = V_ANSWER;
+		parse_var(&lhs[cur_equation][0].token.variable, "answer");
 	}
 	if (!solved_equation(cur_equation)) {
 		error(_("The current equation is not solved for a variable."));
 		return false;
 	}
 	solved_v = lhs[cur_equation][0];
-	i = next_espace();
+/* parse the command line or prompt: */
 	if (*cp) {
 		cp = parse_var2(&v, cp);
 		if (cp == NULL) {
 			return false;
 		}
-	} else {
+	}
+	if (no_vars(rhs[cur_equation], n_rhs[cur_equation], &v)) {
+		error(_("Current expression contains no variables."));
+		return false;
+	}
+	if (v == 0) {
 		if (!prompt_var(&v)) {
 			return false;
 		}
@@ -743,33 +725,39 @@ char	*cp;
 		if (!case_sensitive_flag) {
 			str_tolower(cp);
 		}
-		if ((cp = parse_section(lhs[i], &nl, cp)) == NULL || nl <= 0) {
+		if ((cp = parse_section(tes, &n_tes, cp)) == NULL || n_tes <= 0) {
 			return false;
 		}
 	} else {
-		my_strlcpy(prompt_str, _("goes to: "), sizeof(prompt_str));
-		if (!get_expr(lhs[i], &nl)) {
+		list_var(v, 0);
+		snprintf(prompt_str, sizeof(prompt_str), _("as (%s) goes to: "), var_str);
+		if (!get_expr(tes, &n_tes)) {
 			return false;
 		}
 	}
-	if (extra_garbage(cp))
+	if (extra_characters(cp))
 		return false;
-	simp_loop(lhs[i], &nl);
-	infinity_flag = exp_contains_infinity(lhs[i], nl);
+/* copy to a new equation space and work on the copy: */
+	i = next_espace();
+	copy_espace(cur_equation, i);
+	cur_equation = i;
+/* see if the limit expression contains infinity: */
+	simp_loop(tes, &n_tes);
+	infinity_flag = exp_contains_infinity(tes, n_tes);
+/* first fully simplify the current equation and group denominators together: */
 	simpa_side(rhs[cur_equation], &n_rhs[cur_equation], false);
 	group_proc(rhs[cur_equation], &n_rhs[cur_equation]);
-	found_den = false;
-	complex_den = false;
+	found_den = complex_den = false;
 	for (j = 1; j < n_rhs[cur_equation]; j += 2) {
 		switch (rhs[cur_equation][j].token.operatr) {
 		case DIVIDE:
 		case MODULUS:
-			num = false;
-			den = false;
+			num = den = false;
 			level = rhs[cur_equation][j].level;
 			for (k = j + 2;; k += 2) {
 				if (rhs[cur_equation][k-1].kind == VARIABLE
 				    && rhs[cur_equation][k-1].token.variable == v) {
+/* the limit variable was found in a denominator */
 					den = true;
 					found_den = true;
 				}
@@ -779,6 +767,7 @@ char	*cp;
 				switch (rhs[cur_equation][k].token.operatr) {
 				case DIVIDE:
 				case MODULUS:
+/* a denominator contains a fraction */
 					complex_den = true;
 					break;
 				}
@@ -786,6 +775,7 @@ char	*cp;
 			for (k = j - 1; k >= 0 && rhs[cur_equation][k].level >= level; k--) {
 				if (rhs[cur_equation][k].kind == VARIABLE
 				    && rhs[cur_equation][k].token.variable == v) {
+/* the limit variable was found in a numerator */
 					num = true;
 				}
 			}
@@ -795,15 +785,18 @@ char	*cp;
 			break;
 		}
 	}
-	if (!found_den || (infinity_flag && !complex_den)) {
-		subst_var_with_exp(rhs[cur_equation], &n_rhs[cur_equation], lhs[i], nl, v);
+	if (infinity_flag ? (!complex_den && found_den) : (!found_den)) {
+/* in this case, just substitute the limit variable with the limit expression and simplify: */
+		subst_var_with_exp(rhs[cur_equation], &n_rhs[cur_equation], tes, n_tes, v);
 		simpa_side(rhs[cur_equation], &n_rhs[cur_equation], false);
-		return_result(cur_equation);
-		return true;
+		return return_result(cur_equation);
 	}
-	if (infinity_flag) {
-		nl = 1;
-		lhs[i][0] = zero_token;
+	debug_string(1, "Taking the limit by solving...");
+	if (n_tes == 1 && tes[0].kind == CONSTANT && tes[0].token.constant == HUGE_VAL) {
+/* To take the limit to positive infinity, */
+/* replace infinity with zero and replace the limit variable with its reciprocal: */
+		n_tes = 1;
+		tes[0] = zero_token;
 		tlhs[0] = one_token;
 		tlhs[1].level = 1;
 		tlhs[1].kind = OPERATOR;
@@ -814,6 +807,7 @@ char	*cp;
 		n_tlhs = 3;
 		subst_var_with_exp(rhs[cur_equation], &n_rhs[cur_equation], tlhs, n_tlhs, v);
 	}
+/* General limit taking, solve for the limit variable: */
 	want.level = 1;
 	want.kind = VARIABLE;
 	want.token.variable = v;
@@ -821,18 +815,21 @@ char	*cp;
 		error(_("Can't take the limit because solve failed."));
 		return false;
 	}
-	blt(lhs[cur_equation], lhs[i], nl * sizeof(token_type));
-	n_lhs[cur_equation] = nl;
+/* replace the limit variable (LHS) with the limit expression: */
+	blt(lhs[cur_equation], tes, n_tes * sizeof(token_type));
+	n_lhs[cur_equation] = n_tes;
+/* symbolically simplify the RHS: */
 	symb_flag = true;
 	simpa_side(rhs[cur_equation], &n_rhs[cur_equation], false);
 	symb_flag = false;
+/* solve back for the original variable: */
 	if (solve_sub(&solved_v, 1, lhs[cur_equation], &n_lhs[cur_equation], rhs[cur_equation], &n_rhs[cur_equation]) <= 0) {
 		error(_("Can't take the limit because solve failed."));
 		return false;
 	}
+/* symbolically simplify before returning the result: */
 	symb_flag = true;
 	simpa_side(rhs[cur_equation], &n_rhs[cur_equation], false);
 	symb_flag = false;
-	return_result(cur_equation);
-	return true;
+	return return_result(cur_equation);
 }

@@ -1,222 +1,152 @@
                          VERSION HISTORY OF MATHOMATIC
-
+                         -----------------------------
                   Latest changes are at the end of this file.
                This file may be obtained at "www.mathomatic.org".
+                  All changes were made by George Gesslein II.
                --------------------------------------------------
 
-CHANGES MADE TO MATHOMATIC V12.5.0:
+CHANGES MADE TO MATHOMATIC V12.6.0:
 
-Corrected color and html mode routines.
+8/08/06 - Add "makefile.lib", the Mathomatic symbolic math library makefile.
 
-get_expr() now has equation space pull.
-You may now enter a "#" followed by an equation space number when prompted for an expression.
+8/09/06 - "replace constants" command now approximates constants with roots.
 
-Ported nintegrate command to non-equations.  No more commands to port.
+8/09/06 - Tweak code command.
 
-"make install" works better and installs the "tests" directory.
+8/12/06 - Fixed a floating point accuracy issue recently introduced.
 
-Made redirected output ignore screen_columns.
+8/13/06 - Properly fixed the above accuracy issue.
 
-Added "-q" option (quiet mode, don't display prompts).
+CHANGES MADE TO MATHOMATIC V12.6.1:
 
-The Mathomatic man page was improved.
+8/20/06 - Fixed many very minor bugs.  Added variable display precision.
 
-CHANGES MADE TO MATHOMATIC V12.5.1:
+8/21/06 - Display single digit primes when using "matho-primes pal".
 
-Fixed sum and product command docs and code.
+8/24/06 - Increase display precision from 12 to 14 decimal digits.
 
-Split off "am.c" into "solve.c" and "am.c".
+CHANGES MADE TO MATHOMATIC V12.6.2:
 
-Added "tests/trig.in".  (trig functions!)
+8/27/06 - Added some tiny python programs: "fact/factorial" and "primes/mult".
 
-The list command now displays the equation numbers,
-but not when exporting or saving.
+8/31/06 - Add alternate command name "display" to flist command.
 
-Added "tests/hypertrig.in".
+9/04/06 - Improve eliminate command by allowing "eliminate all all ..." to
+          eliminate all variables two or more times.
 
-Allow limit command to work with non-equations.
+CHANGES MADE TO MATHOMATIC V12.6.3:
 
-An optional step parameter was added to the sum and product commands.
+9/06/06 - Remove "doc/notes.html", it is not my best work.
 
-Minor documentation updates.
+9/08/06 - Improve the Mathomatic manuals.
 
-Corrected makefiles to install everything in /usr/local.
+9/09/06 - Fix sign bug for negative factorials (gamma function).
+          "-1.5!" now evaluates to -3.544907701811 instead of 3.544907701811.
 
-CHANGES MADE TO MATHOMATIC V12.5.2:
+9/10/06 - Rename "fact" directory to "factorial".
 
-Ported matho-primes, matho-twin, and matho-pascal to long doubles.
-"make test" added in "primes" directory.
+CHANGES MADE TO MATHOMATIC V12.6.4:
 
-Alphabetic case sensitive mode set by default.
+10/01/06 - Improve user interface of solve command.
 
-Added "list maxima" option.  "list export" is now for other programs.
+10/01/06 - Add alternate command syntax for sum and product commands.
+           "sum x = 0 to 10" works the same as "sum x 0 10".
 
-Code cleanup.
+10/08/06 - Add "-r" option, which disables readline input processing.
 
-CHANGES MADE TO MATHOMATIC V12.5.3:
+10/08/06 - Corrected "tests/cubic.in" and fixed incomplete simplification
+           in complex root calculation.
 
-Removed parsing of "infinity" and fixed parsing of "inf".
+10/10/06 - Got rid of the special "temp" variable.
 
-Removed matho-around.  Use GNU "seq | factor" instead.
+10/11/06 - Got rid of the special "answer" and "integer" variables.
+           They are now normal variables.
 
-Allow "#+"number and "#-"number at main prompt, to select relative equation numbers.
+CHANGES MADE TO MATHOMATIC V12.6.5:
 
-Removed all primes (') support from variable names.
-This is for compatibility with other math programs.
+10/14/06 - Fix optimize command.  Now works 100% properly for "tests/cubic.in".
 
-Added version command.
+10/16/06 - Made HTML division lines look better using "&mdash;".
 
-Added "-v" option.
+10/17/06 - Made list_equation() and list_expression() more efficient by
+           converting the strcat(3)s to strcpy(3)s with a macro.
 
-Split off super.c into super.c and poly.c.
-All polynomial routines are now in poly.c.
+CHANGES MADE TO MATHOMATIC V12.6.6:
 
-Improved roots command and put it in tests.
+10/27/06 - Tune-up of the Mathomatic HTML documentation.
 
-Fixed bug simplifying "a = (e# + (e#*i#))^(pi + (pi*i#))".
+10/28/06 - Add a warning when complex root approximation is done.
 
-CHANGES MADE TO MATHOMATIC V12.5.4:
+10/30/06 - Add another global temporary expression space to make the calculate command
+           iteration terminate on convergence and make the limit command copy to a new
+           equation space.
 
-Added "doc/manpage.html", which is the man page for Mathomatic
-generated with "groff -Thtml -man".
+11/02/06 - Improve help command by displaying alternate command names.
 
-Made sure all HTML files have the extension ".html".
+CHANGES MADE TO MATHOMATIC V12.6.7:
 
-Made sure we can allocate at least 1 equation space on startup.
+11/10/06 - Add "set autocalc" option.
 
-Made entering things like "#1 a" succeed at entering a single variable expression.
-Previously it gave an error.
+12/08/06 - Fix limit command so it fails instead of giving wrong answers.
 
-Fix-ups to the symbolic math library.
+CHANGES MADE TO MATHOMATIC V12.6.8:
 
-Increased power of limit command.
-A limit expression with infinity in it is assumed to be infinity.
+12/16/06 - Add "set special_variable_character" option.
 
-CHANGES MADE TO MATHOMATIC V12.5.5:
+12/26/06 - Comment makefiles and add "INSTALL.txt" for first-time users.
 
-Fixed compatibility problem with "list export" and "list maxima".
-Constants are now parenthesized when exporting.
+12/31/06 - Add "primes/primorial" Python program.
 
-Added "tests/conversions.in".
+CHANGES MADE TO MATHOMATIC V12.6.9:
 
-Made "code integer" command work with more languages than C and Java.
+2/10/07 - "make install" wasn't working - fixed.
 
-Added "code python" command option.
+CHANGES MADE TO MATHOMATIC V12.6.10:
 
-Added "fact/fact.c" and "fact/fact.py", which are factorial functions.
+2/24/07 - Allow calculating large powers of complex numbers at the prompt, like (i#+1)^99.
 
-Completed "help geometry" page.
+3/06/07 - Display which color mode is in effect on startup of Mathomatic.
 
-CHANGES MADE TO MATHOMATIC V12.5.6:
+3/08/07 - Some minor interface improvements to the taylor command.
 
-Code cleanup and commenting.  Minor reduction in code size.
+CHANGES MADE TO MATHOMATIC V12.6.11:
 
-Changed all occurrences of "mathomatic.com" to "mathomatic.org".
+Code cleanup and documentation touch-ups.
 
-Minor updates to the Mathomatic Command Reference.
+3/31/07 - Corrected limit command for infinity limits.
 
-Added some useful warnings to the gcc compile and caught and fixed some errors.
+4/3/07 - Updated root "README.txt" and created "tests/limits.in".
 
-Split off "factor.c" into "factor_int.c" and "factor.c".
+CHANGES MADE TO MATHOMATIC V12.6.12:
 
-CHANGES MADE TO MATHOMATIC V12.5.7:
+Code cleanup and documentation touch-ups.
 
-Doubled the default max expression size.  Display current size on startup.
+4/16/07 - Remove GPL preamble in "primes/*.c", so everything is LGPL.
 
-Made solve_sub() return -1 for an identity.
+4/26/07 - Allow entering "e#" and "i#" as "e" and "i".  Display "e", "i", and "pi" as "e#", "i#", and "pi#".
 
-Speedup of the simplify command.
+CHANGES MADE TO MATHOMATIC V12.7.0:
 
-CHANGES MADE TO MATHOMATIC V12.5.8:
+4/30/07 - Require a space between command and command line, so variables don't get confused with commands.  This is a bug fix.
 
-A number of minor fixups.
+5/5/07 - Added a directory named "hard_stuff".
 
-Code cleanup.  Code size reduced.
+5/10/07 - Fixed error in "tests/finance.in".
 
-CHANGES MADE TO MATHOMATIC V12.5.9:
+CHANGES MADE TO MATHOMATIC V12.7.1:
 
-Bug fix for nintegrate command.  Result was correct but not fully reduced.
+Documentation and command output improvements and corrections.
 
-Added "twin" option to "primes/matho-primes", removed "primes/matho-twin".
+5/28/07 - Added order parameter to extrema command, which specifies the number of derivatives to take.
 
-Automatically determine the variable if none is specified
-with the derivative and taylor commands.
+6/2/07 - Renamed flist command to "display".
 
-Increased the maximum variable length to 1000 characters.
+CHANGES MADE TO MATHOMATIC V12.7.2:
 
-Cleaned up "main.c".
+Improve documentation.  Wikipedia taught me how to make good documents by watching others and practicing!
 
-CHANGES MADE TO MATHOMATIC V12.5.10:
+6/12/07 - Added display of maximum memory usage to version command.
 
-"matho-primes pal" wasn't working, fixed.
+6/13/07 - Allow read command in the Mathomatic library and fixed memory leak with it.
 
-Improved the "Equation not defined" error message for new users.
-
-Worked on matho-primes program.
-
-Automatically determine the variable if none is specified
-with the extrema command.
-
-Code cleanup.
-
-Helped simplification of complex exponentials.
-
-Parse things like "2 2" as "2*2", instead of giving a syntax error.
-The default operator is always times.
-
-CHANGES MADE TO MATHOMATIC V12.5.11:
-
-A bunch of very minor changes and improvements.
-
-Code cleanup.
-
-Documentation improvements.
-
-Updated command description text in help command.
-
-Converted many functions to inline that are only used once and should be inline.
-
-CHANGES MADE TO MATHOMATIC V12.5.12:
-
-Improved matho-primes by making primes buffer variable size.
-
-Added "set factor_integers" option.
-
-Removed "simplify poly" option, it was rarely useful.
-
-Code cleanup, commenting, and speed optimization.
-
-Improved simplification, added the fixed problem ("tests/linear.in") to the tests.
-
-CHANGES MADE TO MATHOMATIC V12.5.13:
-
-A number of minor changes.
-
-Fixes and improvements to the Mathomatic Command Reference.
-
-Upgraded clear and set commands to accept more than one argument.
-
-Gave real and imaginary commands a useful argument.
-
-Fixed a sloppiness in command line parsing in function get_range().
-
-Code cleanup.
-
-CHANGES MADE TO MATHOMATIC V12.5.14:
-
-Excess variables cleanup of taylor command.
-
-Changed argument of push command from an equation number to an equation number range.
-
-Added easy selection of equation spaces, just type the number at the prompt.
-
-Allow flist command when Mathomatic is compiled as a library.
-
-CHANGES MADE TO MATHOMATIC V12.5.15:
-
-Allow curly brackets ("{}") as parentheses.
-
-Allow all taylor command input on the command line.
-Add taylor command to tests.
-
-Added -u option (Unbuffered mode).  Previously output was always unbuffered.
+6/14/07 - Added echo command.

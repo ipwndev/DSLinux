@@ -12,6 +12,6 @@ simplify
 ((p*x^2+(k-s)*x+r)^2-(p*x^2+(k+s)*x+r)^2)/((p*x^2+(k+t)*x+r)^2-(p*x^2+(k-t)*x+r)^2)
 simplify
 (1 - (1-(y+1)/(x+y+1)) / (1-x/(x+y+1))) / ((y+1)^2 - x / (1+x/(y-x+1))*(x*(y+1)/(y-x+1) - x))
-simplify
+simplify ; Any complex fraction can be reduced to a simple fraction.
 ((2*((x*(x + (((x^2) - 1)^(1/2)))) - 1)) + 1)/((2*x*((x^2) - 1)) + ((((x^2) - 1)^(1/2))*((2*(x^2)) - 1)))
 simplify ; A good simplification resulting from trying to rationalize the denominator.

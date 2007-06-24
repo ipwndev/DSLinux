@@ -1,23 +1,33 @@
 /*
- * Algebraic manipulator expression and equation display routines.
+ * Mathomatic expression and equation display routines.
  * Color mode routines, too.
  *
- * Copyright (c) 1987-2005 George Gesslein II.
+ * Copyright (C) 1987-2007 George Gesslein II.
  */
 
 #include "includes.h"
+
+#define	EQUATE_STRING	" = "	/* string displayed between the LHS and RHS of equations */
+
+#define	APPEND(str)	{ if (string) { strcpy(&string[len], str); } len += strlen(str); }
 
 static int	flist();
 static int	flist_recurse();
 
 /* ANSI color code array */
 static int	carray[] = {
-	32, 33, 31, 35, 34, 36, 37
+	32,	/* green (default color) */
+	33,	/* yellow */
+	31,	/* red */
+	35,	/* magenta */
+	34,	/* blue */
+	36,	/* cyan */
+	37	/* white */
 };
 
 /* HTML color array */
 static char	*html_carray[] = {
-	"#00FF00",
+	"#00FF00",	/* bright green (default color) */
 	"#FFFF00",
 	"#FF9000",
 	"#FF0000",
@@ -25,6 +35,10 @@ static char	*html_carray[] = {
 	"#00FFFF",
 	"#0000FF"
 };
+
+/* global variables for flist() */
+int	cur_line;	/* current line */
+int	cur_pos;	/* current position in the current line on the screen */
 
 /*
  * Turn color off if color mode is on.
@@ -39,6 +53,7 @@ reset_attr()
 			printf("\033[0m");
 		}
 	}
+	fflush(NULL);	/* flush all output */
 }
 
 /*
@@ -78,13 +93,14 @@ default_color()
 }
 
 /*
- * Display the expression or equation stored in equation space "n" in single line format.
+ * Display the expression or equation stored in equation space "n" in single-line format.
+ * The equation space is not modified.
  *
  * Return true if successful.
  */
 int
 list1_sub(n, export_flag)
-int	n;		/* equation number */
+int	n;		/* equation space number */
 int	export_flag;	/* true for exportable format (readable by other math programs) */
 			/* 1 for Maxima, 2 for other */
 {
@@ -95,7 +111,7 @@ int	export_flag;	/* true for exportable format (readable by other math programs)
 	}
 	list_proc(lhs[n], n_lhs[n], export_flag);
 	if (n_rhs[n]) {
-		fprintf(gfp, " = ");
+		fprintf(gfp, EQUATE_STRING);
 		list_proc(rhs[n], n_rhs[n], export_flag);
 	}
 	if (export_flag == 1) {
@@ -120,21 +136,21 @@ int	export_flag;	/* true for exportable format (readable by other math programs)
  */
 int
 list_sub(n)
-int	n;	/* equation number */
+int	n;	/* equation space number */
 {
 	if (n_lhs[n] <= 0)
 		return false;
-	if (groupall) {
-		group_sub(n);
+	if (display2d) {
+		/* display in fraction format */
+		make_fractions_and_group(n);
 		if (factor_int_flag) {
-			factor_int(lhs[n], &n_lhs[n]);
-			factor_int(rhs[n], &n_rhs[n]);
+			factor_int_sub(n);
 		}
 		return flist_sub(n);
 	} else {
+		/* display in single-line format */
 		if (factor_int_flag) {
-			factor_int(lhs[n], &n_lhs[n]);
-			factor_int(rhs[n], &n_rhs[n]);
+			factor_int_sub(n);
 		}
 		return list1_sub(n, false);
 	}
@@ -152,7 +168,7 @@ int		n2;
 		printf(_("level %d: "), level);
 		list_proc(p1, n1, false);
 		if (p2 && n2 > 0) {
-			printf(" = ");
+			printf(EQUATE_STRING);
 			list_proc(p2, n2, false);
 		}
 		printf("\n");
@@ -209,14 +225,14 @@ int	lang_code;	/* language code */
 		break;
 	case V_E:
 		switch (lang_code) {
-		case -2:
-			cp = "e";
-			break;
 		case -1:
 			cp = "%e";
 			break;
 		case 0:
 			cp = "e#";
+			break;
+		case 1:
+			cp ="M_E";
 			break;
 		case 2:
 			cp = "Math.E";
@@ -225,7 +241,7 @@ int	lang_code;	/* language code */
 			cp = "math.e";
 			break;
 		default:
-			cp = "E";
+			cp = "e";
 			break;
 		}
 		break;
@@ -234,8 +250,11 @@ int	lang_code;	/* language code */
 		case -1:
 			cp = "%pi";
 			break;
+		case 0:
+			cp = "pi#";
+			break;
 		case 1:
-			cp = "PI";
+			cp = "M_PI";
 			break;
 		case 2:
 			cp = "Math.PI";
@@ -250,15 +269,6 @@ int	lang_code;	/* language code */
 		break;
 	case MATCH_ANY:
 		cp = "all";
-		break;
-	case V_ANSWER:
-		cp = "answer";
-		break;
-	case V_TEMP:
-		cp = "temp";
-		break;
-	case V_INTEGER:
-		cp = "integer";
 		break;
 	default:
 		j = (v & VAR_MASK) - VAR_OFFSET;
@@ -277,19 +287,13 @@ int	lang_code;	/* language code */
 		snprintf(buf, sizeof(buf), "%d", j - 1);
 		strcat(var_str, buf);
 	}
-	if (lang_code > 0) {
-		for (cp = var_str; *cp; cp++) {
-			if (*cp == '\\') {
-				*cp = '_';
-			}
-		}
-	}
 	return(strlen(var_str));
 }
 
 /*
  * Display an expression in single line format.
  * Use color if available.
+ * The expression is not modified.
  *
  * Return number of characters output (excluding escape sequences).
  */
@@ -323,8 +327,11 @@ int		export_flag;	/* flag for exportable format (usually false) */
 		}
 		switch (equation[i].kind) {
 		case CONSTANT:
+			if (equation[i].token.constant == 0.0) {
+				equation[i].token.constant = 0.0; /* fix -0 */
+			}
 			if (high_prec || export_flag) {
-				if (equation[i].token.constant <= 0.0) {
+				if (equation[i].token.constant < 0.0) {
 					len += fprintf(gfp, "(%.20g)", equation[i].token.constant);
 				} else {
 					len += fprintf(gfp, "%.20g", equation[i].token.constant);
@@ -332,7 +339,7 @@ int		export_flag;	/* flag for exportable format (usually false) */
 			} else if (finance_option) {
 				len += fprintf(gfp, "%.2f", equation[i].token.constant);
 			} else {
-				len += fprintf(gfp, "%.12g", equation[i].token.constant);
+				len += fprintf(gfp, "%.*g", precision, equation[i].token.constant);
 			}
 			break;
 		case VARIABLE:
@@ -358,11 +365,7 @@ int		export_flag;	/* flag for exportable format (usually false) */
 				cp = " % ";
 				break;
 			case POWER:
-				if (starstar) {
-					cp = "**";
-				} else {
-					cp = "^";
-				}
+				cp = "^";
 				break;
 			case FACTORIAL:
 				cp = "!";
@@ -389,7 +392,7 @@ int		export_flag;	/* flag for exportable format (usually false) */
  */
 char *
 list_equation(n, export_flag)
-int	n;		/* equation number */
+int	n;		/* equation space number */
 int	export_flag;	/* flag for exportable format (usually false) */
 {
 	int	len;
@@ -397,16 +400,18 @@ int	export_flag;	/* flag for exportable format (usually false) */
 
 	len = list_string_sub(lhs[n], n_lhs[n], NULL, export_flag);
 	if (n_rhs[n]) {
-		len += 3;
+		len += strlen(EQUATE_STRING);
 		len += list_string_sub(rhs[n], n_rhs[n], NULL, export_flag);
 	}
 	len += 2;
 	cp = (char *) malloc(len);
-	if (cp == NULL)
+	if (cp == NULL) {
+		error(_("Out of memory (can't malloc(3))."));
 		return NULL;
+	}
 	list_string_sub(lhs[n], n_lhs[n], cp, export_flag);
 	if (n_rhs[n]) {
-		strcat(cp, " = ");
+		strcat(cp, EQUATE_STRING);
 		list_string_sub(rhs[n], n_rhs[n], &cp[strlen(cp)], export_flag);
 	}
 	if (export_flag == 1) {
@@ -415,7 +420,6 @@ int	export_flag;	/* flag for exportable format (usually false) */
 	return cp;
 }
 
-#if	false
 /*
  * Store an expression in a text string.
  * String should be freed with free() when done.
@@ -434,12 +438,13 @@ int		export_flag;
 	len = list_string_sub(equation, n, NULL, export_flag);
 	len++;
 	cp = (char *) malloc(len);
-	if (cp == NULL)
+	if (cp == NULL) {
+		error(_("Out of memory (can't malloc(3))."));
 		return NULL;
+	}
 	list_string_sub(equation, n, cp, export_flag);
 	return cp;
 }
-#endif
 
 /*
  * Convert an expression to a text string and store in "string" if
@@ -471,37 +476,33 @@ int		export_flag;
 		for (i1 = 1; i1 <= k; i1++) {
 			if (j > 0) {
 				cur_level--;
-				if (string)
-					strcat(string, ")");
-				len++;
+				APPEND(")");
 			} else {
 				cur_level++;
-				if (string)
-					strcat(string, "(");
-				len++;
+				APPEND("(");
 			}
 		}
 		switch (equation[i].kind) {
 		case CONSTANT:
+			if (equation[i].token.constant == 0.0) {
+				equation[i].token.constant = 0.0; /* fix -0 */
+			}
 			if (high_prec || export_flag) {
-				if (equation[i].token.constant <= 0.0) {
-					len += snprintf(buf, sizeof(buf), "(%.20g)", equation[i].token.constant);
+				if (equation[i].token.constant < 0.0) {
+					snprintf(buf, sizeof(buf), "(%.20g)", equation[i].token.constant);
 				} else {
-					len += snprintf(buf, sizeof(buf), "%.20g", equation[i].token.constant);
+					snprintf(buf, sizeof(buf), "%.20g", equation[i].token.constant);
 				}
 			} else if (finance_option) {
-				len += snprintf(buf, sizeof(buf), "%.2f", equation[i].token.constant);
+				snprintf(buf, sizeof(buf), "%.2f", equation[i].token.constant);
 			} else {
-				len += snprintf(buf, sizeof(buf), "%.12g", equation[i].token.constant);
+				snprintf(buf, sizeof(buf), "%.*g", precision, equation[i].token.constant);
 			}
-			if (string) {
-				strcat(string, buf);
-			}
+			APPEND(buf);
 			break;
 		case VARIABLE:
-			len += list_var(equation[i].token.variable, 0 - export_flag);
-			if (string)
-				strcat(string, var_str);
+			list_var(equation[i].token.variable, 0 - export_flag);
+			APPEND(var_str);
 			break;
 		case OPERATOR:
 			cp = _("(unknown operator)");
@@ -522,27 +523,19 @@ int		export_flag;
 				cp = " % ";
 				break;
 			case POWER:
-				if (starstar) {
-					cp = "**";
-				} else {
-					cp = "^";
-				}
+				cp = "^";
 				break;
 			case FACTORIAL:
 				cp = "!";
 				i++;
 				break;
 			}
-			len += strlen(cp);
-			if (string)
-				strcat(string, cp);
+			APPEND(cp);
 			break;
 		}
 	}
 	for (j = cur_level - min1; j > 0; j--) {
-		if (string)
-			strcat(string, ")");
-		len++;
+		APPEND(")");
 	}
 	return len;
 }
@@ -557,14 +550,11 @@ token_type	*equation;	/* expression pointer */
 int		n;		/* length of expression */
 {
 	int	i;
-	double	d;
 
 	for (i = 0; i < n; i++) {
-		if ((equation[i].kind == CONSTANT
-		    && fmod(equation[i].token.constant, 1.0) != 0.0)
-		    || (equation[i].kind == VARIABLE
-		    && var_is_const(equation[i].token.variable, &d))) {
-			return false;	/* non-integer constant */
+		if ((equation[i].kind == CONSTANT && fmod(equation[i].token.constant, 1.0))
+		    || (equation[i].kind == VARIABLE && equation[i].token.variable <= IMAGINARY)) {
+			return false;
 		}
 	}
 	return true;
@@ -573,32 +563,35 @@ int		n;		/* length of expression */
 /*
  * Display an equation as C, Java, or Python code.
  */
-list_c_equation(en, java_flag, int_flag)
-int	en;		/* equation number */
-int	java_flag;
+list_c_equation(en, language, int_flag)
+int	en;		/* equation space number */
+int	language;
 int	int_flag;	/* integer arithmetic flag */
 {
 	if (n_lhs[en] <= 0)
 		return;
-	list_code(lhs[en], &n_lhs[en], java_flag, int_flag);
+	list_code(lhs[en], &n_lhs[en], language, int_flag);
 	if (n_rhs[en]) {
 		fprintf(gfp, " = ");
-		list_code(rhs[en], &n_rhs[en], java_flag, int_flag);
+		list_code(rhs[en], &n_rhs[en], language, int_flag);
 	}
-	fprintf(gfp, ";\n");
+	if (language != 2) {
+		fprintf(gfp, ";");
+	}
+	fprintf(gfp, "\n");
 }
 
 /*
  * Output C, Java, or Python code for an expression.
- * Expression may be modified.
+ * Expression might be modified by this function.
  *
  * Return length of output (number of characters).
  */
 int
-list_code(equation, np, java_flag, int_flag)
+list_code(equation, np, language, int_flag)
 token_type	*equation;	/* expression pointer */
 int		*np;		/* pointer to length of expression */
-int		java_flag;	/* if 1, generate Java code, if 2, generate Python code */
+int		language;	/* if 0, generate C code; if 1, generate Java code; if 2, generate Python code */
 int		int_flag;	/* integer arithmetic flag, should work with any language */
 {
 	int	i, j, k, i1, i2;
@@ -618,8 +611,7 @@ int		int_flag;	/* integer arithmetic flag, should work with any language */
 		for (i1 = 1; i1 <= k; i1++) {
 			if (j > 0) {
 				cur_level--;
-				fprintf(gfp, ")");
-				len++;
+				len += fprintf(gfp, ")");
 			} else {
 				cur_level++;
 				for (i2 = i + 1; i2 < *np && equation[i2].level >= cur_level; i2 += 2) {
@@ -633,9 +625,9 @@ int		int_flag;	/* integer arithmetic flag, should work with any language */
 								equation[i2].token.operatr = TIMES;
 								equation[i2+1] = equation[i2-1];
 							} else {
-								if (int_flag || java_flag > 1)
+								if (int_flag || language > 1)
 									break;
-								if (java_flag) {
+								if (language) {
 									cp = "Math.pow";
 								} else {
 									cp = "pow";
@@ -651,16 +643,18 @@ int		int_flag;	/* integer arithmetic flag, should work with any language */
 						break;
 					}
 				}
-				fprintf(gfp, "(");
-				len++;
+				len += fprintf(gfp, "(");
 			}
 		}
 		switch (equation[i].kind) {
 		case CONSTANT:
+			if (equation[i].token.constant == 0.0) {
+				equation[i].token.constant = 0.0; /* fix -0 */
+			}
 			if (int_flag) {
 				snprintf(buf, sizeof(buf), "%.0f", equation[i].token.constant);
 			} else {
-				snprintf(buf, sizeof(buf), "%#.16g", equation[i].token.constant);
+				snprintf(buf, sizeof(buf), "%#.*g", MAX_PRECISION, equation[i].token.constant);
 				j = strlen(buf) - 1;
 				for (; j >= 0; j--) {
 					if (buf[j] == '0')
@@ -675,7 +669,7 @@ int		int_flag;	/* integer arithmetic flag, should work with any language */
 			len += fprintf(gfp, "%s", buf);
 			break;
 		case VARIABLE:
-			len += list_var(equation[i].token.variable, java_flag + 1);
+			len += list_var(equation[i].token.variable, language + 1);
 			fprintf(gfp, "%s", var_str);
 			break;
 		case OPERATOR:
@@ -697,7 +691,7 @@ int		int_flag;	/* integer arithmetic flag, should work with any language */
 				cp = " % ";
 				break;
 			case POWER:
-				if (int_flag || java_flag > 1) {
+				if (int_flag || language > 1) {
 					cp = " ** ";
 				} else {
 					cp = ", ";
@@ -718,20 +712,16 @@ int		int_flag;	/* integer arithmetic flag, should work with any language */
 	return len;
 }
 
-int	cur_line;	/* current line */
-int	cur_pos;	/* current position in the current line on the screen */
-
 /*
- * Display an expression or equation in multi-line fraction format.
+ * Display an equation space in multi-line fraction format.
  * Use color if available.
  *
  * Return true if successful.
  */
 int
 flist_sub(n)
-int	n;	/* equation number */
+int	n;	/* equation space number */
 {
-	int	i;
 	int	sind;
 	char	buf[30];
 	int	len, len2, len3;
@@ -748,7 +738,7 @@ int	n;	/* equation number */
 	sind = n_rhs[n];
 	len += flist(lhs[n], n_lhs[n], false, 0, &max_line, &min_line);
 	if (n_rhs[n]) {
-		len += 3;
+		len += strlen(EQUATE_STRING);
 make_smaller:
 		len2 = flist(rhs[n], sind, false, 0, &high, &low);
 		if (screen_columns && gfp == stdout && (len + len2) >= screen_columns && sind > 0) {
@@ -777,27 +767,25 @@ make_smaller:
 		return list1_sub(n, false);
 	}
 	fprintf(gfp, "\n");
-	for (i = max_line; i >= min_line; i--) {
-		cur_line = i;
-		cur_pos = 0;
-		if (i == 0) {
+	for (cur_line = max_line; cur_line >= min_line; cur_line--) {
+		pos = cur_pos = 0;
+		if (cur_line == 0) {
 			cur_pos += fprintf(gfp, "%s", buf);
 		}
-		pos = strlen(buf);
+		pos += strlen(buf);
 		pos += flist(lhs[n], n_lhs[n], true, pos, &high, &low);
 		if (n_rhs[n]) {
-			if (i == 0) {
-				cur_pos += fprintf(gfp, "%s", " = ");
+			if (cur_line == 0) {
+				cur_pos += fprintf(gfp, "%s", EQUATE_STRING);
 			}
-			pos += 3;
-			flist(rhs[n], sind, true, pos, &high, &low);
+			pos += strlen(EQUATE_STRING);
+			pos += flist(rhs[n], sind, true, pos, &high, &low);
 		}
 		fprintf(gfp, "\n");
 	}
 	if (sind < n_rhs[n]) {
 		fprintf(gfp, "\n");
-		for (i = max2_line; i >= min2_line; i--) {
-			cur_line = i;
+		for (cur_line = max2_line; cur_line >= min2_line; cur_line--) {
 			cur_pos = 0;
 			flist(&rhs[n][sind], n_rhs[n] - sind, true, 0, &high, &low);
 			fprintf(gfp, "\n");
@@ -942,7 +930,11 @@ check_again:
 			if (oflag) {
 				set_color(level-1);
 				for (j = 0; j < len_div; j++) {
-					fprintf(gfp, "-");
+					if (html_flag) {
+						fprintf(gfp, "&mdash;");
+					} else {
+						fprintf(gfp, "-");
+					}
 				}
 				set_color(cur_level-1);
 			}
@@ -960,12 +952,13 @@ check_again:
 		}
 		switch (equation[i].kind) {
 		case CONSTANT:
-			if (equation[i].token.constant == 0.0)
+			if (equation[i].token.constant == 0.0) {
 				equation[i].token.constant = 0.0; /* fix -0 */
+			}
 			if (finance_option) {
 				len += snprintf(buf, sizeof(buf), "%.2f", equation[i].token.constant);
 			} else {
-				len += snprintf(buf, sizeof(buf), "%.12g", equation[i].token.constant);
+				len += snprintf(buf, sizeof(buf), "%.*g", precision, equation[i].token.constant);
 			}
 			if (oflag)
 				fprintf(gfp, "%s", buf);
@@ -994,11 +987,7 @@ check_again:
 				cp = " % ";
 				break;
 			case POWER:
-				if (starstar) {
-					cp = "**";
-				} else {
-					cp = "^";
-				}
+				cp = "^";
 				break;
 			case FACTORIAL:
 				cp = "!";

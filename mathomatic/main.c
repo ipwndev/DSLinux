@@ -1,8 +1,8 @@
 /*
- * This file contains main() and startup code for Mathomatic.
+ * This file contains main() and the startup code for Mathomatic.
  * Leave this file out when compiling for the symbolic math library.
  *
- * Copyright (c) 1987-2005 George Gesslein II.
+ * Copyright (C) 1987-2007 George Gesslein II.
  *
  * Output to stderr is only done in this file.  The rest of the code
  * should not output to stderr.
@@ -28,6 +28,9 @@
  * Any number of TIMES and DIVIDE operators may be on the same
  * level, because they are simple multiplicative class operators.
  * The same for PLUS and MINUS, because they are additive class operators.
+ *
+ * See the file "am.h" to start understanding the Mathomatic code and
+ * to adjust memory usage.
  */
 
 #if	!LIBRARY
@@ -37,26 +40,6 @@
 
 static void usage();
 static int set_signals();
-
-#if	CYGWIN
-/*
- * dirname(3) function for Windows.
- */
-char	*
-dirname1(cp)
-char	*cp;
-{
-	int	i;
-
-	i = strlen(cp);
-	while (i >= 0 && cp[i] != '\\' && cp[i] != '/')
-		i--;
-	if (i < 0)
-		return(".");
-	cp[i] = '\0';
-	return(cp);
-}
-#endif
 
 int
 main(argc, argv)
@@ -70,39 +53,44 @@ char	**argv;
 	char		*cp;
 	double		numerator, denominator;
 	double		multiplier;
-	struct winsize	ws;
 	int		coption = false;
 
 #if	UNIX
-	prog_name = strdup(basename(argv[0]));	/* set prog_name to this executable's filename */
+	prog_name = strdup(basename(argv[0]));		/* set prog_name to this executable's filename */
 #endif
 #if	CYGWIN
-	dir_path = strdup(dirname1(argv[0]));	/* set dir_path to this executable's directory */
+	dir_path = strdup(dirname_win(argv[0]));	/* set dir_path to this executable's directory */
 #endif
 	/* initialize the global variables */
 	init_gvars();
 	gfp = stdout;
 
 	/* process command line options */
-	while ((i = getopt(argc, argv, "qtchuvm:")) >= 0) {
+	while ((i = getopt(argc, argv, "qrtchuvm:")) >= 0) {
 		switch (i) {
 		case 'c':
-			coption = true;
+			coption++;
 			break;
 		case 'h':
+			readline_enabled = false;
 			html_flag = true;
 			break;
 		case 'm':
-			multiplier = atof(optarg);
-			if (multiplier <= 0.0 || (n_tokens = (int) (multiplier * DEFAULT_N_TOKENS)) <= 0) {
-				fprintf(stderr, _("Invalid memory size multiplier specified!\n"));
-				usage();
+			multiplier = strtod(optarg, &cp) * DEFAULT_N_TOKENS;
+			if (*cp || multiplier < 100 || multiplier >= (INT_MAX / 3)) {
+				fprintf(stderr, _("%s: Invalid memory size multiplier specified.\n"), prog_name);
+				exit(1);
 			}
+			n_tokens = (int) multiplier;
 			break;
 		case 'q':
 			quiet_mode = true;
 			break;
+		case 'r':
+			readline_enabled = false;
+			break;
 		case 't':
+			readline_enabled = false;
 			test_mode = true;
 			break;
 		case 'u':
@@ -119,17 +107,7 @@ char	**argv;
 		screen_columns = 0;
 		screen_rows = 0;
 	} else {
-		/* get the screen width and height */
-		ws.ws_col = 0;
-		ws.ws_row = 0;
-		if (ioctl(1, TIOCGWINSZ, &ws) >= 0) {
-			if (ws.ws_col) {
-				screen_columns = ws.ws_col;
-			}
-			if (ws.ws_row) {
-				screen_rows = ws.ws_row;
-			}
-		}
+		get_screen_size();
 	}
 	if (!init_mem()) {
 		fprintf(stderr, _("%s: Not enough memory.\n"), prog_name);
@@ -143,12 +121,14 @@ char	**argv;
 		printf(_("Secure "));
 #endif
 		printf(_("Mathomatic version %s (www.mathomatic.org)\n"), VERSION);
-		printf(_("Copyright (C) 1987-2006 George Gesslein II.\n"));
-		printf(_("%d equation spaces available, %ldK per equation space.\n\n"),
-		    N_EQUATIONS, (long) n_tokens * sizeof(token_type) * 2L / 1000L);
+		printf(_("Copyright (C) 1987-2007 George Gesslein II.\n"));
+		printf(_("This is free software; see the source for copying conditions.  There is NO\n"));
+		printf(_("warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"));
+		printf(_("%d equation spaces available, %lld kilobytes per equation space.\n"),
+		    N_EQUATIONS, (long long) n_tokens * sizeof(token_type) * 2LL / 1000LL);
 	}
 #if	!SECURE
-	/* read the options initialization file */
+	/* read the user options initialization file */
 	if (!test_mode && !load_rc()) {
 		fprintf(stderr, _("Error loading set options from \"%s\".\n"), RC_FILE);
 	}
@@ -156,8 +136,11 @@ char	**argv;
 	if (test_mode) {
 		color_flag = false;
 	}
-	if (coption) {
+	if (coption & 1) {
 		color_flag = !color_flag;
+	}
+	if (!test_mode && !quiet_mode && color_flag) {
+		printf(_("%s color mode enabled.\n"), html_flag ? "HTML" : "ANSI");
 	}
 	if ((i = setjmp(jmp_save)) != 0) {
 		/* for error handling */
@@ -167,20 +150,20 @@ char	**argv;
 			printf(_("Operation abruptly aborted.\n"));
 			break;
 		case 14:
-			error(_("Expression too big."));
+			error(_("Expression too large."));
 		default:
 			printf(_("Operation aborted.\n"));
 		}
 	} else {
 		if (!set_signals()) {
-			fprintf(stderr, _("Signal(2) setting failed.\n"));
+			fprintf(stderr, _("signal(2) setting failed.\n"));
 		}
 		if (!f_to_fraction(0.5, &numerator, &denominator)
 		    || !f_to_fraction(1.0/3.0, &numerator, &denominator)) {
 			fprintf(stderr, _("Cannot convert floating point values to fractions.\n"));
 		}
 #if	!SECURE
-		/* read in files on the command line */
+		/* read in files on the command line, exit if error */
 		for (i = optind; i < argc; i++) {
 			if (!read_cmd(argv[i])) {
 				exit_program(1);
@@ -209,12 +192,13 @@ usage()
 	fprintf(stderr, _("Usage: %s [ options ] [ input_files ]\n\n"), prog_name);
 	fprintf(stderr, _("Options:\n"));
 	fprintf(stderr, _("  -c               Toggle color mode.\n"));
-	fprintf(stderr, _("  -h               Enable HTML mode.\n"));
+	fprintf(stderr, _("  -h               Enable HTML output mode and disable readline.\n"));
 	fprintf(stderr, _("  -m number        Specify a memory size multiplier.\n"));
 	fprintf(stderr, _("  -q               Quiet mode (don't display prompts).\n"));
+	fprintf(stderr, _("  -r               Disable readline.\n"));
 	fprintf(stderr, _("  -t               Used when testing.\n"));
-	fprintf(stderr, _("  -u               Unbuffered output.\n"));
-	fprintf(stderr, _("  -v               Display version number and compile flags used.\n"));
+	fprintf(stderr, _("  -u               Set unbuffered output.\n"));
+	fprintf(stderr, _("  -v               Display version number, compile flags, and memory usage.\n"));
 	exit(1);
 }
 
@@ -241,6 +225,26 @@ set_signals()
 #endif
 	return rv;
 }
+
+#if	CYGWIN
+/*
+ * dirname(3) function for Windows.
+ */
+char	*
+dirname_win(cp)
+char	*cp;
+{
+	int	i;
+
+	i = strlen(cp);
+	while (i >= 0 && cp[i] != '\\' && cp[i] != '/')
+		i--;
+	if (i < 0)
+		return(".");
+	cp[i] = '\0';
+	return(cp);
+}
+#endif
 
 #if	!SECURE
 /*
@@ -271,7 +275,7 @@ load_rc()
 	if (fp == NULL)
 		return true;
 #endif
-	while (cp = fgets(buf, sizeof(buf), fp)) {
+	while ((cp = fgets(buf, sizeof(buf), fp)) != NULL) {
 		set_error_level(cp);
 		if (!set_options(cp))
 			rv = false;
@@ -283,25 +287,24 @@ load_rc()
 
 /*
  * Floating point exception handler.
- * Seldom works.
+ * Usually doesn't work in most operating systems.
  */
 void
 fphandler(sig)
 int	sig;
 {
 	error(_("Floating point exception."));
-	signal(SIGFPE, fphandler);
-	longjmp(jmp_save, 2);
 }
 
 /*
- * Control-C handler.
- * Abruptly quits this program.
+ * Control-C (interrupt) handler.
+ * Abruptly quit this program.
  */
 void
 inthandler(sig)
 int	sig;
 {
+	printf(_("\nControl-C pressed, quitting...\n"));
 	exit_program(1);
 }
 
@@ -313,10 +316,29 @@ void
 alarmhandler(sig)
 int	sig;
 {
-	printf(_("\ntimeout\n"));
+	printf(_("\nTimeout, quitting...\n"));
 	exit_program(1);
 }
 #endif
+
+/*
+ * Get the screen (window) width and height.
+ */
+get_screen_size()
+{
+	struct winsize	ws;
+
+	ws.ws_col = 0;
+	ws.ws_row = 0;
+	if (ioctl(1, TIOCGWINSZ, &ws) >= 0) {
+		if (ws.ws_col > 0 && screen_columns) {
+			screen_columns = ws.ws_col;
+		}
+		if (ws.ws_row > 0 && screen_rows) {
+			screen_rows = ws.ws_row;
+		}
+	}
+}
 
 /*
  * Window resize handler.
@@ -325,18 +347,7 @@ void
 resizehandler(sig)
 int	sig;
 {
-	struct winsize	ws;
-
-	ws.ws_col = 0;
-	ws.ws_row = 0;
-	if (ioctl(1, TIOCGWINSZ, &ws) >= 0) {
-		if (ws.ws_col && screen_columns) {
-			screen_columns = ws.ws_col;
-		}
-		if (ws.ws_row && screen_rows) {
-			screen_rows = ws.ws_row;
-		}
-	}
+	get_screen_size();
 }
 
 /*
@@ -344,7 +355,7 @@ int	sig;
  */
 void
 exit_program(exit_value)
-int	exit_value;
+int	exit_value;	/* zero if OK, non-zero indicates error return */
 {
 	reset_attr();
 	printf("\n");

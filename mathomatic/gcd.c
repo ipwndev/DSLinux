@@ -1,14 +1,16 @@
 /*
- * General floating point GCD routines.
+ * General floating point GCD routine and associated code for Mathomatic.
  *
- * Copyright (c) 1987-2005 George Gesslein II.
+ * Copyright (C) 1987-2007 George Gesslein II.
  */
 
 #include "includes.h"
 
 /*
- * Return the Greatest Common Divisor of doubles "d1" and "d2",
+ * Return the Greatest Common Divisor (GCD) of doubles "d1" and "d2",
  * by using the Euclidean GCD algorithm.
+ *
+ * The GCD is defined as the largest positive number that evenly divides both "d1" and "d2".
  * Will work with non-integers, but there may be some floating point error.
  * Always works correctly with integers.
  *
@@ -24,6 +26,9 @@ double	d1, d2;
 	double	r1;
 	double	d;
 
+	if (!isfinite(d1) || !isfinite(d2)) {
+		return 0.0;	/* operands must be finite */
+	}
 	d1 = fabs(d1);
 	d2 = fabs(d2);
 	if (d1 > d2) {
@@ -33,12 +38,13 @@ double	d1, d2;
 		larger = d2;
 		divisor = d1;
 	}
-	if (larger >= MAX_K_INTEGER) {
-		return 0.0;
+	if (divisor <= 0.0 || larger >= MAX_K_INTEGER) {
+		return 0.0;	/* out of range */
 	}
 	d = larger * epsilon;
-	if (d >= divisor)
-		return 0.0;
+	if (d >= divisor) {
+		return 0.0;	/* result would be too inaccurate */
+	}
 	for (count = 1; count < 50; count++) {
 		r1 = fmod(larger, divisor);
 		if (r1 <= d || (divisor - r1) <= d) {
@@ -53,7 +59,7 @@ double	d1, d2;
 }
 
 /*
- * Round a double to the nearest integer.
+ * Return a floating point double rounded to the nearest integer.
  */
 double
 my_round(d1)
@@ -71,57 +77,72 @@ double	d1;	/* value to round */
  * Convert the passed double "d" to a fully reduced fraction.
  * This done by the following simple algorithm:
  *
- * divisor = GCD(d, 1.0)
+ * divisor = gcd(d, 1.0)
  * numerator = d / divisor
  * denominator = 1.0 / divisor
  *
- * Return true with integer numerator and denominator
- * if conversion was successful.
+ * Return true with integer numerator and denominator if conversion was successful.
  * Otherwise return false with numerator = "d" and denominator = "1.0".
  *
- * True return indicates "d" is rational, otherwise "d" is irrational.
+ * True return indicates "d" is rational and finite, otherwise "d" is irrational.
  */
 int
-f_to_fraction(d, d1p, d2p)
-double	d;	/* floating point number to convert */
-double	*d1p;	/* returned numerator */
-double	*d2p;	/* returned denominator */
+f_to_fraction(d, numeratorp, denominatorp)
+double	d;		/* floating point number to convert */
+double	*numeratorp;	/* returned numerator */
+double	*denominatorp;	/* returned denominator */
 {
 	double	divisor;
-	double	d1, d2;
+	double	numerator, denominator;
 	double	k3, k4;
 
-	*d1p = d;
-	*d2p = 1.0;
-	if (fmod(d, 1.0) == 0.0)
+	*numeratorp = d;
+	*denominatorp = 1.0;
+	if (!isfinite(d)) {
+		return false;
+	}
+/* see if "d" is an integer, or very close to an integer: */
+	if (fmod(d, 1.0) == 0.0) {
 		return true;
+	}
+#if	true	/* set true for more integer oriented math */
+	k3 = fabs(d) * epsilon;
+#else
+	k3 = fabs(d) * small_epsilon;
+#endif
+	k4 = my_round(d);
+	if (k4 != 0.0 && fabs(k4 - d) <= k3) {
+		*numeratorp = k4;
+		return true;
+	}
+/* try to convert non-integer, floating point value in "d" to a fraction: */
 	if ((divisor = gcd(1.0, d)) > epsilon) {
-		d1 = d / divisor;
-		d2 = 1.0 / divisor;
-		d1 = my_round(d1);
-		d2 = my_round(d2);
-		if (fabs(d1) >= 1.0e12)
+		numerator = my_round(d / divisor);
+		denominator = my_round(1.0 / divisor);
+/* don't allow more than 11 digits in the numerator or denominator: */
+		if (fabs(numerator) >= 1.0e12)
 			return false;
-		if (d2 >= 1.0e12)
+		if (denominator >= 1.0e12 || denominator < 2.0)
 			return false;
-		if (d2 < 1.5)
-			return false;
-		divisor = gcd(d1, d2);	/* make sure the result is a fully reduced fraction */
-		if (fmod(divisor, 1.0) != 0.0) {
-			error("Error in gcd() function!");
-			return false;
-		}
+/* make sure the result is a fully reduced fraction: */
+		divisor = gcd(numerator, denominator);
 		if (divisor > 1.0) {	/* shouldn't happen, but just in case */
-			d1 = d1 / divisor;
-			d2 = d2 / divisor;
+			numerator /= divisor;
+			denominator /= divisor;
 		}
-		k3 = (d1 / d2);
+		k3 = (numerator / denominator);
 		k4 = d;
 		if (fabs(k3 - k4) > (small_epsilon * fabs(k3))) {
 			return false;	/* result is too inaccurate */
 		}
-		*d1p = d1;
-		*d2p = d2;
+		if (fmod(numerator, 1.0)) {
+			error("Internal error: Numerator not integral.");
+		}
+		if (fmod(denominator, 1.0)) {
+			error("Internal error: Denominator not integral.");
+		}
+		*numeratorp = numerator;
+		*denominatorp = denominator;
 		return true;
 	}
 	return false;
@@ -129,31 +150,30 @@ double	*d2p;	/* returned denominator */
 
 /*
  * Convert non-integer constants in an equation side to fractions, when appropriate.
- *
- * Return true if equation side was changed.
  */
-int
 make_fractions(equation, np)
 token_type	*equation;	/* equation side pointer */
 int		*np;		/* pointer to length of equation side */
 {
 	int	i, j, k;
 	int	level;
-	double	d1, d2;
+	double	numerator, denominator;
 	int	inc_level;
-	int	modified = false;
 
 	for (i = 0; i < *np; i += 2) {
 		if (equation[i].kind == CONSTANT) {
 			level = equation[i].level;
 			if (i > 0 && equation[i-1].level == level && equation[i-1].token.operatr == DIVIDE)
 				continue;
-			if (!f_to_fraction(equation[i].token.constant, &d1, &d2) || d2 == 1.0)
+			if (!f_to_fraction(equation[i].token.constant, &numerator, &denominator))
 				continue;
+			if (denominator == 1.0) {
+				equation[i].token.constant = numerator;
+				continue;
+			}
 			if ((*np + 2) > n_tokens) {
 				error_huge();
 			}
-			modified = true;
 			inc_level = (*np > 1);
 			if ((i + 1) < *np && equation[i+1].level == level) {
 				switch (equation[i+1].token.operatr) {
@@ -163,12 +183,12 @@ int		*np;		/* pointer to length of equation side */
 							break;
 						}
 					}
-					if (d1 == 1.0) {
-						blt(&equation[i], &equation[i+2], (j - (i + 2)) * sizeof(*equation));
+					if (numerator == 1.0) {
+						blt(&equation[i], &equation[i+2], (j - (i + 2)) * sizeof(token_type));
 						j -= 2;
 					} else {
-						equation[i].token.constant = d1;
-						blt(&equation[j+2], &equation[j], (*np - j) * sizeof(*equation));
+						equation[i].token.constant = numerator;
+						blt(&equation[j+2], &equation[j], (*np - j) * sizeof(token_type));
 						*np += 2;
 					}
 					equation[j].level = level;
@@ -177,8 +197,8 @@ int		*np;		/* pointer to length of equation side */
 					j++;
 					equation[j].level = level;
 					equation[j].kind = CONSTANT;
-					equation[j].token.constant = d2;
-					if (d1 == 1.0) {
+					equation[j].token.constant = denominator;
+					if (numerator == 1.0) {
 						i -= 2;
 					}
 					continue;
@@ -188,9 +208,9 @@ int		*np;		/* pointer to length of equation side */
 				}
 			}
 			j = i;
-			blt(&equation[i+3], &equation[i+1], (*np - (i + 1)) * sizeof(*equation));
+			blt(&equation[i+3], &equation[i+1], (*np - (i + 1)) * sizeof(token_type));
 			*np += 2;
-			equation[j].token.constant = d1;
+			equation[j].token.constant = numerator;
 			j++;
 			equation[j].level = level;
 			equation[j].kind = OPERATOR;
@@ -198,12 +218,11 @@ int		*np;		/* pointer to length of equation side */
 			j++;
 			equation[j].level = level;
 			equation[j].kind = CONSTANT;
-			equation[j].token.constant = d2;
+			equation[j].token.constant = denominator;
 			if (inc_level) {
 				for (k = i; k <= j; k++)
 					equation[k].level++;
 			}
 		}
 	}
-	return modified;
 }

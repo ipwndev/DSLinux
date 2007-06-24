@@ -1,7 +1,7 @@
 /*
- * Algebraic manipulator symbolic factorizing routines.
+ * Mathomatic symbolic factorizing routines.
  *
- * Copyright (c) 1987-2005 George Gesslein II.
+ * Copyright (C) 1987-2007 George Gesslein II.
  *
  * There are proper mathematical names for many algebraic rules.
  * I obviously don't know what they are.
@@ -18,8 +18,7 @@ static int	fpower_recurse();
 static int	fpower_sub();
 
 /*
- * Factor divides only.
- * (a/c + b/c) -> ((a+b)/c).
+ * Factor divides only: (a/c + b/c) -> ((a+b)/c).
  *
  * Return true if equation side was modified.
  */
@@ -30,13 +29,12 @@ int		*np;
 long		v;
 double		d;
 {
-	return fplus_recurse(equation, np, 0, 1, v, d, 2);
+	return fplus_recurse(equation, np, 0, 1, v, d, false, true);
 }
 
 /*
  * Take care of subtraction and addition of the same expression
- * multiplied by constants.
- * (2*a + 3*a - a) -> (4*a).
+ * multiplied by constants: (2*a + 3*a - a) -> (4*a).
  *
  * Return true if equation side was modified.
  */
@@ -45,19 +43,18 @@ subtract_itself(equation, np)
 token_type	*equation;
 int		*np;
 {
-	return fplus_recurse(equation, np, 0, 1, 0L, 0.0, 1);
+	return fplus_recurse(equation, np, 0, 1, 0L, 0.0, true, false);
 }
 
 /*
- * Factor equation side.
- * (a*c + b*c) -> (c*(a + b)).
+ * Factor equation side: (a*c + b*c) -> (c*(a + b)).
  *
- * If "v" equals 0L, factor anything,
- * including identical bases raised to powers:
- * (x^2 + x) -> (x*(x + 1)).
+ * If "v" and "d" equals 0, factor anything,
+ * including identical bases raised to powers (Horner factoring): (x^2 + x) -> (x*(x + 1)).
  * If "d" equals 1.0, only factor identical bases raised to the power of a constant.
  *
- * If "v" is a variable, only factor expressions containing that variable.
+ * If "v" is a variable, only factor expressions containing that variable,
+ * with no Horner factoring.
  * If "d" is not equal to 0.0 or 1.0, factor only expressions containing "v" raised
  * to the power of "d".
  *
@@ -65,12 +62,12 @@ int		*np;
  */
 int
 factor_plus(equation, np, v, d)
-token_type	*equation;
-int		*np;
-long		v;
-double		d;
+token_type	*equation;	/* pointer to beginning of equation side */
+int		*np;		/* pointer to length of equation side */
+long		v;		/* variable */
+double		d;		/* control exponent */
 {
-	return fplus_recurse(equation, np, 0, 1, v, d, 0);
+	return fplus_recurse(equation, np, 0, 1, v, d, false, false);
 }
 
 /*
@@ -80,12 +77,13 @@ double		d;
  * Return true if the expression was modified.
  */
 static int
-fplus_recurse(equation, np, loc, level, v, d, factor_code)
+fplus_recurse(equation, np, loc, level, v, d, whole_flag, div_only)
 token_type	*equation;
 int		*np, loc, level;
 long		v;
 double		d;
-int		factor_code;
+int		whole_flag;	/* factor only whole expressions multiplied by a constant */
+int		div_only;	/* factor only divides */
 {
 	int	modified = false;
 	int	i, j, k;
@@ -117,7 +115,7 @@ f_again:
 						break;
 				}
 				len2 = k - j;
-				if (fplus_sub(equation, np, loc, i, len1, j, len2, level + 1, factor_code == 1, factor_code == 2, v, d)) {
+				if (fplus_sub(equation, np, loc, i, len1, j, len2, level + 1, v, d, whole_flag, div_only)) {
 					modified = true;
 					goto f_again;
 				}
@@ -131,7 +129,7 @@ f_again:
 		return true;
 	for (i = loc; i < *np && equation[i].level >= level;) {
 		if (equation[i].level > level) {
-			modified |= fplus_recurse(equation, np, i, level + 1, v, d, factor_code);
+			modified |= fplus_recurse(equation, np, i, level + 1, v, d, whole_flag, div_only);
 			i++;
 			for (; i < *np && equation[i].level > level; i += 2)
 				;
@@ -148,16 +146,16 @@ f_again:
  * Return true if a transformation was made.
  */
 static int
-fplus_sub(equation, np, loc, i1, n1, i2, n2, level, whole_flag, div_only, v, d)
+fplus_sub(equation, np, loc, i1, n1, i2, n2, level, v, d, whole_flag, div_only)
 token_type	*equation;	/* the entire expression */
 int		*np;		/* pointer to length of the entire expression */
 int		loc;		/* index into the beginning of this additive subexpression */
 int		i1, n1, i2, n2;
 int		level;
-int		whole_flag;	/* factor only whole expressions multiplied by a constant */
-int		div_only;	/* factor only divides */
 long		v;
 double		d;
+int		whole_flag;	/* factor only whole expressions multiplied by a constant */
+int		div_only;	/* factor only divides */
 {
 	int	e1, e2;
 	int	op1, op2;
@@ -171,7 +169,7 @@ double		d;
 	int	same_flag;
 	double	save_k1, save_k2;
 	double	save_d1, save_d2;
-	double	power;
+	double	power;		/* for constant power horner factoring */
 	double	d1, d2;
 
 	e1 = i1 + n1;
@@ -179,8 +177,9 @@ double		d;
 	op2 = equation[i2-1].token.operatr;
 	if (i1 <= loc) {
 		op1 = PLUS;
-	} else
+	} else {
 		op1 = equation[i1-1].token.operatr;
+	}
 	i = i1 - 1;
 f_outer:
 	b1 = i + 1;
@@ -276,33 +275,33 @@ f_inner:
 	}
 	ai = i;
 	aj = j;
-	if (whole_flag) {
-		if (flag1 = (b1 > i1)) {
-			b1 = i1;
-			save_k1 = equation[b1].token.constant;
-			equation[b1].token.constant = 1.0;
-		}
-		if (flag2 = (b2 > i2)) {
-			b2 = i2;
-			save_k2 = equation[b2].token.constant;
-			equation[b2].token.constant = 1.0;
-		}
+	save_k1 = 0.0;
+	save_k2 = 0.0;
+	flag1 = (whole_flag && b1 > i1);
+	if (flag1) {
+		b1 = i1;
+		save_k1 = equation[b1].token.constant;
+		equation[b1].token.constant = 1.0;
+	}
+	flag2 = (whole_flag && b2 > i2);
+	if (flag2) {
+		b2 = i2;
+		save_k2 = equation[b2].token.constant;
+		equation[b2].token.constant = 1.0;
 	}
 	same_flag = se_compare(&equation[b1], i - b1, &equation[b2], j - b2, &diff_sign);
-	if (whole_flag) {
-		if (flag1) {
-			equation[i1].token.constant = save_k1;
-			b1 += 2;
-		}
-		if (flag2) {
-			equation[i2].token.constant = save_k2;
-			b2 += 2;
-		}
+	if (flag1) {
+		equation[i1].token.constant = save_k1;
+		b1 += 2;
+	}
+	if (flag2) {
+		equation[i2].token.constant = save_k2;
+		b2 += 2;
 	}
 	if (same_flag) {
 		/* do the factor transformation */
-		power = 1.0;
-more_power:
+		power = 1.0;	/* not doing Horner factoring */
+horner_factor:
 		if (sop1 == DIVIDE) {
 			scratch[0].level = level;
 			scratch[0].kind = CONSTANT;
@@ -311,10 +310,11 @@ more_power:
 			scratch[1].kind = OPERATOR;
 			scratch[1].token.operatr = DIVIDE;
 			len = 2;
-		} else
+		} else {
 			len = 0;
+		}
 		k = len;
-		blt(&scratch[len], &equation[b1], (ai - b1) * sizeof(*equation));
+		blt(&scratch[len], &equation[b1], (ai - b1) * sizeof(token_type));
 		len += ai - b1;
 		if (power != 1.0) {
 			for (; k < len; k++)
@@ -338,12 +338,12 @@ more_power:
 		scratch[len].token.operatr = TIMES;
 		len++;
 		k = len;
-		blt(&scratch[len], &equation[i1], (b1 - i1) * sizeof(*equation));
+		blt(&scratch[len], &equation[i1], (b1 - i1) * sizeof(token_type));
 		len += b1 - i1;
 		if (ai != i) {
 			l = len;
 			m = len + ai - b1;
-			blt(&scratch[len], &equation[b1], (i - b1) * sizeof(*equation));
+			blt(&scratch[len], &equation[b1], (i - b1) * sizeof(token_type));
 			len += i - b1;
 			if (b1 == i1 && i == e1) {
 				for (; l < len; l++)
@@ -370,20 +370,22 @@ more_power:
 		scratch[len].kind = CONSTANT;
 		if (op1 == MINUS) {
 			scratch[len].token.constant = -1.0;
-		} else
+		} else {
 			scratch[len].token.constant = 1.0;
+		}
 		len++;
-		blt(&scratch[len], &equation[i], (e1 - i) * sizeof(*equation));
+		blt(&scratch[len], &equation[i], (e1 - i) * sizeof(token_type));
 		len += e1 - i;
 		for (; k < len; k++)
 			scratch[k].level += 2;
 		scratch[len].level = level + 1;
 		scratch[len].kind = OPERATOR;
 		diff_sign ^= (op2 == MINUS);
-		if (diff_sign)
+		if (diff_sign) {
 			scratch[len].token.operatr = MINUS;
-		else
+		} else {
 			scratch[len].token.operatr = PLUS;
+		}
 		len++;
 		k = len;
 		if (aj != j) {
@@ -395,11 +397,11 @@ more_power:
 				error_huge();
 			}
 		}
-		blt(&scratch[len], &equation[i2], (b2 - i2) * sizeof(*equation));
+		blt(&scratch[len], &equation[i2], (b2 - i2) * sizeof(token_type));
 		len += b2 - i2;
 		if (aj != j) {
 			m = len + aj - b2;
-			blt(&scratch[len], &equation[b2], (j - b2) * sizeof(*equation));
+			blt(&scratch[len], &equation[b2], (j - b2) * sizeof(token_type));
 			len += j - b2;
 			l = m;
 			m++;
@@ -419,7 +421,7 @@ more_power:
 			scratch[len].token.constant = 1.0;
 			len++;
 		}
-		blt(&scratch[len], &equation[j], (e2 - j) * sizeof(*equation));
+		blt(&scratch[len], &equation[j], (e2 - j) * sizeof(token_type));
 		len += e2 - j;
 		for (; k < len; k++)
 			scratch[k].level += 2;
@@ -430,17 +432,17 @@ end_mess:
 		if (op1 == MINUS) {
 			equation[i1-1].token.operatr = PLUS;
 		}
-		blt(&equation[i2-1], &equation[e2], (*np - e2) * sizeof(*equation));
+		blt(&equation[i2-1], &equation[e2], (*np - e2) * sizeof(token_type));
 		*np -= n2 + 1;
-		blt(&equation[i1+len], &equation[e1], (*np - e1) * sizeof(*equation));
+		blt(&equation[i1+len], &equation[e1], (*np - e1) * sizeof(token_type));
 		*np += len - n1;
-		blt(&equation[i1], scratch, len * sizeof(*equation));
+		blt(&equation[i1], scratch, len * sizeof(token_type));
 		return true;
 	}
 	if (whole_flag)
 		return false;
 	if (v || div_only)
-		goto f_inner;
+		goto f_inner;	/* don't do Horner factoring */
 	if (b1 == i1 && i == e1)
 		k = level;
 	else
@@ -455,8 +457,9 @@ end_mess:
 				save_d1 = equation[l+1].token.constant;
 				if (save_d1 <= 0.0)
 					goto f_inner;
-			} else
+			} else {
 				save_d1 = -1.0;
+			}
 			ai = l;
 			break;
 		}
@@ -475,8 +478,9 @@ end_mess:
 				save_d2 = equation[l+1].token.constant;
 				if (save_d2 <= 0.0)
 					goto f_inner;
-			} else
+			} else {
 				save_d2 = -1.0;
+			}
 			aj = l;
 			break;
 		}
@@ -489,22 +493,22 @@ end_mess:
 		goto f_inner;
 	if (se_compare(&equation[b1], ai - b1, &equation[b2], aj - b2, &diff_sign)) {
 		if (save_d1 > 0.0 || save_d2 > 0.0) {
-			if (save_d1 < 0.0)
+			if (save_d1 < 0.0) {
 				power = save_d2;
-			else if (save_d2 < 0.0)
+			} else if (save_d2 < 0.0) {
 				power = save_d1;
-			else {
+			} else {
 				power = min(save_d1, save_d2);
 				if (!diff_sign && (fmod(power, 1.0) != 0.0)) {
 					if (fmod(max(save_d1, save_d2) - power, 1.0) == 0.0) {
-						goto more_power;
+						goto horner_factor;
 					}
 				}
 			}
 			if (power < 1.0)
 				goto f_inner;
 			modf(power, &power);
-			goto more_power;
+			goto horner_factor;
 		}
 		d1 = i - ai;
 		d2 = j - aj;
@@ -546,7 +550,7 @@ end_mess:
 
 /*
  * Factor transformation for a more general pair of subexpressions added together
- * with a common base.
+ * with a common base and any exponent.
  */
 static int
 big_fplus(equation, level, diff_sign, sop1, op1, op2, i1, i2, b1, b2, ai, aj, i, j, e1, e2)
@@ -572,11 +576,12 @@ int		e1, e2;
 		scratch[1].kind = OPERATOR;
 		scratch[1].token.operatr = DIVIDE;
 		len = 2;
-	} else
+	} else {
 		len = 0;
+	}
 	k = len;
 	o = len + ai - b1;
-	blt(&scratch[len], &equation[b1], (i - b1) * sizeof(*equation));
+	blt(&scratch[len], &equation[b1], (i - b1) * sizeof(token_type));
 	len += i - b1;
 	if (b1 == i1 && i == e1) {
 		for (; k < len; k++)
@@ -587,7 +592,7 @@ int		e1, e2;
 	scratch[len].token.operatr = TIMES;
 	len++;
 	k = len;
-	blt(&scratch[len], &equation[i1], (b1 - i1) * sizeof(*equation));
+	blt(&scratch[len], &equation[i1], (b1 - i1) * sizeof(token_type));
 	len += b1 - i1;
 	scratch[len].level = level;
 	scratch[len].kind = CONSTANT;
@@ -597,7 +602,7 @@ int		e1, e2;
 		scratch[len].token.constant = 1.0;
 	}
 	len++;
-	blt(&scratch[len], &equation[i], (e1 - i) * sizeof(*equation));
+	blt(&scratch[len], &equation[i], (e1 - i) * sizeof(token_type));
 	len += e1 - i;
 	for (; k < len; k++)
 		scratch[k].level += 2;
@@ -606,14 +611,14 @@ int		e1, e2;
 	scratch[len].token.operatr = op2;
 	len++;
 	k = len;
-	blt(&scratch[len], &equation[i2], (b2 - i2) * sizeof(*equation));
+	blt(&scratch[len], &equation[i2], (b2 - i2) * sizeof(token_type));
 	len += b2 - i2;
 	if (len + (e2 - b2) + 2 * (i - ai) + 2 > n_tokens) {
 		error_huge();
 	}
 	n = len;
 	m = len + aj - b2;
-	blt(&scratch[len], &equation[b2], (j - b2) * sizeof(*equation));
+	blt(&scratch[len], &equation[b2], (j - b2) * sizeof(token_type));
 	len += j - b2;
 	l = m;
 	m++;
@@ -628,7 +633,7 @@ int		e1, e2;
 	scratch[len].token.operatr = MINUS;
 	len++;
 	m = len;
-	blt(&scratch[len], &equation[ai+1], (i - (ai + 1)) * sizeof(*equation));
+	blt(&scratch[len], &equation[ai+1], (i - (ai + 1)) * sizeof(token_type));
 	len += i - (ai + 1);
 	n = min_level(&equation[ai+1], i - (ai + 1));
 	n = scratch[l].level + 2 - n;
@@ -646,10 +651,10 @@ int		e1, e2;
 		scratch[len].kind = CONSTANT;
 		scratch[len].token.constant = -1.0;
 		len++;
-		blt(&scratch[len], &scratch[o], (i - ai) * sizeof(*equation));
+		blt(&scratch[len], &scratch[o], (i - ai) * sizeof(token_type));
 		len += i - ai;
 	}
-	blt(&scratch[len], &equation[j], (e2 - j) * sizeof(*equation));
+	blt(&scratch[len], &equation[j], (e2 - j) * sizeof(token_type));
 	len += e2 - j;
 	for (; k < len; k++)
 		scratch[k].level += 2;
@@ -803,7 +808,7 @@ common_base:
 	if (*np + len > n_tokens) {
 		error_huge();
 	}
-	blt(&equation[e1+len], &equation[e1], (*np - e1) * sizeof(*equation));
+	blt(&equation[e1+len], &equation[e1], (*np - e1) * sizeof(token_type));
 	*np += len;
 	if (i == e1) {
 		for (k = i1; k < e1; k++)
@@ -817,7 +822,7 @@ common_base:
 	}
 	if (op1 == DIVIDE && !both_divide) {
 		equation[i1-1].token.operatr = TIMES;
-		blt(&equation[i+3], &equation[i+1], rlen1 * sizeof(*equation));
+		blt(&equation[i+3], &equation[i+1], rlen1 * sizeof(token_type));
 		i++;
 		equation[i].level = level;
 		equation[i].kind = CONSTANT;
@@ -840,10 +845,10 @@ common_base:
 		equation[i+1].kind = CONSTANT;
 		equation[i+1].token.constant = 1.0;
 	} else {
-		blt(&equation[i+1], &equation[j+len+1], (e2 - j - 1) * sizeof(*equation));
+		blt(&equation[i+1], &equation[j+len+1], (e2 - j - 1) * sizeof(token_type));
 	}
 	binary_parenthesize(equation, i + e2 - j, i);
-	blt(&equation[i2+len-1], &equation[e2+len], (*np - (e2 + len)) * sizeof(*equation));
+	blt(&equation[i2+len-1], &equation[e2+len], (*np - (e2 + len)) * sizeof(token_type));
 	*np -= n2 + 1;
 	return true;
 }
@@ -939,8 +944,9 @@ int		*np, loc, i1, n1, i2, n2, level;
 	op2 = equation[i2-1].token.operatr;
 	if (i1 <= loc) {
 		op1 = TIMES;
-	} else
+	} else {
 		op1 = equation[i1-1].token.operatr;
+	}
 	for (i = i1 + 1;; i += 2) {
 		if (i >= e1)
 			return false;
@@ -1006,7 +1012,7 @@ fp_inner:
 			diff_sign = !diff_sign;
 		all_divide = (op1 == DIVIDE && diff_sign);
 		len = 0;
-		blt(&scratch[len], &equation[i1], (b1 - i1) * sizeof(*equation));
+		blt(&scratch[len], &equation[i1], (b1 - i1) * sizeof(token_type));
 		len += b1 - i1;
 		scratch[len].level = level + 1;
 		scratch[len].kind = CONSTANT;
@@ -1016,7 +1022,7 @@ fp_inner:
 			scratch[len].token.constant = 1.0;
 		}
 		len++;
-		blt(&scratch[len], &equation[i], (e1 - i) * sizeof(*equation));
+		blt(&scratch[len], &equation[i], (e1 - i) * sizeof(token_type));
 		len += e1 - i;
 		for (k = 0; k < len; k++)
 			scratch[k].level += 2;
@@ -1025,7 +1031,7 @@ fp_inner:
 		scratch[len].token.operatr = TIMES;
 		len++;
 		k = len;
-		blt(&scratch[len], &equation[i2], (b2 - i2) * sizeof(*equation));
+		blt(&scratch[len], &equation[i2], (b2 - i2) * sizeof(token_type));
 		len += b2 - i2;
 		scratch[len].level = level + 1;
 		scratch[len].kind = CONSTANT;
@@ -1035,7 +1041,7 @@ fp_inner:
 			scratch[len].token.constant = 1.0;
 		}
 		len++;
-		blt(&scratch[len], &equation[j], (e2 - j) * sizeof(*equation));
+		blt(&scratch[len], &equation[j], (e2 - j) * sizeof(token_type));
 		len += e2 - j;
 		for (; k < len; k++)
 			scratch[k].level += 2;
@@ -1054,7 +1060,7 @@ fp_inner:
 			len++;
 		}
 		k = len;
-		blt(&scratch[len], &equation[b1], (i - b1) * sizeof(*equation));
+		blt(&scratch[len], &equation[b1], (i - b1) * sizeof(token_type));
 		len += i - b1;
 		for (; k < len; k++)
 			scratch[k].level++;
@@ -1064,11 +1070,11 @@ fp_inner:
 		if (!all_divide && op1 == DIVIDE) {
 			equation[i1-1].token.operatr = TIMES;
 		}
-		blt(&equation[i2-1], &equation[e2], (*np - e2) * sizeof(*equation));
+		blt(&equation[i2-1], &equation[e2], (*np - e2) * sizeof(token_type));
 		*np -= n2 + 1;
-		blt(&equation[i1+len], &equation[e1], (*np - e1) * sizeof(*equation));
+		blt(&equation[i1+len], &equation[e1], (*np - e1) * sizeof(token_type));
 		*np += len - n1;
-		blt(&equation[i1], scratch, len * sizeof(*equation));
+		blt(&equation[i1], scratch, len * sizeof(token_type));
 		return true;
 	}
 	goto fp_inner;

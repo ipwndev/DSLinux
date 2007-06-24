@@ -1,7 +1,7 @@
 /*
  * Floating point complex number routines specifically for Mathomatic.
  *
- * Copyright (c) 1987-2005 George Gesslein II.
+ * Copyright (C) 1987-2007 George Gesslein II.
  */
 
 #include "includes.h"
@@ -26,13 +26,13 @@ int
 roots_cmd(cp)
 char	*cp;
 {
-#define	MAX_ROOT	1000.0
+#define	MAX_ROOT	1000.0	/* put a limit here because more roots become more inaccurate */
 
 	complexs	c, c2, check;
 	double		d, k;
 	double		root;
 	double		radius, theta;
-	double		radius_root;
+	double		radius_root = 0.0;
 	char		buf[MAX_CMD_LEN];
 
 	if (*cp == '\0') {
@@ -42,7 +42,7 @@ char	*cp;
 	}
 	root = strtod(cp, &cp);
 	if ((*cp && !isspace(*cp)) || root < 0.0 || root > MAX_ROOT || fmod(root, 1.0) != 0.0) {
-		printf(_("Root must be a positive integer less than or equal to %.12g.\n"), MAX_ROOT);
+		printf(_("Root must be a positive integer less than or equal to %.0f.\n"), MAX_ROOT);
 		return false;
 	}
 	cp = skip_space(cp);
@@ -78,22 +78,22 @@ char	*cp;
 	}
 	check_err();
 	fprintf(gfp, _("\nThe polar coordinates are:\n%.12g amplitude and %.12g radians (%.12g degrees).\n\n"),
-	    radius, theta, theta * 180 / PI);
+	    radius, theta, theta * 180.0 / M_PI);
 	if (root) {
 		if (c.im == 0.0) {
 			fprintf(gfp, _("The %.12g roots of %.12g^(1/%.12g) are:\n\n"), root, c.re, root);
 		} else {
-			fprintf(gfp, _("The %.12g roots of (%.12g%+.12g*i#)^(1/%.12g) are:\n\n"), root, c.re, c.im, root);
+			fprintf(gfp, _("The %.12g roots of (%.12g%+.12g*i)^(1/%.12g) are:\n\n"), root, c.re, c.im, root);
 		}
 		for (k = 0.0; k < root; k += 1.0) {
 /* add constants to theta and convert back to rectangular coordinates */
-			c2.re = radius_root * cos((theta + 2.0 * k * PI) / root);
-			c2.im = radius_root * sin((theta + 2.0 * k * PI) / root);
+			c2.re = radius_root * cos((theta + 2.0 * k * M_PI) / root);
+			c2.im = radius_root * sin((theta + 2.0 * k * M_PI) / root);
 			complex_fixup(&c2);
 			if (c2.im == 0.0) {
 				fprintf(gfp, "%.12g\n", c2.re);
 			} else {
-				fprintf(gfp, "%.12g %+.12g*i#\n", c2.re, c2.im);
+				fprintf(gfp, "%.12g %+.12g*i\n", c2.re, c2.im);
 			}
 			check = c2;
 			for (d = 1.0; d < root; d += 1.0) {
@@ -103,7 +103,7 @@ char	*cp;
 			if (check.im == 0.0) {
 				printf(_("Inverse Check: %.12g\n\n"), check.re);
 			} else {
-				printf(_("Inverse Check: %.12g %+.12g*i#\n\n"), check.re, check.im);
+				printf(_("Inverse Check: %.12g %+.12g*i\n\n"), check.re, check.im);
 			}
 		}
 	}
@@ -174,6 +174,9 @@ start_over:
 		equation[j].token.variable = IMAGINARY;
 		modified = true;
 		goto start_over;
+	}
+	if (modified) {
+		debug_string(0, "Warning: complex number root approximated, result may be inaccurate.");
 	}
 	return modified;
 }
