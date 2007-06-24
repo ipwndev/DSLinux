@@ -4,8 +4,7 @@
  * Return (arg!).  Return 0 on overflow or error.
  */
 int
-fact(arg)
-int	arg;
+fact(int arg)
 {
 	int	i;
 
@@ -15,7 +14,7 @@ int	arg;
 	for (i = 1; i > 0 && arg > 1; arg--) {
 		i *= arg;
 	}
-	if (i >= 0) {
+	if (i > 0) {
 		return i;
 	} else {
 		return 0;

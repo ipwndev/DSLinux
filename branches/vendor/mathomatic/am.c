@@ -1,7 +1,7 @@
 /*
- * Miscellaneous algebraic manipulator routines.
+ * Miscellaneous routines for Mathomatic.
  *
- * Copyright (c) 1987-2005 George Gesslein II.
+ * Copyright (C) 1987-2007 George Gesslein II.
  */
 
 #include "includes.h"
@@ -57,7 +57,8 @@ clear_all()
 int
 init_mem()
 {
-	if ((scratch = (token_type *) malloc((n_tokens + 10) * sizeof(token_type))) == NULL
+	if ((scratch = (token_type *) malloc(((n_tokens * 3) / 2) * sizeof(token_type))) == NULL
+	    || (tes = (token_type *) malloc(n_tokens * sizeof(token_type))) == NULL
 	    || (tlhs = (token_type *) malloc(n_tokens * sizeof(token_type))) == NULL
 	    || (trhs = (token_type *) malloc(n_tokens * sizeof(token_type))) == NULL) {
 		return false;
@@ -78,7 +79,7 @@ init_gvars()
 	partial_flag = true;
 	symb_flag = false;
 	sign_flag = false;
-	in_calc_cmd = false;
+	approximate_roots = false;
 
 	zero_token.level = 1;
 	zero_token.kind = CONSTANT;
@@ -168,7 +169,7 @@ long	*vp;
 }
 
 /*
- * Allocate or reuse an equation space.
+ * Allocate or reuse an empty equation space.
  *
  * Returns new equation space number or -1 on error.
  */
@@ -220,6 +221,18 @@ next_espace()
 		longjmp(jmp_save, 3);
 	}
 	return i;
+}
+
+/*
+ * Copy equation number "src" to equation number "dest".
+ */
+copy_espace(src, dest)
+int	src, dest;
+{
+	blt(lhs[dest], lhs[src], n_lhs[src] * sizeof(token_type));
+	n_lhs[dest] = n_lhs[src];
+	blt(rhs[dest], rhs[src], n_rhs[src] * sizeof(token_type));
+	n_rhs[dest] = n_rhs[src];
 }
 
 /*
@@ -282,7 +295,7 @@ token_type	*equation;	/* equation side pointer */
 int		*np;		/* pointer to equation side length */
 token_type	*expression;	/* expression pointer */
 int		len;		/* expression length */
-long		v;
+long		v;		/* variable to substitute with expression */
 {
 	int	j, k;
 	int	level;
@@ -330,7 +343,7 @@ int		n;		/* expression length */
 }
 
 /*
- * This is called when the max expression size has been exceeded.
+ * This is called when the maximum expression size has been exceeded.
  *
  * There is no return.
  */
@@ -351,11 +364,11 @@ char	*cp;
 {
 	int	i;
 
-	if (*cp == '\0')
+	if (*cp == '\0') {
 		i = cur_equation;
-	else {
+	} else {
 		i = decstrtol(cp, &cp) - 1;
-		if (extra_garbage(cp))
+		if (extra_characters(cp))
 			return -1;
 	}
 	if (not_defined(i)) {
@@ -367,12 +380,12 @@ char	*cp;
 /*
  * Parse an expression with equation space pull if the line starts with "#".
  *
- * Return true if successful.
+ * Returns the new string position or NULL on error.
  */
-int
+char	*
 parse_expr(equation, np, cp)
-token_type	*equation;	/* where the parsed expression is stored */
-int		*np;		/* pointer to parsed expression length */
+token_type	*equation;	/* where the parsed expression is stored (equation side) */
+int		*np;		/* pointer to the returned parsed expression length */
 char		*cp;		/* string to parse */
 {
 	int	i;
@@ -381,14 +394,23 @@ char		*cp;		/* string to parse */
 	cp1 = skip_space(cp);
 	if (*cp1 == '#') {
 		cp1++;
-		i = decstrtol(cp1, &cp2) - 1;
+		switch (*cp1) {
+		case '+':
+		case '-':
+			i = decstrtol(cp1, &cp2);
+			i = cur_equation + i;
+			break;
+		default:
+			i = decstrtol(cp1, &cp2) - 1;
+			break;
+		}
 		if (cp1 == cp2 || *cp2) {
 			error(_("Error parsing equation space number."));
-			return false;
+			return NULL;
 		}
 		if (i < 0 || i >= n_equations || n_lhs[i] <= 0) {
 			error(_("Equation not defined."));
-			return false;
+			return NULL;
 		}
 		if (n_rhs[i]) {
 			blt(equation, rhs[i], n_rhs[i] * sizeof(token_type));
@@ -397,12 +419,11 @@ char		*cp;		/* string to parse */
 			blt(equation, lhs[i], n_lhs[i] * sizeof(token_type));
 			*np = n_lhs[i];
 		}
-		return true;
+		list_proc(equation, *np, false);
+		fprintf(gfp, "\n");
+		return cp2;
 	}
-	cp = parse_section(equation, np, cp);
-	if (cp)
-		return true;
-	return false;
+	return parse_section(equation, np, cp);
 }
 
 /*
@@ -413,10 +434,10 @@ char		*cp;		/* string to parse */
  */
 int
 get_expr(equation, np)
-token_type	*equation;
-int		*np;
+token_type	*equation;	/* where the parsed expression is stored (equation side) */
+int		*np;		/* pointer to the returned parsed expression length */
 {
-	char	buf[10000];
+	char	buf[DEFAULT_N_TOKENS];
 	char	*cp;
 
 	for (;;) {
@@ -426,8 +447,10 @@ int		*np;
 		if (!case_sensitive_flag) {
 			str_tolower(cp);
 		}
-		if (parse_expr(equation, np, cp))
+		cp = parse_expr(equation, np, cp);
+		if (cp && !extra_characters(cp)) {
 			break;
+		}
 	}
 	return(*np > 0);
 }
@@ -439,24 +462,25 @@ int		*np;
  */
 int
 prompt_var(vp)
-long	*vp;
+long	*vp;	/* pointer to the returned variable */
 {
 	char	buf[MAX_CMD_LEN];
 	char	*cp;
 
-prompt_again:
-	my_strlcpy(prompt_str, _("Enter variable: "), sizeof(prompt_str));
-	if ((cp = get_string(buf, sizeof(buf))) == NULL) {
-		return false;
+	for (;;) {
+		my_strlcpy(prompt_str, _("Enter variable: "), sizeof(prompt_str));
+		if ((cp = get_string(buf, sizeof(buf))) == NULL) {
+			return false;
+		}
+		if (*cp == '\0') {
+			return false;
+		}
+		cp = parse_var2(vp, cp);
+		if (cp == NULL || extra_characters(cp)) {
+			continue;
+		}
+		return true;
 	}
-	cp = parse_var2(vp, cp);
-	if (cp == NULL)
-		return false;
-	if (*cp) {
-		error(_("Only one variable may be specified."));
-		goto prompt_again;
-	}
-	return true;
 }
 
 /*
@@ -478,7 +502,9 @@ int	i;	/* equation space number */
 }
 
 /*
- * Return true and display a message if current equation is undefined.
+ * Verify that a current equation or expression is loaded.
+ *
+ * Return true and display a message if current equation space is empty.
  */
 int
 current_not_defined()
@@ -519,7 +545,7 @@ int	n;		/* maximum size of "string" in bytes */
 	}
 	input_column = strlen(prompt_str);
 #if	READLINE
-	if (!html_flag) {
+	if (readline_enabled) {
 		cp = readline(prompt_str);
 		if (cp == NULL)
 			exit_program(0);
@@ -571,21 +597,27 @@ get_yes_no()
 
 /*
  * Store or display the result of a command.
+ *
+ * Return true if successful.
  */
+int
 return_result(en)
-int	en;	/* equation number */
+int	en;	/* equation space number */
 {
 #if	LIBRARY
 	if (gfp == stdout) {
-		if (factor_int_flag) {
-			factor_int(lhs[en], &n_lhs[en]);
-			factor_int(rhs[en], &n_rhs[en]);
+		if (display2d) {
+			make_fractions_and_group(en);
 		}
+		if (factor_int_flag) {
+			factor_int_sub(en);
+		}
+		free(result_str);
 		result_str = list_equation(en, false);
-		return;
+		return(result_str != NULL);
 	}
 #endif
-	list_sub(en);
+	return list_sub(en);
 }
 
 /*
@@ -615,7 +647,7 @@ int	*ip, *jp;
 
 	*cpp = skip_space(*cpp);
 #if	LIBRARY		/* only allow a single equation number when using as a library */
-	if (isascii(**cpp) && isdigit(**cpp)) {
+	if (isdigit(**cpp)) {
 		i = decstrtol(*cpp, cpp) - 1;
 	} else {
 		i = cur_equation;
@@ -632,7 +664,7 @@ int	*ip, *jp;
 		*ip = 0;
 		*jp = n_equations - 1;
 	} else {
-		if (isascii(**cpp) && isdigit(**cpp)) {
+		if (isdigit(**cpp)) {
 			*ip = strtol(*cpp, cpp, 10) - 1;
 		} else {
 			*ip = cur_equation;
@@ -650,7 +682,7 @@ int	*ip, *jp;
 			return true;
 		}
 		(*cpp)++;
-		if (isascii(**cpp) && isdigit(**cpp)) {
+		if (isdigit(**cpp)) {
 			*jp = strtol(*cpp, cpp, 10) - 1;
 		} else {
 			*jp = cur_equation;
@@ -681,17 +713,19 @@ int	*ip, *jp;
  * on a command line.
  *
  * Returns false if OK.
- * Returns true if non-space characters were encountered
+ * Returns true if any non-space characters were encountered
  * and an error message was printed.
  */
 int
-extra_garbage(cp)
+extra_characters(cp)
 char	*cp;	/* command line */
 {
-	cp = skip_space(cp);
-	if (*cp) {
-		error(_("Extra characters on command line."));
-		return true;
+	if (cp) {
+		cp = skip_space(cp);
+		if (*cp) {
+			error(_("Extra characters encountered."));
+			return true;
+		}
 	}
 	return false;
 }
@@ -707,7 +741,7 @@ int	*ip, *jp;
 	if (!get_range(cpp, ip, jp)) {
 		return false;
 	}
-	if (extra_garbage(*cpp)) {
+	if (extra_characters(*cpp)) {
 		return false;
 	}
 	return true;
@@ -720,14 +754,14 @@ char	*
 skip_space(cp)
 char	*cp;	/* character pointer */
 {
-	while (*cp && isascii(*cp) && isspace(*cp))
+	while (*cp && isspace(*cp))
 		cp++;
 	return cp;
 }
 
 /*
  * Enhanced decimal strtol().
- * Allows and skips trailing spaces.
+ * Skips trailing spaces.
  */
 long
 decstrtol(cp, cpp)
@@ -757,8 +791,7 @@ char	*cp;	/* character pointer */
 	}
 	cp = skip_space(cp);
 	if (*cp == '=') {
-		cp++;
-		cp = skip_space(cp);
+		cp = skip_space(cp + 1);
 	}
 	return(cp);
 }
@@ -767,6 +800,8 @@ char	*cp;	/* character pointer */
  * Compare strings up to the first space.
  * Must be an exact match.
  * Compare is alphabetic case insensitive.
+ *
+ * Returns zero on match, non-zero if different.
  */
 int
 strcmp_tospace(cp1, cp2)
@@ -774,9 +809,9 @@ char	*cp1, *cp2;
 {
 	char	*cp1a, *cp2a;
 
-	for (cp1a = cp1; *cp1a && (!isascii(*cp1a) || !isspace(*cp1a)); cp1a++)
+	for (cp1a = cp1; *cp1a && !isspace(*cp1a); cp1a++)
 		;
-	for (cp2a = cp2; *cp2a && (!isascii(*cp2a) || !isspace(*cp2a)); cp2a++)
+	for (cp2a = cp2; *cp2a && !isspace(*cp2a); cp2a++)
 		;
 	return strncasecmp(cp1, cp2, max(cp1a - cp1, cp2a - cp2));
 }
@@ -785,7 +820,7 @@ char	*cp1, *cp2;
  * Return the number of "level" additive type operators.
  */
 int
-level_plus(p1, n1, level)
+level_plus_count(p1, n1, level)
 token_type	*p1;	/* expression pointer */
 int		n1;	/* expression length */
 int		level;	/* parentheses level number */
@@ -810,14 +845,11 @@ int		level;	/* parentheses level number */
  * Return the number of level 1 additive type operators.
  */
 int
-level1_plus(p1, n1)
+level1_plus_count(p1, n1)
 token_type	*p1;	/* expression pointer */
 int		n1;	/* expression length */
 {
-	int	level;
-
-	level = min_level(p1, n1);
-	return level_plus(p1, n1, level);
+	return level_plus_count(p1, n1, min_level(p1, n1));
 }
 
 /*
@@ -838,6 +870,41 @@ int		n1;	/* expression length */
 		}
 	}
 	return count;
+}
+
+/*
+ * Set *vp if single variable expression.
+ *
+ * Return true if expression contains no variables.
+ */
+int
+no_vars(source, n, vp)
+token_type	*source;	/* expression pointer */
+int		n;		/* expression length */
+long		*vp;		/* variable pointer */
+{
+	int	j;
+	int	found = false;
+
+	if (*vp) {
+		return(var_count(source, n) == 0);
+	}
+	for (j = 0; j < n; j += 2) {
+		if (source[j].kind == VARIABLE) {
+			if ((source[j].token.variable & VAR_MASK) <= SIGN)
+				continue;
+			if (*vp) {
+				if (*vp != source[j].token.variable) {
+					*vp = 0;
+					break;
+				}
+			} else {
+				found = true;
+				*vp = source[j].token.variable;
+			}
+		}
+	}
+	return(!found);
 }
 
 /*

@@ -1,9 +1,9 @@
 /*
- * Algebraic manipulator integration routines and commands.
+ * Mathomatic integration routines and commands.
  *
  * These are very low level, so they don't do much, polynomials only.
  *
- * Copyright (c) 1987-2005 George Gesslein II.
+ * Copyright (C) 1987-2007 George Gesslein II.
  */
 
 #include "includes.h"
@@ -12,14 +12,12 @@ static int	integrate_sub();
 static int	laplace_sub();
 static int	inv_laplace_sub();
 
-static double	integrate_order;	/* global order of integration */
-
 /*
  * Make variable "v" always raised to a power,
  * unless it is on the right side of a power operator.
  */
 make_powers(equation, np, v)
-token_type	*equation;	/* equation side pointer */
+token_type	*equation;	/* pointer to beginning of equation side */
 int		*np;		/* pointer to length of equation side */
 long		v;		/* variable */
 {
@@ -64,7 +62,7 @@ long		v;		/* variable */
  */
 int
 int_dispatch(equation, np, v, func)
-token_type	*equation;	/* equation side to integrate */
+token_type	*equation;	/* pointer to beginning of equation side to integrate */
 int		*np;		/* pointer to length of equation side */
 long		v;		/* integration variable */
 int		(*func)();	/* integration function to call for each term */
@@ -102,11 +100,11 @@ int		(*func)();	/* integration function to call for each term */
  */
 static int
 integrate_sub(equation, np, loc, eloc, v)
-token_type	*equation;	/* equation side pointer */
+token_type	*equation;	/* pointer to beginning of equation side */
 int		*np;		/* pointer to length of equation side */
 int		loc;		/* beginning location of term */
 int		eloc;		/* end location of term */
-long		v;		/* variable */
+long		v;		/* variable of integration */
 {
 	int		i, j, k;
 	int		len;
@@ -197,15 +195,12 @@ long		v;		/* variable */
 			equation[j].level = level;
 			equation[j].kind = CONSTANT;
 			equation[j].token.constant = 1.0;
-			j++;
 			blt(&equation[eloc+len+1], &equation[eloc], (*np - eloc) * sizeof(token_type));
 			*np += len + 1;
-			k = eloc;
-			equation[k].level = mlevel;
-			equation[k].kind = OPERATOR;
-			equation[k].token.operatr = DIVIDE;
-			k++;
-			blt(&equation[k], &equation[i], len * sizeof(token_type));
+			equation[eloc].level = mlevel;
+			equation[eloc].kind = OPERATOR;
+			equation[eloc].token.operatr = DIVIDE;
+			blt(&equation[eloc+1], &equation[i], len * sizeof(token_type));
 			return true;
 		}
 	}
@@ -214,14 +209,13 @@ long		v;		/* variable */
 	}
 	blt(&equation[eloc+2], &equation[eloc], (*np - eloc) * sizeof(token_type));
 	*np += 2;
-	k = eloc;
-	equation[k].level = mlevel;
-	equation[k].kind = OPERATOR;
-	equation[k].token.operatr = TIMES;
-	k++;
-	equation[k].level = mlevel;
-	equation[k].kind = VARIABLE;
-	equation[k].token.variable = v;
+	equation[eloc].level = mlevel;
+	equation[eloc].kind = OPERATOR;
+	equation[eloc].token.operatr = TIMES;
+	eloc++;
+	equation[eloc].level = mlevel;
+	equation[eloc].kind = VARIABLE;
+	equation[eloc].token.variable = v;
 	return true;
 }
 
@@ -233,17 +227,17 @@ integrate_cmd(cp)
 char	*cp;
 {
 	int		i, j;
-	long		v;
-	double		d1;
+	long		v = 0;
 	token_type	*source, *dest;
 	int		n1, n2, *nps, *np;
 	int		def_flag;
+	double		d1, integrate_order = 1.0;
 
-	integrate_order = 1.0;
 	if (current_not_defined()) {
 		return false;
 	}
-	if (def_flag = (strcmp_tospace(cp, "definite") == 0)) {
+	def_flag = (strcmp_tospace(cp, "definite") == 0);
+	if (def_flag) {
 		cp = skip_param(cp);
 	}
 	i = next_espace();
@@ -283,7 +277,7 @@ char	*cp;
 	n1 = *nps;
 	for (d1 = 0; d1 < integrate_order; d1++) {
 		if (!int_dispatch(dest, &n1, v, integrate_sub)) {
-			error(_("Integration failed."));
+			error(_("Integration failed, not a polynomial."));
 			return false;
 		}
 		simp_loop(dest, &n1);
@@ -324,8 +318,7 @@ char	*cp;
 	}
 	*np = n1;
 	cur_equation = i;
-	return_result(cur_equation);
-	return true;
+	return return_result(cur_equation);
 }
 
 /*
@@ -380,7 +373,6 @@ long		v;
 			equation[j].level = level;
 			equation[j].kind = CONSTANT;
 			equation[j].token.constant = -1.0;
-			j++;
 			blt(&equation[eloc+len+3], &equation[eloc], (*np - eloc) * sizeof(token_type));
 			*np += len + 3;
 			k = eloc;
@@ -396,8 +388,7 @@ long		v;
 			k++;
 			equation[k].level = mlevel + 1;
 			equation[k].kind = CONSTANT;
-			equation[k].token.constant = 0.0;
-			k++;
+			equation[k].token.constant = 1.0;
 			return true;
 		}
 	}
@@ -406,14 +397,13 @@ long		v;
 	}
 	blt(&equation[eloc+2], &equation[eloc], (*np - eloc) * sizeof(token_type));
 	*np += 2;
-	k = eloc;
-	equation[k].level = mlevel;
-	equation[k].kind = OPERATOR;
-	equation[k].token.operatr = DIVIDE;
-	k++;
-	equation[k].level = mlevel;
-	equation[k].kind = VARIABLE;
-	equation[k].token.variable = v;
+	equation[eloc].level = mlevel;
+	equation[eloc].kind = OPERATOR;
+	equation[eloc].token.operatr = DIVIDE;
+	eloc++;
+	equation[eloc].level = mlevel;
+	equation[eloc].kind = VARIABLE;
+	equation[eloc].token.variable = v;
 	return true;
 }
 
@@ -463,7 +453,6 @@ long		v;
 			equation[j].level = level;
 			equation[j].kind = CONSTANT;
 			equation[j].token.constant = 1.0;
-			j++;
 			blt(&equation[eloc+len+3], &equation[eloc], (*np - eloc) * sizeof(token_type));
 			*np += len + 3;
 			k = eloc;
@@ -479,8 +468,7 @@ long		v;
 			k++;
 			equation[k].level = mlevel + 1;
 			equation[k].kind = CONSTANT;
-			equation[k].token.constant = 0.0;
-			k++;
+			equation[k].token.constant = 1.0;
 			return true;
 		}
 	}
@@ -495,7 +483,7 @@ laplace_cmd(cp)
 char	*cp;
 {
 	int		i;
-	long		v;
+	long		v = 0;
 	int		inverse_flag;
 	token_type	*source, *dest;
 	int		n1, *nps, *np;
@@ -529,7 +517,7 @@ char	*cp;
 			return false;
 		}
 	}
-	if (extra_garbage(cp)) {
+	if (extra_characters(cp)) {
 		return false;
 	}
 	partial_flag = false;
@@ -539,15 +527,13 @@ char	*cp;
 	blt(dest, source, *nps * sizeof(token_type));
 	n1 = *nps;
 	if (inverse_flag) {
-		if (!poly_in_v(dest, n1, v, true)
-		    || !int_dispatch(dest, &n1, v, inv_laplace_sub)) {
+		if (!poly_in_v(dest, n1, v, true) || !int_dispatch(dest, &n1, v, inv_laplace_sub)) {
 			error(_("Inverse Laplace failed."));
 			return false;
 		}
 	} else {
-		if (!poly_in_v(dest, n1, v, false)
-		    || !int_dispatch(dest, &n1, v, laplace_sub)) {
-			error(_("Laplace failed."));
+		if (!poly_in_v(dest, n1, v, false) || !int_dispatch(dest, &n1, v, laplace_sub)) {
+			error(_("Laplace failed, not a polynomial."));
 			return false;
 		}
 	}
@@ -558,11 +544,10 @@ char	*cp;
 	}
 	*np = n1;
 	cur_equation = i;
-	return_result(cur_equation);
-	return true;
+	return return_result(cur_equation);
 }
 
-#if	!BASICS && !LIBRARY
+#if	!LIBRARY
 /*
  * Numerical integrate command.
  */
@@ -570,7 +555,7 @@ int
 nintegrate_cmd(cp)
 char	*cp;
 {
-	long		v;
+	long		v = 0;
 	int		i, j, k, i1, i2;
 	int		level;
 	int		iterations;
@@ -616,6 +601,7 @@ char	*cp;
 		if (!prompt_var(&v))
 			return false;
 	}
+#if	!SILENT
 	singularity = false;
 	for (j = 1; j < *nps; j += 2) {
 		if (source[j].token.operatr == DIVIDE) {
@@ -629,6 +615,7 @@ char	*cp;
 	if (singularity) {
 		printf(_("Warning: Singularity detected, result of numerical integration may be wrong.\n"));
 	}
+#endif
 	my_strlcpy(prompt_str, _("Enter lower bound: "), sizeof(prompt_str));
 	if (!get_expr(tlhs, &n_tlhs)) {
 		return false;
@@ -647,14 +634,16 @@ char	*cp;
 		error(_("Error: Bound contains infinity."));
 		return false;
 	}
-	if ((n_tlhs + 1 + n_trhs + 2) > n_tokens) {
+	if ((n_tlhs + n_trhs + 3) > n_tokens) {
 		error_huge();
 	}
+#if	!SILENT
 	if (trap_flag) {
-		debug_string(0, _("Approximating the definite integral using the trapezoidal method..."));
+		printf(_("Approximating definite integral using the trapezoid method (%d partitions)...\n"), iterations);
 	} else {
-		debug_string(0, _("Approximating the definite integral using Simpson's rule..."));
+		printf(_("Approximating definite integral using Simpson's rule (%d partitions)...\n"), iterations);
 	}
+#endif
 	subst_constants(source, nps);
 	simp_loop(source, nps);
 	for (j = 0; j < n_trhs; j++) {
@@ -758,16 +747,18 @@ char	*cp;
 			n1 += 2;
 		}
 
-		in_calc_cmd = true;
+		/* simplify and approximate the partial result quickly: */
+		approximate_roots = true;
 		elim_loop(dest, &n1);
 		ufactor(dest, &n1);
 		simp_divide(dest, &n1);
-		in_calc_cmd = false;
+		approximate_roots = false;
 
 		if (exp_contains_infinity(dest, n1)) {
 			error(_("Integration failed because result contains infinity or nan."));
 			return false;
 		}
+		/* detect an ever growing result: */
 		switch (j) {
 		case 0:
 			break;
@@ -811,20 +802,22 @@ char	*cp;
 	for (; k < n1; k++)
 		dest[k].level++;
 
-	in_calc_cmd = true;
+	/* simplify and approximate the result as before: */
+	approximate_roots = true;
 	elim_loop(dest, &n1);
 	ufactor(dest, &n1);
 	simp_divide(dest, &n1);
-	in_calc_cmd = false;
+	approximate_roots = false;
 
-	debug_string(0, _("Integration successful."));
+#if	!SILENT
+	printf(_("Integration successful.\n"));
+#endif
 	if (n_rhs[cur_equation]) {
 		blt(lhs[i], lhs[cur_equation], n_lhs[cur_equation] * sizeof(token_type));
 		n_lhs[i] = n_lhs[cur_equation];
 	}
 	*np = n1;
 	cur_equation = i;
-	return_result(cur_equation);
-	return true;
+	return return_result(cur_equation);
 }
 #endif

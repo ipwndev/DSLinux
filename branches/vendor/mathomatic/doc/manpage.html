@@ -1,5 +1,5 @@
 <!-- Creator     : groff version 1.19.1 -->
-<!-- CreationDate: Tue May  9 12:05:11 2006 -->
+<!-- CreationDate: Tue Jun 12 16:58:46 2007 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -19,6 +19,7 @@
 <a href="#GENERAL">GENERAL</a><br>
 <a href="#ENVIRONMENT">ENVIRONMENT</a><br>
 <a href="#FILES">FILES</a><br>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br>
 <a href="#AUTHOR">AUTHOR</a><br>
 
 <hr>
@@ -41,8 +42,8 @@
 <tr valign="top" align="left">
 <td width="11%"></td>
 <td width="89%">
-<p><b>mathomatic</b> [ <b>-chqtuv</b> ] [ <b>-m</b> number ]
-[ input_files ]</p>
+<p><b>mathomatic</b> [ <b>-chqrtuv</b> ] [ <b>-m</b> number
+] [ input_files ]</p>
 </td>
 </table>
 <a name="DESCRIPTION"></a>
@@ -54,13 +55,19 @@
 <td width="11%"></td>
 <td width="89%">
 <p>Mathomatic is a portable, general purpose CAS (Computer
-Algebra System) that can automatically solve, simplify,
-combine, and compare algebraic equations. It does some
-calculus and handles all algebra, except trigonometry and
-logarithms. It is entirely hand-written in optimized C. It
+Algebra System) that can symbolically solve, simplify,
+combine, and compare algebraic equations, perform complex
+number and polynomial arithmetic, etc. It does some calculus
+and handles all algebra, except trigonometry and
+logarithms.</p>
+<!-- INDENTATION -->
+<p>Mathomatic is entirely hand-written in optimized C. It
 does not permit extremely large expressions, which can take
 a lot of memory and time. Instead reliability, ease of use,
 and speed are its features.</p>
+<!-- INDENTATION -->
+<p>All arithmetic is double precision floating point with 14
+decimal digits accuracy.</p>
 </td>
 </table>
 <a name="OPTIONS"></a>
@@ -90,11 +97,12 @@ color, for easier reading.</p>
 <td width="8%"></td>
 <td width="78%">
 
-<p>Enable HTML mode (also valid XHTML). This makes
-Mathomatic output suitable for inclusion in a web page. The
-color mode flag affects this mode, allowing HTML color
-output. It is recommended that the web page have a black
-background in color mode.</p>
+<p>Enable HTML output mode (also valid XHTML) and disable
+readline input. This makes Mathomatic output suitable for
+inclusion in a web page. The color mode flag affects this
+mode, allowing HTML color output. By default, Mathomatic
+uses maximum brightness colors for HTML, so it is
+recommended that the web page have a dark background.</p>
 </td>
 </table>
 <!-- INDENTATION -->
@@ -112,9 +120,9 @@ background in color mode.</p>
 <td width="22%"></td>
 <td width="78%">
 <p>Change the memory size of equation spaces. It is followed
-by a floating point number which is a multiplier of the
-default equation size. Please don&rsquo;t set this higher
-than 10, unless you know what you are doing.</p>
+by a decimal floating point number which is a multiplier of
+the default equation size. Please don&rsquo;t set this
+higher than 10, unless you know what you are doing.</p>
 </td>
 </table>
 <!-- TABS -->
@@ -129,7 +137,23 @@ than 10, unless you know what you are doing.</p>
 <td width="8%"></td>
 <td width="78%">
 
-<p>Sets quiet mode. Prompts are not displayed.</p>
+<p>Set quiet mode. The startup message and prompts are not
+displayed. This is useful when piping or redirecting input
+into Mathomatic, because the input won&rsquo;t be displayed,
+so prompt output should be turned off.</p>
+</td>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+<p><b>&minus;r</b></p>
+</td>
+<td width="8%"></td>
+<td width="78%">
+
+<p>Completely disable readline input processing. Readline
+allows using the cursor keys and outputs terminal control
+codes which can be turned off with this option.</p>
 </td>
 <tr valign="top" align="left">
 <td width="11%"></td>
@@ -140,9 +164,9 @@ than 10, unless you know what you are doing.</p>
 <td width="8%"></td>
 <td width="78%">
 
-<p>Sets test mode. Used when testing and comparing output.
-Bypasses loading startup file, turns off color mode,
-etc.</p>
+<p>Set test mode. Used when testing and comparing output.
+Bypasses loading startup file, turns off color mode and
+readline, sets infinite screen width and height, etc.</p>
 </td>
 <tr valign="top" align="left">
 <td width="11%"></td>
@@ -164,8 +188,10 @@ etc.</p>
 <td width="8%"></td>
 <td width="78%">
 
-<p>Display version number and compile flags used and
-exit.</p>
+<p>Display version number, compile flags used, maximum
+memory usage, and then exit. The maximum memory usage
+displayed does not include stack size (which varies) or
+executable size.</p>
 </td>
 </table>
 <a name="GENERAL"></a>
@@ -177,22 +203,23 @@ exit.</p>
 <td width="11%"></td>
 <td width="89%">
 <p>First you type in your algebraic equations in standard
-infix notation, then you can solve them by just typing in
-the variable, or perform operations on them with simple
-English commands. Type &quot;help&quot; for the help
-command. If the command is longer than 4 letters, you only
-need to type in the first 4 letters. Most commands operate
-on the current equation by default.</p>
+infix notation, then you can solve them by typing in the
+variable name at the prompt, or perform operations on them
+with simple English commands. Type &quot;help&quot; for the
+help command. If the command is longer than 4 letters, you
+only need to type in the first 4 letters. Most commands
+operate on the current equation by default.</p>
 <!-- INDENTATION -->
-<p>Documentation is available in HTML format, see the web
-site &quot;www.mathomatic.org&quot;.</p>
+<p>Documentation is available in HTML format, see the
+documentation directory or the web site
+&quot;www.mathomatic.org&quot;.</p>
 </td>
 </table>
 <a name="ENVIRONMENT"></a>
 <h2>ENVIRONMENT</h2>
 <!-- TABS -->
 <table width="100%" border=0 rules="none" frame="void"
-       cols="5" cellspacing="0" cellpadding="0">
+       cols="4" cellspacing="0" cellpadding="0">
 <tr valign="top" align="left">
 <td width="11%"></td>
 <td width="9%">
@@ -200,11 +227,10 @@ site &quot;www.mathomatic.org&quot;.</p>
 <p><b>EDITOR</b></p>
 </td>
 <td width="2%"></td>
-<td width="53%">
+<td width="78%">
 
-<p>Editor to use for the edit command.</p>
-</td>
-<td width="25%">
+<p>This environment variable specifies the editor to use
+for the edit command.</p>
 </td>
 </table>
 <a name="FILES"></a>
@@ -228,6 +254,17 @@ It should be a text file with one set option per line. Do
 not include the word &quot;set&quot;.</p>
 </td>
 </table>
+<a name="REPORTING BUGS"></a>
+<h2>REPORTING BUGS</h2>
+<!-- INDENTATION -->
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="89%">
+<p>Report bugs to &lt;gesslein@panix.com&gt;.</p>
+</td>
+</table>
 <a name="AUTHOR"></a>
 <h2>AUTHOR</h2>
 <!-- INDENTATION -->
@@ -236,7 +273,7 @@ not include the word &quot;set&quot;.</p>
 <tr valign="top" align="left">
 <td width="11%"></td>
 <td width="89%">
-<p>George Gesslein II</p>
+<p>George Gesslein II &lt;gesslein@panix.com&gt;</p>
 </td>
 </table>
 <hr>

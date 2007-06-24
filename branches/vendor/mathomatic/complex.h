@@ -1,7 +1,8 @@
 /*
- * Include file for complex number arithmetic in C.
+ * Include file for floating point complex number arithmetic in C.
+ * Goes with "complex_lib.c".
  *
- * Copyright (c) 1987-2005 George Gesslein II.
+ * Copyright (C) 1987-2007 George Gesslein II.
  */
 
 typedef struct complexs {	/* complex number structure */
@@ -9,7 +10,9 @@ typedef struct complexs {	/* complex number structure */
 	double	im;		/* imaginary part */
 } complexs;
 
-/* complex arithmetic functions */
+/*
+ * Complex arithmetic function prototypes
+ */
 int complex_fixup(complexs *ap);
 complexs complex_add(complexs a, complexs b);
 complexs complex_negate(complexs a);

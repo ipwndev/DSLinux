@@ -1,4 +1,4 @@
-# Makefile for compiling and installing the Mathomatic Prime Number Tools
+# Makefile for compiling and installing the Mathomatic Prime Number Tools under Linux and Unix.
 
 CFLAGS		+= -O2 -Wall
 LDFLAGS		+= -s -lm
@@ -7,17 +7,17 @@ prefix		?= /usr/local
 bindir		?= $(prefix)/bin
 mandir		?= $(prefix)/man
 
-TARGETS		= matho-primes matho-pascal
-MANPAGES1	= matho-primes.1 matho-pascal.1
+TARGETS		= matho-primes matho-pascal matho-sumsq
+MANPAGES1	= matho-primes.1 matho-pascal.1 matho-sumsq.1
 
 all: $(TARGETS)
 	@echo Make completed.
 
-check: test
+matho-sumsq: matho-sumsq.o lsqrt.o
 
-test: $(TARGETS)
-	time ./matho-primes 1000000000000000000 1000000000000600000 twin >test.out && diff twins.out test.out
-	rm test.out
+check test: $(TARGETS)
+	time ./matho-primes 1000000000000000000 1000000000000300000 twin >test.out && diff twins.out test.out
+	@rm test.out
 	@echo Test passed.
 
 install:
