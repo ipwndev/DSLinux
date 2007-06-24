@@ -1,0 +1,13 @@
+; This is how we arrive at Heron's formula for the area
+; of any triangle, given side lengths a, b, and c, using the equation
+; for the area of a trapezoid with side lengths a, b, c, and d,
+; where a and c are the parallel sides (a is the longer parallel side).
+
+; A trapezoid is a quadrilateral with
+; exactly two sides that are parallel to each other.
+
+; Equation for the area of a trapezoid:
+area=(a+c)/(4*(a-c))*((a+b-c+d)*(a-b-c+d)*(a+b-c-d)*(-a+b+c+d))^.5
+copy
+replace c with 0 ; make the shorter side length 0
+replace d with c ; Heron's formula:
