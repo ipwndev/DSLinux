@@ -6,7 +6,7 @@
  * And be sure to call "clear_all()" after completing each group of operations,
  * otherwise the equation spaces will fill up.
  *
- * Mathomatic Copyright (c) 1987-2005 George Gesslein II.
+ * Mathomatic Copyright (C) 1987-2007 George Gesslein II.
  */
 
 #include "../includes.h"
@@ -60,7 +60,7 @@ matho_process(char *input, char **outputp)
 	if ((i = setjmp(jmp_save)) != 0) {
 		clean_up();	/* Mathomatic processing was interrupted, so do a clean up. */
 		if (i == 14) {
-			error(_("Expression too big."));
+			error(_("Expression too large."));
 		}
 		*outputp = error_str;
 		free(input);
@@ -100,7 +100,7 @@ matho_parse(char *input, char **outputp)
 	if ((i = setjmp(jmp_save)) != 0) {
 		clean_up();	/* Mathomatic processing was interrupted, so do a clean up. */
 		if (i == 14) {
-			error(_("Expression too big."));
+			error(_("Expression too large."));
 		}
 		*outputp = error_str;
 		free(input);
@@ -110,7 +110,7 @@ matho_parse(char *input, char **outputp)
 	error_str = NULL;
 	set_error_level(input);
 	i = next_espace();
-#if	false	/* set this true if you want to be able to enter single variable expressions with no solving */
+#if	true	/* set this true if you want to be able to enter single variable expressions with no solving */
 	if ((rv = parse(i, input))) {
 #else
 	if ((rv = process_parse(i, input))) {
@@ -125,13 +125,10 @@ matho_parse(char *input, char **outputp)
 
 /*
  * Floating point exception handler.
- *
  * Usually doesn't work in most operating systems.
  */
 void
 fphandler(int sig)
 {
         error(_("Floating point exception."));
-	signal(SIGFPE, fphandler);
-	/* longjmp(jmp_save, 2); */
 }

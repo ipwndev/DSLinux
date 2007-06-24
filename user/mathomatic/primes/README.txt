@@ -7,10 +7,14 @@ compile and install, type:
 
 This will install:
 
-	matho-pascal - display Pascal's Triangle
+	matho-pascal - display Pascal's triangle
 	matho-primes - generate consecutive prime numbers
+	matho-sumsq - display minimum sum of the squares
 
-All work for up to 19 digits.  Man pages are included.
+Man pages are included.  These C programs are C++ compatible.
 
-		George Gesslein II
-		www.mathomatic.org
+The Python program "primorial" is included for calculating large primorials
+from "matho-primes".  To generate a list of all unique primorials from 2 to 97,
+type the following:
+
+	./primorial `matho-primes 2 97`

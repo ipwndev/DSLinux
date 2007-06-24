@@ -10,8 +10,8 @@ eliminate x
 3 ; select equation number 3
 eliminate x y
 z ; solve for z
-2
+2 ; select equation number 2
 eliminate z using 3
-1
+1 ; select equation number 1
 eliminate y z
 simplify all ; list all solutions

@@ -1,22 +1,24 @@
 /*
- * Algebraic manipulator simplifying and polynomial routines.
+ * Mathomatic simplifying and polynomial routines.
  * Includes polynomial and smart division, polynomial factoring, etc.
  *
- * Copyright (c) 1987-2005 George Gesslein II.
+ * The polynomial division and GCD routines here are not recursive, due to static
+ * storage areas.  This limits the polynomial GCD to univariate operation.
+ *
+ * Copyright (C) 1987-2007 George Gesslein II.
  */
 
 #include "includes.h"
 
 #define	REMAINDER_IS_ZERO()	(n_trhs == 1 && trhs[0].kind == CONSTANT && trhs[0].token.constant == 0.0)
 
-/* For smart_div() and poly_div(): */
-token_type	divisor[DIVISOR_SIZE];
+/* These are a non-standard size and must only be used for temp storage: */
+token_type	divisor[DIVISOR_SIZE];		/* static data areas for polynomial and smart division */
 int		n_divisor;
 token_type	quotient[DIVISOR_SIZE];
 int		n_quotient;
-/* These are a non-standard size and must only be used for temp storage. */
-token_type	gcd_divisor[DIVISOR_SIZE];
-int		len_d;
+token_type	gcd_divisor[DIVISOR_SIZE];	/* static data area for polynomial GCD routine */
+int		len_d;				/* length of expression in gcd_divisor[] */
 
 static int	do_gcd();
 static int	pf_recurse();
@@ -25,6 +27,7 @@ static int	mod_recurse();
 static int	polydiv_recurse();
 static int	pdiv_recurse();
 static int	poly_div_sub();
+static void	save_factors();
 
 /*
  * Compare function for qsort(3).
@@ -37,14 +40,14 @@ sort_type	*p1, *p2;
 }
 
 /*
- * Return true if passed expression is strictly a single polynomial term in v.
+ * Return true if passed expression is strictly a single polynomial term in variable v.
  */
 static inline int
 poly_in_v_sub(equation, n, v, allow_divides)
-token_type	*equation;
-int		n;
-long		v;
-int		allow_divides;
+token_type	*equation;	/* expression pointer */
+int		n;		/* expression length */
+long		v;		/* variable */
+int		allow_divides;	/* allow division by variable */
 {
 	int	i, k;
 	int	level, vlevel;
@@ -90,9 +93,8 @@ int		allow_divides;
 }
 
 /*
- * Return true if passed expression is a polynomial in
- * variable v.  The exponents may be anything, as long
- * as they don't contain the variable.
+ * Return true if passed expression is a polynomial in variable v.
+ * The exponents may be anything, as long as they don't contain the variable.
  */
 int
 poly_in_v(equation, n, v, allow_divides)
@@ -122,12 +124,12 @@ int		allow_divides;	/* allow variable to be right of a divide (negative exponent
  * Factors repeated factor polynomials (like (x+1)^5)
  * and symbolic factor polynomials (like (x+a)*(x+b)).
  *
- * Return true if equation side was modified.
+ * Return true if equation side was modified (factored).
  */
 int
 poly_factor(equation, np)
-token_type	*equation;
-int		*np;
+token_type	*equation;	/* pointer to the beginning of equation side */
+int		*np;		/* pointer to length of equation side */
 {
 	return pf_recurse(equation, np, 0, 1);
 }
@@ -170,9 +172,10 @@ int		*np, loc, level;
 
 /*
  * Polynomial factoring subroutine.
- * It can't factor everything,
- * but it usually can factor polynomials
+ * It can't factor everything, but it usually can factor polynomials
  * if it will make the expression size smaller.
+ *
+ * Return true if expression was modified (factored).
  */
 static int
 pf_sub(equation, np, loc, len, level)
@@ -180,10 +183,10 @@ token_type	*equation;
 int		*np, loc, len, level;
 {
 	token_type	*p1;
-	int		modified = false, single_modified = false;
+	int		modified = false, symbolic_modified = false;
 	int		i, j, k;
 	long		v = 0, v1, last_v;
-	int		len_first;
+	int		len_first = 0;
 	int		loc1;
 	int		loc2, len2 = 0;
 	int		loct, lent;
@@ -195,29 +198,29 @@ int		*np, loc, len, level;
 	double		d;
 
 	debug_string(3, "Entering pf_sub().");
-	loc1 = loc;
+	loc2 = loc1 = loc;
 	find_greatest_power(&equation[loc1], len, &v, &d, &j, &k, &div_flag);
 	if (v == 0)
 		return false;
 	blt(save_save, jmp_save, sizeof(jmp_save));
-	if ((i = setjmp(jmp_save)) != 0) {
+	if (setjmp(jmp_save) != 0) {
 		blt(jmp_save, save_save, sizeof(jmp_save));
-		if (i == 13) {
-			longjmp(jmp_save, i);
-		}
-		return(modified || single_modified);
+		return(modified || symbolic_modified);
 	}
-/* First factor polynomials with repeated factors. */
+/* First factor polynomials with repeated factors */
+/* using poly_gcd(polynomial, v * differentiate(polynomial, v)) to discover the factors: */
 	for (count = 1;; count++) {
 		blt(trhs, &equation[loc1], len * sizeof(token_type));
 		n_trhs = len;
 		uf_simp(trhs, &n_trhs);
-		if (level1_plus(trhs, n_trhs) < 2)
+		if (level1_plus_count(trhs, n_trhs) < 2) {
+/* must be at least 2 level 1 additive operators to be factorable */
 			goto skip_factor;
+		}
+/* create a variable list with counts of the number of times each variable occurs: */
 		last_v = 0;
 		for (vc = 0; vc < ARR_CNT(va); vc++) {
-			v1 = -1;
-			for (i = 0; i < n_trhs; i += 2) {
+			for (i = 0, cnt = 0, v1 = -1; i < n_trhs; i += 2) {
 				if (trhs[i].kind == VARIABLE && trhs[i].token.variable > last_v) {
 					if (v1 == -1 || trhs[i].token.variable < v1) {
 						v1 = trhs[i].token.variable;
@@ -234,6 +237,7 @@ int		*np, loc, len, level;
 			va[vc].count = cnt;
 		}
 		side_debug(3, &equation[loc1], len);
+/* find a valid polynomial base variable "v": */
 		cnt = -1;
 		if (v) {
 			if (!poly_in_v(trhs, n_trhs, v, true)) {
@@ -282,7 +286,7 @@ int		*np, loc, len, level;
 		uf_simp(tlhs, &n_tlhs);
 		if (poly_gcd(&equation[loc1], len, tlhs, n_tlhs, v) == 0)
 			break;
-		if (!level1_plus(tlhs, n_tlhs))
+		if (!level1_plus_count(tlhs, n_tlhs))
 			break;
 		save_factors(equation, np, loc1, len, level);
 		loc1 += n_tlhs + 1;
@@ -299,7 +303,7 @@ int		*np, loc, len, level;
 		}
 		modified = true;
 	}
-/* Now try and factor polynomials with symbolic factors. */
+/* Now factor polynomials with symbolic factors by grouping: */
 	if (!modified) {
 		last_v = 0;
 next_v:
@@ -320,12 +324,17 @@ next_v:
 				break;
 			}
 			last_v = v;
+			/* make sure there is more than one "v" raised to the highest power: */
 			if (find_greatest_power(trhs, n_trhs, &v, &d, &j, &k, &div_flag) <= 1) {
 				continue;
 			}
 			blt(tlhs, trhs, n_trhs * sizeof(token_type));
 			n_tlhs = n_trhs;
-			factorv(tlhs, &n_tlhs, v);
+			/* do the grouping: */
+			while (factor_plus(tlhs, &n_tlhs, v, 0.0)) {
+				simp_loop(tlhs, &n_tlhs);
+			}
+			/* extract the highest power group: */
 			if (find_greatest_power(tlhs, n_tlhs, &v, &d, &j, &k, &div_flag) != 1) {
 				continue;
 			}
@@ -340,7 +349,7 @@ next_v:
 #endif
 			if (poly_gcd(&equation[loc1], len, tlhs, n_tlhs, 0L) == 0)
 				goto next_v;
-			if (!level1_plus(tlhs, n_tlhs))
+			if (!level1_plus_count(tlhs, n_tlhs))
 				goto next_v;
 			debug_string(1, "Symbolic polynomial factored.");
 			save_factors(equation, np, loc1, len, level);
@@ -348,7 +357,7 @@ next_v:
 			len = n_trhs;
 			len_first = n_tlhs;
 			loc2 = loc1;
-			single_modified = true;
+			symbolic_modified = true;
 			break;
 		}
 	}
@@ -377,9 +386,10 @@ skip_factor:
 			save_factors(equation, np, loc, len_first, level);
 		}
 	}
-	return(modified || single_modified);
+	return(modified || symbolic_modified);
 }
 
+static void
 save_factors(equation, np, loc1, len, level)
 token_type	*equation;
 int		*np, loc1, len, level;
@@ -413,8 +423,7 @@ int
 remove_factors()
 {
 	int	i, j, k;
-	int	plus_flag = false;
-	int	divide_flag = false;
+	int	plus_flag = false, divide_flag = false;
 	int	op;
 
 	debug_string(3, "Entering remove_factors() with:");
@@ -474,9 +483,9 @@ remove_factors()
 
 /*
  * This is the Euclidean GCD algorithm applied to polynomials.
- * It needs to be made multi-variate.
+ * It needs to be made multivariate.
  *
- * Return number of iterations, if successful.
+ * Return the number of iterations (divisions), if successful.
  * Return 0 on failure.
  */
 static int
@@ -578,6 +587,7 @@ token_type	*smaller;	/* smaller polynomial */
 int		llen, slen;
 long		v;
 {
+	jmp_buf		save_save;
 	int		count;
 
 	debug_string(3, "Entering poly2_gcd():");
@@ -589,8 +599,14 @@ long		v;
 		return 0;
 	blt(tlhs, smaller, slen * sizeof(token_type));
 	n_tlhs = slen;
-	uf_simp_no_repeat(tlhs, &n_tlhs);
-	if (!level1_plus(tlhs, n_tlhs))
+	blt(save_save, jmp_save, sizeof(jmp_save));
+	if (setjmp(jmp_save) != 0) {
+		blt(jmp_save, save_save, sizeof(jmp_save));
+		return 0;
+	}
+	uf_simp(tlhs, &n_tlhs);
+	blt(jmp_save, save_save, sizeof(jmp_save));
+	if (!level1_plus_count(tlhs, n_tlhs))
 		return 0;
 	if (n_tlhs > ARR_CNT(gcd_divisor))
 		return 0;
@@ -600,7 +616,7 @@ long		v;
 	if (count == 0)
 		return 0;
 	if (count > 1) {
-		if (!level1_plus(gcd_divisor, len_d))
+		if (!level1_plus_count(gcd_divisor, len_d))
 			return 0;
 		if (poly_div(smaller, slen, gcd_divisor, len_d, &v) != 2) {
 			debug_string(0, "Polynomial GCD found, but smaller divide failed.");
@@ -624,8 +640,7 @@ long		v;
 		n_trhs = 1;
 		trhs[0] = one_token;
 	}
-	uf_simp(tlhs, &n_tlhs);
-	uf_simp(trhs, &n_trhs);
+	debug_string(3, "poly2_gcd() successful.");
 	return count;
 }
 
@@ -640,16 +655,12 @@ is_integer_expr(equation, n)
 token_type	*equation;	/* expression pointer */
 int		n;		/* length of expression */
 {
-	int	i2;
-	double	d;
+	int	i;
 
-	for (i2 = 0; i2 < n; i2++) {
-		if ((equation[i2].kind == OPERATOR
-		    && equation[i2].token.operatr == DIVIDE)
-		    || (equation[i2].kind == CONSTANT
-		    && fmod(equation[i2].token.constant, 1.0))
-		    || (equation[i2].kind == VARIABLE
-		    && var_is_const(equation[i2].token.variable, &d))) {
+	for (i = 0; i < n; i++) {
+		if ((equation[i].kind == OPERATOR && equation[i].token.operatr == DIVIDE)
+		    || (equation[i].kind == CONSTANT && fmod(equation[i].token.constant, 1.0))
+		    || (equation[i].kind == VARIABLE && equation[i].token.variable <= IMAGINARY)) {
 			return false;
 		}
 	}
@@ -678,8 +689,7 @@ int		*np, loc, level;
 	int	modified = false;
 	int	i, j, k;
 	int	i1, i2, i3, i4, i5;
-	int	op;
-	int	last_op2;
+	int	op, last_op2;
 	int	len1, len2, len3;
 	long	v;
 	int	diff_sign;
@@ -704,9 +714,7 @@ int		*np, loc, level;
 			}
 			len1 = k - (i + 1);
 			last_op2 = 0;
-			for (j = loc;; j++) {
-				if (j >= *np || equation[j].level < level)
-					break;
+			for (j = loc; j < *np && equation[j].level >= level; j++) {
 				if (equation[j].level == level && equation[j].kind == OPERATOR) {
 					last_op2 = equation[j].token.operatr;
 					continue;
@@ -716,9 +724,7 @@ int		*np, loc, level;
 				}
 				last_op2 = MODULUS;
 				op = 0;
-				for (k = j + 1;; k += 2) {
-					if (k >= *np || equation[k].level <= level)
-						break;
+				for (i1 = k = j + 1; k < *np && equation[k].level > level; k += 2) {
 					if (equation[k].level == (level + 1)) {
 						op = equation[k].token.operatr;
 						i1 = k;
@@ -808,19 +814,16 @@ int		*np, loc, level;
 				v = 0;
 				if (poly_div(&equation[j], len2, &equation[i+1], len1, &v)) {
 					if (is_integer_expr(tlhs, n_tlhs)) {
+						if ((*np + (n_trhs - len2)) > n_tokens)
+							error_huge();
 #if	!SILENT
-						for (k = 0; k < n_tlhs; k += 2) {
-							if (tlhs[k].kind == VARIABLE) {
-								printf(_("Modulus simplification made some variables integer only.\n"));
-								break;
-							}
+						if (var_count(tlhs, n_tlhs)) {
+							printf(_("Modulus simplification made some variables integer only.\n"));
 						}
 #endif
 						for (k = 0; k < n_trhs; k++)
 							trhs[k].level += level;
-						if ((*np + (n_trhs - len2)) > n_tokens)
-							error_huge();
-						blt(&equation[j+n_trhs], &equation[j+len2], (*np - (j + len2)) * sizeof(*equation));
+						blt(&equation[j+n_trhs], &equation[j+len2], (*np - (j + len2)) * sizeof(token_type));
 						*np += n_trhs - len2;
 						blt(&equation[j], trhs, n_trhs * sizeof(token_type));
 						return true;
@@ -867,6 +870,7 @@ int		*np, loc, level;
 		}
 		i++;
 	}
+start:
 	for (i = loc + 1; i < *np && equation[i].level >= level; i += 2) {
 		if (equation[i].level == level && equation[i].token.operatr == DIVIDE) {
 			for (k = i + 2;; k += 2) {
@@ -875,9 +879,7 @@ int		*np, loc, level;
 			}
 			len1 = k - (i + 1);
 			last_op2 = 0;
-			for (j = loc;; j++) {
-				if (j >= *np || equation[j].level < level)
-					break;
+			for (j = loc; j < *np && equation[j].level >= level; j++) {
 				if (equation[j].level == level && equation[j].kind == OPERATOR) {
 					last_op2 = equation[j].token.operatr;
 					continue;
@@ -900,16 +902,17 @@ store_code:
 					if (((*np + (n_trhs - len2)) > n_tokens)
 					    || ((*np + (n_trhs - len2) + (n_tlhs - len1)) > n_tokens))
 						error_huge();
-					blt(&equation[j+n_trhs], &equation[j+len2], (*np - (j + len2)) * sizeof(*equation));
+					blt(&equation[j+n_trhs], &equation[j+len2], (*np - (j + len2)) * sizeof(token_type));
 					*np += n_trhs - len2;
 					if (i > j)
 						i += n_trhs - len2;
 					blt(&equation[j], trhs, n_trhs * sizeof(token_type));
-					blt(&equation[i+n_tlhs+1], &equation[i+1+len1], (*np - (i + 1 + len1)) * sizeof(*equation));
+					blt(&equation[i+n_tlhs+1], &equation[i+1+len1], (*np - (i + 1 + len1)) * sizeof(token_type));
 					*np += n_tlhs - len1;
-					blt(&equation[i+1], tlhs, n_tlhs * sizeof(*equation));
-					debug_string(0, _("Found polynomial Greatest Common Divisor.  Division simplified."));
-					return true;
+					blt(&equation[i+1], tlhs, n_tlhs * sizeof(token_type));
+					debug_string(0, _("Division simplified with polynomial GCD."));
+					modified = true;
+					goto start;
 				}
 				if (poly2_gcd(&equation[j], len2, &equation[i+1], len1, 0L)) {
 					k = j - 1;
@@ -929,6 +932,7 @@ store_code:
 /*
  * This routine is a division simplifier for equation sides.
  * Check for divides and do polynomial and smart division.
+ *
  * Return true if expression was simplified.
  */
 int
@@ -955,12 +959,11 @@ int		*np, loc, level, code;
 {
 	int	modified = false;
 	int	i, j, k;
-	int	op, op2;
-	int	last_op2;
+	int	op, op2, last_op2;
 	int	len1, len2, real_len1;
 	long	v;
 	int	rv;
-	int	flag, power_flag;
+	int	flag, power_flag, zero_remainder;
 
 	for (i = loc + 1; i < *np && equation[i].level >= level; i += 2) {
 		if (equation[i].level == level && equation[i].token.operatr == DIVIDE) {
@@ -968,11 +971,9 @@ int		*np, loc, level, code;
 				if (k >= *np || equation[k].level <= level)
 					break;
 			}
-			real_len1 = k - (i + 1);
+			len1 = real_len1 = k - (i + 1);
 			last_op2 = 0;
-			for (j = loc;; j++) {
-				if (j >= *np || equation[j].level < level)
-					break;
+			for (j = loc; j < *np && equation[j].level >= level; j++) {
 				if (equation[j].level == level && equation[j].kind == OPERATOR) {
 					last_op2 = equation[j].token.operatr;
 					continue;
@@ -982,11 +983,10 @@ int		*np, loc, level, code;
 				}
 				last_op2 = DIVIDE;
 				op = 0;
-				for (k = j + 1;; k += 2) {
-					if (k >= *np || equation[k].level <= level)
-						break;
-					if (equation[k].level == level + 1)
+				for (k = j + 1; k < *np && equation[k].level > level; k += 2) {
+					if (equation[k].level == (level + 1)) {
 						op = equation[k].token.operatr;
+					}
 				}
 				if (op != PLUS && op != MINUS) {
 					continue;
@@ -996,9 +996,7 @@ int		*np, loc, level, code;
 				power_flag = false;
 				op = 0;
 				op2 = 0;
-				for (k = i + 2;; k += 2) {
-					if (k >= *np || equation[k].level <= level)
-						break;
+				for (k = i + 2; k < *np && equation[k].level > level; k += 2) {
 					if (equation[k].level == level + 3) {
 						switch (equation[k].token.operatr) {
 						case PLUS:
@@ -1009,8 +1007,7 @@ int		*np, loc, level, code;
 						op = equation[k].token.operatr;
 					} else if (equation[k].level == level + 1) {
 						if (equation[k].token.operatr == POWER
-						    && (op == PLUS || op == MINUS
-						    || (op == TIMES && op2 == PLUS))) {
+						    && (op == PLUS || op == MINUS || (op == TIMES && op2 == PLUS))) {
 							power_flag = true;
 							len1 = k - (i + 1);
 						}
@@ -1027,10 +1024,13 @@ next_thingy:
 				} else {
 					rv = smart_div(&equation[j], len2, &equation[i+1], len1);
 				}
-				if (power_flag && !(rv > 0 && REMAINDER_IS_ZERO())) {
+				zero_remainder = (rv > 0 && REMAINDER_IS_ZERO());
+				if (power_flag && !zero_remainder) {
 					rv = 0;
 				}
-				if (rv > 0 && (n_tlhs + 2 + n_trhs + len1) <= n_tokens) {
+				if (rv > 0) {
+					if ((n_tlhs + 2 + n_trhs + len1) > n_tokens)
+						error_huge();
 					for (k = 0; k < n_tlhs; k++)
 						tlhs[k].level++;
 					tlhs[n_tlhs].level = 1;
@@ -1060,16 +1060,11 @@ next_thingy:
 						k = (var_count(tlhs, n_tlhs) <= (var_count(&equation[j], len2) + var_count(&equation[i+1], len1)));
 					}
 					if (k) {
-						if (power_flag) {
-							if ((*np - len2 + n_tlhs + 2) > n_tokens)
-								error_huge();
-						} else {
-							if ((*np - (len1 + 1 + len2) + n_tlhs) > n_tokens)
-								error_huge();
-						}
 						for (k = 0; k < n_tlhs; k++)
 							tlhs[k].level += level;
 						if (power_flag) {
+							if ((*np - len2 + n_tlhs + 2) > n_tokens)
+								error_huge();
 							for (k = i + 2 + len1; k <= i + real_len1; k++) {
 								equation[k].level++;
 							}
@@ -1086,6 +1081,8 @@ next_thingy:
 								j += 2;
 							}
 						} else {
+							if ((*np - (len1 + 1 + len2) + n_tlhs) > n_tokens)
+								error_huge();
 							blt(&equation[i], &equation[i+1+len1], (*np - (i + 1 + len1)) * sizeof(token_type));
 							*np -= len1 + 1;
 							if (i < j) {
@@ -1145,19 +1142,16 @@ token_type	*d2;		/* pointer to divisor */
 int		len2;		/* length of divisor */
 long		*vp;		/* variable pointer to base variable */
 {
-	int		i, j;
+	int		j;
 	int		old_partial;
 	jmp_buf		save_save;
 
 	old_partial = partial_flag;
 	partial_flag = false;	/* We want full unfactoring. */
 	blt(save_save, jmp_save, sizeof(jmp_save));
-	if ((i = setjmp(jmp_save)) != 0) {
+	if (setjmp(jmp_save) != 0) {
 		blt(jmp_save, save_save, sizeof(jmp_save));
 		partial_flag = old_partial;
-		if (i == 13) {
-			longjmp(jmp_save, i);
-		}
 		return false;
 	}
 	j = poly_div_sub(d1, len1, d2, len2, vp);
@@ -1364,12 +1358,12 @@ int		len2;		/* length of divisor */
 {
 	int		i, j, k;
 	int		t1, len_t1;
-	int		t2, len_t2 = 0;
+	int		t2 = 0, len_t2 = 0;
 	int		sign;
 	int		old_n_quotient;
 	int		trhs_size;
-	int		term_size, term_count;
-	int		term_pos, skip_terms[100];
+	int		term_size = 0, term_count;
+	int		term_pos = 0, skip_terms[100];
 	int		skip_count;
 	token_type	*qp;
 	int		q_size;
@@ -1678,10 +1672,8 @@ long		*vp1;		/* variable pointer */
 
 	last_v = 0;
 	for (vc = 0; vc < ARR_CNT(va); vc++) {
-		v1 = -1;
-		for (i = 0; i < n1; i += 2) {
-			if (p1[i].kind == VARIABLE
-			    && p1[i].token.variable > last_v) {
+		for (i = 0, cnt = 0, v1 = -1; i < n1; i += 2) {
+			if (p1[i].kind == VARIABLE && p1[i].token.variable > last_v) {
 				if (v1 == -1 || p1[i].token.variable < v1) {
 					v1 = p1[i].token.variable;
 					cnt = 1;
@@ -1729,7 +1721,7 @@ int		n1, loc;
 {
 	int	i, j, k;
 	int	divide_flag = false;
-	int	level, div_level;
+	int	level, div_level = 0;
 	double	d, sub_count, sub_sum;
 
 	for (i = 0; i < VALUE_CNT; i++)
@@ -1808,12 +1800,10 @@ int		*dcodep;	/* divide flag pointer indicates if term is a denominator */
 				/* for example: for x^5 it is false, for 1/x^5 it is true */
 				/* if equal to 3, ignore */
 {
-	int		i, j, k;
-	int		ii;
+	int		i, j, k, ii;
 	double		d;
 	int		flag, divide_flag = false;
-	int		div_level;
-	int		level;
+	int		level, div_level = 0;
 	long		v = 0;
 	int		was_power = false;
 	double		last_va[VALUE_CNT];
