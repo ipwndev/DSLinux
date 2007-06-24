@@ -1,8 +1,8 @@
 /*
- * An independent, floating point complex number library for C.
+ * An independent, floating point complex number arithmetic library for C.
  * Include "complex.h" if you use this.
  *
- * Copyright (c) 1987-2005 George Gesslein II.
+ * Copyright (C) 1987-2007 George Gesslein II.
  */
 
 #include "complex.h"
@@ -14,13 +14,14 @@
 #define epsilon	0.00000000000005	/* a good value for doubles */
 
 /*
- * Zero out relatively very small real or imaginary parts.
+ * Zero out relatively very small real or imaginary parts of a complex number,
+ * because they probably are a result of accumulated floating point inaccuracies.
  *
  * Return true if something was zeroed out.
  */
 int
 complex_fixup(ap)
-complexs	*ap;
+complexs	*ap;	/* complex number pointer */
 {
 	if (fabs(ap->re * epsilon) > fabs(ap->im)) {
 		ap->im = 0.0;
@@ -65,8 +66,7 @@ complexs	a;
  */
 complexs
 complex_mult(a, b)
-complexs	a;
-complexs	b;
+complexs	a, b;
 {
 	complexs	r;
 
@@ -76,7 +76,7 @@ complexs	b;
 }
 
 /*
- * Divide complex "a" by complex "b" and return result.
+ * Divide two complex numbers (a / b) and return result.
  */
 complexs
 complex_div(a, b)
@@ -131,8 +131,7 @@ complexs	a;
  */
 complexs
 complex_pow(a, b)
-complexs	a;
-complexs	b;
+complexs	a, b;
 {
 	complexs	r;
 

@@ -1,5 +1,6 @@
 /*
  * Factorial function in Java.
+ * Written by Gordon McKinney (http://gmckinney.info).
  */
 public class MathSupport
 {

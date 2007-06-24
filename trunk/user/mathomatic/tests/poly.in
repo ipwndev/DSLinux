@@ -14,4 +14,5 @@ c ; solve for c
 eliminate c using 3 ; eliminate (c) using equation number 3
 1 ; select equation number 1
 eliminate b c ; the final elimination
-simplify quick all ; list all solutions
+simplify all ; list all solutions
+fraction all ; convert to simple fractions

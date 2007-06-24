@@ -1,7 +1,7 @@
 /*
- * Algebraic manipulator solve routines.
+ * Mathomatic solve routines.
  *
- * Copyright (c) 1987-2005 George Gesslein II.
+ * Copyright (C) 1987-2007 George Gesslein II.
  */
 
 #include "includes.h"
@@ -35,7 +35,7 @@ int	have;	/* equation number to solve */
 	n_lhs[want] = 0;
 	n_rhs[want] = 0;
 #if	!SILENT
-	if (!rv) {
+	if (rv <= 0) {
 		printf(_("Solve failed.\n"));
 	}
 #endif
@@ -43,19 +43,20 @@ int	have;	/* equation number to solve */
 }
 
 /*
- * Main Mathomatic solve routine.
+ * Main Mathomatic symbolic solve routine.
  *
  * This works by moving everything containing the variable to solve for
  * to the LHS (via transposition), then moving everything not containing the variable to the
  * RHS.  Many tricks are used, and this routine works very well.
  *
- * "tlhs" and "trhs" are used by this routine.
+ * tlhs and trhs are used by this routine.
  *
  * Returns a positive integer if successful, with the result placed in the passed LHS and RHS.
  * Returns 1 for normal success.
  * Returns 2 if successful and a solution was zero and removed.
- * Returns 0 on failure.
+ * Returns 0 on failure.  Might succeed at a numeric solve.
  * Returns -1 if the equation is an identity.
+ * Returns -2 if unsolvable in all realms.
  */
 int
 solve_sub(wantp, wantn, leftp, leftnp, rightp, rightnp)
@@ -74,10 +75,10 @@ int		*rightnp;	/* size of RHS */
 	token_type	*p1, *b1, *ep;
 	long		v;
 	int		need_flip;
-	int		uf_flag = false;
+	int		uf_flag = false;	/* unfactor flag */
 	int		qtries = 0;
-	int		zflag;
-	int		zsolve;
+	int		zflag;			/* true if RHS is currently zero */
+	int		zsolve;			/* true if we are solving for zero */
 	int		inc_count = 0;
 	int		zero_solved = false;
 	double		numerator, denominator;
@@ -112,11 +113,10 @@ int		*rightnp;	/* size of RHS */
 		}
 		zsolve = true;
 	}
-#if	true
 	uf_power(tlhs, &n_tlhs);
 	uf_power(trhs, &n_trhs);
-#endif
 simp_again:
+	/* Make sure equation is a bit simplified. */
 	list_tdebug(2);
 	simps_side(tlhs, &n_tlhs, zsolve);
 	if (uf_flag) {
@@ -128,7 +128,7 @@ simp_again:
 	}
 	list_tdebug(1);
 no_simp:
-	/* Move from the RHS to the LHS. */
+	/* First selectively move subexpressions from the RHS to the LHS. */
 	op = 0;
 	ep = &trhs[n_trhs];
 	if (zsolve) {
@@ -193,7 +193,7 @@ no_simp:
 		simps_side(trhs, &n_trhs, zsolve);
 	}
 left_again:
-	worked = 1;
+	worked = true;
 	uf_flag = false;
 see_work:
 	/* See if we have solved the equation. */
@@ -214,7 +214,7 @@ zero_simp:
 					do {
 						simp_ssub(trhs, &n_trhs, 0L, 0.0, false, true, 0);
 					} while (uf_power(trhs, &n_trhs));
-				} while (super_factor(trhs, &n_trhs, true));
+				} while (super_factor(trhs, &n_trhs, 1));
 				list_tdebug(3);
 				ep = &trhs[n_trhs];
 				op = 0;
@@ -348,8 +348,7 @@ zero_simp:
 			if (p1 >= ep) {
 				if (found_count == 0) { /* if solve variable no longer in LHS */
 					for (i = 0; i < n_trhs; i += 2) {
-						if (trhs[i].kind == VARIABLE
-						    && trhs[i].token.variable == v) {
+						if (trhs[i].kind == VARIABLE && trhs[i].token.variable == v) {
 							/* solve variable in RHS */
 							return false;
 						}
@@ -359,7 +358,7 @@ zero_simp:
 					if (se_compare(tlhs, n_tlhs, trhs, n_trhs, &diff_sign) && !diff_sign) {
 						error(_("This equation is an identity."));
 #if	!SILENT
-						printf(_("That is, the left equation side is identical to the right equation side.\n"));
+						printf(_("That is, the LHS is identical to the RHS.\n"));
 #endif
 						return -1;
 					}
@@ -383,14 +382,14 @@ zero_simp:
 					} else {
 						error(_("There are no possible values for the solve variable."));
 					}
-					return false;
+					return -2;
 				}
 				zflag = (n_trhs == 1 && trhs[0].kind == CONSTANT && trhs[0].token.constant == 0.0);
+				if (zflag) {
+					/* overwrite -0.0 */
+					trhs[0].token.constant = 0.0;
+				}
 				if (need_flip >= found_count) {
-					if (zflag) {
-						/* overwrite -0.0 */
-						trhs[0].token.constant = 0.0;
-					}
 					if (!flip(tlhs, &n_tlhs, trhs, &n_trhs))
 						return false;
 					list_tdebug(2);
@@ -400,7 +399,7 @@ zero_simp:
 					goto left_again;
 				}
 				if (worked && !uf_flag) {
-					worked--;
+					worked = false;
 					debug_string(1, _("Unfactoring..."));
 					partial_flag = false;
 					uf_simp(tlhs, &n_tlhs);
@@ -487,14 +486,15 @@ zero_simp:
 						    || fabs(numerator) != 1.0 || denominator < 2.0) {
 							continue;
 						}
-						for (j = i - 1; (j >= 0) && tlhs[j].level >= tlhs[i].level; j--) {
+						for (j = i - 1; j >= 0 && tlhs[j].level >= tlhs[i].level; j--) {
 							if (tlhs[j].kind == VARIABLE && tlhs[j].token.variable == v) {
 								if (b1) {
 									if (fabs(b1->token.constant) < fabs(tlhs[i+1].token.constant)) {
 										b1 = &tlhs[i+1];
 									}
-								} else
+								} else {
 									b1 = &tlhs[i+1];
+								}
 								break;
 							}
 						}
@@ -528,9 +528,8 @@ zero_simp:
 					return false;
 				if (zero_solved) {
 					qtries++;
-				} else {
-					zero_solved = true;
 				}
+				zero_solved = true;
 				if (quad_solve(v)) {
 					goto left_again;
 				} else {
@@ -681,30 +680,30 @@ end:
  * where "x" is an expression containing passed variable "v",
  * and "n" is a constant.
  *
+ * The equation to solve is in tlhs and trhs, it must be solved for zero.
+ *
  * Return true if successful.
  */
 static int
 quad_solve(v)
-long	v;
+long	v;	/* solve variable */
 {
 	int		i, j, k;
 	token_type	*p1, *p2, *ep;
-	token_type	*x1p, *x2p;
-	token_type	*a1p, *a2p, *a2ep;
+	token_type	*x1p = NULL, *x2p;
+	token_type	*a1p = NULL, *a2p = NULL, *a2ep = NULL;
 	token_type	*b1p, *b2p, *b2ep;
 	token_type	*x1tp, *a1tp;
 	token_type	x1_storage[100];
-	int		nx1;
 	int		op, op2, opx1, opx2;
-	int		found;
-	int		diff_sign;
-	int		len;
-	int		alen, blen;
-	int		aloc;
+	int		found, diff_sign;
+	int		len, alen, blen, aloc, nx1;
 	double		high_power = 0.0;
 
 	uf_simp(trhs, &n_trhs);
-	factorv(trhs, &n_trhs, v);
+	while (factor_plus(trhs, &n_trhs, v, 0.0)) {
+		simp_loop(trhs, &n_trhs);
+	}
 	list_tdebug(1);
 
 	found = false;
@@ -995,7 +994,7 @@ big_bbreak:
 	} else if (high_power == 4.0) {
 		printf(_("Equation was biquadratic.\n"));
 	} else {
-		printf(_("Equation was a degree %g quadratic.\n"), high_power);
+		printf(_("Equation was a degree %.*g quadratic.\n"), precision, high_power);
 	}
 #endif
 	return true;
@@ -1020,10 +1019,8 @@ int		*side1np;	/* pointer to the length of "side1p" */
 token_type	*side2p;	/* equation side pointer */
 int		*side2np;	/* pointer to the length of "side2p" */
 {
-	int		i;
 	token_type	*p1, *p2, *ep;
-	int		oldn;
-	int		operandn;
+	int		oldn, operandn;
 	double		numerator, denominator;
 	static int	prev_n1, prev_n2;
 	double		d1, d2;
@@ -1048,17 +1045,6 @@ int		*side2np;	/* pointer to the length of "side2p" */
 	case POWER:
 	case MODULUS:
 		break;
-	case FACTORIAL:
-		i = oldn - 2;
-		if (i >= 0 && side1p[i].level == 1 && side1p[i].token.operatr == op) {
-			i = *side2np - 2;
-			if (i >= 0 && side2p[i].level == 1 && side2p[i].token.operatr == op) {
-				debug_string(1, _("Removing factorial from both sides of the equation:"));
-				*side1np -= 2;
-				*side2np -= 2;
-				return true;
-			}
-		}
 	default:
 		return false;
 	}
@@ -1151,7 +1137,7 @@ int		*side2np;	/* pointer to the length of "side2p" */
 		p2++;
 		p2->level = 2;
 		p2->kind = VARIABLE;
-		p2->token.variable = V_INTEGER;
+		parse_var(&p2->token.variable, "integer");
 		p2++;
 		p2->level = 2;
 		p2->kind = OPERATOR;

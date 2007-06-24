@@ -1,12 +1,13 @@
 /*
- * Algebraic manipulator simplifying routines.
+ * Mathomatic simplifying routines.
  *
- * Copyright (c) 1987-2005 George Gesslein II.
+ * Copyright (C) 1987-2007 George Gesslein II.
  */
 
 #include "includes.h"
 
-#define	MAX_COMPARE_TERMS	400	/* Max no. of terms on same level that can be compared.  Increases stack usage. */
+#define	MAX_COMPARE_TERMS	30	/* Max no. of terms on same level that can be compared, increases stack usage. */
+					/* MAX_COMPARE_TERMS should be approximately (sqrt(DEFAULT_N_TOKENS) * 3) */
 
 static int	org_recurse();
 static int	const_recurse();
@@ -14,20 +15,25 @@ static int	compare_recurse();
 static int	order_recurse();
 
 /*
- * Minimally and very basically simplify an equation space.
+ * Quickly and very basically simplify an equation space.
+ * No factoring is done.
  */
 simp_sub(n)
-int	n;	/* equation number to simplify */
+int	n;	/* equation space number to simplify */
 {
+	if (n_lhs[n] <= 0)
+		return;
 	simp_loop(lhs[n], &n_lhs[n]);
-	simp_loop(rhs[n], &n_rhs[n]);
+	if (n_rhs[n]) {
+		simp_loop(rhs[n], &n_rhs[n]);
+	}
 }
 
 /*
  * For quick, mid-range simplification of an expression.
  */
 simp_side(equation, np)
-token_type	*equation;	/* equation side to simplify */
+token_type	*equation;	/* pointer to the beginning of equation side to simplify */
 int		*np;		/* pointer to length of equation side */
 {
 	simp_ssub(equation, np, 0L, 0.0, true, true, 1);
@@ -37,49 +43,65 @@ int		*np;		/* pointer to length of equation side */
  * This function is the mid-range simplifier used by the solver.
  */
 simps_side(equation, np, zsolve)
-token_type	*equation;	/* equation side to simplify */
+token_type	*equation;	/* pointer to the beginning of equation side to simplify */
 int		*np;		/* pointer to length of equation side */
 int		zsolve;		/* true if we are solving for zero */
 {
 	do {
 		simp_ssub(equation, np, 0L, 0.0, !zsolve, true, 2);
-	} while (super_factor(equation, np, false));
+	} while (super_factor(equation, np, 0));
 }
 
 /*
  * This function is used by the "factor" command.
  */
 simpv_side(equation, np, v)
-token_type	*equation;	/* equation side to factor */
+token_type	*equation;	/* pointer to the beginning of equation side to factor */
 int		*np;		/* pointer to length of equation side */
 long		v;		/* variable to factor */
 {
 	if (*np == 0)
 		return;
-	simp_ssub(equation, np, v, 0.0, v == 0L, true, 2);
+	simp_ssub(equation, np, v, 0.0, v == 0, true, 2);
+}
+
+/*
+ * Convert expression with any algebraic fractions into a single fraction.
+ */
+frac_side(equation, np)
+token_type	*equation;	/* pointer to the beginning of equation side */
+int		*np;		/* pointer to length of equation side */
+{
+	if (*np == 0)
+		return;
+	do {
+		simpb_side(equation, np, false, 2);
+	} while (super_factor(equation, np, 2));
 }
 
 /*
  * Simplify and approximate for the calculate command.
- * Includes imaginary number simplification.
+ * Includes complex number simplification.
  */
 calc_simp(equation, np)
 token_type	*equation;
 int		*np;
 {
-	in_calc_cmd = true;
+	approximate_roots = true;
 	subst_constants(equation, np);
 	simp_side(equation, np);
+	factorv(equation, np, IMAGINARY);
+	ufactor(equation, np);
+	factorv(equation, np, IMAGINARY);
 	ufactor(equation, np);
 	factorv(equation, np, IMAGINARY);
 	simp_side(equation, np);
 	uf_simp(equation, np);
-	in_calc_cmd = false;
+	approximate_roots = false;
 }
 
 /*
- * Try to eliminate "i#" from an equation side,
- * by converting "i#*(b^.5)" to "(-1*b)^.5".
+ * Try to eliminate "i#" from an equation side by converting "i#*(b^.5)" to "(-1*b)^.5".
  */
 simp_i(equation, np)
 token_type	*equation;
@@ -129,23 +151,19 @@ int		*np;
  * This is the slowest and most thorough simplify of all.
  */
 simpa_side(equation, np, quick_flag)
-token_type	*equation;	/* pointer to equation side to simplify */
+token_type	*equation;	/* pointer to the beginning of equation side to simplify */
 int		*np;		/* pointer to length of the equation side */
 int		quick_flag;	/* "simplify quick" option */
 {
-	int		flag, poly_flag = false;
+	int		flag, poly_flag = true;
 	jmp_buf		save_save;
 
 	if (*np <= 1)	/* no need to simplify a constant or a variable */
 		return;
 	partial_flag = 2;
-#if	true
 	simp_loop(equation, np);
 	poly_factor(equation, np);
-#endif
-	do {
-		simp_ssub(equation, np, 0L, 0.0, false, true, 1);
-	} while (uf_power(equation, np));
+	simpb_side(equation, np, true, 1);
 	simp_ssub(equation, np, 0L, 0.0, true, true, 1);
 	rationalize(equation, np);
 	unsimp_power(equation, np);
@@ -183,7 +201,7 @@ int		quick_flag;	/* "simplify quick" option */
 		do {
 			simp_ssub(equation, np, 0L, 1.0, false, true, 1);
 		} while (uf_power(equation, np));
-	} while (super_factor(equation, np, true));
+	} while (super_factor(equation, np, 2));
 	if (quick_flag) {
 do_quick:
 		uf_tsimp(equation, np);
@@ -206,7 +224,7 @@ do_quick:
 	}
 	partial_flag = false;
 	simpb_side(equation, np, true, 1);
-	debug_string(1, "Simplified result before applying polynomial operations:");
+	debug_string(1, "Simplify result before applying polynomial operations:");
 	side_debug(1, equation, *np);
 	for (flag = false;;) {
 		/* divide top and bottom of fractions by any polynomial GCD found */
@@ -244,14 +262,14 @@ do_quick:
 	while (div_remainder(equation, np, poly_flag, quick_flag)) {
 		simpb_side(equation, np, true, 3);
 	}
-	if (poly_factor(equation, np)) {
-		simpb_side(equation, np, true, 3);
-	}
+	poly_factor(equation, np);
 	simpb_side(equation, np, true, 2);
+	debug_string(1, "Result of complete simplify:");
+	side_debug(1, equation, *np);
 }
 
 /*
- * Compare function for qsort(3).
+ * Compare function for qsort(3) within simpb_side().
  */
 static int
 vcmp(p1, p2)
@@ -276,15 +294,15 @@ sort_type	*p1, *p2;
 }
 
 /*
+ * Beauty simplifier.
  * Neat simplify and factor routine.
- * Factors variables in order.
- * "sign" variables first, then by frequency.
+ * Factors variables in order: "sign" variables first, then by frequency.
  */
 simpb_side(equation, np, power_flag, fc_level)
-token_type	*equation;	/* equation side pointer */
+token_type	*equation;	/* pointer to the beginning of equation side */
 int		*np;		/* pointer to length of equation side */
-int		power_flag;	/* factor powers flag */
-int		fc_level;	/* factor constants code */
+int		power_flag;	/* factor_power() flag */
+int		fc_level;	/* factor constants code, passed to factor_constants() */
 {
 	int		i;
 	int		vc, cnt;
@@ -295,8 +313,7 @@ int		fc_level;	/* factor constants code */
 	uf_allpower(equation, np);
 	last_v = 0;
 	for (vc = 0; vc < ARR_CNT(va); vc++) {
-		v1 = -1;
-		for (i = 0; i < *np; i += 2) {
+		for (i = 0, cnt = 0, v1 = -1; i < *np; i += 2) {
 			if (equation[i].kind == VARIABLE && equation[i].token.variable > last_v) {
 				if (v1 == -1 || equation[i].token.variable < v1) {
 					v1 = equation[i].token.variable;
@@ -312,25 +329,23 @@ int		fc_level;	/* factor constants code */
 		va[vc].v = v1;
 		va[vc].count = cnt;
 	}
-	if (vc == 0) {
-		goto skip_factor;
-	}
-	qsort((char *) va, vc, sizeof(*va), vcmp);
-	simp2_divide(equation, np, va[0].v, fc_level);
-	for (i = 1; i < vc; i++) {
-		if (factor_divide(equation, np, va[i].v, 0.0))
-			simp2_divide(equation, np, va[i].v, fc_level);
-	}
-	simp2_divide(equation, np, 0L, fc_level);
-	for (i = 0; i < vc; i++) {
-		while (factor_plus(equation, np, va[i].v, 0.0)) {
+	if (vc) {
+		qsort((char *) va, vc, sizeof(*va), vcmp);
+		simp2_divide(equation, np, va[0].v, fc_level);
+		for (i = 1; i < vc; i++) {
+			if (factor_divide(equation, np, va[i].v, 0.0))
+				simp2_divide(equation, np, va[i].v, fc_level);
+		}
+		simp2_divide(equation, np, 0L, fc_level);
+		for (i = 0; i < vc; i++) {
+			while (factor_plus(equation, np, va[i].v, 0.0)) {
+				simp2_divide(equation, np, 0L, fc_level);
+			}
+		}
+		while (factor_plus(equation, np, MATCH_ANY, 0.0)) {
 			simp2_divide(equation, np, 0L, fc_level);
 		}
 	}
-	while (factor_plus(equation, np, MATCH_ANY, 0.0)) {
-		simp2_divide(equation, np, 0L, fc_level);
-	}
-skip_factor:
 	simp_ssub(equation, np, MATCH_ANY, 0.0, power_flag, true, fc_level);
 }
 
@@ -339,7 +354,7 @@ skip_factor:
  * Just does constant simplification.
  */
 elim_loop(equation, np)
-token_type	*equation;	/* equation side to simplify */
+token_type	*equation;	/* pointer to the beginning of equation side to simplify */
 int		*np;		/* pointer to length of equation side */
 {
 	side_debug(6, equation, *np);
@@ -362,12 +377,12 @@ int		*np;		/* pointer to length of equation side */
  * Configurable high level simplify routine.
  */
 simp_ssub(equation, np, v, d, power_flag, times_flag, fc_level)
-token_type	*equation;	/* equation side to simplify */
+token_type	*equation;	/* pointer to the beginning of equation side to simplify */
 int		*np;		/* pointer to length of equation side */
 long		v;		/* variable to factor, 0L or MATCH_ANY to factor all variables */
 double		d;		/* factor expressions raised to the power of this if v */
-int		power_flag;	/* factor power flag */
-int		times_flag;	/* factor times flag */
+int		power_flag;	/* factor_power() flag */
+int		times_flag;	/* factor_times() flag */
 int		fc_level;	/* factor constants code, passed to factor_constants() */
 {
 	do {
@@ -396,14 +411,12 @@ int		fc_level;	/* factor constants code, passed to factor_constants() */
  */
 int
 simp_loop(equation, np)
-token_type	*equation;	/* equation side to simplify */
+token_type	*equation;	/* pointer to the beginning of equation side to simplify */
 int		*np;		/* pointer to length of equation side */
 {
 	int	i;
 	int	rv = false;
 
-	if (*np == 0)
-		return rv;
 	do {
 		do {
 			do {
@@ -424,7 +437,7 @@ int		*np;		/* pointer to length of equation side */
  * If v is IMAGINARY, do complex number simplification.
  */
 factorv(equation, np, v)
-token_type	*equation;	/* equation side to factor */
+token_type	*equation;	/* pointer to the beginning of equation side to factor */
 int		*np;		/* pointer to equation side length */
 long		v;		/* variable to factor */
 {
@@ -455,7 +468,8 @@ int		*np;
 }
 
 /*
- * Combine all like denominators.  Don't factor times.
+ * Combine all like denominators containing variable "v".
+ * Don't call factor_times().
  */
 simp2_divide(equation, np, v, fc_level)
 token_type	*equation;
@@ -483,15 +497,15 @@ int		fc_level;
  * This is the inner-most loop in Mathomatic, make it fast.
  */
 organize(equation, np)
-token_type	*equation;
-int		*np;
+token_type	*equation;	/* equation side pointer */
+int		*np;		/* pointer to length of equation side */
 {
 	if (*np <= 0 || (*np & 1) != 1) {
-		error(_("Organize called with bad expression size!"));
+		error("Internal error: Organize called with bad expression size.");
 		longjmp(jmp_save, 13);
 	}
 	if (*np > n_tokens) {
-		error(_("Array overflow detected!  Expression larger than \"n_tokens\"."));
+		error("Internal error: Expression array overflow detected.");
 		longjmp(jmp_save, 13);
 	}
 	org_recurse(equation, np, 0, 1, NULL);
@@ -530,12 +544,14 @@ int		level, invert;
 }
 
 /*
- * Recursively organize an expression at "level" of parentheses.
+ * Recurse through every sub-expression in "equation", starting at "loc",
+ * moving up levels to "level" of parentheses.
  */
 static int
 org_recurse(equation, np, loc, level, elocp)
-token_type	*equation;
-int		*np, loc, level, *elocp;
+token_type	*equation;	/* equation side pointer */
+int		*np;		/* pointer to length of equation side */
+int		loc, level, *elocp;
 {
 	token_type	*p1, *bp, *ep;
 	int		op, sub_op;
@@ -761,7 +777,7 @@ int		*np, i;
 		if (*np + 2 > n_tokens) {
 			error_huge();
 		}
-		blt(&equation[j+2], &equation[j], (*np - j) * sizeof(*equation));
+		blt(&equation[j+2], &equation[j], (*np - j) * sizeof(token_type));
 		*np += 2;
 		equation[j+1].level = level + 1;
 		equation[j+1].kind = CONSTANT;
@@ -838,7 +854,7 @@ int		*np, i;
 		k++;
 		for (i = k; i < j; i++)
 			equation[i].level++;
-		blt(&equation[k+2], &equation[k], (*np - k) * sizeof(*equation));
+		blt(&equation[k+2], &equation[k], (*np - k) * sizeof(token_type));
 		*np += 2;
 		equation[k].level = level;
 		equation[k].kind = CONSTANT;
@@ -881,7 +897,7 @@ int		*np;
  */
 int
 combine_constants(equation, np, iflag)
-token_type	*equation;	/* equation side pointer */
+token_type	*equation;	/* pointer to the beginning of equation side */
 int		*np;		/* pointer to length of equation side */
 int		iflag;		/* produce imaginary numbers flag */
 {
@@ -889,7 +905,7 @@ int		iflag;		/* produce imaginary numbers flag */
 }
 
 /*
- * Do the arithmetic.
+ * Do the floating point arithmetic for Mathomatic.
  *
  * Return true if successful.
  */
@@ -901,8 +917,7 @@ int	op2;	/* operator 2 */
 double	k2;	/* operand 2 */
 {
 	int	op1;
-	double	d;
-	double	d1, d2;
+	double	d, d1, d2;
 
 	domain_check = false;
 	errno = 0;
@@ -948,13 +963,11 @@ double	k2;	/* operand 2 */
 				*k1p = *k1p / k2;
 			}
 		}
-		d1 = fabs(*k1p) * small_epsilon;
-		d = my_round(*k1p);
-		if (d != 0.0 && fabs(d - *k1p) < d1) {
-			*k1p = d;
-		}
 		break;
 	case MODULUS:
+		if (k2 == 0) {
+			debug_string(0, _("Warning: modulo 0 encountered, might be considered undefined."));
+		}
 #if	false	/* If fmod() always works.  It doesn't. */
 		*k1p = fmod(*k1p, k2);
 #else
@@ -969,18 +982,16 @@ double	k2;	/* operand 2 */
 			break;
 		}
 		if (*k1p == 0.0 && k2 < 0.0) {
-#if	!SILENT
 			error(_("Divide by zero error."));
-#endif
 			longjmp(jmp_save, 2);
 		}
 		domain_check = true;
 		if (*k1p == 0.0 && k2 == 0.0) {
-			debug_string(0, _("Warning: 0 raised to the power of 0."));
+			debug_string(0, _("Warning: 0^0 encountered, might be considered undefined."));
 			d = 1.0;	/* some people don't know 0^0 */
 		} else {
 			d = pow(*k1p, k2);
-			if (preserve_roots && !in_calc_cmd) {
+			if (preserve_roots && !approximate_roots) {
 				if (isfinite(k2) && fmod(k2, 1.0) != 0.0 && f_to_fraction(*k1p, &d1, &d2)) {
 					if (!f_to_fraction(d, &d1, &d2)) {
 						domain_check = false;
@@ -995,8 +1006,8 @@ double	k2;	/* operand 2 */
 		break;
 	case FACTORIAL:
 #if	true	/* set this to false if lgamma() doesn't exist */
-		d = exp(lgamma(*k1p + 1.0));
-		if (errno) {	/* simply don't evaluate if error */
+		d = exp(lgamma(*k1p + 1.0)) * signgam;
+		if (errno) {	/* don't evaluate if overflow */
 			return false;
 		}
 #else
@@ -1028,7 +1039,7 @@ int		*np, loc, level, iflag;
 	double		d, d1, d2, numerator, denominator;
 	complexs	cv, p;
 
-	old_loc = loc;
+	loc1 = old_loc = loc;
 	for (;; loc++) {
 beginning:
 		if (loc >= *np || equation[loc].level < level) {
@@ -1054,7 +1065,7 @@ beginning:
 			if (calc((loc1 <= old_loc) ? &zero : &equation[loc1-1].token.operatr, &d, op, d2)) {
 				if (op == POWER && !domain_check) {
 					if (!f_to_fraction(d2, &numerator, &denominator)) {	/* if irrational power */
-						if (!iflag || (preserve_roots && !in_calc_cmd))
+						if (!iflag || (preserve_roots && !approximate_roots))
 							return modified;
 						cv.re = d;
 						cv.im = 0.0;
@@ -1064,7 +1075,7 @@ beginning:
 						if (*np + 2 > n_tokens) {
 							error_huge();
 						}
-						blt(&equation[loc1+2], &equation[loc1], (*np - loc1) * sizeof(*equation));
+						blt(&equation[loc1+2], &equation[loc1], (*np - loc1) * sizeof(token_type));
 						*np += 2;
 						equation[loc1].level = level;
 						equation[loc1].kind = CONSTANT;
@@ -1102,7 +1113,7 @@ beginning:
 					if (*np + 2 > n_tokens) {
 						error_huge();
 					}
-					blt(&equation[loc1+2], &equation[loc1], (*np - loc1) * sizeof(*equation));
+					blt(&equation[loc1+2], &equation[loc1], (*np - loc1) * sizeof(token_type));
 					*np += 2;
 					if (d2 == 0.5) {
 						equation[loc1].level = level + 1;
@@ -1150,7 +1161,7 @@ not_imaginary:
 					equation[loc1].token.constant = d;
 					modified = true;
 					domain_check = false;
-					blt(&equation[loc-1], &equation[loc+1], (*np - (loc + 1)) * sizeof(*equation));
+					blt(&equation[loc-1], &equation[loc+1], (*np - (loc + 1)) * sizeof(token_type));
 					*np -= 2;
 					loc -= 2;
 				}
@@ -1446,6 +1457,7 @@ int		n2, l2, *diff_signp;
 	int		last_op1, op1, op2;
 	int		diff_op;
 	double		d1, c1, c2;
+	double		compare_epsilon = epsilon;
 
 	*diff_signp = false;
 	if (n1 == 1 && n2 == 1) {
@@ -1469,7 +1481,7 @@ int		n2, l2, *diff_signp;
 				*diff_signp = true;
 				return true;
 			}
-			d1 = fabs(c1) * epsilon;
+			d1 = fabs(c1) * compare_epsilon;
 			if (fabs(c1 - c2) < d1) {
 				return true;
 			}
@@ -1525,7 +1537,7 @@ int		n2, l2, *diff_signp;
 	}
 	if (diff_op) {
 		if (p1->kind == CONSTANT && p1->level == l1 && op1 == TIMES) {
-			if (fabs(fabs(p1->token.constant) - 1.0) <= epsilon) {
+			if (fabs(fabs(p1->token.constant) - 1.0) <= compare_epsilon) {
 				if (!compare_recurse(p1 + 2, n1 - 2, min_level(p1 + 2, n1 - 2), p2, n2, l2, diff_signp)) {
 					return false;
 				}
@@ -1536,7 +1548,7 @@ int		n2, l2, *diff_signp;
 			}
 		}
 		if (p2->kind == CONSTANT && p2->level == l2 && op2 == TIMES) {
-			if (fabs(fabs(p2->token.constant) - 1.0) <= epsilon) {
+			if (fabs(fabs(p2->token.constant) - 1.0) <= compare_epsilon) {
 				if (!compare_recurse(p1, n1, l1, p2 + 2, n2 - 2, min_level(p2 + 2, n2 - 2), diff_signp)) {
 					return false;
 				}
@@ -1570,13 +1582,11 @@ no_op2:
 				break;
 		for (i = 0;; i++) {
 			if (i >= oc2) {
-				if ((op1 == TIMES || op1 == DIVIDE)
-				    && pv1->level == l1 && pv1->kind == CONSTANT) {
-					if (fabs(pv1->token.constant + 1.0) <= epsilon) {
-						*diff_signp ^= true;
-						break;
-					}
-					if (fabs(pv1->token.constant - 1.0) <= epsilon) {
+				if ((op1 == TIMES || op1 == DIVIDE) && pv1->level == l1 && pv1->kind == CONSTANT) {
+					if (fabs(fabs(pv1->token.constant) - 1.0) <= compare_epsilon) {
+						if (pv1->token.constant < 0.0) {
+							*diff_signp ^= true;
+						}
 						break;
 					}
 				}
@@ -1640,13 +1650,11 @@ no_op2:
 	}
 	for (i = 0; i < oc2; i++) {
 		if (!used[i]) {
-			if ((op2 == TIMES || op2 == DIVIDE)
-			    && opa2[i]->level == l2 && opa2[i]->kind == CONSTANT) {
-				if (fabs(opa2[i]->token.constant + 1.0) <= epsilon) {
-					*diff_signp ^= true;
-					continue;
-				}
-				if (fabs(opa2[i]->token.constant - 1.0) <= epsilon) {
+			if ((op2 == TIMES || op2 == DIVIDE) && opa2[i]->level == l2 && opa2[i]->kind == CONSTANT) {
+				if (fabs(fabs(opa2[i]->token.constant) - 1.0) <= compare_epsilon) {
+					if (opa2[i]->token.constant < 0.0) {
+						*diff_signp ^= true;
+					}
 					continue;
 				}
 			}
@@ -1658,8 +1666,9 @@ no_op2:
 
 /*
  * Take out meaningless "sign" variables and negative constants.
- * Simplify imaginary numbers raised to the power of some constants
- * (including simple division ((i#^-1) -> (-1*i#))).
+ * Simplify imaginary numbers raised to the power of some constants,
+ * including simple division (1/i# -> -1*i#).
+ *
  * Return true if equation side was modified.
  */
 int
@@ -1742,8 +1751,7 @@ int		*np;
 					}
 				}
 			} else {
-				if (equation[i-1].level == level
-				    && equation[i-1].kind == VARIABLE) {
+				if (equation[i-1].level == level && equation[i-1].kind == VARIABLE) {
 					if (equation[i-1].token.variable == IMAGINARY) {
 						d = fmod(equation[i+1].token.constant, 4.0);
 						if (d == 1.0) {
@@ -1756,8 +1764,7 @@ int		*np;
 							modified = true;
 						}
 					} else if ((equation[i-1].token.variable & VAR_MASK) == SIGN) {
-						d = fmod(equation[i+1].token.constant, 2.0);
-						equation[i+1].token.constant = d;
+						equation[i+1].token.constant = fmod(equation[i+1].token.constant, 2.0);
 					}
 				}
 			}
@@ -1924,10 +1931,10 @@ int		i1, i2;
 	}
 	n1 = e1 - i1;
 	n2 = e2 - i2;
-	blt(scratch, &equation[i1], (e2 - i1) * sizeof(*equation));
-	blt(&equation[i1+n2], &equation[e1], (i2 - e1) * sizeof(*equation));
-	blt(&equation[i1], &scratch[i2-i1], n2 * sizeof(*equation));
-	blt(&equation[e2-n1], scratch, n1 * sizeof(*equation));
+	blt(scratch, &equation[i1], (e2 - i1) * sizeof(token_type));
+	blt(&equation[i1+n2], &equation[e1], (i2 - e1) * sizeof(token_type));
+	blt(&equation[i1], &scratch[i2-i1], n2 * sizeof(token_type));
+	blt(&equation[e2-n1], scratch, n1 * sizeof(token_type));
 }
 
 static int
@@ -2007,13 +2014,12 @@ int		*np, loc, level;
 		}
 		for (k = j + 2; k < i;) {
 			if (equation[k].level == level && equation[k].token.operatr == TIMES) {
-				for (n = k + 2; n < i; n += 2)
-					if (equation[n].level <= level)
-						break;
+				for (n = k + 2; n < i && equation[n].level > level; n += 2)
+					;
 				n -= k;
-				blt(scratch, &equation[k], n * sizeof(*equation));
-				blt(&equation[j+n], &equation[j], (k - j) * sizeof(*equation));
-				blt(&equation[j], scratch, n * sizeof(*equation));
+				blt(scratch, &equation[k], n * sizeof(token_type));
+				blt(&equation[j+n], &equation[j], (k - j) * sizeof(token_type));
+				blt(&equation[j], scratch, n * sizeof(token_type));
 				j += n;
 				k += n;
 				modified = true;
@@ -2025,9 +2031,8 @@ int		*np, loc, level;
 	}
 	return modified;
 corrupt:
-	error(_("Expression is corrupt!"));
+	error(_("Expression is corrupt!  Please file a bug report."));
 	longjmp(jmp_save, 13);
-
 }
 
 /*

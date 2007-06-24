@@ -1,9 +1,10 @@
 /*
  * Standard include files for Mathomatic.
  *
- * Copyright (c) 1987-2005 George Gesslein II.
+ * Copyright (C) 1987-2007 George Gesslein II.
  */
 
+/* include files from /usr/include: */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -24,7 +25,8 @@
 #include <readline/readline.h>
 #endif
 
-#include "am.h"
-#include "complex.h"
-#include "proto.h"
-#include "externs.h"
+/* include files from the current directory: */
+#include "am.h"		/* the main include file for Mathomatic, contains tunable parameters */
+#include "complex.h"	/* floating point complex number arithmetic function prototypes */
+#include "proto.h"	/* global function prototypes */
+#include "externs.h"	/* global variable extern definitions */

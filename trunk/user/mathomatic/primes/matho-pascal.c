@@ -1,23 +1,7 @@
 /*
- * Calculate and display Pascal's Triangle.
+ * Calculate and display Pascal's triangle.
  *
  * Copyright (C) 2005 George Gesslein II.
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * Usage: matho-pascal [number-of-lines]
  */
 
 #include <stdio.h>
@@ -58,16 +42,17 @@ main(int argc, char *argv[])
 	struct winsize	ws;
 
         prog_name = strdup(basename(argv[0]));
+
 	ws.ws_col = 0;
 	ws.ws_row = 0;
 	ioctl(1, TIOCGWINSZ, &ws);
-	if (ws.ws_col) {
+	if (ws.ws_col > 0) {
 		screen_columns = ws.ws_col;
 	}
 	if (screen_columns >= sizeof(line_buf)) {
-		fprintf(stderr, "%s: Screen too wide!\n", prog_name);
-		exit(1);
+		screen_columns = sizeof(line_buf) - 1;
 	}
+
 	switch (argc) {
 	case 0:
 	case 1:
@@ -147,8 +132,8 @@ display_triangle()
 
 /*
  * Create a line of output in line_buf[] for centering mode.
- * Return length if successful,
- * otherwise return 0.
+
+ * Return length if successful, otherwise return 0.
  */
 int
 center_buf(int line_number, int cell_size)
@@ -182,6 +167,6 @@ void
 usage()
 {
 	fprintf(stderr, "Usage: %s [number-of-lines]\n\n", prog_name);
-	fprintf(stderr, "Display up to %d lines of Pascal's Triangle.\n", MAX_LINES);
+	fprintf(stderr, "Display up to %d lines of Pascal's triangle.\n", MAX_LINES);
 	exit(1);
 }

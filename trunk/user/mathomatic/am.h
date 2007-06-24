@@ -1,13 +1,13 @@
 /*
  * Main include file for Mathomatic.
  *
- * Copyright (c) 1987-2005 George Gesslein II.
+ * Copyright (C) 1987-2007 George Gesslein II.
  */
 
 #define	true	1
 #define	false	0
 
-#if	LIBRARY		/* define this when using Mathomatic as a symbolic math library */
+#if	LIBRARY
 #define	SILENT	1
 #endif
 
@@ -23,18 +23,15 @@
 #define	isfinite(d)	finite(d)
 #endif
 
-#undef	PI
-#define	PI	3.141592653589793238
-#define	E	2.718281828459045235
-
 #define	ARR_CNT(a)	(sizeof(a)/sizeof(a[0]))	/* returns the number of elements in an array */
 
-#define	MAX_K_INTEGER	1.0e14				/* 14 digits for doubles */
+#define	MAX_K_INTEGER	1.0e14				/* maximum representable integer, 14 digits for doubles */
+#define	MAX_PRECISION	16				/* maximum useful display precision (number of digits) */
 
 #define	blt(dst, src, cnt)	memmove((char *) (dst), (char *) (src), (size_t) (cnt))	/* memory copy function */
 #define always_positive(power)	(fmod((double) (power), 2.0) == 0.0)	/* true if all real numbers raised to "power" result in positive, real numbers */
 
-#if	I18N	/* internationalization */
+#if	I18N	/* internationalization, translators needed! */
 #define _(str)		gettext(str)
 #else
 #define _(str)		str
@@ -64,19 +61,22 @@
 
 /*
  * The following defines the default maximum mathematical expression size.
+ * Expression arrays are allocated with this size by default.
+ * It is linearly related to the actual memory usage of Mathomatic.
  * This should be made much smaller for Palmtops or embedded systems.
+ * Do not set to less than 100.
  */
 #define	DEFAULT_N_TOKENS	100
 
-#define	DIVISOR_SIZE	(DEFAULT_N_TOKENS / 2)	/* A nice maximum divisor size. */
+#define	DIVISOR_SIZE	(DEFAULT_N_TOKENS / 2)	/* a nice maximum divisor size */
 
-#define	MAX_VAR_NAMES	8000			/* Maximum number of long variable names. Keep this under (VAR_MASK - VAR_OFFSET). */
-#define	MAX_VAR_LEN	1000			/* Maximum size of long variable names */
+#define	MAX_VAR_NAMES	8000			/* maximum number of long variable names, keep this under (VAR_MASK - VAR_OFFSET) */
+#define	MAX_VAR_LEN	100			/* maximum size of long variable names */
 
-#define	MAX_VARS	500			/* Maximum number of unique variables handled in each equation */
+#define	MAX_VARS	500			/* maximum number of unique variables handled in each equation */
 
 #define	VAR_OFFSET	'A'			/* makes space for predefined variables */
-#define	VAR_MASK	0x3fffL			/* mask for bits containing the variable name */
+#define	VAR_MASK	0x3fffL			/* mask for bits containing a reference to the variable name */
 #define	VAR_SHIFT	14			/* number of bits set in VAR_MASK */
 #define	SUBSCRIPT_MASK	63			/* mask for variable subscript after shifting VAR_SHIFT */
 #define	MAX_SUBSCRIPT	(SUBSCRIPT_MASK - 1)	/* maximum variable subscript */
@@ -92,18 +92,15 @@ enum kind_list {		/* kinds of tokens specified in the union below */
 typedef union {
 	double	constant;	/* internal storage for mathematical constants */
 	long	variable;	/* internal storage for mathematical variables */
-/* predefined variables follow (order is important) */
+/* predefined special variables follow (order is important) */
 #define	V_NULL		0L	/* null variable (display nothing) */
-#define	V_E		1L	/* the constant "e" */
+#define	V_E		1L	/* the constant "e" or "e#" */
 #define	V_PI		2L	/* the constant "pi" */
-#define	IMAGINARY	3L	/* the imaginary constant "i#" */
-#define	SIGN		4L	/* the "sign" variable */
+#define	IMAGINARY	3L	/* the imaginary constant "i" or "i#" */
+#define	SIGN		4L	/* for "sign" variables */
 #define	MATCH_ANY	5L	/* match any variable (wild-card variable) */
-#define	V_ANSWER	6L	/* the "answer" variable */
-#define V_TEMP		7L	/* the "temp" variable */
-#define	V_INTEGER	8L	/* the "integer" variable */
-	int	operatr;	/* internal storage for operators */
-/* valid operators follow */
+	int	operatr;	/* internal storage for mathematical operators */
+/* valid operators follow (order doesn't matter) */
 #define	PLUS		1	/* a + b */
 #define	MINUS		2	/* a - b */
 #define	TIMES		3	/* a * b */

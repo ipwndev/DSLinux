@@ -1,29 +1,29 @@
 /*
- * Generate consecutive prime numbers using a modified sieve algorithm
- * that doesn't use much memory by using a windowing sieve buffer.
- * Works with up to 19 digit numbers.
+ * Generate consecutive prime numbers using a modified sieve of Eratosthenes
+ * algorithm that doesn't use much memory by using a windowing sieve buffer.
  *
- * Copyright (C) 2006 George Gesslein II.
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
- * Usage: matho-primes [start [stop]] ["pal" [base]]
- *
- * If "pal" is specified, display only palindromic primes of base "base",
- * default base is 10.
- *
+ * Copyright (C) 2007 George Gesslein II.
+ */
+
+/*
+Usage: matho-primes [start [stop]] ["twin"] ["pal" [base]]
+
+Generate consecutive prime numbers up to 19 digits.
+If "twin" is specified, output only twin primes.
+If "pal" is specified, output only palindromic primes.
+The palindromic base may be specified, the default is base 10.
+
+or
+
+Usage: matho-primes [options] [start [stop]]
+
+Generate consecutive prime numbers up to 19 digits.
+Options:
+  -t               Output only twin primes.
+  -p base          Output only palindromic primes.
+ */
+
+/*
  * Changes:
  *
  * 11/22/05 - converted everything to long doubles.
@@ -56,21 +56,22 @@
 
 #define	MAX_K_INTEGER	1.0e19L		/* 19 digits for long doubles */
 
-/* memory usage in bytes; can be set to any size; the larger, the faster */
-#define BUFFER_SIZE	5000000
-#if	BUFFER_SIZE >= (INT_MAX / 2)
-#error	BUFFER_SIZE too big!
+/* Maximum memory usage in bytes; can be set to any size; the larger, the faster: */
+#define BUFFER_SIZE	2000000
+#if	BUFFER_SIZE >= (INT_MAX / 2) || BUFFER_SIZE <= 0
+#error	"BUFFER_SIZE too large."
 #endif
 
 void	generate_primes(void);
 int	test_pal(long double d, long double base);
 void	usage(void);
+void	usage2(void);
 int	get_long_double_int(char *cp, long double *dp);
 
 long double strtold(const char *nptr, char **endptr);
 
 long double start_value, number, end_value;
-long double sq[] = {			/* Additive array that skips over multiples of 2, 3, 5, and 7. */
+long double skip_multiples[] = {	/* Additive array that skips over multiples of 2, 3, 5, and 7. */
 	10, 2, 4, 2, 4, 6, 2, 6,
 	 4, 2, 4, 6, 6, 2, 6, 4,
 	 2, 6, 4, 6, 8, 4, 2, 4,
@@ -114,11 +115,11 @@ main(int argc, char *argv[])
 		case 'p':
 			pal_flag = true;
 			if (!get_long_double_int(optarg, &pal_base)) {
-				usage();
+				usage2();
 			}
 			break;
 		default:
-			usage();
+			usage2();
 		}
 	}
 	if (argc > optind) {
@@ -169,8 +170,8 @@ main(int argc, char *argv[])
 	if (argc > optind) {
 		usage();
 	}
-	if (pal_base < 2 || pal_base > 256) {
-		fprintf(stderr, "Palindromic base range is 2 to 256.\n");
+	if (pal_base < 2 || pal_base >= INT_MAX) {
+		fprintf(stderr, "Palindromic base must be >= 2.\n");
 		usage();
 	}
 	if (start_value < 0.0) {
@@ -207,7 +208,7 @@ get2:
 			}
 		}
 	}
-	buffer_size = min(BUFFER_SIZE, (end_value - start_value) + 1.0L);
+	buffer_size = (int) min(BUFFER_SIZE, (end_value - start_value) + 1.0L);
 	prime = (char *) malloc(buffer_size);
 	if (prime == NULL) {
 		fprintf(stderr, "%s: Not enough memory.\n", prog_name);
@@ -266,8 +267,8 @@ generate_primes()
 		elim_factor(7.0L);
 		ii = 1.0;
 		for (;;) {
-			for (j = 0; j < ARR_CNT(sq); j++) {
-				ii += sq[j];
+			for (j = 0; j < ARR_CNT(skip_multiples); j++) {
+				ii += skip_multiples[j];
 				elim_factor(ii);
 			}
 			if (ii > vv)
@@ -300,9 +301,9 @@ generate_primes()
 }
 
 /*
- * Parse an ASCII number in the string pointed to by "cp" and
- * return true with a floating point long double value
- * in "*dp" if a valid integer.
+ * Parse a space or null terminated ASCII number in the string pointed to by "cp" and
+ * return true with a floating point long double value in "*dp" if a valid integer,
+ * otherwise display an error message and return false.
  */
 int
 get_long_double_int(char *cp, long double *dp)
@@ -320,6 +321,9 @@ get_long_double_int(char *cp, long double *dp)
 	case '\n':
 		break;
 	default:
+		if (isspace(*cp1)) {
+			break;
+		}
 		fprintf(stderr, "Invalid number.\n");
 		return false;
 	}
@@ -351,10 +355,6 @@ test_pal(long double d, long double base)
 		digits[i] = (int) fmodl(d, base);
 		d /= base;
 	}
-	if (i <= 1) {
-		/* less than 2 digits */
-		return false;
-	}
 	/* compare the array of digits[] end to end */
 	for (j = 0, i--; j < i; j++, i--) {
 		if (digits[i] != digits[j])
@@ -368,8 +368,19 @@ usage()
 {
 	fprintf(stderr, "\nUsage: %s [start [stop]] [\"twin\"] [\"pal\" [base]]\n\n", prog_name);
 	fprintf(stderr, "Generate consecutive prime numbers up to 19 digits.\n");
-	fprintf(stderr, "If \"twin\" is specified, display only twin primes.\n");
-	fprintf(stderr, "If \"pal\" is specified, display only palindromic primes.\n");
+	fprintf(stderr, "If \"twin\" is specified, output only twin primes.\n");
+	fprintf(stderr, "If \"pal\" is specified, output only palindromic primes.\n");
 	fprintf(stderr, "The palindromic base may be specified, the default is base 10.\n");
+	exit(1);
+}
+
+void
+usage2()
+{
+	fprintf(stderr, "\nUsage: %s [options] [start [stop]]\n\n", prog_name);
+	fprintf(stderr, "Generate consecutive prime numbers up to 19 digits.\n");
+	fprintf(stderr, "Options:\n");
+	fprintf(stderr, "  -t               Output only twin primes.\n");
+	fprintf(stderr, "  -p base          Output only palindromic primes.\n");
 	exit(1);
 }
