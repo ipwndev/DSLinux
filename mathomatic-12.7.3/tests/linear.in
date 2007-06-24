@@ -1,0 +1,17 @@
+; Combine 3 simultaneous linear equations with 3 unknowns (x, y, z).
+; Solve for all 3 unknowns using the "eliminate" command.
+
+clear all
+d1=a1*x+b1*y+c1*z
+d2=a2*x+b2*y+c2*z
+d3=a3*x+b3*y+c3*z
+2 ; select equation number 2
+eliminate x
+3 ; select equation number 3
+eliminate x y
+z ; solve for z
+2 ; select equation number 2
+eliminate z using 3
+1 ; select equation number 1
+eliminate y z
+simplify all ; list all solutions

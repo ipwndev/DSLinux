@@ -1,0 +1,12 @@
+; Commonly used metric/English conversions.
+; Solve and "calculate" to use.
+; These values are correct for the US and UK.
+
+; Temperature
+fahrenheit = (9*celsius/5) + 32
+kelvin = celsius + 273.15
+; Distance
+inches = centimeters/2.54
+miles = kilometers/1.609344
+; Weight
+pounds = kilograms/0.45359237

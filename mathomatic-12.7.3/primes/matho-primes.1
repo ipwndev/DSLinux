@@ -1,0 +1,42 @@
+.TH matho-primes 1
+
+.SH NAME
+matho-primes \- generate consecutive prime numbers
+
+.SH SYNOPSIS
+.B matho-primes
+[start [stop]] ["twin"] ["pal" [base]]
+
+.SH DESCRIPTION
+This utility is part of the
+.B mathomatic(1)
+package and quickly computes any number of consecutive prime numbers using a memory efficient
+sieve of Eratosthenes algorithm, dumping them to standard output.
+Generates up to 19 digit primes.
+They are displayed one prime per line in ascending order,
+unless the "twin" option is specified,
+which displays two primes per line.
+
+A range may be
+specified on the command line, otherwise the starting number and
+the number of primes to output is prompted for.
+The range is "start" to "stop", inclusive, and "stop" must
+be greater than or equal to "start".
+
+If "twin" is specified on the command line, only twin primes will be displayed.
+Twin primes are two primes that differ in value by 2.
+Each twin pair is displayed together on the same line separated by a space character.
+
+If "pal" is specified at the end of the command line, only palindromic primes are displayed.
+Palindromes are symmetrical, they read exactly the same forward and backward.
+The palindromic number base may be specified, the default is base 10.
+The base can be any integer greater than 1.
+
+.SH SEE ALSO
+mathomatic(1), matho-pascal(1), matho-sumsq(1)
+
+.SH REPORTING BUGS
+Report bugs to <gesslein@panix.com>.
+
+.SH AUTHOR
+George Gesslein II <gesslein@panix.com>
