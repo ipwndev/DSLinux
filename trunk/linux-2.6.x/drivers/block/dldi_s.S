@@ -1,3 +1,5 @@
+/* Config Options */
+#include <linux/config.h>
 
 /* common macros for all NDS GBA ROM device drivers */
 #include <asm/arch/gbarom-macro.S>
@@ -10,8 +12,10 @@
 	.global	_call_dldi
 	.global _buf_dldi
 
+#ifdef CONFIG_NDS_ROM8BIT
 	.global gba_set_io
 	.global gba_set_ram
+#endif
 
 @---------------------------------------------------------------------------------
 .equ FEATURE_MEDIUM_CANREAD,		0x00000001
@@ -88,6 +92,7 @@ _param_dldi:
 
 	.align
 _call_dldi:
+#ifdef CONFIG_NDS_ROM8BIT
 @ test the data cache control if we have RAM at GBA ROM space
 	mrc	p15, 0, r0, c2, c0, 0
 	tst	r0,#0b10000000		@ (this must be synchronous to head.S)
@@ -152,6 +157,7 @@ _call_dldi_stack:
 	bx	lr			@ return
 @ direct call without bankswitching.
 _call_dldi_direct:
+#endif
 	ldr	ip,=_param_dldi		@ ip = IO parameter block
 	ldr	r0,[ip,#8]		@ read parameter 1
 	ldr	r1,[ip,#12]		@ read parameter 2
