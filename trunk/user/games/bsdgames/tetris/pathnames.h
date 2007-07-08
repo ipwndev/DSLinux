@@ -35,4 +35,4 @@
  *	@(#)pathnames.h	8.1 (Berkeley) 5/31/93
  */
 
-#define _PATH_SCOREFILE	"/var/games/bsdgames/tetris-bsd.scores"
+#define _PATH_SCOREFILE	"/home/.tetris-bsd.scores"
