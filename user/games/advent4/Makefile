@@ -22,7 +22,7 @@ GAMESDIR=/usr/games
 romfs:
 	$(ROMFSINST) $(GAMESDIR)/advent4
 	$(ROMFSINST) -e CONFIG_USER_GAMES_ADVENT4 \
-		-a "advent4 stream tcp nowait root $(GAMESDIR)/advent4" /etc/inetd.conf
+		-a "#advent4 stream tcp nowait root $(GAMESDIR)/advent4" /etc/inetd.conf.example
 
 clean:
 	rm -f *.o *.err advent4 advent4.elf advent4.gdb

@@ -22,7 +22,7 @@ $(EXEC): $(OBJS)
 romfs:
 	$(ROMFSINST) /bin/$(EXEC)
 	$(ROMFSINST) -e CONFIG_USER_TELNETD_TELNETD \
-		-a "telnet  stream tcp nowait root /bin/telnetd" /etc/inetd.conf
+		-a "#telnet  stream tcp nowait root /bin/telnetd" /etc/inetd.conf.example
 
 clean:
 	-rm -f $(EXEC) *.elf *.gdb *.o

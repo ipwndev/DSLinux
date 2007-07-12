@@ -70,7 +70,7 @@ romfs:
 	$(ROMFSINST) $(GAMESDIR)/dungeon
 	$(ROMFSINST) dtextc.dat /$(LIBDIR)/dtextc.dat
 	$(ROMFSINST) -e CONFIG_USER_GAMES_DUNGEON \
-		-a "#dungeon stream tcp nowait root $(GAMESDIR)/dungeon" /etc/inetd.conf
+		-a "#dungeon stream tcp nowait root $(GAMESDIR)/dungeon" /etc/inetd.conf.example
 
 clean:
 	rm -f $(OBJS) dungeon core dsave.dat *~ dungeon.gdb dungeon.elf
