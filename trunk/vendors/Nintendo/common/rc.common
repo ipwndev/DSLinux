@@ -53,6 +53,14 @@ then
 	fi
 fi
 
+if [ "$start_inetd" = "YES" ]
+then
+	if [ "$__network_up" = "YES" ]
+	then
+		/etc/rc.d/inetd start
+	else
+fi
+
 # set hostname
 hostname $hostname
 
