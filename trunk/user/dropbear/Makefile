@@ -218,5 +218,5 @@ romfs:
 	done
 	$(ROMFSINST) dbclient /bin/ssh
 	$(ROMFSINST) -e CONFIG_USER_DROPBEAR_DROPBEAR \
-		-a "#ssh     stream tcp nowait root /bin/dropbear -i" /etc/inetd.conf
+		-a "#ssh     stream tcp nowait root /bin/dropbear -i" /etc/inetd.conf.example
 
