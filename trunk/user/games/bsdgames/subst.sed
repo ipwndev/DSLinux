@@ -55,25 +55,25 @@ s%@sail_dir@%/var/games/bsdgames/sail%g
 s%@sail_dir_perms@%0750%g
 s%@install_sail_dir@%install -d -m 0750%g
 s%@atc_dir@%/usr/share/games/bsdgames/atc%g
-s%@atc_scorefile@%/var/games/bsdgames/atc_score%g
-s%@battlestar_scorefile@%/var/games/bsdgames/battlestar.log%g
+s%@atc_scorefile@%/home/.atc_score%g
+s%@battlestar_scorefile@%/home/.battlestar.log%g
 s%@dictionary_src@%$(ROOTDIR)/user/games/bsdgames/temp-dictionary%g
 s%@boggle_dir@%/usr/share/games/bsdgames/boggle%g
-s%@canfield_scorefile@%/var/games/bsdgames/cfscores%g
+s%@canfield_scorefile@%/home/.cfscores%g
 s%@cribbage_instrfile@%/usr/share/games/bsdgames/cribbage.instr%g
-s%@cribbage_scorefile@%/var/games/bsdgames/criblog%g
+s%@cribbage_scorefile@%/home/.criblog%g
 s%@fish_instrfile@%/usr/share/games/bsdgames/fish.instr%g
-s%@hack_dir@%/var/games/bsdgames/hack%g
+s%@hack_dir@%/home/.hack%g
 s%@hack_dir_perms@%0755%g
 s%@install_hack_dir@%install -d -m 0755%g
 s%@hangman_wordsfile@%/usr/share/dict/words%g
 s%@monop_cardsfile@%/usr/share/games/bsdgames/monop-cards.pck%g
-s%@phantasia_dir@%/var/games/bsdgames/phantasia%g
+s%@phantasia_dir@%/home/.phantasia%g
 s%@quiz_dir@%/usr/share/games/bsdgames/quiz%g
-s%@robots_scorefile@%/var/games/bsdgames/robots_roll%g
-s%@sail_scorefile@%/var/games/bsdgames/saillog%g
-s%@snake_scorefile@%/var/games/bsdgames/snake.log%g
-s%@snake_rawscorefile@%/var/games/bsdgames/snakerawscores%g
-s%@tetris_scorefile@%/var/games/bsdgames/tetris-bsd.scores%g
+s%@robots_scorefile@%/home/.robots_roll%g
+s%@sail_scorefile@%/home/.saillog%g
+s%@snake_scorefile@%/home/.snake.log%g
+s%@snake_rawscorefile@%/home/.snakerawscores%g
+s%@tetris_scorefile@%/home/.tetris-bsd.scores%g
 s%@wtf_acronymfile@%/usr/share/games/bsdgames/acronyms%g
 s%@wump_infofile@%/usr/share/games/bsdgames/wump.info%g

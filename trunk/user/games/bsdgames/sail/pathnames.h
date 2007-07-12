@@ -32,6 +32,6 @@
  *	@(#)pathnames.h	8.1 (Berkeley) 5/31/93
  */
 
-#define	_PATH_LOGFILE	"/var/games/bsdgames/saillog"
+#define	_PATH_LOGFILE	"/home/.saillog"
 #define	_PATH_SYNC	"/var/games/bsdgames/sail/#sailsink.%d"
 #define	_PATH_LOCK	"/var/games/bsdgames/sail/#saillock.%d"
