@@ -209,7 +209,7 @@ target_alias =
 # Automake requirements
 AUTOMAKE_OPTIONS = gnits 1.8
 ACLOCAL_AMFLAGS = -I config
-SUBDIRS = intl lib po sed doc testsuite
+SUBDIRS = lib sed 
 noinst_DATA = bootstrap.sh
 noinst_HEADERS = basicdefs.h
 EXTRA_DIST = BUGS THANKS COPYING.DOC README.boot bootstrap.sh 	      \
