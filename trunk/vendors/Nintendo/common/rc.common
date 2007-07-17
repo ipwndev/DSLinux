@@ -59,6 +59,8 @@ then
 	then
 		/etc/rc.d/inetd start
 	else
+		echo "Not starting telnetd: network is down"
+	fi
 fi
 
 # set hostname
