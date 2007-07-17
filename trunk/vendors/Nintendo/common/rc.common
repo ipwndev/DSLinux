@@ -59,7 +59,7 @@ then
 	then
 		/etc/rc.d/inetd start
 	else
-		echo "Not starting telnetd: network is down"
+		echo "Not starting inetd: network is down"
 	fi
 fi
 
