@@ -32,17 +32,12 @@
  *
  * Returns:
  *  r0 = address of abort
- *  r1 != 0 if writing
- *  r3 = FSR
+ *  r1 = FSR
  */
 	.align	5
 ENTRY(cpu_arm946_data_abort)
-	mrc	p15, 0, r3, c5, c0, 0		@ get FSR
-	mrc	p15, 0, r0, c6, c0, 0		@ get FAR
-	ldr	r1, [r0]			@ read aborted instruction
-	tst	r1, r1, lsr #21			@ C = bit 20
-	sbc	r1, r1, r1			@ r1 = C - 1
-	and	r3, r3, #255
+	mov	r0, #0
+	mov	r1, #0
 	mov	pc, lr
 
 /*
