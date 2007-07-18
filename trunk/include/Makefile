@@ -60,8 +60,8 @@ LINKHDRS = \
 	$(ROOTDIR)/prop/smgrd/unixware/cmd/sscep/sscep_error_codes.h,. \
 	$(ROOTDIR)/lib/libid3tag/id3tag.h,. \
 	$(ROOTDIR)/lib/libmad/mad.h,. \
-	$(ROOTDIR)/lib/gpm/src/headers/gpm.h,.
-
+	$(ROOTDIR)/lib/gpm/src/headers/gpm.h,. \
+	$(ROOTDIR)/lib/uClibc++/include/*,uClibc++
 
 #
 # Both freeswan and openswan can provide des and crypto headers
@@ -104,12 +104,12 @@ all: clean
 	done
 	@rm -f gcc
 	@ln -s `$(CC) -print-file-name=include` gcc
-	@echo "Making include/c++ symlink to compiler c++ includes"
-	@rm -f c++
-	@ln -s /usr/local/include/g++-v3 c++
-	@for i in `$(CXX) -v -xc++ /dev/null 2>&1 | sed -e '/^Reading specs/,/^#include <\.\.\.>/d' -e '/End of search list/Q'`; do \
-		if [ -f $$i/new ]; then rm -f c++; ln -s $$i c++; break; fi; \
-	done
+#	@echo "Making include/c++ symlink to compiler c++ includes"
+#	@rm -f c++
+#	@ln -s /usr/local/include/g++-v3 c++
+#	@for i in `$(CXX) -v -xc++ /dev/null 2>&1 | sed -e '/^Reading specs/,/^#include <\.\.\.>/d' -e '/End of search list/Q'`; do \
+#		if [ -f $$i/new ]; then rm -f c++; ln -s $$i c++; break; fi; \
+#	done
 
 romfs:
 

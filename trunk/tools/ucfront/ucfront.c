@@ -659,9 +659,9 @@ static void process_args(int argc, char **argv)
 				args_add(stripped_args, "-lc");
 				args_add(stripped_args, "-lgcc");
 				/* support c++ */
-				args_add(stripped_args, "-lstdc++");
-				args_add(stripped_args, "-lsupc++");
-				args_add(stripped_args, "-lm");
+				// args_add(stripped_args, "-lstdc++");
+				// args_add(stripped_args, "-lsupc++");
+				// args_add(stripped_args, "-lm");
 				args_add(stripped_args, "-Wl,--end-group");
 			}
 		}

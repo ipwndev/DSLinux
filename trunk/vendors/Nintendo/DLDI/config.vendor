@@ -84,6 +84,7 @@ CONFIG_LIB_NCURSES_FORCE=y
 # CONFIG_LIB_LIBCRYPT_OLD_FORCE is not set
 # CONFIG_LIB_ID3TAG_FORCE is not set
 # CONFIG_LIB_MAD_FORCE is not set
+# CONFIG_LIB_UCLIBCPP_FORCE is not set
 
 #
 # Library Configuration
@@ -1042,7 +1043,7 @@ CONFIG_USER_RAMIMAGE_NONE=y
 # Debug tools
 #
 # CONFIG_USER_TIMEPEG_TPT is not set
-# CONFIG_USER_RTEST is not set
+CONFIG_USER_RTEST=y
 
 #
 # Debug libraries

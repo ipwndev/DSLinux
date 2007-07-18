@@ -24,13 +24,14 @@
 ifndef CROSS
 CROSS=
 endif
-CC= $(CROSS)gcc
-CXX= $(CROSS)g++
-AR= $(CROSS)ar
-LD= $(CROSS)ld
+#use the UCLINUX defines
+#CC= $(CROSS)gcc
+#CXX= $(CROSS)g++
+#AR= $(CROSS)ar
+#LD= $(CROSS)ld
 NM= $(CROSS)nm
-RANLIB= $(CROSS)ranlib
-STRIPTOOL= $(CROSS)strip
+#RANLIB= $(CROSS)ranlib
+#STRIPTOOL= $(CROSS)strip
 
 INSTALL= install
 LN= ln -s -f
@@ -100,9 +101,9 @@ CPU_CFLAGS=$(subst ",, $(strip $(CPU_CFLAGS-y)))
 
 # Some nice CFLAGS to work with
 GEN_CFLAGS:=-fno-builtin
-CFLAGS:=$(XWARNINGS) $(CPU_CFLAGS) -ansi
+CFLAGS+=$(XWARNINGS) $(CPU_CFLAGS) -ansi
 
-LDFLAGS:=-Wl,--warn-common -Wl,--warn-once -Wl,-z,combreloc -Wl,-z,defs
+LDFLAGS+=-Wl,--warn-common -Wl,--warn-once -Wl,-z,combreloc -Wl,-z,defs
 
 ifeq ($(DODEBUG),y)
     CFLAGS += -O0 -g3 
@@ -122,9 +123,9 @@ endif
 
 GEN_CXXFLAGS:=-nostdinc++
 GEN_CXXFLAGS+=$(call check_gxx_visibility)
-CXXFLAGS:=$(CFLAGS)
+# CXXFLAGS:=$(CFLAGS)
 
-LIBGCC:=$(shell $(CC) -print-libgcc-file-name)
+LIBGCC:=$(shell $(CC) $(CFLAGS) -print-libgcc-file-name)
 LIBGCC_DIR:=$(dir $(LIBGCC))
 
 #GCC_VERSION?=$(shell $(CC) -dumpversion | cut -c1-3)

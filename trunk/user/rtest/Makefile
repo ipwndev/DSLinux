@@ -28,8 +28,8 @@ all: $(EXEC)
 
 # This is the rule that build the executable.
 $(EXEC): $(OBJS)
-	$(CXX) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
-	arm-linux-elf-flthdr -k $(EXEC) 
+	$(CXX) $(LDFLAGS) -o $@ $(OBJS) $(CXXLIBS) $(LDLIBS)
+	arm-linux-elf-flthdr -s 100000 -K $(EXEC) 
 
 # The romfs target is also phony. It is used to copy your app
 # into the DSLinux filesystem image.

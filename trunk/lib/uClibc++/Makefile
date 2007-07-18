@@ -1,5 +1,5 @@
 MAKE    = make
-SUBDIRS = bin include src
+SUBDIRS = include src
 
 # User defines:
 
@@ -10,10 +10,12 @@ noconfig_targets := menuconfig config oldconfig randconfig \
 TOPDIR=./
 include $(TOPDIR)Rules.mak
 
-all: headers
+all: dslinuxconfig headers
 	for dir in $(SUBDIRS) ; do \
 		$(MAKE) -C $$dir all; \
 	done
+
+romfs:
 
 tests: all
 	$(MAKE) -C tests all
@@ -25,12 +27,10 @@ clean:
 	for dir in $(SUBDIRS) tests ; do \
 		$(MAKE) -C $$dir clean; \
 	done
-	#$(MAKE) -C extra/locale clean
-
-distclean: clean
-	$(MAKE) -C extra clean
 	$(RM) .config .config.cmd .config.old
 	$(RM) include/system_configuration.h
+
+distclean: clean
 
 headers: include/system_configuration.h
 
@@ -47,6 +47,11 @@ extra/config/conf:
 
 extra/config/mconf:
 	make -C extra/config ncurses mconf
+
+.PHONY: dslinuxconfig
+dslinuxconfig:  extra/config/conf
+	cp -a extra/Configs/dslinux_config .config
+	@./extra/config/conf -o extra/Configs/Config.in
 
 menuconfig: extra/config/mconf
 	@./extra/config/mconf extra/Configs/Config.in
