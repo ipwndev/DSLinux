@@ -16,7 +16,7 @@ unwind-c.o:
 #
 #else
 #	echo Binary
-	$(AR) x $(shell $(CC) -print-file-name=libgcc_eh.a)
+	$(AR) x $(shell $(CC) $(CFLAGS) -print-file-name=libgcc.a) $@
 #endif
 #endif
 

@@ -116,6 +116,7 @@ fi
 bool 'Build libcrypt_old'	CONFIG_LIB_LIBCRYPT_OLD_FORCE
 bool 'Build libid3tag'		CONFIG_LIB_ID3TAG_FORCE
 bool 'Build libmad'		CONFIG_LIB_MAD_FORCE
+bool 'Build uClibc++'		CONFIG_LIB_UCLIBCPP_FORCE
 
 comment 'Library Configuration'
 bool 'Support time zones'	CONFIG_LIB_UC_LIBC_TIMEZONE
@@ -1739,6 +1740,10 @@ bool 'build debugable applications'	CONFIG_USER_DEBUG
 comment "Debug tools"
 bool 'tpt'				CONFIG_USER_TIMEPEG_TPT
 bool 'rtest'				CONFIG_USER_RTEST
+    if [ "$CONFIG_USER_RTEST" = "y" ]; then
+        define_bool CONFIG_LIB_UCLIBCPP y
+    fi
+
 comment "Debug libraries"
 bool 'ccmalloc'				CONFIG_LIB_LIBCCMALLOC
 
