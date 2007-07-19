@@ -113,6 +113,8 @@ all: clean
 
 romfs:
 
-clean:
+clean: 	
+	rm -f "uClibc++/Makefile"
+	-rmdir "uClibc++"
 	-find . -depth -type l -a ! -name Makefile | xargs rm > /dev/null 2>&1 || exit 0
 	-find . -depth -type d | grep -v .svn | xargs rmdir > /dev/null 2>&1 || exit 0

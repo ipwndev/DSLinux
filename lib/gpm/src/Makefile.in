@@ -38,6 +38,8 @@ DEFS  = @DEFS@
 
 STRIP = -s
 
+LIBS += -lm
+
 ### BUILD PROCESS
 
 # allow CFLAGS to be overriden from make command line
