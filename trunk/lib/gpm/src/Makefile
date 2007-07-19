@@ -39,6 +39,8 @@ DEFS  = -DHAVE_CONFIG_H
 
 STRIP = -s
 
+LIBS += -lm
+
 ### BUILD PROCESS
 
 # allow CFLAGS to be overriden from make command line
