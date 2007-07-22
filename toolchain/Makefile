@@ -302,15 +302,14 @@ $(SRCDIR)/.uClibc-compiled: $(SRCDIR)/.uClibc-configured
 # causes the -g flag to link with libg.a in addition to libc.a.
 # uClibc does not provide libg.a, so linking fails if -g is
 # in CFLAGS. Create a dummy libg.a to work around this.
-$(PREFIX)/$(TARGET)/lib/libg.a:
+$(PREFIX)/$(TARGET)/lib/libg.a: $(SRCDIR)/.uClibc-compiled
 	echo 'void __libg__dummy(){};' | $(TARGET)-gcc -xc -c -o libg.o -
 	$(TARGET)-ar r libg.a libg.o
 	rm libg.o
 	mv libg.a $(PREFIX)/$(TARGET)/lib/
 
 # install uClibc
-$(SRCDIR)/.uClibc-installed: $(SRCDIR)/.uClibc-compiled \
-		$(PREFIX)/$(TARGET)/lib/libg.a
+$(SRCDIR)/.uClibc-installed: $(PREFIX)/$(TARGET)/lib/libg.a
 	$(MAKE) -C $(UCLIBC_SRCDIR) PREFIX=$(PREFIX) install
 	touch $@
 
