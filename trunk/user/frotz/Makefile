@@ -162,13 +162,12 @@ COMP_DEFS = $(OPT_DEFS) $(COLOR_DEFS) $(SOUND_DEFS) $(SOUNDCARD) \
 
 FLAGS = $(OPTS) $(COMP_DEFS) $(INCL)
 
-$(NAME): $(NAME)-curses
+.PHONY: all
+all:	$(NAME)
 
-$(NAME)-curses:		soundcard.h  $(COMMON_OBJECT) $(CURSES_OBJECT)
+$(NAME):	$(SRCDIR)/soundcard.h  $(COMMON_OBJECT) $(CURSES_OBJECT)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $(BINNAME)$(EXTENSION) \
 		$(COMMON_OBJECT) $(CURSES_OBJECT) $(LIB) $(CURSES) $(SOUND_LIB)
-
-all:	$(NAME)
 
 dumb:		$(NAME)-dumb
 d$(NAME):	$(NAME)-dumb
@@ -209,7 +208,7 @@ $(DUMB_TARGET): $(DUMB_OBJECT)
 	ranlib $(DUMB_TARGET)
 	@echo
 
-soundcard.h:
+$(SRCDIR)/soundcard.h:
 	@if [ ! -f $(SRCDIR)/soundcard.h ] ; then \
 		 sh $(SRCDIR)/misc/findsound.sh $(SRCDIR); \
 	fi
