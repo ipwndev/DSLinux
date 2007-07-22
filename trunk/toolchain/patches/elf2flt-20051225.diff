@@ -1,9 +1,15 @@
-
-Pipes cannot be opened in binary mode:
-
-diff -urN elf2flt-20051225.orig/elf2flt.c elf2flt-20051225/elf2flt.c
---- elf2flt-20051225.orig/elf2flt.c	Wed Sep 28 07:26:02 2005
-+++ elf2flt-20051225/elf2flt.c	Sun Aug 13 02:45:21 2006
+diff -urN elf2flt-20051225-orig/elf2flt.c elf2flt-20051225/elf2flt.c
+--- elf2flt-20051225-orig/elf2flt.c	2005-09-28 07:26:02.000000000 +0200
++++ elf2flt-20051225/elf2flt.c	2007-07-22 21:21:50.000000000 +0200
+@@ -687,7 +687,7 @@
+ 			/* Adjust the address to account for the GOT table which wasn't
+ 			 * present in the relative file link.
+ 			 */
+-			if (pic_with_got)
++			if (!use_resolved && pic_with_got)
+ 			  q->address += got_size;
+ #endif
+ 
 @@ -2009,7 +2009,7 @@
  				pclose(gf); \
  			else \
@@ -13,14 +19,9 @@ diff -urN elf2flt-20051225.orig/elf2flt.c elf2flt-20051225/elf2flt.c
  			fprintf(stderr, "Can't run cmd %s\n", cmd); \
  			exit(4); \
  		} \
-
-
-Userspace XIP support:
-
-
-diff -urN elf2flt-20051225.orig/elf2flt.ld elf2flt-20051225/elf2flt.ld
---- elf2flt-20051225.orig/elf2flt.ld	Thu Aug 25 04:19:42 2005
-+++ elf2flt-20051225/elf2flt.ld	Sun Aug 13 20:16:07 2006
+diff -urN elf2flt-20051225-orig/elf2flt.ld elf2flt-20051225/elf2flt.ld
+--- elf2flt-20051225-orig/elf2flt.ld	2005-08-25 04:19:42.000000000 +0200
++++ elf2flt-20051225/elf2flt.ld	2007-07-22 21:19:13.000000000 +0200
 @@ -24,7 +24,6 @@
  
  W_RODAT		*(.rodata)
@@ -51,15 +52,9 @@ diff -urN elf2flt-20051225.orig/elf2flt.ld elf2flt-20051225/elf2flt.ld
  		/* Microblaze has .sdata and .sbss (small bss).  They must
  		   be contiguous, so please don't move any of this. JW */
  		_ssrw = . ;			
-
-
-
-Pipes cannot be opened in binary mode:
-
-
-diff -urN elf2flt-20051225.orig/flthdr.c elf2flt-20051225/flthdr.c
---- elf2flt-20051225.orig/flthdr.c	Wed Sep 28 07:26:02 2005
-+++ elf2flt-20051225/flthdr.c	Sun Aug 13 02:45:21 2006
+diff -urN elf2flt-20051225-orig/flthdr.c elf2flt-20051225/flthdr.c
+--- elf2flt-20051225-orig/flthdr.c	2005-09-28 07:26:02.000000000 +0200
++++ elf2flt-20051225/flthdr.c	2007-07-22 21:19:13.000000000 +0200
 @@ -242,7 +242,7 @@
  		}
  
@@ -87,3 +82,33 @@ diff -urN elf2flt-20051225.orig/flthdr.c elf2flt-20051225/flthdr.c
  		ofp_is_pipe = 1;
  	}
  
+diff -urN elf2flt-20051225-orig/ld-elf2flt.in elf2flt-20051225/ld-elf2flt.in
+--- elf2flt-20051225-orig/ld-elf2flt.in	2005-04-19 00:00:48.000000000 +0200
++++ elf2flt-20051225/ld-elf2flt.in	2007-07-22 21:26:37.000000000 +0200
+@@ -145,21 +145,19 @@
+ 
+ 		if [ "@got_check@" = "no" ]
+ 		then
+-		 $LINKER $EMUL $SDIRS -T $LDSCRIPT -Ur -d -o "$OFILE.elf" $ARG1         ||exit $?
+-		 $LINKER $EMUL $SDIRS -T $LDSCRIPT -o "$OFILE.gdb" $ARG1                ||exit $?
++		 $LINKER $EMUL $SDIRS -T $LDSCRIPT -q -o "$OFILE.gdb" $ARG1             ||exit $?
+ 		else
+ 		 $LINKER $EMUL -r -d -o "$OFILE.elf2flt" $ARG1                          ||exit $?
+-		 $LINKER $EMUL $SDIRS -T $LDSCRIPT -Ur -o "$OFILE.elf" "$OFILE.elf2flt" ||exit $?
+-		 $LINKER $EMUL $SDIRS -T $LDSCRIPT -o "$OFILE.gdb" "$OFILE.elf2flt"     ||exit $?
++		 $LINKER $EMUL $SDIRS -T $LDSCRIPT -q -o "$OFILE.gdb" "$OFILE.elf2flt"  ||exit $?
+ 		 rm -f "$OFILE.elf2flt"
+ 		fi
+ 		if grep _GLOBAL_OFFSET_TABLE_ "$OFILE.gdb" > /dev/null 
+ 		then
+-			$ELF2FLT $FLTFLAGS -o "$OFILE" -p "$OFILE.gdb" "$OFILE.elf" || exit $?
++			$ELF2FLT $FLTFLAGS -a -o "$OFILE" -p "$OFILE.gdb" "$OFILE.gdb"  ||exit $?
+ 		else
+-			$ELF2FLT $FLTFLAGS -o "$OFILE" -r "$OFILE.elf" || exit $?
++			$ELF2FLT $FLTFLAGS -o "$OFILE" -r "$OFILE.gdb" 			||exit $?
+ 		fi
+-		rm -f "$OFILE.elf"  # not needed for any reason
++		rm -f "$OFILE.gdb"  # not needed for any reason
+ 		rm -f "$NEWLDSCRIPT"
+ 		exit 0
+ 	fi
