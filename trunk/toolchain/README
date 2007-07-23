@@ -38,7 +38,7 @@ for the build to succeed:
 All this software should be packaged with any general purpose Linux
 distribution.
 
-The build will want to download a couple of files (about 30MB total).
+The build will want to download a couple of files (about 40MB total).
 If you want to get the files now and build the toolchain later, run:
 
         make fetch

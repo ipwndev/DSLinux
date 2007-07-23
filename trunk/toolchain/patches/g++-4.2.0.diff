@@ -1,0 +1,23 @@
+Fix compilation error.
+The configure script does not catch this for some reason...
+
+--- gcc-4.2.0.orig/libstdc++-v3/config/locale/generic/c_locale.cc.orig	Sun Jun 24 22:29:08 2007
++++ gcc-4.2.0/libstdc++-v3/config/locale/generic/c_locale.cc	Sun Jun 24 22:29:42 2007
+@@ -56,7 +56,7 @@
+       char* __old = strdup(setlocale(LC_ALL, NULL));
+       setlocale(LC_ALL, "C");
+       char* __sanity;
+-#if defined(_GLIBCXX_HAVE_STRTOF)
++#if 0
+       float __f = strtof(__s, &__sanity);
+ #else
+       double __d = strtod(__s, &__sanity);
+@@ -111,7 +111,7 @@
+       errno = 0;
+       char* __old = strdup(setlocale(LC_ALL, NULL));
+       setlocale(LC_ALL, "C");
+-#if defined(_GLIBCXX_HAVE_STRTOLD)
++#if 0
+       char* __sanity;
+       long double __ld = strtold(__s, &__sanity);
+       if (__sanity != __s && errno != ERANGE)
