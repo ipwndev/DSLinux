@@ -1,6 +1,6 @@
-diff -urN elf2flt-20051225-orig/elf2flt.c elf2flt-20051225/elf2flt.c
---- elf2flt-20051225-orig/elf2flt.c	2005-09-28 07:26:02.000000000 +0200
-+++ elf2flt-20051225/elf2flt.c	2007-07-22 21:21:50.000000000 +0200
+diff -urN elf2flt-20051225.orig/elf2flt.c elf2flt-20051225/elf2flt.c
+--- elf2flt-20051225.orig/elf2flt.c	Wed Sep 28 07:26:02 2005
++++ elf2flt-20051225/elf2flt.c	Mon Jul 23 00:17:42 2007
 @@ -687,7 +687,7 @@
  			/* Adjust the address to account for the GOT table which wasn't
  			 * present in the relative file link.
@@ -19,9 +19,9 @@ diff -urN elf2flt-20051225-orig/elf2flt.c elf2flt-20051225/elf2flt.c
  			fprintf(stderr, "Can't run cmd %s\n", cmd); \
  			exit(4); \
  		} \
-diff -urN elf2flt-20051225-orig/elf2flt.ld elf2flt-20051225/elf2flt.ld
---- elf2flt-20051225-orig/elf2flt.ld	2005-08-25 04:19:42.000000000 +0200
-+++ elf2flt-20051225/elf2flt.ld	2007-07-22 21:19:13.000000000 +0200
+diff -urN elf2flt-20051225.orig/elf2flt.ld elf2flt-20051225/elf2flt.ld
+--- elf2flt-20051225.orig/elf2flt.ld	Thu Aug 25 04:19:42 2005
++++ elf2flt-20051225/elf2flt.ld	Mon Jul 23 00:17:42 2007
 @@ -24,7 +24,6 @@
  
  W_RODAT		*(.rodata)
@@ -52,9 +52,9 @@ diff -urN elf2flt-20051225-orig/elf2flt.ld elf2flt-20051225/elf2flt.ld
  		/* Microblaze has .sdata and .sbss (small bss).  They must
  		   be contiguous, so please don't move any of this. JW */
  		_ssrw = . ;			
-diff -urN elf2flt-20051225-orig/flthdr.c elf2flt-20051225/flthdr.c
---- elf2flt-20051225-orig/flthdr.c	2005-09-28 07:26:02.000000000 +0200
-+++ elf2flt-20051225/flthdr.c	2007-07-22 21:19:13.000000000 +0200
+diff -urN elf2flt-20051225.orig/flthdr.c elf2flt-20051225/flthdr.c
+--- elf2flt-20051225.orig/flthdr.c	Wed Sep 28 07:26:02 2005
++++ elf2flt-20051225/flthdr.c	Mon Jul 23 00:17:42 2007
 @@ -242,7 +242,7 @@
  		}
  
@@ -82,10 +82,10 @@ diff -urN elf2flt-20051225-orig/flthdr.c elf2flt-20051225/flthdr.c
  		ofp_is_pipe = 1;
  	}
  
-diff -urN elf2flt-20051225-orig/ld-elf2flt.in elf2flt-20051225/ld-elf2flt.in
---- elf2flt-20051225-orig/ld-elf2flt.in	2005-04-19 00:00:48.000000000 +0200
-+++ elf2flt-20051225/ld-elf2flt.in	2007-07-22 21:26:37.000000000 +0200
-@@ -145,21 +145,19 @@
+diff -urN elf2flt-20051225.orig/ld-elf2flt.in elf2flt-20051225/ld-elf2flt.in
+--- elf2flt-20051225.orig/ld-elf2flt.in	Tue Apr 19 00:00:48 2005
++++ elf2flt-20051225/ld-elf2flt.in	Mon Jul 23 00:20:05 2007
+@@ -145,21 +145,18 @@
  
  		if [ "@got_check@" = "no" ]
  		then
@@ -108,7 +108,6 @@ diff -urN elf2flt-20051225-orig/ld-elf2flt.in elf2flt-20051225/ld-elf2flt.in
 +			$ELF2FLT $FLTFLAGS -o "$OFILE" -r "$OFILE.gdb" 			||exit $?
  		fi
 -		rm -f "$OFILE.elf"  # not needed for any reason
-+		rm -f "$OFILE.gdb"  # not needed for any reason
  		rm -f "$NEWLDSCRIPT"
  		exit 0
  	fi

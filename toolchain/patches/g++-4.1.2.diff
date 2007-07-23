@@ -1,0 +1,14 @@
+
+Do not enable large file support because the build will fail.
+
+--- gcc-4.1.2/libstdc++-v3/configure.orig	Sun Jul 22 20:49:14 2007
++++ gcc-4.1.2/libstdc++-v3/configure	Sun Jul 22 20:49:27 2007
+@@ -78463,7 +78463,7 @@
+ _ACEOF
+ 
+     case "$target" in
+-      *-uclinux*)
++      arm-linux-elf | *-uclinux*)
+         # Don't enable LFS with uClibc
+         ;;
+       *)

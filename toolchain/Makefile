@@ -25,7 +25,7 @@ SYSROOT 	:= $(PREFIX)/$(TARGET)
 EIGHTBIT_DIR	:= $(CWD)/8bit
 
 BINUTILS_VER	= 2.17
-GCC_VER		= 4.0.2
+GCC_VER		= 4.0.4
 ELF2FLT_VER	= 20051225
 GENROMFS_VER	= 0.5.1
 LIBELF_VER	= 0.8.8
@@ -40,8 +40,8 @@ LIBELF_DIST	:= libelf-$(LIBELF_VER).tar.gz
 # We do basic MD5 checking to prevent hassle with broken downloads.
 BINUTILS_DIST_MD5	= e26e2e06b6e4bf3acf1dc8688a94c0d1
 ELF2FLT_DIST_MD5	= 704ee32b30c58307bb5187d5ea9c7e2b
-GCC_DIST_MD5		= f7781398ada62ba255486673e6274b26
-GPP_DIST_MD5		= 97da403f4756d9e0b896368fd25c84df
+GCC_DIST_MD5		= 193e0a7a471cca70e374974bc5a60137
+GPP_DIST_MD5		= 5c79e6af5b49dd9cfd22001f3856f447
 GENROMFS_DIST_MD5	= fee69ecbf8f990fdb0ca0c7267c13e7e
 LIBELF_DIST_MD5		= be84e553686dd50c8b6d520f86f46521
 
@@ -374,8 +374,11 @@ gcc-clean:
 
 # fetch distfile for gcc
 $(DISTDIR)/$(GCC_DIST):
-	cd $(DISTDIR) && $(FETCH_CMD) $(GCC_URL) \
-		&& $(FETCH_CMD) $(GPP_URL)
+	cd $(DISTDIR) && $(FETCH_CMD) $(GCC_URL)
+
+# fetch distfile for g++
+$(DISTDIR)/$(GPP_DIST):
+	cd $(DISTDIR) && $(FETCH_CMD) $(GPP_URL)
 
 # unpack gcc (stage 1)
 $(GCC_SRCDIR)/.stage1-unpacked: $(DISTDIR)/$(GCC_DIST)
@@ -407,7 +410,8 @@ $(GCC_SRCDIR)/.stage1-configured: $(GCC_SRCDIR)/.stage1-patched
 		--with-gnu-as \
 		--disable-shared \
 		--disable-threads \
-		--disable-nls
+		--disable-nls \
+		--disable-libssp
 	touch $@
 
 # compile gcc (stage 1)
@@ -421,7 +425,7 @@ $(GCC_SRCDIR)/.stage1-installed: $(GCC_SRCDIR)/.stage1-compiled
 	touch $@
 
 # unpack gcc (stage 2)
-$(GCC_SRCDIR)/.stage2-unpacked: $(DISTDIR)/$(GCC_DIST)
+$(GCC_SRCDIR)/.stage2-unpacked: $(DISTDIR)/$(GCC_DIST) $(DISTDIR)/$(GPP_DIST)
 	test "`md5sum $(DISTDIR)/$(GCC_DIST) | cut -d' ' -f 1`" \
 		= "$(GCC_DIST_MD5)"
 	test "`md5sum $(DISTDIR)/$(GPP_DIST) | cut -d' ' -f 1`" \
@@ -432,7 +436,7 @@ $(GCC_SRCDIR)/.stage2-unpacked: $(DISTDIR)/$(GCC_DIST)
 
 # patch gcc (stage 2)
 $(GCC_SRCDIR)/.stage2-patched: $(GCC_SRCDIR)/.stage2-unpacked
-	patch -d $(GCC_SRCDIR) -p1 < $(PATCHDIR)/gcc-$(GCC_VER).diff
+	patch -d $(GCC_SRCDIR) -p1 < $(PATCHDIR)/g++-$(GCC_VER).diff
 	# Use Amadeus' ARM code generator that fixes the 8bit write problem
 	$(foreach f,arm.h arm.md predicates.md t-arm-elf, \
 		cp $(EIGHTBIT_DIR)/$(f) $(GCC_SRCDIR)/gcc/config/arm/;)
@@ -455,7 +459,8 @@ $(GCC_SRCDIR)/.stage2-configured: $(GCC_SRCDIR)/.stage2-patched
 		--with-gnu-as \
 		--disable-shared \
 		--disable-threads \
-		--disable-nls
+		--disable-nls \
+		--disable-libssp
 	touch $@
 
 # compile gcc (stage 2)
@@ -596,7 +601,6 @@ strip-reset:
 	rm -f $(CWD)/.stripped
 
 # Strip the size of the toolchain down as much as possible.
-# Note: Running this target twice will produce an error :(
 $(CWD)/.stripped:
 	# remove large pre-compiled C++ headers
 	rm -rf $(PREFIX)/include/c++/$(GCC_VER)/$(TARGET)/bits/stdc++.h.gch
@@ -610,18 +614,9 @@ $(CWD)/.stripped:
 	-strip $(PREFIX)/libexec/gcc/$(TARGET)/$(GCC_VER)/*
 	-strip $(PREFIX)/libexec/gcc/$(TARGET)/$(GCC_VER)/install-tools/*
 	# strip debug symbols from libraries
-	strip --strip-debug $(PREFIX)/lib/*.a
-	$(TARGET)-strip --strip-debug $(PREFIX)/$(TARGET)/lib/*.o
-	$(TARGET)-strip --strip-debug $(PREFIX)/$(TARGET)/lib/*.a
-	$(TARGET)-strip --strip-debug $(PREFIX)/$(TARGET)/lib/thumb/*.a
-	$(TARGET)-strip --strip-debug $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/*.o
-	$(TARGET)-strip --strip-debug $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/*.a
-	$(TARGET)-strip --strip-debug $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/thumb/*.o
-	$(TARGET)-strip --strip-debug $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/thumb/*.a
-	$(foreach d, multibase nopic pic singlebase strb swpb, \
-		$(TARGET)-strip --strip-debug $(PREFIX)/$(TARGET)/lib/$d/*.a; \
-		$(TARGET)-strip --strip-debug $(PREFIX)/$(TARGET)/lib/$d/*/*.a; \
-		$(TARGET)-strip --strip-debug $(PREFIX)/$(TARGET)/lib/$d/*/*/*.a;)
+	find $(PREFIX)/$(TARGET)/lib -name *.[oa] -exec $(TARGET)-strip -g {} \;
+	find $(PREFIX)/lib/gcc/$(TARGET)/$(GCC_VER)/ -name *.[ao] \
+		-exec $(TARGET)-strip -g {} \;
 	touch $@
 
 #######################################################################
