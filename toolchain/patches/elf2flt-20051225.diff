@@ -1,6 +1,15 @@
 diff -urN elf2flt-20051225.orig/elf2flt.c elf2flt-20051225/elf2flt.c
 --- elf2flt-20051225.orig/elf2flt.c	Wed Sep 28 07:26:02 2005
-+++ elf2flt-20051225/elf2flt.c	Mon Jul 23 00:17:42 2007
++++ elf2flt-20051225/elf2flt.c	Mon Jul 23 16:19:55 2007
+@@ -583,7 +583,7 @@
+ 	}
+ 
+ 	symb = get_symbols(rel_bfd, &nsymb);
+-	relpp = (arelent **) xmalloc(relsize);
++	relpp = (arelent **) malloc(relsize);
+ 	relcount = bfd_canonicalize_reloc(rel_bfd, r, relpp, symb);
+ 	if (relcount <= 0) {
+ 		if (verbose)
 @@ -687,7 +687,7 @@
  			/* Adjust the address to account for the GOT table which wasn't
  			 * present in the relative file link.
@@ -21,7 +30,7 @@ diff -urN elf2flt-20051225.orig/elf2flt.c elf2flt-20051225/elf2flt.c
  		} \
 diff -urN elf2flt-20051225.orig/elf2flt.ld elf2flt-20051225/elf2flt.ld
 --- elf2flt-20051225.orig/elf2flt.ld	Thu Aug 25 04:19:42 2005
-+++ elf2flt-20051225/elf2flt.ld	Mon Jul 23 00:17:42 2007
++++ elf2flt-20051225/elf2flt.ld	Mon Jul 23 16:19:47 2007
 @@ -24,7 +24,6 @@
  
  W_RODAT		*(.rodata)
@@ -54,7 +63,7 @@ diff -urN elf2flt-20051225.orig/elf2flt.ld elf2flt-20051225/elf2flt.ld
  		_ssrw = . ;			
 diff -urN elf2flt-20051225.orig/flthdr.c elf2flt-20051225/flthdr.c
 --- elf2flt-20051225.orig/flthdr.c	Wed Sep 28 07:26:02 2005
-+++ elf2flt-20051225/flthdr.c	Mon Jul 23 00:17:42 2007
++++ elf2flt-20051225/flthdr.c	Mon Jul 23 16:19:47 2007
 @@ -242,7 +242,7 @@
  		}
  
@@ -84,7 +93,7 @@ diff -urN elf2flt-20051225.orig/flthdr.c elf2flt-20051225/flthdr.c
  
 diff -urN elf2flt-20051225.orig/ld-elf2flt.in elf2flt-20051225/ld-elf2flt.in
 --- elf2flt-20051225.orig/ld-elf2flt.in	Tue Apr 19 00:00:48 2005
-+++ elf2flt-20051225/ld-elf2flt.in	Mon Jul 23 00:20:05 2007
++++ elf2flt-20051225/ld-elf2flt.in	Mon Jul 23 16:19:47 2007
 @@ -145,21 +145,18 @@
  
  		if [ "@got_check@" = "no" ]
