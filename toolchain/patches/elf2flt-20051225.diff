@@ -1,16 +1,34 @@
 diff -urN elf2flt-20051225.orig/elf2flt.c elf2flt-20051225/elf2flt.c
 --- elf2flt-20051225.orig/elf2flt.c	Wed Sep 28 07:26:02 2005
-+++ elf2flt-20051225/elf2flt.c	Mon Jul 23 16:19:55 2007
-@@ -583,7 +583,7 @@
++++ elf2flt-20051225/elf2flt.c	Mon Jul 23 16:35:46 2007
+@@ -227,7 +227,11 @@
+     return NULL;
+ 
+   symbol_table = (asymbol **) malloc (storage_needed);
+-
++  if (symbol_table == NULL) {
++      perror("malloc");
++      exit(1);
++  }
++      
+   number_of_symbols = bfd_canonicalize_symtab (abfd, symbol_table);
+   
+   if (number_of_symbols < 0) 
+@@ -583,7 +587,12 @@
  	}
  
  	symb = get_symbols(rel_bfd, &nsymb);
 -	relpp = (arelent **) xmalloc(relsize);
 +	relpp = (arelent **) malloc(relsize);
++	if (relpp == NULL) {
++	  perror("malloc");
++	  exit(1);
++	}
++
  	relcount = bfd_canonicalize_reloc(rel_bfd, r, relpp, symb);
  	if (relcount <= 0) {
  		if (verbose)
-@@ -687,7 +687,7 @@
+@@ -687,7 +696,7 @@
  			/* Adjust the address to account for the GOT table which wasn't
  			 * present in the relative file link.
  			 */
@@ -19,7 +37,40 @@ diff -urN elf2flt-20051225.orig/elf2flt.c elf2flt-20051225/elf2flt.c
  			  q->address += got_size;
  #endif
  
-@@ -2009,7 +2009,7 @@
+@@ -1882,6 +1891,10 @@
+   }
+ 
+   text = malloc(text_len);
++  if (text == NULL) {
++      perror("malloc");
++      exit(1);
++  }
+ 
+   if (verbose)
+     printf("TEXT -> vma=0x%x len=0x%x\n", text_vma, text_len);
+@@ -1902,6 +1915,10 @@
+     exit (2);
+   }
+   data = malloc(data_len);
++  if (data == NULL) {
++      perror("malloc");
++      exit(1);
++  }
+ 
+   if (verbose)
+     printf("DATA -> vma=0x%x len=0x%x\n", data_vma, data_len);
+@@ -1986,6 +2003,10 @@
+   
+   if (!ofile) {
+     ofile = malloc(strlen(fname) + 5 + 1); /* 5 to add suffix */
++    if (ofile == NULL) {
++	perror("malloc");
++	exit(1);
++    }
+     strcpy(ofile, fname);
+     strcat(ofile, ".bflt");
+   }
+@@ -2009,7 +2030,7 @@
  				pclose(gf); \
  			else \
  				fclose(gf); \
