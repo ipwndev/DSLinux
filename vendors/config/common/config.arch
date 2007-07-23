@@ -90,7 +90,6 @@ ifeq ($(UCLINUX_COMMON_LIB),1)
 	STL_LIBDIR=$(ROOTDIR)/lib/STLport/lib
 
 	# uClibc++
-	UCLIBCPP_INCDIR=$(ROOTDIR)/include/uClibc++
-	# UCLIBCPP_LIBDIR=$(ROOTDIR)/lib/uClibc++/??
+	UCLIBCPP_INCDIR=$(ROOTDIR)/lib/uClibc++/include
 
 endif
