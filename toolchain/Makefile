@@ -26,7 +26,7 @@ EIGHTBIT_DIR	:= $(CWD)/8bit
 
 BINUTILS_VER	= 2.17
 GCC_VER		= 4.0.4
-ELF2FLT_VER	= 20051225
+ELF2FLT_VER	= 20070723
 GENROMFS_VER	= 0.5.1
 LIBELF_VER	= 0.8.8
 
@@ -39,7 +39,7 @@ LIBELF_DIST	:= libelf-$(LIBELF_VER).tar.gz
 
 # We do basic MD5 checking to prevent hassle with broken downloads.
 BINUTILS_DIST_MD5	= e26e2e06b6e4bf3acf1dc8688a94c0d1
-ELF2FLT_DIST_MD5	= 704ee32b30c58307bb5187d5ea9c7e2b
+ELF2FLT_DIST_MD5	= ca0eeac57eed14079ee581bacaff7e22
 GCC_DIST_MD5		= 193e0a7a471cca70e374974bc5a60137
 GPP_DIST_MD5		= 5c79e6af5b49dd9cfd22001f3856f447
 GENROMFS_DIST_MD5	= fee69ecbf8f990fdb0ca0c7267c13e7e
@@ -249,7 +249,8 @@ $(ELF2FLT_SRCDIR)/.configured: $(BINUTILS_SRCDIR)/.compiled \
 		--with-libbfd=$(BINUTILS_OBJDIR)/bfd/libbfd.a \
 		--with-libiberty=$(BINUTILS_OBJDIR)/libiberty/libiberty.a \
 		--with-bfd-include-dir=$(BINUTILS_OBJDIR)/bfd \
-		--with-binutils-include-dir=$(BINUTILS_SRCDIR)/include
+		--with-binutils-include-dir=$(BINUTILS_SRCDIR)/include \
+		--enable-emit_relocs
 	touch $@
 
 # compile elf2flt
