@@ -293,7 +293,7 @@ $(SRCDIR)/.uClibc-headers-compiled: $(SRCDIR)/.uClibc-configured
 	$(MAKE) -C $(UCLIBC_SRCDIR) KERNEL_SOURCE=$(KERNEL_SRCDIR) headers
 	touch $@
 
-# compile uCLibc
+# compile uClibc
 $(SRCDIR)/.uClibc-compiled: $(SRCDIR)/.uClibc-configured
 	$(MAKE) -C $(UCLIBC_SRCDIR) KERNEL_SOURCE=$(KERNEL_SRCDIR) \
 		CROSS=$(TARGET)-
