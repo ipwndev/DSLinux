@@ -1627,7 +1627,15 @@ linux_read_offsets (CORE_ADDR *text_p, CORE_ADDR *data_p)
       return 1;
     }
 #endif
- return 0;
+#ifdef __arm__
+  int pid = get_thread_process (current_inferior)->head.id;
+
+  *text_p = ptrace (PTRACE_PEEKUSER, pid, (long)18*4, 0);
+  *data_p = ptrace (PTRACE_PEEKUSER, pid, (long)20*4, 0);
+  return 1;
+#else
+  return 0;
+#endif
 }
 #endif
 
