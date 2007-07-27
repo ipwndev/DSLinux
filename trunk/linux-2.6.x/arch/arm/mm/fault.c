@@ -465,14 +465,23 @@ do_DataAbort(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
 	unsigned long *p;
 	unsigned int i;
 
-	printk(KERN_ALERT "Data abort: pc=0x%08lx\n", regs->ARM_pc);
-	printk(KERN_ALERT "            lr=0x%08lx\n", regs->ARM_lr);
-	printk(KERN_ALERT "            sp=0x%08lx\n", regs->ARM_sp);
+	printk(KERN_ALERT "Data abort:   pc=0x%08lx", regs->ARM_pc);
+	printk(" lr=0x%08lx", regs->ARM_lr);
+	printk(" sp=0x%08lx\n", regs->ARM_sp);
 #if 0
 	/* This value is always garbage. I think Pepsiman once said
 	 * that the MPU does not provide the faulty address at all... */
 	printk(KERN_ALERT "          addr=0x%08lx\n", addr);
 #endif
+	/* Dump the registers */
+	printk(KERN_ALERT "r0=0x%08lx ", regs->ARM_r0);
+	printk("r1=0x%08lx ", regs->ARM_r1);
+	printk("r2=0x%08lx ", regs->ARM_r2);
+	printk("r3=0x%08lx\n",regs->ARM_r3);
+	printk(KERN_ALERT "r4=0x%08lx ", regs->ARM_r4);
+	printk("r5=0x%08lx ", regs->ARM_r5);
+	printk("r6=0x%08lx ", regs->ARM_r6);
+	printk("r7=0x%08lx\n",regs->ARM_r7);
 
 	/* Get the best possible stack trace.
 	 * Print all addresses on the stack that are inside the
@@ -480,9 +489,13 @@ do_DataAbort(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
 	printk(KERN_ALERT "Possible stack trace:\n");
 	i = 1;
 	for (p = (unsigned long*)regs->ARM_sp; !kstack_end(p); p++) {
-		if (current->mm->start_code < *p && *p < current->mm->end_code)
-			printk("%02i: %08lx\n", i++, *p);
+		if (current->mm->start_code < *p && *p < current->mm->end_code) {
+			printk("%02i: %08lx ", i++, *p);
+			if (((i-1) & 0x03) == 0)
+				printk("\n");
+		}
 	}
+	printk("\n");
 
 	info.si_signo = SIGKILL;
 	info.si_errno = 0;
