@@ -28,7 +28,7 @@ clean:
 		$(MAKE) -C $$dir clean; \
 	done
 	$(RM) .config .config.cmd .config.old
-#	$(RM) include/system_configuration.h
+	$(RM) include/system_configuration.h
 
 distclean: clean
 
