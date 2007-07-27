@@ -24,7 +24,7 @@ check test: tests
 	$(MAKE) -C tests test
 
 clean:
-	for dir in $(SUBDIRS) tests ; do \
+	for dir in $(SUBDIRS) tests extra ; do \
 		$(MAKE) -C $$dir clean; \
 	done
 	$(RM) .config .config.cmd .config.old
