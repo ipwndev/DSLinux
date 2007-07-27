@@ -600,7 +600,21 @@ gdb-reset:
 	rm -f $(foreach f, .unpacked .configured .compiled \
 		.installed, $(GDB_SRCDIR)/$(f))
 gdb-clean:
-	-$(MAKE) -C $(GDB_OBJDIR) clean
+	-$(MAKE) -C $(GDB_OBJDIR) distclean
+	-rm -f $(GDB_OBJDIR)/bfd/config.*
+	-rm -f $(GDB_OBJDIR)/etc/config.*
+	-rm -f $(GDB_OBJDIR)/gdb/config.*
+	-rm -f $(GDB_OBJDIR)/gdb/doc/config.*
+	-rm -f $(GDB_OBJDIR)/gdb/testsuite/config.*
+	-rm -f $(GDB_OBJDIR)/gdb/testsuite/gdb.stabs/config.*
+	-rm -f $(GDB_OBJDIR)/intl/config.*
+	-rm -f $(GDB_OBJDIR)/libiberty/config.*
+	-rm -f $(GDB_OBJDIR)/opcodes/config.*
+	-rm -f $(GDB_OBJDIR)/readline/config.*
+	-rm -f $(GDB_OBJDIR)/sim/config.*
+	-rm -f $(GDB_OBJDIR)/sim/arm/config.*
+	-rm -f $(GDB_OBJDIR)/sim/common/config.*
+	-rm -f $(GDB_OBJDIR)/sim/testsuite/config.*
 
 # fetch distfile for gdb
 $(DISTDIR)/$(GDB_DIST):
@@ -619,7 +633,7 @@ $(GDB_SRCDIR)/.configured: $(GDB_SRCDIR)/.unpacked
 	cd $(GDB_OBJDIR) \
 		&& $(GDB_SRCDIR)/configure \
 		--prefix=$(PREFIX) \
-		--target=arm-linux 
+		--target=arm-linux-elf 
 	touch $@
 
 # compile gdb
@@ -630,9 +644,6 @@ $(GDB_SRCDIR)/.compiled: $(GDB_SRCDIR)/.configured
 # install gdb
 $(GDB_SRCDIR)/.installed: $(GDB_SRCDIR)/.compiled
 	$(MAKE) -C $(GDB_OBJDIR) install
-	mv $(PREFIX)/bin/arm-linux-gdb $(PREFIX)/bin/arm-linux-elf-gdb
-	mv $(PREFIX)/bin/arm-linux-gdbtui $(PREFIX)/bin/arm-linux-elf-gdbtui
-	mv $(PREFIX)/bin/arm-linux-run $(PREFIX)/bin/arm-linux-elf-run
 	touch $@
 
 
