@@ -29,6 +29,7 @@ GCC_VER		= 4.0.4
 ELF2FLT_VER	= 20070723
 GENROMFS_VER	= 0.5.1
 LIBELF_VER	= 0.8.8
+GDB_VER		= 6.6
 
 BINUTILS_DIST	:= binutils-$(BINUTILS_VER).tar.bz2
 GCC_DIST	:= gcc-core-$(GCC_VER).tar.bz2
@@ -36,6 +37,7 @@ GPP_DIST	:= gcc-g++-$(GCC_VER).tar.bz2
 ELF2FLT_DIST	:= elf2flt-$(ELF2FLT_VER).tar.gz
 GENROMFS_DIST	:= genromfs-$(GENROMFS_VER).tar.gz
 LIBELF_DIST	:= libelf-$(LIBELF_VER).tar.gz
+GDB_DIST	:= gdb-$(GDB_VER).tar.bz2
 
 # We do basic MD5 checking to prevent hassle with broken downloads.
 BINUTILS_DIST_MD5	= e26e2e06b6e4bf3acf1dc8688a94c0d1
@@ -44,13 +46,15 @@ GCC_DIST_MD5		= 193e0a7a471cca70e374974bc5a60137
 GPP_DIST_MD5		= 5c79e6af5b49dd9cfd22001f3856f447
 GENROMFS_DIST_MD5	= fee69ecbf8f990fdb0ca0c7267c13e7e
 LIBELF_DIST_MD5		= be84e553686dd50c8b6d520f86f46521
+GDB_DIST_MD5		= a4df41d28dd514d64e8ccbfe125fd9a6
 
 DISTFILES :=	$(DISTDIR)/$(BINUTILS_DIST) \
 		$(DISTDIR)/$(GCC_DIST) \
 		$(DISTDIR)/$(GPP_DIST) \
 		$(DISTDIR)/$(ELF2FLT_DIST) \
 		$(DISTDIR)/$(GENROMFS_DIST) \
-		$(DISTDIR)/$(LIBELF_DIST)
+		$(DISTDIR)/$(LIBELF_DIST) \
+		$(DISTDIR)/$(GDB_DIST)
 	
 FETCH_CMD = wget -c
 
@@ -65,12 +69,14 @@ ELF2FLT_URL	:= http://dslinux.in-berlin.de/$(ELF2FLT_DIST)
 #ELF2FLT_URL	:= http://stsp.spline.de/dslinux/$(ELF2FLT_DIST)
 GENROMFS_URL	:= $(SOURCEFORGE_MIRROR)/romfs/$(GENROMFS_DIST)
 LIBELF_URL	:= http://www.mr511.de/software/$(LIBELF_DIST)
+GDB_URL		:= $(GNU_MIRROR)/gdb/$(GDB_DIST)
 
 BINUTILS_SRCDIR := $(SRCDIR)/binutils-$(BINUTILS_VER)
 GCC_SRCDIR	:= $(SRCDIR)/gcc-$(GCC_VER)
 ELF2FLT_SRCDIR	:= $(SRCDIR)/elf2flt-$(ELF2FLT_VER)
 GENROMFS_SRCDIR	:= $(SRCDIR)/genromfs-$(GENROMFS_VER)
 LIBELF_SRCDIR	:= $(SRCDIR)/libelf-$(LIBELF_VER)
+GDB_SRCDIR	:= $(SRCDIR)/gdb-$(GDB_VER)
 KERNEL_SRCDIR	:= $(CWD)/../linux-2.6.x
 UCLIBC_SRCDIR	:= $(CWD)/../uClibc
 NDSTOOL_SRCDIR	:= $(CWD)/ndstool
@@ -80,6 +86,7 @@ BINUTILS_OBJDIR := $(OBJDIR)/binutils-$(BINUTILS_VER)
 GCC_OBJDIR	:= $(OBJDIR)/gcc-$(GCC_VER)
 ELF2FLT_OBJDIR	:= $(OBJDIR)/elf2ftl-$(ELF2FLT_VER)
 LIBELF_OBJDIR	:= $(OBJDIR)/libelf-$(ELF2FLT_VER)
+GDB_OBJDIR	:= $(OBJDIR)/gdb-$(GDB_VER)
 
 # For releases, this must be changed to the version number:
 VERSION		:= $(shell date -I)
@@ -97,7 +104,7 @@ export PATH	:= $(PREFIX)/bin:$(PATH)
 # for the bootstrap process.
 all: dirs-create binutils-install elf2flt-install sysroot-create \
 	gcc-stage1-install uClibc-install gcc-stage2-install \
-	genromfs-install libelf-install ndstool-install \
+	genromfs-install libelf-install gdb-install ndstool-install \
 	symbolmap.sh-install strip dist
 
 # If you just want to download distfiles, use this target.
@@ -105,12 +112,12 @@ fetch: $(CWD)/.dirs-created $(DISTFILES)
 
 # Use these to start a build from the beginning.
 reset: dirs-reset binutils-reset uClibc-reset sysroot-reset gcc-stage1-reset \
-	gcc-stage2-reset elf2flt-reset libelf-reset ndstool-reset strip-reset \
+	gcc-stage2-reset elf2flt-reset libelf-reset gdb-reset ndstool-reset strip-reset \
 	dist-reset
 
 # Use to save disc space.
 clean: binutils-clean uClibc-clean sysroot-clean gcc-clean elf2flt-clean \
-	libelf-clean ndstool-clean dist-clean
+	libelf-clean gdb-clean ndstool-clean dist-clean
 
 # Nukes everything (including the installed toolchain itself!)
 # Use this to start ALL OVER AGAIN! Use with caution!
@@ -580,6 +587,54 @@ $(NDSTOOL_SRCDIR)/.compiled:
 $(NDSTOOL_SRCDIR)/.installed: $(NDSTOOL_SRCDIR)/.compiled
 	install -m 755 $(NDSTOOL_SRCDIR)/ndstool $(PREFIX)/bin
 	touch $@
+
+#######################################################################
+# gdb
+#######################################################################
+
+gdb-unpack:		$(GDB_SRCDIR)/.unpacked
+gdb-configure:		$(GDB_SRCDIR)/.configured
+gdb-compile:		$(GDB_SRCDIR)/.compiled
+gdb-install:		$(GDB_SRCDIR)/.installed
+gdb-reset:
+	rm -f $(foreach f, .unpacked .configured .compiled \
+		.installed, $(GDB_SRCDIR)/$(f))
+gdb-clean:
+	-$(MAKE) -C $(GDB_OBJDIR) clean
+
+# fetch distfile for gdb
+$(DISTDIR)/$(GDB_DIST):
+	cd $(DISTDIR) && $(FETCH_CMD) $(GDB_URL)
+
+# unpack gdb
+$(GDB_SRCDIR)/.unpacked: $(DISTDIR)/$(GDB_DIST)
+	test "`md5sum $(DISTDIR)/$(GDB_DIST) | cut -d' ' -f 1`" \
+		= "$(GDB_DIST_MD5)"
+	tar -C $(SRCDIR) -jxf $(DISTDIR)/$(GDB_DIST)
+	touch $@
+
+# configure gdb
+$(GDB_SRCDIR)/.configured: $(GDB_SRCDIR)/.unpacked
+	[ -d $(GDB_OBJDIR) ] || mkdir -p $(GDB_OBJDIR)
+	cd $(GDB_OBJDIR) \
+		&& $(GDB_SRCDIR)/configure \
+		--prefix=$(PREFIX) \
+		--target=arm-linux 
+	touch $@
+
+# compile gdb
+$(GDB_SRCDIR)/.compiled: $(GDB_SRCDIR)/.configured
+	$(MAKE) -C $(GDB_OBJDIR)
+	touch $@
+
+# install gdb
+$(GDB_SRCDIR)/.installed: $(GDB_SRCDIR)/.compiled
+	$(MAKE) -C $(GDB_OBJDIR) install
+	mv $(PREFIX)/bin/arm-linux-gdb $(PREFIX)/bin/arm-linux-elf-gdb
+	mv $(PREFIX)/bin/arm-linux-gdbtui $(PREFIX)/bin/arm-linux-elf-gdbtui
+	mv $(PREFIX)/bin/arm-linux-run $(PREFIX)/bin/arm-linux-elf-run
+	touch $@
+
 
 #######################################################################
 # symbolmap.sh
