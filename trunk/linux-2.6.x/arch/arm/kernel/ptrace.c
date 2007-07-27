@@ -539,6 +539,13 @@ static int ptrace_read_user(struct task_struct *tsk, unsigned long off,
 	if (off < sizeof(struct pt_regs))
 		tmp = get_user_reg(tsk, off >> 2);
 
+	/* Helper for gdb to figure out the Offsets */
+	switch(off-sizeof(struct pt_regs)) {
+	case 0: tmp = tsk->mm->start_code; break;
+	case 4: tmp = tsk->mm->end_code; break;
+	case 8: tmp = tsk->mm->start_data; break;
+	}
+
 	return put_user(tmp, ret);
 }
 
