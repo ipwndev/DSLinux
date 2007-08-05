@@ -1,11 +1,18 @@
 #!/bin/sh
-
+# Save NETWORK_CONFIG before sourcing so it doesn't get overridden
+[ -n "$NETWORK_CONFIG" ] && NETWORK_CONFIG_ENV="$NETWORK_CONFIG"
 [ -e /etc/rc.defaults ] && . /etc/rc.defaults
 [ -e /etc/rc.conf ] && . /etc/rc.conf
 
 # Source a custom configuration file if specified
 # in the environment.
-[ -n "$NETWORK_CONFIG" ] && . "$NETWORK_CONFIG"
+if [ -n "$NETWORK_CONFIG_ENV" ]
+then
+	. "$NETWORK_CONFIG_ENV"
+elif [ -n "$NETWORK_CONFIG" ]
+then
+	. "$NETWORK_CONFIG"
+fi
 
 case "$1" in
 	start)
