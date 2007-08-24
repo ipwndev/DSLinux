@@ -403,19 +403,19 @@ all: config
 	for i in $(sort $(dir_y)) $(dir_v) $(dir_p); do \
 		if [ -d $$i ]; then \
 			touch $$i/.sgbuilt_user; \
-			make -C $$i || exit $$? ; \
+			$(MAKE) -C $$i || exit $$? ; \
 		fi; \
 	done
 
 romfs:
 	for i in $(sort $(dir_y)) $(dir_p) ; do \
-		[ ! -d $$i ] || make -C $$i romfs || exit $$? ; \
+		[ ! -d $$i ] || $(MAKE) -C $$i romfs || exit $$? ; \
 	done
 
 clean:
 	-for i in $(dir_v) $(sort $(dir_y) $(dir_n) $(dir_)) $(dir_p) ; do \
 		if [ -f $$i/.sgbuilt_user ]; then \
-			make -C $$i clean ; \
+			$(MAKE) -C $$i clean ; \
 			rm -f $$i/.sgbuilt_user; \
 		fi; \
 	done
