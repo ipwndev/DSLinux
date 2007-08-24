@@ -255,12 +255,12 @@ image: no_root
 .PHONY: netflash
 netflash netflash_only:
 ifeq ($(NO_NETFLASH_EXE),)
-	make -C prop/mstools CONFIG_PROP_MSTOOLS_NETFLASH_NETFLASH=y
+	$(MAKE) -C prop/mstools CONFIG_PROP_MSTOOLS_NETFLASH_NETFLASH=y
 endif
 
 .PHONY: release
 release:
-	make -C release release
+	$(MAKE) -C release release
 
 %_fullrelease:
 	@echo "This target no longer works"
@@ -336,13 +336,13 @@ distclean: mrproper
 		echo "vendors/$(@:_default=)/config.device must exist first"; \
 		exit 1; \
 	 fi
-	-make clean > /dev/null 2>&1
+	-$(MAKE) clean > /dev/null 2>&1
 	cp vendors/$(@:_default=)/config.device .config
 	chmod u+x config/setconfig
 	yes "" | config/setconfig defaults
 	config/setconfig final
-	make dep
-	make
+	$(MAKE) dep
+	$(MAKE)
 
 config_error:
 	@echo "*************************************************"
