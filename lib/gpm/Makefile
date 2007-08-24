@@ -31,7 +31,7 @@ romfs:
 
 dep:
 	touch src/$(DEPFILE) # to prevent unecessary warnings
-	make -C src dep
+	$(MAKE) -C src dep
 
 check: all
 
