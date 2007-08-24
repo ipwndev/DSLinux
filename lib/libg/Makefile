@@ -14,10 +14,10 @@
 DIRS  = gtermcap
 
 all: $(DIRS)
-	for i in $(DIRS) ; do make -C $$i || exit $? ; done
+	for i in $(DIRS) ; do $(MAKE) -C $$i || exit $? ; done
 
 romfs:
 
 clean:
-	-for i in $(DIRS) ; do make -C $$i clean ; done
+	-for i in $(DIRS) ; do $(MAKE) -C $$i clean ; done
 
