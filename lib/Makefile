@@ -105,10 +105,10 @@ all:
 		if [ -d $$i ]; then \
 			if [ "$$i" = "libncurses" ]; then \
 				touch $$i/.sgbuilt_lib; \
-				make -C $$i AWK=awk || exit $$?; \
+				$(MAKE) -C $$i AWK=awk || exit $$?; \
 			else \
 				touch $$i/.sgbuilt_lib; \
-				make -C $$i || exit $$? ; \
+				$(MAKE) -C $$i || exit $$? ; \
 			fi; \
 		fi; \
 		$(MAKE) make_links || exit $? ; \
@@ -125,7 +125,7 @@ romfs:
 	$(ROMFSINST) -e CONFIG_USER_FLATFSD_FLATFSD -s config/resolv.conf /etc/resolv.conf
 	$(ROMFSINST) -e CONFIG_USER_FLATFSD_FLATFSD -e CONFIG_USER_TINYLOGIN_SHADOWPASSWDS -s config/shadow /etc/shadow
 	for i in $(dir_y) ; do \
-		[ ! -d $$i ] || make -C $$i romfs || exit $$? ; \
+		[ ! -d $$i ] || $(MAKE) -C $$i romfs || exit $$? ; \
 	done
 
 ##############################################################################
@@ -133,7 +133,7 @@ romfs:
 clean: clean_links
 	-for i in $(dir_y) $(dir_n) $(dir_); do \
 		if [ -f $$i/.sgbuilt_lib ]; then \
-			make -C $$i clean ; \
+			$(MAKE) -C $$i clean ; \
 			rm -f $$i/.sgbuilt_lib; \
 		fi; \
 	done
