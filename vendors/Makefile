@@ -29,29 +29,29 @@ all:
 	for i in $(dir_v) ; do \
 		if [ -d $$i ]; then \
 			touch $$i/.sgbuilt_vendor; \
-			make -C $$i || exit $$? ; \
+			$(MAKE) -C $$i || exit $$? ; \
 		fi; \
 	done
 
 romfs:
 	for i in $(dir_v) ; do \
-		[ ! -d $$i ] || make -C $$i romfs || exit $$? ; \
+		[ ! -d $$i ] || $(MAKE) -C $$i romfs || exit $$? ; \
 	done
 
 image:
 	for i in $(dir_v) ; do \
-		[ ! -d $$i ] || make -C $$i image || exit $$? ; \
+		[ ! -d $$i ] || $(MAKE) -C $$i image || exit $$? ; \
 	done
 
 vendor_%:
 	for i in $(dir_v) ; do \
-		[ ! -d $$i ] || make -C $$i $@ || exit $$? ; \
+		[ ! -d $$i ] || $(MAKE) -C $$i $@ || exit $$? ; \
 	done
 
 clean:
 	-for i in $(dir_v) ; do \
 		if [ -f $$i/.sgbuilt_vendor ]; then \
-			make -C $$i clean ; \
+			$(MAKE) -C $$i clean ; \
 			rm -f $$i/.sgbuilt_vendor; \
 		fi; \
 	done
