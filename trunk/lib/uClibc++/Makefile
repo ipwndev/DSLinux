@@ -43,10 +43,10 @@ install:
 #Menu configuration system
 
 extra/config/conf:
-	make -C extra/config conf
+	$(MAKE) -C extra/config conf
 
 extra/config/mconf:
-	make -C extra/config ncurses mconf
+	$(MAKE) -C extra/config ncurses mconf
 
 .PHONY: dslinuxconfig
 dslinuxconfig:  extra/config/conf
@@ -76,7 +76,7 @@ defconfig: extra/config/conf
 
 include/system_configuration.h: .config
 	@if [ ! -x ./extra/config/conf ] ; then \
-		make -C extra/config conf; \
+		$(MAKE) -C extra/config conf; \
 	fi;
 	@./extra/config/conf -o extra/Configs/Config.in
 
