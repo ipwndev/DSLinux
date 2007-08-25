@@ -366,7 +366,7 @@ lib/main.o: $(ROOTDIR)/lib/libc/main.c
 	$(CC) $(CFLAGS) $(ARCH_CFLAGS) -c -o $@ $(ROOTDIR)/lib/libc/main.c
 
 bogus $(SHARED_TARGET): lib/libc.a lib/main.o Makefile
-	make -C $(ROOTDIR) relink
+	$(MAKE) -C $(ROOTDIR) relink
 	$(CC) -nostartfiles -o $(SHARED_TARGET) $(ARCH_CFLAGS)          \
 			-mid-shared-library -mshared-library-id=0               \
 			-Wl,-elf2flt -nostdlib -Wl,-shared-lib-id,${LIBID}      \
