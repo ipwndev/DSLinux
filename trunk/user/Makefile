@@ -399,13 +399,14 @@ dir_y += fwver wfcdump
 
 dir_y += games
 
-all: config
-	for i in $(sort $(dir_y)) $(dir_v) $(dir_p); do \
-		if [ -d $$i ]; then \
-			touch $$i/.sgbuilt_user; \
-			$(MAKE) -C $$i || exit $$? ; \
-		fi; \
-	done
+all: config $(dir_y) $(dir_v) $(dir_p)
+
+.PHONY: $(dir_y) $(dir_v) $(dir_p)
+$(dir_y) $(dir_v) $(dir_p): config
+	if [ -d $@ ]; then \
+		touch $@/.sgbuilt_user; \
+		$(MAKE) -C $@ || exit $$? ; \
+	fi; \
 
 romfs:
 	for i in $(sort $(dir_y)) $(dir_p) ; do \
