@@ -399,19 +399,22 @@ dir_y += fwver wfcdump
 
 dir_y += games
 
-all: config $(dir_y) $(dir_v) $(dir_p)
-
-.PHONY: $(dir_y) $(dir_v) $(dir_p)
-$(dir_y) $(dir_v) $(dir_p): config
+all_targets := $(sort $(dir_y) $(dir_v) $(dir_p))
+.PHONY: $(all_targets)
+all: config $(all_targets)
+$(all_targets): config
 	if [ -d $@ ]; then \
 		touch $@/.sgbuilt_user; \
 		$(MAKE) -C $@ || exit $$? ; \
 	fi; \
 
-romfs:
-	for i in $(sort $(dir_y)) $(dir_p) ; do \
-		[ ! -d $$i ] || $(MAKE) -C $$i romfs || exit $$? ; \
-	done
+romfstargets := $(patsubst %,%.r, $(sort $(dir_y) $(dir_p)))
+.PHONY: $(romfstargets)
+romfs: $(romfstargets)
+$(romfstargets):
+	if [ -d $(patsubst %.r,%,$@) ]; then \
+		$(MAKE) -C $(patsubst %.r,%,$@) romfs || exit $$? ; \
+	fi; \
 
 clean:
 	-for i in $(dir_v) $(sort $(dir_y) $(dir_n) $(dir_)) $(dir_p) ; do \
