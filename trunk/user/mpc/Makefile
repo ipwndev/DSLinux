@@ -25,16 +25,16 @@ bindir = ${exec_prefix}/bin
 
 
 all: 
-	make -C src
+	$(MAKE) -C src
 
 romfs:
-	make -C src romfs
+	$(MAKE) -C src romfs
 
 clean:
-	make -C src clean
+	$(MAKE) -C src clean
 
 #distclean: clean
 #	rm -f Makefile config.h
 
 install:
-	make -C src install
+	$(MAKE) -C src install
