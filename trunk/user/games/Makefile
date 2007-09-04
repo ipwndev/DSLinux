@@ -16,17 +16,17 @@ dir_$(CONFIG_USER_GAMES_SUDOKU)			+= sudoku
 #dir_$(CONFIG_USER_GAMES_XMAME)		    += xmame
 
 all:
-	for i in $(dir_y) dummy ; do \
-		[ $$i = dummy ] || make -C $$i || exit $? ; \
+	+for i in $(dir_y) dummy ; do \
+		[ $$i = dummy ] || $(MAKE) -C $$i || exit $? ; \
 	done
 
 romfs:
-	for i in $(dir_y) dummy ; do \
-		[ $$i = dummy ] || make -C $$i romfs || exit $? ; \
+	+for i in $(dir_y) dummy ; do \
+		[ $$i = dummy ] || $(MAKE) -C $$i romfs || exit $? ; \
 	done
 
 clean:
 	-for i in $(dir_y) $(dir_n) $(dir_) ; do \
-		[ ! -d $$i ] || make -C $$i clean; \
+		[ ! -d $$i ] || $(MAKE) -C $$i clean; \
 	done
 
