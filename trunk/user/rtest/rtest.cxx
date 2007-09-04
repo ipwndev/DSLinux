@@ -1,41 +1,28 @@
-//#include <iostream.h>
-#include <stdio.h> 
+#include <iostream>
 
+using namespace std;
+
+/*
 class test1 {
 public:
 test1();
-~test1();
+virtual ~test1();
 
 virtual const char *self(void);
-virtual const char *selfa(void);
-virtual const char *selfb(void);
-virtual const char *selfc(void);
-
 };
 
 test1::test1() {
-	puts("constructor test1\n");
+	cout << "constructor test1" << endl;
 }
 
 test1::~test1() {
-	puts("destructor test1\n");
+	cout << "destructor test1" << endl;
 }
 
 const char *test1::self(void) {
 	return "test 1";
 }
-
-const char *test1::selfa(void) {
-	return "test 1a";
-}
-
-const char *test1::selfb(void) {
-	return "test 1b";
-}
-
-const char *test1::selfc(void) {
-	return "test 1c";
-}
+*/
 
 /*
 class test2: public test1 {
@@ -63,34 +50,15 @@ const char *test2::self(void) {
 
 int main()
  {
-	test1 *bubi;
-//	unsigned int *x;
+//	test1 *bubi;
 
-	puts("start: before new\n");
-
+	cout << "start: before new" << endl;
+/*
 	bubi = new test1;
 
-//	puts("after new\n");
-
-	/* get address of object */
-//	x = (unsigned int *) bubi;
-//	printf("%X\n ", x[0]);
-
-	// get vtable contents
-//	x = (unsigned int *) x[0];
-//	printf("%X ", x[0]);
-//	printf("%X ", x[1]);
-//	printf("%X\n ", x[2]);
-
-	puts( bubi->self());
+	cout << bubi->self()<< endl;
 
 	delete bubi;
-
-    	// Dies ist das Hello-World-Programm
-//    	cout<<"Hello, world!"<<endl;
-	
-//	printf("Hello");
-
-
+*/
 	return 0;
  };
