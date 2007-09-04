@@ -259,14 +259,14 @@ oldconfig_uClibc:
 #
 
 .PHONY: romfs
-romfs: no_root no_root ucfront linux subdirs 
-	for dir in vendors $(DIRS) ; do [ ! -d $$dir ] || $(MAKEARCH) -C $$dir romfs || exit 1 ; done
+romfs: no_root ucfront linux subdirs 
+	+for dir in vendors $(DIRS) ; do [ ! -d $$dir ] || $(MAKEARCH) -C $$dir romfs || exit 1 ; done
 	-find $(ROMFSDIR)/. -name CVS | xargs -r rm -rf
 
 .PHONY: image
 image: no_root romfs modules modules_install
 	[ -d $(IMAGEDIR) ] || mkdir $(IMAGEDIR)
-	$(MAKEARCH) -C vendors image
+	+$(MAKEARCH) -C vendors image
 
 .PHONY: netflash
 netflash netflash_only:
@@ -291,7 +291,7 @@ release:
 
 .PHONY: vendor_% 
 vendor_%:
-	$(MAKEARCH) -C vendors $@
+	+$(MAKEARCH) -C vendors $@
 
 .PHONY: linux
 linux linux%_only:
@@ -299,7 +299,7 @@ linux linux%_only:
 		echo "ERROR: you need to do a 'make dep' first" ; \
 		exit 1 ; \
 	fi
-	$(MAKEARCH_KERNEL) -C $(LINUXDIR) $(LINUXTARGET) || exit 1
+	+$(MAKEARCH_KERNEL) -C $(LINUXDIR) $(LINUXTARGET) || exit 1
 	if [ -f $(LINUXDIR)/vmlinux ]; then \
 		ln -f $(LINUXDIR)/vmlinux $(LINUXDIR)/linux ; \
 	fi
