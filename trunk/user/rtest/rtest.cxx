@@ -2,7 +2,7 @@
 
 using namespace std;
 
-/*
+
 class test1 {
 public:
 test1();
@@ -22,9 +22,7 @@ test1::~test1() {
 const char *test1::self(void) {
 	return "test 1";
 }
-*/
 
-/*
 class test2: public test1 {
 public:
 test2();
@@ -45,20 +43,19 @@ test2::~test2() {
 const char *test2::self(void) {
 	return "test 2";
 }
-*/
 
 
 int main()
  {
-//	test1 *bubi;
+	test2 *bubi;
 
 	cout << "start: before new" << endl;
-/*
-	bubi = new test1;
+
+	bubi = new test2;
 
 	cout << bubi->self()<< endl;
 
 	delete bubi;
-*/
+
 	return 0;
  };
