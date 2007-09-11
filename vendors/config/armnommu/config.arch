@@ -209,12 +209,15 @@ ifeq ($(UCLINUX_BUILD_SET),1)
 		CXXFLAGS += -nostdinc++
 		CXXFLAGS += -DGCC_HASCLASSVISIBILITY
 		CXXFLAGS += -fno-rtti
-		LIBGCC:=$(shell $(CXX) $(CXXFLAGS) -print-libgcc-file-name)
+		LIBGCC :=$(shell $(CXX) $(CXXFLAGS) -print-libgcc-file-name)
 		LIBGCC_DIR:=$(dir $(LIBGCC))
 		CXXLIBS	  =  $(CXXSUP)
 		CXXLIBS	 += -luClibc++
 		CXXLIBS  += -L$(LIBGCC_DIR)
 		CXXLIBS  += -lsupc++ 
+		# Definitions for the inclusion of static constructors
+		CRTBEGIN := $(shell $(CXX) $(CXXFLAGS) -print-file-name=crtbegin.o)
+		CRTEND   := $(shell $(CXX) $(CXXFLAGS) -print-file-name=crtend.o)
 	endif	
 
 	# be compatible for old style c++ includes
