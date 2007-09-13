@@ -31,7 +31,7 @@
 #include <FL/math.h>
 #include <stdlib.h>
 
-struct matrix {double a, b, c, d, x, y;};
+struct matrix {float a, b, c, d, x, y;};
 
 static matrix m = {1, 0, 0, 1, 0, 0};
 
@@ -42,7 +42,7 @@ void fl_push_matrix() {stack[sptr++] = m;}
 
 void fl_pop_matrix() {m = stack[--sptr];}
 
-void fl_mult_matrix(double a, double b, double c, double d, double x, double y) {
+void fl_mult_matrix(float a, float b, float c, float d, float x, float y) {
 
   matrix o;
   o.a = a*m.a + b*m.c;
@@ -54,15 +54,15 @@ void fl_mult_matrix(double a, double b, double c, double d, double x, double y) 
   m = o;
 }
 
-void fl_scale(double x,double y) {fl_mult_matrix(x,0,0,y,0,0);}
+void fl_scale(float x,float y) {fl_mult_matrix(x,0,0,y,0,0);}
 
-void fl_scale(double x) {fl_mult_matrix(x,0,0,x,0,0);}
+void fl_scale(float x) {fl_mult_matrix(x,0,0,x,0,0);}
 
-void fl_translate(double x,double y) {fl_mult_matrix(1,0,0,1,x,y);}
+void fl_translate(float x,float y) {fl_mult_matrix(1,0,0,1,x,y);}
 
-void fl_rotate(double d) {
+void fl_rotate(float d) {
   if (d) {
-    double s, c;
+    float s, c;
     if (d == 0) {s = 0; c = 1;}
     else if (d == 90) {s = 1; c = 0;}
     else if (d == 180) {s = 0; c = -1;}
@@ -96,13 +96,13 @@ void fl_begin_loop() {n = 0; what = LOOP;}
 
 void fl_begin_polygon() {n = 0; what = POLYGON;}
 
-double fl_transform_x(double x, double y) {return x*m.a + y*m.c + m.x;}
+float fl_transform_x(float x, float y) {return x*m.a + y*m.c + m.x;}
 
-double fl_transform_y(double x, double y) {return x*m.b + y*m.d + m.y;}
+float fl_transform_y(float x, float y) {return x*m.b + y*m.d + m.y;}
 
-double fl_transform_dx(double x, double y) {return x*m.a + y*m.c;}
+float fl_transform_dx(float x, float y) {return x*m.a + y*m.c;}
 
-double fl_transform_dy(double x, double y) {return x*m.b + y*m.d;}
+float fl_transform_dy(float x, float y) {return x*m.b + y*m.d;}
 
 static void fl_transformed_vertex(COORD_T x, COORD_T y) {
   if (!n || x != p[n-1].x || y != p[n-1].y) {
@@ -120,11 +120,11 @@ static void fl_transformed_vertex(COORD_T x, COORD_T y) {
   }
 }
 
-void fl_transformed_vertex(double xf, double yf) {
+void fl_transformed_vertex(float xf, float yf) {
   fl_transformed_vertex(COORD_T(xf+.5), COORD_T(yf+.5));
 }
 
-void fl_vertex(double x,double y) {
+void fl_vertex(float x,float y) {
   fl_transformed_vertex(x*m.a + y*m.c + m.x, x*m.b + y*m.d + m.y);
 }
 
@@ -233,11 +233,11 @@ void fl_end_complex_polygon() {
 // warning: these do not draw rotated ellipses correctly!
 // See fl_arc.c for portable version.
 
-void fl_circle(double x, double y,double r) {
-  double xt = fl_transform_x(x,y);
-  double yt = fl_transform_y(x,y);
-  double rx = r * (m.c ? sqrt(m.a*m.a+m.c*m.c) : fabs(m.a));
-  double ry = r * (m.b ? sqrt(m.b*m.b+m.d*m.d) : fabs(m.d));
+void fl_circle(float x, float y,float r) {
+  float xt = fl_transform_x(x,y);
+  float yt = fl_transform_y(x,y);
+  float rx = r * (m.c ? sqrt(m.a*m.a+m.c*m.c) : fabs(m.a));
+  float ry = r * (m.b ? sqrt(m.b*m.b+m.d*m.d) : fabs(m.d));
   int llx = int(xt-rx+.5);
   int w = int(xt+rx+.5)-llx;
   int lly = int(yt-ry+.5);

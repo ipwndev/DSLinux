@@ -33,7 +33,7 @@
 // A compiler from a certain very large software company will not compile
 // the function pointer assignment due to the name conflict with fl_arc.
 // This function is to fix that:
-void fl_arc_i(int x,int y,int w,int h,double a1,double a2) {
+void fl_arc_i(int x,int y,int w,int h,float a1,float a2) {
   fl_arc(x,y,w,h,a1,a2);
 }
 
@@ -50,7 +50,7 @@ static void draw(int which, int x,int y,int w,int h, int inset, uchar color)
   int d = w <= h ? w : h;
   if (d <= 1) return;
   fl_color((Fl_Color)color);
-  void (*f)(int,int,int,int,double,double);
+  void (*f)(int,int,int,int,float,float);
   f = (which==FILL) ? fl_pie : fl_arc_i;
   if (which >= CLOSED) {
     f(x+w-d, y, d, d, w<=h ? 0 : -90, w<=h ? 180 : 90);

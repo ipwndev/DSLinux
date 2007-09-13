@@ -197,9 +197,9 @@ typedef struct
     u_short pt_button;		/*button state - same as tc_button */
     u_short pt_pen;		/*other state - same as tc_pen */
     short pt_pressure;		/*Pressure. + against tablet, - above tablet. */
-    double pt_anglex;		/*angle of tilt in the x direction, in radians. */
-    double pt_angley;		/*angle of tilt in the y direction, in radians. */
-    double pt_barrelrotate;	/*angle of barrel rotation, in radians. */
+    float pt_anglex;		/*angle of tilt in the x direction, in radians. */
+    float pt_angley;		/*angle of tilt in the y direction, in radians. */
+    float pt_barrelrotate;	/*angle of barrel rotation, in radians. */
 }
 pen_state;
 
@@ -227,7 +227,7 @@ typedef struct
 {
     pen_rect pr_area;
     short pr_row, pr_col;
-    double pr_rowpitch, pr_colpitch;
+    float pr_rowpitch, pr_colpitch;
 }
 pen_frame;
 

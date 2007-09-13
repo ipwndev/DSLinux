@@ -68,7 +68,7 @@
 
 #include "screensaver.h"
 
-static scrtop_fire_timer(GR_TIMER_ID id);
+static void scrtop_fire_timer(GR_TIMER_ID id);
 static void mainloop(void);
 
 GR_TIMER_ID pwr_timer_id = 0;
@@ -328,7 +328,7 @@ void scrtop_unregister_timer(GR_TIMER_ID id) {
     }
 }
 
-static scrtop_fire_timer(GR_TIMER_ID id) {
+static void scrtop_fire_timer(GR_TIMER_ID id) {
   struct timer_list *a = 0, *p = 0;
   
   for(a = scrtop_timer_list; a; p = a, a = a->next)

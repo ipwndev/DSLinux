@@ -114,7 +114,7 @@ protected:
 class JSFloat : public JSNode
 {
 public:
-    JSFloat( double );
+    JSFloat( float );
     virtual ~JSFloat() { }
 
     virtual int isA() { return ID_JSFloat; }
@@ -122,7 +122,7 @@ public:
     virtual int rightValue( JSScopeStack* _s, JSValue *rv );    
 
 protected:
-    double value;
+    float value;
 };
 
 class JSBinaryOperator : public JSNode

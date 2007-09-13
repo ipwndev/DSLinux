@@ -24,7 +24,7 @@
 
 struct MotionVector
 {
-  double h,v;
+  float h,v;
 };
 
 

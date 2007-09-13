@@ -947,12 +947,12 @@ RECOGNIZER_FINALIZE(r)
 
 #ifdef	__ultrix
 /* Ultrix doesn't have these declarations in math.h! */
-extern double rint(double);
+extern float rint(float);
 extern float expf(float);
 #endif
 
 #ifdef	ELX
-extern double rint(double);
+extern float rint(float);
 extern float expf(float);	/* N.B.  exp() appears to be broken on ELX! */
 #endif
 
@@ -1403,7 +1403,7 @@ lialg_compute_chain_code(point_list * pts)
 	int dx = endpt->x - startpt->x;
 	int dy = endpt->y - startpt->y;
 /*
-	int tmp	= rint(4.0 * atan2((double)dx, (double)dy) / M_PI);
+	int tmp	= rint(4.0 * atan2((float)dx, (float)dy) / M_PI);
 	int dircode = (10 + tmp) % 8;
 */
 	int tmp = quadr(likeatan(dy, dx));
@@ -2610,11 +2610,11 @@ lialg_compute_lpf_parameters()
     for (i = LP_FILTER_WIDTH; i >= 0; i--) {
 	float x = 0.04 * (i * i);
 #ifdef ARM_LINUX
-	double tmp = 100.0 * exp((double) x);
+	float tmp = 100.0 * exp((float) x);
 #else
 	float tmp = 100.0 * expf(x);
 #endif
-	int wt = rint((double) tmp);
+	int wt = rint((float) tmp);
 
 	lialg_lpfwts[LP_FILTER_WIDTH - i] = wt;
 	lialg_lpfwts[LP_FILTER_WIDTH + i] = wt;

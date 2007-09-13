@@ -5,8 +5,10 @@
 
 // Miscellaneous functions for operating on IO streams in C++
 
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
+
+using namespace std;
 
 inline void remove_white_space(istream& i) {
   char c;

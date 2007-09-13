@@ -64,7 +64,7 @@ void Fl_Adjuster::draw() {
 }
 
 int Fl_Adjuster::handle(int event) {
-  double v;
+  float v;
   int delta;
   int mx = Fl::event_x();
   switch (event) {

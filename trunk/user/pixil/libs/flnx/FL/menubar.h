@@ -51,7 +51,7 @@ inline void MenuAdd(
     ((Fl_Menu_Item*)m)->add(text,bind,(Fl_Callback*)cb,(void *)data,flags);
 }
 
-inline MenuEntry *MenuPopup(Fl_Widget *o,const char *title,MenuEntry *m,double x,double y) {
+inline MenuEntry *MenuPopup(Fl_Widget *o,const char *title,MenuEntry *m,float x,float y) {
     const Fl_Menu_Item* v = ((Fl_Menu_Item*)m)->popup(x,y,title);
     if (v && v->callback_) v->do_callback(o);
     return (MenuEntry *)v;

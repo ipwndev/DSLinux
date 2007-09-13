@@ -40,7 +40,7 @@ extern char fl_key_vector[32]; // in Fl_x.C
 int Fl::event_key(int k) {
   if (k > FL_Button && k <= FL_Button+8)
     return Fl::event_state(8<<(k-FL_Button));
-  int i;
+  int i = 0;
 #ifdef __sgi
 
   // get some missing PC keyboard keys:

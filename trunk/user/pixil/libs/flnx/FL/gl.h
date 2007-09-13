@@ -51,9 +51,9 @@ inline void gl_rectf(int x,int y,int w,int h) {glRecti(x,y,x+w,y+h);}
 FL_EXPORT void gl_font(int fontid, int size);
 FL_EXPORT int  gl_height();
 FL_EXPORT int  gl_descent();
-FL_EXPORT double gl_width(const char *);
-FL_EXPORT double gl_width(const char *, int n);
-FL_EXPORT double gl_width(uchar);
+FL_EXPORT float gl_width(const char *);
+FL_EXPORT float gl_width(const char *, int n);
+FL_EXPORT float gl_width(uchar);
 
 FL_EXPORT void gl_draw(const char*);
 FL_EXPORT void gl_draw(const char*, int n);

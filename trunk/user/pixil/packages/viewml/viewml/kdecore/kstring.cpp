@@ -58,6 +58,7 @@ QString& operator<<( QString& _str, float _v )
     return _str;
 }
 
+#if 0
 QString& operator<<( QString& _str, double _v )
 {
     QString tmp;
@@ -65,6 +66,7 @@ QString& operator<<( QString& _str, double _v )
     _str += tmp.data();
     return _str;
 }
+#endif
 
 QString& operator<<( QString& _str, const char* _v )
 {

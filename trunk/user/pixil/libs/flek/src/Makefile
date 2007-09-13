@@ -17,6 +17,7 @@ OBJS = $(CPPFILES:.cxx=.o)
 
 CFLAGS ?=
 CFLAGS += -DPIXIL
+CXXFLAGS += -DPIXIL
 
 ifeq ($(COMPILE_CROSS),y)
 # CFLAGS += -fpermissive

@@ -28,7 +28,7 @@
 #include <FL/Fl_Hor_Value_Slider.H>
 #include <FL/fl_draw.H>
 
-double args[6] = {140, 140, 50, 0, 360, 0};
+float args[6] = {140, 140, 50, 0, 360, 0};
 const char* name[6] = {"X", "Y", "R", "start", "end", "rotate"};
 
 class Drawing : public Fl_Widget {

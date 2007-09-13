@@ -41,8 +41,8 @@
 typedef struct city_struct
 {
     char *name;
-    double lat;
-    double lon;
+    float lat;
+    float lon;
     char *tz;
     int visible;
     struct city_struct *prev;

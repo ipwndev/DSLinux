@@ -55,7 +55,7 @@ class Fl_Chart : public Fl_Widget {
     int maxnumb;
     int sizenumb;
     FL_CHART_ENTRY *entries;
-    double min,max;
+    float min,max;
     uchar autosize_;
     uchar textfont_,textsize_,textcolor_;
 protected:
@@ -63,11 +63,11 @@ protected:
 public:
     FL_EXPORT Fl_Chart(int,int,int,int,const char * = 0);
     FL_EXPORT void clear();
-    FL_EXPORT void add(double, const char * =0, uchar=0);
-    FL_EXPORT void insert(int, double, const char * =0, uchar=0);
-    FL_EXPORT void replace(int, double, const char * =0, uchar=0);
-    void bounds(double *a,double *b) const {*a = min; *b = max;}
-    FL_EXPORT void bounds(double a,double b);
+    FL_EXPORT void add(float, const char * =0, uchar=0);
+    FL_EXPORT void insert(int, float, const char * =0, uchar=0);
+    FL_EXPORT void replace(int, float, const char * =0, uchar=0);
+    void bounds(float *a,float *b) const {*a = min; *b = max;}
+    FL_EXPORT void bounds(float a,float b);
     int size() const {return numb;}
     int maxsize() const {return maxnumb;}
     FL_EXPORT void maxsize(int);

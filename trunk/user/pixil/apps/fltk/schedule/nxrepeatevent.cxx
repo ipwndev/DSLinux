@@ -195,7 +195,7 @@ NxSchedule::changeFuture_callback(Fl_Widget * w, void *l)
     time_t end_on = 0;
     time_t new_time = 0;
     unsigned long days = 0;
-    double diff = 0;
+    float diff = 0;
     tm *tt;
     int year = 0;
     int mon = 0;
@@ -352,7 +352,7 @@ NxSchedule::changeAll_callback(Fl_Widget * w, void *l)
 	int mon = 0;
 	int m_day = 0;
 	time_t end_on = 0;
-	double diff = 0;
+	float diff = 0;
 	long days = 0;
 	time_t new_date;
 	tm *tt;

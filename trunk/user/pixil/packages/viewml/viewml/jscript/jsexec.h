@@ -372,7 +372,7 @@ protected:
 class JSFloatObject : public JSObject
 {
 public:
-    JSFloatObject( double _i );
+    JSFloatObject( float _i );
     JSFloatObject() { }
 
     virtual int isA() { return TYPE_JSFloatObject; }    
@@ -381,10 +381,10 @@ public:
 
     virtual JSObject* copy() { return new JSFloatObject( value ); }    
 
-    double getValue() { return value; }
+    float getValue() { return value; }
     
 protected:
-    double value;
+    float value;
 };
 
 #endif

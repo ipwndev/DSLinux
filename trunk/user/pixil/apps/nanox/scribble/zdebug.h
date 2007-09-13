@@ -18,4 +18,4 @@ extern char _zdebug_flag[];
 #define ZZZ(f) if(_zdebug_flag[f] >= 3)
 #define ZZZZ(f) if(_zdebug_flag[f] >= 4)
 
-extern double kludge[];
+extern float kludge[];

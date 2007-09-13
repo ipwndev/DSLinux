@@ -47,6 +47,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <ctype.h>
+#include <limits.h>
 
 #include <pixil_config.h>
 #include <par/par.h>
@@ -2887,7 +2888,7 @@ bool NxSchedule::IsForToday(NxTodo * note, time_t nEarlyDay, time_t nLateDay)
     tm *
 	today =
 	NULL;
-    double
+    float
 	diff =
 	0;
     time_t

@@ -42,6 +42,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <nano-X.h>
+#include <nanowm.h>
 
 #include <pixlib/pixlib.h>
 #ifdef CONFIG_PAR
@@ -68,11 +69,13 @@ static void pm_do_callback(int type, void *data);
 
 GR_TIMER_ID pm_get_timer_id(void) { return  pm_timer_id; }
 
+#if 0
 static void set_pm_timer(int timeout) {
   if (pm_timer_id) return;
   pm_timer_id = GrCreateTimer(1, timeout);
   scrtop_register_timer(pm_timer_id, pm_suspend);
 }
+#endif
 
 static void stop_bl_timer(void) {
   GrSetScreenSaverTimeout(0);
@@ -204,8 +207,6 @@ pm_init(void) {
 
 void
 pm_suspend(void) {    
-
-  int state = pix_pwr_onBattery();
 
   printf("Suspending the screentop - see you on the flip side\n");
   pm_stop_timer();    /* Stop both timers */

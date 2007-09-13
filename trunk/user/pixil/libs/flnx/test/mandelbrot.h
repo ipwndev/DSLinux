@@ -39,8 +39,8 @@ public:
   int julia;
   int iterations;
   int brightness;
-  double jX, jY;
-  double X,Y,scale;
+  float jX, jY;
+  float X,Y,scale;
   int sx, sy, sw, sh; // selection box
   void erase_box();
   int handle(int);

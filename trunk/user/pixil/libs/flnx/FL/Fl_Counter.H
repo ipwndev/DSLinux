@@ -39,7 +39,7 @@
 class Fl_Counter : public Fl_Valuator {
 
   uchar textfont_, textsize_, textcolor_;
-  double lstep_;
+  float lstep_;
   uchar mouseobj;
   static FL_EXPORT void repeat_callback(void *);
   FL_EXPORT int calc_mouseobj();
@@ -54,9 +54,9 @@ public:
   FL_EXPORT int handle(int);
   FL_EXPORT Fl_Counter(int,int,int,int,const char * = 0);
   FL_EXPORT ~Fl_Counter();
-  void lstep(double a) {lstep_ = a;}
-  void step(double a,double b) {Fl_Valuator::step(a); lstep_ = b;}
-  void step(double a) {Fl_Valuator::step(a);}
+  void lstep(float a) {lstep_ = a;}
+  void step(float a,float b) {Fl_Valuator::step(a); lstep_ = b;}
+  void step(float a) {Fl_Valuator::step(a);}
   Fl_Font textfont() const {return (Fl_Font)textfont_;}
   void textfont(uchar s) {textfont_ = s;}
   uchar textsize() const {return textsize_;}

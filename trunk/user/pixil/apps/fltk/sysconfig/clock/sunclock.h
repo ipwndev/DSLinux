@@ -137,10 +137,10 @@ Flags;
 
 typedef struct ZoomSettings
 {
-    double fx;			/* zoom factor along width */
-    double fy;			/* zoom factor along height */
-    double fdx;			/* translation factor along width */
-    double fdy;			/* translation factor along height */
+    float fx;			/* zoom factor along width */
+    float fy;			/* zoom factor along height */
+    float fdx;			/* translation factor along width */
+    float fdy;			/* translation factor along height */
     int mode;			/* zoom behaviour mode=0,1,2,3 */
     int width;			/* width of full extent zoomed area */
     int height;			/* height of full extent zoomed area */
@@ -194,7 +194,7 @@ Pixlist;
 typedef struct City
 {
     char *name;			/* Name of the city */
-    double lat, lon;		/* Latitude and longitude of city */
+    float lat, lon;		/* Latitude and longitude of city */
     char *tz;			/* Timezone of city */
     int mode;
     struct City *next;		/* Pointer to next record */
@@ -205,7 +205,7 @@ City;
 typedef struct Mark
 {
     City *city;
-    double save_lat, save_lon;
+    float save_lat, save_lon;
     int status, pulse, full;
     struct tm sr, ss, dl;
 }
@@ -232,7 +232,7 @@ typedef struct Sundata
     short *tr1;			/* pointer to day/night transition 1 */
     short *tr2;			/* pointer to day/night transition 2 */
     int south;			/* color code (0 / -1) at South pole */
-    double *wave;		/* pointer to sine, cosine values */
+    float *wave;		/* pointer to sine, cosine values */
     Pixmap pix;			/* pixmap */
     XImage *xim;		/* ximage of map */
     char *ximdata;		/* ximage data copy */
@@ -243,16 +243,16 @@ typedef struct Sundata
     long projtime;		/* last time projected illumination */
     long progress;		/* time progression (in sec) */
     long jump;			/* time jump (in sec) */
-    double fnoon;		/* position of noon, double prec */
+    float fnoon;		/* position of noon, float prec */
     int noon;			/* position of noon, integer */
     int local_day;		/* previous local day */
     int solar_day;		/* previous solar day */
     int textx;			/* x where to draw the text */
     int texty;			/* y where to draw the text */
     int count;			/* number of time iterations */
-    double sundec;		/* Sun declination */
-    double sunlon;		/* Sun longitude */
-    double shadefactor;		/* shading factor */
+    float sundec;		/* Sun declination */
+    float sunlon;		/* Sun longitude */
+    float shadefactor;		/* shading factor */
     struct City pos1;		/* first position */
     struct City pos2;		/* second position */
     struct Mark mark1;		/* first mark */

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* This file is part of the KDE libraries
-    Copyright (C) 1998 Jörg Habenicht (j.habenicht@europemail.com)
+    Copyright (C) 1998 Jï¿½g Habenicht (j.habenicht@europemail.com)
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -60,7 +60,7 @@
  * so the widget will be painted only once when entering the main event loop.
  *
  * @short A ruler widget
- * @author Jörg Habenicht
+ * @author Jï¿½g Habenicht
  */
 class KRuler : public QFrame
 {
@@ -270,9 +270,9 @@ KRuler(direction dir, int widgetWidth, QWidget *parent=0, const char *name=0, WF
    * To use int values use setPixelPerMark((int)your_int_value);
    * default: 1 mark per 10 pixels 
    */
-  void setPixelPerMark(double);
+  void setPixelPerMark(float);
   /*  void setPixelPerMark(int); */
-  inline double getPixelPerMark() const;
+  inline float getPixelPerMark() const;
 
   /** the ruler may slide up and down "count" pixels
    * this doesn't affect the position of the ruler pointer,
@@ -307,7 +307,7 @@ private:
   bool showtm, showlm, showmm, showbm, showem; /* show tiny, little, medium, big, endmarks */
   int valuelm, valuemm, valuebm; /* value per little, medium, big mark */
   bool showValuelm, showValuemm, showValuebm;
-  double ppm; /* pixel per mark */
+  float ppm; /* pixel per mark */
 
   QString endlabel;
   QRangeControl range;
@@ -349,7 +349,7 @@ KRuler::paint_style
 KRuler::getTickStyle() const;
 #endif
 
-double 
+float 
 KRuler::getPixelPerMark() const
 { return ppm; }
 

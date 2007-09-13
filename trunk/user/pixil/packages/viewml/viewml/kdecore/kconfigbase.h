@@ -315,7 +315,7 @@ public:
 	* @param nDefault A default value returned if the key was not found.
 	* @return The value for this key or 0 if no value was found.
 	*/
-  double readDoubleNumEntry( const char* pKey, double nDefault = 0.0 ) const;
+  float readFloatNumEntry( const char* pKey, float nDefault = 0.0 ) const;
 
   /**
 	* Read a QFont.
@@ -535,7 +535,7 @@ public:
 	* @return The old value for this key. If this key did not
 	* exist, a null string is returned.	
 	*/
-  const char* writeEntry( const char* pKey, double nValue,
+  const char* writeEntry( const char* pKey, float nValue,
 						  bool bPersistent = true, bool bGlobal = false,
 						  bool bNLS = false );
 

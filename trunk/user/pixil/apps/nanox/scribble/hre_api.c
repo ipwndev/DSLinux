@@ -1260,7 +1260,7 @@ initialize_pen_state(pen_state * ps,
 		     u_short button,
 		     u_short pen,
 		     short pressure,
-		     double anglex, double angley, double barrelrotate)
+		     float anglex, float angley, float barrelrotate)
 {
     if (ps != NULL) {
 	ps->pt_button = button;

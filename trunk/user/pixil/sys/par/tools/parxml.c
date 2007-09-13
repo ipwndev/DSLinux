@@ -327,8 +327,8 @@ data_key(xml_token * tag, void *data, char *text, int size)
     }
 
     if (strcmp(prop->value, "float") == 0) {
-	double fval = atof(text);
-	tree_addData((tree_t *) data, &fval, sizeof(double), PAR_FLOAT);
+	float fval = atof(text);
+	tree_addData((tree_t *) data, &fval, sizeof(float), PAR_FLOAT);
 	return (data);
     }
 
@@ -502,7 +502,7 @@ par_data(FILE * stream, void *in)
 	break;
 
     case PAR_FLOAT:
-	fprintf(stream, "%f", *((double *) node->data));
+	fprintf(stream, "%f", *((float *) node->data));
 	break;
 
     case PAR_COLOR:

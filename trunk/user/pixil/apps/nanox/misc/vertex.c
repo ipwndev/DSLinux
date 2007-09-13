@@ -70,7 +70,7 @@ pop_matrix()
 }
 
 void
-mult_matrix(double a, double b, double c, double d, double x, double y)
+mult_matrix(float a, float b, float c, float d, float x, float y)
 {
     struct matrix o;
     o.a = a * m.a + b * m.c;
@@ -83,28 +83,28 @@ mult_matrix(double a, double b, double c, double d, double x, double y)
 }
 
 void
-scale_xy(double x, double y)
+scale_xy(float x, float y)
 {
     mult_matrix(x, 0, 0, y, 0, 0);
 }
 
 void
-scale_x(double x)
+scale_x(float x)
 {
     mult_matrix(x, 0, 0, x, 0, 0);
 }
 
 void
-translate(double x, double y)
+translate(float x, float y)
 {
     mult_matrix(1, 0, 0, 1, x, y);
 }
 
 void
-rotate(double d)
+rotate(float d)
 {
     if (d) {
-	double s, c;
+	float s, c;
 	if (0 == d) {
 	    s = 0;
 	    c = 1;
@@ -153,26 +153,26 @@ begin_polygon()
     what = POLYGON;
 }
 
-double
-transform_x(double x, double y)
+float
+transform_x(float x, float y)
 {
     return x * m.a + y * m.c + m.x;
 }
 
-double
-transform_y(double x, double y)
+float
+transform_y(float x, float y)
 {
     return x * m.b + y * m.d + m.y;
 }
 
-double
-transform_dx(double x, double y)
+float
+transform_dx(float x, float y)
 {
     return x * m.a + y * m.c;
 }
 
-double
-transform_dy(double x, double y)
+float
+transform_dy(float x, float y)
 {
     return x * m.b + y * m.d;
 }
@@ -192,13 +192,13 @@ transformed_coord_vertex(COORD_T x, COORD_T y)
 }
 
 void
-transformed_double_vertex(double xf, double yf)
+transformed_double_vertex(float xf, float yf)
 {
     transformed_coord_vertex((COORD_T) xf + .5, (COORD_T) yf + .5);
 }
 
 void
-vertex(double x, double y)
+vertex(float x, float y)
 {
     transformed_double_vertex(x * m.a + y * m.c + m.x,
 			      x * m.b + y * m.d + m.y);
@@ -272,7 +272,7 @@ end_complex_polygon(GR_WINDOW_ID pmap, GR_GC_ID gc)
 }
 
 void
-circle(double x, double y, double r, GR_WINDOW_ID pmap, GR_GC_ID gc,
+circle(float x, float y, float r, GR_WINDOW_ID pmap, GR_GC_ID gc,
        GR_SIZE w, GR_SIZE h)
 {
     GrEllipse(pmap, gc, w / 2 - 1, h / 2 - 1, w / 2 - 1, h / 2 - 1);

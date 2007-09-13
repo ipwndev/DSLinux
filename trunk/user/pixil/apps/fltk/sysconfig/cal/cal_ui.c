@@ -491,7 +491,7 @@ nxcal_ValidatePt(int npts, CalPt_t * dpts)
     int deltax,			/* Change in x */
       deltay,			/* Change in y */
       retval = -1;		/* Return value, default to fail */
-    double fudgex,		/* Fudge factor in x */
+    float fudgex,		/* Fudge factor in x */
       fudgey;			/* Fudge factor in y */
     CalPt_t validpt1,		/* Validation point #1 */
       validpt2;			/* Validation point #2 */

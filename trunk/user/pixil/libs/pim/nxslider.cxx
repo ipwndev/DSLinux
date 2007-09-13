@@ -74,7 +74,7 @@ NxSlider::draw()
 }
 
 void
-NxSlider::slider_size(double v)
+NxSlider::slider_size(float v)
 {
     if (v < 0)
 	v = 0;
@@ -87,7 +87,7 @@ NxSlider::slider_size(double v)
 }
 
 void
-NxSlider::bounds(double a, double b)
+NxSlider::bounds(float a, float b)
 {
     if (minimum() != a || maximum() != b) {
 	Fl_Valuator::bounds(a, b);
@@ -105,7 +105,7 @@ NxSlider::scrollvalue(int p, int w, int t, int l)
     step(1, 1);
     if (p + w > t + l)
 	l = p + w - t;
-    slider_size(w >= l ? 1.0 : double (w) / double (l));
+    slider_size(w >= l ? 1.0 : float (w) / float (l));
 #ifdef PDA
     if (slider_size() < slider_size_min_) {
 	slider_size(slider_size_min_);
@@ -138,7 +138,7 @@ NxSlider::draw_bg(int x, int y, int w, int h)
 void
 NxSlider::draw(int x, int y, int w, int h)
 {
-    double val;
+    float val;
 
     if (minimum() == maximum())
 	val = 0.5;
@@ -292,7 +292,7 @@ NxSlider::slider_ver_lines(int x, int y, int w, int h, int W, Fl_Color c)
 	if (w > 0 && h > 0) {
 	    if (w < 17) {
 		w = 17;
-		slider_size(double (w) / double (W));
+		slider_size(float (w) / float (W));
 		slider_size_min_ = slider_size();
 	    }
 	    draw_box(FL_BORDER_BOX, x, y, w, h, c);
@@ -318,7 +318,7 @@ NxSlider::slider_hor_lines(int x, int y, int w, int h, int W, Fl_Color c)
 	if (w > 0 && h > 0) {
 	    if (h < 17) {
 		h = 17;
-		slider_size(double (h) / double (W));
+		slider_size(float (h) / float (W));
 		slider_size_min_ = slider_size();
 	    }
 
@@ -359,7 +359,7 @@ NxSlider::handle(int event, int x, int y, int w, int h)
 	    int X;
 	    static int offcenter;
 	    if (type() == FL_HOR_FILL_SLIDER || type() == FL_VERT_FILL_SLIDER) {
-		double val = (value() - minimum()) / (maximum() - minimum());
+		float val = (value() - minimum()) / (maximum() - minimum());
 
 		if (val >= 1.0)
 		    X = W;
@@ -379,7 +379,7 @@ NxSlider::handle(int event, int x, int y, int w, int h)
 		}
 		S = 0;
 	    } else {
-		double val = (value() - minimum()) / (maximum() - minimum());
+		float val = (value() - minimum()) / (maximum() - minimum());
 
 		if (val >= 1.0)
 		    X = W - S;
@@ -399,7 +399,7 @@ NxSlider::handle(int event, int x, int y, int w, int h)
 		}
 	    }
 	    X = mx - offcenter;
-	    double v;
+	    float v;
 	  TRY_AGAIN:
 	    if (X < 0) {
 		X = 0;

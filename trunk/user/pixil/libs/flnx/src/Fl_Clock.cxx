@@ -40,7 +40,7 @@ const float hourhand[4][2] = {{-0.5f, 0}, {0, 1.5f}, {0.5f, 0}, {0, -7.0f}};
 const float  minhand[4][2] = {{-0.5f, 0}, {0, 1.5f}, {0.5f, 0}, {0, -11.5f}};
 const float  sechand[4][2] = {{-0.1f, 0}, {0, 2.0f}, {0.1f, 0}, {0, -11.5f}};
 
-static void drawhand(double ang,const float v[][2],Fl_Color fill,Fl_Color line)
+static void drawhand(float ang,const float v[][2],Fl_Color fill,Fl_Color line)
 {
   fl_push_matrix();
   fl_rotate(ang);
@@ -57,9 +57,9 @@ void Fl_Clock_Output::drawhands(Fl_Color fill, Fl_Color line) {
   drawhand(-360*(second()/60.0), sechand, fill, line);
 }
 
-static void rect(double x, double y, double w, double h) {
-  double r = x+w;
-  double t = y+h;
+static void rect(float x, float y, float w, float h) {
+  float r = x+w;
+  float t = y+h;
   fl_begin_polygon();
   fl_vertex(x, y);
   fl_vertex(r, y);
@@ -147,7 +147,7 @@ static void tick(void *v) {
   struct timeval t;
   gettimeofday(&t, 0);
   ((Fl_Clock*)v)->value(t.tv_sec);
-  double delay = 1.0-t.tv_usec*.000001;
+  float delay = 1.0-t.tv_usec*.000001;
   if (delay < .1 || delay > .9) delay = 1.0;
   Fl::add_timeout(delay, tick, v);
 #endif

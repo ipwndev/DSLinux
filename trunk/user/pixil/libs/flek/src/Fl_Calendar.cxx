@@ -35,6 +35,7 @@
 
 #ifdef PIXIL
 #include <nxapp.h>
+#include <time.h>
 
 void
 set_week_buttons(Fl_Calendar_Base * c, int val)

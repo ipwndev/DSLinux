@@ -45,16 +45,16 @@ void LowPass_3x3mean(const Image_YUV<Pixel>& img,Image_YUV<Pixel>& dest);
 
 
 template <class Pel> void ConvolveH(const Bitmap<Pel>& src,Bitmap<Pel>& dst,
-				    const Array<double>& filter,bool useborder=true);
+				    const Array<float>& filter,bool useborder=true);
 template <class Pel> void ConvolveV(const Bitmap<Pel>& src,Bitmap<Pel>& dst,
-				    const Array<double>& filter,bool useborder=true);
+				    const Array<float>& filter,bool useborder=true);
 template <class Pel> void ConvolveHV(const Bitmap<Pel>& src,Bitmap<Pel>& dst,
-				     const Array<double>& filter,bool useborder=true);
+				     const Array<float>& filter,bool useborder=true);
 
-void NormalizeFilter(Array<double>& filter); // Make coefficients sum up to 1.0 .
+void NormalizeFilter(Array<float>& filter); // Make coefficients sum up to 1.0 .
 
 
-void CreateGaussFilter     (Array<double>& filter,double sigma,double cutoffval=0.01,bool normalize=true);
-void CreateGaussDerivFilter(Array<double>& filter,double sigma,double cutoffval=0.01);
+void CreateGaussFilter     (Array<float>& filter,float sigma,float cutoffval=0.01,bool normalize=true);
+void CreateGaussDerivFilter(Array<float>& filter,float sigma,float cutoffval=0.01);
 
 #endif

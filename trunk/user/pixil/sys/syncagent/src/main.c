@@ -10,6 +10,7 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/select.h>
+#include <ctype.h>
 
 #include <ipc/colosseum.h>
 #include <sync/msg_defs.h>
@@ -127,7 +128,7 @@ handle_outgoing(plugin_t * plugin)
 
     char *buffer = (char *) calloc(CL_MAX_MSG_LEN, 1);
     if (!buffer)
-	return;
+	return -1;
 
     ret = ClGetMessage(buffer, &size, &src);
 
@@ -159,6 +160,7 @@ handle_outgoing(plugin_t * plugin)
     }
     else  printf("SYNAGENT:  I don't know what to do with the incoming message [%d] [%s]\n", ret, buffer);
     free(buffer);
+    return 0;
 }
 
 int

@@ -11,7 +11,7 @@ void initFlex( const char *_code );
 %union
 {
      int vali;
-     double vald;
+     float vald;
      char *name;
      void *ptr;
 }

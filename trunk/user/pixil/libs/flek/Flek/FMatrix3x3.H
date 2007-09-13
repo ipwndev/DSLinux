@@ -59,7 +59,7 @@ public:
   /**
    * One argument constructor - from scalar, set all elements to given value.
    */
-  FMatrix3x3 (double scalar)
+  FMatrix3x3 (float scalar)
     : FBase ()
     {
       row[0] = scalar; row[1] = scalar; row[2] = scalar;
@@ -101,7 +101,7 @@ public:
   /**
    * Assignment from a scalar
    */
-  void operator = (double scalar)
+  void operator = (float scalar)
     {
       row[0] = scalar; row[1] = scalar; row[2] = scalar;
     }
@@ -123,7 +123,7 @@ public:
    * 
    * @param scalar Value assigned to each element.
    */
-  void set (double scalar)
+  void set (float scalar)
     {
       row[0] = scalar; row[1] = scalar; row[2] = scalar;
     }
@@ -218,7 +218,7 @@ public:
    * 
    * @param scalar The scalar to multiply by.
    */
-  void operator *= (double scalar)
+  void operator *= (float scalar)
     {
       for (int i=0; i < 3; ++i)
 	row[i] *= scalar;
@@ -229,7 +229,7 @@ public:
    * 
    * @param scalar The scalar to divide by.
    */
-  void operator /= (double scalar)
+  void operator /= (float scalar)
     {
       for (int i=0; i < 3; ++i)
 	row[i] /= scalar;
@@ -263,9 +263,9 @@ public:
    * @param mat The source matrix.
    * @return The detrminant of the source matrix.
    */  
-  friend double determinant(const FMatrix3x3& mat)
+  friend float determinant(const FMatrix3x3& mat)
     {
-      double det = 0.0;
+      float det = 0.0;
       
       det =   mat[0][0] * mat[1][1] * mat[2][2] 
 	+ mat[0][1] * mat[1][2] * mat[2][0] 
@@ -313,7 +313,7 @@ public:
 	    }
 	  
 	  // Divide matrix by main diagonal element to make it 1.0
-	  double fact = row[i][i];
+	  float fact = row[i][i];
 	  for (j=0; j < 3; ++j)
 	    {
 	      row[j] /= fact;
@@ -325,7 +325,7 @@ public:
 	    {
 	      if ( j != i )
 		{
-		  double temp = row[j][i];
+		  float temp = row[j][i];
 		  row[j] -= row[i]*temp;
 		  inv[j] -= inv[i]*temp;
 		}
@@ -336,7 +336,7 @@ public:
       // Last row will be 1.0
       for (i=0; i < 2; ++i)
 	{
-	  double pivot = row[i][i];
+	  float pivot = row[i][i];
 	  row[i] /= pivot;
 	  inv[i] /= pivot;
 	}
@@ -390,7 +390,7 @@ public:
   /**
    * Post-multiplication by a scalar.
    */
-  friend FMatrix3x3 operator * (const FMatrix3x3& mat, double scalar)
+  friend FMatrix3x3 operator * (const FMatrix3x3& mat, float scalar)
     {
       FMatrix3x3 prod (mat);
       prod *= scalar;
@@ -400,7 +400,7 @@ public:
   /**
    * Pre-multiplication by a scalar.
    */
-  friend FMatrix3x3 operator * (double scalar, const FMatrix3x3& mat)
+  friend FMatrix3x3 operator * (float scalar, const FMatrix3x3& mat)
     {
       FMatrix3x3 prod (mat);
       prod *= scalar;
@@ -410,7 +410,7 @@ public:
   /**
    * Division by a scalar.
    */
-  friend FMatrix3x3 operator / (const FMatrix3x3& mat, double scalar)
+  friend FMatrix3x3 operator / (const FMatrix3x3& mat, float scalar)
     {
       FMatrix3x3 quot (mat);
       quot /= scalar;

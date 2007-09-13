@@ -41,7 +41,7 @@ Fl_Animator::Fl_Animator(char * const *image, int X, int Y,
   _fwidth = fwidth;
   _fheight = fheight;
   
-  _interval = ((double) interval / 1000);
+  _interval = ((float) interval / 1000);
 
   _curframe = 0;
   

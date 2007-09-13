@@ -40,7 +40,7 @@
 #include <FL/math.h>
 #endif
 
-void fl_arc(int x,int y,int w,int h,double a1,double a2) {
+void fl_arc(int x,int y,int w,int h,float a1,float a2) {
   if (w <= 0 || h <= 0) return;
 #ifdef WIN32
   int xa = x+w/2+int(w*cos(a1/180.0*M_PI));
@@ -72,7 +72,7 @@ void fl_arc(int x,int y,int w,int h,double a1,double a2) {
 }
 
 
-void fl_pie(int x,int y,int w,int h,double a1,double a2) {
+void fl_pie(int x,int y,int w,int h,float a1,float a2) {
   if (w <= 0 || h <= 0) return;
   if (a1 == a2) return;
 

@@ -41,9 +41,9 @@ Fl_Valuator::Fl_Valuator(int X, int Y, int W, int H, const char* L)
   B = 1;
 }
 
-const double epsilon = 1e-12 ;
+const float epsilon = 1e-12 ;
 
-void Fl_Valuator::step(double s) {
+void Fl_Valuator::step(float s) {
   if (s < 0) s = -s;
   A = rint(s);
   B = 1;
@@ -57,7 +57,7 @@ void Fl_Valuator::precision(int p) {
 
 void Fl_Valuator::value_damage() {damage(FL_DAMAGE_EXPOSE);} // by default do partial-redraw
 
-int Fl_Valuator::value(double v) {
+int Fl_Valuator::value(float v) {
   clear_changed();
   if (v == value_) return 0;
   value_ = v;
@@ -65,9 +65,9 @@ int Fl_Valuator::value(double v) {
   return 1;
 }
 
-double Fl_Valuator::softclamp(double v) {
+float Fl_Valuator::softclamp(float v) {
   int which = (min<=max);
-  double p = previous_value_;
+  float p = previous_value_;
   if ((v<min)==which && p!=min && (p<min)!=which) return min;
   else if ((v>max)==which && p!=max && (p>max)!=which) return max;
   else return v;
@@ -75,7 +75,7 @@ double Fl_Valuator::softclamp(double v) {
 
 // inline void Fl_Valuator::handle_push() {previous_value_ = value_;}
 
-void Fl_Valuator::handle_drag(double v) {
+void Fl_Valuator::handle_drag(float v) {
   if (v != value_) {
     value_ = v;
     value_damage();
@@ -96,25 +96,25 @@ void Fl_Valuator::handle_release() {
   }
 }
 
-double Fl_Valuator::round(double v) {
+float Fl_Valuator::round(float v) {
   if (A) return rint(v*B/A)*A/B;
   else return v;
 }
 
-double Fl_Valuator::clamp(double v) {
+float Fl_Valuator::clamp(float v) {
   if ((v<min)==(min<=max)) return min;
   else if ((v>max)==(min<=max)) return max;
   else return v;
 }
 
-double Fl_Valuator::increment(double v, int n) {
+float Fl_Valuator::increment(float v, int n) {
   if (!A) return v+n*(max-min)/100;
   if (min > max) n = -n;
   return (rint(v*B/A)+n)*A/B;
 }
 
 int Fl_Valuator::format(char* buffer) {
-  double v = value();
+  float v = value();
   if (!A || B==1) return sprintf(buffer, "%g", v);
   int i, x;
   for (x = 10, i = 2; x < B; x *= 10) i++;

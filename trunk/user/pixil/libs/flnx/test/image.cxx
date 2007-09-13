@@ -42,9 +42,9 @@ void make_image() {
   image = new uchar[3*width*height];
   uchar *p = image;
   for (int y = 0; y < height; y++) {
-    double Y = double(y)/(height-1);
+    float Y = float(y)/(height-1);
     for (int x = 0; x < width; x++) {
-      double X = double(x)/(width-1);
+      float X = float(x)/(width-1);
       *p++ = uchar(255*((1-X)*(1-Y))); // red in upper-left
       *p++ = uchar(255*((1-X)*Y));	// green in lower-left
       *p++ = uchar(255*(X*Y));	// blue in lower-right

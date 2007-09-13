@@ -45,7 +45,7 @@ class CubeView : public Fl_Box {
 
 public:
     // this value determines the scaling factor used to draw the cube.
-    double size;
+    float size;
 
     CubeView(int x,int y,int w,int h,const char *l=0);
 

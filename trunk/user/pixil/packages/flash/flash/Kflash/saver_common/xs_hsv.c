@@ -17,12 +17,12 @@
 #include "xs_hsv.h"
 
 void
-hsv_to_rgb (int h, double s, double v,
+hsv_to_rgb (int h, float s, float v,
 	    unsigned short *r, unsigned short *g, unsigned short *b)
 {
-  double H, S, V, R, G, B;
-  double p1, p2, p3;
-  double f;
+  float H, S, V, R, G, B;
+  float p1, p2, p3;
+  float f;
   int i;
 
   if (s < 0) s = 0;
@@ -50,15 +50,15 @@ hsv_to_rgb (int h, double s, double v,
 
 void
 rgb_to_hsv (unsigned short r, unsigned short g, unsigned short b,
-	    int *h, double *s, double *v)
+	    int *h, float *s, float *v)
 {
-  double R, G, B, H, S, V;
-  double cmax, cmin;
-  double cmm;
+  float R, G, B, H, S, V;
+  float cmax, cmin;
+  float cmm;
   int imax;
-  R = ((double) r) / 65535.0;
-  G = ((double) g) / 65535.0;
-  B = ((double) b) / 65535.0;
+  R = ((float) r) / 65535.0;
+  G = ((float) g) / 65535.0;
+  B = ((float) b) / 65535.0;
   cmax = R; cmin = G; imax = 1;
   if  ( cmax < G ) { cmax = G; cmin = R; imax = 2; }
   if  ( cmax < B ) { cmax = B; imax = 3; }

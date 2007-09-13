@@ -95,24 +95,24 @@ PrintAreaLayouter_nUp::PrintAreaLayouter_nUp()
   AddPostscriptModule(*this);
 }
 
-int PrintAreaLayouter_nUp::SetParams(double aspect,bool landscape,int nup,double spacing,PaperSize paper)
+int PrintAreaLayouter_nUp::SetParams(float aspect,bool landscape,int nup,float spacing,PaperSize paper)
 {
 try_again:
-  double width  = (landscape ? paper.height : paper.width )-2*paper.border;
-  double height = (landscape ? paper.width  : paper.height)-2*paper.border;
+  float width  = (landscape ? paper.height : paper.width )-2*paper.border;
+  float height = (landscape ? paper.width  : paper.height)-2*paper.border;
 
   int    bestcol=0;
   int    bestrow=0;
-  double bestaw=0.0;
-  double bestah=0.0;
+  float bestaw=0.0;
+  float bestah=0.0;
 
   // Try all possible number of columns and take that one that results in largest area sizes.
   for (int ncol=1;ncol<=nup;ncol++)
     {
       int nrow = (nup+ncol-1)/ncol;
 
-      double aw = (width -(ncol-1)*spacing)/ncol;
-      double ah = (height-(nrow-1)*spacing)/nrow;
+      float aw = (width -(ncol-1)*spacing)/ncol;
+      float ah = (height-(nrow-1)*spacing)/nrow;
 
       if (aw<=0.0 || ah <= 0.0)
 	continue;
@@ -141,8 +141,8 @@ try_again:
       goto try_again;
     }
 
-  double aox = (width -(bestcol-1)*spacing - bestcol*bestaw)/bestcol/2;
-  double aoy = (height-(bestrow-1)*spacing - bestrow*bestah)/bestrow/2;
+  float aox = (width -(bestcol-1)*spacing - bestcol*bestaw)/bestcol/2;
+  float aoy = (height-(bestrow-1)*spacing - bestrow*bestah)/bestrow/2;
 
   d_nCols = bestcol;
   d_nRows = bestrow;

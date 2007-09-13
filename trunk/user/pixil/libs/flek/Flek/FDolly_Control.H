@@ -44,20 +44,20 @@ protected:
   bool Dragging;
 
   // Mouse translations/points
-  double vNow, vDown;
+  float vNow, vDown;
 
   // Current dolly
-  double dNow, dDown;
+  float dNow, dDown;
 
   // For scaling given coordinate value
-  double scale_factor;
+  float scale_factor;
   
 public:
   
   /**
    * Default constructor
    */
-  FDolly_Control (double sf=1.0)
+  FDolly_Control (float sf=1.0)
     : mNow(), Dragging(false), vNow(0), vDown(0), dNow(0), dDown(0),
       scale_factor(sf)
   {}
@@ -87,7 +87,7 @@ public:
     dNow = 0.0; dDown = 0.0 ; mNow.reset();
   }
   
-  void set_scale(double sf) {
+  void set_scale(float sf) {
     scale_factor = sf;
   }
   
@@ -106,7 +106,7 @@ public:
   /**
    * Specify mouse position.
    */
-  void mouse (double z) {
+  void mouse (float z) {
     vNow = scale_factor*z;
   }
   
@@ -120,7 +120,7 @@ public:
   /**
    * Get the dolly value.
    */
-  double dolly_value (void) const {
+  float dolly_value (void) const {
     return dNow;
   }
   

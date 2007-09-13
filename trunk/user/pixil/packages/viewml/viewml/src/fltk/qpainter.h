@@ -105,7 +105,7 @@ public:
       drawRect(rect.x(),rect.y(),rect.width(), rect.height());
     }
 
-  void scale(double sx, double sy) { }
+  void scale(float sx, float sy) { }
 
   void eraseRect(int x, int y, int w, int h);
   void eraseRect(const QRect & rect);

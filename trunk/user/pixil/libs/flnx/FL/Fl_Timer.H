@@ -39,7 +39,7 @@ class Fl_Timer : public Fl_Widget {
   static FL_EXPORT void stepcb(void *);
   FL_EXPORT void step();
   char on, direction_;
-  double delay, total;
+  float delay, total;
   long lastsec,lastusec;
 protected:
   FL_EXPORT void draw();
@@ -47,8 +47,8 @@ public:
   FL_EXPORT int handle(int);
   FL_EXPORT Fl_Timer(uchar t,int x,int y,int w,int h, const char *l);
   FL_EXPORT ~Fl_Timer();
-  FL_EXPORT void value(double);
-  double value() const {return delay>0.0?delay:0.0;}
+  FL_EXPORT void value(float);
+  float value() const {return delay>0.0?delay:0.0;}
   char direction() const {return direction_;}
   void direction(char d) {direction_ = d;}
   char suspended() const {return !on;}

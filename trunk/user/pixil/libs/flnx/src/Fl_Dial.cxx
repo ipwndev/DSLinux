@@ -37,7 +37,7 @@ void Fl_Dial::draw(int x, int y, int w, int h) {
   y += Fl::box_dy(box());
   w -= Fl::box_dw(box());
   h -= Fl::box_dh(box());
-  double angle = (a2-a1)*(value()-minimum())/(maximum()-minimum()) + a1;
+  float angle = (a2-a1)*(value()-minimum())/(maximum()-minimum()) + a1;
   if (type() == FL_FILL_DIAL) {
     // foo: draw this nicely in certain round box types
     int foo = (box() > _FL_ROUND_UP_BOX && Fl::box_dx(box()));
@@ -96,11 +96,11 @@ int Fl_Dial::handle(int event, int x, int y, int w, int h) {
     int mx = Fl::event_x()-x-w/2;
     int my = Fl::event_y()-y-h/2;
     if (!mx && !my) return 1;
-    double angle = 270-atan2((float)-my, (float)mx)*180/M_PI;
-    double oldangle = (a2-a1)*(value()-minimum())/(maximum()-minimum()) + a1;
+    float angle = 270-atan2((float)-my, (float)mx)*180/M_PI;
+    float oldangle = (a2-a1)*(value()-minimum())/(maximum()-minimum()) + a1;
     while (angle < oldangle-180) angle += 360;
     while (angle > oldangle+180) angle -= 360;
-    double val;
+    float val;
     if ((a1<a2) ? (angle <= a1) : (angle >= a1)) {
       val = minimum();
     } else if ((a1<a2) ? (angle >= a2) : (angle <= a2)) {

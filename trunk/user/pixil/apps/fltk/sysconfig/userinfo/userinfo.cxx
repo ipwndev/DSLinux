@@ -239,7 +239,7 @@ NxUserInfo::MakeWindow(int X, int Y, int W, int H)
 	_resetb = o;
     }
     {
-	double max_lbl_wid = 0;	// Label width
+	float max_lbl_wid = 0;	// Label width
 	int input_width;
 	Fl_Tabs *o;		// Tab widget
 
@@ -248,7 +248,7 @@ NxUserInfo::MakeWindow(int X, int Y, int W, int H)
 
 	fl_font(DEFAULT_TEXT_FONT, DEFAULT_TEXT_SIZE);
 	for (int i = 1; i <= UI_FLD_MAXFLDS; i++) {
-	    double tmp_wid;
+	    float tmp_wid;
 
 	    if ((tmp_wid = fl_width(ParIds[i])) > max_lbl_wid)
 		max_lbl_wid = tmp_wid;

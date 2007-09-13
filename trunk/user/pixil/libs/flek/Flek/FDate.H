@@ -167,7 +167,7 @@ class FDate : public FBase
    * 
    * @return The julian date value for this object.
    */
-  double julian_date ();
+  float julian_date ();
 
   /**
    * Equality comparison of two dates.

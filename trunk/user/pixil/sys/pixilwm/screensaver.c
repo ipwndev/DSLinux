@@ -45,6 +45,7 @@
 #include "powerman.h"
 
 static int g_active = 0;
+#ifndef CONFIG_PIXILWM_PM
 static GR_WINDOW_ID swindow = 0;
 
 static void draw_screensaver(void) {
@@ -103,6 +104,7 @@ static void do_screensaver(void) {
   /* Turn back on the backlight */
   pm_backlight(1);
 }
+#endif
 
 void screensaver_init(void) {
 	

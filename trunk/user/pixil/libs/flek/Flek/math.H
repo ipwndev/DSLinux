@@ -57,14 +57,6 @@ inline float absolute (float x)
   return (x < 0.0) ? -x : x;
 }
 
-/**
- * Returns the absolute value.
- */
-inline double absolute (double x)
-{
-  return (x < 0.0) ? -x : x;
-}
-
 #endif
 
 // Zero '0' value to be used for comparison and assignment
@@ -96,7 +88,7 @@ inline bool is_non_zero (int num) {
 /**
  * Check if passed number is non-zero.  (Uses ZERO bounds).
  */
-inline bool is_non_zero (double num) {
+inline bool is_non_zero (float num) {
   if ( (num < -ZERO) || (num > ZERO) ) return true;
   return false;
 }
@@ -107,10 +99,6 @@ inline bool is_non_zero (double num) {
 #define _INLINE_FP_EQUAL_
 
 inline bool are_equal (float x1, float x2) {
-  return ( ( absolute (x1-x2) < ZERO ) ? true : false );
-}
-
-inline bool are_equal (double x1, double x2) {
   return ( ( absolute (x1-x2) < ZERO ) ? true : false );
 }
 
@@ -199,20 +187,6 @@ inline float cube (float x) {
   return x*x*x;
 }
 
-/**
- * Square the number.
- */
-inline double sqr (double x) {
-  return x*x;
-}
-
-/**
- * Cube the number.
- */
-inline double cube (double x) {
-  return x*x*x;
-}
-
 #endif
 
 #ifndef _INLINE_MIN_MAX_
@@ -269,20 +243,6 @@ inline float max (float x, float y) {
 }
 
 /**
- * Minimum of two numbers.
- */
-inline double min (double x, double y) {
-  return ( (x < y) ? x : y );
-}
-
-/**
- * Maximum of two numbers.
- */
-inline double max (double x, double y) {
-  return ( (x > y) ? x : y );
-}
-
-/**
  * Minimum of two unsigned chars.
  */
 inline unsigned char min (unsigned char x, unsigned char y) {
@@ -327,14 +287,6 @@ inline void swap (float& x, float& y) {
   x = y; y = t;
 }
 
-/**
- * Swap two numbers.
- */
-inline void swap (double& x, double& y) {
-  double t = x;
-  x = y; y = t;
-}
-
 #endif
 
 #ifndef _INLINE_DEG_RAD_
@@ -348,23 +300,9 @@ inline float deg2rad (float deg) {
 }
 
 /**
- * Degrees to radians.
- */
-inline double deg2rad (double deg) {
-  return deg*M_PI/180.0;
-}
-
-/**
  * Radians to degrees.
  */
 inline float rad2deg (float rad) {
-  return rad*180.0/M_PI;
-}
-
-/**
- * Radians to degrees.
- */
-inline double rad2deg (double rad) {
   return rad*180.0/M_PI;
 }
 
@@ -384,13 +322,6 @@ inline int sign (int x) {
  * Return the sign of a number.  1, 0, or -1.
  */
 inline float sign (float x) {
-  return ( (x < 0.0) ? -1.0 : ((x > 0.0) ? 1.0 : 0.0) );
-}
-
-/**
- * Return the sign of a number.  1, 0, or -1.
- */
-inline double sign (double x) {
   return ( (x < 0.0) ? -1.0 : ((x > 0.0) ? 1.0 : 0.0) );
 }
 

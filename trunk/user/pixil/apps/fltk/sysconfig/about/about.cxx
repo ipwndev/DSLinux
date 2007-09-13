@@ -196,7 +196,7 @@ NxAbout::FormatString(char *str, int w, int idx)
       lnlen = 0,		// Length of line in # of chars
       solflg = 0,		// Indicates a start of a line
       sowflg = 0;		// Indicates a start of a word
-    double strwid;		// Current width of line
+    float strwid;		// Current width of line
 
     if (str == NULL || w == 0)
 	return;
@@ -390,12 +390,12 @@ NxAbout::HideWindow(void)
 void
 NxAbout::SetWidths(void)
 {
-    double max_lbl_width = 0;
+    float max_lbl_width = 0;
 
     fl_font(DEFAULT_TEXT_FONT, DEFAULT_TEXT_SIZE);
     for (int i = 0; i < ABOUT_DUMMY; i++) {
 	char *cp;
-	double dbltmp;
+	float dbltmp;
 
 	if ((cp = strchr(label_tags[i], '\n')) != NULL) {
 	    char *tmpbuf;

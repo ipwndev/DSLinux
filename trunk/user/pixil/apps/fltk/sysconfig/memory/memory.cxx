@@ -66,7 +66,7 @@ static char *f_curDev;		// Ptr to the current device value
 
 
 // Static function prototypes (non class)
-static double getsztags(int byteval, int *idx);
+static float getsztags(int byteval, int *idx);
 
 NxMemory::~NxMemory()
 {
@@ -129,7 +129,7 @@ NxMemory::MakeWindow(int X, int Y, int W, int H)
       curx,			// Current x coordinate
       cury,			// Current y coordinate
       mar = 4;			// Left margin
-    double fontw0,		// Width of "0%" in current font
+    float fontw0,		// Width of "0%" in current font
       fontw100;			// Width of "100%" in current font
 
     Fl_Color def_bg,		// Default background
@@ -385,7 +385,7 @@ NxMemory::GetMemory(void)
 {
     char buf[255];		// Buffer
     int tag_idx = 0;		// Tag index
-    double val;			// Value
+    float val;			// Value
     unsigned long mbuf = 0,	// Memory buffered
       mcache = 0,		// Memory cached
       mfree = 0,		// Memory free
@@ -437,7 +437,7 @@ NxMemory::GetMemory(void)
     _memory.total->label(_memory.t_str);
     _memory.total->redraw();
 
-    val = ((double) mused / mtot) * 100.0;
+    val = ((float) mused / mtot) * 100.0;
     _memsl->value(val);
     _memsl->redraw();
 
@@ -457,7 +457,7 @@ void
 NxMemory::GetStorage(void)
 {
     char buf[64];
-    double pcnt_used,		// Percentage used
+    float pcnt_used,		// Percentage used
       sadjtot = 0.0, sfree = 0.0, stot = 0.0, sused = 0.0, val;	// Value
     int tag_idx = 1;		// Idx into size_tags
     struct statfs stfs;		// Filesystem stat info
@@ -467,10 +467,10 @@ NxMemory::GetStorage(void)
     if (statfs(f_curDev, &stfs))
 	return;
 
-    stot = ((double) stfs.f_blocks * stfs.f_bsize) / 1024;	// In KB
+    stot = ((float) stfs.f_blocks * stfs.f_bsize) / 1024;	// In KB
     sadjtot = stfs.f_blocks - (stfs.f_bfree - stfs.f_bavail);
-    sfree = ((double) stfs.f_bavail * stfs.f_bsize) / 1024;
-    sused = ((double) (sadjtot - stfs.f_bavail) * stfs.f_bsize) / 1024;
+    sfree = ((float) stfs.f_bavail * stfs.f_bsize) / 1024;
+    sused = ((float) (sadjtot - stfs.f_bavail) * stfs.f_bsize) / 1024;
     sadjtot = sadjtot * stfs.f_bsize / 1024;
     pcnt_used = ((sused) / sadjtot) * 100.0 + 0.5;
 
@@ -690,7 +690,7 @@ NxMemory::proc_tmr(void *d)
 
 /*******************************************************************************\
 **
-**	Function:	double getsztags()
+**	Function:	float getsztags()
 **	Desc:		Converts the value into the lowest form of BYTES/KB/MB/GB that is
 **				>= 1.0 and < 1024.0 units
 **	Accepts:	int value = Value to convert (if *idx == 0, values are assumed bytes)
@@ -698,11 +698,11 @@ NxMemory::proc_tmr(void *d)
 **	Returns:	Double a value >= 1.0 && < 1024.0
 **
 \*******************************************************************************/
-static double
+static float
 getsztags(int value, int *idx)
 {
     int new_idx = *idx;		// New idx
-    double retval = value;	// Value
+    float retval = value;	// Value
 
     if (new_idx < 0 || new_idx > SZ_TAGS)
 	new_idx = 0;

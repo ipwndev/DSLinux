@@ -667,7 +667,9 @@ IP_Setup::net_up()
 //
 //////////////////////////////////////////////////////////
 
-#include <iostream.h>
+#include <iostream>
+using namespace std;
+
 IP_Setup::IP_Setup()
 {
 

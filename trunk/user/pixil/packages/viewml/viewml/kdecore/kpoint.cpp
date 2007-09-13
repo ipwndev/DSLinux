@@ -96,7 +96,7 @@ KPoint &KPoint::operator*=(int _c)
 }
 
 //==========================================================
-KPoint &KPoint::operator*=(double _c)
+KPoint &KPoint::operator*=(float _c)
 {
   xpos = static_cast<int>(xpos * _c);
   ypos = static_cast<int>(ypos * _c);
@@ -114,7 +114,7 @@ KPoint &KPoint::operator/=(int _c)
 }
 
 //==========================================================
-KPoint &KPoint::operator/=(double _c)
+KPoint &KPoint::operator/=(float _c)
 {
   xpos = static_cast<int>(xpos / _c);
   ypos = static_cast<int>(ypos / _c);
@@ -189,13 +189,13 @@ KPoint operator*(int _c,const KPoint &_pnt)
 }
 
 //==========================================================
-KPoint operator*(const KPoint &_pnt,double _c)
+KPoint operator*(const KPoint &_pnt,float _c)
 {
   return KPoint(_pnt.x() * _c,_pnt.y() *_c);
 }
 
 //==========================================================
-KPoint operator*(double _c,const KPoint &_pnt)
+KPoint operator*(float _c,const KPoint &_pnt)
 {
   return KPoint(_pnt.x() * _c,_pnt.y() *_c);
 }
@@ -213,7 +213,7 @@ KPoint operator/(const KPoint &_pnt,int _c)
 }
 
 //==========================================================
-KPoint operator/(const KPoint &_pnt,double _c)
+KPoint operator/(const KPoint &_pnt,float _c)
 {
   return KPoint(_pnt.x() / _c,_pnt.y() /_c);
 }

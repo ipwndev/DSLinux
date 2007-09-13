@@ -147,19 +147,19 @@ int fl_descent() {
   return fl_fontsize->metr.tmDescent;
 }
 
-double fl_width(const char* c) {
-  double w = 0.0;
+float fl_width(const char* c) {
+  float w = 0.0;
   while (*c) w += fl_fontsize->width[uchar(*c++)];
   return w;
 }
 
-double fl_width(const char* c, int n) {
-  double w = 0.0;
+float fl_width(const char* c, int n) {
+  float w = 0.0;
   while (n--) w += fl_fontsize->width[uchar(*c++)];
   return w;
 }
 
-double fl_width(uchar c) {
+float fl_width(uchar c) {
   return fl_fontsize->width[c];
 }
 

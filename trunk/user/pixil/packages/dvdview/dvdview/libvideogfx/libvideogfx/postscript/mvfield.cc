@@ -12,8 +12,8 @@ MotionField2Postscript::~MotionField2Postscript()
 
 void MotionField2Postscript::DrawMotionField(const Bitmap<MotVec>& mv,int hperblk,int vperblk)
 {
-  double blkwidth  = d_area.width /mv.AskWidth();
-  double blkheight = d_area.height/mv.AskHeight();
+  float blkwidth  = d_area.width /mv.AskWidth();
+  float blkheight = d_area.height/mv.AskHeight();
 
   const MotVec*const* mvptr = mv.AskFrame_const();
 

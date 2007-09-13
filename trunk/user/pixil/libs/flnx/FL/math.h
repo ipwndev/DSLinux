@@ -49,8 +49,8 @@
 
 #if defined(WIN32) || defined(CRAY)
 
-inline double rint(double v) {return floor(v+.5);}
-inline double copysign(double a, double b) {return b<0 ? -a : a;}
+inline float rint(float v) {return floor(v+.5);}
+inline float copysign(float a, float b) {return b<0 ? -a : a;}
 
 #endif
 

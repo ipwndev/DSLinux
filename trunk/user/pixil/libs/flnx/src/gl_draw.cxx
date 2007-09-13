@@ -40,9 +40,9 @@
 void  gl_font(int fontid, int size) {fl_font(fontid, size);}
 int   gl_height() {return fl_height();}
 int   gl_descent() {return fl_descent();}
-double gl_width(const char* s) {return fl_width(s);}
-double gl_width(const char* s, int n) {return fl_width(s,n);}
-double gl_width(uchar c) {return fl_width(c);}
+float gl_width(const char* s) {return fl_width(s);}
+float gl_width(const char* s, int n) {return fl_width(s,n);}
+float gl_width(uchar c) {return fl_width(c);}
 
 void gl_draw(const char* str, int n) {
   if (!fl_fontsize->listbase) {

@@ -51,7 +51,7 @@ int		Fl::damage_,
 char		*Fl::e_text = "";
 int		Fl::e_length;
 
-static double fl_elapsed();
+static float fl_elapsed();
 
 //
 // 'Fl:event_inside()' - Return whether or not the mouse event is inside
@@ -73,14 +73,14 @@ int Fl::event_inside(const Fl_Widget *o) /*const*/ {
 // are only a small number:
 
 static struct Timeout {
-  double time;
+  float time;
   void (*cb)(void*);
   void* arg;
 } * timeout;
 static int numtimeouts;
 static int timeout_array_size;
 
-void Fl::add_timeout(double t, void (*cb)(void *), void *v) {
+void Fl::add_timeout(float t, void (*cb)(void *), void *v) {
 
   fl_elapsed();
 
@@ -154,7 +154,7 @@ void Fl::flush() {
 #endif
 }
 
-extern double fl_wait(int timeout_flag, double timeout);
+extern float fl_wait(int timeout_flag, float timeout);
 extern int fl_ready();
 
 static int initclock; // if false we didn't call fl_elapsed() last time
@@ -167,7 +167,7 @@ static int initclock; // if false we didn't call fl_elapsed() last time
 // called.  To reduce the number of system calls to get the
 // current time, the "initclock" symbol is turned on by an indefinite
 // wait.  This should then reset the measured-from time and return zero
-static double fl_elapsed() {
+static float fl_elapsed() {
 
 #ifdef WIN32
 
@@ -177,7 +177,7 @@ static double fl_elapsed() {
   if (!initclock) {prevclock = newclock; initclock = 1; return 0.0;}
   else if (newclock < prevclock) return 0.0;
 
-  double t = double(newclock-prevclock)/TICKS_PER_SECOND;
+  float t = float(newclock-prevclock)/TICKS_PER_SECOND;
   prevclock = newclock;
 
 #else
@@ -191,7 +191,7 @@ static double fl_elapsed() {
     initclock = 1;
     return 0.0;
   }
-  double t = newclock.tv_sec - prevclock.tv_sec +
+  float t = newclock.tv_sec - prevclock.tv_sec +
     (newclock.tv_usec - prevclock.tv_usec)/1000000.0;
   prevclock.tv_sec = newclock.tv_sec;
   prevclock.tv_usec = newclock.tv_usec;
@@ -237,12 +237,12 @@ int Fl::wait() {
   return 1;
 }
 
-double Fl::wait(double time) {
+float Fl::wait(float time) {
   callidle();
   int expired = 0;
   if (numtimeouts) {time -= fl_elapsed(); expired = call_timeouts();}
   flush();
-  double wait_time = (idle && !in_idle) || expired ? 0.0 : time;
+  float wait_time = (idle && !in_idle) || expired ? 0.0 : time;
   if (numtimeouts && timeout[0].time < wait_time) wait_time = timeout[0].time;
   fl_wait(1, wait_time);
   return time - fl_elapsed();

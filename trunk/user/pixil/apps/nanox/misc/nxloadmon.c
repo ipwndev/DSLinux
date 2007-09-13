@@ -76,7 +76,7 @@ static nxARGS args[] = {
     nxEND
 };
 
-double queue[BACKLOG];
+float queue[BACKLOG];
 int qhead = 1;
 int qtail = 0;
 
@@ -103,13 +103,13 @@ static GR_WINDOW_INFO info;
 #define YSIZE	info.height
 
 static void expose_points(void);
-static void insert_point(double value);
+static void insert_point(float value);
 
-static double
+static float
 get_load()
 {
     unsigned long user, nice, sys, idle;
-    double total = 0, busy = 0;
+    float total = 0, busy = 0;
 
     char str[BUFSIZ];
     char *c;
@@ -141,8 +141,8 @@ get_load()
 	dsys = abs(sys - cpudata.sys);
 	didle = abs(idle - cpudata.idle);
 
-	busy = (double) duser + dnice + dsys;
-	total = (double) busy + didle;
+	busy = (float) duser + dnice + dsys;
+	total = (float) busy + didle;
     } else
 	total = 0;
 
@@ -272,7 +272,7 @@ expose_points(void)
 }
 
 static void
-insert_point(double value)
+insert_point(float value)
 {
     if (--qhead < 0)
 	qhead = (BACKLOG - 1);

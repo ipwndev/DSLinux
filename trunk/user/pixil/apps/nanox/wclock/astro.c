@@ -139,15 +139,15 @@ jdate(t)
 
 /* JTIME --    Convert internal GMT  date  and	time  to  astronomical
 	       Julian  time  (i.e.   Julian  date  plus  day fraction,
-	       expressed as a double).	*/
+	       expressed as a float).	*/
 
-double
+float
 jtime(t)
      struct tm *t;
 {
 #ifdef NOTUSED
     long val = t->tm_sec + (60L * (t->tm_min + 60L * t->tm_hour));
-    double ret = (((double) (jdate(t) + val)) - 0.5) / 86400.0;
+    float ret = (((float) (jdate(t) + val)) - 0.5) / 86400.0;
     return (ret);
 #endif
 
@@ -158,11 +158,11 @@ jtime(t)
 
 /*  KEPLER  --	Solve the equation of Kepler.  */
 
-double
+float
 kepler(m, ecc)
-     double m, ecc;
+     float m, ecc;
 {
-    double e, delta;
+    float e, delta;
 #define EPSILON 1E-6
 
     e = m = dtr(m);
@@ -186,11 +186,11 @@ kepler(m, ecc)
 
 void
 sunpos(jd, apparent, ra, dec, rv, slong)
-     double jd;
+     float jd;
      int apparent;
-     double *ra, *dec, *rv, *slong;
+     float *ra, *dec, *rv, *slong;
 {
-    double t, t2, t3, l, m, e, ea, v, theta, omega, eps;
+    float t, t2, t3, l, m, e, ea, v, theta, omega, eps;
 
     /* Time, in Julian centuries of 36525 ephemeris days,
        measured from the epoch 1900 January 0.5 ET. */
@@ -266,11 +266,11 @@ sunpos(jd, apparent, ra, dec, rv, slong)
 /*  GMST  --  Calculate Greenwich Mean Siderial Time for a given
 	      instant expressed as a Julian date and fraction.	*/
 
-double
+float
 gmst(jd)
-     double jd;
+     float jd;
 {
-    double t, theta0;
+    float t, theta0;
 
 
     /* Time, in Julian centuries of 36525 ephemeris days,

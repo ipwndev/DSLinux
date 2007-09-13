@@ -281,7 +281,7 @@ struct jpeg_compress_struct {
   int input_components;		/* # of color components in input image */
   J_COLOR_SPACE in_color_space;	/* colorspace of input image */
 
-  double input_gamma;		/* image gamma of input image */
+  float input_gamma;		/* image gamma of input image */
 
   /* Compression parameters --- these fields must be set before calling
    * jpeg_start_compress().  We recommend calling jpeg_set_defaults() to
@@ -431,7 +431,7 @@ struct jpeg_decompress_struct {
 
   unsigned int scale_num, scale_denom; /* fraction by which to scale image */
 
-  double output_gamma;		/* image gamma wanted in output */
+  float output_gamma;		/* image gamma wanted in output */
 
   boolean buffered_image;	/* TRUE=multiple output passes */
   boolean raw_data_out;		/* TRUE=downsampled data wanted */

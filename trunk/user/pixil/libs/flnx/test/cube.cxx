@@ -37,10 +37,10 @@
 #if !HAVE_GL
 class cube_box : public Fl_Box {
 public:	
-  double lasttime;
+  float lasttime;
   int wire;
-  double size;
-  double speed;
+  float size;
+  float speed;
   cube_box(int x,int y,int w,int h,const char *l=0)
     :Fl_Box(FL_DOWN_BOX,x,y,w,h,l){
       label("This demo does\nnot work without GL");
@@ -53,10 +53,10 @@ public:
 class cube_box : public Fl_Gl_Window {
   void draw();
 public:
-  double lasttime;
+  float lasttime;
   int wire;
-  double size;
-  double speed;
+  float size;
+  float speed;
   cube_box(int x,int y,int w,int h,const char *l=0)
     : Fl_Gl_Window(x,y,w,h,l) {lasttime = 0.0;}
 };

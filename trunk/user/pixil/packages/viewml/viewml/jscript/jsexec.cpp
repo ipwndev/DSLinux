@@ -49,7 +49,7 @@ JSBoolObject::JSBoolObject( bool _i ) : JSObject()
  *
  *********************************************************/
 
-JSFloatObject::JSFloatObject( double _i ) : JSObject()
+JSFloatObject::JSFloatObject( float _i ) : JSObject()
 {
     value = _i;
 }

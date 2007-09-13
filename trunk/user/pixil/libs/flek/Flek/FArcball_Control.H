@@ -70,7 +70,7 @@ public:
    *   the user sweeps a rotation arc.  The radius is relative to the
    *   window, where the value 1.0 would be the size of the window.
    */
-  FArcball_Control (const FVector3& cen, double rad);
+  FArcball_Control (const FVector3& cen, float rad);
 
   /**
    * The destructor.
@@ -93,7 +93,7 @@ public:
    *   the user sweeps a rotation arc.  The radius is relative to the
    *   window, where the value 1.0 would be the size of the window.
    */
-  void place (const FVector3& cen, double rad) {
+  void place (const FVector3& cen, float rad) {
     vCenter = cen; dRadius = rad;
   }
 
@@ -113,7 +113,7 @@ public:
    * @param y The y coordinate center for all subsequent rotation operations.
    * @param z The z coordinate center for all subsequent rotation operations.
    */    
-  void center (double x, double y, double z) {
+  void center (float x, float y, float z) {
     vCenter.set (x, y, z);
   }
 
@@ -132,7 +132,7 @@ public:
    * @param x The new x coordinate of the mouse.
    * @param y The new y coordinate of the mouse.
    */
-  void mouse (double x, double y) {
+  void mouse (float x, float y) {
     vNow.set (x, y, 0);
   }
 
@@ -230,18 +230,18 @@ public:
    * @return The arcball radius relative to the size of the viewport.  
    *   Where 1.0 equals a diameter equal to the size of the viewport.
    */
-  double radius () const { return dRadius; }
+  float radius () const { return dRadius; }
 
   /** 
    * Sets the arcball radius.
    *
    * @param The arcball radius.  Good values are usually less than 1.0.
    */
-  void radius (const double r) { dRadius = r; }
+  void radius (const float r) { dRadius = r; }
   
  protected:
   FVector3 vCenter;
-  double dRadius;
+  float dRadius;
 
   FQuaternion qNow, qDown, qDrag;
   FVector3 vNow, vDown, vFrom, vTo;
@@ -252,7 +252,7 @@ public:
   
 private:
   
-  static FVector3 mouseOnSphere (const FVector3& mouse, const FVector3& ballCenter, double ballRadius);
+  static FVector3 mouseOnSphere (const FVector3& mouse, const FVector3& ballCenter, float ballRadius);
   static FVector3 constrainToAxis (const FVector3& loose, const FVector3& axis);
   static int nearestConstraintAxis (const FVector3& loose, FVector3 * axes, int nAxes);
   static FQuaternion quatFromBallPoints (const FVector3& from, const FVector3& to);

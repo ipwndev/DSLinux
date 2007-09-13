@@ -3,12 +3,12 @@
 
 # Set the compiler targets for FLNX configure
 
-export CC=$(TARGET_CROSS)gcc
-export CXX=$(TARGET_CROSS)g++
-export AR=$(TARGET_CROSS)ar
-export NM=$(TARGET_CROSS)nm
-export RANLIB=$(TARGET_CROSS)ranlib
-export LD=$(TARGET_CROSS)ld
+#export CC=$(TARGET_CROSS)gcc
+#export CXX=$(TARGET_CROSS)g++
+#export AR=$(TARGET_CROSS)ar
+#export NM=$(TARGET_CROSS)nm
+#export RANLIB=$(TARGET_CROSS)ranlib
+#export LD=$(TARGET_CROSS)ld
 
 # FLNX and FLEK are always built
 
@@ -51,7 +51,7 @@ all: $(subdir-build) $(local-build)
 clean: $(subdir-clean) $(local-clean)
 install: $(subdir-install) $(local-install)
 
-$(subdir-build): dummy
+$(subdir-build): _build_flnx dummy
 	@ $(MAKE) -C $(patsubst _subdir_%,%,$@)
 
 $(subdir-clean): dummy

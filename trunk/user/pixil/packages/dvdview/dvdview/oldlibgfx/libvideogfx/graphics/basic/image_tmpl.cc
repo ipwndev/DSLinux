@@ -10,7 +10,7 @@ template class Image_YUV<Pixel>;
 template class Bitmap<Pixel>;
 
 template class Bitmap<bool>;
-template class Bitmap<double>;
+template class Bitmap<float>;
 
 #include "image.cc"
 #include "bitmap.cc"

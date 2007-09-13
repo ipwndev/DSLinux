@@ -40,9 +40,9 @@ void sAddExample();		/* sc, char *classname; Vector y */
 void sRemoveExample();		/* sc, classname, y */
 void sDoneAdding();		/* sc */
 sClassDope sClassify();		/* sc, y */
-sClassDope sClassifyAD();	/* sc, y, double *ap; double *dp */
+sClassDope sClassifyAD();	/* sc, y, float *ap; float *dp */
 sClassDope sClassNameLookup();	/* sc, classname */
-double MahalanobisDistance();	/* Vector v, u; Matrix sigma */
+float MahalanobisDistance();	/* Vector v, u; Matrix sigma */
 void FixClassifier();
 void sDumpClassifier();
 void sDistances();

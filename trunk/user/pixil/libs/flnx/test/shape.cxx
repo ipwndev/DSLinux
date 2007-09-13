@@ -59,7 +59,7 @@ void shape_window::draw() {
   glColor3f(.5,.6,.7);
   glBegin(GL_POLYGON);
   for (int i=0; i<sides; i++) {
-    double ang = i*2*M_PI/sides;
+    float ang = i*2*M_PI/sides;
     glVertex3f(cos(ang),sin(ang),0);
   }
   glEnd();

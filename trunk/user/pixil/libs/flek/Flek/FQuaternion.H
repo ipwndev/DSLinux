@@ -57,21 +57,21 @@ public:
   /**
    * Constructor from a vector and a scalar
    */
-  FQuaternion (const FVector3& vec, double scalar)
+  FQuaternion (const FVector3& vec, float scalar)
     : FBase (), v (vec), w (scalar)
     {}
 
   /**
    * Same as above, but with reverse order
    */
-  FQuaternion (double scalar, const FVector3& vec)
+  FQuaternion (float scalar, const FVector3& vec)
     : FBase (), v (vec), w (scalar)
     {}
 
   /**
    * Construct from 3/4 individual values. Scalar is set to 0 by default
    */
-  FQuaternion (double x, double y, double z, double scalar=0.0)
+  FQuaternion (float x, float y, float z, float scalar=0.0)
     : FBase (), v (x, y, z), w (scalar)
     {}
 
@@ -110,7 +110,7 @@ public:
   /**
    * Set the vector and scalar parts of the quaternion
    */
-  void set (const FVector3& vec, double scalar=0.0)
+  void set (const FVector3& vec, float scalar=0.0)
     {
       v = vec; w = scalar;
     }
@@ -118,7 +118,7 @@ public:
   /**
    * Set the vector and scalar parts of the quaternion
    */
-  void set (double x, double y, double z, double scalar=0.0)
+  void set (float x, float y, float z, float scalar=0.0)
     {
       v.set (x, y, z); w = scalar;
     }
@@ -144,13 +144,13 @@ public:
    * Access the elements of the quaternion. Indices start at 0 and the
    *  scalar is at index=3
    */
-  double& operator [] (uint index)
+  float& operator [] (uint index)
     {
       if ( index == 3 ) return w;
       return v[index];
     }
      
-  double operator [] (uint index) const
+  float operator [] (uint index) const
     {
       if ( index == 3 ) return w;
       return v[index];
@@ -191,7 +191,7 @@ public:
   void operator *= (const FQuaternion& quat)
     {
       FVector3 vec;
-      double s;
+      float s;
       
       s   = w*quat.w - v*quat.v;
       vec = quat.v*w + v*quat.w + (v % quat.v);
@@ -206,13 +206,13 @@ public:
       this->operator *= (v2q);
     }
   
-  void operator *= (double scalar)
+  void operator *= (float scalar)
     {
       w *= scalar;
       v *= scalar;
     }
   
-  void operator /= (double scalar)
+  void operator /= (float scalar)
     {
       w /= scalar;
       v /= scalar;
@@ -221,16 +221,16 @@ public:
   /**
    * Square of the length of a quaternion
    */
-  friend double lengthsqr(const FQuaternion& quat)
+  friend float lengthsqr(const FQuaternion& quat)
     {
-      double lensqr = quat.v*quat.v + quat.w*quat.w;
+      float lensqr = quat.v*quat.v + quat.w*quat.w;
       return lensqr;
     }
   
   /**
    * Length of a quaternion
    */
-  friend double length(const FQuaternion& quat)
+  friend float length(const FQuaternion& quat)
     {
       return sqrt(lengthsqr(quat));
     }
@@ -238,12 +238,12 @@ public:
   /**
    * For consistency define norm and normsqr also
    */
-  friend double normsqr(const FQuaternion& quat)
+  friend float normsqr(const FQuaternion& quat)
     {
       return lengthsqr(quat);
     }
 
-  friend double norm(const FQuaternion& quat)
+  friend float norm(const FQuaternion& quat)
     {
       return length(quat);
     }
@@ -261,9 +261,9 @@ public:
    * Returns the original length of the quaternion
    * If length is 0, nothing is changed
    */
-  friend double normalize(FQuaternion& quat)
+  friend float normalize(FQuaternion& quat)
     {
-      double len = length(quat);
+      float len = length(quat);
       if ( is_non_zero(len) == true )
 	quat /= len;
       return len;
@@ -302,7 +302,7 @@ public:
   /**
    * Post-multiplication by a scalar
    */
-  friend FQuaternion operator * (const FQuaternion& q, double scalar)
+  friend FQuaternion operator * (const FQuaternion& q, float scalar)
     {
       FQuaternion prod = q;
       prod *= scalar;
@@ -312,7 +312,7 @@ public:
   /**
    * Pre-multiplication by a scalara
    */
-  friend FQuaternion operator * (double scalar, const FQuaternion& q)
+  friend FQuaternion operator * (float scalar, const FQuaternion& q)
     {
       FQuaternion prod = q;
       prod *= scalar;
@@ -322,7 +322,7 @@ public:
   /** 
    * Division by a scalar
    */
-  friend FQuaternion operator / (const FQuaternion& q, double scalar)
+  friend FQuaternion operator / (const FQuaternion& q, float scalar)
     {
       FQuaternion quot = q;
       quot /= scalar;
@@ -367,7 +367,7 @@ public:
   FMatrix3x3 to_matrix(void) const
     {
       FMatrix3x3 mat;
-      double x,y,z,s;
+      float x,y,z,s;
       
       v.get(x,y,z); s = w;
       
@@ -385,7 +385,7 @@ public:
       return mat4;
     }
   
-  void to_matrix(double array[16]) const
+  void to_matrix(float array[16]) const
     {
       // Similar to toMatrix4, but fills a given array of 16 elements with the
       // rotation matrix corresponding to this quaternion in column major form
@@ -409,7 +409,7 @@ public:
   /**
    * Get the angle of rotation. Returns value between 0 and PI
    */
-  double get_angle(void) const
+  float get_angle(void) const
     {
       return 2.0 * acos(w);
     }
@@ -418,7 +418,7 @@ public:
    * Get the angle of rotation. Returns value between 0 and PI
    * Computes angle after normalizing the quaternion
    */
-  friend double get_angle(const FQuaternion& quat)
+  friend float get_angle(const FQuaternion& quat)
     {
       // Make the quaternion a unit quaternion first
       FQuaternion nq = normalized(quat);
@@ -441,7 +441,7 @@ public:
   /**
    * Get the axis and angle.
    */
-  void get_axis_and_angle(FVector3& axis, double& theta) const
+  void get_axis_and_angle(FVector3& axis, float& theta) const
     {
       FQuaternion nq = normalized(*this);
       
@@ -452,7 +452,7 @@ public:
   /**
    * Set the axis and angle.
    */
-  void set_axis_and_angle(const FVector3& axis, double theta)
+  void set_axis_and_angle(const FVector3& axis, float theta)
     {
       w = cos(theta/2.0);
       v = normalized(axis);
@@ -462,7 +462,7 @@ public:
   /**
    * Change the angle to a new value. Use same axis as before
    */
-  void set_angle(double theta)
+  void set_angle(float theta)
     {
       w = cos(theta/2.0);
       normalize(v);
@@ -472,7 +472,7 @@ public:
   /**
    * Scale the angle by the given scale factor
    */
-  void scale_angle(double scale_factor)
+  void scale_angle(float scale_factor)
     {
       set_angle(get_angle()*scale_factor);
     }
@@ -506,7 +506,7 @@ protected:
   /**
    * Scalar component
    */
-  double w;
+  float w;
 
 };
 

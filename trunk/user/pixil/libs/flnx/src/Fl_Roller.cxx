@@ -57,8 +57,8 @@ void Fl_Roller::draw() {
   int H = h()-Fl::box_dh(box())-1;
   if (W<=0 || H <=0) return;
   int offset = step() ? int(value()/step()) : 0;
-  const double ARC = 1.5; // 1/2 the number of radians visible
-  const double delta = .2; // radians per knurl
+  const float ARC = 1.5; // 1/2 the number of radians visible
+  const float delta = .2; // radians per knurl
   if (horizontal()) { // horizontal one
     // draw shaded ends of wheel:
     int h1 = W/4+1; // distance from end that shading starts
@@ -72,8 +72,8 @@ void Fl_Roller::draw() {
     }
     if (active_r()) {
       // draw ridges:
-      double junk;
-      for (double y = -ARC+modf(offset*sin(ARC)/(W/2)/delta,&junk)*delta;;
+      float junk;
+      for (float y = -ARC+modff(offset*sin(ARC)/(W/2)/delta,&junk)*delta;;
 	   y += delta) {
 	int y1 = int((sin(y)/sin(ARC)+1)*W/2);
 	if (y1 <= 0) continue; else if (y1 >= W-1) break;
@@ -106,8 +106,8 @@ void Fl_Roller::draw() {
     }
     if (active_r()) {
       // draw ridges:
-      double junk;
-      for (double y = -ARC+modf(offset*sin(ARC)/(H/2)/delta,&junk)*delta;
+      float junk;
+      for (float y = -ARC+modff(offset*sin(ARC)/(H/2)/delta,&junk)*delta;
 	   ; y += delta) {
 	int y1 = int((sin(y)/sin(ARC)+1)*H/2);
 	if (y1 <= 0) continue; else if (y1 >= H-1) break;

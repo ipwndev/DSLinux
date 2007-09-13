@@ -32,46 +32,46 @@
 #include <FL/fl_draw.H>
 #include <math.h>
 
-void fl_curve(double X0, double Y0,
-	      double X1, double Y1,
-	      double X2, double Y2,
-	      double X3, double Y3) {
-  double x = fl_transform_x(X0,Y0);
-  double y = fl_transform_y(X0,Y0);
-  double x1 = fl_transform_x(X1,Y1);
-  double y1 = fl_transform_y(X1,Y1);
-  double x2 = fl_transform_x(X2,Y2);
-  double y2 = fl_transform_y(X2,Y2);
-  double x3 = fl_transform_x(X3,Y3);
-  double y3 = fl_transform_y(X3,Y3);
+void fl_curve(float X0, float Y0,
+	      float X1, float Y1,
+	      float X2, float Y2,
+	      float X3, float Y3) {
+  float x = fl_transform_x(X0,Y0);
+  float y = fl_transform_y(X0,Y0);
+  float x1 = fl_transform_x(X1,Y1);
+  float y1 = fl_transform_y(X1,Y1);
+  float x2 = fl_transform_x(X2,Y2);
+  float y2 = fl_transform_y(X2,Y2);
+  float x3 = fl_transform_x(X3,Y3);
+  float y3 = fl_transform_y(X3,Y3);
 
   int n; { // find smaller size of bounding box
-    double lx = x; if (x1<lx) lx=x1; if (x2<lx) lx=x2; if (x3<lx) lx=x3;
-    double rx = x; if (x1>rx) rx=x1; if (x2>rx) rx=x2; if (x3>rx) rx=x3;
-    double ly = y; if (y1<ly) ly=y1; if (y2<ly) ly=y2; if (y3<ly) ly=y3;
-    double ry = y; if (y1>ry) ry=y1; if (y2>ry) ry=y2; if (y3>ry) ry=y3;
+    float lx = x; if (x1<lx) lx=x1; if (x2<lx) lx=x2; if (x3<lx) lx=x3;
+    float rx = x; if (x1>rx) rx=x1; if (x2>rx) rx=x2; if (x3>rx) rx=x3;
+    float ly = y; if (y1<ly) ly=y1; if (y2<ly) ly=y2; if (y3<ly) ly=y3;
+    float ry = y; if (y1>ry) ry=y1; if (y2>ry) ry=y2; if (y3>ry) ry=y3;
     // calculate number of pieces to cut curve into:
     n = int((rx-lx+ry-ly)/8); if (n < 3) n = 3;
   }
-  double e = 1.0/n;
+  float e = 1.0/n;
 
   // calculate the coefficients of 3rd order equation:
-  double xa = (x3-3*x2+3*x1-x);
-  double xb = 3*(x2-2*x1+x);
-  double xc = 3*(x1-x);
+  float xa = (x3-3*x2+3*x1-x);
+  float xb = 3*(x2-2*x1+x);
+  float xc = 3*(x1-x);
   // calculate the forward differences:
-  double dx1 = ((xa*e+xb)*e+xc)*e;
-  double dx3 = 6*xa*e*e*e;
-  double dx2 = dx3 + 2*xb*e*e;
+  float dx1 = ((xa*e+xb)*e+xc)*e;
+  float dx3 = 6*xa*e*e*e;
+  float dx2 = dx3 + 2*xb*e*e;
 
   // calculate the coefficients of 3rd order equation:
-  double ya = (y3-3*y2+3*y1-y);
-  double yb = 3*(y2-2*y1+y);
-  double yc = 3*(y1-y);
+  float ya = (y3-3*y2+3*y1-y);
+  float yb = 3*(y2-2*y1+y);
+  float yc = 3*(y1-y);
   // calculate the forward differences:
-  double dy1 = ((ya*e+yb)*e+yc)*e;
-  double dy3 = 6*ya*e*e*e;
-  double dy2 = dy3 + 2*yb*e*e;
+  float dy1 = ((ya*e+yb)*e+yc)*e;
+  float dy3 = 6*ya*e*e*e;
+  float dy2 = dy3 + 2*yb*e*e;
 
   // draw point 0:
   fl_transformed_vertex(x,y);

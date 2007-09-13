@@ -997,7 +997,7 @@ nxSunclock::adj_tm_cb(Fl_Widget * w, void *d)
 void
 nxSunclock::map_click_cb(Fl_Widget * W, void *d)
 {
-    double lat,			// Latitude
+    float lat,			// Latitude
       lon;			// Longitude
     int ccnt,			// City count
       h,			// Height
@@ -1019,7 +1019,7 @@ nxSunclock::map_click_cb(Fl_Widget * W, void *d)
 
     // Convert the x/y coordinate's into relative latitude and longitude values
     lat = (((-180.0 * ypos) + (180.0 * h)) / h) - 90.0;
-    lon = (((360.0 * (double) xpos) / (double) w) - 180.0);
+    lon = (((360.0 * (float) xpos) / (float) w) - 180.0);
     if (lon > 180.0)
 	lon -= 360.0;
 
@@ -1030,7 +1030,7 @@ nxSunclock::map_click_cb(Fl_Widget * W, void *d)
     if ((ccnt = GetCityList(me->_zndb, (int) lat, (int) lon)) > 0) {
 	// Load up a Fl_SelectBrowser widget
 	for (int i = 0; i < ccnt; i++) {
-	    double tmp;
+	    float tmp;
 	    char buf[25];
 
 	    sprintf(buf, "%s, %s", city_list[i].city_name, city_list[i].reg);

@@ -79,7 +79,7 @@ void Grey2RGB_Inplace(Image_YUV<Pixel>& src,Image_RGB<Pixel>& dst);
 
 
 
-void HSB2RGB(double h,double s,double b, double& r,double& g,double& b);  // input/output range: 0..1 
+void HSB2RGB(float h,float s,float b, float& r,float& g,float& b);  // input/output range: 0..1 
 void RGB2YUV(uint8 r,uint8 g,uint8 b, uint8& y,uint8& u,uint8& v);
 
 

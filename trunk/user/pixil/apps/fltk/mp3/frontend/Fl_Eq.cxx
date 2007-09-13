@@ -105,7 +105,7 @@ Fl_Valuator(x, y, w, h, l)
 }
 
 void
-Fl_Eq::slider_size(double v)
+Fl_Eq::slider_size(float v)
 {
     if (v < 0)
 	v = 0;
@@ -118,7 +118,7 @@ Fl_Eq::slider_size(double v)
 }
 
 void
-Fl_Eq::bounds(double a, double b)
+Fl_Eq::bounds(float a, float b)
 {
     if (minimum() != a || maximum() != b) {
 	Fl_Valuator::bounds(a, b);
@@ -152,13 +152,13 @@ Fl_Eq::slider_ver_lines(int x, int y, int w, int h, int W, Fl_Color c)
     fl_color(FL_BLACK);
 
     int stepVal = 4;
-    double stepBoxSize = 3;
+    float stepBoxSize = 3;
 
     if (type() != FL_HORIZONTAL) {
 
-	double curStep = 0.0;
-	double p1 = percent1 / 100.0;
-	double p2 = percent2 / 100.0;
+	float curStep = 0.0;
+	float p1 = percent1 / 100.0;
+	float p2 = percent2 / 100.0;
 
 	int convW = W / stepVal;
 
@@ -183,7 +183,7 @@ Fl_Eq::slider_ver_lines(int x, int y, int w, int h, int W, Fl_Color c)
 	if (w > 0 && h > 0) {
 	    if (w < 17) {
 		w = 17;
-		slider_size(double (w) / double (W));
+		slider_size(float (w) / float (W));
 		slider_size_min_ = slider_size();
 	    }
 	    draw_box(FL_BORDER_BOX, x, y, w, h, c);
@@ -206,7 +206,7 @@ Fl_Eq::slider_hor_lines(int x, int y, int w, int h, int W, Fl_Color c)
     fl_color(FL_BLACK);
 
     int stepVal = 4;
-    double stepBoxSize = 3;
+    float stepBoxSize = 3;
 
     if (type() != FL_VERTICAL) {
 
@@ -215,7 +215,7 @@ Fl_Eq::slider_hor_lines(int x, int y, int w, int h, int W, Fl_Color c)
 			  255 * FL_NUM_GREEN / 256, 0 * FL_NUM_BLUE / 256);
 	int curStep = 0;
 
-	double val = value();
+	float val = value();
 
 	int event_y = 0;
 
@@ -261,7 +261,7 @@ Fl_Eq::slider_hor_lines(int x, int y, int w, int h, int W, Fl_Color c)
 	if (w > 0 && h > 0) {
 	    if (h < 17) {
 		h = 17;
-		slider_size(double (h) / double (W));
+		slider_size(float (h) / float (W));
 		slider_size_min_ = slider_size();
 	    }
 	    draw_box(FL_BORDER_BOX, x, y, w, h, c);
@@ -285,7 +285,7 @@ Fl_Eq::scrollvalue(int p, int w, int t, int l)
     step(1, 1);
     if (p + w > t + l)
 	l = p + w - t;
-    slider_size(w >= l ? 1.0 : double (w) / double (l));
+    slider_size(w >= l ? 1.0 : float (w) / float (l));
 #ifdef PDA
     if (slider_size() < slider_size_min_) {
 	slider_size(slider_size_min_);
@@ -321,7 +321,7 @@ void
 Fl_Eq::draw(int x, int y, int w, int h)
 {
 
-    double val;
+    float val;
 
     if (minimum() == maximum())
 	val = 0.5;
@@ -465,7 +465,7 @@ Fl_Eq::handle(int event, int x, int y, int w, int h)
 		if (type() == FL_HOR_FILL_SLIDER
 		    || type() == FL_VERT_FILL_SLIDER) {
 
-		    double val =
+		    float val =
 			(value() - minimum()) / (maximum() - minimum());
 
 		    if (val >= 1.0)
@@ -487,7 +487,7 @@ Fl_Eq::handle(int event, int x, int y, int w, int h)
 
 		    S = 0;
 		} else {
-		    double val =
+		    float val =
 			(value() - minimum()) / (maximum() - minimum());
 
 		    if (val >= 1.0)
@@ -508,7 +508,7 @@ Fl_Eq::handle(int event, int x, int y, int w, int h)
 		    }
 		}
 		X = mx - offcenter;
-		double v;
+		float v;
 	      TRY_AGAIN:
 		if (X < 0) {
 		    X = 0;

@@ -36,44 +36,44 @@
 
 class Fl_Valuator : public Fl_Widget {
 
-  double value_;
-  double previous_value_;
-  double min, max; // truncates to this range *after* rounding
-  double A; int B; // rounds to multiples of A/B, or no rounding if A is zero
+  float value_;
+  float previous_value_;
+  float min, max; // truncates to this range *after* rounding
+  float A; int B; // rounds to multiples of A/B, or no rounding if A is zero
 
 protected:
 
   int horizontal() const {return type()&1;}
   FL_EXPORT Fl_Valuator(int X, int Y, int W, int H, const char* L);
 
-  double previous_value() const {return previous_value_;}
+  float previous_value() const {return previous_value_;}
   void handle_push() {previous_value_ = value_;}
-  FL_EXPORT double softclamp(double);
-  FL_EXPORT void handle_drag(double newvalue);
+  FL_EXPORT float softclamp(float);
+  FL_EXPORT void handle_drag(float newvalue);
   FL_EXPORT void handle_release(); // use drag() value
   virtual FL_EXPORT void value_damage(); // cause damage() due to value() changing
 
 public:
 
-  void bounds(double a, double b) {min=a; max=b;}
-  double minimum() const {return min;}
-  void minimum(double a) {min = a;}
-  double maximum() const {return max;}
-  void maximum(double a) {max = a;}
-  void range(double a, double b) {min = a; max = b;}
+  void bounds(float a, float b) {min=a; max=b;}
+  float minimum() const {return min;}
+  void minimum(float a) {min = a;}
+  float maximum() const {return max;}
+  void maximum(float a) {max = a;}
+  void range(float a, float b) {min = a; max = b;}
   void step(int a) {A = a; B = 1;}
-  void step(double a, int b) {A = a; B = b;}
-  FL_EXPORT void step(double s);
-  double step() const {return A/B;}
+  void step(float a, int b) {A = a; B = b;}
+  FL_EXPORT void step(float s);
+  float step() const {return A/B;}
   FL_EXPORT void precision(int);
 
-  double value() const {return value_;}
-  FL_EXPORT int value(double);
+  float value() const {return value_;}
+  FL_EXPORT int value(float);
 
   virtual int format(char*);
-  FL_EXPORT double round(double); // round to nearest multiple of step
-  FL_EXPORT double clamp(double); // keep in range
-  FL_EXPORT double increment(double, int); // add n*step to value
+  FL_EXPORT float round(float); // round to nearest multiple of step
+  FL_EXPORT float clamp(float); // keep in range
+  FL_EXPORT float increment(float, int); // add n*step to value
 };
 
 #endif

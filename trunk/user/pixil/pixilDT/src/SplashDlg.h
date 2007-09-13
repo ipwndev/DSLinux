@@ -52,7 +52,7 @@
 #include <FL/Fl_Window.H>
 class SplashDlg:public Fl_Window
 {
-  public:SplashDlg(double fSeconds,
+  public:SplashDlg(float fSeconds,
 	      // Constructor
 	      bool & bTimedOut);
      ~SplashDlg();		// Destructor

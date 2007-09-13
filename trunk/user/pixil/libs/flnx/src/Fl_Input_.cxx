@@ -68,7 +68,7 @@ const char* Fl_Input_::expand(const char* p, char* buf) const {
 	  if (ww_)
 	  {
     if (wordwrap && (p >= value_+size_ || *p==' ' || *p=='\n')) {
-      width_to_lastspace += fl_width(lastspace, p-lastspace);
+      width_to_lastspace += (int)fl_width(lastspace, p-lastspace);
       if (p > lastspace+1) {
 	if (width_to_lastspace > wordwrap) {
 	  p = lastspace; o = lastspace_out; break;
@@ -105,7 +105,7 @@ const char* Fl_Input_::expand(const char* p, char* buf) const {
 }
 
 // After filling in such a buffer, find the width to e
-double Fl_Input_::expandpos(
+float Fl_Input_::expandpos(
   const char* p,	// real string
   const char* e,	// pointer into real string
   const char* buf,	// conversion of real string by expand()
@@ -154,7 +154,7 @@ void Fl_Input_::minimal_update(int p, int q) {
 
 ////////////////////////////////////////////////////////////////
 
-static double up_down_pos;
+static float up_down_pos;
 static int was_up_down;
 
 void Fl_Input_::setfont() const {
@@ -365,16 +365,16 @@ void Fl_Input_::handle_mouse(int X, int Y,
     p = e;
     if (e >= value_+size_) break;
   }
-  const char *l, *r, *t; double f0 = Fl::event_x()-X+xscroll_;
+  const char *l, *r, *t; float f0 = Fl::event_x()-X+xscroll_;
   for (l = p, r = e; l<r; ) {
-    double f;
+    float f;
     t = l+(r-l+1)/2;
     f = X-xscroll_+expandpos(p, t, buf, 0);
     if (f <= Fl::event_x()) {l = t; f0 = Fl::event_x()-f;}
     else r = t-1;
   }
   if (l < e) { // see if closer to character on right:
-    double f1 = X-xscroll_+expandpos(p, l+1, buf, 0)-Fl::event_x();
+    float f1 = X-xscroll_+expandpos(p, l+1, buf, 0)-Fl::event_x();
     if (f1 < f0) l = l+1;
   }
   newpos = l-value();
@@ -441,10 +441,10 @@ int Fl_Input_::position(int p, int m) {
 
 int Fl_Input_::up_down_position(int i, int keepmark) {
   while (i > 0 && index(i-1) != '\n') i--;	// go to start of line
-  double oldwid = 0.0;
+  float oldwid = 0.0;
   setfont();
   while (index(i) && index(i)!='\n') {
-    double tt = oldwid + fl_width(index(i));
+    float tt = oldwid + fl_width(index(i));
     if ((oldwid+tt)/2 >= up_down_pos) break;
     oldwid = tt;
     i++;

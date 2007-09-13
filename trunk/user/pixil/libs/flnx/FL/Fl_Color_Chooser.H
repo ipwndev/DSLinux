@@ -68,27 +68,27 @@ class Fl_Color_Chooser : public Fl_Group {
   Flcc_Value_Input gvalue;
   Flcc_Value_Input bvalue;
   Fl_Box resize_box;
-  double hue_, saturation_, value_;
-  double r_, g_, b_;
+  float hue_, saturation_, value_;
+  float r_, g_, b_;
   FL_EXPORT void set_valuators();
   static FL_EXPORT void rgb_cb(Fl_Widget*, void*);
   static FL_EXPORT void mode_cb(Fl_Widget*, void*);
 public:
   int mode() {return choice.value();}
-  double hue() const {return hue_;}
-  double saturation() const {return saturation_;}
-  double value() const {return value_;}
-  double r() const {return r_;}
-  double g() const {return g_;}
-  double b() const {return b_;}
-  FL_EXPORT int hsv(double,double,double);
-  FL_EXPORT int rgb(double,double,double);
-  static FL_EXPORT void hsv2rgb(double, double, double,double&,double&,double&);
-  static FL_EXPORT void rgb2hsv(double, double, double,double&,double&,double&);
+  float hue() const {return hue_;}
+  float saturation() const {return saturation_;}
+  float value() const {return value_;}
+  float r() const {return r_;}
+  float g() const {return g_;}
+  float b() const {return b_;}
+  FL_EXPORT int hsv(float,float,float);
+  FL_EXPORT int rgb(float,float,float);
+  static FL_EXPORT void hsv2rgb(float, float, float,float&,float&,float&);
+  static FL_EXPORT void rgb2hsv(float, float, float,float&,float&,float&);
   FL_EXPORT Fl_Color_Chooser(int,int,int,int,const char* = 0);
 };
 
-FL_EXPORT int fl_color_chooser(const char* name, double& r, double& g, double& b);
+FL_EXPORT int fl_color_chooser(const char* name, float& r, float& g, float& b);
 FL_EXPORT int fl_color_chooser(const char* name, uchar& r, uchar& g, uchar& b);
 
 #endif

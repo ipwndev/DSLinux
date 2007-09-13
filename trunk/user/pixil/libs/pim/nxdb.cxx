@@ -59,6 +59,7 @@
 #else /*  */
 #ifdef __UCLIBC__
 #include <iostream>
+using namespace std;
 #endif /*  */
 #include <unistd.h>
 #endif /*  */

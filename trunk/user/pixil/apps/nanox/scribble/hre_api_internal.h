@@ -249,8 +249,8 @@ pen_state *initialize_pen_state(pen_state * ps,
 				u_short button,
 				u_short pen,
 				short pressure,
-				double anglex,
-				double angley, double barrelrotate);
+				float anglex,
+				float angley, float barrelrotate);
 void delete_pen_state_array(pen_state * ps);
 
 #endif

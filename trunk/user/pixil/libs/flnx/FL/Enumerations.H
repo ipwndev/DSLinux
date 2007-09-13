@@ -45,7 +45,7 @@
 // because the old "const double" definition would not allow for conditional
 // compilation...
 //
-// FL_VERSION is a double that describes the major and minor version numbers.
+// FL_VERSION is a float that describes the major and minor version numbers.
 // Version 1.1 is actually stored as 1.01 to allow for more than 9 minor
 // releases.
 //
@@ -57,8 +57,8 @@
 #define FL_MAJOR_VERSION	1
 #define FL_MINOR_VERSION	0
 #define FL_PATCH_VERSION	7
-#define FL_VERSION		((double)FL_MAJOR_VERSION + \
-				 (double)FL_MINOR_VERSION * 0.01)
+#define FL_VERSION		((float)FL_MAJOR_VERSION + \
+				 (float)FL_MINOR_VERSION * 0.01)
 
 typedef unsigned char uchar;
 typedef unsigned long ulong;

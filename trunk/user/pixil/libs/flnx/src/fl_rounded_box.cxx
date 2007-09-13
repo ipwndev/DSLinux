@@ -30,7 +30,7 @@
 #define RS	15
 #define BW	3
 
-static double offset[RN] = { 0.0, 0.07612, 0.29289, 0.61732, 1.0};
+static float offset[RN] = { 0.0, 0.07612, 0.29289, 0.61732, 1.0};
 
 static void rbox(int fill, int x, int y, int w, int h) {
   int i;

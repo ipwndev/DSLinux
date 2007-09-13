@@ -51,21 +51,21 @@ template <class T> void DrawRectangle(Bitmap<T>& bm,int x1,int y1,int w, int h,T
 
 /* This function draws a line and places a head on one (arrows == false) or
    both (arrows==true) sides of the line. */
-template <class T> void DrawArrow(Bitmap<T>& bm,int x0,int y0,int x1, int y1,double alpha,int len,
+template <class T> void DrawArrow(Bitmap<T>& bm,int x0,int y0,int x1, int y1,float alpha,int len,
 				  T color,bool arrows = false);
 
 // main function to draw a circle
 template <class T> void DrawCircle(Bitmap<T>& bm,int x0,int y0, int radius,T color,bool fill = false);
 
 // this function draws an ellipse. Clipping is also included.
-template <class T> void DrawEllipse(Bitmap<T>& bm,int xm,int ym, int a,int b,double angle,T color);
+template <class T> void DrawEllipse(Bitmap<T>& bm,int xm,int ym, int a,int b,float angle,T color);
 
 template <class Pel> class ArrowPainter
 {
 public:
   ArrowPainter();
 
-  void SetAlpha(double a) { alpha=a*M_PI/180; }
+  void SetAlpha(float a) { alpha=a*M_PI/180; }
   void SetHeadLength(int l) { len=l; }
   void DrawBothHeads(bool flag=true) { bothheads=flag; }
   void SetColor(Pel c) { color=c; }
@@ -74,7 +74,7 @@ public:
     { ::DrawArrow(bm,x0,y0,x1,y1,alpha,len,color,bothheads); }
 
 private:
-  double alpha;
+  float alpha;
   int    len;
   bool   bothheads;
   Pel    color;

@@ -443,18 +443,18 @@ extern void glutStrokeCharacter(void *font, int character);
 extern int glutStrokeWidth(void *font, int character);
 
 /* GLUT pre-built models sub-API */
-extern void glutWireSphere(GLdouble radius, GLint slices, GLint stacks);
-extern void glutSolidSphere(GLdouble radius, GLint slices, GLint stacks);
-extern void glutWireCone(GLdouble base, GLdouble height, GLint slices, GLint stacks);
-extern void glutSolidCone(GLdouble base, GLdouble height, GLint slices, GLint stacks);
-extern void glutWireCube(GLdouble size);
-extern void glutSolidCube(GLdouble size);
-extern void glutWireTorus(GLdouble innerRadius, GLdouble outerRadius, GLint sides, GLint rings);
-extern void glutSolidTorus(GLdouble innerRadius, GLdouble outerRadius, GLint sides, GLint rings);
+extern void glutWireSphere(GLfloat radius, GLint slices, GLint stacks);
+extern void glutSolidSphere(GLfloat radius, GLint slices, GLint stacks);
+extern void glutWireCone(GLfloat base, GLfloat height, GLint slices, GLint stacks);
+extern void glutSolidCone(GLfloat base, GLfloat height, GLint slices, GLint stacks);
+extern void glutWireCube(GLfloat size);
+extern void glutSolidCube(GLfloat size);
+extern void glutWireTorus(GLfloat innerRadius, GLfloat outerRadius, GLint sides, GLint rings);
+extern void glutSolidTorus(GLfloat innerRadius, GLfloat outerRadius, GLint sides, GLint rings);
 extern void glutWireDodecahedron();
 extern void glutSolidDodecahedron();
-extern void glutWireTeapot(GLdouble size);
-extern void glutSolidTeapot(GLdouble size);
+extern void glutWireTeapot(GLfloat size);
+extern void glutSolidTeapot(GLfloat size);
 extern void glutWireOctahedron();
 extern void glutSolidOctahedron();
 extern void glutWireTetrahedron();

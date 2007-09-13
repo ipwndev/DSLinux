@@ -61,7 +61,7 @@ public:
   /**
    * 1 argument constructor - from scalar, set all elements to given value
    */
-  FMatrix4x4 (double scalar)
+  FMatrix4x4 (float scalar)
     : FBase ()
     {
       row[0] = scalar; row[1] = scalar; row[2] = scalar; row[3] = scalar;
@@ -121,7 +121,7 @@ public:
   /**
    * Assignment from a scalar
    */
-  void operator = (double scalar)
+  void operator = (float scalar)
     {
       row[0] = scalar; row[1] = scalar; row[2] = scalar; row[3] = scalar;
     }
@@ -134,7 +134,7 @@ public:
       row[0] = r0; row[1] = r1; row[2] = r2; row[3] = r3;
     }
   
-  void set (double scalar)
+  void set (float scalar)
     {
       row[0] = scalar; row[1] = scalar; row[2] = scalar; row[3] = scalar;
     }
@@ -207,13 +207,13 @@ public:
 	row[i] -= mat.row[i];
     }
   
-  void operator *= (double scalar)
+  void operator *= (float scalar)
     {
       for (int i=0; i < 4; ++i)
 	row[i] *= scalar;
     }
   
-  void operator /= (double scalar)
+  void operator /= (float scalar)
     {
       for (int i=0; i < 4; ++i)
 	row[i] /= scalar;
@@ -266,9 +266,9 @@ public:
       return trans;
     }
   
-  friend double determinant(const FMatrix4x4& mat)
+  friend float determinant(const FMatrix4x4& mat)
     {
-      double det = 0.0;
+      float det = 0.0;
       
       for (int i=0; i < 3; ++i)
 	det += mat[0][i] * cofsign (0, i) * determinant (mat.cofactor (0, i));
@@ -311,7 +311,7 @@ public:
 	    }
 	  
 	  // Divide matrix by main diagonal element to make it 1.0
-	  double fact = row[i][i];
+	  float fact = row[i][i];
 	  for (j=0; j < 4; ++j)
 	    {
 	      row[j] /= fact;
@@ -323,7 +323,7 @@ public:
 	    {
 	      if ( j != i )
 		{
-		  double temp = row[j][i];
+		  float temp = row[j][i];
 		  row[j] -= row[i]*temp;
 		  inv[j] -= inv[i]*temp;
 		}
@@ -334,7 +334,7 @@ public:
       // Last row will be 1.0
       for (i=0; i < 3; ++i)
 	{
-	  double pivot = row[i][i];
+	  float pivot = row[i][i];
 	  row[i] /= pivot;
 	  inv[i] /= pivot;
 	}
@@ -383,7 +383,7 @@ public:
   /**
    * Post-multiplication by a scalar.
    */
-  friend FMatrix4x4 operator * (const FMatrix4x4& mat, double scalar)
+  friend FMatrix4x4 operator * (const FMatrix4x4& mat, float scalar)
     {
       FMatrix4x4 prod (mat);
       prod *= scalar;
@@ -393,7 +393,7 @@ public:
   /**
    * Pre-multiplication by a scalar.
    */
-  friend FMatrix4x4 operator * (double scalar, const FMatrix4x4& mat)
+  friend FMatrix4x4 operator * (float scalar, const FMatrix4x4& mat)
     {
       FMatrix4x4 prod (mat);
       prod *= scalar;
@@ -403,7 +403,7 @@ public:
   /**
    * Division by a scalar.
    */
-  friend FMatrix4x4 operator / (const FMatrix4x4& mat, double scalar)
+  friend FMatrix4x4 operator / (const FMatrix4x4& mat, float scalar)
     {
       FMatrix4x4 quot (mat);
       quot /= scalar;
@@ -486,7 +486,7 @@ public:
    * Fill an array with contents of the matrix
    * Row - major form -> Row 1 == { array[0], array[1], array[2], array[3] }
    */
-  void fill_array_row_major (double array[16]) const
+  void fill_array_row_major (float array[16]) const
     {
       int index=0;
       for (int i=0; i < 4; ++i)
@@ -503,7 +503,7 @@ public:
    * Fill an array with contents of the matrix
    * Row - major form -> Column 1 == { array[0], array[1], array[2], array[3] }  
    */
-  void fill_array_column_major (double array[16]) const
+  void fill_array_column_major (float array[16]) const
     {
       int index=0;
       for (int i=0; i < 4; ++i)

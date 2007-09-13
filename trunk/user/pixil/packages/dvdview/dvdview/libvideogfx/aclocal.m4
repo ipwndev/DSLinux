@@ -3741,9 +3741,9 @@ static char *f (char * (*g) (char **, int), char **p, ...)
   va_end (v);
   return s;
 }
-int test (int i, double x);
+int test (int i, float x);
 struct s1 {int (*f) (int a);};
-struct s2 {int (*f) (double a);};
+struct s2 {int (*f) (float a);};
 int pairnames (int, char **, FILE *(*)(struct buf *, struct stat *, int), int, int);
 int argc;
 char **argv;

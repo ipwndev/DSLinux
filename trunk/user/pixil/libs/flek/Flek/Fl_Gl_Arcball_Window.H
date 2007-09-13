@@ -67,18 +67,18 @@ protected:
   ProjectionType projtype;                          // Ortho/Perspective projection
   
   // For perspective projection
-  double fovy;                                      // Field-of-view in degrees in y
-  double aspect;                                    // Ratio of width to height
-  double near;                                      // Near clipping plane
-  double far;                                       // Far clipping plane
+  float fovy;                                      // Field-of-view in degrees in y
+  float aspect;                                    // Ratio of width to height
+  float near;                                      // Near clipping plane
+  float far;                                       // Far clipping plane
   
   // For orthographic projection
-  double umin,umax,vmin,vmax;                       // Viewing frustum
+  float umin,umax,vmin,vmax;                       // Viewing frustum
   
-  double cenx, ceny, cenz;                          // Center point for gluLookAt
-  double eyex, eyey, eyez;                          // Eye point for gluLookAt
-  double upx, upy, upz;                             // Up vector for gluLookAt
-  double dist;                                      // Dist from eye pt to center pt
+  float cenx, ceny, cenz;                          // Center point for gluLookAt
+  float eyex, eyey, eyez;                          // Eye point for gluLookAt
+  float upx, upy, upz;                             // Up vector for gluLookAt
+  float dist;                                      // Dist from eye pt to center pt
   
   FVector3 near_color_;
   FVector3 far_color_;
@@ -91,7 +91,7 @@ public:
     : Fl_Gl_Window(x,y,w,h,l),
       arcball(FVector3(0,0,0),1.0), trcontrol(), zoomcontrol(), dollycontrol(10.0),
       transform(), currenttr(None),
-      fovy(45.0), aspect(double(w)/double(h)), near(1.0), far(1000.0),
+      fovy(45.0), aspect(float(w)/float(h)), near(1.0), far(1000.0),
       umin(-1.0), umax(1.0), vmin(-1.0), vmax(1.0),
       cenx(0), ceny(0), cenz(0), eyex(0), eyey(0), eyez(50.0), upx(0), upy(1), upz(0)
   {}
@@ -132,13 +132,13 @@ public:
     // Don't do anything if we aren't in a neutral state or aren't rotating
     if ( currenttr != None && currenttr != Rotate ) return;
     
-    double x,y;
+    float x,y;
     
     currenttr = Rotate;
     
     // Transform coords to lie between -1 to 1
-    x = ( double(Fl::event_x() << 1) / w() ) - 1.0;
-    y = ( -double(Fl::event_y() << 1) / h() ) + 1.0;
+    x = ( float(Fl::event_x() << 1) / w() ) - 1.0;
+    y = ( -float(Fl::event_y() << 1) / h() ) + 1.0;
     
     arcball.mouse(x,y); arcball.update();
     
@@ -158,14 +158,14 @@ public:
     // Don't do anything if we aren't in a neutral state or aren't panning
     if ( currenttr != None && currenttr != Pan ) return;
     
-    double x, y;
-    double tx=0, ty=0;
+    float x, y;
+    float tx=0, ty=0;
     
     currenttr = Pan;
     
     // Transform coords to lie between -1 to 1
-    x = ( double(Fl::event_x() << 1) / w() ) - 1.0;
-    y = ( -double(Fl::event_y() << 1) / h() ) + 1.0;
+    x = ( float(Fl::event_x() << 1) / w() ) - 1.0;
+    y = ( -float(Fl::event_y() << 1) / h() ) + 1.0;
     
     // Adjust the x and y values so that moving mouse by 1 pixel
     // on screen moves point under mouse by 1 pixel
@@ -200,12 +200,12 @@ public:
     // Don't do anything if we aren't in a neutral state or aren't zooming
     if ( currenttr != None && currenttr != Zoom ) return;
     
-    double z;
+    float z;
     
     currenttr = Zoom;
     
     // Transform coords to lie between -1 to 1
-    z = ( double(Fl::event_x() << 1) / w() ) - 1.0;
+    z = ( float(Fl::event_x() << 1) / w() ) - 1.0;
     
     // Currently both orthographic and perspective zoom is handled by same
     // controller which simply does a scaling
@@ -241,12 +241,12 @@ public:
     // Don't do anything if we aren't in a neutral state or aren't dollying
     if ( currenttr != None && currenttr != Dolly ) return;
     
-    double z;
+    float z;
     
     currenttr = Dolly;
     
     // Transform coords to lie between -1 to 1
-    z = ( double(Fl::event_x() << 1) / w() ) - 1.0;
+    z = ( float(Fl::event_x() << 1) / w() ) - 1.0;
     
     dollycontrol.mouse(z); dollycontrol.update();
     
@@ -277,7 +277,7 @@ public:
   void drawConstraints (void) const;
   void drawDragArc (void);
   void arcball_transform(void) {                     // Apply the arcball transformation
-    double mat[16];
+    float mat[16];
     
     // Do the dollying separately before everything else
     glTranslated(0,0,dollycontrol.dolly_value());
@@ -306,7 +306,7 @@ public:
     arcball.center(cen);
   }
   
-  void arcball_radius(double rad) {
+  void arcball_radius(float rad) {
     arcball.radius(rad);
   }
   
@@ -314,7 +314,7 @@ public:
     return arcball.center();
   }
   
-  double arcball_radius(void) const {
+  float arcball_radius(void) const {
     return arcball.radius();
   }
 

@@ -30,7 +30,7 @@
 #include <FL/Fl_Positioner.H>
 #include <FL/fl_draw.H>
 
-static double flinear(double val, double smin, double smax, double gmin, double gmax)
+static float flinear(float val, float smin, float smax, float gmin, float gmax)
 {
   if (smin == smax) return gmax;
   else return gmin + (gmax - gmin) * (val - smin) / (smax - smin);
@@ -54,7 +54,7 @@ void Fl_Positioner::draw() {
   draw_label();
 }
 
-int Fl_Positioner::value(double X, double Y) {
+int Fl_Positioner::value(float X, float Y) {
   clear_changed();
   if (X == xvalue_ && Y == yvalue_) return 0;
   xvalue_ = X; yvalue_ = Y;
@@ -62,11 +62,11 @@ int Fl_Positioner::value(double X, double Y) {
   return 1;
 }
 
-int Fl_Positioner::xvalue(double X) {
+int Fl_Positioner::xvalue(float X) {
   return(value(X, yvalue_));
 }
 
-int Fl_Positioner::yvalue(double Y) {
+int Fl_Positioner::yvalue(float Y) {
   return(value(xvalue_, Y));
 }
 
@@ -75,15 +75,15 @@ int Fl_Positioner::handle(int event, int x, int y, int w, int h) {
   case FL_PUSH:
   case FL_DRAG:
   case FL_RELEASE: {
-    double x1 = x + 4;
-    double y1 = y + 4;
-    double w1 = w - 2 * 4;
-    double h1 = h - 2 * 4;
-    double X = flinear(Fl::event_x(), x1, x1+w1-1.0, xmin, xmax);
+    float x1 = x + 4;
+    float y1 = y + 4;
+    float w1 = w - 2 * 4;
+    float h1 = h - 2 * 4;
+    float X = flinear(Fl::event_x(), x1, x1+w1-1.0, xmin, xmax);
     if (xstep_) X = int(X/xstep_+0.5) * xstep_;
     if (X < xmin) X = xmin;
     if (X > xmax) X = xmax;
-    double Y = flinear(Fl::event_y(), y1, y1+h1-1.0, ymin, ymax);
+    float Y = flinear(Fl::event_y(), y1, y1+h1-1.0, ymin, ymax);
     if (ystep_) Y = int(Y/ystep_+0.5) * ystep_;
     if (Y < ymin) Y = ymin;
     if (Y > ymax) Y = ymax;
@@ -114,14 +114,14 @@ Fl_Positioner::Fl_Positioner(int x, int y, int w, int h, const char* l)
   xstep_ = ystep_ = 0;
 }
 
-void Fl_Positioner::xbounds(double a, double b) {
+void Fl_Positioner::xbounds(float a, float b) {
   if (a != xmin || b != xmax) {
     xmin = a; xmax = b;
     redraw();
   }
 }
 
-void Fl_Positioner::ybounds(double a, double b) {
+void Fl_Positioner::ybounds(float a, float b) {
   if (a != ymin || b != ymax) {
     ymin = a; ymax = b;
     redraw();
