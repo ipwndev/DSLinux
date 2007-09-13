@@ -73,26 +73,26 @@ FL_EXPORT void fl_yxline(int x, int y, int y1, int x2);
 FL_EXPORT void fl_yxline(int x, int y, int y1, int x2, int y3);
 
 // circular lines and pie slices (code in fl_arci.C):
-FL_EXPORT void fl_arc(int x, int y, int w, int h, double a1, double a2);
-FL_EXPORT void fl_pie(int x, int y, int w, int h, double a1, double a2);
-FL_EXPORT void fl_chord(int x, int y, int w, int h, double a1, double a2); // nyi
+FL_EXPORT void fl_arc(int x, int y, int w, int h, float a1, float a2);
+FL_EXPORT void fl_pie(int x, int y, int w, int h, float a1, float a2);
+FL_EXPORT void fl_chord(int x, int y, int w, int h, float a1, float a2); // nyi
 
 // scalable drawing code (code in fl_vertex.C and fl_arc.C):
 FL_EXPORT void fl_push_matrix();
 FL_EXPORT void fl_pop_matrix();
-FL_EXPORT void fl_scale(double x, double y);
-FL_EXPORT void fl_scale(double x);
-FL_EXPORT void fl_translate(double x, double y);
-FL_EXPORT void fl_rotate(double d);
-FL_EXPORT void fl_mult_matrix(double a, double b, double c, double d, double x,double y);
+FL_EXPORT void fl_scale(float x, float y);
+FL_EXPORT void fl_scale(float x);
+FL_EXPORT void fl_translate(float x, float y);
+FL_EXPORT void fl_rotate(float d);
+FL_EXPORT void fl_mult_matrix(float a, float b, float c, float d, float x,float y);
 FL_EXPORT void fl_begin_points();
 FL_EXPORT void fl_begin_line();
 FL_EXPORT void fl_begin_loop();
 FL_EXPORT void fl_begin_polygon();
-FL_EXPORT void fl_vertex(double x, double y);
-FL_EXPORT void fl_curve(double, double, double, double, double, double, double, double);
-FL_EXPORT void fl_arc(double x, double y, double r, double start, double a);
-FL_EXPORT void fl_circle(double x, double y, double r);
+FL_EXPORT void fl_vertex(float x, float y);
+FL_EXPORT void fl_curve(float, float, float, float, float, float, float, float);
+FL_EXPORT void fl_arc(float x, float y, float r, float start, float a);
+FL_EXPORT void fl_circle(float x, float y, float r);
 FL_EXPORT void fl_end_points();
 FL_EXPORT void fl_end_line();
 FL_EXPORT void fl_end_loop();
@@ -101,11 +101,11 @@ FL_EXPORT void fl_begin_complex_polygon();
 FL_EXPORT void fl_gap();
 FL_EXPORT void fl_end_complex_polygon();
 // get and use transformed positions:
-FL_EXPORT double fl_transform_x(double x, double y);
-FL_EXPORT double fl_transform_y(double x, double y);
-FL_EXPORT double fl_transform_dx(double x, double y);
-FL_EXPORT double fl_transform_dy(double x, double y);
-FL_EXPORT void fl_transformed_vertex(double x, double y);
+FL_EXPORT float fl_transform_x(float x, float y);
+FL_EXPORT float fl_transform_y(float x, float y);
+FL_EXPORT float fl_transform_dx(float x, float y);
+FL_EXPORT float fl_transform_dy(float x, float y);
+FL_EXPORT void fl_transformed_vertex(float x, float y);
 
 // current font:
 FL_EXPORT void fl_font(int face, int size);
@@ -117,9 +117,9 @@ inline int fl_size() {return fl_size_;}
 // information you can get about the current font:
 FL_EXPORT int   fl_height();	// using "size" should work ok
 FL_EXPORT int   fl_descent();
-FL_EXPORT double fl_width(const char*);
-FL_EXPORT double fl_width(const char*, int n);
-FL_EXPORT double fl_width(uchar);
+FL_EXPORT float fl_width(const char*);
+FL_EXPORT float fl_width(const char*, int n);
+FL_EXPORT float fl_width(uchar);
 
 // draw using current font:
 FL_EXPORT void fl_draw(const char*, int x, int y);

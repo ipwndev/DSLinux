@@ -132,7 +132,7 @@ int fl_ready() {
   return ::select(0,&fdt[0],&fdt[1],&fdt[2],&t);
 }
 
-double fl_wait(int timeout_flag, double time) {
+float fl_wait(int timeout_flag, float time) {
   int have_message = 0;
   int timerid;
 

@@ -36,7 +36,7 @@ static Fl_Value_Input* hack_o_rama;
 
 void Fl_Value_Input::input_cb(Fl_Widget*, void* v) {
   Fl_Value_Input& t = *(Fl_Value_Input*)v;
-  double nv;
+  float nv;
   if (t.step()>=1.0) nv = strtol(t.input.value(), 0, 0);
   else nv = strtod(t.input.value(), 0);
   hack_o_rama = &t;
@@ -68,7 +68,7 @@ void Fl_Value_Input::value_damage() {
 }
 
 int Fl_Value_Input::handle(int event) {
-  double v;
+  float v;
   int delta;
   int mx = Fl::event_x();
   static int ix, drag;

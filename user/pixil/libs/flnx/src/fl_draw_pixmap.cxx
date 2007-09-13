@@ -173,7 +173,7 @@ int fl_draw_pixmap(/*const*/char*const* di, int x, int y, Fl_Color bg) {
     // if first color is ' ' it is transparent (put it later to make
     // it not be transparent):
     if (*p == ' ') {
-      uchar* c = (uchar*)&d.colors[' '];
+      uchar* c = (uchar*)&d.colors[(int)' '];
 #ifdef U64
       *(U64*)c = 0;
 #if WORDS_BIGENDIAN

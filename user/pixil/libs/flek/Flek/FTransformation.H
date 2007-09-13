@@ -88,7 +88,7 @@ public:
   /**
    * Static function to compute translation matrix from x, y, z values.
    */  
-  static FMatrix4x4 translation (double tx, double ty, double tz) {
+  static FMatrix4x4 translation (float tx, float ty, float tz) {
     FMatrix4x4 transmat;
     transmat[0][3] = tx;
     transmat[1][3] = ty;
@@ -99,9 +99,9 @@ public:
   /**
    * Static function to compute rotation matrix about the x axis.
    */  
-  static FMatrix4x4 rotation_x (double angle) {
+  static FMatrix4x4 rotation_x (float angle) {
     FMatrix4x4 rotmat;
-    double ct = cos(angle), st = sin(angle);
+    float ct = cos(angle), st = sin(angle);
     rotmat[0].set( 1,  0,  0, 0);
     rotmat[1].set( 0, ct, st, 0);
     rotmat[2].set( 0,-st, ct, 0);
@@ -112,9 +112,9 @@ public:
   /**
    * Static function to compute rotation matrix about the y axis.
    */  
-  static FMatrix4x4 rotation_y (double angle) {
+  static FMatrix4x4 rotation_y (float angle) {
     FMatrix4x4 rotmat;
-    double ct = cos(angle), st = sin(angle);
+    float ct = cos(angle), st = sin(angle);
     rotmat[0].set(ct, 0,-st, 0);
     rotmat[1].set( 0, 1,  0, 0);
     rotmat[2].set(st, 0, ct, 0);
@@ -125,9 +125,9 @@ public:
   /**
    * Static function to compute rotation matrix about the z axis.
    */  
-  static FMatrix4x4 rotation_z (double angle) {
+  static FMatrix4x4 rotation_z (float angle) {
     FMatrix4x4 rotmat;
-    double ct = cos(angle), st = sin(angle);
+    float ct = cos(angle), st = sin(angle);
     rotmat[0].set( ct, st, 0, 0);
     rotmat[1].set(-st, ct, 0, 0);
     rotmat[2].set(  0,  0, 1, 0);
@@ -149,7 +149,7 @@ public:
   /**
    * Static function to compute scale matrix from x, y, z values.
    */
-  static FMatrix4x4 scaling (double sx, double sy, double sz) {
+  static FMatrix4x4 scaling (float sx, float sy, float sz) {
     FMatrix4x4 scmat;
     scmat[0][0] = sx;
     scmat[1][1] = sy;
@@ -221,19 +221,19 @@ public:
     transform = FTransformation :: translation(t) * transform;
   }
   
-  void translate (double tx, double ty, double tz) {
+  void translate (float tx, float ty, float tz) {
     transform = FTransformation::translation (tx,ty,tz) * transform;
   }
   
-  void rotate_x (double angle) {
+  void rotate_x (float angle) {
     transform = FTransformation::rotation_x (angle) * transform;
   }
   
-  void rotate_y (double angle) {
+  void rotate_y (float angle) {
     transform = FTransformation::rotation_y (angle) * transform;
   }
   
-  void rotate_z (double angle) {
+  void rotate_z (float angle) {
     transform = FTransformation::rotation_z (angle) * transform;
   }
 
@@ -248,7 +248,7 @@ public:
     transform = FTransformation :: scaling(s) * transform;
   }
   
-  void scale (double sx, double sy, double sz) {
+  void scale (float sx, float sy, float sz) {
     transform = FTransformation :: scaling(sx,sy,sz) * transform;
   }
   
@@ -259,19 +259,19 @@ public:
     transform *= FTransformation :: translation(t);
   }
   
-  void post_translate (double tx, double ty, double tz) {
+  void post_translate (float tx, float ty, float tz) {
     transform *= FTransformation :: translation(tx,ty,tz);
   }
   
-  void post_rotateX (double angle) {
+  void post_rotateX (float angle) {
     transform *= FTransformation :: rotation_x(angle);
   }
   
-  void post_rotateY (double angle) {
+  void post_rotateY (float angle) {
     transform *= FTransformation :: rotation_y(angle);
   }
   
-  void post_rotateZ (double angle) {
+  void post_rotateZ (float angle) {
     transform *= FTransformation :: rotation_z(angle);
   }
 
@@ -286,7 +286,7 @@ public:
     transform *= FTransformation :: scaling(s);
   }
   
-  void post_scale (double sx, double sy, double sz) {
+  void post_scale (float sx, float sy, float sz) {
     transform *= FTransformation :: scaling(sx,sy,sz);
   }
   
@@ -294,7 +294,7 @@ public:
    * Apply the FTransformation in OpenGL. Calls only glMultMatrix.
    */
   void apply (void) const {
-    double mat[16];
+    float mat[16];
     transform.fill_array_column_major(mat);
     glMultMatrixd(mat);
   }

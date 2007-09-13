@@ -45,6 +45,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
+#include <time.h>
 
 #include <ctype.h>
 
@@ -2471,14 +2472,14 @@ NxApp::copy_callback(Fl_Widget * fl, void *o)
     printf("copy_callback\n");
     Fl_Widget *w = Fl::selection_owner();
 
-    if (fl_editor_type && dynamic_cast < Fl_Editor * >(w)) {
+    if (fl_editor_type /*&& dynamic_cast < Fl_Editor * >(w)*/) {
 
 	//    printf("Fl_Editor->Copy() w = %p\n", w);
 	((Fl_Editor *) w)->Copy();
 
     } else {
 
-	if (!fl_editor_type && dynamic_cast < Fl_Input * >(w)) {
+	if (!fl_editor_type /*&& dynamic_cast < Fl_Input * >(w)*/) {
 	    ((Fl_Input_ *) w)->copy();
 	}
 
@@ -2493,12 +2494,12 @@ NxApp::cut_callback(Fl_Widget * fl, void *o)
 
     undoTarget = w;
 
-    if (fl_editor_type && dynamic_cast < Fl_Editor * >(w)) {
+    if (fl_editor_type /*&& dynamic_cast < Fl_Editor * >(w)*/) {
 	((Fl_Editor *) w)->Cut();
 
     } else {
 
-	if (!fl_editor_type && dynamic_cast < Fl_Input * >(w)) {
+	if (!fl_editor_type /*&& dynamic_cast < Fl_Input * >(w)*/) {
 	    ((Fl_Input *) w)->cut();
 	}
 

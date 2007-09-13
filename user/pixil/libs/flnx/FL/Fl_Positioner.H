@@ -32,10 +32,10 @@
 
 class Fl_Positioner : public Fl_Widget {
 
-  double xmin, ymin;
-  double xmax, ymax;
-  double xvalue_, yvalue_;
-  double xstep_, ystep_;
+  float xmin, ymin;
+  float xmax, ymax;
+  float xvalue_, yvalue_;
+  float xstep_, ystep_;
 
 protected:
 
@@ -48,23 +48,23 @@ public:
 
   FL_EXPORT int handle(int);
   FL_EXPORT Fl_Positioner(int x,int y,int w,int h, const char *l=0);
-  double xvalue() const {return xvalue_;}
-  double yvalue() const {return yvalue_;}
-  FL_EXPORT int xvalue(double);
-  FL_EXPORT int yvalue(double);
-  FL_EXPORT int value(double,double);
-  FL_EXPORT void xbounds(double, double);
-  double xminimum() const {return xmin;}
-  void xminimum(double a) {xbounds(a,xmax);}
-  double xmaximum() const {return xmax;}
-  void xmaximum(double a) {xbounds(xmin,a);}
-  FL_EXPORT void ybounds(double, double);
-  double yminimum() const {return ymin;}
-  void yminimum(double a) {ybounds(a,ymax);}
-  double ymaximum() const {return ymax;}
-  void ymaximum(double a) {ybounds(ymin,a);}
-  void xstep(double a) {xstep_ = a;}
-  void ystep(double a) {ystep_ = a;}
+  float xvalue() const {return xvalue_;}
+  float yvalue() const {return yvalue_;}
+  FL_EXPORT int xvalue(float);
+  FL_EXPORT int yvalue(float);
+  FL_EXPORT int value(float,float);
+  FL_EXPORT void xbounds(float, float);
+  float xminimum() const {return xmin;}
+  void xminimum(float a) {xbounds(a,xmax);}
+  float xmaximum() const {return xmax;}
+  void xmaximum(float a) {xbounds(xmin,a);}
+  FL_EXPORT void ybounds(float, float);
+  float yminimum() const {return ymin;}
+  void yminimum(float a) {ybounds(a,ymax);}
+  float ymaximum() const {return ymax;}
+  void ymaximum(float a) {ybounds(ymin,a);}
+  void xstep(float a) {xstep_ = a;}
+  void ystep(float a) {ystep_ = a;}
 
 };
 

@@ -65,7 +65,7 @@ void initFlex( const char *_code );
 typedef union
 {
      int vali;
-     double vald;
+     float vald;
      char *name;
      void *ptr;
 } YYSTYPE;

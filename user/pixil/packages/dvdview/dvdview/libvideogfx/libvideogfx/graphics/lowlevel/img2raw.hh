@@ -45,7 +45,7 @@ struct RawImageOperator
   int  final_width,final_height;
 
   bool   resize_with_factor;
-  double resize_factor;
+  float resize_factor;
 
   bool   force_to_greyscale; // REDUNDANT ?
 };
@@ -86,7 +86,7 @@ public:
 
   void SetOutputSpec(const RawImageSpec_RGB& spec) { d_spec=spec; }
 
-  void SetZoomFactor(double f=2)    { d_spec.resize_factor=f; d_spec.resize_with_factor = (f!=1.0); }
+  void SetZoomFactor(float f=2)    { d_spec.resize_factor=f; d_spec.resize_with_factor = (f!=1.0); }
   void SetGrayscale(bool flag=true) { d_spec.force_to_greyscale = flag; }
 
   void TransformRGB(const Image_RGB<Pixel>&,uint8* mem,int firstline=0,int lastline=-1);

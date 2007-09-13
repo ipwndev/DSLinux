@@ -80,20 +80,20 @@ int Drawing_Area::idle() {
   }
   if (nextline < H) {
     if (!buffer) buffer = new uchar[W*H];
-    double yy = Y+(H/2-nextline)*scale/W;
-    double yi = yy; if (julia) yy = jY;
+    float yy = Y+(H/2-nextline)*scale/W;
+    float yi = yy; if (julia) yy = jY;
     uchar *p = buffer+nextline*W;
     for (int xi = 0; xi < W; xi++) {
-      double xx = X+(xi-W/2)*scale/W;
-      double wx = xx; double wy = yi;
+      float xx = X+(xi-W/2)*scale/W;
+      float wx = xx; float wy = yi;
       if (julia) xx = jX;
       for (int i=0; ; i++) {
 	if (i >= iterations) {*p = 0; break;}
-	double t = wx*wx - wy*wy + xx;
+	float t = wx*wx - wy*wy + xx;
 	wy = 2*wx*wy + yy;
 	wx = t;
 	if (wx*wx + wy*wy > 4) {
-	  wx = t = 1-double(i)/(1<<10);
+	  wx = t = 1-float(i)/(1<<10);
 	  if (t <= 0) t = 0; else for (i=brightness; i--;) t*=wx;
 	  *p = 255-int(254*t);
 	  break;

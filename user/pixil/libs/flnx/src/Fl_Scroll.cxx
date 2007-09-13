@@ -27,7 +27,9 @@
 #include <FL/Fl_Scroll.H>
 #include <FL/fl_draw.H>
 
-#include <iostream.h>
+#include <iostream>
+
+using namespace std;
 
 // Insure the scrollbars are the last children:
 void Fl_Scroll::fix_scrollbar_order() {

@@ -277,7 +277,7 @@ FDate::operator=(const FDate & d)
     this->Day = d.Day;
 }
 
-double
+float
 FDate::julian_date()
 {
     int days_in_year = 365;

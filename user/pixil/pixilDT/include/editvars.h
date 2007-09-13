@@ -77,10 +77,10 @@
 #endif /*  */
 
 #ifdef WIN32
-RCLDLL extern double PowersOfTen[];
+RCLDLL extern float PowersOfTen[];
 
 #else /*  */
-extern double PowersOfTen[];
+extern float PowersOfTen[];
 
 #endif /*  */
 enum ErrorSeverity
@@ -121,23 +121,23 @@ enum rclError
 #include <math.h>
 #ifndef WIN32
 #include <cmath>
-#ifndef modf
-extern "C" double modf(double, double *);
+#ifndef modff
+extern "C" float modff(float, float *);
 
 #endif /*  */
 #endif /*  */
-inline double
-Round(double num, short places)
+inline float
+Round(float num, short places)
 {
-    double intpart, fracpart;
-    fracpart = modf(num * PowersOfTen[places], &intpart);
+    float intpart, fracpart;
+    fracpart = modff(num * PowersOfTen[places], &intpart);
     if (fracpart >= 0.5)
 	intpart++;
     return (intpart / PowersOfTen[places]);
 }
 
 inline bool
-IsZero(double num)
+IsZero(float num)
 {
     return ((num > -0.005) && (num < 0.005));
 }

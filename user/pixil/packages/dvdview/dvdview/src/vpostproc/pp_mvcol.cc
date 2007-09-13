@@ -85,22 +85,22 @@ void VideoPostprocessor_MVCol::ShowMBRows(DecodedImageData* decimg)
 
 	BlockColorInfo bci;
 
-	double magnitude=0.0;
-	double angle;
+	float magnitude=0.0;
+	float angle;
 
 	{
 	  // forward MV
 
 	  int h,v;
 
-	  double m;
+	  float m;
 
 	  if (mb.m_HasMotionForward && d_fwd)
 	    {
 	      h = abs(mb.m_forward1.m_habs);
 	      v = abs(mb.m_forward1.m_vabs);
 
-	      m = sqrt((double)(h*h+v*v));
+	      m = sqrt((float)(h*h+v*v));
 	      magnitude=m;
 	    }
 	    
@@ -112,7 +112,7 @@ void VideoPostprocessor_MVCol::ShowMBRows(DecodedImageData* decimg)
 	      h = abs(mb.m_backward1.m_habs);
 	      v = abs(mb.m_backward1.m_vabs);
 
-	      m = sqrt((double)(h*h+v*v));
+	      m = sqrt((float)(h*h+v*v));
 	      magnitude += m;
 	      magnitude /= 2;
 	    }
@@ -138,7 +138,7 @@ void VideoPostprocessor_MVCol::ShowMBRows(DecodedImageData* decimg)
 
 	  if (h!=0 || v!=0)
 	    {
-	      double w;
+	      float w;
 	      if (h==0)
 		{
 		  if (v<0) w=PI/2.0;
@@ -148,12 +148,12 @@ void VideoPostprocessor_MVCol::ShowMBRows(DecodedImageData* decimg)
 		{
 		  if (h>0)
 		    {
-		      w = atan(((double)-v)/h);
+		      w = atan(((float)-v)/h);
 		      if (w<0) w+= 2*PI;
 		    }
 		  else
 		    {
-		      w = -atan(((double)v)/h);
+		      w = -atan(((float)v)/h);
 		      w+= PI;
 		    }
 		}
@@ -205,13 +205,13 @@ void VideoPostprocessor_MVCol::RedrawHold(Pixel*const* yp,Pixel*const* cb,Pixel*
 	for (int yy=0;yy<ch;yy++)
 	  for (int xx=0;xx<cw;xx++)
 	    {
-	      double rd,gd,bd;
+	      float rd,gd,bd;
 	      uint8 r,g,b;
 	      uint8 yc,uc,vc;
 
-	      double hue = bci.hue;
-	      double sat = bci.sat;
-	      double val = ((double)(yp[blkh*y+yy][16*x+xx]))/255;
+	      float hue = bci.hue;
+	      float sat = bci.sat;
+	      float val = ((float)(yp[blkh*y+yy][16*x+xx]))/255;
 
 	      HSB2RGB(hue,sat,val, rd,gd,bd);
 	      r = (uint8)(255*rd);

@@ -214,7 +214,7 @@ start_pass (j_decompress_ptr cinfo)
 	 */
 	FLOAT_MULT_TYPE * fmtbl = (FLOAT_MULT_TYPE *) compptr->dct_table;
 	int row, col;
-	static const double aanscalefactor[DCTSIZE] = {
+	static const float aanscalefactor[DCTSIZE] = {
 	  1.0, 1.387039845, 1.306562965, 1.175875602,
 	  1.0, 0.785694958, 0.541196100, 0.275899379
 	};
@@ -223,7 +223,7 @@ start_pass (j_decompress_ptr cinfo)
 	for (row = 0; row < DCTSIZE; row++) {
 	  for (col = 0; col < DCTSIZE; col++) {
 	    fmtbl[i] = (FLOAT_MULT_TYPE)
-	      ((double) qtbl->quantval[i] *
+	      ((float) qtbl->quantval[i] *
 	       aanscalefactor[row] * aanscalefactor[col]);
 	    i++;
 	  }

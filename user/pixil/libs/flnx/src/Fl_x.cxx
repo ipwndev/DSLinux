@@ -44,7 +44,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/time.h>
-#include <iostream.h>
+#include <iostream>
+
+using namespace std;
 
 #define CONSOLIDATE_MOTION 1
 /**** Define this if your keyboard lacks a backspace key... ****/
@@ -341,12 +343,12 @@ extern Fl_Window *fl_xmousewin;
 
 int update = 0;
 
-double 
-fl_wait (int timeout_flag, double time)
+float 
+fl_wait (int timeout_flag, float time)
 {
 
   int msec = 0;
-  double mtime = 100.0 * time;
+  float mtime = 100.0 * time;
 
   if (timeout_flag)
     if (mtime < 1)
@@ -557,7 +559,7 @@ fl_handle (const GR_EVENT & xevent)
 {
   int i;
 
-  GR_WINDOW_INFO info;
+//  GR_WINDOW_INFO info;
   fl_xevent = (GR_EVENT *) & xevent;
   Window xid = xevent.general.wid;	//fl_window;
 
@@ -1496,8 +1498,8 @@ do_queued_events ()
 #endif
 }
 
-double
-fl_wait (int timeout_flag, double time)
+float
+fl_wait (int timeout_flag, float time)
 {
 
   // OpenGL and other broken libraries call XEventsQueued

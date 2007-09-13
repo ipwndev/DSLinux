@@ -90,12 +90,12 @@ public:
 
   // execution:
   static FL_EXPORT int wait();
-  static FL_EXPORT double wait(double time);
+  static FL_EXPORT float wait(float time);
   static FL_EXPORT int check();
   static FL_EXPORT int ready();
   static FL_EXPORT int run();
   static FL_EXPORT Fl_Widget* readqueue();
-  static FL_EXPORT void add_timeout(double t,void (*cb)(void*),void* = 0);
+  static FL_EXPORT void add_timeout(float t,void (*cb)(void*),void* = 0);
   static FL_EXPORT void remove_timeout(void (*cb)(void*), void* = 0);
   static FL_EXPORT void add_fd(int fd, int when, void (*cb)(int,void*),void* =0);
   static FL_EXPORT void add_fd(int fd, void (*cb)(int, void*), void* = 0);

@@ -49,17 +49,23 @@ OBJECTS = $(CPPFILES:.cxx=.o)
 
 include ../makeinclude
 
+LIBDIRS += -L../lib
+LDLIBS  += -lfltk
+INCLUDES += -I..
+
 .SUFFIXES : .cxx .c .o
 
 .cxx.o :
-	$(CXX) -I.. $(CXXFLAGS) -c $<
+	$(CXX) -c $(CXXFLAGS) $(INCLUDES) -o $@ $<
 .c.o :
-	$(CC) -I.. $(CFLAGS) -c $<
-.cxx :
-	$(CXX) -I.. $(CXXFLAGS) -o $@ $< -L../lib -lfltk $(LDLIBS)
+	$(CC) -c $(CFLAGS) $(INCLUDES) -o $@ $<
+.o :
+	$(CXX) -o $@ $(CRTBEGIN) $(BUILD_CFLAGS) $(LDFLAGS) $(OBJS) $(LIBDIRS) $(LDLIBS) $(LIBS) $(CXXLIBS)-lm  $(CRTEND)
+	$(TARGET_CROSS)flthdr -s $(STACK_SIZE) $@
 
-$(PROGRAM) : $(OBJECTS) ../lib/$(LIBNAME)
-	$(CXX) $(LDFLAGS) -o $(PROGRAM) $(OBJECTS) -L../lib -lfltk $(LDLIBS)
+$(PROGRAM) : $(OBJS) ../lib/$(LIBNAME)
+	$(CXX) -o $@ $(CRTBEGIN) $(BUILD_CFLAGS) $(LDFLAGS) $(OBJS) $(LIBDIRS) -L../lib $(LDLIBS) $(LIBS)  $(CXXLIBS) -lm $(CRTEND)
+	$(TARGET_CROSS)flthdr -s $(STACK_SIZE) $@
 
 clean :
 	-@ rm -f *.o $(PROGRAM) $(CLEAN) core *~ makedepend

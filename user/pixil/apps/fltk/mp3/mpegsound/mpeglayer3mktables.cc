@@ -9,7 +9,7 @@
 #include <math.h>
 #include <stdio.h>
 #define OUT_FNAME "mpeglayer3tables.h"
-typedef double REAL;
+typedef float REAL;
 
 #define PI     M_PI
 #define PI_12  (PI/12.0)
@@ -53,55 +53,55 @@ main(void)
     {
 	for (i = 0; i < 18; i++)
 	    win[0][i] = win[1][i] =
-		0.5 * sin(PI_72 * (double) (2 * i + 1)) / cos(PI_72 *
-							      (double) (2 *
+		0.5 * sin(PI_72 * (float) (2 * i + 1)) / cos(PI_72 *
+							      (float) (2 *
 									i +
 									19));
 	for (; i < 36; i++)
 	    win[0][i] = win[3][i] =
-		0.5 * sin(PI_72 * (double) (2 * i + 1)) / cos(PI_72 *
-							      (double) (2 *
+		0.5 * sin(PI_72 * (float) (2 * i + 1)) / cos(PI_72 *
+							      (float) (2 *
 									i +
 									19));
 
 	for (i = 0; i < 6; i++) {
-	    win[1][i + 18] = 0.5 / cos(PI_72 * (double) (2 * (i + 18) + 19));
-	    win[3][i + 12] = 0.5 / cos(PI_72 * (double) (2 * (i + 12) + 19));
+	    win[1][i + 18] = 0.5 / cos(PI_72 * (float) (2 * (i + 18) + 19));
+	    win[3][i + 12] = 0.5 / cos(PI_72 * (float) (2 * (i + 12) + 19));
 	    win[1][i + 24] =
-		0.5 * sin(PI_24 * (double) (2 * i + 13)) / cos(PI_72 *
-							       (double) (2 *
+		0.5 * sin(PI_24 * (float) (2 * i + 13)) / cos(PI_72 *
+							       (float) (2 *
 									 (i +
 									  24)
 									 +
 									 19));
 	    win[1][i + 30] = win[3][i] = 0.0;
 	    win[3][i + 6] =
-		0.5 * sin(PI_24 * (double) (2 * i + 1)) / cos(PI_72 *
-							      (double) (2 *
+		0.5 * sin(PI_24 * (float) (2 * i + 1)) / cos(PI_72 *
+							      (float) (2 *
 									(i +
 									 6) +
 									19));
 	}
 	for (i = 0; i < 12; i++)
 	    win[2][i] =
-		0.5 * sin(PI_24 * (double) (2 * i + 1)) / cos(PI_24 *
-							      (double) (2 *
+		0.5 * sin(PI_24 * (float) (2 * i + 1)) / cos(PI_24 *
+							      (float) (2 *
 									i +
 									7));
     }
 
     for (i = 0; i < 9; i++)
-	cos_18[i] = cos(PI_18 * double (i));
+	cos_18[i] = cos(PI_18 * float (i));
     for (i = 0; i < 9; i++)
-	hsec_36[i] = 0.5 / cos(PI_36 * double (i * 2 + 1));
+	hsec_36[i] = 0.5 / cos(PI_36 * float (i * 2 + 1));
     for (i = 0; i < 3; i++)
-	hsec_12[i] = 0.5 / cos(PI_12 * double (i * 2 + 1));
+	hsec_12[i] = 0.5 / cos(PI_12 * float (i * 2 + 1));
 
     for (i = 0; i < 40; i++)
-	two_to_negative_half_pow[i] = (REAL) pow(2.0, -0.5 * (double) i);
+	two_to_negative_half_pow[i] = (REAL) pow(2.0, -0.5 * (float) i);
 
     for (i = 0; i < FOURTHIRDSTABLENUMBER; i++)
-	TO_FOUR_THIRDSTABLE[i] = (REAL) pow((double) i, 4.0 / 3.0);
+	TO_FOUR_THIRDSTABLE[i] = (REAL) pow((float) i, 4.0 / 3.0);
     for (i = 0; i < 256; i++)
 	POW2[i] = (REAL) pow(2.0, (0.25 * (i - 210.0)));
     for (i = 0; i < 8; i++)
@@ -123,8 +123,8 @@ main(void)
 	}
     }
 
-#define IO0 ((double)0.840896415256)
-#define IO1 ((double)0.707106781188)
+#define IO0 ((float)0.840896415256)
+#define IO1 ((float)0.707106781188)
     rat_2[0][0].l = rat_2[0][0].r = rat_2[1][0].l = rat_2[1][0].r = 1.;
 
     for (i = 1; i < 64; i++)

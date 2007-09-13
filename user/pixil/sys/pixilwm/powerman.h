@@ -71,7 +71,7 @@ void pm_backlight(int mode);
 void pm_bltimer_on(void);
 void pm_bltimer_off(void);
 
-int pm_get_bl_status(void);
+int pm_get_bl_state(void);
 void pm_bl_toggle(void);
 
 #endif

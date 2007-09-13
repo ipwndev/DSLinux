@@ -129,8 +129,8 @@ static IDCTInt C6b;
 static IDCTInt Qb;
 static IDCTInt Rb;
 
-static double OutputScaleFactor[8];  // fuer FDCT
-static double InputScaleFactor[8];   // fuer IDCT
+static float OutputScaleFactor[8];  // fuer FDCT
+static float InputScaleFactor[8];   // fuer IDCT
 
 static long long d_fact[8][8];
 
@@ -157,7 +157,7 @@ static void Init()
   A5b = (DCTInt2)(cos(3.0*PI/8.0)*FDCT_M2ScaleFact+0.5);
 
   OutputScaleFactor[0] = sqrt(0.5)/2.0;
-  {for (int i=1;i<8;i++) OutputScaleFactor[i] = 0.25/cos(PI*(double)i/16.0);}
+  {for (int i=1;i<8;i++) OutputScaleFactor[i] = 0.25/cos(PI*(float)i/16.0);}
 
 
   // IDCT
@@ -181,7 +181,7 @@ static void Init()
   Rb  = (DCTInt2)(( 2.0*cos(PI/8.0) + 2.0*cos(3.0*PI/8.0))*IDCT_M1ScaleFact+0.5);
   
   InputScaleFactor[0] = 0.5*0.5*sqrt(2);
-  {for (int i=1;i<8;i++) InputScaleFactor[i] = 0.5*cos(PI*((double)i)/16.0);}
+  {for (int i=1;i<8;i++) InputScaleFactor[i] = 0.5*cos(PI*((float)i)/16.0);}
 
   IsInitialized=true;
 

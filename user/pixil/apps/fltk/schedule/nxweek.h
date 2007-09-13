@@ -69,10 +69,10 @@ class WeekGrid;
 
 typedef struct appt_
 {				// appointmet structure
-    double x;
-    double y;
-    double w;
-    double h;
+    float x;
+    float y;
+    float w;
+    float h;
     int overlay;
     int recno;
     time_t start_time;
@@ -106,13 +106,13 @@ class WeekGrid:public Fl_Widget
     short info_draw;
     uchar appt_array[7][288];
     appt *first_appt;
-    double pix_ratio;
-    double day_pix;
+    float pix_ratio;
+    float day_pix;
     NxDb *db;
     char db_name[255];
     void draw();
     int handle(int);
-    double GetOffSet(double val);
+    float GetOffSet(float val);
     void DrawAppointments();
     void DrawOverlaps(int dy);
     void DrawRects(int dy);

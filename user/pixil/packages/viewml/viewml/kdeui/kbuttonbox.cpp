@@ -151,7 +151,7 @@ void KButtonBox::placeButtons() {
       
 	x_pos += b->width() + _autoborder;
       } else
-	x_pos += (int)((((double)fs) * item->stretch) / stretch);
+	x_pos += (int)((((float)fs) * item->stretch) / stretch);
     }
   } else { // VERTICAL
     // calcualte free size and stretches
@@ -182,7 +182,7 @@ void KButtonBox::placeButtons() {
       
 	y_pos += b->height() + _autoborder;
       } else
-	y_pos += (int)((((double)fs) * item->stretch) / stretch);
+	y_pos += (int)((((float)fs) * item->stretch) / stretch);
     }
   }
 }

@@ -110,7 +110,7 @@ extern "C" void* newJSBool( char _bool )
     return (void*) new JSBool( (bool)_bool );
 }
 
-extern "C" void* newJSFloat( double _f )
+extern "C" void* newJSFloat( float _f )
 {
     return (void*) new JSFloat( _f );
 }

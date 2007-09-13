@@ -34,9 +34,9 @@ public:
   KPoint &operator+=(const KPoint &_pnt);
   KPoint &operator-=(const KPoint &_pnt);
   KPoint &operator*=(int _c);
-  KPoint &operator*=(double _c);
+  KPoint &operator*=(float _c);
   KPoint &operator/=(int _c);
-  KPoint &operator/=(double _c);
+  KPoint &operator/=(float _c);
 
   operator QPoint() const;
   
@@ -50,11 +50,11 @@ public:
   friend KPoint operator-(const KPoint &_pnt1,const KPoint &_pnt2);
   friend KPoint operator*(const KPoint &_pnt,int _c);
   friend KPoint operator*(int _c,const KPoint &_pnt);
-  friend KPoint operator*(const KPoint &_pnt,double _c);
-  friend KPoint operator*(double _c,const KPoint &_pnt);
+  friend KPoint operator*(const KPoint &_pnt,float _c);
+  friend KPoint operator*(float _c,const KPoint &_pnt);
   friend KPoint operator-(const KPoint &_pnt);
   friend KPoint operator/(const KPoint &_pnt,int _c);
-  friend KPoint operator/(const KPoint &_pnt,double _c);
+  friend KPoint operator/(const KPoint &_pnt,float _c);
 
 protected:
   int xpos,ypos;

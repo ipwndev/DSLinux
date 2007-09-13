@@ -58,7 +58,7 @@ class Fl_Input_ : public Fl_Widget {
   uchar erase_cursor_only;
 
   FL_EXPORT const char* expand(const char*, char*) const;
-  FL_EXPORT double expandpos(const char*, const char*, const char*, int*) const;
+  FL_EXPORT float expandpos(const char*, const char*, const char*, int*) const;
   FL_EXPORT void minimal_update(int, int);
   FL_EXPORT void minimal_update(int p);
   FL_EXPORT void put_in_buffer(int newsize);

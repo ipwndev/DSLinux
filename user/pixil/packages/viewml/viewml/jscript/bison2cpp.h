@@ -57,7 +57,7 @@ void* newJSMember( void *_obj, char* _member );
 void* newJSArrayAccess( void *_array, void *_index );
 void* newJSString( char *_string );
 void* newJSBool( char );
-void* newJSFloat( double );
+void* newJSFloat( float );
 void* newJSThis();
 void* newJSNull();
 

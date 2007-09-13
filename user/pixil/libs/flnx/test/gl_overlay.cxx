@@ -71,7 +71,7 @@ void shape_window::draw() {
   //  for (int j=1; j<=1000; j++) {
     glBegin(GL_POLYGON);
     for (int i=0; i<sides; i++) {
-      double ang = i*2*M_PI/sides;
+      float ang = i*2*M_PI/sides;
       glColor3f(float(i)/sides,float(i)/sides,float(i)/sides);
       glVertex3f(cos(ang),sin(ang),0);
     }
@@ -91,7 +91,7 @@ void shape_window::draw_overlay() {
   gl_color(FL_RED);
   glBegin(GL_LINE_LOOP);
   for (int i=0; i<overlay_sides; i++) {
-    double ang = i*2*M_PI/overlay_sides;
+    float ang = i*2*M_PI/overlay_sides;
     glVertex3f(cos(ang),sin(ang),0);
   }
   glEnd();

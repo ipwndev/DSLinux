@@ -88,7 +88,7 @@ int JSBool::rightValue( JSScopeStack *, JSValue *_rv )
  *
  *********************************************************/
 
-JSFloat::JSFloat( double _value ) : JSNode()
+JSFloat::JSFloat( float _value ) : JSNode()
 {
     value = _value;
 }

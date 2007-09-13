@@ -204,9 +204,9 @@ T*const* p = bm.AskFrame();
 }
 
 // This function is a part of the DrawLine algorithm. Do not call this function directly
-static bool Clipt(double denom,double num, double& tE, double& tL)
+static bool Clipt(float denom,float num, float& tE, float& tL)
 {
-  double t;
+  float t;
   bool accept = true;
 
   if (denom > 0)
@@ -238,10 +238,10 @@ static bool Clipt(double denom,double num, double& tE, double& tL)
 void ClipLine(int& x0,int& y0,int& x1, int& y1, int xMax, int yMax, bool& visible)
 {
 
-  double dx = (double)(x1 - x0);
-  double dy = (double)(y1 - y0);
-  double tE = 0.0;
-  double tL = 1.0;
+  float dx = (float)(x1 - x0);
+  float dy = (float)(y1 - y0);
+  float tE = 0.0;
+  float tL = 1.0;
   visible = false;
     
   if (Clipt(dx,0-(x0),tE,tL))
@@ -281,13 +281,13 @@ template <class Pel> ArrowPainter<Pel>::ArrowPainter()
 }
 
 // This function draws a line and places a head on one (arrows == false) or both (arrows==true) sides of the line.
-template <class T> void DrawArrow(Bitmap<T>& bm,int x0,int y0,int x1, int y1,double alpha,int l,T color,bool arrows = false)
+template <class T> void DrawArrow(Bitmap<T>& bm,int x0,int y0,int x1, int y1,float alpha,int l,T color,bool arrows = false)
 {
   DrawLine(bm,x0,y0,x1,y1,color);     
 
   // zeichnen der Pfeilspitze
   int xa,ya,dxp,dyp;
-  double norm;
+  float norm;
       
   dxp = x1-x0;
   dyp = y1-y0;
@@ -547,22 +547,22 @@ template <class T> void DrawCircle(Bitmap<T>& bm,int x0,int y0, int radius,T col
 }
 
 // this function draws an ellipse. Clipping is also included.
-template <class T> void DrawEllipse(Bitmap<T>& bm,int xm,int ym, int a,int b,double angle,T color)
+template <class T> void DrawEllipse(Bitmap<T>& bm,int xm,int ym, int a,int b,float angle,T color)
 {
   T*const* p = bm.AskFrame();
   static int flag = 0;
 
-  const double beta = angle*M_PI/180;
+  const float beta = angle*M_PI/180;
 
-  const double cosb = cos(beta);
-  const double sinb = sin(beta);
-  static double alpha_step = M_PI/180;
+  const float cosb = cos(beta);
+  const float sinb = sin(beta);
+  static float alpha_step = M_PI/180;
   int x[3],y[3];
 
-  for (double alpha=0;alpha<2*M_PI;alpha+=alpha_step)
+  for (float alpha=0;alpha<2*M_PI;alpha+=alpha_step)
     {
 
-      double sina,cosa;
+      float sina,cosa;
 
       cosa = cos(alpha)*a;
       sina = sin(alpha)*b;
@@ -636,11 +636,11 @@ template <class T> void DrawEllipse(Bitmap<T>& bm,int xm,int ym, int a,int b,dou
 
 
 template void DrawRectangle(Bitmap<Pixel>& bm,int x1,int y1,int w, int h,Pixel color);
-template void DrawArrow(Bitmap<Pixel>& bm,int x0,int y0,int x1, int y1,double alpha,int l,
+template void DrawArrow(Bitmap<Pixel>& bm,int x0,int y0,int x1, int y1,float alpha,int l,
 			Pixel color,bool arrows);
 template void DrawLine(Bitmap<Pixel>& bm,int x0,int y0,int x1, int y1,Pixel color);
 template void DrawCircle(Bitmap<Pixel>& bm,int x0,int y0, int radius,Pixel color,bool);
-template void DrawEllipse(Bitmap<Pixel>& bm,int xm,int ym, int a,int b,double angle,Pixel);
+template void DrawEllipse(Bitmap<Pixel>& bm,int xm,int ym, int a,int b,float angle,Pixel);
 template class ArrowPainter<Pixel>;
 
 

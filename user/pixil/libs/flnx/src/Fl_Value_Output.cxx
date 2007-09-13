@@ -52,7 +52,7 @@ void Fl_Value_Output::draw() {
 
 int Fl_Value_Output::handle(int event) {
   if (!step()) return 0;
-  double v;
+  float v;
   int delta;
   int mx = Fl::event_x();
   static int ix, drag;

@@ -92,9 +92,9 @@ static int selection_xevent_handler(int) {
     XSendEvent(fl_display, e.requestor, 0, 0, (XEvent *)&e);}
     return 1;
 
+#endif //tanghao
   default:
     return 0;
-#endif //tanghao
   }
 }
 

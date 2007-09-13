@@ -414,7 +414,7 @@ Sync::timer_callback(void *)
 	
     Sync *pThis = (Sync *) NxApp::Instance();
     int state = pThis->syncState;
-    double timeout = 0.5;
+    float timeout = 0.5;
 
     printf("TIMER [%d]\n", state);
 
@@ -648,7 +648,7 @@ Sync::sync_error()
 int
 Sync::send_update_status(string app_id)
 {
-    static double s_value = 0;
+    static float s_value = 0;
     s_value += 10;
     //statusSlider->value(s_value);
     if (s_value >= 100)
@@ -667,8 +667,8 @@ Sync::get_update_status(vector < string > &vmessages)
 {
     DPRINT("Get Update Status start\n");
     //get sync status
-    double value = 0;
-    static double slider_value = 0;
+    float value = 0;
+    static float slider_value = 0;
     string svalue;
     char msg[CL_MAX_MSG_LEN];
 

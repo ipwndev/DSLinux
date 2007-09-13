@@ -8,7 +8,7 @@
 
 
 #define FL2FIX( x, fracs )      ((int)((x)*(1<<fracs)))
-#define FIX2FL( x, fracs )      ((double)(x)/(1<<fracs))
+#define FIX2FL( x, fracs )      ((float)(x)/(1<<fracs))
 
 
 
@@ -22,21 +22,21 @@ class REAL
     int x;
     //REAL( void ) {};
     //inline REAL( const int );
-    //inline REAL( const double );
+    //inline REAL( const float );
     inline REAL operator=(const REAL);
     inline REAL operator=(const int);
-    inline REAL operator=(const double);
+    inline REAL operator=(const float);
     inline REAL operator+(const REAL) const;
-    inline REAL operator+(const double) const;
+    inline REAL operator+(const float) const;
     inline REAL operator-(const REAL) const;
-    inline REAL operator-(const double) const;
+    inline REAL operator-(const float) const;
     inline REAL operator-(void) const;
     inline REAL operator+=(const REAL);
     inline REAL operator-=(const REAL);
     inline REAL operator*(const REAL) const;
-    inline REAL operator*(const double) const;
+    inline REAL operator*(const float) const;
     inline REAL operator*=(const REAL);
-    inline REAL operator*=(const double);
+    inline REAL operator*=(const float);
     inline int operator==(const int) const;
     inline int operator!=(const int) const;
     inline REAL operator*(const class REAL13) const;
@@ -47,7 +47,7 @@ class REAL
 //    x = i << FIXED_POINT_FRACBITS;
 //}
 
-//inline REAL::REAL( const double d )
+//inline REAL::REAL( const float d )
 //{
 //    x = FL2FIX( d, FIXED_POINT_FRACBITS );
 //}
@@ -67,7 +67,7 @@ REAL::operator=(const int i)
 }
 
 inline REAL
-REAL::operator=(const double d)
+REAL::operator=(const float d)
 {
     x = FL2FIX(d, FIXED_POINT_FRACBITS);
     return *this;
@@ -84,7 +84,7 @@ REAL::operator+(const REAL r) const
 }
 
 inline REAL
-REAL::operator+(const double d) const
+REAL::operator+(const float d) const
 {
     REAL s;
     do {
@@ -104,7 +104,7 @@ REAL::operator-(const REAL r) const
 }
 
 inline REAL
-REAL::operator-(const double d) const
+REAL::operator-(const float d) const
 {
     REAL s;
     do {
@@ -153,7 +153,7 @@ REAL::operator*(const REAL r) const
 }
 
 inline REAL
-REAL::operator*(const double d) const
+REAL::operator*(const float d) const
 {
     REAL s;
     do {
@@ -171,7 +171,7 @@ REAL::operator*=(const REAL r)
 }
 
 inline REAL
-REAL::operator*=(const double d)
+REAL::operator*=(const float d)
 {
     return (*this = *this * d);
 }
@@ -199,13 +199,13 @@ class REAL13
   public:
     int x;
     //inline REAL13( void ) {};
-    //inline REAL13( const double );
+    //inline REAL13( const float );
     inline REAL13 operator=(const REAL13);
-    inline REAL13 operator=(const double);
+    inline REAL13 operator=(const float);
     inline REAL13 operator-(void) const;
 };
 
-//inline REAL13::REAL13( const double d )
+//inline REAL13::REAL13( const float d )
 //{
 //    x = FL2FIX( d, 13 );
 //}
@@ -218,7 +218,7 @@ REAL13::operator=(const REAL13 r)
 }
 
 inline REAL13
-REAL13::operator=(const double d)
+REAL13::operator=(const float d)
 {
     x = FL2FIX(d, 13);
     return *this;
@@ -256,19 +256,19 @@ class REAL19
   public:
     int x;
     //inline REAL19( void ) {};
-    //inline REAL19( const double );
-    inline REAL19 operator=(const double);
+    //inline REAL19( const float );
+    inline REAL19 operator=(const float);
     inline REAL operator*(const REAL) const;
     inline REAL operator*(const REAL13) const;
 };
 
-//inline REAL19::REAL19( const double d )
+//inline REAL19::REAL19( const float d )
 //{
 //    x = FL2FIX( d, 19 );
 //}
 
 inline REAL19
-REAL19::operator=(const double d)
+REAL19::operator=(const float d)
 {
     x = FL2FIX(d, 19);
     return *this;

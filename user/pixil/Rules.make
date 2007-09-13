@@ -6,11 +6,14 @@
 # Released under the GPL (see LICENSE) for details
 ####
 
+# stack size for uClinux
+ifeq ($(STACK_SIZE),)
+STACK_SIZE = 16384
+endif
 
 # Compiler information
 
 # Get rid of the annoying quotes on the cross compiler
-
 
 ifeq ($(BUILD_NATIVE),y)
 CC=gcc
@@ -24,20 +27,16 @@ CONFIG_NANOX=n
 CONFIG_X11=y
 
 else
-ifeq ($(USE_CCACHE),1)
-CC=ccache $(TARGET_CROSS)gcc
-CXX=ccache $(TARGET_CROSS)g++
-else
-CC=$(TARGET_CROSS)gcc
-CXX=$(TARGET_CROSS)g++
-endif
 AR=$(TARGET_CROSS)ar
 RANLIB=$(TARGET_CROSS)ranlib
-LD=$(TARGET_CROSS)ld
 endif
 
 # Determine if we are using a uclibc compiler or not
+ifdef CONFIG_PLATFORM_DSLINUX
+UCLIBC=uclibc
+else
 UCLIBC=$(findstring uclibc,$(CC))
+endif
 
 # Default paths
 
@@ -85,7 +84,9 @@ endif
  
 INCLUDES += -I$(INCLUDE_DIR) 
 
-CFLAGS += -Wall
+CXXFLAGS += -Wall
+
+CXXFLAGS += -DPIXIL
 
 # If we are building with uclibc, then add in GNU_SOURCE
 # This is hokey, but it works
@@ -103,13 +104,13 @@ endif
 # Compile with copious debug information
 
 ifeq ($(CONFIG_DEBUG),y)
-CFLAGS += -O0 -g -DDEBUG
+CXXFLAGS += -O0 -g -DDEBUG
 endif
 
 INCLUDES += -I$(FLTKDIR) -I$(FLEKDIR)
 
 ifeq ($(CONFIG_NANOX),y)
-CFLAGS += -DNANOX -DNANO_X
+CXXFLAGS += -DNANOX -DNANO_X
 INCLUDES += -I$(MWDIR)/include
 LIBDIRS += -L$(MWDIR)/lib
 endif
@@ -176,10 +177,12 @@ install-so: $(INSTALL_SODIR)
 	fi
 
 $(TARGET): $(OBJS)
-	$(CC) $(BUILD_CFLAGS) $(LDFLAGS) -o $@ $(OBJS) $(sort $(LIBDIRS)) $(LIBS)
+	$(CC) $(BUILD_CFLAGS) $(LDFLAGS) -o $@ $(OBJS) $(LIBDIRS) $(LDLIBS) $(LIBS) 
+	$(TARGET_CROSS)flthdr -s $(STACK_SIZE) $@
 
 $(TARGET_CXX): $(OBJS)
-	$(CXX) $(BUILD_CFLAGS) $(LDFLAGS) -o $@ $(OBJS) $(sort $(LIBDIRS)) $(LIBS) -lstdc++ -lm 
+	$(CXX) -o $@ $(CRTBEGIN) $(BUILD_CFLAGS) $(LDFLAGS) $(OBJS) $(LIBDIRS) $(LDLIBS) $(LIBS) $(CXXLIBS) -lm  $(CRTEND)
+	$(TARGET_CROSS)flthdr -s $(STACK_SIZE) $@
 
 $(TARGET_SO): $(OBJS)
 	$(CC) -shared -o $@ $(OBJS)
@@ -240,10 +243,10 @@ $(PAR_CONFIG): $(PAR_TEMPLATE)
 	$(CC) -c $(CFLAGS) $(INCLUDES) -o $@ $<
 
 %.o: %.cxx 
-	$(CXX) -c $(CFLAGS) $(INCLUDES) -o $@ $<
+	$(CXX) -c $(CXXFLAGS) $(INCLUDES) -o $@ $<
 
 %.o: %.cpp
-	$(CXX) -c $(CFLAGS) $(INCLUDES) -o $@ $<
+	$(CXX) -c $(CXXFLAGS) $(INCLUDES) -o $@ $<
 
 
 ## These handle multiple platform targets

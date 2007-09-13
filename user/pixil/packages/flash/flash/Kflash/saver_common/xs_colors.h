@@ -40,8 +40,8 @@ extern void allocate_writable_colors (Display *dpy, Colormap cmap,
    otherwise, read-only cells will be allocated.
  */
 extern void make_color_ramp (Display *dpy, Colormap cmap,
-			     int h1, double s1, double v1,
-			     int h2, double s2, double v2,
+			     int h1, float s1, float v1,
+			     int h2, float s2, float v2,
 			     XColor *colors, int *ncolorsP,
 			     Bool closed_p,
 			     Bool allocate_p,
@@ -58,9 +58,9 @@ extern void make_color_ramp (Display *dpy, Colormap cmap,
    otherwise, read-only cells will be allocated.
  */
 extern void make_color_loop (Display *, Colormap,
-			     int h1, double s1, double v1,
-			     int h2, double s2, double v2,
-			     int h3, double s3, double v3,
+			     int h1, float s1, float v1,
+			     int h2, float s2, float v2,
+			     int h3, float s3, float v3,
 			     XColor *colors, int *ncolorsP,
 			     Bool allocate_p,
 			     Bool writable_p);

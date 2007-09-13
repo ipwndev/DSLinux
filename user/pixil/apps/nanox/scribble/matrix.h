@@ -53,8 +53,8 @@ struct array_header
     unsigned char filler;
 };
 
-typedef double **Matrix;
-typedef double *Vector;
+typedef float **Matrix;
+typedef float *Vector;
 
 Vector NewVector();		/* int r; (number of rows) */
 Matrix NewMatrix();		/* int r, c; (number of rows, number of columns) */
@@ -62,12 +62,12 @@ void FreeVector();		/* Vector v; */
 void FreeMatrix();		/* Matrix m; */
 void PrintVector();		/* Vector v; char *fmt; any a1,a2,a3,a4,a5,a6,a7,a8 */
 void PrintMatrix();		/* Matrix m; char *fmt; any a1,a2,a3,a4,a5,a6,a7,a8 */
-double InnerProduct();		/* Vector v1, v2 */
+float InnerProduct();		/* Vector v1, v2 */
 void MatrixMultiply();		/* Matrix m1, m2, prod; */
 void VectorTimesMatrix();	/* Vector v; Matrix m; Vector prod; */
-void ScalarTimesVector();	/* double s; Vector v; Vector prod; */
-double QuadraticForm();		/* Vector v; Matrix m; (computes v'mv) */
-double InvertMatrix();		/* Matrix input_matrix, result_matrix (returns det) */
+void ScalarTimesVector();	/* float s; Vector v; Vector prod; */
+float QuadraticForm();		/* Vector v; Matrix m; (computes v'mv) */
+float InvertMatrix();		/* Matrix input_matrix, result_matrix (returns det) */
 Vector SliceVector();		/* Vector v; BitVector rowmask */
 Matrix SliceMatrix();		/* Matrix m; Bitvector rowmask, colmask; */
 Vector VectorCopy();		/* Vector v; */
@@ -75,11 +75,11 @@ Matrix MatrixCopy();		/* Matrix m; */
 Vector InputVector();		/* FILE *f; */
 Matrix InputMatrix();		/* FILE *f; */
 
-double InvertSingularMatrix();	/* Matrix input, result (returns det) */
-Matrix DeSliceMatrix();		/* Matrix m, double fill, BitVector rowmask, colmask;
+float InvertSingularMatrix();	/* Matrix input, result (returns det) */
+Matrix DeSliceMatrix();		/* Matrix m, float fill, BitVector rowmask, colmask;
 				   Matrix result */
 void OutputVector();
 void OutputMatrix();
 void ZeroVector();
 void ZeroMatrix();		/* Matrix m; */
-void FillMatrix();		/* Matrix m; double fill; */
+void FillMatrix();		/* Matrix m; float fill; */

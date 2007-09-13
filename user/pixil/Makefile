@@ -21,12 +21,12 @@ EN_SHARED   = --enable-shared
 EN_STATIC   = --enable-static
 
 ifdef CONFIG_PLATFORM_DSLINUX
-MW_PREFIX       = $(BASE_DIR)/../microwin/src
-INSTALL_PREFIX  = $(BASE_DIR)/../../romfs/usr/pixil/
+# here is the MicroWindows source code
+MW_PREFIX      := $(BASE_DIR)/../microwin/src
+# here is the installation root directory
+INSTALL_PREFIX := $(BASE_DIR)/../../romfs/usr/pixil/
+# we don't have static linkage here
 EN_SHARED	= --disable-shared
-#CFLAGS         += -D_GNU_SOURCE
-CFLAGS	       += -fno-exceptions
-LDFLAGS        += -lstdc++ -lc -lgcc -elf2flt
 endif
 
 # The base directory for installing
@@ -140,19 +140,19 @@ $(subdir-install): dummy
 
 .PHONY: platform-build platform-clean platform-install packages-clean
 platform-build:
-	@ make -C scripts/platforms/ 
+	@ $(MAKE) -C scripts/platforms/ 
 
 platform-clean:
-	@ make -C scripts/platforms/ clean
+	@ $(MAKE) -C scripts/platforms/ clean
 
 platform-install: 
-	@ make -C scripts/platforms/ install
+	@ $(MAKE) -C scripts/platforms/ install
 
 packages:
-	@ make -C packages
+	@ $(MAKE) -C packages
 
 packages-clean:
-	@ make -C packages packages-clean
+	@ $(MAKE) -C packages packages-clean
 
 $(STAGE_DIR):
 	@ mkdir -p $(STAGE_DIR)/lib
@@ -171,10 +171,10 @@ $(INCLUDE_DIR)/pixil_config.h: $(BASE_DIR)/config
 # ------------------------------
 
 $(MCONFIG_DIR)/conf:
-	make -C $(MCONFIG_DIR) conf
+	$(MAKE) -C $(MCONFIG_DIR) conf
 
 $(MCONFIG_DIR)/mconf:
-	make -C $(MCONFIG_DIR) conf mconf
+	$(MAKE) -C $(MCONFIG_DIR) conf mconf
 
 menuconfig: $(BASE_DIR)/config $(MCONFIG_DIR)/mconf
 	@$(MCONFIG_DIR)/mconf $(SYSDEP_DIR)/Config.in

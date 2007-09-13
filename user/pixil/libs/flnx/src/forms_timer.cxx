@@ -67,7 +67,7 @@ void Fl_Timer::draw() {
     col = selection_color();
   draw_box(box(), col);
   if (type() == FL_VALUE_TIMER && delay>0.0) {
-    double d = direction_ ? total-delay : delay;
+    float d = direction_ ? total-delay : delay;
     if (d < 60.0)
       sprintf(str, "%.1f", d);
     else {
@@ -87,9 +87,9 @@ void Fl_Timer::stepcb(void* v) {
 
 void Fl_Timer::step() {
   if (!on) return;
-  double lastdelay = delay;
+  float lastdelay = delay;
   long sec, usec; fl_gettime(&sec, &usec);
-  delay -= (double) (sec - lastsec) + (double) (usec - lastusec) / 1000000.0;
+  delay -= (float) (sec - lastsec) + (float) (usec - lastusec) / 1000000.0;
   lastsec = sec; lastusec = usec;
   if (lastdelay > 0.0 && delay <= 0.0) {
     if (type() == FL_HIDDEN_TIMER) {
@@ -127,7 +127,7 @@ Fl_Timer::Fl_Timer(uchar t, int x, int y, int w, int h, const char* l)
   if (t == FL_VALUE_TIMER) align(FL_ALIGN_LEFT);
 }
 
-void Fl_Timer::value(double d) {
+void Fl_Timer::value(float d) {
   delay = total = d;
   on = (d > 0.0);
   fl_gettime(&(lastsec), &(lastusec));

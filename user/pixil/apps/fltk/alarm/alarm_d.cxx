@@ -42,6 +42,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <limits.h>
 
 #ifdef CONFIG_NANOX
 #include <wm/scrtoplib.h>

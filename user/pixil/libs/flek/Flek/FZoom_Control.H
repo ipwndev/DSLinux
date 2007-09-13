@@ -47,7 +47,7 @@ protected:
   bool Dragging;
 
   // Mouse x coordinate
-  double vNowx, vDownx;
+  float vNowx, vDownx;
 
   FVector3 zNow, zDown;
 
@@ -99,7 +99,7 @@ public:
   /**
    * Specify mouse position.
    */
-  void mouse (double x, double y=0.0, double z=0.0) {
+  void mouse (float x, float y=0.0, float z=0.0) {
     vNowx = x;
   }
   
@@ -151,8 +151,8 @@ public:
       // For a mouse movement of 1.0, scale changes by a factor of 2
       // Note: This is in the transformed mouse coordinates (-1 to 1)
       // Also only the x mouse coordinate is used
-      double diff = vNowx - vDownx;
-      double fact = 1 + absolute (diff);
+      float diff = vNowx - vDownx;
+      float fact = 1 + absolute (diff);
       if ( diff < 0.0 ) zNow /= fact;
       else zNow *= fact;
       

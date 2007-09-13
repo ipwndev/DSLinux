@@ -31,14 +31,14 @@ void MotionFieldVisualizer::Overlay(Image_YUV<Pixel>& img,const MotionVectorFiel
 	int x0 = x*mvfld.blksize_h+mvfld.blksize_h/2;
 	int y0 = y*mvfld.blksize_v+mvfld.blksize_v/2;
 
-	double dx = mvptr[y][x].h;
-	double dy = mvptr[y][x].v;
+	float dx = mvptr[y][x].h;
+	float dy = mvptr[y][x].v;
 
 	dx *= d_scale;
 	dy *= d_scale;
 
-	double x1= x0+dx;
-	double y1= y0+dy;
+	float x1= x0+dx;
+	float y1= y0+dy;
 
 	Pixel color=d_vectorcolor;
 	if (cbm && !cbm[y][x]) color=0;
@@ -46,7 +46,7 @@ void MotionFieldVisualizer::Overlay(Image_YUV<Pixel>& img,const MotionVectorFiel
 
 	if (d_drawarrows && (abs(mvptr[y][x].h)>0 || abs(mvptr[y][x].v)>0))
 	  {
-	    double len = sqrt(dx*dx+dy*dy);
+	    float len = sqrt(dx*dx+dy*dy);
 
 	    dx /= len;
 	    dy /= len;

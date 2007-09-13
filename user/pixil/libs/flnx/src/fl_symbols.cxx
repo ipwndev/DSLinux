@@ -162,7 +162,7 @@ static void set_outline_color(Fl_Color c) {
   fl_color(fl_color_average(c, FL_BLACK, .5));
 }
 
-static void rectangle(double x,double y,double x2,double y2,Fl_Color col) {
+static void rectangle(float x,float y,float x2,float y2,Fl_Color col) {
   fl_color(col);
   BP; vv(x,y); vv(x2,y); vv(x2,y2); vv(x,y2); EP;
   set_outline_color(col);

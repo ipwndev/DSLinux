@@ -207,7 +207,7 @@ main(int argc, char **argv)
 	break;
 
     case PAR_FLOAT:{
-	    double fval = atof(value);
+	    float fval = atof(value);
 	    ret = db_addNode(db, node, value, fval, PAR_FLOAT);
 	}
 

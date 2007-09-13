@@ -82,7 +82,7 @@ par_getGlobalPref(db_handle * db, char *category, char *keyword, int type,
 	break;
 
     case PAR_FLOAT:
-	gsize = sizeof(double);
+	gsize = sizeof(float);
 	break;
 
     case PAR_BOOL:

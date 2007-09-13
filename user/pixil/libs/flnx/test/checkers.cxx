@@ -1257,7 +1257,7 @@ Fl_Window *intel_window;
 Fl_Value_Output *intel_output;
 
 void intel_slider_cb(Fl_Widget*w, void*) {
-  double v = ((Fl_Slider*)w)->value();
+  float v = ((Fl_Slider*)w)->value();
   int n = int(v*v);
   intel_output->value(n);
   maxevaluate = maxnodes = n;

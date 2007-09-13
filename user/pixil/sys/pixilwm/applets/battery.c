@@ -70,6 +70,7 @@ static GR_WINDOW_ID ttl_wid = 0;
 static int ttl_shown = 0;
 static GR_IMAGE_ID batimage;
 
+#ifdef NOTUSED
 static void show_ttlwindow(void) {
   char buf[64];
   int tw, th, tb;
@@ -99,7 +100,7 @@ static void show_ttlwindow(void) {
   if (!fontid)
     fontid = GrCreateFont(GR_FONT_GUI_VAR, 0, NULL);
 
-  if (global_battery.status || global_battery.ttl == -1) 
+  if (global_battery.status || global_battery.ttl == ((unsigned short)-1)) 
     sprintf(buf, "AC Attached");
   else 
     sprintf(buf, "%d:%02d left", global_battery.ttl / 60, 
@@ -123,6 +124,7 @@ static void show_ttlwindow(void) {
 
   ttl_shown = 2;
 }
+#endif
   
   static void draw_battery(GR_WINDOW_ID wid) {
   GR_GC_ID gc = GrNewGC();

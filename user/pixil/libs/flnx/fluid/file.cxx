@@ -347,7 +347,7 @@ int write_file(const char *filename, int selected_only) {
 
 void read_fdesign();
 
-double read_version;
+float read_version;
 
 extern Fl_Type *Fl_Type_make(const char *tn);
 

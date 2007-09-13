@@ -29,7 +29,7 @@
 #include <FL/fl_draw.H>
 #include <FL/Fl_Toggle_Button.H>
 
-double args[9] = {
+float args[9] = {
   20,20, 50,200, 100,20, 200,200, 0};
 const char* name[9] = {
   "X0", "Y0", "X1", "Y1", "X2", "Y2", "X3", "Y3", "rotate"};

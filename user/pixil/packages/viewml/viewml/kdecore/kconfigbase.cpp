@@ -532,18 +532,18 @@ unsigned long KConfigBase::readUnsignedLongNumEntry( const char* pKey,
 }
 
 
-double KConfigBase::readDoubleNumEntry( const char* pKey, 
-										double nDefault) const
+float KConfigBase::readFloatNumEntry( const char* pKey, 
+										float nDefault) const
 {
   bool ok;
-  double rc;
+  float rc;
 
   QString aValue = readEntry( pKey );
   if( aValue.isNull() )
 	return nDefault;
   else
 	{
-	  rc = aValue.toDouble( &ok );
+	  rc = aValue.toFloat( &ok );
 	  return( ok ? rc : 0 );
 	}
 }
@@ -958,13 +958,13 @@ const char* KConfigBase::writeEntry( const char* pKey, unsigned long nValue,
 }
 
 
-const char* KConfigBase::writeEntry( const char* pKey, double nValue,
+const char* KConfigBase::writeEntry( const char* pKey, float nValue,
 									 bool bPersistent, bool bGlobal,
 									 bool bNLS )
 {
   QString aValue;
 
-  aValue.setNum( nValue, 'g', 15 );
+  aValue.setNum( nValue, 'f', 15 );
 
   return writeEntry( pKey, aValue, bPersistent, bGlobal, bNLS );
 }

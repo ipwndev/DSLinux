@@ -62,9 +62,9 @@ public:
   FL_EXPORT void slider_hor_lines(int x, int y, int h, int w, int W, Fl_Color c);
   FL_EXPORT void slider_ver_lines(int x, int y, int h, int w, int W, Fl_Color c);
   FL_EXPORT int scrollvalue(int windowtop,int windowsize,int first,int totalsize);
-  FL_EXPORT void bounds(double a, double b);
+  FL_EXPORT void bounds(float a, float b);
   float slider_size() const {return slider_size_;}
-  FL_EXPORT void slider_size(double v);
+  FL_EXPORT void slider_size(float v);
   Fl_Boxtype slider() const {return (Fl_Boxtype)slider_;}
   void slider(Fl_Boxtype c) {slider_ = c;}
 };

@@ -67,12 +67,12 @@ class NxSlider:public Fl_Valuator
     void draw(int x, int y, int w, int h);
     void draw();
 
-    FL_EXPORT void bounds(double a, double b);
+    FL_EXPORT void bounds(float a, float b);
     float slider_size() const
     {
 	return slider_size_;
     }
-    FL_EXPORT void slider_size(double v);
+    FL_EXPORT void slider_size(float v);
     Fl_Boxtype slider() const
     {
 	return (Fl_Boxtype) slider_;

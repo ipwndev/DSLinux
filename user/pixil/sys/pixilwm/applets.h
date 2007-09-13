@@ -55,6 +55,7 @@ typedef struct applet {
 
 int wm_applet_add_timer(int applet_id, int type, unsigned long length, applet_timeout_callback cb);
 
+void wm_init_applets(void);
 unsigned long wm_applet_get_timeout(void);
 void wm_applet_handle_event(GR_EVENT *event);
 unsigned long wm_applet_handle_timer(unsigned long elapsed);

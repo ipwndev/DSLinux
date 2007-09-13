@@ -71,7 +71,7 @@ SplashDlg *
 //--------------------------------------------------------------//
 // Constructor                                                  //
 //--------------------------------------------------------------//
-SplashDlg::SplashDlg(double fSeconds, bool & bTimedOut)
+SplashDlg::SplashDlg(float fSeconds, bool & bTimedOut)
     :
 Fl_Window((Fl::w() - DLG_WIDTH) / 2,
 	  (Fl::h() - DLG_HEIGHT) / 2, DLG_WIDTH, DLG_HEIGHT)

@@ -58,7 +58,7 @@ int NxScrollbar::handle(int event) {
     else {
       int sliderx;
       int S = int(slider_size()*W+.5);
-      double val = (value()-minimum())/(maximum()-minimum());
+      float val = (value()-minimum())/(maximum()-minimum());
 		if (val >= 1.0) sliderx = W-S;
       else if (val <= 0.0) sliderx = 0;
       else sliderx = int(val*(W-S)+.5);
@@ -74,7 +74,7 @@ int NxScrollbar::handle(int event) {
     else {
       int slidery;
       int S = int(slider_size()*H+.5);
-      double val = (value()-minimum())/(maximum()-minimum());
+      float val = (value()-minimum())/(maximum()-minimum());
       if (val >= 1.0) slidery = H-S;
       else if (val <= 0.0) slidery = 0;
       else slidery = int(val*(H-S)+.5);

@@ -31,7 +31,7 @@ void write_int( int _fd, int _value )
     write( _fd, (const char*)buffer, strlen(buffer) );
 }
 
-void write_double( int _fd, double _value )
+void write_float( int _fd, float _value )
 {
     char buffer[10];
     sprintf( buffer, "%f ", _value );
@@ -63,9 +63,9 @@ void write_intList( int _fd, intList* _list )
     write( _fd, (const char*)(_list->list), len );
 }
 
-void write_doubleList( int _fd, doubleList* _list )
+void write_floatList( int _fd, floatList* _list )
 {
-    int len = _list->elements * sizeof(double);
+    int len = _list->elements * sizeof(float);
     write( _fd, (const char*)&(_list->elements), sizeof(int) );
     write( _fd, (const char*)(_list->list), len );
 }
@@ -120,7 +120,7 @@ char read_char( char *_data, int &_pos, int )
     return tmp;
 }
 
-double read_double( char *_data, int &_pos, int _len )
+float read_float( char *_data, int &_pos, int _len )
 {
     int i = _pos;
     while ( _data[ _pos ] != ' ' )
@@ -158,15 +158,15 @@ void read_intList( char *_data, int &_pos, int _len, intList *_list )
     }
 }
 
-void read_doubleList( char *_data, int &_pos, int _len, doubleList *_list )
+void read_floatList( char *_data, int &_pos, int _len, floatList *_list )
 {
     int tmp = *((int*)_data + _pos);
     _list->elements = tmp;
     _pos += sizeof(int);
-    _list->list = (double*)malloc( tmp * sizeof(double) );
+    _list->list = (float*)malloc( tmp * sizeof(float) );
     for( int i = 0; i < tmp; i++ )
     {
-	_list->list[i] = read_double( _data, _pos, _len );
+	_list->list[i] = read_float( _data, _pos, _len );
     }
 }
 
@@ -202,7 +202,7 @@ void free_intList( intList *_list )
     free ( _list->list );
 }
 
-void free_doubleList( doubleList *_list )
+void free_floatList( floatList *_list )
 {
     free ( _list->list );
 }
@@ -219,7 +219,7 @@ int len_int( int _value )
     return strlen(buffer) + 1;
 }
 
-int len_double( double _value )
+int len_float( float _value )
 {
     char buffer[ 20 ];
     sprintf( buffer, "%f", _value );
@@ -255,9 +255,9 @@ int len_intList( intList *_list )
     return ( sizeof(int) + _list->elements * sizeof(int) );
 }
 
-int len_doubleList( doubleList *_list )
+int len_floatList( floatList *_list )
 {
-    return ( sizeof(int) + _list->elements * sizeof(double) );
+    return ( sizeof(int) + _list->elements * sizeof(float) );
 }
 
 int len_charList( charList *_list )

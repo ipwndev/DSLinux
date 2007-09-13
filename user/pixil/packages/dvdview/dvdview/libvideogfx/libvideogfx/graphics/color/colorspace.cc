@@ -516,16 +516,16 @@ void TrTo444_DupSub(Image_YUV<Pixel>& img)
 }
 
 
-void HSB2RGB(double h,double s,double br, double& red,double& green,double& blue)
+void HSB2RGB(float h,float s,float br, float& red,float& green,float& blue)
 {
-  double hue = h;
-  double saturation = s;
-  double brightness = br;
+  float hue = h;
+  float saturation = s;
+  float brightness = br;
 
   if (brightness == 0.0) { red   = green = blue  = 0.0;        return; }
   if (saturation == 0.0) { red   = green = blue  = brightness; return; }
 
-  double offs;   // hue mod 1/6
+  float offs;   // hue mod 1/6
   if (hue < 1.0/6)
     {   // red domain; green ascends
       offs = hue;

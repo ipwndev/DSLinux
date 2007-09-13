@@ -195,7 +195,7 @@ Dsp_Feedback::FeedbackFilter(void *data)
     buffer = (short int *) data;
 
     /*
-       double F, Pi;
+       float F, Pi;
        int L, Hz, SR;
 
        Hz = feedback->Hz;
@@ -215,7 +215,7 @@ Dsp_Feedback::FeedbackFilter(void *data)
     //int dest[257];
     int i;
     //short int sample[512];
-    //double scale = 100/log(256);
+    //float scale = 100/log(256);
 
     for (i = 0; i < RAWDATASIZE; i += 512) {
 

@@ -17,11 +17,11 @@
    H is in the range 0 - 360;
    S and V are in the range 0.0 - 1.0.
  */
-extern void hsv_to_rgb (int h, double s, double v,
+extern void hsv_to_rgb (int h, float s, float v,
 			unsigned short *r,
 			unsigned short *g,
 			unsigned short *b);
 extern void rgb_to_hsv (unsigned short r, unsigned short g, unsigned short b,
-			int *h, double *s, double *v);
+			int *h, float *s, float *v);
 
 #endif /* __HSV_H__ */

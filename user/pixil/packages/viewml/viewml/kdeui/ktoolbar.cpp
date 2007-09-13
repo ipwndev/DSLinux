@@ -167,7 +167,7 @@
 // Revision 1.58  1998/04/27 19:22:41  ettrich
 // Matthias: the nifty feature that you can globally change the size of the
 //   toolbars broke the nifty-as-well feature that a client can pass another
-//   size than 26 to the toolbar´s constructor.
+//   size than 26 to the toolbars constructor.
 //
 //   I hope I found a solution which allows both. If you pass an argument
 //   to the constructor, than a new attribute fixed_size is set.
@@ -675,7 +675,7 @@ void KToolBarButton::modeChange()
 /*
   if (_size > 28)
   {
-    double factor=_size/26;
+    float factor=_size/26;
     QImage i;
     i = enabledPixmap.convertToImage();
     i = i.smoothScale(enabledPixmap.width()*factor,

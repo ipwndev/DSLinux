@@ -118,8 +118,8 @@ void VideoPostprocessor_FilteredResize::ShowMBRows(DecodedImageData* decimg)
 
   // Select filter
 
-  double xfact = ((double)width )/dimg->m_width;
-  double yfact = ((double)height)/dimg->m_height;
+  float xfact = ((float)width )/dimg->m_width;
+  float yfact = ((float)height)/dimg->m_height;
 
   // unfiltered resizing
   for (int y=0;y<height;y++)

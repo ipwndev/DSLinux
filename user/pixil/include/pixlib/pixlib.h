@@ -387,7 +387,7 @@ extern "C"
 
     typedef struct
     {
-	double mtotal,
+	float mtotal,
 	    mfree, mused, mshare, mbuffer, mcache, stotal, sused, sfree;
     }
     pixMemInfo_t;

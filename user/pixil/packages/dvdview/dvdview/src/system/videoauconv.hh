@@ -76,7 +76,7 @@ private:
   bool   d_HasPTS;
   PTS    d_pts;
   int    d_pts_picoffset;
-  double d_framerate;
+  float d_framerate;
 
   ByteBufferParams d_bytebufparams;
 

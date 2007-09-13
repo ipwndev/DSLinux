@@ -303,7 +303,7 @@ NxRegional::MakeWindow(int X, int Y, int W, int H)
 	_reset = o;
     }				// end of "Reset button
     {
-	double width;
+	float width;
 	NxBox *o;
 	NxMenuButton *p;
 
@@ -347,7 +347,7 @@ NxRegional::MakeWindow(int X, int Y, int W, int H)
 	cury += (int) (1.5 * BUTTON_HEIGHT);
     }				// end of line
     {
-	double max_width = 0.0, tmp_width;
+	float max_width = 0.0, tmp_width;
 	int lblw, lblx, dtaw, dtax;
 	NxBox *lbls[REG_NUM_TMDT],	// Array of sample labels
 	 *dta[REG_NUM_NMBRS];	// Array of sample data
@@ -378,7 +378,7 @@ NxRegional::MakeWindow(int X, int Y, int W, int H)
 	cury += (int) (0.5 * BUTTON_HEIGHT);
     }
     {
-	double max_width = 0.0, tmp_width;
+	float max_width = 0.0, tmp_width;
 	int lblw, lblx, dtaw, dtax;
 	NxBox *lbls[REG_NUM_NMBRS], *dta[REG_NUM_NMBRS];
 
@@ -526,7 +526,7 @@ void
 NxRegional::SetValues(void)
 {
     char *cp1, *olocale, tmp_data[128];
-    double conv_val = 123456789.0;
+    float conv_val = 123456789.0;
 
 
     // TODO: Set the curret locale to what was selected and redisplay values

@@ -634,12 +634,12 @@ fl_descent()
 /* NanoX functions, because of speed issues with the */
 /* TrueType fonts */
 
-double
+float
 fl_width(const char *c)
 {
 #ifdef NANO_X
     GR_FONT_INFO fi;
-    double res = 0.0;
+    float res = 0.0;
 
     width_cache_struct *wc = width_cache.check_cache(fl_xfont);
     unsigned char *fwidths;
@@ -678,11 +678,11 @@ fl_width(const char *c)
 #endif //tanghao
 }
 
-double
+float
 fl_width(const char *c, int n)
 {
 #ifdef NANO_X
-    double w = 0;
+    float w = 0;
     GR_FONT_INFO fi;
     width_cache_struct *wc = width_cache.check_cache(fl_xfont);
     unsigned char *fwidths;
@@ -697,7 +697,7 @@ fl_width(const char *c, int n)
     }
 
     for (int i = 0; i < n; i++) {
-	w += (double) (fwidths[*(c + i)]);
+	w += (float) (fwidths[*(c + i)]);
     }
     return w;
 
@@ -719,7 +719,7 @@ fl_width(const char *c, int n)
 #endif //tanghao
 }
 
-double
+float
 fl_width(uchar c)
 {
 #ifdef NANO_X

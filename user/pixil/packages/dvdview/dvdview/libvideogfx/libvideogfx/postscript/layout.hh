@@ -29,12 +29,12 @@
 struct PaperSize
 {
   PaperSize() : border(1.5) { }
-  PaperSize(double w,double h) : width(w), height(h), border(1.5) { }
+  PaperSize(float w,float h) : width(w), height(h), border(1.5) { }
 
   // All measures in 'cm'.
-  double width,height;
+  float width,height;
 
-  double border; // Unprintable area on each side of paper.
+  float border; // Unprintable area on each side of paper.
 };
 
 // Several common paper sizes
@@ -52,8 +52,8 @@ extern PaperSize Paper_A5;
 struct PrintingArea
 {
   // All measures in 'cm'.
-  double xoffs,yoffs;
-  double width,height;
+  float xoffs,yoffs;
+  float width,height;
 };
 
 #define cm2pts 28.5634
@@ -94,7 +94,7 @@ public:
   virtual void         Finish()      = 0;
 
 protected:
-  void _SetParams(bool landscape,double paperwidth) { d_landscape=landscape; d_paperwidth=paperwidth; }
+  void _SetParams(bool landscape,float paperwidth) { d_landscape=landscape; d_paperwidth=paperwidth; }
 
   void _Init();
   void _BeginNewPage();
@@ -105,7 +105,7 @@ protected:
 
 private:
   bool     d_landscape;
-  double   d_paperwidth;
+  float   d_paperwidth;
 
   bool     d_DrawBorder;
   int      d_currPage;
@@ -132,10 +132,10 @@ public:
    PrintAreaLayouter_nUp();
   ~PrintAreaLayouter_nUp() { }
 
-  int  SetParams(double aspect,          // width/height
+  int  SetParams(float aspect,          // width/height
 		 bool   landscape=false,
 		 int nup=2,              // Number of areas on one sheet of paper (actual number may be greater)
-		 double spacing=1.0,     // spacing between areas (in 'cm')
+		 float spacing=1.0,     // spacing between areas (in 'cm')
 		 PaperSize paper=Paper_A4);
 
 
@@ -152,9 +152,9 @@ public:
 
 private:
   int      d_nCols,d_nRows;
-  double   d_xOffs,d_yOffs;
-  double   d_xStep,d_yStep;
-  double   d_xSize,d_ySize;
+  float   d_xOffs,d_yOffs;
+  float   d_xStep,d_yStep;
+  float   d_xSize,d_ySize;
 
   int      d_nextAreaNr;
 

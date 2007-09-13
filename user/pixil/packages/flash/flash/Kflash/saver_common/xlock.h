@@ -224,10 +224,10 @@ extern int is_ribbon();
 #define SINF(n) sinf(n)
 #define COSF(n) cosf(n)
 #define FABSF(n) fabsf(n)
-#else
-#define SINF(n) ((float)sin((double)(n)))
-#define COSF(n) ((float)cos((double)(n)))
-#define FABSF(n) ((float)fabs((double)(n)))
+#else 
+#define SINF(n) ((float)sin((float)(n)))
+#define COSF(n) ((float)cos((float)(n)))
+#define FABSF(n) ((float)fabs((float)(n)))
 #endif
 
 /*** random number generator ***/

@@ -84,8 +84,8 @@ allocate_writable_colors (Display *dpy, Colormap cmap,
 
 void
 make_color_ramp (Display *dpy, Colormap cmap,
-		 int h1, double s1, double v1,   /* 0-360, 0-1.0, 0-1.0 */
-		 int h2, double s2, double v2,   /* 0-360, 0-1.0, 0-1.0 */
+		 int h1, float s1, float v1,   /* 0-360, 0-1.0, 0-1.0 */
+		 int h2, float s2, float v2,   /* 0-360, 0-1.0, 0-1.0 */
 		 XColor *colors, int *ncolorsP,
 		 Bool closed_p,
 		 Bool allocate_p,
@@ -93,7 +93,7 @@ make_color_ramp (Display *dpy, Colormap cmap,
 {
   int i;
   int ncolors = *ncolorsP;
-  double dh, ds, dv;		/* deltas */
+  float dh, ds, dv;		/* deltas */
 
  AGAIN:
 
@@ -107,7 +107,7 @@ make_color_ramp (Display *dpy, Colormap cmap,
      is always from h1 to h2 (rather than the shorter path.)  make_uniform
      depends on this.
    */
-  dh = ((double)h2 - (double)h1) / ncolors;
+  dh = ((float)h2 - (float)h1) / ncolors;
   ds = (s2 - s1) / ncolors;
   dv = (v2 - v1) / ncolors;
 
@@ -186,7 +186,7 @@ make_color_ramp (Display *dpy, Colormap cmap,
 
 static void
 make_color_path (Display *dpy, Colormap cmap,
-		 int npoints, int *h, double *s, double *v,
+		 int npoints, int *h, float *s, float *v,
 		 XColor *colors, int *ncolorsP,
 		 Bool allocate_p,
 		 Bool writable_p)
@@ -195,9 +195,9 @@ make_color_path (Display *dpy, Colormap cmap,
   int total_ncolors = *ncolorsP;
 
   int ncolors[MAXPOINTS];  /* number of pixels per edge */
-  double dh[MAXPOINTS];    /* distance between pixels, per edge (0 - 360.0) */
-  double ds[MAXPOINTS];    /* distance between pixels, per edge (0 - 1.0) */
-  double dv[MAXPOINTS];    /* distance between pixels, per edge (0 - 1.0) */
+  float dh[MAXPOINTS];    /* distance between pixels, per edge (0 - 360.0) */
+  float ds[MAXPOINTS];    /* distance between pixels, per edge (0 - 1.0) */
+  float dv[MAXPOINTS];    /* distance between pixels, per edge (0 - 1.0) */
 
   if (npoints == 0)
     {
@@ -221,20 +221,20 @@ make_color_path (Display *dpy, Colormap cmap,
  AGAIN:
 
   {
-    double DH[MAXPOINTS];	/* Distance between H values in the shortest
+    float DH[MAXPOINTS];	/* Distance between H values in the shortest
 				   direction around the circle, that is, the
 				   distance between 10 and 350 is 20.
 				   (Range is 0 - 360.0.)
 				*/
-    double edge[MAXPOINTS];	/* lengths of edges in unit HSV space. */
-    double ratio[MAXPOINTS];	/* proportions of the edges (total 1.0) */
-    double circum = 0;
-    double one_point_oh = 0;	/* (debug) */
+    float edge[MAXPOINTS];	/* lengths of edges in unit HSV space. */
+    float ratio[MAXPOINTS];	/* proportions of the edges (total 1.0) */
+    float circum = 0;
+    float one_point_oh = 0;	/* (debug) */
 
     for (i = 0; i < npoints; i++)
       {
 	int j = (i+1) % npoints;
-	double d = ((double) (h[i] - h[j])) / 360;
+	float d = ((float) (h[i] - h[j])) / 360;
 	if (d < 0) d = -d;
 	if (d > 0.5) d = 0.5 - (d - 0.5);
 	DH[i] = d;
@@ -328,7 +328,7 @@ make_color_path (Display *dpy, Colormap cmap,
 #endif /* DEBUG */
       for (j = 0; j < ncolors[i]; j++, k++)
 	{
-	  double hh = (h[i] + (j * dh[i] * direction));
+	  float hh = (h[i] + (j * dh[i] * direction));
 	  if (hh < 0) hh += 360;
 	  else if (hh > 360) hh -= 0;
 	  colors[k].flags = DoRed|DoGreen|DoBlue;
@@ -417,15 +417,15 @@ make_color_path (Display *dpy, Colormap cmap,
 
 void
 make_color_loop (Display *dpy, Colormap cmap,
-		 int h0, double s0, double v0,   /* 0-360, 0-1.0, 0-1.0 */
-		 int h1, double s1, double v1,   /* 0-360, 0-1.0, 0-1.0 */
-		 int h2, double s2, double v2,   /* 0-360, 0-1.0, 0-1.0 */
+		 int h0, float s0, float v0,   /* 0-360, 0-1.0, 0-1.0 */
+		 int h1, float s1, float v1,   /* 0-360, 0-1.0, 0-1.0 */
+		 int h2, float s2, float v2,   /* 0-360, 0-1.0, 0-1.0 */
 		 XColor *colors, int *ncolorsP,
 		 Bool allocate_p,
 		 Bool writable_p)
 {
   int h[3];
-  double s[3], v[3];
+  float s[3], v[3];
   h[0] = h0; h[1] = h1; h[2] = h2;
   s[0] = s0; s[1] = s1; s[2] = s2;
   v[0] = v0; v[1] = v1; v[2] = v2;
@@ -465,10 +465,10 @@ make_smooth_colormap (Display *dpy, Visual *visual, Colormap cmap,
   Bool wanted_writable = (allocate_p && writable_pP && *writable_pP);
   int i;
   int h[MAXPOINTS];
-  double s[MAXPOINTS];
-  double v[MAXPOINTS];
-  double total_s = 0;
-  double total_v = 0;
+  float s[MAXPOINTS];
+  float v[MAXPOINTS];
+  float total_s = 0;
+  float total_v = 0;
   Screen *screen = DefaultScreenOfDisplay(dpy); /* #### WRONG! */
 
   if (*ncolorsP <= 0) return;
@@ -495,10 +495,10 @@ make_smooth_colormap (Display *dpy, Visual *visual, Colormap cmap,
       if (i > 0)
 	{
 	  int j = (i+1 == npoints) ? 0 : (i-1);
-	  double hi = ((double) h[i]) / 360;
-	  double hj = ((double) h[j]) / 360;
-	  double dh = hj - hi;
-	  double distance;
+	  float hi = ((float) h[i]) / 360;
+	  float hj = ((float) h[j]) / 360;
+	  float dh = hj - hi;
+	  float distance;
 	  if (dh < 0) dh = -dh;
 	  if (dh > 0.5) dh = 0.5 - (dh - 0.5);
 	  distance = sqrt ((dh * dh) +
@@ -554,8 +554,8 @@ make_uniform_colormap (Display *dpy, Visual *visual, Colormap cmap,
   Bool wanted_writable = (allocate_p && writable_pP && *writable_pP);
   Screen *screen = DefaultScreenOfDisplay(dpy); /* #### WRONG! */
 
-  double S = ((double) (random() % 34) + 66) / 100.0;	/* range 66%-100% */
-  double V = ((double) (random() % 34) + 66) / 100.0;	/* range 66%-100% */
+  float S = ((float) (random() % 34) + 66) / 100.0;	/* range 66%-100% */
+  float V = ((float) (random() % 34) + 66) / 100.0;	/* range 66%-100% */
 
   if (*ncolorsP <= 0) return;
 
@@ -611,8 +611,8 @@ make_random_colormap (Display *dpy, Visual *visual, Colormap cmap,
       if (bright_p)
 	{
 	  int H = random() % 360;			   /* range 0-360    */
-	  double S = ((double) (random()%70) + 30)/100.0;  /* range 30%-100% */
-	  double V = ((double) (random()%34) + 66)/100.0;  /* range 66%-100% */
+	  float S = ((float) (random()%70) + 30)/100.0;  /* range 30%-100% */
+	  float V = ((float) (random()%34) + 66)/100.0;  /* range 66%-100% */
 	  hsv_to_rgb (H, S, V,
 		      &colors[i].red, &colors[i].green, &colors[i].blue);
 	}

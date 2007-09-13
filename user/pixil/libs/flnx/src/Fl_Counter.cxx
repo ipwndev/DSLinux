@@ -84,7 +84,7 @@ void Fl_Counter::draw() {
 
 void Fl_Counter::increment_cb() {
   if (!mouseobj) return;
-  double v = value();
+  float v = value();
   switch (mouseobj) {
   case 1: v -= lstep_; break;
   case 2: v = increment(v, -1); break;

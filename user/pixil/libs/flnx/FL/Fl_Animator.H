@@ -25,7 +25,7 @@ private:
   int _xpos;
   int _ypos;
 
-  double _interval;  /* Gap between frames, in seconds */
+  float _interval;  /* Gap between frames, in seconds */
   
   int _fcount;    /* The number of frames in the strip  */
   int _fwidth;    /* The xsize of the frames */
@@ -54,7 +54,7 @@ public:
   /* internally */
 
   int interval() { return((int ) (_interval * 1000)); }
-  void interval(int newint) { _interval = (double) (newint / 1000); }
+  void interval(int newint) { _interval = (float) (newint / 1000); }
   
   int frame_width() { return(_fwidth); }
   void frame_width(int newwidth) { _fwidth = newwidth; }

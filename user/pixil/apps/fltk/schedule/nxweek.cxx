@@ -70,7 +70,7 @@ Fl_Widget(X, Y, W, H, L)
     memset(db_name, 0, sizeof(db_name));
     db = NULL;
     first_appt = NULL;
-    pix_ratio = (double) b_height / 7200;	//pix per second
+    pix_ratio = (float) b_height / 7200;	//pix per second
     day_pix = 86400 * pix_ratio;
     num_recs = 0;
     memset(appt_array, 0, sizeof(appt_array));
@@ -268,7 +268,7 @@ WeekGrid::GetOverlapDim(appt * p_Appt, appt * p_Prev)
 	    val = val << 4;
 	    appt_array[col][row1 + idx] = val | low_val;
 	}
-    } else if (NULL == p_Prev) {	// double on top of double
+    } else if (NULL == p_Prev) {	// float on top of float
 	new_time = p_Appt->end_time;
 	tt = localtime(&new_time);
 	t_hour = tt->tm_hour;
@@ -710,8 +710,8 @@ WeekGrid::GetApptDim(appt * p_Appt)
     int hour;
     int min;
     int wday;
-    double h;
-    double y;
+    float h;
+    float y;
     char buf[16];
     tm *tt = localtime(&new_time);
 
@@ -764,12 +764,12 @@ free_appts(appt * app)
     }
 }
 
-double
-WeekGrid::GetOffSet(double val)
+float
+WeekGrid::GetOffSet(float val)
 {
     int num = (int) (val / day_pix);
-    double close = num * day_pix;
-    double rem = val - close;
+    float close = num * day_pix;
+    float rem = val - close;
 
     return rem;
 }
@@ -814,20 +814,20 @@ WeekGrid::DrawOverlaps(int dy)
 {
     int col = 0;
     int row = 0;
-    double h_val = 0;
-    double dec = 0;
+    float h_val = 0;
+    float dec = 0;
     int last_val = 0;
     int low_val;
     int hi_val;
     int H;
     int start_row = 0;
-    double y_val;
+    float y_val;
     int Y;
     int X;
     int x_off;
     int next_val;
     int width;
-    double rem = 0;
+    float rem = 0;
     int offset = 0;
 
     // go low
@@ -883,7 +883,7 @@ WeekGrid::DrawOverlaps(int dy)
 		    DPRINT("Y [%d] H [%d]\n", Y, H);
 		    // correct Y
 
-		    rem = GetOffSet((double) Y);
+		    rem = GetOffSet((float) Y);
 		    offset = Y;
 		    Y = (int) rem - dy;
 		    if (offset >= (dy + (int) (6.5 * b_height)))
@@ -969,7 +969,7 @@ WeekGrid::DrawOverlaps(int dy)
 		    } else
 			H = 0;
 		} else {
-		    rem = GetOffSet((double) Y);
+		    rem = GetOffSet((float) Y);
 		    offset = Y;
 		    Y = (int) rem - dy;
 		    if (offset >= (dy + (int) (6.5 * b_height)))
@@ -1019,7 +1019,7 @@ WeekGrid::DrawRects(int dy)
     int H;
     int X;
     int Y;
-    double rem;
+    float rem;
     tm *tt;
     int width = 0;
     int x_off = 0;
@@ -1131,7 +1131,7 @@ WeekGrid::ShowInfo(int X, int Y)
     int big_overlap = 0;
     int x_off = 0;
     int left = 0;
-    double rem = 0;
+    float rem = 0;
     int H = 0;
     int offset = 0;
     int width = 0;

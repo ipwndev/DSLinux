@@ -924,8 +924,8 @@ Flv_List::draw_scrollbars(int &X, int &Y, int &W, int &H)
 	scrollbar.slider_size(x);
 #else
 	scrollbar.
-	    slider_size((double)
-			((double) x / (double) (H - vscrollbar_width * 2)));
+	    slider_size((float)
+			((float) x / (float) (H - vscrollbar_width * 2)));
 #endif
 	scrollbar.Fl_Valuator::value(top_row());	//      , 1,    0, vrows );
 	if (!scrollbar.visible())
@@ -958,8 +958,8 @@ Flv_List::draw_scrollbars(int &X, int &Y, int &W, int &H)
 #else
 	x = vrow_width / 10;
 	hscrollbar.
-	    slider_size((double)
-			((double) x / (double) (W - vscrollbar_width * 2)));
+	    slider_size((float)
+			((float) x / (float) (W - vscrollbar_width * 2)));
 #endif
 	hscrollbar.Fl_Valuator::value(vrow_offset);	//      , 1,    0, vrows );
 	if (!hscrollbar.visible())

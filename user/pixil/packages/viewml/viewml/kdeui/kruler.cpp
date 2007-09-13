@@ -1,5 +1,5 @@
 /* This file is part of the KDE libraries
-    Copyright (C) 1998 Jörg Habenicht (j.habenicht@europemail.com)
+    Copyright (C) 1998 Jï¿½g Habenicht (j.habenicht@europemail.com)
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -34,7 +34,7 @@
 #define INIT_SHOW_BIG_MARK true
 #define INIT_SHOW_END_MARK true
 
-#define INIT_PIXEL_PER_MARK (double)10.0 /* distance between 2 base marks in pixel */
+#define INIT_PIXEL_PER_MARK (float)10.0 /* distance between 2 base marks in pixel */
 #define INIT_OFFSET (-20)
 
 #define FIX_WIDTH 20 /* widget width in pixel */
@@ -368,13 +368,13 @@ KRuler::setTickStyle(paint_style);
 void 
 KRuler::setPixelPerMark(int rate)
 {
-  ppm = (double)rate;
+  ppm = (float)rate;
   update(contentsRect());
 }
 */
 
 void 
-KRuler::setPixelPerMark(double rate)
+KRuler::setPixelPerMark(float rate)
 { // never compare floats against each other :)
   ppm = rate;
   update(contentsRect());
@@ -472,9 +472,9 @@ KRuler::drawContents(QPainter *p)
     //    pixelpm = (int)ppm;
   //    left  = clip.left(),
   //    right = clip.right();
-  double f, fend,
-    offsetmin=(double)(minval-offset),
-    offsetmax=(double)(maxval-offset);
+  float f, fend,
+    offsetmin=(float)(minval-offset),
+    offsetmax=(float)(maxval-offset);
 
   // draw labels
   QFont font = p->font();

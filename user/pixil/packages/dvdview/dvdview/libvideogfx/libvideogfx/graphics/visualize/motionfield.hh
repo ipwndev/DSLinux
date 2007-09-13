@@ -31,14 +31,14 @@ public:
 
   void SetLumaVal(Pixel p) { d_vectorcolor=p; }
   void DrawArrows(bool flag) { d_drawarrows=flag; }
-  void SetScale(double s) { d_scale=s; }
+  void SetScale(float s) { d_scale=s; }
 
   void Overlay(Image_YUV<Pixel>&,const MotionVectorField&,const Bitmap<bool>* colored=NULL) const;
 
 private:
   Pixel  d_vectorcolor;
   bool   d_drawarrows;
-  double d_scale;
+  float d_scale;
 };
 
 #endif

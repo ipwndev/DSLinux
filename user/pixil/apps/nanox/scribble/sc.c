@@ -7,7 +7,7 @@
 #include "sc.h"
 #include "stdio.h"
 #include "stdlib.h"
-#include "math.h"
+#include <math.h>
 #include "zdebug.h"
 
 #define	EPS	(1.0e-6)	/* for singular matrix check */
@@ -100,8 +100,8 @@ sAddExample(sc, classname, y)
 {
     register sClassDope scd;
     register int i, j;
-    double nfv[50];
-    double nm1on, recipn;
+    float nfv[50];
+    float nm1on, recipn;
 
     scd = sClassNameLookup(sc, classname);
     if (scd == NULL) {
@@ -130,7 +130,7 @@ sAddExample(sc, classname, y)
     }
 
     scd->nexamples++;
-    nm1on = ((double) scd->nexamples - 1) / scd->nexamples;
+    nm1on = ((float) scd->nexamples - 1) / scd->nexamples;
     recipn = 1.0 / scd->nexamples;
 
     /* incrementally update covariance matrix */
@@ -155,10 +155,10 @@ sDoneAdding(sc)
     register int i, j;
     int c;
     int ne, denom;
-    double oneoverdenom;
+    float oneoverdenom;
     register Matrix s;
     register Matrix avgcov;
-    double det;
+    float det;
     register sClassDope scd;
 
     if (sc->nclasses == 0) {
@@ -225,14 +225,14 @@ sClassDope
 sClassifyAD(sc, fv, ap, dp)
      sClassifier sc;
      Vector fv;
-     double *ap;
-     double *dp;
+     float *ap;
+     float *dp;
 {
-    double disc[MAXSCLASSES];
+    float disc[MAXSCLASSES];
     register int i, maxclass;
-    double denom, exp();
+    float denom;
     register sClassDope scd;
-    double d;
+    float d;
 
     if (sc->w == NULL) {
 	error("%x not a trained classifier", sc);
@@ -241,7 +241,7 @@ sClassifyAD(sc, fv, ap, dp)
 
     for (i = 0; i < sc->nclasses; i++) {
 /* ari */
-	double IP;
+	float IP;
 	IP = InnerProduct(sc->w[i], fv);
 /*	  fprintf(stderr, "sClassifyAD:  InnerProduct for class %s is %f.\n", sc->classdope[i]->name, IP); */
 /*	  fprintf(stderr, "sClassifyAD:  sc->cnst[i] = %f.\n", sc->cnst[i]); */
@@ -331,14 +331,14 @@ sClassifyAD(sc, fv, ap, dp)
  Compute (v-u)' sigma (v-u)
  */
 
-double
+float
 MahalanobisDistance(v, u, sigma)
      register Vector v, u;
      register Matrix sigma;
 {
     register int i;
     static Vector space;
-    double result;
+    float result;
 
     if (space == NULL || NROWS(space) != NROWS(v)) {
 	if (space)
@@ -357,7 +357,7 @@ FixClassifier(sc, avgcov)
      Matrix avgcov;
 {
     int i;
-    double det;
+    float det;
     BitVector bv;
     Matrix m, r;
 
@@ -482,7 +482,7 @@ sDistances(sc, nclosest)
 {
     register Matrix d = NewMatrix(sc->nclasses, sc->nclasses);
     register int i, j;
-    double min, max = 0;
+    float min, max = 0;
     int n, mi, mj;
 
     printf("-----------\n");

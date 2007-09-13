@@ -41,7 +41,7 @@ NewVector(r)
     register Vector v;
 
     a = (struct array_header *)
-	allocate(sizeof(struct array_header) + r * sizeof(double), char);
+	allocate(sizeof(struct array_header) + r * sizeof(float), char);
     a->ndims = 1;
     a->nrows = r;
     a->ncols = 1;
@@ -65,13 +65,13 @@ NewMatrix(r, c)
      int r, c;
 {
     register struct array_header *a = (struct array_header *)
-	allocate(sizeof(struct array_header) + r * sizeof(double *), char);
+	allocate(sizeof(struct array_header) + r * sizeof(float *), char);
     register int i;
     register Matrix m;
 
     m = (Matrix) (a + 1);
     for (i = 0; i < r; i++)
-	m[i] = allocate(c, double);
+	m[i] = allocate(c, float);
     a->ndims = 2;
     a->nrows = r;
     a->ncols = c;
@@ -147,7 +147,7 @@ ZeroMatrix(m)
 void
 FillMatrix(m, fill)
      Matrix m;
-     double fill;
+     float fill;
 {
     register int i, j;
     for (i = 0; i < NROWS(m); i++)
@@ -155,11 +155,11 @@ FillMatrix(m, fill)
 	    m[i][j] = fill;
 }
 
-double
+float
 InnerProduct(v1, v2)
      register Vector v1, v2;
 {
-    double result = 0;
+    float result = 0;
     register int n = NROWS(v1);
     if (n != NROWS(v2)) {
 	exit_error("InnerProduct %d x %d ", n, NROWS(v2));
@@ -174,7 +174,7 @@ MatrixMultiply(m1, m2, prod)
      register Matrix m1, m2, prod;
 {
     register int i, j, k;
-    double sum;
+    float sum;
 
     if (NCOLS(m1) != NROWS(m2)) {
 	error("MatrixMultiply: Can't multiply %dx%d and %dx%d matrices",
@@ -233,7 +233,7 @@ VectorTimesMatrix(v, m, prod)
 
 void
 ScalarTimesVector(s, v, product)
-     double s;
+     float s;
      register Vector v, product;
 {
     register int n = NROWS(v);
@@ -250,7 +250,7 @@ ScalarTimesVector(s, v, product)
 
 void
 ScalarTimesMatrix(s, m, product)
-     double s;
+     float s;
      register Matrix m, product;
 {
     register int i, j;
@@ -270,13 +270,13 @@ ScalarTimesMatrix(s, m, product)
  Compute v'mv
  */
 
-double
+float
 QuadraticForm(v, m)
      register Vector v;
      register Matrix m;
 {
     register int i, j, n;
-    double result = 0;
+    float result = 0;
 
     n = NROWS(v);
 
@@ -319,12 +319,12 @@ int DebugInvertMatrix = 0;
 
 #define _abs(x) ((x)>=0 ? (x) : -(x))
 
-double
+float
 InvertMatrix(ym, rm)
      Matrix ym, rm;
 {
     register int i, j, k;
-    double det, biga, recip_biga, hold;
+    float det, biga, recip_biga, hold;
     int l[PERMBUFSIZE], m[PERMBUFSIZE];
     register int n;
 
@@ -491,7 +491,7 @@ SliceMatrix(m, rowmask, colmask)
 Matrix
 DeSliceMatrix(m, fill, rowmask, colmask, r)
      Matrix m;
-     double fill;
+     float fill;
      BitVector rowmask, colmask;
      Matrix r;
 {
@@ -585,14 +585,14 @@ InputMatrix(f)
     return m;
 }
 
-double
+float
 InvertSingularMatrix(m, inv)
      Matrix m, inv;
 {
     register int i, j, k;
     BitVector mask;
     Matrix sm;
-    double det, maxdet;
+    float det, maxdet;
     int mi = -1, mj = -1, mk = -1;
 
     maxdet = 0.0;

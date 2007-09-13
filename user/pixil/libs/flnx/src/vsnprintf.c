@@ -84,7 +84,7 @@ int vsnprintf(char* str, size_t size, const char* fmt, va_list ap) {
 	case 'f':
 	case 'g':
 	  *copy_p = 0;
-	  sprintf(sprintf_out, copy, va_arg(ap, double));
+	  sprintf(sprintf_out, copy, va_arg(ap, float));
 	  copy_p = sprintf_out;
 	  goto DUP;
 	case 'p':

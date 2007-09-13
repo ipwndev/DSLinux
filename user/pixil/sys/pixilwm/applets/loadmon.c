@@ -25,7 +25,7 @@ static void draw_applet(void);
 static int get_load(void)
 {
   unsigned long user, nice, sys, idle;
-  double total = 0, busy = 0;
+  float total = 0, busy = 0;
   
   char str[BUFSIZ];
   char *c;
@@ -58,8 +58,8 @@ static int get_load(void)
     dsys = abs(sys - cpudata.sys);
     didle = abs(idle - cpudata.idle);
     
-    busy = (double) duser + dnice + dsys;
-    total = (double) busy + didle;
+    busy = (float) duser + dnice + dsys;
+    total = (float) busy + didle;
   } else
     total = 0;
   

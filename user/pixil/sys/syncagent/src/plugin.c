@@ -75,7 +75,7 @@ load_plugin(char *filename)
   db_handle *handle = db_openDB(db_getDefaultDB(), PAR_DB_MODE_RDONLY);
   
   if (handle) {
-    int len = par_getCapability(handle, "syncagent", (void **) &data);
+    (void) par_getCapability(handle, "syncagent", (void **) &data);
     db_closeDB(handle);
   }
 #endif

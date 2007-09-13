@@ -240,7 +240,7 @@ static int fl_free_font = FL_FREE_FONT;
 
 Fl_Font Fl::set_fonts(const char* xstarname) {
   fl_open_display();
-  int xlistsize;
+  int xlistsize = 0;
   char buf[20];
   if (!xstarname) {
     strcpy(buf,"-*-"); strcpy(buf+3,fl_encoding);

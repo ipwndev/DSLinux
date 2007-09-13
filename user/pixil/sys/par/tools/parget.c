@@ -73,7 +73,7 @@ printValue(int type, void *value)
 	break;
 
     case PAR_FLOAT:
-	printf("%f\n", *((double *) value));
+	printf("%f\n", *((float *) value));
 
     case PAR_BOOL:
 	if (*((int *) value))

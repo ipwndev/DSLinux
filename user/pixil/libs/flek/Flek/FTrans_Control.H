@@ -91,7 +91,7 @@ public:
   /**
    * Specify mouse position.
    */
-  void mouse (double x, double y, double z=0.0) {
+  void mouse (float x, float y, float z=0.0) {
     vNow.set(x,y,z);
   }
      

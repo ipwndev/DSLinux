@@ -931,7 +931,7 @@ void slider_size_cb(Fl_Value_Input* i, void* v) {
     i->show();
     i->value(((Fl_Slider*)(current_widget->o))->slider_size());
   } else {
-    double n = i->value();
+    float n = i->value();
     for (Fl_Type *o = Fl_Type::first; o; o = o->next)
       if (o->selected && o->is_widget()) {
 	Fl_Widget_Type* q = (Fl_Widget_Type*)o;
@@ -949,7 +949,7 @@ void min_cb(Fl_Value_Input* i, void* v) {
     i->show();
     i->value(((Fl_Valuator*)(current_widget->o))->minimum());
   } else {
-    double n = i->value();
+    float n = i->value();
     for (Fl_Type *o = Fl_Type::first; o; o = o->next)
       if (o->selected && o->is_widget()) {
 	Fl_Widget_Type* q = (Fl_Widget_Type*)o;
@@ -967,7 +967,7 @@ void max_cb(Fl_Value_Input* i, void* v) {
     i->show();
     i->value(((Fl_Valuator*)(current_widget->o))->maximum());
   } else {
-    double n = i->value();
+    float n = i->value();
     for (Fl_Type *o = Fl_Type::first; o; o = o->next)
       if (o->selected && o->is_widget()) {
 	Fl_Widget_Type* q = (Fl_Widget_Type*)o;
@@ -985,7 +985,7 @@ void step_cb(Fl_Value_Input* i, void* v) {
     i->show();
     i->value(((Fl_Valuator*)(current_widget->o))->step());
   } else {
-    double n = i->value();
+    float n = i->value();
     for (Fl_Type *o = Fl_Type::first; o; o = o->next)
       if (o->selected && o->is_widget()) {
 	Fl_Widget_Type* q = (Fl_Widget_Type*)o;
@@ -1008,7 +1008,7 @@ void value_cb(Fl_Value_Input* i, void* v) {
     } else 
       i->hide();
   } else {
-    double n = i->value();
+    float n = i->value();
     for (Fl_Type *o = Fl_Type::first; o; o = o->next)
       if (o->selected && o->is_widget()) {
 	Fl_Widget_Type* q = (Fl_Widget_Type*)o;
@@ -1387,8 +1387,8 @@ void Fl_Widget_Type::write_widget_code() {
     if (v->value())
       write_c("%so->value(%g);\n", indent(), v->value());
     if (is_valuator()==2) {
-      double x = ((Fl_Slider*)v)->slider_size();
-      double y = ((Fl_Slider*)f)->slider_size();
+      float x = ((Fl_Slider*)v)->slider_size();
+      float y = ((Fl_Slider*)f)->slider_size();
       if (x != y) write_c("%so->slider_size(%g);\n", indent(), x);
     }
   }
@@ -1498,8 +1498,8 @@ void Fl_Widget_Type::write_properties() {
     if (v->step()!=f->step()) write_string("step %g",v->step());
     if (v->value()!=0.0) write_string("value %g",v->value());
     if (is_valuator()==2) {
-      double x = ((Fl_Slider*)v)->slider_size();
-      double y = ((Fl_Slider*)f)->slider_size();
+      float x = ((Fl_Slider*)v)->slider_size();
+      float y = ((Fl_Slider*)f)->slider_size();
       if (x != y) write_string("slider_size %g", x);
     }
   }

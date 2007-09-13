@@ -162,7 +162,7 @@ void LowPass_3x3mean(const Image_YUV<Pixel>& img,Image_YUV<Pixel>& dest)
 
 
 template <class Pel> void ConvolveH(const Bitmap<Pel>& src,Bitmap<Pel>& dst,
-				    const Array<double>& filter,bool useborder)
+				    const Array<float>& filter,bool useborder)
 {
   int left = -filter.AskBase();
   int right=  filter.AskSize()-left-1;
@@ -180,7 +180,7 @@ template <class Pel> void ConvolveH(const Bitmap<Pel>& src,Bitmap<Pel>& dst,
 
   dst.Create(xe-xs+1,h,1,1,borderw);
 
-  const double* f = filter.Data_const();
+  const float* f = filter.Data_const();
 
   const Pel*const* sp = src.AskFrame_const();
         Pel*const* dp = dst.AskFrame();
@@ -188,7 +188,7 @@ template <class Pel> void ConvolveH(const Bitmap<Pel>& src,Bitmap<Pel>& dst,
   for (int y=-borderw;y<h+borderw;y++)
     for (int x=xs;x<=xe;x++)
       {
-	double sum=0.0;
+	float sum=0.0;
 	for (int xx=-left;xx<=right;xx++)
 	  sum += f[xx]*sp[y][x+xx];
     
@@ -198,7 +198,7 @@ template <class Pel> void ConvolveH(const Bitmap<Pel>& src,Bitmap<Pel>& dst,
 
 
 template <class Pel> void ConvolveV(const Bitmap<Pel>& src,Bitmap<Pel>& dst,
-				    const Array<double>& filter,bool useborder)
+				    const Array<float>& filter,bool useborder)
 {
   int top   = -filter.AskBase();
   int bottom=  filter.AskSize()-top-1;
@@ -216,7 +216,7 @@ template <class Pel> void ConvolveV(const Bitmap<Pel>& src,Bitmap<Pel>& dst,
 
   dst.Create(w,ye-ys+1,1,1,borderw);
 
-  const double* f = filter.Data_const();
+  const float* f = filter.Data_const();
 
   const Pel*const* sp = src.AskFrame_const();
         Pel*const* dp = dst.AskFrame();
@@ -224,7 +224,7 @@ template <class Pel> void ConvolveV(const Bitmap<Pel>& src,Bitmap<Pel>& dst,
   for (int y=ys;y<=ye;y++)
     for (int x=-borderw;x<w+borderw;x++)
       {
-	double sum=0.0;
+	float sum=0.0;
 	for (int yy=-top;yy<=bottom;yy++)
 	  sum += f[yy]*sp[y+yy][x];
     
@@ -234,7 +234,7 @@ template <class Pel> void ConvolveV(const Bitmap<Pel>& src,Bitmap<Pel>& dst,
 
 
 template <class Pel> void ConvolveHV(const Bitmap<Pel>& src,Bitmap<Pel>& dst,
-				     const Array<double>& filter,bool useborder)
+				     const Array<float>& filter,bool useborder)
 {
   Bitmap<Pel> tmpbm;
   ConvolveH(src,tmpbm,filter,useborder);
@@ -242,30 +242,30 @@ template <class Pel> void ConvolveHV(const Bitmap<Pel>& src,Bitmap<Pel>& dst,
 }
 
 
-void NormalizeFilter(Array<double>& filter)
+void NormalizeFilter(Array<float>& filter)
 {
-  double sum=0.0;
+  float sum=0.0;
   int i0 = filter.AskStartIdx();
   int i1 = filter.AskEndIdx();
 
-  double* f = filter.Data();
+  float* f = filter.Data();
 
   for (int i=i0;i<=i1;i++)
     sum += f[i];
 
-  const double fact = 1.0/sum;
+  const float fact = 1.0/sum;
 
   for (int i=i0;i<=i1;i++)
     f[i] *= fact;
 }
 
 
-void CreateGaussFilter(Array<double>& filter,double sigma,double cutoffval,bool normalize)
+void CreateGaussFilter(Array<float>& filter,float sigma,float cutoffval,bool normalize)
 {
 #define MAXRANGE 100
-  double filt[MAXRANGE];
+  float filt[MAXRANGE];
 
-  double minus_twosigma2inv = -1.0/(2*sigma*sigma);
+  float minus_twosigma2inv = -1.0/(2*sigma*sigma);
 
   int lastidx=MAXRANGE-1;
   for (int i=0;i<MAXRANGE;i++)
@@ -280,7 +280,7 @@ void CreateGaussFilter(Array<double>& filter,double sigma,double cutoffval,bool 
     throw "CreateGaussFilter(): Gauss filter is too wide.";
 
   filter.Create(2*lastidx+1 , -lastidx);
-  double* f = filter.Data();
+  float* f = filter.Data();
 
   for (int i=0;i<=lastidx;i++)
     f[-i]=f[i]=filt[i];
@@ -289,7 +289,7 @@ void CreateGaussFilter(Array<double>& filter,double sigma,double cutoffval,bool 
 }
 
 
-void CreateGaussDerivFilter(Array<double>& filter,double sigma,double cutoffval=0.01)
+void CreateGaussDerivFilter(Array<float>& filter,float sigma,float cutoffval=0.01)
 {
   CreateGaussFilter(filter,sigma,cutoffval,false);
 
@@ -298,30 +298,30 @@ void CreateGaussDerivFilter(Array<double>& filter,double sigma,double cutoffval=
 
   // normalize
 
-  double sum=0.0;
+  float sum=0.0;
 
   int i0 = filter.AskStartIdx();
   int i1 = filter.AskEndIdx();
 
-  double* f = filter.Data();
+  float* f = filter.Data();
 
   for (int i=i0;i<=i1;i++)
     sum += i*f[i];
 
-  const double fact = 1.0/sum;
+  const float fact = 1.0/sum;
 
   for (int i=i0;i<=i1;i++)
     f[i] *= fact;
 }
 
 
-template class Array<double>;
-template void ConvolveH (const Bitmap<Pixel>&,Bitmap<Pixel>&,const Array<double>&,bool);
-template void ConvolveV (const Bitmap<Pixel>&,Bitmap<Pixel>&,const Array<double>&,bool);
-template void ConvolveHV(const Bitmap<Pixel>&,Bitmap<Pixel>&,const Array<double>&,bool);
+template class Array<float>;
+template void ConvolveH (const Bitmap<Pixel>&,Bitmap<Pixel>&,const Array<float>&,bool);
+template void ConvolveV (const Bitmap<Pixel>&,Bitmap<Pixel>&,const Array<float>&,bool);
+template void ConvolveHV(const Bitmap<Pixel>&,Bitmap<Pixel>&,const Array<float>&,bool);
 
-template void ConvolveH (const Bitmap<double>&,Bitmap<double>&,const Array<double>&,bool);
-template void ConvolveV (const Bitmap<double>&,Bitmap<double>&,const Array<double>&,bool);
-template void ConvolveHV(const Bitmap<double>&,Bitmap<double>&,const Array<double>&,bool);
+template void ConvolveH (const Bitmap<float>&,Bitmap<float>&,const Array<float>&,bool);
+template void ConvolveV (const Bitmap<float>&,Bitmap<float>&,const Array<float>&,bool);
+template void ConvolveHV(const Bitmap<float>&,Bitmap<float>&,const Array<float>&,bool);
 
 #include "libvideogfx/containers/array.cc"

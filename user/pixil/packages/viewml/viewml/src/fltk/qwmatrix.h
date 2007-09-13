@@ -4,7 +4,7 @@
 class QWMatrix
 {
  public:
-  QWMatrix & scale(double dx, double dy) { return *this; }  
+  QWMatrix & scale(float dx, float dy) { return *this; }  
 };
 
 

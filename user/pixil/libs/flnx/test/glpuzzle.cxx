@@ -871,7 +871,7 @@ int
 invertMatrix(const GLfloat src[16], GLfloat inverse[16])
 {
   int i, j, k, swap;
-  double t;
+  float t;
   GLfloat temp[4][4];
 
   for (i = 0; i < 4; i++) {

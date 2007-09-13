@@ -48,8 +48,8 @@ class QListBox : public QWidget
 // CRH long maxItemWidth () const { return 0; }
   long maxItemWidth () const
 	{
-		double len = 0;
-		double max = 0;
+		float len = 0;
+		float max = 0;
 		for(int i = 1; i <= m_nCount; i++)
 			if(max < (len = fl_width(browser->text(i))))
 				max = len;

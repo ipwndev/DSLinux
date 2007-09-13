@@ -84,22 +84,22 @@ settings;
 /* External functions - mainly to do math */
 /* See astro.c for all the fun and games */
 
-extern void sunpos(double jd, int apparent, double *ra,
-		   double *dec, double *rv, double *slong);
+extern void sunpos(float jd, int apparent, float *ra,
+		   float *dec, float *rv, float *slong);
 
-extern double jtime(struct tm *t);
-extern double gmst(double jd);
+extern float jtime(struct tm *t);
+extern float gmst(float jd);
 
 void write_settings(void);
 
 /* Translate latitude and longitude to X and Y positions */
 
 static void
-translate(double lat, double lon, int *xpos, int *ypos)
+translate(float lat, float lon, int *xpos, int *ypos)
 {
-    *xpos = (int) ((180.0 + lon) * ((double) WIDTH / 360.0));
+    *xpos = (int) ((180.0 + lon) * ((float) WIDTH / 360.0));
     *ypos =
-	(int) ((double) HEIGHT - (lat + 90.0) * ((double) HEIGHT / 180.0));
+	(int) ((float) HEIGHT - (lat + 90.0) * ((float) HEIGHT / 180.0));
 }
 
 /* Copy the map to to the screen */
@@ -122,18 +122,18 @@ handle_map(int ex, int ey)
     city_t *city = 0;
 
     city_t *best_city = 0;
-    double best_len = 999.0;
+    float best_len = 999.0;
 
     for (city = city_head; city; city = city->next) {
 	int xpos, ypos;
-	double dist;
+	float dist;
 
 	/* Translate the lat/lon */
 	translate(city->lat, city->lon, &xpos, &ypos);
 
 	/* Figure out the distance from the click */
 
-	dist = hypot((double) abs(ex - xpos), (double) (ey - ypos));
+	dist = hypot((float) abs(ex - xpos), (float) (ey - ypos));
 
 	if (dist < best_len) {
 	    best_city = city;
@@ -352,17 +352,17 @@ draw_map(GR_IMAGE_ID image, GR_WINDOW_ID pixmap, int width, int height)
     GR_REGION_ID region = GrNewRegion();
     GR_GC_ID gc;
 
-    double daywave[WIDTH];
+    float daywave[WIDTH];
 
     /* Math variables */
-    double sunra, sundec, sunrv, sunlon;
-    double quot, cd, sd, shiftp;
-    double f2, f3, spos, jgmt;
+    float sunra, sundec, sunrv, sunlon;
+    float quot, cd, sd, shiftp;
+    float f2, f3, spos, jgmt;
     int hemi, i;
 
     time_t now;
     struct tm *gmt;
-    double julian;
+    float julian;
 
     /* Get the current UTC time */
 
@@ -375,7 +375,7 @@ draw_map(GR_IMAGE_ID image, GR_WINDOW_ID pixmap, int width, int height)
     /* Get the position of the sun */
     sunpos(julian, 0, &sunra, &sundec, &sunrv, &sunlon);
 
-    jgmt = (double) gmst(julian);
+    jgmt = (float) gmst(julian);
     sunlon = fixangle(180.0 + (sunra - (jgmt * 15)));
 
     /* Convert the sun x position on the map */
@@ -393,15 +393,15 @@ draw_map(GR_IMAGE_ID image, GR_WINDOW_ID pixmap, int width, int height)
     sd = sin(quot);
 
     /* This is the radius of the sun */
-    quot = (2.0 * M_PI) / (double) width;
+    quot = (2.0 * M_PI) / (float) width;
 
     shiftp = 0.5 * (height + 1);
 
-    f2 = ((double) height) / M_PI;
+    f2 = ((float) height) / M_PI;
     f3 = 1E-8 * f2;
 
     for (i = 0; i < width; i++) {
-	double val = (double) i;
+	float val = (float) i;
 	daywave[i] = cos(quot * (val - spos));
     }
 

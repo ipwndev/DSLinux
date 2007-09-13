@@ -73,8 +73,8 @@ const float hourhand[4][2] = { {-0.5f, 0}, {0, 1.5f}, {0.5f, 0}, {0, -7.0f} };
 const float minhand[4][2] = { {-0.5f, 0}, {0, 1.5f}, {0.5f, 0}, {0, -11.5f} };
 const float sechand[4][2] = { {-0.1f, 0}, {0, 2.0f}, {0.1f, 0}, {0, -11.5f} };
 
-static void
-drawhand(double ang, const float v[][2], GR_COLOR fill,
+static void 
+drawhand(float ang, const float v[][2], GR_COLOR fill,
 	 GR_COLOR line, GR_WINDOW_ID pmap, GR_GC_ID gc)
 {
     int i;
@@ -114,10 +114,10 @@ draw_clock_hands(GR_COLOR fill, GR_COLOR line, GR_WINDOW_ID pmap, GR_GC_ID gc)
 
 
 static void
-rect(double x, double y, double w, double h, GR_WINDOW_ID pmap, GR_GC_ID gc)
+rect(float x, float y, float w, float h, GR_WINDOW_ID pmap, GR_GC_ID gc)
 {
-    double r = x + w;
-    double t = y + h;
+    float r = x + w;
+    float t = y + h;
     begin_polygon();
     vertex(x, y);
     vertex(r, y);

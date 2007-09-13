@@ -633,7 +633,7 @@ const REAL
 
 
 
-/* hcos_64[i] = 1.0 / (2.0*cos(PI*double(i*2+1)/64.0)) */
+/* hcos_64[i] = 1.0 / (2.0*cos(PI*float(i*2+1)/64.0)) */
 const REAL
     Mpegtoraw::hcos_64[16] = {
     X(0.500602998235196),
@@ -654,7 +654,7 @@ const REAL
 	X(10.190008123548033)
 };
 
-/* hcos_32[i] = 1.0 / (2.0*cos(PI*double(i*2+1)/32.0)) */
+/* hcos_32[i] = 1.0 / (2.0*cos(PI*float(i*2+1)/32.0)) */
 const REAL
     Mpegtoraw::hcos_32[8] = {
     X(0.502419286188156),
@@ -667,7 +667,7 @@ const REAL
 	X(5.101148618689155)
 };
 
-/* hcos_16[i] = 1.0 / (2.0*cos(PI*double(i*2+1)/16.0)) */
+/* hcos_16[i] = 1.0 / (2.0*cos(PI*float(i*2+1)/16.0)) */
 const REAL
     Mpegtoraw::hcos_16[4] = {
     X(0.509795579104159),
@@ -676,7 +676,7 @@ const REAL
 	X(2.562915447741505)
 };
 
-/* hcos_8 [i] = 1.0 / (2.0*cos(PI*double(i*2+1)/ 8.0)) */
+/* hcos_8 [i] = 1.0 / (2.0*cos(PI*float(i*2+1)/ 8.0)) */
 const REAL
     Mpegtoraw::hcos_8[2] = {
     X(0.541196100146197),

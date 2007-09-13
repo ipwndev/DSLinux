@@ -80,25 +80,25 @@ inline void glVertex (const FVector2& v)
 }
 
 /**
- * This form of glVertex takes 4 doubles as it's arguments.
+ * This form of glVertex takes 4 floats as it's arguments.
  */
-inline void glVertex (const double& x, const double& y, const double& z, const double& w)
+inline void glVertex (const float& x, const float& y, const float& z, const float& w)
 {
   glVertex4d (x, y, z, w);
 }
 
 /**
- * This form of glVertex takes 3 doubles as it's arguments.
+ * This form of glVertex takes 3 floats as it's arguments.
  */
-inline void glVertex (const double& x, const double& y, const double& z)
+inline void glVertex (const float& x, const float& y, const float& z)
 {
   glVertex3d (x, y, z);
 }
 
 /**
- * This form of glVertex takes 2 doubles as it's arguments.
+ * This form of glVertex takes 2 floats as it's arguments.
  */
-inline void glVertex (const double& x, const double& y)
+inline void glVertex (const float& x, const float& y)
 {
   glVertex2d (x, y);
 }
@@ -121,17 +121,17 @@ inline void glColor (const FVector3& v)
 }
 
 /**
- * This form takes 4 doubles as it's arguments (RGBA).
+ * This form takes 4 floats as it's arguments (RGBA).
  */
-inline void glColor (const double& x, const double& y, const double& z, const double& w)
+inline void glColor (const float& x, const float& y, const float& z, const float& w)
 {
   glColor4d (x, y, z, w);
 }
 
 /**
- * This form takes 3 doubles as it's arguments (RGB).
+ * This form takes 3 floats as it's arguments (RGB).
  */
-inline void glColor (const double& x, const double& y, const double& z)
+inline void glColor (const float& x, const float& y, const float& z)
 {
   glColor3d (x, y, z);
 }
@@ -157,15 +157,15 @@ inline void glNormal (const FVector3& v)
 /**
  * This form takes an fVector2 and a z value as it's arguments.
  */
-inline void glNormal (const FVector2& v, const double &z)
+inline void glNormal (const FVector2& v, const float &z)
 {
   glNormal3d (v[0], v[1], z);
 }
 
 /**
- * This form takes 3 doubles as it's arguments.
+ * This form takes 3 floats as it's arguments.
  */
-inline void glNormal (const double& x, const double& y, const double& z)
+inline void glNormal (const float& x, const float& y, const float& z)
 {
   glNormal3d (x, y, z);
 }
@@ -181,9 +181,9 @@ inline void glScale (const FVector3& v)
 }
 
 /**
- * This form takes 3 doubles as it's argument.
+ * This form takes 3 floats as it's argument.
  */
-inline void glScale (const double &x, const double &y=1, const double &z=1)
+inline void glScale (const float &x, const float &y=1, const float &z=1)
 {
   glScaled (x, y, z);
 }
@@ -199,9 +199,9 @@ inline void glTranslate (const FVector3& v)
 }
 
 /**
- * This form takes 3 doubles as it's arguments.
+ * This form takes 3 floats as it's arguments.
  */
-inline void glTranslate (const double &x, const double &y=0, const double &z=0)
+inline void glTranslate (const float &x, const float &y=0, const float &z=0)
 {
   glTranslated (x, y, z);
 }
@@ -209,7 +209,7 @@ inline void glTranslate (const double &x, const double &y=0, const double &z=0)
 /**
  * glRotate rotates the current transformation matrix by an angle a about an axis v.
  */
-inline void glRotate (const double &a, const FVector3 &v)
+inline void glRotate (const float &a, const FVector3 &v)
 {
   glRotated (a, v[0], v[1], v[2]);
 }
@@ -217,7 +217,7 @@ inline void glRotate (const double &a, const FVector3 &v)
 /**
  * glRotate rotates the current transformation matrix by an angle a about an axis (x, y, z).
  */
-inline void glRotate (const double &a, const double &x, const double &y, const double &z)
+inline void glRotate (const float &a, const float &x, const float &y, const float &z)
 {
   glRotated (a, x, y, z);
 }

@@ -484,8 +484,8 @@ void
 SchedulerMonthly::Print()
 {
     bool bOverflow;
-    double fBoxHeight;
-    double fBoxWidth;
+    float fBoxHeight;
+    float fBoxWidth;
     int nBorder = INCH / 2;	// 1/2 inch border
     int nCol;
     int nCopy;
@@ -543,9 +543,9 @@ SchedulerMonthly::Print()
 
 	    // Calculate the sizeof the calendar boxes
 	    fBoxHeight =
-		(double (nHeight - (3 * printer.GetFontSize()) / 2 - nBorder))
+		(float (nHeight - (3 * printer.GetFontSize()) / 2 - nBorder))
 		/6.0;
-	    fBoxWidth = (double (printer.GetWidth() - 2 * nBorder)) /7.0;
+	    fBoxWidth = (float (printer.GetWidth() - 2 * nBorder)) /7.0;
 
 	    // Draw the day names
 	    for (nCol = 0; nCol < 7; ++nCol) {
@@ -576,7 +576,7 @@ SchedulerMonthly::Print()
 	    for (nRow = 0; nRow < 6; ++nRow) {
 		// Calculate this Y and set the next "last Y" value
 		nY = nLastY;
-		nLastY = nHeight - int (double (nRow + 1) * fBoxHeight);
+		nLastY = nHeight - int (float (nRow + 1) * fBoxHeight);
 
 		// Get the first "last X" value
 		nLastX = nBorder;
@@ -585,7 +585,7 @@ SchedulerMonthly::Print()
 		for (nCol = 0; nCol < 7; ++nCol) {
 		    // Calculate this X and set the next "last X" value
 		    nX = nLastX;
-		    nLastX = int (double ((nCol + 1)) * fBoxWidth) + nBorder;
+		    nLastX = int (float ((nCol + 1)) * fBoxWidth) + nBorder;
 
 		    // Get the events for this day
 		    pSchedulerDB->GetAllAppointments(nDate, mapEvent);

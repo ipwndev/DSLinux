@@ -33,7 +33,7 @@
 
 /** @package libflek_core
  * FVector3 is a 3 dimensional vector represented internally as an array of 
- * doubles.  This class is related to FVector2 and FVector4 which are 
+ * floats.  This class is related to FVector2 and FVector4 which are 
  * 2-D and 4-D versions of this class.  All FVector classes are forward
  * declared in FVector.h.
  */
@@ -57,7 +57,7 @@ public:
    * This one argument constructor intializes all elements in the vector
    * with the given value.
    */
-  FVector3 (double val) 
+  FVector3 (float val) 
     : FBase ()
     {
       elem[0] = elem[1] = elem[2] = val;
@@ -67,7 +67,7 @@ public:
    * This one argument constructor initializes the vector with the first
    * three elements in the given array.
    */
-  FVector3 (double * arr)
+  FVector3 (float * arr)
     : FBase ()
     {
       elem[0] = arr[0]; elem[1] = arr[1]; elem[2] = arr[2];
@@ -77,7 +77,7 @@ public:
    * This three argument constructor initializes the vector with the
    * passed values.
    */
-  FVector3 (double val1, double val2, double val3=0.0)
+  FVector3 (float val1, float val2, float val3=0.0)
     : FBase ()
     {
       elem[0] = val1; elem[1] = val2; elem[2] = val3;
@@ -132,7 +132,7 @@ public:
    * Assignment operator from a scalar.  All elements are set to 
    * the scalar value.
    */
-  FVector3& operator = (double scalar)
+  FVector3& operator = (float scalar)
     {
       elem[0] = elem[1] = elem[2] = scalar;
       return (*this);
@@ -168,7 +168,7 @@ public:
   /** 
    * Set each element vector to the given values.
    */
-  void set (double v1, double v2, double v3)
+  void set (float v1, float v2, float v3)
     {
       elem[0] = v1; elem[1] = v2; elem[2] = v3;
     }
@@ -176,7 +176,7 @@ public:
   /** 
    * Set each element vector to the given value.
    */
-  void set (double val)
+  void set (float val)
     {
       elem[0] = elem[1] = elem[2] = val;
     }
@@ -192,7 +192,7 @@ public:
   /** 
    * Get the elements of vector into given values.
    */
-  void get (double& v1, double& v2, double& v3) const
+  void get (float& v1, float& v2, float& v3) const
     {
       v1 = elem[0]; v2 = elem[1]; v3 = elem[2];
     }
@@ -200,7 +200,7 @@ public:
   /**
    * Fill an array with the elements of the vector.
    */
-  void fill_array (double arr[3]) const
+  void fill_array (float arr[3]) const
     {
       arr[0] = elem[0]; arr[1] = elem[1]; arr[2] = elem[2];
     }
@@ -209,7 +209,7 @@ public:
    * Element access operator.  For efficiency, this doesn't check for 
    * valid indices
    */
-  double& operator [] (uint index)
+  float& operator [] (uint index)
     {
       return elem[index];
     }
@@ -218,7 +218,7 @@ public:
    * Element access operator.  For efficiency, this doesn't check for 
    * valid indices
    */
-  double operator [] (uint index) const
+  float operator [] (uint index) const
     {
       return elem[index];
     }
@@ -242,7 +242,7 @@ public:
   /**
    * Arithmetic operator for multiplicative (scalar) assignment.
    */
-  void operator *= (double scalar)
+  void operator *= (float scalar)
     {
       elem[0] *= scalar; elem[1] *= scalar; elem[2] *= scalar;
     }
@@ -250,7 +250,7 @@ public:
   /**
    * Arithmetic operator for divisive (scalar) assignment.
    */
-  void operator /= (double scalar)
+  void operator /= (float scalar)
     {
       elem[0] /= scalar; elem[1] /= scalar; elem[2] /= scalar;
     }
@@ -278,9 +278,9 @@ public:
   /**
    * Operator for scalar multiplication (dot product).
    */
-  double operator * (const FVector3& vec) const
+  float operator * (const FVector3& vec) const
     {
-      double dotprod = elem[0]*vec.elem[0] + elem[1]*vec.elem[1] + elem[2]*vec.elem[2];
+      float dotprod = elem[0]*vec.elem[0] + elem[1]*vec.elem[1] + elem[2]*vec.elem[2];
       return dotprod;
     }
 
@@ -310,7 +310,7 @@ public:
   /**
    * Friend operator for scalar pre-multiplication.
    */
-  friend FVector3 operator * (double scalar, const FVector3& vec)
+  friend FVector3 operator * (float scalar, const FVector3& vec)
     {
       FVector3 prod (vec);
       
@@ -321,7 +321,7 @@ public:
   /**
    * Friend operator for scalar post-multiplication.
    */  
-  friend FVector3 operator * (const FVector3& vec, double scalar)
+  friend FVector3 operator * (const FVector3& vec, float scalar)
     {
       FVector3 prod (vec);
       
@@ -332,7 +332,7 @@ public:
   /**
    * Friend operator for scalar division.
    */
-  friend FVector3 operator / (const FVector3& vec, double scalar)
+  friend FVector3 operator / (const FVector3& vec, float scalar)
     {
       FVector3 prod (vec);
       
@@ -375,16 +375,16 @@ public:
   /**
    * Square of the norm of the vector.
    */
-  friend double normsqr (const FVector3& vec)
+  friend float normsqr (const FVector3& vec)
     {
-      double nsq = sqr (vec.elem[0]) + sqr (vec.elem[1]) + sqr (vec.elem[2]);
+      float nsq = sqr (vec.elem[0]) + sqr (vec.elem[1]) + sqr (vec.elem[2]);
       return nsq;
     }
   
   /**
    * Norm of the vector.
    */
-  friend double norm (const FVector3& vec)
+  friend float norm (const FVector3& vec)
     {
       return sqrt (normsqr (vec));
     }
@@ -392,7 +392,7 @@ public:
   /** 
    * Length (norm) of the vector.
    */
-  double length ()
+  float length ()
     {
       return norm (*this);
     }
@@ -400,9 +400,9 @@ public:
   /**
    * Normalize.  Returns previous norm.
    */
-  friend double normalize (FVector3& vec)
+  friend float normalize (FVector3& vec)
     {
-      double n = norm (vec);
+      float n = norm (vec);
       if (is_non_zero (n) == true) vec /= n;
       return n;
     }
@@ -417,7 +417,7 @@ public:
       return nvec;
     } 
 
-  friend double distance (const FVector3& v1, const FVector3& v2)
+  friend float distance (const FVector3& v1, const FVector3& v2)
     {
       FVector3 t;
       t = v1 - v2;
@@ -444,7 +444,7 @@ public:
 	{
 	  // Correct format
 	  int numread = 0; // No. of elements read
-	  double val;
+	  float val;
 	  char c;
 	  
 	  i >> c;   // Read opening square bracket
@@ -500,7 +500,7 @@ public:
 
  protected:
      
-     double elem[3];
+     float elem[3];
   
      /**
       * Initialize the elements from a FVector2,

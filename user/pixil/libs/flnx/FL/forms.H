@@ -275,7 +275,7 @@ inline void fl_end_group() {Fl_Group::current()->forms_end();}
 inline void fl_addto_group(Fl_Widget* o) {((Fl_Group* )o)->begin();}
 #define resizebox _ddfdesign_kludge()
 
-inline void fl_scale_form(Fl_Window* f, double x, double y) {
+inline void fl_scale_form(Fl_Window* f, float x, float y) {
   f->resizable(f); f->size(int(f->w()*x),int(f->h()*y));}
 inline void fl_set_form_position(Fl_Window* f,int x,int y) {f->position(x,y);}
 inline void fl_set_form_size(Fl_Window* f, int w, int h) {f->size(w,h);}
@@ -515,13 +515,13 @@ inline void fl_set_pixmapbutton_data(Fl_Widget* o, char*const* c) {
 forms_constructor(Fl_Chart, fl_add_chart)
 inline void fl_clear_chart(Fl_Widget* o) {
   ((Fl_Chart*)o)->clear();}
-inline void fl_add_chart_value(Fl_Widget* o,double v,const char* s,uchar c){
+inline void fl_add_chart_value(Fl_Widget* o,float v,const char* s,uchar c){
   ((Fl_Chart*)o)->add(v,s,c);}
-inline void fl_insert_chart_value(Fl_Widget* o, int i, double v, const char* s, uchar c) {
+inline void fl_insert_chart_value(Fl_Widget* o, int i, float v, const char* s, uchar c) {
   ((Fl_Chart*)o)->insert(i,v,s,c);}
-inline void fl_replace_chart_value(Fl_Widget* o, int i, double v, const char* s, uchar c) {
+inline void fl_replace_chart_value(Fl_Widget* o, int i, float v, const char* s, uchar c) {
   ((Fl_Chart*)o)->replace(i,v,s,c);}
-inline void fl_set_chart_bounds(Fl_Widget* o, double a, double b) {
+inline void fl_set_chart_bounds(Fl_Widget* o, float a, float b) {
   ((Fl_Chart*)o)->bounds(a,b);}
 inline void fl_set_chart_maxnumb(Fl_Widget* o, int v) {
   ((Fl_Chart*)o)->maxsize(v);}
@@ -576,23 +576,23 @@ inline void fl_get_clock(Fl_Widget* o, int* h, int* m, int* s) {
 
 #include "Fl_Counter.H"
 forms_constructor(Fl_Counter, fl_add_counter)
-inline void fl_set_counter_value(Fl_Widget* o, double v) {
+inline void fl_set_counter_value(Fl_Widget* o, float v) {
     ((Fl_Counter*)o)->value(v);}
-inline void fl_set_counter_bounds(Fl_Widget* o, double a, double b) {
+inline void fl_set_counter_bounds(Fl_Widget* o, float a, float b) {
     ((Fl_Counter*)o)->bounds(a,b);}
-inline void fl_set_counter_step(Fl_Widget* o, double a, double b) {
+inline void fl_set_counter_step(Fl_Widget* o, float a, float b) {
     ((Fl_Counter*)o)->step(a,b);}
 inline void fl_set_counter_precision(Fl_Widget* o, int v) {
     ((Fl_Counter*)o)->precision(v);}
 inline void fl_set_counter_return(Fl_Widget* o, int v) {
     ((Fl_Counter*)o)->when((Fl_When)(v|FL_WHEN_RELEASE));}
-inline double fl_get_counter_value(Fl_Widget* o) {
+inline float fl_get_counter_value(Fl_Widget* o) {
     return ((Fl_Counter*)o)->value();}
 inline void fl_get_counter_bounds(Fl_Widget* o, float* a, float* b) {
   *a = float(((Fl_Counter*)o)->minimum());
   *b = float(((Fl_Counter*)o)->maximum());
 }
-//inline void fl_set_counter_filter(Fl_Widget*,const char* (*)(Fl_Widget*,double,int));
+//inline void fl_set_counter_filter(Fl_Widget*,const char* (*)(Fl_Widget*,float,int));
 
 // Cursor stuff cannot be emulated because it uses X stuff
 inline void fl_set_cursor(Fl_Window* w, Fl_Cursor c) {w->cursor(c);}
@@ -605,11 +605,11 @@ inline void fl_set_cursor(Fl_Window* w, Fl_Cursor c) {w->cursor(c);}
 #define FL_DIAL_COL2 37
 
 forms_constructor(Fl_Dial, fl_add_dial)
-inline void fl_set_dial_value(Fl_Widget* o, double v) {
+inline void fl_set_dial_value(Fl_Widget* o, float v) {
   ((Fl_Dial*)o)->value(v);}
-inline double fl_get_dial_value(Fl_Widget* o) {
+inline float fl_get_dial_value(Fl_Widget* o) {
   return ((Fl_Dial*)o)->value();}
-inline void fl_set_dial_bounds(Fl_Widget* o, double a, double b) {
+inline void fl_set_dial_bounds(Fl_Widget* o, float a, float b) {
   ((Fl_Dial*)o)->bounds(a, b);}
 inline void fl_get_dial_bounds(Fl_Widget* o, float* a, float* b) {
   *a = float(((Fl_Dial*)o)->minimum());
@@ -622,7 +622,7 @@ inline void fl_set_dial_angles(Fl_Widget* o, int a, int b) {
 //inline void fl_set_dial_cross(Fl_Widget* o, int);
 // inline void fl_set_dial_direction(Fl_Widget* o, uchar d) {
 //   ((Fl_Dial*)o)->direction(d);}
-inline void fl_set_dial_step(Fl_Widget* o, double v) {
+inline void fl_set_dial_step(Fl_Widget* o, float v) {
   ((Fl_Dial*)o)->step(v);}
 
 // Frames:
@@ -639,7 +639,7 @@ inline Fl_Widget* fl_add_labelframe(Fl_Boxtype i,int x,int y,int w,int h,const c
 
 #include "Fl_Free.H"
 inline Fl_Free*
-fl_add_free(int t,double x,double y,double w,double h,const char* l,
+fl_add_free(int t,float x,float y,float w,float h,const char* l,
 	    FL_HANDLEPTR hdl) {
  return (Fl_Free*)(fl_add_new(
    new Fl_Free(t,int(x),int(y),int(w),int(h),l,hdl)));
@@ -750,29 +750,29 @@ inline const char* fl_get_menu_text(Fl_Widget* o) {
 #include "Fl_Positioner.H"
 #define FL_NORMAL_POSITIONER	0
 forms_constructor(Fl_Positioner, fl_add_positioner)
-inline void fl_set_positioner_xvalue(Fl_Widget* o, double v) {
+inline void fl_set_positioner_xvalue(Fl_Widget* o, float v) {
     ((Fl_Positioner*)o)->xvalue(v);}
-inline double fl_get_positioner_xvalue(Fl_Widget* o) {
+inline float fl_get_positioner_xvalue(Fl_Widget* o) {
     return ((Fl_Positioner*)o)->xvalue();}
-inline void fl_set_positioner_xbounds(Fl_Widget* o, double a, double b) {
+inline void fl_set_positioner_xbounds(Fl_Widget* o, float a, float b) {
     ((Fl_Positioner*)o)->xbounds(a,b);}
 inline void fl_get_positioner_xbounds(Fl_Widget* o, float* a, float* b) {
   *a = float(((Fl_Positioner*)o)->xminimum());
   *b = float(((Fl_Positioner*)o)->xmaximum());
 }
-inline void fl_set_positioner_yvalue(Fl_Widget* o, double v) {
+inline void fl_set_positioner_yvalue(Fl_Widget* o, float v) {
     ((Fl_Positioner*)o)->yvalue(v);}
-inline double fl_get_positioner_yvalue(Fl_Widget* o) {
+inline float fl_get_positioner_yvalue(Fl_Widget* o) {
     return ((Fl_Positioner*)o)->yvalue();}
-inline void fl_set_positioner_ybounds(Fl_Widget* o, double a, double b) {
+inline void fl_set_positioner_ybounds(Fl_Widget* o, float a, float b) {
     ((Fl_Positioner*)o)->ybounds(a,b);}
 inline void fl_get_positioner_ybounds(Fl_Widget* o, float* a, float* b) {
   *a = float(((Fl_Positioner*)o)->yminimum());
   *b = float(((Fl_Positioner*)o)->ymaximum());
 }
-inline void fl_set_positioner_xstep(Fl_Widget* o, double v) {
+inline void fl_set_positioner_xstep(Fl_Widget* o, float v) {
     ((Fl_Positioner*)o)->xstep(v);}
-inline void fl_set_positioner_ystep(Fl_Widget* o, double v) {
+inline void fl_set_positioner_ystep(Fl_Widget* o, float v) {
     ((Fl_Positioner*)o)->ystep(v);}
 inline void fl_set_positioner_return(Fl_Widget* o, int v) {
     ((Fl_Positioner*)o)->when((Fl_When)(v|FL_WHEN_RELEASE));}
@@ -784,11 +784,11 @@ inline void fl_set_positioner_return(Fl_Widget* o, int v) {
 
 forms_constructort(Fl_Slider, fl_add_slider)
 #define FL_SLIDER_COL1 FL_GRAY
-inline void fl_set_slider_value(Fl_Widget* o, double v) {
+inline void fl_set_slider_value(Fl_Widget* o, float v) {
     ((Fl_Slider*)o)->value(v);}
-inline double fl_get_slider_value(Fl_Widget* o) {
+inline float fl_get_slider_value(Fl_Widget* o) {
     return ((Fl_Slider*)o)->value();}
-inline void fl_set_slider_bounds(Fl_Widget* o, double a, double b) {
+inline void fl_set_slider_bounds(Fl_Widget* o, float a, float b) {
     ((Fl_Slider*)o)->bounds(a, b);}
 inline void fl_get_slider_bounds(Fl_Widget* o, float* a, float* b) {
   *a = float(((Fl_Slider*)o)->minimum());
@@ -796,10 +796,10 @@ inline void fl_get_slider_bounds(Fl_Widget* o, float* a, float* b) {
 }
 inline void fl_set_slider_return(Fl_Widget* o, int i) {
     ((Fl_Slider*)o)->when((Fl_When)(i|FL_WHEN_RELEASE));}
-inline void fl_set_slider_step(Fl_Widget* o, double v) {
+inline void fl_set_slider_step(Fl_Widget* o, float v) {
     ((Fl_Slider*)o)->step(v);}
-// inline void fl_set_slider_increment(Fl_Widget* o, double v, double);
-inline void fl_set_slider_size(Fl_Widget* o, double v) {
+// inline void fl_set_slider_increment(Fl_Widget* o, float v, float);
+inline void fl_set_slider_size(Fl_Widget* o, float v) {
     ((Fl_Slider*)o)->slider_size(v);}
 
 #include "Fl_Value_Slider.H"
@@ -823,8 +823,8 @@ forms_constructorb(Fl_FormsText, fl_add_text)
 
 #include "Fl_Timer.H"
 forms_constructort(Fl_Timer, fl_add_timer)
-inline void fl_set_timer(Fl_Widget* o, double v) {((Fl_Timer*)o)->value(v);}
-inline double fl_get_timer(Fl_Widget* o) {return ((Fl_Timer*)o)->value();}
+inline void fl_set_timer(Fl_Widget* o, float v) {((Fl_Timer*)o)->value(v);}
+inline float fl_get_timer(Fl_Widget* o) {return ((Fl_Timer*)o)->value();}
 inline void fl_suspend_timer(Fl_Widget* o) {((Fl_Timer*)o)->suspended(1);}
 inline void fl_resume_timer(Fl_Widget* o) {((Fl_Timer*)o)->suspended(0);}
 inline void fl_set_timer_countup(Fl_Widget* o,char d) {((Fl_Timer*)o)->direction(d);}
