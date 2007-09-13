@@ -58,7 +58,7 @@ Direct inquiries to 30 Frost Street, Cambridge, MA 02140
 extern float MINLOGF, SQRTHF;
 
 
-#if ANSIC
+#ifdef ANSIC
 float frexpf( float, int * );
 
 float logf( float xx )

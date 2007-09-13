@@ -136,7 +136,7 @@ return( y );
 
 
 
-#if ANSIC
+#ifdef ANSIC
 float atan2f( float y, float x )
 #else
 float atan2f( x, y )
@@ -158,7 +158,7 @@ if( x == 0.0 )
 	{
 	if( code & 1 )
 		{
-#if ANSIC
+#ifdef ANSIC
 		return( -PIO2F );
 #else
 		return( 3.0*PIO2F );
@@ -180,7 +180,7 @@ if( y == 0.0 )
 switch( code )
 	{
 	default:
-#if ANSIC
+#ifdef ANSIC
 	case 0:
 	case 1: w = 0.0; break;
 	case 2: w = PIF; break;

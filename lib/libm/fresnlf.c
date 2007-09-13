@@ -174,7 +174,7 @@ if( xxa < 0.0 )
 
 *cca = cc;
 *ssa = ss;
-#if !ANSIC
+#ifndef ANSIC
 return 0;
 #endif
 }

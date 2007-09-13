@@ -91,7 +91,7 @@ double p, rr;
 /*rr = sqrt( z->r * z->r  +  z->i * z->i );*/
 rr = cabs(z);
 p = log(rr);
-#if ANSIC
+#ifdef ANSIC
 rr = atan2( z->i, z->r );
 #else
 rr = atan2( z->r, z->i );
@@ -710,7 +710,7 @@ a = 1.0 - x2 - (y * y);
 if( a == 0.0 )
 	goto ovrf;
 
-#if ANSIC
+#ifdef ANSIC
 t = atan2( 2.0 * x, a )/2.0;
 #else
 t = atan2( a, 2.0 * x )/2.0;
