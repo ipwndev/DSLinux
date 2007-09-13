@@ -107,17 +107,6 @@ broadcast=""
 dns1=""
 dns2=""
 
-# If you want to start telnetd on boot, so you can login into
-# your DS from your PC via telnet, set start_telnetd to "YES".
-# Note that you should only start the telnet server in a
-# trusted environment. Do not enable it if you are in a
-# public network, because anyone could easily connect to
-# your DSLinux installation (the default root password
-# is widely known). Neither should you configure your router
-# to put the DS into DMZ, because this makes your DS accessible
-# to anyone on the internet!
-start_telnetd="NO"
-
 # If you want to start inetd on boot, say "YES" here
 # Don't forget to edit /etc/inetd.conf!
 start_inetd="NO"
