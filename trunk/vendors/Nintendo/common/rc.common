@@ -42,17 +42,7 @@ else
 	__network_up="NO"
 fi
 
-# start telnetd if configured
-if [ "$start_telnetd" = "YES" ]
-then
-	if [ "$__network_up" = "YES" ]
-	then
-		/etc/rc.d/telnetd start
-	else
-		echo "Not starting telnetd: network is down"
-	fi
-fi
-
+# start inetd if configured
 if [ "$start_inetd" = "YES" ]
 then
 	if [ "$__network_up" = "YES" ]
