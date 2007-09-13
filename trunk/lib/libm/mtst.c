@@ -78,13 +78,13 @@ return( x * x * x );
 struct oneargument
   {
     char *nam1;		/* the function */
-#if ANSIC
+#ifdef ANSIC
     float (*name) (float);
 #else
     float (*name) ();
 #endif
     char *nam2;		/* its inverse  */
-#if ANSIC
+#ifdef ANSIC
     float (*inv )(float);
 #else
     float (*inv )();
@@ -99,13 +99,13 @@ struct oneargument
 struct twoarguments
   {
     char *nam1;		/* the function */
-#if ANSIC
+#ifdef ANSIC
     float (*name) (float, float);
 #else
     float (*name) ();
 #endif
     char *nam2;		/* its inverse  */
-#if ANSIC
+#ifdef ANSIC
     float (*inv )(float, float);
 #else
     float (*inv )();
@@ -193,7 +193,7 @@ static double doublea;
 
 int main()
 {
-#if ANSIC
+#ifdef ANSIC
 float (*fun1 )(float);
 float (*ifun1 )(float);
 float (*fun2 )(float, float);

@@ -76,10 +76,10 @@ Copyright 1984, 1987, 1989, 1995 by Stephen L. Moshier
 
 /* Define if your processor stores words with the most significant
    byte first (like Motorola and SPARC, unlike Intel and VAX).  */
-#define WORDS_BIGENDIAN
+#undef WORDS_BIGENDIAN
 
 /* Define if floating point words are bigendian.  */
-#define FLOAT_WORDS_BIGENDIAN
+#undef FLOAT_WORDS_BIGENDIAN
 
 /* The number of bytes in a int.  */
 #define SIZEOF_INT 4

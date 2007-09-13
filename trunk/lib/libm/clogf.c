@@ -64,7 +64,7 @@ float p, rr;
 /*rr = sqrtf( z->r * z->r  +  z->i * z->i );*/
 rr = cabsf(z);
 p = logf(rr);
-#if ANSIC
+#ifdef ANSIC
 rr = atan2f( z->i, z->r );
 #else
 rr = atan2f( z->r, z->i );
@@ -656,7 +656,7 @@ a = 1.0f - x2 - (y * y);
 if( a == 0.0f )
 	goto ovrf;
 
-#if ANSIC
+#ifdef ANSIC
 t = 0.5f * atan2f( 2.0f * x, a );
 #else
 t = 0.5f * atan2f( a, 2.0f * x );

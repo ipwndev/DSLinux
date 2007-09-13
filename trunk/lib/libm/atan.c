@@ -348,7 +348,7 @@ if( fabs(x) <= (fabs(y) / MAXNUM) )
 	{
 	if( code & 1 )
 		{
-#if ANSIC
+#ifdef ANSIC
 		return( -PIO2 );
 #else
 		return( 3.0*PIO2 );
@@ -369,7 +369,7 @@ if( y == 0.0 )
 
 switch( code )
 	{
-#if ANSIC
+#ifdef ANSIC
 	default:
 	case 0:
 	case 1: w = 0.0; break;
