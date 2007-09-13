@@ -166,7 +166,10 @@ romfs: $(INSTALLER) busybox.links
 	fi
 	$(ROMFSINST) /bin/$(PROG)
 	$(SHELL) $< $(TARGETDIR)/bin/ --hardlinks --nosubdir
-
+	$(ROMFSINST) -e CONFIG_USER_BUSYBOX_TELNETD_INETD \
+			-a "#telnet     stream tcp nowait root /bin/telnetd" /etc/inetd.conf.example
+	$(ROMFSINST) -e CONFIG_USER_BUSYBOX_TELNETD_INETD \
+			-a "telnet 23/tcp" /etc/services
 check: busybox
 	bindir=$(top_builddir) srcdir=$(top_srcdir)/testsuite \
 	$(top_srcdir)/testsuite/runtest
