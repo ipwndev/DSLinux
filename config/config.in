@@ -966,6 +966,9 @@ bool 'setpci'			CONFIG_USER_PCIUTILS_SETPCI
 
 comment 'PIXIL PDA GUI'
 bool 'pixil'			CONFIG_USER_PIXIL
+    if [ "$CONFIG_USER_PIXIL" = "y" ]; then
+        define_bool CONFIG_LIB_UCLIBCPP y
+    fi
 
 comment ''
 bool 'C++ Test Applications'	CONFIG_USER_CXXTEST_CXXTEST
