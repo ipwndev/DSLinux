@@ -114,7 +114,8 @@ local-build: $(STAGE_DIR) $(INCLUDE_DIR)/pixil_config.h $(subdir-build) platform
 local-install: $(INSTALL_DIR) $(subdir-install) $(STRIP_TARGET) platform-install
 	@ mkdir -p $(INSTALL_DIR)/share/images
 	@ cp -r $(IMAGES_DIR)/* $(INSTALL_DIR)/share/images
-
+	@ rm -rf $(INSTALL_DIR)/share/images/.svn
+ 
 local-clean:  $(subdir-clean) platform-clean
 	@ rm -rf $(STAGE_DIR) $(INCLUDE_DIR)/pixil_config.h
 	@ make -C scripts/config/ clean
