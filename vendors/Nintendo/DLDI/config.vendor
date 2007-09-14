@@ -545,7 +545,7 @@ CONFIG_USER_SYSUTILS_PS=y
 #
 # PIXIL PDA GUI
 #
-# CONFIG_USER_PIXIL is not set
+CONFIG_USER_PIXIL=y
 
 #
 # 
@@ -1043,7 +1043,7 @@ CONFIG_USER_RAMIMAGE_NONE=y
 # Debug tools
 #
 # CONFIG_USER_TIMEPEG_TPT is not set
-CONFIG_USER_RTEST=y
+# CONFIG_USER_RTEST is not set
 
 #
 # Debug libraries
