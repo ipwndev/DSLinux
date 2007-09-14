@@ -72,7 +72,7 @@ clean_themes:
 
 inst_themes:
 	mkdir -p $(INSTALL_DIR)/share/themes
-	cp -r themes/pixil $(INSTALL_DIR)/share/themes
+	-cp themes/pixil/* $(INSTALL_DIR)/share/themes
 
 inst_applets:
 	mkdir -p $(INSTALL_DIR)/share/pixilwm
