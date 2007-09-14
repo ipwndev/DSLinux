@@ -74,7 +74,6 @@ romfs:
 	$(ROMFSINST) -s $(FATFS)/linux/usr/bin /bin
 	$(ROMFSINST) -s $(FATFS)/linux/home /home
 	$(ROMFSINST) -s $(FATFS)/linux/etc /etc
-	$(ROMFSINST) -s /var/tmp /tmp
 	$(ROMFSINST) /boot/rc
 	$(ROMFSINST) /boot/inittab
 	$(ROMFSINST) /$(FATFS)/linux/etc/issue
@@ -91,6 +90,7 @@ image:
 	[ -d $(IMAGEDIR) ] || mkdir -p $(IMAGEDIR)
 	[ -d $(IMAGEDIR)/linux ] || mkdir -p $(IMAGEDIR)/linux
 	$(CROSS_COMPILE)flthdr -z $(ROMFSDIR)/bin/*
+	mkdir -p $(ROMFSDIR)/tmp
 	rm -r $(ROMFSDIR)/bin
 	mkdir $(ROMFSDIR)/bin
 	-for i in `sort $(ROOTDIR)/user/busybox/busybox.links` ; do\
