@@ -112,6 +112,12 @@ config INSTALL_PREFIX
        help
          Indicate where Pixil should be installed when it is built
 
+config TARGET_PREFIX
+       string "Pixil target prefix"
+       default "/usr/local/pixil/"
+       help
+         Indicate where Pixil should be run in the target
+
 config CONFIG_SAMPLES
 	bool "Install sample data?"
 	default y
