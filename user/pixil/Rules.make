@@ -42,7 +42,7 @@ endif
 
 CURDIR=${shell pwd}
 X11DIR?=/usr/X11R6
-DEST_DIR?=$(ROOT_DIR)
+DEST_DIR?=$(TARGET_DIR)
 
 # Dependency Paths
 
