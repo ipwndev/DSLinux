@@ -1479,7 +1479,7 @@ NxSchedule::playAlarm()
     char buf[255];
     int ret = 0;
     char *args[4];
-    char *wave_path = "/usr/local/pixil/bin/waveplay";
+    char *wave_path = "/usr/pixil/bin/waveplay";
 
     par_db = db_openDB(db_getDefaultDB(), PAR_DB_MODE_RDONLY);
     if (!par_db) {

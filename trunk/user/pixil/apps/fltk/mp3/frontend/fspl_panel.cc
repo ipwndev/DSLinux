@@ -169,7 +169,7 @@ fspl_panel::fspl_panel(char *app)
      */
 
     if (!path_ok)
-	strcpy(defaultMusicPath, "/usr/local/pixil/mp3/");
+	strcpy(defaultMusicPath, "/usr/pixil/mp3/");
 
 ////////////////////////////////////////
 // Create song window and timer
