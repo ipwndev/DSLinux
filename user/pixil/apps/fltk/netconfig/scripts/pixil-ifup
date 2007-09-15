@@ -20,9 +20,9 @@ IFS=NULL
   exit 1
 }
 
-# We assume a default file of /usr/local/pixil/scripts/pixil-<device>.conf
+# We assume a default file of /usr/pixil/scripts/pixil-<device>.conf
 
-[ -f "${CONFIG}" ] || CONFIG=/usr/local/pixil/scripts/pixil-${CONFIG}.conf 
+[ -f "${CONFIG}" ] || CONFIG=/usr/pixil/scripts/pixil-${CONFIG}.conf 
 [ -f "${CONFIG}" ] || {
   echo "No config '${CONFIG}' found"
   echo "Usage:  ./pixil-ifup <config | device>"

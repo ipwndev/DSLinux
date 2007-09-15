@@ -14,7 +14,7 @@ CONFIG=${1}
   exit 1
 }
 
-[ -f "${CONFIG}" ] || CONFIG=/usr/local/pixil/scripts/pixil-${CONFIG}.conf
+[ -f "${CONFIG}" ] || CONFIG=/usr/pixil/scripts/pixil-${CONFIG}.conf
 [ -f "${CONFIG}" ] || {
   echo "Usage:  ./pixil-ifdown <config | device>"
   exit 1

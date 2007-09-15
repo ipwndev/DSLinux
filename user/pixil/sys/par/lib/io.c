@@ -105,29 +105,21 @@ db_mapBlock(db_handle * db, int offset)
     else
 	mode = PROT_READ | PROT_WRITE;
 
-#ifndef HAVE_MMAPBUG
-    db->map[bnum].addr =
-	mmap(0, db->blkSize, mode, MAP_SHARED, db->fd, db->blkSize * bnum);
-#else
-    if (db->mode == PAR_DB_READ_BLOCK)
-	db->map[bnum].addr = mmap(0, db->blkSize, mode,
-				  MAP_SHARED, db->fd, db->blkSize * bnum);
-    else {
+    {
 	int ret;
 
 	db->map[bnum].addr = (void *) malloc(db->blkSize);
 
 	if (db->map[bnum].addr) {
 	    lseek(db->fd, db->blkSize * bnum, SEEK_SET);
-	    ret =
-		read(db->fd, (unsigned char *) db->map[bnum].addr,
-		     db->blkSize);
-	    if (ret != db->blkSize)
+	    ret = read(db->fd, (unsigned char *) db->map[bnum].addr, db->blkSize);
+	    if (ret <= 0) {
+		free(db->map[bnum].addr);
 		db->map[bnum].addr = MAP_FAILED;
+	    }
 	} else
 	    db->map[bnum].addr = MAP_FAILED;
     }
-#endif
 
     if (db->map[bnum].addr == MAP_FAILED) {
 	bzero(&db->map[bnum], sizeof(db_map_t));
@@ -145,28 +137,20 @@ db_mapBlock(db_handle * db, int offset)
 void
 db_unmapBlock(db_handle * db, int block)
 {
-
     if (db->map[block].usage > 0)
 	db->map[block].usage--;
 
-    if (db->map[block].addr && !db->map[block].usage) {
-#ifndef HAVE_MMAPBUG
-	munmap(db->map[block].addr, db->blkSize);
-#else
-	if (db->map[block].mode == PAR_DB_READ_BLOCK)
-	    munmap(db->map[block].addr, db->blkSize);
-	else {
-	    int ret;
-
-	    lseek(db->fd, db->blkSize * block, SEEK_SET);
-	    ret = write(db->fd, db->map[block].addr, db->blkSize);
-
-	    free(db->map[block].addr);
-	}
-#endif
+    if (!db->map[block].usage) {
+    	if (db->map[block].addr) {
+		if ((db->map[block].mode != PAR_DB_READ_BLOCK) && (db->access != PAR_DB_MODE_RDONLY)) {
+			int ret;
+	    		lseek(db->fd, db->blkSize * block, SEEK_SET);
+	    		ret = write(db->fd, db->map[block].addr, db->blkSize);
+		}
+		free(db->map[block].addr);
+    	}
+    	bzero(&db->map[block], sizeof(db_map_t));
     }
-
-    bzero(&db->map[block], sizeof(db_map_t));
 }
 
 void
