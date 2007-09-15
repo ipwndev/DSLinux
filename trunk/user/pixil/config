@@ -36,6 +36,7 @@ CONFIG_FLEK=y
 # Installation Options
 #
 # INSTALL_PREFIX="/usr/local/pixil"
+TARGET_PREFIX="/usr/local/pixil"
 CONFIG_SAMPLES=y
 
 #

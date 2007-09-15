@@ -31,6 +31,7 @@ endif
 
 # The base directory for installing
 ROOT_DIR = $(strip $(subst ",, $(INSTALL_PREFIX)))
+TARGET_DIR = $(strip $(subst ",, $(TARGET_PREFIX)))
 
 # The basic PDA install dir
 
@@ -69,7 +70,7 @@ else
 SYS=$(BUILD_SYS)
 endif
 
-export TARGET_CROSS BASE_DIR STAGE_DIR INCLUDE_DIR PAR_DB PAR_CONFIG 
+export TARGET_CROSS BASE_DIR STAGE_DIR INCLUDE_DIR PAR_DB PAR_CONFIG TARGET_DIR
 export TOOL_DIR INSTALL_DIR ROOT_DIR SYS BUILD_SYS EN_SHARED EN_STATIC MW_PREFIX COMPILE_CROSS
 
 # Set up the list of directories based on the configuration
