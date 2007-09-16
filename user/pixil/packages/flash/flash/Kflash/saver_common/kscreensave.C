@@ -59,7 +59,7 @@ void kForceLocker()
 		QString buffer = QString(KApplication::kde_bindir().data());
 		buffer.append("/kblankscrn.kss");
 	    
-		if ( fork() == 0 )
+		if ( vfork() == 0 )
 		{
 			execlp( buffer, buffer, "-install", "-delay", "0", "-lock", root, 0 );
 

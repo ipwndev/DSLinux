@@ -335,7 +335,7 @@ ppp_nullmodem_connect(pix_comm_ppp_options_t * ppp_options)
 	strcat(pptr, ipaddr);
     }
 
-    if ((childpid = fork()) == -1) {
+    if ((childpid = vfork()) == -1) {
 	perror("PPP_MODEM_CONNECT (FORK)");
 	return (PIX_COMM_ERROR);
     } else if (childpid == 0) {	// in child
@@ -459,7 +459,7 @@ ppp_modem_connect(pix_comm_ppp_options_t * ppp_options,
 	strcat(pptr, "'");
     }
     /* Fire away! */
-    if ((childpid = fork()) == -1) {
+    if ((childpid = vfork()) == -1) {
 	perror("PPP_MODEM_CONNECT (FORK)");
 	return (PIX_COMM_ERROR);
     } else if (childpid == 0) {	// in child

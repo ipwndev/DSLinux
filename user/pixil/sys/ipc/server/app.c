@@ -196,7 +196,7 @@ local_ForkApp(char *exec, char *astr, char *workdir)
 
     local_parseArgs(exec, astr, &argv);
 
-    if (!(pid = fork())) {
+    if (!(pid = vfork())) {
 	char *path = 0;
 	/* If a work dir was specified, use that one */
 

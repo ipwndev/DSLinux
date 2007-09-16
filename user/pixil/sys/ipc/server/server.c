@@ -331,7 +331,7 @@ main(int argc, char **argv)
 	    cl_daemon = 1;
 
 	    /* Fork us away - This will esentially make a connectionless client */
-	    if (fork())
+	    if (vfork())
 		return (0);
 
 	    /* Redirect the terminal */

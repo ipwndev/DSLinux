@@ -721,7 +721,7 @@ void KHTMLWidget::execfunc(const char *cmd)
   }
 
   // spawn the new process
-  pid = fork();
+  pid = vfork();
   if(pid != 0)
   {
     return;

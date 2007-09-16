@@ -240,7 +240,7 @@ local_spawn(char *exec, char *argstr, char *workdir)
     if (!argc)
 	return (-1);
 
-    if (!(pid = fork())) {
+    if (!(pid = vfork())) {
 	if (strlen(workdir))
 	    if (chdir(workdir))
 		error("Unable to switch to working directory '%s'.\n",

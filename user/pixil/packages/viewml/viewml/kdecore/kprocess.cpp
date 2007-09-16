@@ -237,7 +237,7 @@ bool KProcess::start(RunMode runmode, Communication comm)
     debug("Could not setup Communication!");
 
   runs = TRUE;
-  pid = fork();
+  pid = vfork();
 
   if (0 == pid) {
 	// The child process
@@ -689,7 +689,7 @@ bool KShellProcess::start(RunMode runmode, Communication comm)
     debug("Could not setup Communication!");
 
   runs = TRUE;
-  pid = fork();
+  pid = vfork();
 
   if (0 == pid) {
 	// The child process

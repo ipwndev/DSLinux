@@ -450,7 +450,7 @@ linux_if_dhcp(char *ifname)
     int child_status;
     int idx;
 
-    if ((childpid = fork()) == -1) {
+    if ((childpid = vfork()) == -1) {
 	perror("IF_DHCP (FORK)");
 	return (PIX_COMM_ERROR);
     } else if (childpid == 0)	// in child
@@ -497,7 +497,7 @@ linux_set_if_status(int status, char *ifname)
     else
 	flags &= ~IFF_UP;
 
-    if ((childpid = fork()) == -1) {
+    if ((childpid = vfork()) == -1) {
 	perror("IF_DHCP (FORK)");
 	return (PIX_COMM_ERROR);
     } else if (childpid == 0)	// in child

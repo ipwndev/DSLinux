@@ -1421,7 +1421,7 @@ void KApplication::resizeAll()
 
 void KApplication::invokeHTMLHelp( QString filename, QString topic ) const
 {
-  if ( fork() == 0 )	
+  if ( vfork() == 0 )	
     {		
 	  if( filename.isEmpty() )
 	    filename = aAppName + "/index.html";

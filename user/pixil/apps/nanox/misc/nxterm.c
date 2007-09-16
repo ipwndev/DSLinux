@@ -1098,7 +1098,7 @@ term_init()
     }
     signal(SIGCHLD, sigchild);
     signal(SIGINT,  sigchild);
-    if ((pid = fork()) == -1) {
+    if ((pid = vfork()) == -1) {
 	fprintf(stderr, "No processes\n");
 	return -1;
     }

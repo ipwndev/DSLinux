@@ -2647,7 +2647,7 @@ NxApp::launch_keyboard(int x, int y, int w, int h)
     check_for_keyboard(GR_ROOT_WINDOW_ID);
 
     if (!keyboard_running) {
-	if ((childpid = fork()) == -1) {
+	if ((childpid = vfork()) == -1) {
 	    perror("NxApp::launch_keyboard (FORK FAILED)");
 	    return (-1);
 	} else if (childpid == 0) {
