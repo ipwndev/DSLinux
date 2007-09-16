@@ -49,7 +49,7 @@ void sigchld(int) {
 void cb(Fl_Widget *o, void *) {
   if (((Fl_Toggle_Button*)o)->value()) {
     if (running) return;
-    running = fork();
+    running = vfork();
     if (!running) execl("/usr/sbin/pppd","pppd","-detach",0);
     else signal(SIGCHLD, sigchld);
   } else {

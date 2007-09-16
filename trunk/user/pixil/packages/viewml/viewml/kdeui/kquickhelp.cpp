@@ -232,7 +232,7 @@ void KQuickHelp::hyperlinkRequested(QString link) {
     {
       // lets give this URL to kfm, he knows better what
       // to do with it
-      if(fork() > 0) {
+      if(vfork() > 0) {
 	// drop setuid, setgid
 	setgid(getgid());
 	setuid(getuid());

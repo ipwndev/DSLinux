@@ -141,7 +141,7 @@ keyboard_buttondown(win * window, GR_EVENT_BUTTON * ep)
 	} else {
 	    GrUnmapWindow(p->m_container_wid);
 	}
-    } else if (!(p->m_process_id = fork())) {
+    } else if (!(p->m_process_id = vfork())) {
 	printf("execing %s\n", p->m_exec);
 	/* Set up the keyboard environment for execvp */
 	if (!kymap[0] && !kyword[0]) {

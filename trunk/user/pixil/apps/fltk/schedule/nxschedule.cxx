@@ -1503,7 +1503,7 @@ NxSchedule::playAlarm()
     args[1] = buf;
     args[2] = "100";
     args[3] = NULL;
-    if ((childpid = fork()) == 0) {
+    if ((childpid = vfork()) == 0) {
 	execv(wave_path, args);
     }
 }

@@ -530,7 +530,7 @@ InitSync(void)
 	return -1;
     }
 
-    if (!(sync_pid = fork())) {	/* Child */
+    if (!(sync_pid = vfork())) {	/* Child */
 	dup2(outfd[0], 0);	/* Parent outgoing goes into child stdin */
 	dup2(infd[1], 1);	/* Parent incoming comes from child stdout */
 

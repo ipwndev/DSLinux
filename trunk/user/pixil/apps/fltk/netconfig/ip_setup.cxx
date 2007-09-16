@@ -582,7 +582,7 @@ IP_Setup::net_down()
 
     //bool have_dev_eth0 = get_have_dev_eth0_value();
 
-    if ((childpid = fork()) == -1) {
+    if ((childpid = vfork()) == -1) {
 	perror("net_down (FORK)");
 	return (PIX_COMM_ERROR);
     } else if (childpid == 0) {
@@ -629,7 +629,7 @@ IP_Setup::net_up()
     int idx;
 
 
-    if ((childpid = fork()) == -1) {
+    if ((childpid = vfork()) == -1) {
 	perror("net_down (FORK)");
 	return (PIX_COMM_ERROR);
     } else if (childpid == 0) {

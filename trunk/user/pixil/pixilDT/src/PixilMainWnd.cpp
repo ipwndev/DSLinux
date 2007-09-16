@@ -1131,7 +1131,7 @@ PixilMainWnd::SyncPush(Fl_Widget * pWidget, void *pData)
 	return;
 
     sprintf(cmd_line, "%s/push.sh", pixil_bin);
-    int pid = fork();
+    int pid = vfork();
 
     if (!pid) {
 	execl(cmd_line, cmd_line, 0);
@@ -1156,7 +1156,7 @@ PixilMainWnd::SyncPull(Fl_Widget * pWidget, void *pData)
 
     sprintf(cmd_line, "%s/pull.sh", pixil_bin);
 
-    int pid = fork();
+    int pid = vfork();
 
     if (!pid) {
 	execl(cmd_line, cmd_line, 0);
