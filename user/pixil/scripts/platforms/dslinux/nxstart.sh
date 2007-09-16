@@ -3,9 +3,11 @@
 # Set some required environment variables
 export PARDB=/usr/pixil/share/par/pixil.db
 export CONSOLE=/dev/tty1
+export FRAMEBUFFER=/dev/fb1
 
-fbset -depth 16 -n
+fbset -depth 16 -n -fb $FRAMEBUFFER
 ifconfig lo up
+killall gpm
 
 # Start the IPC server
 /usr/pixil/sbin/clserver &
