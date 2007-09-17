@@ -462,8 +462,13 @@ typedef struct {
 	((((r) & 0xf8) << 8) | (((g) & 0xfc) << 3) | (((b) & 0xf8) >> 3))
 
 /* create 16 bit 5/5/5 format pixel from RGB triplet */
+#if NDSDRIVER
+#define RGB2PIXEL555(r,g,b)	\
+	((1 << 15) | (((b) & 0xf8) << 7) | (((g) & 0xf8) << 2) | (((r) & 0xf8) >> 3))
+#else
 #define RGB2PIXEL555(r,g,b)	\
 	((((r) & 0xf8) << 7) | (((g) & 0xf8) << 2) | (((b) & 0xf8) >> 3))
+#endif
 
 /* create 8 bit 3/3/2 format pixel from RGB triplet*/
 #define RGB2PIXEL332(r,g,b)	\
@@ -489,8 +494,13 @@ typedef struct {
 
 /* create 16 bit 5/5/5 format pixel from RGB colorval (0x00BBGGRR)*/
 /* In this format, alpha is ignored. */
+#if NDSDRIVER
+#define COLOR2PIXEL555(c)	\
+	((((c) & 0xf8) >> 3) | (((c) & 0xf800) >> 6) | (((c) & 0xf80000) >> 9) | (1 << 15))
+#else
 #define COLOR2PIXEL555(c)	\
 	((((c) & 0xf8) << 7) | (((c) & 0xf800) >> 6) | (((c) & 0xf80000) >> 19))
+#endif
 
 /* create 8 bit 3/3/2 format pixel from RGB colorval (0x00BBGGRR)*/
 /* In this format, alpha is ignored. */
@@ -516,10 +526,16 @@ typedef struct {
 #define PIXEL565GREEN(pixelval)		(((pixelval) >> 5) & 0x3f)
 #define PIXEL565BLUE(pixelval)		((pixelval) & 0x1f)
 
-/* return 5/5/5 bit r, g or b component of 16 bit pixelval*/
+/* return 5/5/5 bit r, g or b component of 15 bit pixelval*/
+#if NDSDRIVER
+#define PIXEL555RED(pixelval)		((pixelval) & 0x1f)
+#define PIXEL555GREEN(pixelval)		(((pixelval) >> 5) & 0x1f)
+#define PIXEL555BLUE(pixelval)		(((pixelval) >> 10) & 0x1f)
+#else
 #define PIXEL555RED(pixelval)		(((pixelval) >> 10) & 0x1f)
 #define PIXEL555GREEN(pixelval)		(((pixelval) >> 5) & 0x1f)
 #define PIXEL555BLUE(pixelval)		((pixelval) & 0x1f)
+#endif
 
 /* return 3/3/2 bit r, g or b component of 8 bit pixelval*/
 #define PIXEL332RED(pixelval)		(((pixelval) >> 5) & 0x07)
@@ -530,10 +546,10 @@ typedef struct {
  * Conversion from MWPIXELVAL to normal 8-bit red, green or blue components
  */
 /* return 8/8/8/8 bit a, r, g or b component of 32 bit pixelval*/
-#define PIXEL8888ALPHA8(pixelval)		(((pixelval) >> 24) & 0xff)
+#define PIXEL8888ALPHA8(pixelval)	(((pixelval) >> 24) & 0xff)
 #define PIXEL8888RED8(pixelval)		(((pixelval) >> 16) & 0xff)
-#define PIXEL8888GREEN8(pixelval)		(((pixelval) >> 8) & 0xff)
-#define PIXEL8888BLUE8(pixelval)		((pixelval) & 0xff)
+#define PIXEL8888GREEN8(pixelval)	(((pixelval) >> 8) & 0xff)
+#define PIXEL8888BLUE8(pixelval)	((pixelval) & 0xff)
 
 /* return 8 bit r, g or b component of 8/8/8 24 bit pixelval*/
 #define PIXEL888RED8(pixelval)          (((pixelval) >> 16) & 0xff)
@@ -545,10 +561,16 @@ typedef struct {
 #define PIXEL565GREEN8(pixelval)        (((pixelval) >> 3) & 0xfc)
 #define PIXEL565BLUE8(pixelval)         (((pixelval) << 3) & 0xf8)
 
-/* return 8 bit r, g or b component of 5/5/5 16 bit pixelval*/
+/* return 8 bit r, g or b component of 5/5/5 15 bit pixelval*/
+#if NDSDRIVER
+#define PIXEL555RED8(pixelval)          (((pixelval) << 3) & 0xf8)
+#define PIXEL555GREEN8(pixelval)        (((pixelval) >> 2) & 0xf8)
+#define PIXEL555BLUE8(pixelval)         (((pixelval) >> 7) & 0xf8)
+#else
 #define PIXEL555RED8(pixelval)          (((pixelval) >> 7) & 0xf8)
 #define PIXEL555GREEN8(pixelval)        (((pixelval) >> 2) & 0xf8)
 #define PIXEL555BLUE8(pixelval)         (((pixelval) << 3) & 0xf8)
+#endif
 
 /* return 8 bit r, g or b component of 3/3/2 8 bit pixelval*/
 #define PIXEL332RED8(pixelval)          ( (pixelval)       & 0xe0)
@@ -576,10 +598,16 @@ typedef struct {
 #define PIXEL565GREEN32(pixelval)        ((((unsigned long)(pixelval)) << 21) & 0xfc000000UL)
 #define PIXEL565BLUE32(pixelval)         ((((unsigned long)(pixelval)) << 27) & 0xf8000000UL)
 
-/* return 32 bit r, g or b component of 5/5/5 16 bit pixelval*/
+/* return 32 bit r, g or b component of 5/5/5 15 bit pixelval*/
+#if NDSDRIVER
+#define PIXEL555RED32(pixelval)          ((((unsigned long)(pixelval)) << 27) & 0xf8000000UL)
+#define PIXEL555GREEN32(pixelval)        ((((unsigned long)(pixelval)) << 22) & 0xf8000000UL)
+#define PIXEL555BLUE32(pixelval)         ((((unsigned long)(pixelval)) << 17) & 0xf8000000UL)
+#else
 #define PIXEL555RED32(pixelval)          ((((unsigned long)(pixelval)) << 17) & 0xf8000000UL)
 #define PIXEL555GREEN32(pixelval)        ((((unsigned long)(pixelval)) << 22) & 0xf8000000UL)
 #define PIXEL555BLUE32(pixelval)         ((((unsigned long)(pixelval)) << 27) & 0xf8000000UL)
+#endif
 
 /* return 32 bit r, g or b component of 3/3/2 8 bit pixelval*/
 #define PIXEL332RED32(pixelval)          ((((unsigned long)(pixelval)) << 24) & 0xe0000000UL)
@@ -601,8 +629,14 @@ typedef struct {
 #define PIXEL565TOCOLORVAL(p)	\
 	(0xff000000ul | (((p) & 0xf800u) >> 8) | (((p) & 0x07e0u) << 5) | (((p) & 0x1ful) << 19) | 0xff000000ul)
 
+/* create RGB colorval (0xAABBGGRR) from 5/5/5 format pixel*/
+#if NDSDRIVER
+#define PIXEL555TOCOLORVAL(p)	\
+	(0xff000000ul | (((p) & 0x7c00u) << 6) | (((p) & 0x03e0u) << 3) | ((p) & 0x1ful))
+#else
 #define PIXEL555TOCOLORVAL(p)	\
 	(0xff000000ul | (((p) & 0x7c00u) >> 7) | (((p) & 0x03e0u) << 6) | (((p) & 0x1ful) << 19) | 0xff000000ul)
+#endif
 
 /* create RGB colorval (0xAABBGGRR) from 3/3/2 format pixel*/
 #define PIXEL332TOCOLORVAL(p)	\
@@ -636,13 +670,8 @@ typedef struct {
 #endif
 
 #if MWPIXEL_FORMAT == MWPF_TRUECOLOR555
-#if NDSDRIVER
-#define RGB2PIXEL(r,g,b)	(RGB2PIXEL555(r,g,b) | 1 << 15)
-#define COLORVALTOPIXELVAL(c)	(COLOR2PIXEL555(c) | 1 << 15)
-#else
 #define RGB2PIXEL(r,g,b)	RGB2PIXEL555(r,g,b)
 #define COLORVALTOPIXELVAL(c)	COLOR2PIXEL555(c)
-#endif
 #define PIXELVALTOCOLORVAL(p)	PIXEL555TOCOLORVAL(p)
 #define PIXEL2RED(p)		PIXEL555RED(p)
 #define PIXEL2GREEN(p)		PIXEL555GREEN(p)

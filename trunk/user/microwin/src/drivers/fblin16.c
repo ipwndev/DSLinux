@@ -10,6 +10,12 @@
 #include <assert.h>
 #include <stdlib.h>
 
+#if NDSDRIVER
+#define ALPHA_1B (1 << 15)
+#else
+#define ALPHA_1B (0)
+#endif
+
 /* We want to do string copying fast, so inline assembly if possible */
 #ifndef __OPTIMIZE__
 #define __OPTIMIZE__
@@ -19,11 +25,7 @@
 #include "device.h"
 #include "fb.h"
 
-#if NDSDRIVER
-#define ALPHA_1B  (1 << 15)
-#else
-#define ALPHA_1B 0
-#endif
+DEFINE_applyOpR			/* define inline rop calculator*/
 
 #define USE_16BIT_ACCESS 0	/* =1 to force 16 bit display access*/
 
@@ -62,12 +64,11 @@ linear16_drawpixel(PSD psd, MWCOORD x, MWCOORD y, MWPIXELVAL c)
 	assert (c < psd->ncolors);
 
 	DRAWON;
+	addr += x + y * psd->linelen;
 	if(gr_mode == MWMODE_COPY)
-		addr[x + y * psd->linelen] = c | ALPHA_1B;
-	else {
-		applyOp(gr_mode, c, &addr[x + y * psd->linelen], ADDR16);
-		addr[x + y * psd->linelen] |= ALPHA_1B;
-	}
+		*addr = c;
+	else
+		*addr = applyOpR(gr_mode, c, *addr) | ALPHA_1B;
 	DRAWOFF;
 }
 
@@ -81,7 +82,7 @@ linear16_readpixel(PSD psd, MWCOORD x, MWCOORD y)
 	assert (x >= 0 && x < psd->xres);
 	assert (y >= 0 && y < psd->yres);
 
-	return addr[x + y * psd->linelen] & ~(ALPHA_1B);
+	return addr[x + y * psd->linelen];
 }
 
 /* Draw horizontal line from x1,y to x2,y including final point*/
@@ -101,14 +102,12 @@ linear16_drawhorzline(PSD psd, MWCOORD x1, MWCOORD x2, MWCOORD y, MWPIXELVAL c)
 	addr += x1 + y * psd->linelen;
 	if(gr_mode == MWMODE_COPY) {
 		/* FIXME: memsetw(dst, c, x2-x1+1)*/
-		c |= ALPHA_1B;
 		while(x1++ <= x2)
 			*addr++ = c;
 	} else {
 		while (x1++ <= x2) {
-			applyOp(gr_mode, c, addr, ADDR16);
-			*addr |= ALPHA_1B;
-			++addr;
+			*addr = applyOpR(gr_mode, c, *addr) | ALPHA_1B;
+			addr++;
 		}
 	}
 	DRAWOFF;
@@ -131,15 +130,13 @@ linear16_drawvertline(PSD psd, MWCOORD x, MWCOORD y1, MWCOORD y2, MWPIXELVAL c)
 	DRAWON;
 	addr += x + y1 * linelen;
 	if(gr_mode == MWMODE_COPY) {
-		c |= ALPHA_1B;
 		while(y1++ <= y2) {
 			*addr = c;
 			addr += linelen;
 		}
 	} else {
 		while (y1++ <= y2) {
-			applyOp(gr_mode, c, addr, ADDR16);
-			*addr |= ALPHA_1B;
+			*addr = applyOpR(gr_mode, c, *addr) | ALPHA_1B;
 			addr += linelen;
 		}
 	}
@@ -241,8 +238,7 @@ stdblit:
 	} else {
 		while (--h >= 0) {
 			for (i=0; i<w; i++) {
-				applyOp(MWROP_TO_MODE(op), *src, dst, ADDR16);
-				*dst |= ALPHA_1B;
+				*dst = applyOpR(MWROP_TO_MODE(op), *src, *dst) | ALPHA_1B;
 				++src;
 				++dst;
 			}
@@ -313,7 +309,7 @@ if (g_col_inc) col_inc = g_col_inc; else
 				pixel = *src++;
 				col_pos -= 0x10000L;
 			}
-			*dst++ = pixel | ALPHA_1B;
+			*dst++ = pixel;
 			col_pos += col_inc;
 		}
 
@@ -511,7 +507,7 @@ linear16_stretchblitex(PSD dstpsd,
 
 			x_count = width;
 			while (x_count-- > 0) {
-				*dest_ptr++ = *src_ptr | ALPHA_1B;
+				*dest_ptr++ = *src_ptr;
 
 				src_ptr += src_x_step_normal;
 				x_error += x_error_step_normal;
@@ -556,8 +552,7 @@ linear16_stretchblitex(PSD dstpsd,
 
 			x_count = width;
 			while (x_count-- > 0) {
-				applyOp(MWROP_TO_MODE(op), *src_ptr, dest_ptr, ADDR16);
-				*dest_ptr |= ALPHA_1B;
+				*dest_ptr = applyOpR(MWROP_TO_MODE(op), *src_ptr, *dest_ptr) | ALPHA_1B;
 				dest_ptr++;
 
 				src_ptr += src_x_step_normal;
