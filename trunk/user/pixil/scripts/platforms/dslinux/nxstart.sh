@@ -7,7 +7,7 @@ export FRAMEBUFFER=/dev/fb1
 
 fbset -depth 16 -n -fb $FRAMEBUFFER
 ifconfig lo up
-killall gpm
+gpm -k
 
 # Start the IPC server
 /usr/pixil/sbin/clserver &
