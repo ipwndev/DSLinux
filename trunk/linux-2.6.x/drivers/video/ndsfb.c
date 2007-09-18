@@ -222,7 +222,9 @@ static int ndsfb_pan_display(struct fb_var_screeninfo *var,
 			     struct fb_info *info);
 static int ndsfb_mmap(struct fb_info *info, struct file *file,
 		      struct vm_area_struct *vma);
-static int ndsfb_blank(int blank_mode, const struct fb_info *info);
+static int ndsfb_blank(int blank_mode, struct fb_info *info);
+static int ndsfb_open(struct fb_info *info, int user);
+static int ndsfb_release(struct fb_info *info, int user);
 
 static struct fb_ops ndsfb_ops = {
 	.fb_check_var = ndsfb_check_var,
@@ -234,8 +236,13 @@ static struct fb_ops ndsfb_ops = {
 	.fb_imageblit = cfb_imageblit,
 	.fb_cursor = soft_cursor,
 	.fb_mmap = ndsfb_mmap,
-	.fb_blank = ndsfb_blank
+	.fb_blank = ndsfb_blank,
+	.fb_open = ndsfb_open,
+	.fb_release = ndsfb_release
 };
+
+extern void ndstouch_open_fb1(void);
+extern void ndstouch_close_fb1(void);
 
 #if 0
 static irqreturn_t ndsfb_interrupt(int irq, void *dev_id, struct pt_regs *regs)
@@ -357,7 +364,7 @@ static int ndsfb_set_par(struct fb_info *info)
 
 	info->fix.line_length =
 	    info->var.xres_virtual * (info->var.bits_per_pixel / 8);
-	info->fix.smem_start = info->screen_base;
+	info->fix.smem_start = (unsigned)info->screen_base;
 	info->fix.smem_len = info->var.xres_virtual * info->var.yres_virtual *
 	    (info->var.bits_per_pixel / 8);
 
@@ -433,7 +440,7 @@ static int ndsfb_set_par(struct fb_info *info)
 	return 0;
 }
 
-static int ndsfb_blank(int blank_mode, const struct fb_info *info)
+static int ndsfb_blank(int blank_mode, struct fb_info *info)
 {
 	if (blank_mode) {
 		//POWER_CR &= ~ ( POWER_2D | POWER_2D_SUB | POWER_LCD_TOP | POWER_LCD_TOP ) ;
@@ -555,6 +562,25 @@ int __init ndsfb_setup(char *options)
 			ndsfb_enable = 0;
 	}
 	return 1;
+}
+
+
+static int ndsfb_open(struct fb_info *info, int user)
+{
+	struct platform_device *dev = to_platform_device(info->device);
+	if (dev->id == 1) {
+		ndstouch_open_fb1();
+	}
+	return 0;
+}
+
+static int ndsfb_release(struct fb_info *info, int user)
+{
+	struct platform_device *dev = to_platform_device(info->device);
+	if (dev->id == 1) {
+		ndstouch_close_fb1();
+	}
+	return 0;
 }
 
     /*
