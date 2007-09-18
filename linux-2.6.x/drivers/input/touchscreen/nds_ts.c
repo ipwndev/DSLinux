@@ -16,7 +16,6 @@
 #include <linux/interrupt.h> 
 #include <linux/version.h>
 #include <linux/kbd_kern.h>
-//#include <linux/config.h>
 #include <asm/arch/fifo.h>
 
 #include <asm/irq.h>
@@ -119,7 +118,7 @@ MODULE_PARM_DESC(debug_level, "Specifes the amount of debug information that wil
 #define DISABLED_MODE 0
 #define KEYBOARD_MODE 1
 #define MOUSE_MODE 2
-
+#define XMOUSE_MODE 3		/* absolute mouse mode with nano-X on /dev/fb1 */
 
 static void ndstouch_input_event(u8 touched, u8 x, u8 y);
 static int ndstouch_output_event(struct input_dev *dev, unsigned int type, unsigned int code, int value);
@@ -267,6 +266,31 @@ switch_to_keyboard_mode(void)
 	update_keyboard(0);
 }
 
+static void
+switch_to_xmouse_mode(void)
+{
+	mode = XMOUSE_MODE;
+
+	memset( bgmap, 0, 32 * 24 * 2 );
+	memset( fgmap, 0, 32 * 24 * 2 );
+
+	input_report_abs(&ndstouch_dev, ABS_PRESSURE, 1);
+	input_report_abs(&ndstouch_dev, ABS_TOOL_WIDTH, 5);
+
+}
+
+/* These 2 functions are called by the frame buffer driver
+   if /dev/fb1 is opened or closed. */
+void ndstouch_open_fb1(void)
+{
+	switch_to_xmouse_mode();
+}
+
+void ndstouch_close_fb1(void)
+{
+	switch_to_keyboard_mode();
+}
+
 int ndstouch_output_event(struct input_dev *dev, unsigned int type, unsigned int code, int value)
 {
 	if (type == EV_LED && code == LED_CAPSL ) {
@@ -320,12 +344,14 @@ static void ndstouch_input_event(u8 touched, u8 x, u8 y)
 
 			break;
 		case MOUSE_MODE:
+		case XMOUSE_MODE:
 			if (touched) {
 				u8 kx = x / 8;
 				u8 ky = y / 8;
 				if (!wasTouched) {
 					wasTouched = TRUE;
-					if (qwertyKeyMap[ky * 32 + kx] == BTN_TOUCH) {
+					if ((mode == MOUSE_MODE)
+					  &&(qwertyKeyMap[ky * 32 + kx] == BTN_TOUCH)) {
 						switch_to_keyboard_mode();
 						break ;
 					}
@@ -359,6 +385,7 @@ static int __init touchscreen_init(void)
 			draw_keyboard(0);
 			break;
 		case MOUSE_MODE:
+		case XMOUSE_MODE:
 		case DISABLED_MODE:
 			break;
 	}
