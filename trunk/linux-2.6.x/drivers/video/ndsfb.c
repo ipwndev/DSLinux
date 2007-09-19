@@ -25,6 +25,7 @@
 #include <asm/arch/power.h>
 #include <asm/io.h>
 
+#define	VCOUNT		     (*(volatile u16*)0x04000006)
 #define DISPLAY_CR       (*(volatile u32*)0x04000000)
 #define SUB_DISPLAY_CR   (*(volatile u32*)0x04001000)
 
@@ -225,6 +226,7 @@ static int ndsfb_mmap(struct fb_info *info, struct file *file,
 static int ndsfb_blank(int blank_mode, struct fb_info *info);
 static int ndsfb_open(struct fb_info *info, int user);
 static int ndsfb_release(struct fb_info *info, int user);
+static int ndsfb_ioctl(struct inode *inode, struct file *file,unsigned int cmd, unsigned long arg, struct fb_info *info);
 
 static struct fb_ops ndsfb_ops = {
 	.fb_check_var = ndsfb_check_var,
@@ -238,7 +240,8 @@ static struct fb_ops ndsfb_ops = {
 	.fb_mmap = ndsfb_mmap,
 	.fb_blank = ndsfb_blank,
 	.fb_open = ndsfb_open,
-	.fb_release = ndsfb_release
+	.fb_release = ndsfb_release,
+	.fb_ioctl	= ndsfb_ioctl
 };
 
 extern void ndstouch_open_fb1(void);
@@ -450,6 +453,43 @@ static int ndsfb_blank(int blank_mode, struct fb_info *info)
 		    (POWER_2D | POWER_2D_SUB | POWER_LCD_TOP | POWER_LCD_TOP);
 	}
 	return 0;
+}
+
+static int ndsfb_get_vblank(struct fb_vblank *vblank)
+{
+	memset(vblank, 0, sizeof(&vblank));
+	vblank->flags = FB_VBLANK_HAVE_VCOUNT;
+	vblank->vcount = readw(VCOUNT);
+	return 0;
+}
+
+    /*
+     * ioctl
+     */
+
+static int ndsfb_ioctl(struct inode *inode, struct file *file,
+			  unsigned int cmd, unsigned long arg,
+			  struct fb_info *info)
+{
+	void __user *argp = (void __user *)arg;
+	u32 val, old_mode;
+	int retval = -EFAULT;
+ 
+	switch (cmd) {
+		case FBIOGET_VBLANK:
+			{
+				struct fb_vblank vblank;
+				int err;
+
+				err = ndsfb_get_vblank(&vblank);
+				if (err)
+					return err;
+				if (copy_to_user(argp, &vblank, sizeof(vblank)))
+					return -EFAULT;
+				return 0;
+			}
+	}
+	return -ENOTTY;
 }
 
     /*
