@@ -1631,6 +1631,7 @@ if [ "$CONFIG_USER_MICROWIN" = "y" ]; then
     bool 'DragonEngine TS' CONFIG_USER_MICROWIN_DE2TSMOUSE
     bool 'Cleopatra Mouse' CONFIG_USER_MICROWIN_CLEOMOUSE
     bool 'No Mouse'        CONFIG_USER_MICROWIN_NOMOUSE
+    bool 'NDS Mouse'       CONFIG_USER_MICROWIN_NDSMOUSE
 	comment 'Keyboard'
 	bool 'TTY Keyboard'    CONFIG_USER_MICROWIN_TTYKBD
 	bool 'Scan Keyboard'   CONFIG_USER_MICROWIN_SCANKBD

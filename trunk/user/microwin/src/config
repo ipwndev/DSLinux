@@ -402,10 +402,11 @@ CLEOVGA                  = $(subst y,Y,$(CONFIG_USER_MICROWIN_CLEOVGA))
 # PSIONMOUSE	Psion 5 (/dev/touch_psion)
 # YOPYMOUSE	Yopy (/dev/yopy-ts)
 # HARRIERMOUSE	NEC Harrier (/dev/tpanel)
+# NDSMOUSE	Nintendo DS (/dev/touch)
 ####################################################################
 
 ifdef NO_DEFINED_EVER
-GPMMOUSE                 = Y
+GPMMOUSE                 = N
 SERMOUSE                 = N
 SUNMOUSE                 = N
 NOMOUSE                  = N
@@ -420,6 +421,7 @@ MTMOUSE                  = N
 PSIONMOUSE               = N
 YOPYMOUSE                = N
 HARRIERMOUSE             = N
+NDSMOUSE		 = Y
 else
 GPMMOUSE                 = $(subst y,Y,$(CONFIG_USER_MICROWIN_GPMMOUSE))
 SERMOUSE                 = $(subst y,Y,$(CONFIG_USER_MICROWIN_SERMOUSE))
@@ -438,6 +440,7 @@ YOPYMOUSE                = $(subst y,Y,$(CONFIG_USER_MICROWIN_YOPYMOUSE))
 UCTSMOUSE                = $(subst y,Y,$(CONFIG_USER_MICROWIN_UCTSMOUSE))
 DE2TSMOUSE               = $(subst y,Y,$(CONFIG_USER_MICROWIN_DE2TSMOUSE))
 CLEOMOUSE                = $(subst y,Y,$(CONFIG_USER_MICROWIN_CLEOMOUSE))
+NDSMOUSE		 = $(subst y,Y,$(CONFIG_USER_MICROWIN_NDSMOUSE))
 endif
 
 # keyboard or null kbd driver

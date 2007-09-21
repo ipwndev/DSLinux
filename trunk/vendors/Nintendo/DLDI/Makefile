@@ -33,7 +33,7 @@ DEVICES = \
 	fb0,c,29,0\
 	fb1,c,29,1\
 	\
-	psaux,c,10,1   mouse0,c,13,32\
+	psaux,c,10,1   mouse0,c,13,32	  touch,c,13,65\
 	\
 	rom0,b,31,0    rom1,b,31,1        rom2,b,31,2      rom3,b,31,3 \
 	rom4,b,31,4    rom5,b,31,5        rom6,b,31,6      rom7,b,31,7 \

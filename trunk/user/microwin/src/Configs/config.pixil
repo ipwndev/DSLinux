@@ -309,8 +309,9 @@ HWVGA                    = N
 # PSIONMOUSE	Psion 5 (/dev/touch_psion)
 # YOPYMOUSE	Yopy (/dev/yopy-ts)
 # HARRIERMOUSE	NEC Harrier (/dev/tpanel)
+# NDSMOUSE	Nintendo DS (/dev/touch)
 ####################################################################
-GPMMOUSE                 = Y
+GPMMOUSE                 = N
 SERMOUSE                 = N
 SUNMOUSE                 = N
 NOMOUSE                  = N
@@ -325,6 +326,7 @@ MTMOUSE                  = N
 PSIONMOUSE               = N
 YOPYMOUSE                = N
 HARRIERMOUSE             = N
+NDSMOUSE		 = Y
 
 # keyboard or null kbd driver
 TTYKBD                   = N
