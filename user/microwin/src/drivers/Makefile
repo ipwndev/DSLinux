@@ -159,6 +159,12 @@ CFLAGS += -DTOUCHSCREEN_HELIO=1
 OBJS += mou_vrlinux.o
 endif
 
+### Nindento DS touchscreen
+ifeq ($(NDSMOUSE), Y)
+CFLAGS += -DTOUCHSCREEN_NDS=1
+OBJS += mou_touchscreen.o
+endif
+
 #### Yopy touchscreen
 ifeq ($(YOPYMOUSE), Y)
 OBJS += mou_yopy.o

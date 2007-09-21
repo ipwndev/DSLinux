@@ -11,6 +11,7 @@
    TOUCHSCREEN_TUXSCREEN - Shannon IS2630
    TOUCHSCREEN_ADS - Applied Data Systems Graphics Client+ devices
    TOUCHSCREEN_ADS7846 - TI ADS6847 (PSI OMAP Innovator)
+   TOUCHSCREEN_NDS - Nintendo DS
 */
 
 /* To add a new device, add a new item to the config file
@@ -46,6 +47,11 @@
 #include "touchscreen_ucb1x00.h"
 #endif
 
+#ifdef TOUCHSCREEN_NDS
+#include <linux/input.h>
+#include "touchscreen_nds.h"
+#endif
+
 #ifndef TS_DEVICE
 #error "You didn't define a device for the generic touchscreen driver!"
 #endif
@@ -61,6 +67,12 @@ static int PD_Open(MOUSEDEVICE *pmd)
 		return -1;
 	}
 
+#ifdef TOUCHSCREEN_NDS
+	// grab all input events
+	if (ioctl(pd_fd, EVIOCGRAB, 1) < 0)
+		EPRINTF("Can't get exclusive access to %s\n", TS_DEVICE_FILE);
+#endif
+
 	GdHideCursor(&scrdev);  
 	return pd_fd;
 }
@@ -71,6 +83,9 @@ static void PD_Close(void)
  
 	if(pd_fd < 0) return;
  
+#ifdef TOUCHSCREEN_NDS
+	ioctl(pd_fd, EVIOCGRAB, 0);
+#endif
 	close(pd_fd);
 	pd_fd = -1;
 }
@@ -91,6 +106,11 @@ static int PD_Read(MWCOORD *px, MWCOORD *py, MWCOORD *pz, int *pb, int mode)
 {
 	struct ts_event event;
 	int bytes_read;
+#ifdef TOUCHSCREEN_NDS
+	static int pressed;
+	static int xcoord;
+	static int ycoord;
+#endif
   
 	/* read a data point */
 	bytes_read = read(pd_fd, &event, sizeof(event));
@@ -107,6 +127,28 @@ static int PD_Read(MWCOORD *px, MWCOORD *py, MWCOORD *pz, int *pb, int mode)
 		return 0;
 	}
 
+#ifdef TOUCHSCREEN_NDS
+	switch (event.type) {
+	case EV_SYN:
+		*px = xcoord;
+		*py = ycoord;
+		*pz = pressed ? 50 : 0;
+		*pb = pressed ? MWBUTTON_L : 0;
+		return pressed ? 2 : 3;
+	case EV_KEY:
+		if (event.code == BTN_TOUCH) 
+			pressed = event.value;
+		break;
+	case EV_ABS:
+		if (event.code == ABS_X) {
+			xcoord = event.value;
+		} else if (event.code == ABS_Y) {
+			ycoord = event.value;
+		}
+		break;
+	}
+	return 0;
+#else
 	*px = event.x;
 	*py = event.y;
 
@@ -121,6 +163,7 @@ static int PD_Read(MWCOORD *px, MWCOORD *py, MWCOORD *pz, int *pb, int mode)
 	if(!*pb)
 		return 3;
 	return 2;
+#endif
 }
 
 MOUSEDEVICE mousedev = {
