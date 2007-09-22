@@ -7,7 +7,7 @@ CLEAN_EXTRAS=clean-apps
 # Just the basic nano-X library for nxterm
 
 NXLIBS=-L$(MWDIR)/lib -lnano-X
-LDFLAGS=-Wl,-elf2flt -D__PIC__ -fpic -msingle-pic-base -mswp-byte-writes
+#LDFLAGS=-Wl,-elf2flt -D__PIC__ -fpic -msingle-pic-base -mswp-byte-writes
 # A bit more is needed for nxclock and nxloadmon
 
 WMLIBS= -L$(STAGE_DIR)/lib -L$(MWDIR)/lib -lwm -lnano-X
