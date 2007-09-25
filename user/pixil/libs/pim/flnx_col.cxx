@@ -36,6 +36,7 @@
  * are not clear to you.                                                
  */
 
+#ifdef TesterClass
 
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
@@ -667,3 +668,5 @@ IPCTester::TerminateCB(Fl_Widget * fl, void *o)
     NxApp::Instance()->Write_Fd(ipc, msg, len);
 
 }
+
+#endif
