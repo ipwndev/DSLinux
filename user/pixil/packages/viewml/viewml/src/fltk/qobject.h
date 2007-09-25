@@ -6,7 +6,7 @@
 #include "qconnection.h"
 #include "qdict.h"
 
-#include <iostream.h>
+#include <iostream>
 #include <signal.h>
 #include <pthread.h>
 

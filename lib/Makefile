@@ -94,6 +94,8 @@ dir_$(CONFIG_LIB_MAD)		+= libmad
 dir_$(CONFIG_LIB_MAD_FORCE)	+= libmad
 dir_$(CONFIG_LIB_UCLIBCPP)	+= uClibc++
 dir_$(CONFIG_LIB_UCLIBCPP_FORCE)+= uClibc++
+dir_$(CONFIG_LIB_LIBWWW)	+= libwww
+dir_$(CONFIG_LIB_LIBWWW_FORCE)  += libwww
 
 # And build libraries in the prop directory last
 dir_y += $(ROOTDIR)/prop
@@ -178,7 +180,11 @@ LINKLIBS=\
 	$(ROOTDIR)/lib/libid3tag/*.a \
 	$(ROOTDIR)/lib/libmad/*.a \
 	$(ROOTDIR)/lib/gpm/src/lib/*.a \
-	$(ROOTDIR)/lib/uClibc++/src/*.a
+	$(ROOTDIR)/lib/uClibc++/src/*.a \
+	$(ROOTDIR)/lib/libwww/src/Library/src/.libs/*.a \
+	$(ROOTDIR)/lib/libwww/src/modules/expat/xmlparse/.libs/*.a \
+	$(ROOTDIR)/lib/libwww/src/modules/expat/xmltok/.libs/*.a \
+	$(ROOTDIR)/lib/libwww/src/modules/md5/.libs/*.a
 
 
 ##############################################################################

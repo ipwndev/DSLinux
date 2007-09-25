@@ -1,19 +1,19 @@
 #ifndef __QSTRING_H
 #define __QSTRING_H
 
-#include <algo.h>
+#include <algorithm>
 #include <string>
 #include <stdarg.h>
 #include <errno.h>
 #include <stdio.h>
-
+#include <cctype>
 #include "fltk-qdefs.h"
 //#include "qregexp.h"
+using namespace std;
 
 class QRegExp;
 
-class QString : public string
-{
+class QString : public string{
  protected:
   bool m_bNull;
  public:

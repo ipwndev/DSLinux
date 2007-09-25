@@ -83,6 +83,7 @@ CONFIG_LIB_NCURSES_FORCE=y
 # CONFIG_LIB_LIBCRYPT_OLD_FORCE is not set
 # CONFIG_LIB_ID3TAG_FORCE is not set
 # CONFIG_LIB_MAD_FORCE is not set
+# CONFIG_LIB_LIBWWW_FORCE is not set
 
 #
 # Library Configuration

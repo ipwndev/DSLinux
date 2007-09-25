@@ -23,7 +23,7 @@ class QDict : public QCollection
 
   virtual void clear() 
     { 
-      map<string,T*>::iterator pos;
+      typename std::map<string,T*>::iterator pos;
       if(m_bAutoDelete) {
 	for(pos=m_Map.begin(); pos != m_Map.end(); ++pos)
 	  delete pos->second;
@@ -33,7 +33,7 @@ class QDict : public QCollection
 
   T* find(const QString & key)
     {
-      map<string,T*>::iterator pos;
+      typename std::map<string,T*>::iterator pos;
 
       pos = m_Map.find(key);
       if(pos != m_Map.end())
@@ -44,7 +44,7 @@ class QDict : public QCollection
 
   bool remove(const QString & key)
     {
-      map<string,T*>::iterator pos;
+      typename std::map<string,T*>::iterator pos;
 
       pos = m_Map.find(key);
       if(pos != m_Map.end()) {
@@ -62,15 +62,15 @@ class QDict : public QCollection
       m_Map[key] = (T*)item;
     }
 
-  map<string,T*>::iterator end() { return m_Map.end(); }
-  map<string,T*>::iterator begin() { return m_Map.begin(); }
+  typename std::map<string,T*>::iterator end() { return m_Map.end(); }
+  typename std::map<string,T*>::iterator begin() { return m_Map.begin(); }
 };
 
 template <class T>
 class QDictIterator 
 {
  protected:
-  map<string,T*>::iterator m_Pos;
+  typename std::map<string,T*>::iterator m_Pos;
   QDict<T> & m_Dict;
  public:
   QDictIterator(QDict<T> & t) : m_Dict(t) { m_Pos = t.begin();  }

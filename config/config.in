@@ -117,6 +117,7 @@ bool 'Build libcrypt_old'	CONFIG_LIB_LIBCRYPT_OLD_FORCE
 bool 'Build libid3tag'		CONFIG_LIB_ID3TAG_FORCE
 bool 'Build libmad'		CONFIG_LIB_MAD_FORCE
 bool 'Build uClibc++'		CONFIG_LIB_UCLIBCPP_FORCE
+bool 'Build libwww'		CONFIG_LIB_LIBWWW_FORCE
 
 comment 'Library Configuration'
 bool 'Support time zones'	CONFIG_LIB_UC_LIBC_TIMEZONE
@@ -973,6 +974,7 @@ comment 'PIXIL PDA GUI'
 bool 'pixil'			CONFIG_USER_PIXIL
     if [ "$CONFIG_USER_PIXIL" = "y" ]; then
         define_bool CONFIG_LIB_UCLIBCPP y
+	define_bool CONFIG_LIB_LIBWWW y
     fi
 
 comment ''

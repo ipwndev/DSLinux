@@ -11,7 +11,7 @@
 #include "qfontmetrics.h"
 
 #include "Fl_Widget.H"
-#include <iostream.h>
+#include <iostream>
 
 //#define ADJUSTX(_x) (m_Widget->x() + _x)
 //#define ADJUSTY(_y) (m_Widget->y() + _y)
