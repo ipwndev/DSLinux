@@ -331,6 +331,7 @@ dir_$(CONFIG_USER_SMBMOUNT_SMBMOUNT)        += smbmount
 dir_$(CONFIG_USER_SMBMOUNT_SMBUMOUNT)       += smbmount
 dir_$(CONFIG_USER_SMTP_SMTPCLIENT)          += smtpclient
 dir_$(CONFIG_USER_SMTP_SMTPFILTER)          += smtpfilter
+dir_$(CONFIG_USER_SNAPSHOT)		    += snapshot
 dir_$(CONFIG_USER_SNMPD_SNMPD)              += snmpd
 dir_$(CONFIG_USER_SNORT_SNORT)              += snort
 dir_$(CONFIG_USER_SPEEDTOUCH_MODEM_RUN)     += speedtouch/src
