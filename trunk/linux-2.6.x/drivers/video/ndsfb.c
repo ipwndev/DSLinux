@@ -25,7 +25,7 @@
 #include <asm/arch/power.h>
 #include <asm/io.h>
 
-#define	VCOUNT		     (*(volatile u16*)0x04000006)
+#define	VCOUNT  	 (*(volatile u16*)0x04000006)
 #define DISPLAY_CR       (*(volatile u32*)0x04000000)
 #define SUB_DISPLAY_CR   (*(volatile u32*)0x04001000)
 
@@ -209,6 +209,7 @@ static struct fb_fix_screeninfo ndsfb_fix __initdata = {
 
 static int ndsfb_enable __initdata = 1;	/* enabled by default */
 
+static int opencount = 0;
     /*
      *  Interface used by the world
      */
@@ -457,7 +458,7 @@ static int ndsfb_blank(int blank_mode, struct fb_info *info)
 
 static int ndsfb_get_vblank(struct fb_vblank *vblank)
 {
-	memset(vblank, 0, sizeof(&vblank));
+	memset(vblank, 0, sizeof(*vblank));
 	vblank->flags = FB_VBLANK_HAVE_VCOUNT;
 	vblank->vcount = readw(VCOUNT);
 	return 0;
@@ -472,8 +473,6 @@ static int ndsfb_ioctl(struct inode *inode, struct file *file,
 			  struct fb_info *info)
 {
 	void __user *argp = (void __user *)arg;
-	u32 val, old_mode;
-	int retval = -EFAULT;
  
 	switch (cmd) {
 		case FBIOGET_VBLANK:
@@ -609,16 +608,19 @@ static int ndsfb_open(struct fb_info *info, int user)
 {
 	struct platform_device *dev = to_platform_device(info->device);
 	if (dev->id == 1) {
-		ndstouch_open_fb1();
+		if (!opencount++)
+			ndstouch_open_fb1();
 	}
 	return 0;
 }
 
 static int ndsfb_release(struct fb_info *info, int user)
 {
+	// This is called when the reference count goes to zero.
 	struct platform_device *dev = to_platform_device(info->device);
 	if (dev->id == 1) {
-		ndstouch_close_fb1();
+		if (!--opencount)
+			ndstouch_close_fb1();
 	}
 	return 0;
 }
@@ -629,7 +631,6 @@ static int ndsfb_release(struct fb_info *info, int user)
 
 static void ndsfb_platform_release(struct device *device)
 {
-	// This is called when the reference count goes to zero.
 }
 
 static int __init ndsfb_probe(struct device *device)
