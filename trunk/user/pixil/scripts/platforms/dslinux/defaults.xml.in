@@ -157,7 +157,7 @@
 
 <category name="utils">
 <title>Utilities</title>
-<applist>worldclock netconfig sysconfig loadmon nxterm</applist>
+<applist>worldclock netconfig sysconfig loadmon nxterm poweroff</applist>
 </category>
 
 <category name="internet">
@@ -307,6 +307,14 @@
 <workdir>@prefix@/share/data</workdir>
 <icon>notes.gif</icon>
 <defargs>-p @prefix@/share/data/</defargs>
+</app>
+
+<app name="poweroff">
+<title>Power Off</title>
+<exec>/bin/poweroff</exec>
+<workdir>/bin</workdir>
+<icon>terminal.gif</icon>
+<defargs></defargs>
 </app>
 
 <app name="worldclock">
