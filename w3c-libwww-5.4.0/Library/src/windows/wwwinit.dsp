@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="wwwapp" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="wwwinit" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Dynamic-Link Library" 0x0102
 
-CFG=wwwapp - Win32 Release
+CFG=wwwinit - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "wwwapp.mak".
+!MESSAGE NMAKE /f "wwwinit.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "wwwapp.mak" CFG="wwwapp - Win32 Release"
+!MESSAGE NMAKE /f "wwwinit.mak" CFG="wwwinit - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "wwwapp - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "wwwapp - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "wwwinit - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "wwwinit - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE 
 
 # Begin Project
@@ -29,18 +29,18 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "wwwapp - Win32 Release"
+!IF  "$(CFG)" == "wwwinit - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
-# PROP BASE Output_Dir ".\wwwapp\Release"
-# PROP BASE Intermediate_Dir ".\wwwapp\Release"
-# PROP BASE Target_Dir ".\wwwapp"
+# PROP BASE Output_Dir ".\wwwinit\Release"
+# PROP BASE Intermediate_Dir ".\wwwinit\Release"
+# PROP BASE Target_Dir ".\wwwinit"
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
 # PROP Output_Dir "..\..\..\Bin"
-# PROP Intermediate_Dir ".\wwwapp\Release"
-# PROP Target_Dir ".\wwwapp"
+# PROP Intermediate_Dir ".\wwwinit\Release"
+# PROP Target_Dir ".\wwwinit"
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
 # ADD CPP /nologo /MD /W3 /GX /O2 /I "..\..\..\modules\expat\xmlparse" /I "..\..\External" /D "NDEBUG" /D "WWW_WIN_DLL" /D "WWW_WIN_ASYNC" /D "WIN32" /D "_WINDOWS" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /win32
@@ -52,20 +52,20 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 WSock32.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib advapi32.lib /nologo /subsystem:windows /dll /machine:I386 /out:"..\..\..\Bin\Release\wwwapp.dll"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib comdlg32.lib advapi32.lib WSock32.lib /nologo /subsystem:windows /dll /machine:I386 /out:"..\..\..\Bin\Release\wwwinit.dll"
 
-!ELSEIF  "$(CFG)" == "wwwapp - Win32 Debug"
+!ELSEIF  "$(CFG)" == "wwwinit - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir ".\wwwapp\Debug"
-# PROP BASE Intermediate_Dir ".\wwwapp\Debug"
-# PROP BASE Target_Dir ".\wwwapp"
+# PROP BASE Output_Dir ".\wwwinit\Debug"
+# PROP BASE Intermediate_Dir ".\wwwinit\Debug"
+# PROP BASE Target_Dir ".\wwwinit"
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
 # PROP Output_Dir "..\..\..\Bin"
-# PROP Intermediate_Dir ".\wwwapp\Debug"
-# PROP Target_Dir ".\wwwapp"
+# PROP Intermediate_Dir ".\wwwinit\Debug"
+# PROP Target_Dir ".\wwwinit"
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /c
 # ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\modules\expat\xmlparse" /I "..\..\External" /D "_DEBUG" /D "WWW_WIN_DLL" /D "WWW_WIN_ASYNC" /D "WIN32" /D "_WINDOWS" /YX /FD /c
 # ADD BASE MTL /nologo /D "_DEBUG" /win32
@@ -77,52 +77,24 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386
-# ADD LINK32 WSock32.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib advapi32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\Bin\Debug\wwwapp.dll"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib comdlg32.lib advapi32.lib WSock32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\Bin\Debug\wwwinit.dll"
 
 !ENDIF 
 
 # Begin Target
 
-# Name "wwwapp - Win32 Release"
-# Name "wwwapp - Win32 Debug"
+# Name "wwwinit - Win32 Release"
+# Name "wwwinit - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90"
 # Begin Source File
 
-SOURCE=..\HTAccess.c
+SOURCE=..\HTInit.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\HTDialog.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\HTEvtLst.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\HTFilter.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\HTHist.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\HTHome.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\HTLog.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\HTProxy.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\HTRules.c
+SOURCE=..\HTProfil.c
 # End Source File
 # Begin Source File
 
@@ -130,11 +102,11 @@ SOURCE=.\windll.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\wwwapp.def
+SOURCE=.\wwwinit.def
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\External\gnu_regex.lib
+SOURCE=..\..\External\xmlparse.lib
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -146,39 +118,11 @@ SOURCE=.\config.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\HTAccess.h
+SOURCE=..\HTInit.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\HTDialog.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\HTEvtLst.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\HTFilter.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\HTHist.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\HTHome.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\HTLog.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\HTProxy.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\HTRules.h
+SOURCE=..\HTProfil.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
