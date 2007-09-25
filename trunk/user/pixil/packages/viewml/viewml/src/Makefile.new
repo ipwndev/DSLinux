@@ -11,7 +11,7 @@
 
 include ../makeinclude
 include ./.build_depends
-
+CXXFLAGS +=-Wno-deprecated
 VIEWML_BINARY=viewml
 
 OBJS = html.o htmlchain.o htmlclue.o htmldata.o htmlfont.o htmliter.o \
@@ -28,7 +28,8 @@ OTHEROBJS = ../kdecore/kurl.o ../jscript/builtin.o ../jscript/cpp2bison.o \
 	fltk/nxslider.o fltk/nxscrollbar.o fltk/nxscroll.o
 
 all: $(OBJS) $(OTHEROBJS)
-	$(CXX) $(OBJS) $(OTHEROBJS) $(LDFLAGS) -o $(VIEWML_BINARY) $(LIBS)
+	$(CXX) -o $(VIEWML_BINARY) $(CRTBEGIN) $(CXXFLAGS) $(CFLAGS) $(INCLUDES) -I.. $(LDFLAGS) $(OBJS) $(OTHEROBJS) $(LIBS) $(CXXLIBS) $(LDLIBS) $(CRTEND)
+	arm-linux-elf-flthdr -s 8192 $(VIEWML_BINARY)
 
 .build_depends:
 	@echo "       ===== Alert =====" 

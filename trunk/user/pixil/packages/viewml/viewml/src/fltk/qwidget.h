@@ -10,7 +10,7 @@
 #include "qfontinfo.h"
 #include "Fl_Widget.H"
 #include "fl_draw.H"
-#include <iostream.h>
+#include <iostream>
 #include "qevent.h"
 
 class QWidget : public QObject, public QPaintDevice

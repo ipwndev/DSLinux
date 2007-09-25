@@ -1,32 +1,35 @@
 VIEWML_DIR=${shell pwd}/viewml
 
-export CC=$(TARGET_CROSS)gcc
-export CXX=$(TARGET_CROSS)g++
-export AR=$(TARGET_CROSS)ar
-export NM=$(TARGET_CROSS)nm
-export RANLIB=$(TARGET_CROSS)ranlib
-export LD=$(TARGET_CROSS)ld
+export BASE_DIR=$(ROOTDIR)/user/pixil
+#export CC=$(CROSS)gcc
+#export CXX=$(CROSS)g++
+export AR=$(CROSS)ar
+export NM=$(CROSS)nm
+export RANLIB=$(CROSS)ranlib
+export LD=$(CROSS)ld
+export CFLAGS+=-Wno-deprecated
 
-$(VIEWML_DIR)/.configured: 
+.configured: 
 	(cd $(VIEWML_DIR); ./configure \
-	--host=$(SYS) \
-        --build=$(BUILD_SYS) \
-	--with-libwwwconf=$(strip $(subst ",, $(LIBWWW_PREFIX)))/bin \
-	--with-microwin=$(strip $(subst ",, $(MW_PREFIX))) \
+	--host=$(CROSS) \
+	--with-libwwwconf=$(strip $(subst ",, $(ROOTDIR)))/lib/libwww/src \
+	--with-microwin=$(strip $(subst ",, $(ROOTDIR)))/user/microwin/src \
 	--with-fltk=$(BASE_DIR)/libs/flnx \
 	--with-nxapp=$(BASE_DIR)/libs/pim)
-	touch $(VIEWML_DIR)/.configured
+	touch $@
 
-$(VIEWML_DIR)/src/viewml: $(VIEWML_DIR)/.configured
+.compiled: .configured
 	make -C $(VIEWML_DIR) -e
+	touch $@
 
-all: $(VIEWML_DIR)/src/viewml
+all: .compiled
 
 clean: 
 	if [ -f $(VIEWML_DIR)/Makefile ]; then \
 		make -C $(VIEWML_DIR) distclean; \
 	fi
-	rm -rf $(VIEWML_DIR)/.configured
+	rm -rf .configured
+	rm -rf .compiled
 
 install: $(VIEWML_DIR)/src/viewml
 	cp ./viewml/src/viewml $(INSTALL_DIR)/bin

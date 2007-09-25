@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "qcollection.h"
-
+using namespace std;
 template <class T>
 class QList : public vector<T*>, public QCollection
 {
@@ -143,7 +143,7 @@ class QList : public vector<T*>, public QCollection
 
   bool removeRef(const T* item)
     {
-      vector<T*>::iterator pos = find(begin(),end(),item);
+      typename vector<T*>::iterator pos = find(begin(),end(),item);
       if(pos != end()) {
 	if(m_bAutoDelete)
 	  delete *pos;

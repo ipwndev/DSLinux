@@ -15,7 +15,7 @@
 // System header files
 #include <string>
 #include <vector>
-
+using namespace std;
 // Local header files
 #include <FL/Fl_Menu_Button.H>
 

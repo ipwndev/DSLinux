@@ -22,10 +22,10 @@ LD=@LD@
 AR=@AR@
 STRIP=@STRIP@
 
-LIBS = @LIBS@ -L$(BASE_DIR)/build/lib -lpar `@LIBWWW_CONFIG@ --libs` 
-CFLAGS = @CFLAGS@ `@LIBWWW_CONFIG@ --cflags`
-CXXFLAGS = @CXXFLAGS@ `@LIBWWW_CONFIG@ --cflags`
+LIBS = @LIBS@ -L$(BASE_DIR)/build/lib -lpar `@LIBWWW_CONFIG@ --libs` -lm
+CFLAGS += @CFLAGS@ `@LIBWWW_CONFIG@ --cflags`
+CXXFLAGS += @CXXFLAGS@ `@LIBWWW_CONFIG@ --cflags`
 INCLUDES = -L@includedir@ @INCLUDES@ -I$(BASE_DIR)/include -I$(BASE_DIR)/include/par
-LDFLAGS = @LDFLAGS@
+LDFLAGS += @LDFLAGS@
 
 # $Id$

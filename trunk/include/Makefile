@@ -60,7 +60,12 @@ LINKHDRS = \
 	$(ROOTDIR)/prop/smgrd/unixware/cmd/sscep/sscep_error_codes.h,. \
 	$(ROOTDIR)/lib/libid3tag/id3tag.h,. \
 	$(ROOTDIR)/lib/libmad/mad.h,. \
-	$(ROOTDIR)/lib/gpm/src/headers/gpm.h,. 
+	$(ROOTDIR)/lib/gpm/src/headers/gpm.h,. \
+	$(ROOTDIR)/lib/libwww/src/Library/src/*.h,. \
+	$(ROOTDIR)/lib/libwww/src/wwwconf.h,. \
+	$(ROOTDIR)/lib/libwww/src/modules/expat/xmlparse/xmlparse.h,. \
+	$(ROOTDIR)/lib/libwww/src/modules/expat/xmltok/xmltok.h,. \
+	$(ROOTDIR)/lib/libwww/src/modules/md5/md5.h,. 
 
 #
 # Both freeswan and openswan can provide des and crypto headers

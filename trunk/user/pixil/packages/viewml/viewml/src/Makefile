@@ -1,29 +1,29 @@
 # uncomment the line below for Nano-X
-#_NANOX = 1
+_NANOX = 1
 
 ifndef _NANOX
   # your version of FLTK (1.0.7, please!)
   FLTK = /home/davet/src/fltk/flmwin
 else
   # your version of Nano-X FLTK (0.88, please!)
-  FLTK = /home/jasonk/projects/flnx
+  FLTK = $(ROOTDIR)/user/pixil/libs/flnx
 endif
 
 # Where your Xlibs are (not needed for Nano-X/Mwin builds)
 XLIBS = -L/usr/X11R6/lib -lX11
 
 # Where Nano-X is (not needed if building for X only)
-NANOX = /home/jasonk/projects/microwin
+NANOX = $(ROOTDIR)/user/microwin
 
 # Various support libraries
 IMLIBS = `imlib-config --libs`
-WWWLIBS = `/usr/bin/libwww-config --libs`
+WWWLIBS = `$(ROOTDIR)/user/lib/libwww/libwww-config --libs`
 
 # The everpresent CFLAGS
 ifndef _NANOX
   CFLAGS = -g `/usr/bin/libwww-config --cflags`
 else
-  CFLAGS = -g -DNANOX -D_NANOX `libwww-config --cflags`
+  CFLAGS += "-Wno-deprecated  -g -DNANOX -D_NANOX `libwww-config --cflags`"
 endif
 
 
@@ -88,7 +88,7 @@ depend:
 .SUFFIXES:	.cpp .h .o
 
 .cpp.o :
-	$(CXX) $(CFLAGS) $(INCLUDES) -I.. $(CXXFLAGS) -c -o $@ $<
+	$(CXX) -o $@ $(CRTBEGIN) $(CXXFLAGS) $(CFLAGS) $(INCLUDES) -I.. $(LDFLAGS) $(OBJS) $(CXXLIBS) $(LDLIBS) $(CRTEND)
 .c.o :
 	$(CC) $(CFLAGS) -I.. $(CFLAGS) -c -o $@ $<
 
