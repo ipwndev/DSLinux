@@ -3,7 +3,7 @@
  *
  *  Switching and detection functions for the GBA IO/ROM/RAM space.
 
- *  Copyright (C) 2007 Amadeus
+ *  Copyright (C) 2007 Amadeus, Rick "Lick" Wong and Pepsiman
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
