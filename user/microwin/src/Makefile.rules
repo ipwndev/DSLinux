@@ -41,6 +41,8 @@ INCLUDEDIRS += -I. -I$(TOP)/include
 # Libraries required for the 'engine' functionality.
 MW_CORE_LIBS :=
 
+# Don't do debug for speed issues
+DEFINES += -DNDEBUG
 
 ifeq ($(VTSWITCH), Y)
 DEFINES += -DVTSWITCH=1
