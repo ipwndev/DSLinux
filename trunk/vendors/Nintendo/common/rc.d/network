@@ -37,7 +37,7 @@ case "$1" in
 				echo "Starting AP scan (channel detection)"
 				ifconfig nds up
 				sleep 1
-				iwlist scan nds >/dev/null 2>/dev/null
+				iwlist nds scan >/dev/null 2>/dev/null
 			fi
 
 			echo "ESSID:    $essid"
