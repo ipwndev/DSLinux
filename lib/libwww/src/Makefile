@@ -156,7 +156,7 @@ bin_SCRIPTS = libwww-config
 AUTOMAKE_OPTIONS = foreign
 
 # These are the sub directories
-SUBDIRS = config modules Library #PICS-client LineMode Robot ComLine WinCom Icons
+SUBDIRS = modules Library #config PICS-client LineMode Robot ComLine WinCom Icons
 
 # Tag before making distribution.  Also, don't make a distribution if
 # checks fail.
