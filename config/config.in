@@ -974,7 +974,7 @@ comment 'PIXIL PDA GUI'
 bool 'pixil'			CONFIG_USER_PIXIL
     if [ "$CONFIG_USER_PIXIL" = "y" ]; then
         define_bool CONFIG_LIB_UCLIBCPP y
-	# only for VIEWML define_bool CONFIG_LIB_LIBWWW y
+	define_bool CONFIG_LIB_LIBWWW y
     fi
 
 comment ''
