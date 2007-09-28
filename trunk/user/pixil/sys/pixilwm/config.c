@@ -266,7 +266,6 @@ nxLoadSettings(db_handle * db)
     getColor(db, WM_ICONCOLOR, "iconbgcolor");
     getColor(db, WM_ICONTEXT, "iconfgcolor");
     getColor(db, WM_TASKBAR, "taskbar");
-    getColor(db, WM_DIALOG, "dialog");
 
     /* Get the theme information */
 
