@@ -13,6 +13,7 @@ LIBWWW_CONFIGURE_FLAGS=--without-expat --disable-shared
 
 .compiled: #.configured
 	$(MAKE) -C src
+	cp -f src/libwww-config.tmpl src/libwww-config
 	sed -i -r 's@^prefix=.*$$@prefix=$(ROOTDIR)@' src/libwww-config
 	chmod 755 src/libwww-config
 	touch $@
