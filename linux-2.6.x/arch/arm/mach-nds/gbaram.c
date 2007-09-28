@@ -25,6 +25,7 @@
 #include <linux/types.h>
 #include <asm/arch/gbaram.h>
 #include <asm/io.h>
+#include <linux/kernel.h>	/* printk() */
 
 //==========================================================================
 void (*gba_set_ram)(void);
@@ -340,7 +341,7 @@ int ez_detect(void)
 	// nothing found
 	return 0;
 
-ez_ok:	// test for end address (129MB PSRAM or only 64 MB?)
+ez_ok:	// test for end address (128MB PSRAM or only 64 MB?)
 	len = 0x00800000;
 	if (gba_testram(0x08400000+len, 256))
 		len = 0x01000000;
@@ -378,24 +379,42 @@ int gba_activate_ram(void)
 
 activated:
 
-/* It is very difficult to detect support for fast RAM access reliably */
-#if 0
-	/* the TURBO mode: try to lower the access time to GBA ROM space */
+	{
+		/* the TURBO mode: try to lower the access time to GBA ROM space */
+		unsigned short wait_value;
 #define WAIT_CR 	0x04000204
 
-	// Switch to high speed:
-	// bit 0-1     RAM-region access cycle control 0..3=10,8,6,18 cycles
-	//     2-3     ROM 1st access cycle control    0..3=10,8,6,18 cycles
-	//       4     ROM 2nd access cycle control    0..1=6,4 cycles
+		/* read the original WAIT_CR value */
+		wait_value = readw(WAIT_CR);
+		printk(KERN_INFO "WAIT_CR was:    0x%X\n", (int)wait_value);
 
-	// try to speed up 2nd access rom cycle (data cache block moves)
-        writew( readw(WAIT_CR) | 0x0010, WAIT_CR);
+		// Switch to high speed:
+		// bit 0-1     RAM-region access cycle control 0..3=10,8,6,18 cycles
+		//     2-3     ROM 1st access cycle control    0..3=10,8,6,18 cycles
+		//       4     ROM 2nd access cycle control    0..1=6,4 cycles
+		// reset value is 00000b
 
-	if (!gba_testram(gba_start, 0x1000)) {
-		/* failure: stay slow */
-	        writew( readw(WAIT_CR) & ~0x0010, WAIT_CR);
+		// try to speed up 2nd access rom cycle (data cache block moves)
+        	writew( wait_value | 0x0010, WAIT_CR);
+		if (gba_testram(gba_start, 0x1000)) {
+			wait_value |= 0x0010;
+		}
+		// try to speed up 1nd access rom cycle most
+        	writew( wait_value | 0x0008, WAIT_CR);
+		if (gba_testram(gba_start, 0x1000)) {
+			wait_value |= 0x0008;
+		} else {
+			// try to speed up 1nd access rom cycle
+        		writew( wait_value | 0x0004, WAIT_CR);
+			if (gba_testram(gba_start, 0x1000)) {
+				wait_value |= 0x0004;
+			}
+		}
+		// set highest speed value
+        	writew( wait_value, WAIT_CR);
+		printk(KERN_INFO "WAIT_CR set to: 0x%X\n", (int)wait_value);
 	}
-#endif
+
 	/* Activate the data cache for GBA ROM space so CONFIG_NDS_ROM8BIT can work */
 	{
 		/* this is the same pattern used in head.S */
