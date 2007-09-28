@@ -182,39 +182,39 @@ GZIP_ENV = --best
 all: all-redirect
 .SUFFIXES:
 .SUFFIXES: .html
-$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --foreign --include-deps Makefile
+#$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+#	cd $(top_srcdir) && $(AUTOMAKE) --foreign --include-deps Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
-	cd $(top_builddir) \
-	  && CONFIG_FILES=$@ CONFIG_HEADERS= $(SHELL) ./config.status
+#Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+#	cd $(top_builddir) \
+#	  && CONFIG_FILES=$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
-$(ACLOCAL_M4):  configure.in  acinclude.m4
-	cd $(srcdir) && $(ACLOCAL)
+#$(ACLOCAL_M4):  configure.in  acinclude.m4
+#	cd $(srcdir) && $(ACLOCAL)
 
-config.status: $(srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
-	$(SHELL) ./config.status --recheck
-$(srcdir)/configure: $(srcdir)/configure.in $(ACLOCAL_M4) $(CONFIGURE_DEPENDENCIES)
-	cd $(srcdir) && $(AUTOCONF)
+#config.status: $(srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
+#	$(SHELL) ./config.status --recheck
+#$(srcdir)/configure: $(srcdir)/configure.in $(ACLOCAL_M4) #$(CONFIGURE_DEPENDENCIES)
+#	cd $(srcdir) && $(AUTOCONF)
 
-wwwconf.h: stamp-h
-	@if test ! -f $@; then \
-		rm -f stamp-h; \
-		$(MAKE) stamp-h; \
-	else :; fi
-stamp-h: $(srcdir)/wwwconf.h.in $(top_builddir)/config.status
-	cd $(top_builddir) \
-	  && CONFIG_FILES= CONFIG_HEADERS=wwwconf.h \
-	     $(SHELL) ./config.status
-	@echo timestamp > stamp-h 2> /dev/null
-$(srcdir)/wwwconf.h.in: $(srcdir)/stamp-h.in
-	@if test ! -f $@; then \
-		rm -f $(srcdir)/stamp-h.in; \
-		$(MAKE) $(srcdir)/stamp-h.in; \
-	else :; fi
-$(srcdir)/stamp-h.in: $(top_srcdir)/configure.in $(ACLOCAL_M4) acconfig.h
-	cd $(top_srcdir) && $(AUTOHEADER)
-	@echo timestamp > $(srcdir)/stamp-h.in 2> /dev/null
+#wwwconf.h: stamp-h
+#	@if test ! -f $@; then \
+#		rm -f stamp-h; \
+#		$(MAKE) stamp-h; \
+#	else :; fi
+#stamp-h: $(srcdir)/wwwconf.h.in $(top_builddir)/config.status
+#	cd $(top_builddir) \
+#	  && CONFIG_FILES= CONFIG_HEADERS=wwwconf.h \
+#	     $(SHELL) ./config.status
+#	@echo timestamp > stamp-h 2> /dev/null
+#$(srcdir)/wwwconf.h.in: $(srcdir)/stamp-h.in
+#	@if test ! -f $@; then \
+#		rm -f $(srcdir)/stamp-h.in; \
+#		$(MAKE) $(srcdir)/stamp-h.in; \
+#	else :; fi
+#$(srcdir)/stamp-h.in: $(top_srcdir)/configure.in $(ACLOCAL_M4) acconfig.h
+#	cd $(top_srcdir) && $(AUTOHEADER)
+#	@echo timestamp > $(srcdir)/stamp-h.in 2> /dev/null
 
 mostlyclean-hdr:
 
