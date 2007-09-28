@@ -119,4 +119,7 @@ show_firmware_version="YES"
 # Note that nanoX is not really useful at this point.
 start_nanox="NO"
 
+# If you want to start PIXIL at boot, set this to "YES".
+start_pixil="NO"
+
 # End of file.

@@ -88,5 +88,11 @@ then
 	ifconfig lo up
 fi
 
+# setup PIXIL
+if [ "$start_pixil" = "YES" ]
+then
+	/usr/pixil/nxstart.sh&
+fi
+
 # this is here so that we will get a login prompt in any case
 exit 0
