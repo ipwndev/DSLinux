@@ -198,12 +198,12 @@ OBJECTS = $(libwwwssl_la_OBJECTS)
 all: all-redirect
 .SUFFIXES:
 .SUFFIXES: .S .c .h .html .lo .o .s .txt
-$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --gnu --include-deps Library/src/SSL/Makefile
+#$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+#	cd $(top_srcdir) && $(AUTOMAKE) --gnu --include-deps #Library/src/SSL/Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
-	cd $(top_builddir) \
-	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+#Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+#	cd $(top_builddir) \
+#	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) #./config.status
 
 
 mostlyclean-libLTLIBRARIES:

@@ -13,13 +13,12 @@ LIBWWW_CONFIGURE_FLAGS=--without-expat --disable-shared
 
 .compiled: #.configured
 	$(MAKE) -C src
-	sed -i 's@THEROOTDIR@$(ROOTDIR)@' src/libwww-config
+	sed -i -r 's@^prefix=.*$$@prefix=$(ROOTDIR)@' src/libwww-config
 	chmod 755 src/libwww-config
 	touch $@
 
 clean:
 	-[ -f src/Makefile ] && $(MAKE) -C src clean
-	sed -i 's@$(ROOTDIR)@THEROOTDIR@' src/libwww-config
 	rm -f .configured .compiled
 
 romfs:
