@@ -52,6 +52,11 @@
 #include "nanowm.h"
 #include "applets.h"
 
+#ifdef STATIC_LINK
+#define applet_init battery_applet_init
+#define applet_close battery_applet_close
+#endif
+
 static GR_WINDOW_ID wid;
 static int g_w = 0, g_h = 0;
 static int applet_id;

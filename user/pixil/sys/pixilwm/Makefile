@@ -44,8 +44,8 @@ OBJS-$(CONFIG_PIXILWM_MENUS) += sys_menu.o
 
 ifeq ($(LIBTYPE),.o)
 OBJS-y += applets/date$(LIBTYPE)
-# xAMADEUS OBJS-$(CONFIG_PIXILWM_PM) += applets/backlight$(LIBTYPE)
-# xAMADEUS OBJS-$(CONFIG_PIXILWM_PM) += applets/battery$(LIBTYPE)
+OBJS-$(CONFIG_PIXILWM_PM) += applets/backlight$(LIBTYPE)
+OBJS-$(CONFIG_PIXILWM_PM) += applets/battery$(LIBTYPE)
 endif
 
 OBJS := $(OBJS-y)
