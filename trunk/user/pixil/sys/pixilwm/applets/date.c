@@ -7,6 +7,11 @@
 #include "nanowm.h"
 #include "applets.h"
 
+#ifdef STATIC_LINK
+#define applet_init date_applet_init
+#define applet_close date_applet_close
+#endif
+
 static GR_WINDOW_ID wid;
 static GR_FONT_ID fontid;
 

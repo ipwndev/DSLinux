@@ -194,7 +194,7 @@
 <bgstyle>bottom</bgstyle>
 
 <applets>
-<applet name="date">@prefix@/share/pixilwm/date.so</applet>
+<applet name="date">date</applet>
 </applets>
 
 <colors>

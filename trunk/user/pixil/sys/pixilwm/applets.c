@@ -46,11 +46,10 @@
 #include "config.h"
 #include "applets.h"
 
-#if 1	// xAMADEUS
-#define dlopen(x,y) 0
-#define dlsym(x,y)  0
-#define dlclose(x)  0
-#define dlerror()   0
+#ifdef STATIC_LINK
+extern int date_applet_init(int id, int *x, int y, int h);
+extern int date_applet_close(void);
+#define dlclose(x) 0
 #endif
 
 static int g_applet_id = 0;
@@ -249,25 +248,37 @@ int wm_applet_load(char *filename) {
   applet = (applet_t *) calloc(1, sizeof(applet_t));
   if (!applet) return -1;
 
+#ifndef STATIC_LINK
   applet->handle = dlopen(filename, RTLD_LAZY | RTLD_GLOBAL);
 
   if (!applet->handle) {
     printf("Unable to load applet [%s] [%s]\n", filename, dlerror());
     goto load_error;
   }
+#endif
 
   /* Get the hooks for the applet */
   
+#ifdef STATIC_LINK
+  /* This is an ugly hack */
+  if (strcmp(filename, "date") == 0) {
+	applet->init = date_applet_init;
+	applet->close = date_applet_close;
+  }
+#else
   applet->init = (int (*)(int, int *, int, int)) 
     dlsym(applet->handle, "applet_init");
 
   applet->close = (int (*)(void)) 
     dlsym(applet->handle, "applet_close");
+#endif
 
   /* Set the applet id */
   applet->applet_id = g_applet_id++;
 
   /* Initalize the applet */
+  if (!applet->init) 
+    goto load_error;
   if (applet->init(applet->applet_id, &applet_x, applet_y, applet_h))
     goto load_error;
 

@@ -9,9 +9,10 @@ INSTALL_SODIR=$(INSTALL_DIR)/share/pixilwm
 TARGET=pixilwm
 
 ifeq ($(EN_SHARED),--enable-shared)
-LIBTYPE=.so
+LIBTYPE :=.so
 else
-LIBTYPE=.o
+LIBTYPE :=.o
+CFLAGS += -DSTATIC_LINK
 endif
 
 # These are extra targets that are defined locally
@@ -40,6 +41,12 @@ OBJS-$(CONFIG_COLOSSEUM) += ipc.o
 OBJS-$(CONFIG_PIXILWM_PM) += powerman.o
 OBJS-$(CONFIG_PIXILWM_THEMES) += themes.o themesconfig.o
 OBJS-$(CONFIG_PIXILWM_MENUS) += sys_menu.o
+
+ifeq ($(LIBTYPE),.o)
+OBJS-y += applets/date$(LIBTYPE)
+# xAMADEUS OBJS-$(CONFIG_PIXILWM_PM) += applets/backlight$(LIBTYPE)
+# xAMADEUS OBJS-$(CONFIG_PIXILWM_PM) += applets/battery$(LIBTYPE)
+endif
 
 OBJS := $(OBJS-y)
 
