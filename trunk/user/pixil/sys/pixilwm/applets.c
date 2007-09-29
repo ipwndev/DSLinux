@@ -49,6 +49,10 @@
 #ifdef STATIC_LINK
 extern int date_applet_init(int id, int *x, int y, int h);
 extern int date_applet_close(void);
+extern int backlight_applet_init(int id, int *x, int y, int h);
+extern int backlight_applet_close(void);
+extern int battery_applet_init(int id, int *x, int y, int h);
+extern int battery_applet_close(void);
 #define dlclose(x) 0
 #endif
 
@@ -264,6 +268,14 @@ int wm_applet_load(char *filename) {
   if (strcmp(filename, "date") == 0) {
 	applet->init = date_applet_init;
 	applet->close = date_applet_close;
+  }
+  if (strcmp(filename, "backlight") == 0) {
+	applet->init = backlight_applet_init;
+	applet->close = backlight_applet_close;
+  }
+  if (strcmp(filename, "battery") == 0) {
+	applet->init = battery_applet_init;
+	applet->close = battery_applet_close;
   }
 #else
   applet->init = (int (*)(int, int *, int, int)) 

@@ -53,6 +53,11 @@
 #define BLOFFICON "bloff.gif"
 #define BLONICON  "blon.gif"
 
+#ifdef STATIC_LINK
+#define applet_init backlight_applet_init
+#define applet_close backlight_applet_close
+#endif
+
 static GR_IMAGE_ID idON, idOFF;
 static GR_WINDOW_ID wid;
 static int g_w = 0, g_h = 0;
