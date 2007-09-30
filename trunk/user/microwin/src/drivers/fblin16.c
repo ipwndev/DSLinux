@@ -101,9 +101,29 @@ linear16_drawhorzline(PSD psd, MWCOORD x1, MWCOORD x2, MWCOORD y, MWPIXELVAL c)
 	DRAWON;
 	addr += x1 + y * psd->linelen;
 	if(gr_mode == MWMODE_COPY) {
+#if NDSDRIVER
+		int count = x2 - x1 + 1;
+		asm ( "   tst    %0, #2\n"		// odd 16bit address?
+		      "   strneh %2, [%0], #2\n"	// yes: store one pixel
+		      "   subne  %1, %1, #1\n"          // count--
+	              "   orr    %2, %2, %2, lsl #16\n"	// extend pixelvalue to 32 bit
+		      "   subs	 %1, %1, #2\n"		// count -= 2	  
+		      "1: strhs  %2, [%0], #4\n"	// draw 2 pixels
+		      "	  subhss %1, %1, #2\n"		// count -= 2	  
+		      "   strhs  %2, [%0], #4\n"	// draw 2 pixels
+		      "	  subhss %1, %1, #2\n"		// count -= 2	  
+		      "   bhs    1b\n"			// and again
+		      "   adds   %1, %1, #1\n"		// count++
+		      "   streqh %2, [%0]\n"		// draw last byte
+		    : /* no output registers */
+		    : "r" (addr), "r" (count), "r" (c) 
+                    : "cc" /* no memory, because we know GCC does not read it here */
+                    );
+#else
 		/* FIXME: memsetw(dst, c, x2-x1+1)*/
 		while(x1++ <= x2)
 			*addr++ = c;
+#endif
 	} else {
 		while (x1++ <= x2) {
 			*addr = applyOpR(gr_mode, c, *addr) | ALPHA_1B;
@@ -130,10 +150,25 @@ linear16_drawvertline(PSD psd, MWCOORD x, MWCOORD y1, MWCOORD y2, MWPIXELVAL c)
 	DRAWON;
 	addr += x + y1 * linelen;
 	if(gr_mode == MWMODE_COPY) {
+#if NDSDRIVER
+		int count = y2 - y1 + 1;
+		asm ( "   mov	 %3, %3, lsl #1\n"      // linelen * 2
+		      "   subs   %1, %1, #1\n"          // count--
+		      "1: strhsh %2, [%0], %3\n"	// draw 1 pixel
+		      "	  subhss %1, %1, #1\n"		// count--
+		      "   strhsh %2, [%0], %3\n"	// draw 1 pixel
+		      "	  subhss %1, %1, #1\n"		// count--
+		      "   bhs    1b\n"			// and again
+		    : /* no output registers */
+		    : "r" (addr), "r" (count), "r" (c), "r" (linelen) 
+                    : "cc" /* no memory, because we know GCC does not read it here */
+                    );
+#else
 		while(y1++ <= y2) {
 			*addr = c;
 			addr += linelen;
 		}
+#endif
 	} else {
 		while (y1++ <= y2) {
 			*addr = applyOpR(gr_mode, c, *addr) | ALPHA_1B;
