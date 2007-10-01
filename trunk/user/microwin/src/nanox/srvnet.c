@@ -1436,12 +1436,26 @@ GrReqShmCmdsWrapper(void *r)
 		goto bad;
 
 	for ( key=SHMKEY_BASE; key < SHMKEY_BASE+SHMKEY_MAX; key++ ) {
+#if NDSDRIVER
+		shmid = (int)malloc(req->size);
+		if (shmid)
+			key = shmid;
+		else {
+			shmid = -1;
+			errno = ENOMEM;
+		}
+#else
 		shmid = shmget(key,req->size,IPC_CREAT|IPC_EXCL|0666);
+#endif
 		if ( shmid == -1 ) {
 			if ( errno != EEXIST )
 				goto bad;
 		} else {
+#if NDSDRIVER
+			tmp = (char *)shmid;
+#else
 			tmp = shmat(shmid,0,0);
+#endif
 			if ( tmp == (char *)-1 )
 				goto bad;
 			curclient->shm_cmds = tmp;
@@ -2118,8 +2132,12 @@ GsDropClient(int fd)
 #if HAVE_SHAREDMEM_SUPPORT
 		if ( client->shm_cmds != 0 ) {
 			/* Free shared memory */
+#if NDSDRIVER
+			/* do nothing for now */
+#else
 			shmctl(client->shm_cmds_shmid,IPC_RMID,0);
 			shmdt(client->shm_cmds);
+#endif
 		}
 #endif
 GsPrintResources();

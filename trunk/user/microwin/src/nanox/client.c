@@ -3782,15 +3782,23 @@ GrReqShmCmds(long shmsize)
 		return;
 	}
 
+#if NDSDRIVER
+	shmid = key;
+#else
 	shmid = shmget(key, shmsize, 0);
+#endif
 	if (shmid == -1) {
 		EPRINTF("nxclient: Can't shmget key %d: %m\n", key);
 		UNLOCK(&nxGlobalLock);
 		return;
 	}
 
+#if NDSDRIVER
+	nxSharedMem = (char *)shmid;
+#else
 	nxSharedMem = shmat(shmid, 0, 0);
 	shmctl(shmid,IPC_RMID,0);	/* Prevent other from attaching */
+#endif
 	if (nxSharedMem == (char *)-1) {
 		UNLOCK(&nxGlobalLock);
 		return;
