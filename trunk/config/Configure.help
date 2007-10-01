@@ -1667,6 +1667,11 @@ CONFIG_USER_GAMES_ADVENT4
   The Colossal Cave Adventure game.  To play, telnet to port 8898 or run
   advent4 from the command line.
 
+CONFIG_USER_GAMES_CNIBBLES
+  cNibbles is a curses based version of the old nibbles game (also known
+  as snake).  Your object is to control the worm and help it eat apples
+  distributed on the playing area.
+
 CONFIG_USER_GAMES_DUNGEON
   The Dungeon Adventure game.  To play, telnet to port 8899 or run
   dungeon from the command line.
