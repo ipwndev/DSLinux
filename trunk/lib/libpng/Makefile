@@ -25,7 +25,7 @@ WARNMORE=-Wwrite-strings -Wpointer-arith -Wshadow \
 # for pgcc version 2.95.1, -O3 is buggy; don't use it.
 
 CFLAGS += -I$(ZLIBINC) -Wall -O3 -funroll-loops \
-	$(ALIGN) -DPNG_NO_FLOATING_POINT_SUPPORTED # $(WARNMORE) -g -DPNG_DEBUG=5 
+	$(ALIGN) # $(WARNMORE) -g -DPNG_DEBUG=5 
 #LDFLAGS=-L. -Wl,-rpath,. -L$(ZLIBLIB) -Wl,-rpath,$(ZLIBLIB) -lpng -lz -lm
 
 #RANLIB=ranlib
