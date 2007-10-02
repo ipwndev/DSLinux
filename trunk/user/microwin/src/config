@@ -208,9 +208,9 @@ LIBPNG                   = /usr/lib/libpng.a
 LIBZ                     = /usr/lib/libz.a
 else
 HAVE_PNG_SUPPORT         = $(subst y,Y,$(CONFIG_USER_MICROWIN_HAVE_PNG_SUPPORT))
-# INCPNG                   = .
-# LIBPNG                   = /usr/lib/libpng.a
-# LIBZ                     = /usr/lib/libz.a
+INCPNG                   = $(ROOTDIR)/include
+LIBPNG                   = $(ROOTDIR)/lib/libpng.a
+LIBZ                     = $(ROOTDIR)/lib/libz.a
 endif
 
 ####################################################################

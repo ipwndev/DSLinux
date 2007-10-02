@@ -1604,6 +1604,10 @@ if [ "$CONFIG_USER_MICROWIN" = "y" ]; then
             define_bool CONFIG_LIB_LIBJPEG y
     	fi
 	bool 'Have PNG Support' CONFIG_USER_MICROWIN_HAVE_PNG_SUPPORT
+    	if [ "$CONFIG_USER_MICROWIN_HAVE_PNG_SUPPORT" = "y" ]; then
+	define_bool CONFIG_LIB_LIBPNG y
+	define_bool CONFIG_LIB_ZLIB y
+    	fi
 	bool 'Have T1LIB Support' CONFIG_USER_MICROWIN_HAVE_T1LIB_SUPPORT
 	bool 'Have FreeType Support' CONFIG_USER_MICROWIN_HAVE_FREETYPE_SUPPORT
 	bool 'Have SharedMemory Support' CONFIG_USER_MICROWIN_HAVE_SHAREDMEM_SUPPORT

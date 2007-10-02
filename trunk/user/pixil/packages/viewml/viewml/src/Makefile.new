@@ -29,7 +29,7 @@ OTHEROBJS = ../kdecore/kurl.o ../jscript/builtin.o ../jscript/cpp2bison.o \
 
 all: $(OBJS) $(OTHEROBJS)
 	$(CXX) -o $(VIEWML_BINARY) $(CRTBEGIN) $(CXXFLAGS) $(CFLAGS) $(INCLUDES) -I.. $(LDFLAGS) $(OBJS) $(OTHEROBJS) $(LIBS) $(CXXLIBS) $(LDLIBS) $(CRTEND)
-	arm-linux-elf-flthdr -s 8192 $(VIEWML_BINARY)
+	arm-linux-elf-flthdr -s 512000 $(VIEWML_BINARY)
 
 .build_depends:
 	@echo "       ===== Alert =====" 
