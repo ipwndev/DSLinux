@@ -59,20 +59,16 @@ hostname $hostname
 # set up /etc/hosts so networking tools will work
 echo "127.0.0.1 $hostname" > /etc/hosts
 
-# if we have a extra RAM then enable gpm and 2 extra terminals
+# if we have a extra RAM, enable 2 extra terminals and gpm
 exec 0</proc/meminfo
 read line
 exec 0</dev/null
 set -- $line
 if [ $2 -gt 4000 ]
 then
-              /usr/bin/agetty -n -l /bin/autologin 38400 tty2 linux &
-              /usr/bin/agetty -n -l /bin/autologin 38400 tty3 linux &
-# if we have a gpm binary, enable the mouse cursor
-if [ -x /usr/bin/gpm ]
-then
-	/usr/bin/gpm -m /dev/mouse0 -t ps2 &
-fi
+	/usr/bin/agetty -n -l /bin/autologin 38400 tty2 linux &
+	/usr/bin/agetty -n -l /bin/autologin 38400 tty3 linux &
+	[ -x /usr/bin/gpm ] && /usr/bin/gpm -m /dev/mouse0 -t ps2 &
 fi
 
 # show firmware version if configured
