@@ -13,7 +13,8 @@ gpm -k
 /usr/pixil/sbin/clserver &
 
 # Start the Nano-X server
-/usr/bin/nano-X -p &
+# (use PATH to search for the executable)
+nano-X -p &
 
 # Make sure that the server is calibrated
 # /usr/bin/nxcal -d /etc/pixil.calibrate

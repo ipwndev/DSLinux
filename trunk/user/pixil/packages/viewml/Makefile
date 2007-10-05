@@ -32,6 +32,7 @@ clean:
 	rm -rf .compiled
 
 install: $(VIEWML_DIR)/src/viewml
+	$(CROSS)flthdr -z viewml/src/viewml
 	cp ./viewml/src/viewml $(INSTALL_DIR)/bin
 
 .PHONY: all clean install
