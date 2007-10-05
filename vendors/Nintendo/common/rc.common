@@ -13,7 +13,8 @@ else
 	echo "to create /etc/rc.conf to customise your dslinux installation."
 fi
 
-PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+# /opt is BEFORE /usr/bin to speed up some applications
+PATH=/bin:/sbin:/opt:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 export PATH
 
 # create /etc/passwd if it doesn't exist
