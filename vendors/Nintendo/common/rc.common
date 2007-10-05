@@ -59,7 +59,7 @@ hostname $hostname
 # set up /etc/hosts so networking tools will work
 echo "127.0.0.1 $hostname" > /etc/hosts
 
-# if we have a extra RAM, enable 2 extra terminals and gpm
+# if we have extra RAM, enable 2 extra terminals and gpm
 exec 0</proc/meminfo
 read line
 exec 0</dev/null
