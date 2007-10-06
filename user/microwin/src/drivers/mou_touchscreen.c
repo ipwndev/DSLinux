@@ -173,5 +173,9 @@ MOUSEDEVICE mousedev = {
 	PD_GetDefaultAccel,
 	PD_Read,
 	NULL,
+#ifdef TOUCHSCREEN_NDS
+	MOUSE_NORMAL
+#else
 	MOUSE_TRANSFORM   /* Input filter flags */
+#endif
 };
