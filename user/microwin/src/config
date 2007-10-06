@@ -195,6 +195,8 @@ INCJPEG                  = .
 LIBJPEG                  = /usr/lib/libjpeg.a
 else
 HAVE_JPEG_SUPPORT        = $(subst y,Y,$(CONFIG_USER_MICROWIN_HAVE_JPEG_SUPPORT))
+INCJPEG                  = $(ROOTDIR)/include
+LIBJPEG			 = $(ROOTDIR)/lib/libjpeg.a
 endif
 
 ####################################################################
