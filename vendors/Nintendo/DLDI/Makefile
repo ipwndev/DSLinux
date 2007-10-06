@@ -115,10 +115,14 @@ finishrom:
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/login $(ROMFSDIR)/bin
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/init $(ROMFSDIR)/bin
 	-mv $(ROMFSDIR)/$(FATFS)/linux/usr/bin/autologin $(ROMFSDIR)/bin
+	# Compress the data area of these programs
+	$(CROSS)flthdr -d $(ROMFSDIR)/bin/*
 	# If we have external RAM, we can spend some of our precious internal RAM
         # to speed up some applications.
 	-cp -p $(ROMFSDIR)/$(FATFS)/linux/usr/bin/nano-X $(ROMFSDIR)/$(OPTDIR)
 	-cp -p $(ROMFSDIR)/$(FATFS)/linux/usr/bin/madplay $(ROMFSDIR)/$(OPTDIR)
+	# Compress the data area of these programs
+	$(CROSS)flthdr -d $(ROMFSDIR)/$(OPTDIR)/*
 
 .PHONY: setupimage
 	# Setup the basic image directories
