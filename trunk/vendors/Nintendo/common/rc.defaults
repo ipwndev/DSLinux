@@ -122,4 +122,8 @@ start_nanox="NO"
 # If you want to start PIXIL at boot, set this to "YES".
 start_pixil="NO"
 
+# If you use a proxy server in your environment, specify it here
+# for ViewML.
+export VIEWML_PROXY=""
+
 # End of file.
