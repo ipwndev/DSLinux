@@ -558,23 +558,31 @@ void
 drawbitmap(PSD psd, MWCOORD x, MWCOORD y, MWCOORD width, MWCOORD height,
 	const MWIMAGEBITS *imagebits)
 {
+#if MW_FEATURE_PSDOP_BITMAP_MWIMAGE
+	driver_gc_t gc;
+#else
 	MWCOORD minx;
 	MWCOORD maxx;
 	MWIMAGEBITS bitvalue = 0;	/* bitmap word value */
 	int bitcount;			/* number of bits left in bitmap word */
-
+#endif
 	if (width <= 0 || height <= 0)
 		return;
 
+#if MW_FEATURE_PSDOP_BITMAP_MWIMAGE
+	gc.dstx = x;
+	gc.dsty = y;
+	gc.dstw = width;
+	gc.dsth = height;
+	gc.pixels = (MWIMAGEBITS *)imagebits;
+	gc.fg_color = gr_foreground;
+	gc.bg_color = gr_background;
+	gc.gr_usebg = gr_usebg;
+	psd->DrawArea(psd, &gc, PSDOP_BITMAP_MWIMAGE);
+#else
 	if (gr_usebg)
 		psd->FillRect(psd, x, y, x + width - 1, y + height - 1,
 			gr_background);
-
-	/* FIXME think of the speedups if this existed...
-	psd->DrawBitmap(psd, x, y, width, height, imagebits, gr_foreground);
-	return;
-	*/
-
 	minx = x;
 	maxx = x + width - 1;
 	bitcount = 0;
@@ -595,6 +603,7 @@ drawbitmap(PSD psd, MWCOORD x, MWCOORD y, MWCOORD width, MWCOORD height,
 			bitcount = 0;
 		}
 	}
+#endif
 }
 
 void

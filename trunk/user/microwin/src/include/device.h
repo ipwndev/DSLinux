@@ -65,9 +65,10 @@
 /* Which low-level psd->DrawArea routines to include. */
 #define MW_FEATURE_PSDOP_COPY                   1
 #define MW_FEATURE_PSDOP_ALPHAMAP               0
-#define MW_FEATURE_PSDOP_ALPHACOL               0
+#define MW_FEATURE_PSDOP_ALPHACOL               1
 #define MW_FEATURE_PSDOP_BITMAP_BYTES_LSB_FIRST 0
 #define MW_FEATURE_PSDOP_BITMAP_BYTES_MSB_FIRST 1
+#define MW_FEATURE_PSDOP_BITMAP_MWIMAGE         1
 
 /* max char height/width must be >= 16 and a multiple of sizeof(MWIMAGEBITS)*/
 #define MAX_CHAR_HEIGHT	128			/* maximum text bitmap height*/
@@ -262,6 +263,26 @@ typedef struct {
  */
 #define PSDOP_BITMAP_BYTES_MSB_FIRST	6
 #endif /* MW_FEATURE_PSDOP_BITMAP_BYTES_MSB_FIRST */
+
+#if MW_FEATURE_PSDOP_BITMAP_MWIMAGE
+/*
+ * Draws a mono bitmap to screen (e.g. a mono font).
+ * This variant takes the bitmap as an array of MWIMAGEBITS,
+ * where the Most Significant Bit in each MWIMAGEBITS is
+ * used to set the left-most of the 16 pixels
+ * controlled by that MWIMAGEBITS. 
+ *
+ * Params:
+ * dstx, dsty  - Destination for top left of image
+ * dstw, dsth  - Image size
+ * pixels      - The bitmap.  Format: ADDR16, MSB is drawn first.
+ * fg_color    - The color to draw "1" bits in, in the display format.
+ * bg_color    - The color to draw "0" bits in, in the display format.
+ * gr_usebg    - If zero, then "0" bits are transparent.  If nonzero,
+ *               then "0" bits are bg_color.
+ */
+#define PSDOP_BITMAP_MWIMAGE	7
+#endif /* MW_FEATURE_PSDOP_BITMAP_MWIMAGE */
 
 /* common blitter parameter structure*/
 typedef struct {

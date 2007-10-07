@@ -1041,6 +1041,57 @@ linear16_drawarea_bitmap_bytes_msb_first(PSD psd, driver_gc_t * gc)
 }
 #endif /* MW_FEATURE_PSDOP_BITMAP_BYTES_MSB_FIRST */
 
+#if MW_FEATURE_PSDOP_BITMAP_MWIMAGE
+/*
+ * Draws a mono bitmap to screen (e.g. a mono font).
+ * This variant takes the bitmap as an array of MWIMAGEBITS,
+ * where the Most Significant Bit in each MWIMAGEBITS is
+ * used to set the left-most of the 16 pixels
+ * controlled by that MWIMAGEBITS. 
+ *
+ * Params:
+ * dstx, dsty  - Destination for top left of image
+ * dstw, dsth  - Image size
+ * pixels      - The bitmap.  Format: ADDR16, MSB is drawn first.
+ * fg_color    - The color to draw "1" bits in, in the display format.
+ * bg_color    - The color to draw "0" bits in, in the display format.
+ * gr_usebg    - If zero, then "0" bits are transparent.  If nonzero,
+ *               then "0" bits are bg_color.
+ */
+static void linear16_drawarea_bitmap_mwimage(PSD psd, driver_gc_t * gc)
+{
+	ADDR16 dst = ((ADDR16) psd->addr) + (psd->linelen * gc->dsty) + gc->dstx;
+	ADDR16 src = gc->pixels;
+	MWCOORD height = gc->dsth;
+	MWCOORD width = gc->dstw;
+	MWPIXELVAL foreground = gc->fg_color;
+	MWPIXELVAL background = gc->bg_color;
+	int usebg = gc->gr_usebg;
+	MWCOORD advance = psd->linelen - gc->dstw; 
+	unsigned int bitcount = 0;
+	MWIMAGEBITS bitvalue;
+
+	while (height > 0) {
+		if (!bitcount) {
+			bitcount = MWIMAGE_BITSPERIMAGE;
+			bitvalue = *src++;
+		}
+		if (MWIMAGE_TESTBIT(bitvalue))
+			*dst = foreground;
+		else 
+			if(usebg) *dst = background;
+		dst++;
+		bitvalue = MWIMAGE_SHIFTBIT(bitvalue);
+		bitcount--;
+		if (!--width) {
+			width = gc->dstw;
+			--height;
+			bitcount = 0;
+			dst += advance;
+		}			
+	}
+}
+#endif /* MW_FEATURE_PSDOP_BITMAP_MWIMAGE */
 
 #if MW_FEATURE_PSDOP_ALPHAMAP
 
@@ -1146,9 +1197,15 @@ linear16_drawarea_alphacol(PSD psd, driver_gc_t * gc)
 #define COLOR_MASK_G_565 0x07E0U
 #define COLOR_MASK_B_565 0x001FU
 
+#if NDSDRIVER
+#define COLOR_MASK_B_555 0x7C00U
+#define COLOR_MASK_G_555 0x03E0U
+#define COLOR_MASK_R_555 0x001FU
+#else
 #define COLOR_MASK_R_555 0x7C00U
 #define COLOR_MASK_G_555 0x03E0U
 #define COLOR_MASK_B_555 0x001FU
+#endif
 
 	DRAWON;
 	if (psd->pixtype == MWPF_TRUECOLOR565) {
@@ -1295,11 +1352,11 @@ linear16_drawarea_copytrans(PSD psd, driver_gc_t * gc)
 		rdst = dst;
 		rsrc = src16;
 		for (x = 0; x < gc->dstw; x++) {
-			pcol = *rsrc++ & ~(ALPHA_1B);
+			pcol = *rsrc++;
 			if (pcol == gc->bg_color)
 				rdst++;
 			else
-				*rdst++ = pcol | ALPHA_1B;
+				*rdst++ = pcol;
 		}
 		dst += psd->linelen;
 		src16 += gc->src_linelen;
@@ -1363,6 +1420,11 @@ linear16_drawarea(PSD psd, driver_gc_t * gc, int op)
 		break;
 #endif /* MW_FEATURE_PSDOP_BITMAP_BYTES_MSB_FIRST */
 
+#if MW_FEATURE_PSDOP_BITMAP_MWIMAGE
+	case PSDOP_BITMAP_MWIMAGE:
+		linear16_drawarea_bitmap_mwimage(psd, gc);
+		break;
+#endif /* MW_FEATURE_PSDOP_BITMAP_MWIMAGE */
 	}
 }
 
