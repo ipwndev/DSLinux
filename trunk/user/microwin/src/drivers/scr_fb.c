@@ -504,9 +504,15 @@ gen_getscreeninfo(PSD psd,PMWSCREENINFO psi)
 		psi->bmask	= 0x001f;
 		break;
 	case MWPF_TRUECOLOR555:
+#if NDSDRIVER
+		psi->bmask 	= 0x7c00;
+		psi->gmask 	= 0x03e0;
+		psi->rmask	= 0x001f;
+#else
 		psi->rmask 	= 0x7c00;
 		psi->gmask 	= 0x03e0;
 		psi->bmask	= 0x001f;
+#endif
 		break;
 	case MWPF_TRUECOLOR332:
 		psi->rmask 	= 0xe0;
@@ -529,7 +535,7 @@ gen_getscreeninfo(PSD psd,PMWSCREENINFO psi)
 		/* VGA 640x480*/
 		psi->xdpcm = 27;	/* assumes screen width of 24 cm*/
 		psi->ydpcm = 27;	/* assumes screen height of 18 cm*/
-        } else if(psd->yvirtres <= 240) {
+        } else if(psd->yvirtres >= 240) {
 		/* half VGA 640x240 */
 		psi->xdpcm = 14;        /* assumes screen width of 24 cm*/ 
 		psi->ydpcm =  5;
