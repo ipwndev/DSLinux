@@ -169,6 +169,7 @@ drawLabel(GR_GC_ID gc, char *label, int x, int y, int icon)
 
     strcpy(p, label);
 
+    GrSetGCUseBackground(gc, GR_FALSE);
     while (1) {
 	int w, h, b;
 	char *n;
@@ -181,6 +182,7 @@ drawLabel(GR_GC_ID gc, char *label, int x, int y, int icon)
 	    int dx = x + ((icon - w) / 2);
 	    GrText(GR_ROOT_WINDOW_ID, gc, dx, dy, p, -1,
 		   GR_TFASCII | GR_TFTOP);
+	    GrSetGCUseBackground(gc, GR_TRUE);
 	    return;
 	}
 
@@ -216,6 +218,7 @@ drawLabel(GR_GC_ID gc, char *label, int x, int y, int icon)
 
 	    GrText(GR_ROOT_WINDOW_ID, gc, dx, dy, p, -1,
 		   GR_TFASCII | GR_TFTOP);
+	    GrSetGCUseBackground(gc, GR_TRUE);
 	    return;
 	}
     }
