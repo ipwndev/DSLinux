@@ -63,11 +63,11 @@
 #endif /* MW_FEATURE_GDERROR*/
 
 /* Which low-level psd->DrawArea routines to include. */
-#define MW_FEATURE_PSDOP_COPY                   0
+#define MW_FEATURE_PSDOP_COPY                   1
 #define MW_FEATURE_PSDOP_ALPHAMAP               0
 #define MW_FEATURE_PSDOP_ALPHACOL               0
 #define MW_FEATURE_PSDOP_BITMAP_BYTES_LSB_FIRST 0
-#define MW_FEATURE_PSDOP_BITMAP_BYTES_MSB_FIRST 0
+#define MW_FEATURE_PSDOP_BITMAP_BYTES_MSB_FIRST 1
 
 /* max char height/width must be >= 16 and a multiple of sizeof(MWIMAGEBITS)*/
 #define MAX_CHAR_HEIGHT	128			/* maximum text bitmap height*/
