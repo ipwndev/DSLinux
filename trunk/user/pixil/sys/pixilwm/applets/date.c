@@ -18,11 +18,19 @@ static GR_FONT_ID fontid;
 static int g_w = 0, g_h = 0;
 static int dtoggle = 0;
 static int applet_id;
+static int lastminute = -1;
+static int lasttoggle = -1;
 
 static void draw_date(void) {
   char buffer[256];
   time_t t = time(0);
   struct tm *tv = localtime(&t);
+
+  if ((dtoggle == lasttoggle) &&
+  	(tv->tm_min == lastminute))
+	return;
+  lastminute = tv->tm_min;
+  lasttoggle = dtoggle;
 
   GR_GC_ID gc = GrNewGC();
   if (!fontid) fontid = GrCreateFont(GR_FONT_GUI_VAR, 0, NULL);
