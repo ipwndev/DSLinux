@@ -48,7 +48,7 @@
 #include "config.h"
 
 #define XOFFSET 20
-#define YOFFSET 30
+#define YOFFSET 20
 #define XSPACING (ICONWIDTH+20)
 #define YSPACING (ICONHEIGHT+ICONTEXTHEIGHT+20)
 
@@ -290,7 +290,7 @@ draw_current_iconlist(GR_REGION_ID r)
 		  ICONWIDTH);
 
 	if (xpos + XSPACING + XSPACING > si.ws_width) {
-	    xpos = 20;
+	    xpos = XOFFSET;
 	    ypos += YSPACING;
 	} else
 	    xpos += XSPACING;
