@@ -592,6 +592,12 @@ CONFIG_USER_OPENSSL_APPS
 CONFIG_USER_OPENSWAN
   The Openswan tools and applications
 
+CONFIG_USER_OPENVPN
+  OpenVPN is a full-featured SSL VPN solution which can accomodate a wide 
+  range of configurations, including remote access, site-to-site VPNs, WiFi 
+  security, and enterprise-scale remote access solutions with load balancing, 
+  failover, and fine-grained access-controls
+
 CONFIG_USER_PING_PING
   Diagnostic tool for testing network connections.
   Approx. binary size: 27k

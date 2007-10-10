@@ -504,6 +504,7 @@ bool 'openssl'			CONFIG_USER_OPENSSL_APPS
 if [ "$CONFIG_USER_OPENSSL_APPS" = "y" ]; then
 	define_bool	CONFIG_LIB_LIBSSL y
 fi
+bool 'openvpn'			CONFIG_USER_OPENVPN
 
 bool 'ping'			CONFIG_USER_PING_PING
 bool 'plugdaemon'		CONFIG_USER_PLUG_PLUG

@@ -111,6 +111,10 @@ dns2=""
 # Don't forget to edit /etc/inetd.conf!
 start_inetd="NO"
 
+# To start openvpn on boot say "YES" here
+# Please read /etc/openvpn.conf.example
+start_openvpn="NO"
+
 # If you want to see your DS firmware version on boot,
 # set this to "YES". By default, the firmware version is shown.
 show_firmware_version="YES"

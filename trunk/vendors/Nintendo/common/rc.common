@@ -54,6 +54,16 @@ then
 	fi
 fi
 
+if [ "$start_openvpn" = "YES" ]
+then
+	if [ "$__network_up" = "YES" ]
+	then
+		/etc/rc.d/openvpn start
+	else
+		echo "Not starting openvpn: network is down"
+	fi
+fi
+
 # set hostname
 hostname $hostname
 
