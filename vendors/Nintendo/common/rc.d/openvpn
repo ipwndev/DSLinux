@@ -8,7 +8,7 @@ CONFIG=/etc/openvpn.conf
 case "$1" in
 	start)
 		echo "Starting $DAEMON"
-		$DAEMON --config=$CONFIG&
+		$DAEMON --config $CONFIG&
 	;;
 	stop)
 		echo "Stopping $DAEMON"
