@@ -239,6 +239,7 @@ dir_$(CONFIG_USER_OGGPLAY_EXAMPLE)          += oggplay
 dir_$(CONFIG_USER_OGGPLAY_OGG123)           += oggplay
 dir_$(CONFIG_USER_OPENSSL_APPS)             += openssl
 dir_$(CONFIG_USER_OPENSWAN)                 += openswan
+dir_$(CONFIG_USER_OPENVPN)                 += openvpn
 dir_$(CONFIG_USER_PALMBOT_PALMBOT)          += palmbot
 dir_$(CONFIG_USER_PCIUTILS_LSPCI)           += pciutils
 dir_$(CONFIG_USER_PCIUTILS_SETPCI)          += pciutils
