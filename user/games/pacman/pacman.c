@@ -55,7 +55,7 @@ int main(int argc, char *argv[100]) {
 
 	InitCurses();
 	CheckScreenSize();
-	CreateWindows(29, 28, 1, 1);
+	CreateWindows(29, 28, 1, 18);
 
 	//If they specified a level to load
 	if((argc > 1) && (strlen(argv[1]) > 1)) {
@@ -151,7 +151,7 @@ void CheckScreenSize() {
 
 void CreateWindows(int y, int x, int y0, int x0) {
 	win = newwin(y, x, y0, x0);
-	status = newwin(3, 27, 29, 1);
+	status = newwin(3, 27, 29, 18);
 }
 
 void Delay() {
