@@ -379,6 +379,11 @@ int gba_activate_ram(void)
 
 activated:
 
+// Turbo mode detection does break DLDI driver for M3 ...
+// For Supercard (lite), and maybe other SDRAM memory, Turbo mode is not working
+// because of the slow interface. The only cards where Turbo mode MAY be working
+// is the opera expansion and the 3in1 expansion because they are using PSRAM.
+#if 0
 	{
 		/* the TURBO mode: try to lower the access time to GBA ROM space */
 		unsigned short wait_value;
@@ -414,6 +419,7 @@ activated:
         	writew( wait_value, WAIT_CR);
 		printk(KERN_INFO "WAIT_CR set to: 0x%X\n", (int)wait_value);
 	}
+#endif
 
 	/* Activate the data cache for GBA ROM space so CONFIG_NDS_ROM8BIT can work */
 	{
