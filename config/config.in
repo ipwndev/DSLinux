@@ -118,6 +118,9 @@ bool 'Build libid3tag'		CONFIG_LIB_ID3TAG_FORCE
 bool 'Build libmad'		CONFIG_LIB_MAD_FORCE
 bool 'Build uClibc++'		CONFIG_LIB_UCLIBCPP_FORCE
 bool 'Build libwww'		CONFIG_LIB_LIBWWW_FORCE
+bool 'Build libiconv'		CONFIG_LIB_LIBICONV_FORCE
+bool 'Build libgettext'	CONFIG_LIB_LIBGETTEXT_FORCE
+bool 'Build libglib'		CONFIG_LIB_LIBGLIB_FORCE
 
 comment 'Library Configuration'
 bool 'Support time zones'	CONFIG_LIB_UC_LIBC_TIMEZONE
@@ -431,6 +434,12 @@ if [ "$CONFIG_USER_IPUTILS_IPUTILS" = "y" ]; then
 	bool '  arping'		CONFIG_USER_IPUTILS_ARPING
 	bool '  rarpd'		CONFIG_USER_IPUTILS_RARPD
 fi
+bool 'irssi'			CONFIG_USER_IRSSI_IRSSI
+    if [ "$CONFIG_USER_IRSSI_IRSSI" = "y" ]; then
+	define_bool CONFIG_LIB_LIBICONV y
+	define_bool CONFIG_LIB_LIBGETTEXT y
+	define_bool CONFIG_LIB_LIBGLIB y
+    fi
 bool 'kendin-config'	CONFIG_USER_KENDIN_CONFIG
 bool 'klaxon'			CONFIG_USER_KLAXON_KLAXON
 if [ "$CONFIG_USER_KLAXON_KLAXON" = "y" ]; then

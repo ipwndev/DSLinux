@@ -422,6 +422,9 @@ CONFIG_USER_FNORD_NOAUTH
 CONFIG_USER_BITCHX_BITCHX
   Text mode IRC client.
 
+CONFIG_USER_IRSSI_IRSSI
+  Text mode IRC client.
+
 CONFIG_USER_BPALOGIN_BPALOGIN
   Telstra Bigpond broadband internet authentication program.
   Approx. binary size: 39k
@@ -824,6 +827,21 @@ CONFIG_LIB_UCLIBCPP_FORCE
 
 CONFIG_LIB_LIBWWW_FORCE
   Enable w3c-libwww library.
+  Only enable this if you want to force the library to be built.  The
+  Config will make sure this library is built if it is needed.
+
+CONFIG_LIB_LIBICONV_FORCE
+  Enable libiconv library.
+  Only enable this if you want to force the library to be built.  The
+  Config will make sure this library is built if it is needed.
+
+CONFIG_LIB_LIBGETTEXT_FORCE
+  Enable gettext library.
+  Only enable this if you want to force the library to be built.  The
+  Config will make sure this library is built if it is needed.
+
+CONFIG_LIB_LIBGLIB_FORCE
+  Enable glib library.
   Only enable this if you want to force the library to be built.  The
   Config will make sure this library is built if it is needed.
 

@@ -96,6 +96,12 @@ dir_$(CONFIG_LIB_UCLIBCPP)	+= uClibc++
 dir_$(CONFIG_LIB_UCLIBCPP_FORCE)+= uClibc++
 dir_$(CONFIG_LIB_LIBWWW)	+= libwww
 dir_$(CONFIG_LIB_LIBWWW_FORCE)  += libwww
+dir_$(CONFIG_LIB_LIBICONV)	+= libiconv
+dir_$(CONFIG_LIB_LIBICONV_FORCE)  += libiconv
+dir_$(CONFIG_LIB_LIBGETTEXT)	+= gettext
+dir_$(CONFIG_LIB_LIBGETTEXT_FORCE)  += gettext
+dir_$(CONFIG_LIB_LIBGLIB)	+= glib
+dir_$(CONFIG_LIB_LIBGLIB_FORCE)  += glib
 
 # And build libraries in the prop directory last
 dir_y += $(ROOTDIR)/prop
@@ -184,8 +190,11 @@ LINKLIBS=\
 	$(ROOTDIR)/lib/libwww/src/Library/src/.libs/*.a \
 	$(ROOTDIR)/lib/libwww/src/modules/expat/xmlparse/.libs/*.a \
 	$(ROOTDIR)/lib/libwww/src/modules/expat/xmltok/.libs/*.a \
-	$(ROOTDIR)/lib/libwww/src/modules/md5/.libs/*.a
-
+	$(ROOTDIR)/lib/libwww/src/modules/md5/.libs/*.a \
+	$(ROOTDIR)/lib/libiconv/src/lib/.libs/*.a \
+	$(ROOTDIR)/lib/gettext/src/gettext-runtime/intl/.libs/*.a \
+	$(ROOTDIR)/lib/glib/src/glib/.libs/*.a \
+	$(ROOTDIR)/lib/glib/src/gmodule/.libs/*.a
 
 ##############################################################################
 
