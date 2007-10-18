@@ -8562,7 +8562,7 @@ else
   { echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6; }
 fi
-	if test "$MSGFMT" == "no"; then
+	if test "$MSGFMT" != "no"; then
           glib_save_LIBS="$LIBS"
           LIBS="$LIBS $INTLLIBS"
 

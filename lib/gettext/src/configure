@@ -668,7 +668,8 @@ GCJ
 GCJFLAGS
 EMACS
 EMACSLOADPATH'
-ac_subdirs_all='autoconf-lib-link gettext-runtime gettext-tools'
+#ac_subdirs_all='autoconf-lib-link gettext-runtime gettext-tools'
+ac_subdirs_all='gettext-runtime'
 
 # Initialize some variables set by options.
 ac_init_help=
@@ -2224,7 +2225,8 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 
 
 
-subdirs="$subdirs autoconf-lib-link gettext-runtime gettext-tools"
+#subdirs="$subdirs autoconf-lib-link gettext-runtime gettext-tools"
+subdirs="$subdirs gettext-runtime"
 
 
 # Make sure we can run config.sub.
