@@ -9,11 +9,10 @@ IRSSI_CONFIGURE_FLAGS=--enable-static --disable-shared --with-ncurses=$(ROOTDIR)
 	cd src && env CFLAGS="$(CFLAGS)" \
 		./configure --build i386 --host none-uclinux-uclibc  \
 		--prefix=/usr $(IRSSI_CONFIGURE_FLAGS)
-	sed -i -r 's@\-ldl@-lintl -liconv@' src/src/fe-text/Makefile
+	sed -i -r 's@\-ldl@-lintl -liconv@g' src/src/fe-text/Makefile
 	touch $@
 
 .compiled: .configured
-	sed -i -r 's@\-ldl@-lintl -liconv@' src/src/fe-text/Makefile
 	$(MAKE) -C src
 	touch $@
 
