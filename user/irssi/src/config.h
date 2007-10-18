@@ -1,10 +1,10 @@
 /* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in.  Generated from configure.in by autoheader.  */
 /* misc.. */
-#define HAVE_IPV6 1
+/* #undef HAVE_IPV6 */
 /* #undef HAVE_SOCKS_H */
 #define HAVE_PL_PERL 1
-#define HAVE_STATIC_PERL 1
+/* #undef HAVE_STATIC_PERL */
 #define HAVE_GMODULE 1
 /* #undef HAVE_GC_H */
 /* #undef HAVE_GC_GC_H */
@@ -27,18 +27,18 @@
 /* #undef HAVE_CURSES_WRESIZE */
 
 /* terminfo/termcap */
-#define HAVE_TERMINFO 1
+/* #undef HAVE_TERMINFO */
 
 /* If set to 64, enables 64bit off_t for some systems (eg. Linux, Solaris) */
-#define _FILE_OFFSET_BITS 64
+/* #undef _FILE_OFFSET_BITS */
 
 /* What type should be used for uoff_t */
 /* #undef UOFF_T_INT */
-/* #undef UOFF_T_LONG */
-#define UOFF_T_LONG_LONG 1
+#define UOFF_T_LONG 1
+/* #undef UOFF_T_LONG_LONG */
 
 /* printf()-format for uoff_t, eg. "u" or "lu" or "llu" */
-#define PRIuUOFF_T "llu"
+#define PRIuUOFF_T "lu"
 
 /* Define to 1 if you have the <dirent.h> header file. */
 #define HAVE_DIRENT_H 1
@@ -134,13 +134,13 @@
 #define SIZEOF_LONG_LONG 8
 
 /* The size of `off_t', as computed by sizeof. */
-#define SIZEOF_OFF_T 8
+#define SIZEOF_OFF_T 4
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
 /* Number of bits in a file offset, on hosts where this is settable. */
-#define _FILE_OFFSET_BITS 64
+/* #undef _FILE_OFFSET_BITS */
 
 /* Define for large files, on AIX-style hosts. */
 /* #undef _LARGE_FILES */
