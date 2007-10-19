@@ -70,7 +70,7 @@ LINKHDRS = \
 	$(ROOTDIR)/lib/gettext/src/gettext-runtime/intl/libintl.h,. \
 	$(ROOTDIR)/lib/glib/src/glib/glib.h,. \
 	$(ROOTDIR)/lib/glib/src/glibconfig.h,. \
-	$(ROOTDIR)/lib/glib/src/glib/,glib 
+	$(ROOTDIR)/lib/glib/src/glib/,.
 
 #
 # Both freeswan and openswan can provide des and crypto headers
