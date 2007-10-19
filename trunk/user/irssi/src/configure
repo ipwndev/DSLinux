@@ -23802,10 +23802,10 @@ if test -z "$GLIB_LIBS"; then
 
   { { echo "$as_me:$LINENO: error: GLIB is required to build irssi." >&5
 echo "$as_me: error: GLIB is required to build irssi." >&2;}
-   { (exit 1); exit 1; }; }
+   { (echo 1); echo 1; }; }
 fi
 
-LIBS="$LIBS $GLIB_LIBS"
+LIBS="$LIBS -lgmodule-2.0 -lglib-2.0 -lintl -liconv "
 
 have_openssl=no
 if test "$enable_ssl" = "yes"; then

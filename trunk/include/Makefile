@@ -68,7 +68,9 @@ LINKHDRS = \
 	$(ROOTDIR)/lib/libwww/src/modules/md5/md5.h,. \
 	$(ROOTDIR)/lib/libiconv/src/include/iconv.h,. \
 	$(ROOTDIR)/lib/gettext/src/gettext-runtime/intl/libintl.h,. \
-	$(ROOTDIR)/lib/glib/src/glib/glib.h,. 
+	$(ROOTDIR)/lib/glib/src/glib/glib.h,. \
+	$(ROOTDIR)/lib/glib/src/glibconfig.h,. \
+	$(ROOTDIR)/lib/glib/src/glib/,glib 
 
 #
 # Both freeswan and openswan can provide des and crypto headers

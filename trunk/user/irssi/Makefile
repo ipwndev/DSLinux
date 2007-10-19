@@ -7,9 +7,9 @@ IRSSI_CONFIGURE_FLAGS=--enable-static --disable-shared --with-ncurses=$(ROOTDIR)
 
 .configured:
 	cd src && env CFLAGS="$(CFLAGS)" \
+		 PKG_CONFIG=no \
 		./configure --build i386 --host none-uclinux-uclibc  \
 		--prefix=/usr $(IRSSI_CONFIGURE_FLAGS)
-	sed -i -r 's@\-ldl@-lintl -liconv@g' src/src/fe-text/Makefile
 	touch $@
 
 .compiled: .configured
