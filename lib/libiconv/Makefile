@@ -13,6 +13,7 @@ LIBICONV_CONFIGURE_FLAGS=--enable-static --disable-shared --with-libiconv-prefix
 
 .compiled: .configured
 	$(MAKE) -C src
+	ln -s $(ROOTDIR)/lib/libiconv/src/include/iconv.h $(ROOTDIR)/include/iconv.h 
 	touch $@
 
 clean:
