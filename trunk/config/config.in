@@ -799,6 +799,7 @@ bool 'gdbserver (old)'		CONFIG_USER_GDBSERVER_GDBSERVER
 bool 'grep'			CONFIG_USER_GREP_GREP
 bool 'hd'			CONFIG_USER_HD_HD
 bool 'hexedit'			CONFIG_USER_HEXEDIT_HEXEDIT
+bool 'hnb'			CONFIG_USER_HNB
 bool 'lcalc'			CONFIG_USER_LCALC_LCALC
 bool 'lcd'			CONFIG_USER_LCD_LCD
 bool 'ledcon'			CONFIG_USER_LEDCON_LEDCON

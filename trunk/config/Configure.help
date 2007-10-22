@@ -500,6 +500,12 @@ CONFIG_USER_HEXEDIT_HEXEDIT
 CONFIG_USER_LCALC_LCALC
   A simple, 4 function calculator
 
+CONFIG_USER_HNB
+  A hierarchical notebook(hnb) is a curses program to structure 
+  many kinds of data in one place, for example addresses, to-do lists,
+  ideas, book reviews or to store snippets of brainstorming. Writing 
+  structured documents and speech outlines.
+
 CONFIG_USER_ROUTE_IFCONFIG
   Required to configure network interfaces.
   Approx. binary size: 28k
