@@ -1,0 +1,4 @@
+macro_add tmacro
+	echo line one
+	echo line two
+macro_end
