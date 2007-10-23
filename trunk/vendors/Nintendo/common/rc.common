@@ -42,7 +42,16 @@ else
 	echo "To configure wireless edit /etc/rc.conf or run 'wnc'."
 	__network_up="NO"
 fi
-
+#Start iptables before other services
+if [ "$start_iptables" = "YES" ]
+then
+	if [ "$__network_up" = "YES" ]
+	then
+		/etc/rc.d/iptables start
+	else
+		echo "Not starting iptables: network is down"
+	fi
+fi
 # start inetd if configured
 if [ "$start_inetd" = "YES" ]
 then

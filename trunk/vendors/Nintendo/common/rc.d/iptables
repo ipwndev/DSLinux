@@ -1,0 +1,35 @@
+#!/bin/sh
+
+[ -e /etc/rc.defaults ] && . /etc/rc.defaults
+[ -e /etc/rc.conf ] && . /etc/rc.conf
+
+CONFIG=/etc/iptables.conf
+
+
+case "$1" in
+	start)
+		if [ ! -f $CONFIG ]
+		then
+			echo "Error: Configuration file $CONFIG not found!"
+			echo "Please read /etc/iptables.conf.example"
+			exit 1
+		fi
+
+		echo "Loading firewall rules from $CONFIG"
+		iptables-restore $CONFIG
+	;;
+	stop)
+		echo "Saving firewall rules to $CONFIG"
+		iptables-save > $CONFIG
+		echo "Stopping firewall"
+		iptables --flush
+	;;	
+	restart)
+		$0 stop
+		$0 start
+	;;
+	*)
+		echo "Usage: $0 <start|stop|restart>"
+		exit 1
+	;;
+esac
