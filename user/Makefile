@@ -366,6 +366,7 @@ dir_$(CONFIG_USER_TFTPD_TFTPD)              += tftpd
 dir_$(CONFIG_USER_THREADDEMOS_THREADDEMOS)  += threaddemos
 dir_$(CONFIG_USER_THTTPD_THTTPD)            += thttpd
 dir_$(CONFIG_USER_TINYIRC_TINYIRC)          += tinyirc
+dir_$(CONFIG_USER_TINTIN_TINTIN)            += tintin
 dir_$(CONFIG_USER_TINYLOGIN_CRYPT_CRYPT)    += tinylogin
 dir_$(CONFIG_USER_TINYLOGIN_TINYLOGIN)      += tinylogin
 dir_$(CONFIG_USER_TINYSID_TINYSID)          += tinysid

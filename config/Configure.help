@@ -1434,6 +1434,9 @@ CONFIG_USER_THTTPD_THTTPD
 CONFIG_USER_TINYIRC_TINYIRC
   Very tiny IRC client.
 
+CONFIG_USER_TINTIN_TINTIN
+  A simple and portable MUD client, designed for online text-based RPGs.
+
 CONFIG_USER_TRIPWIRE_TRIPWIRE
   The tripwire file modification detection utility.
 
