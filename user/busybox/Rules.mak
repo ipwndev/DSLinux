@@ -47,7 +47,8 @@ CPP            = $(CC) -E
 # MAKEFILES      = $(TOPDIR).config
 endif
 
-FLTFLAGS       += -s 20000
+# Note that 20K stack space is too low if we use 2GB SD cards
+FLTFLAGS       += -s 30000
 
 # What OS are you compiling busybox for?  This allows you to include
 # OS specific things, syscall overrides, etc.
