@@ -646,12 +646,11 @@ $(GDB_SRCDIR)/.installed: $(GDB_SRCDIR)/.compiled
 	$(MAKE) -C $(GDB_OBJDIR) install
 	touch $@
 
-
 #######################################################################
 # symbolmap.sh
 #######################################################################
 
-symbolmap.sh-install:		$(SRCDIR)/.symbolmap.sh-installed
+symbolmap.sh-install: $(SRCDIR)/.symbolmap.sh-installed
 symbolmap.sh-reset:
 	rm -f $(SRCDIR)/.symbolmap.sh-installed
 
