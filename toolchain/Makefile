@@ -56,7 +56,7 @@ DISTFILES :=	$(DISTDIR)/$(BINUTILS_DIST) \
 		$(DISTDIR)/$(LIBELF_DIST) \
 		$(DISTDIR)/$(GDB_DIST)
 	
-FETCH_CMD = wget -c
+FETCH_CMD = wget -c --passive-ftp
 
 GNU_MIRROR		= ftp://ftp.fu-berlin.de/gnu
 SOURCEFORGE_MIRROR	= http://switch.dl.sourceforge.net/sourceforge
