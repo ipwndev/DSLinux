@@ -601,20 +601,20 @@ gdb-reset:
 		.installed, $(GDB_SRCDIR)/$(f))
 gdb-clean:
 	-$(MAKE) -C $(GDB_OBJDIR) distclean
-	-rm -f $(GDB_OBJDIR)/bfd/config.*
-	-rm -f $(GDB_OBJDIR)/etc/config.*
-	-rm -f $(GDB_OBJDIR)/gdb/config.*
-	-rm -f $(GDB_OBJDIR)/gdb/doc/config.*
-	-rm -f $(GDB_OBJDIR)/gdb/testsuite/config.*
-	-rm -f $(GDB_OBJDIR)/gdb/testsuite/gdb.stabs/config.*
-	-rm -f $(GDB_OBJDIR)/intl/config.*
-	-rm -f $(GDB_OBJDIR)/libiberty/config.*
-	-rm -f $(GDB_OBJDIR)/opcodes/config.*
-	-rm -f $(GDB_OBJDIR)/readline/config.*
-	-rm -f $(GDB_OBJDIR)/sim/config.*
-	-rm -f $(GDB_OBJDIR)/sim/arm/config.*
-	-rm -f $(GDB_OBJDIR)/sim/common/config.*
-	-rm -f $(GDB_OBJDIR)/sim/testsuite/config.*
+	rm -f $(GDB_OBJDIR)/bfd/config.*
+	rm -f $(GDB_OBJDIR)/etc/config.*
+	rm -f $(GDB_OBJDIR)/gdb/config.*
+	rm -f $(GDB_OBJDIR)/gdb/doc/config.*
+	rm -f $(GDB_OBJDIR)/gdb/testsuite/config.*
+	rm -f $(GDB_OBJDIR)/gdb/testsuite/gdb.stabs/config.*
+	rm -f $(GDB_OBJDIR)/intl/config.*
+	rm -f $(GDB_OBJDIR)/libiberty/config.*
+	rm -f $(GDB_OBJDIR)/opcodes/config.*
+	rm -f $(GDB_OBJDIR)/readline/config.*
+	rm -f $(GDB_OBJDIR)/sim/config.*
+	rm -f $(GDB_OBJDIR)/sim/arm/config.*
+	rm -f $(GDB_OBJDIR)/sim/common/config.*
+	rm -f $(GDB_OBJDIR)/sim/testsuite/config.*
 
 # fetch distfile for gdb
 $(DISTDIR)/$(GDB_DIST):
