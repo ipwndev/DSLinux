@@ -2133,7 +2133,7 @@ GsDropClient(int fd)
 		if ( client->shm_cmds != 0 ) {
 			/* Free shared memory */
 #if NDSDRIVER
-			/* do nothing for now */
+			free((void *)client->shm_cmds_shmid);
 #else
 			shmctl(client->shm_cmds_shmid,IPC_RMID,0);
 			shmdt(client->shm_cmds);
