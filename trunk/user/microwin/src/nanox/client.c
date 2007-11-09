@@ -151,7 +151,7 @@ ReadBlock(void *b, int n)
 
 	nxFlushReq(0L,0);
 	while(v < ((char *) b + n)) {
-		i = read(nxSocket, v, ((char *) b + n - v));
+		i = nxReadSocket(v, ((char *) b + n - v));
 		if ( i <= 0 ) {
 			if ( i == 0 ) {
 				/* We should maybe produce an event here,

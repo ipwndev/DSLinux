@@ -81,6 +81,7 @@ void	nxFlushReq(long newsize, int reply_needed);
 void 	nxAssignReqbuffer(char *buffer, long size);
 void 	nxWriteSocket(char *buf, int todo);
 int	nxCalcStringBytes(void *str, int count, GR_TEXTFLAGS flags);
+int	nxReadSocket(char *buf, int todo);
 
 #if notyet
 /* all replies share this header*/
