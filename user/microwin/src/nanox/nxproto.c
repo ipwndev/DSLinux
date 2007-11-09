@@ -100,6 +100,29 @@ nxWriteSocket(char *buf, int todo)
 	} while ( todo > 0 );
 }
 
+/* Buffer for "lost" bytes on poll operations */
+static char poll_buffer[256];
+static unsigned char poll_read = 0;
+static unsigned char poll_write = 0;
+
+/* Read a block of data on the socket from the nano-X server */
+int
+nxReadSocket(char *buf, int todo)
+{
+	int count = 0;
+	while (todo && (poll_read != poll_write)) {
+		*buf++ = poll_buffer[poll_read++];
+		count++;
+		todo--;
+	}
+	if (todo) {		
+		int result = read(nxSocket, buf, todo);
+		if (result > 0)
+			count += result;
+	}
+	return count;			
+}
+
 /* Flush request buffer if required, possibly reallocate buffer size*/
 void
 nxFlushReq(long newsize, int reply_needed)
@@ -159,10 +182,15 @@ nxFlushReq(long newsize, int reply_needed)
 
 			nxWriteSocket((char *)&req,sizeof(req));
 
-			if ( reply_needed )
-				while ( read(nxSocket, &c, 1) != 1 )
-					;
-
+			if ( reply_needed ) {
+				do {
+					/* wait for the response byte ("1") from the server */
+					while ( read(nxSocket, &c, 1) != 1 )
+						;
+					if (c != 1)
+						poll_buffer[poll_write++] = c;
+				} while (c != 1);
+			}
 			reqbuf.bufptr = reqbuf.buffer;
 
 			if ( reqbuf.buffer + newsize > reqbuf.bufmax ) {
