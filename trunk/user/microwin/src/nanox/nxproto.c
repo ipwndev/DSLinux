@@ -171,7 +171,7 @@ nxFlushReq(long newsize, int reply_needed)
 			 * as it has to be sent over the socket to wake
 			 * up the Nano-X server.
 			 */
-			char c;
+			unsigned char c;
 			nxShmCmdsFlushReq req;
 
 			req.reqType = GrNumShmCmdsFlush;
@@ -184,12 +184,12 @@ nxFlushReq(long newsize, int reply_needed)
 
 			if ( reply_needed ) {
 				do {
-					/* wait for the response byte ("1") from the server */
+					/* wait for the response byte ("0xA5") from the server */
 					while ( read(nxSocket, &c, 1) != 1 )
 						;
-					if (c != 1)
+					if (c != 0xA5)
 						poll_buffer[poll_write++] = c;
-				} while (c != 1);
+				} while (c != 0xA5);
 			}
 			reqbuf.bufptr = reqbuf.buffer;
 

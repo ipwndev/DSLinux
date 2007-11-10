@@ -1761,7 +1761,7 @@ GrShmCmdsFlushWrapper(void *r)
 		/* No or short shm present serverside, bug or mischief */
 		EPRINTF("nano-X: Ill behaved client assumes shm ok\n");
 		if ( req->reply ) {
-			reply = 0;
+			reply = 0xA5;
 			GsWrite(current_fd, &reply, 1);
 		}
 		return;
@@ -1782,13 +1782,13 @@ GrShmCmdsFlushWrapper(void *r)
 	}
 
 	if ( req->reply ) {
-		reply = 1;
+		reply = 0xA5;
 		GsWrite(current_fd, &reply, 1);
 	}
 #else
 	/* no shared memory support*/
 	if ( req->reply ) {
-		reply = 0;
+		reply = 0xA5;
 		GsWrite(current_fd, &reply, 1);
 	}
 #endif /* HAVE_SHAREDMEM_SUPPORT*/
