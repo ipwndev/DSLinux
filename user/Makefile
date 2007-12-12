@@ -162,6 +162,7 @@ dir_$(CONFIG_USER_HTTPTUNNEL_CLIENT)        += httptunnel
 dir_$(CONFIG_USER_HTTPTUNNEL_SERVER)        += httptunnel
 dir_$(CONFIG_USER_HWCLOCK_HWCLOCK)          += hwclock
 dir_$(CONFIG_USER_IFATTACH_IFATTACH)        += ifattach
+dir_$(CONFIG_USER_INADYN_INADYN)            += inadyn
 dir_$(CONFIG_USER_INETD_INETD)              += inetd
 dir_$(CONFIG_USER_INIT.ORG_INIT)            += init.org
 dir_$(CONFIG_USER_INIT_EXPAND)              += init

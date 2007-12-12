@@ -510,6 +510,10 @@ CONFIG_USER_ROUTE_IFCONFIG
   Required to configure network interfaces.
   Approx. binary size: 28k
 
+CONFIG_USER_INADYN_INADYN
+  INADYN is a dynamic DNS client.
+  It supports dyndns.org, freedns.afraid.org, zoneedit.com and no-ip.com
+
 CONFIG_USER_INETD_INETD
   Starts network daemons as required.
   Approx. binary size: 11k
