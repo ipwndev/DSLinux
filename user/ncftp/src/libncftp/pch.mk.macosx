@@ -1,0 +1,5 @@
+syshdrs.p: syshdrs.h ncftp.h ncftp_errno.h util.h ftp.h
+	$(CC) -precomp $(CFLAGS) $(CPPFLAGS) $(DEFS) syshdrs.h -o syshdrs.p
+
+PCH=syshdrs.p
+SYSHDRS_DEP=syshdrs.p

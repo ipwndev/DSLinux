@@ -1,0 +1,79 @@
+#-----------------------------------------------------------------------------
+#
+# NcFTP sh_util makefile for the platform @OS@, on the host @host@.
+#
+#-----------------------------------------------------------------------------
+
+CC=@CC@
+CFLAGS=@CFLAGS@
+#CC=gcc
+#CFLAGS=-O2 -W -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wshadow -Wbad-function-cast -Wwrite-strings -Wconversion
+VPATH=@srcdir@
+CPPFLAGS=-I@MAINDIR@ -I../libncftp -I../Strn -I../sio @CPPFLAGS@
+prefix=@prefix@
+SYSCONFDIR=@sysconfdir@
+SOCKS_LIBS=@SOCKS_LIBS@
+LIBS=@LIBS@ $(SOCKS_LIBS)
+STRIP=@STRIP@
+LDFLAGS=-L../libncftp -L../Strn -L../sio @LDFLAGS@
+
+# Any -D definitions:
+DEFS=-Dsh_util -DO_S=\"@OS@\" -DSYSCONFDIR=\"$(SYSCONFDIR)\" @DEFS@@NDEFS@
+
+DPROGS=../bin/ncftpget@EXEEXT@ ../bin/ncftpput@EXEEXT@ ../bin/ncftpbatch@EXEEXT@ ../bin/ncftpls@EXEEXT@
+
+all: $(DPROGS)
+	-@echo 'Done making NcFTP shell utilities.'
+
+../bin/ncftpget@EXEEXT@: ncftpget.c gpshare.@OBJEXT@ preffw.@OBJEXT@ spoolutil.@OBJEXT@ util.@OBJEXT@ gl_getline.@OBJEXT@ version.@OBJEXT@ gpshare.h syshdrs.h ../ncftp/util.h ../ncftp/pref.h ../ncftp/spool.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h ../libncftp/libncftp.a
+	@CCDV@$(CC) $(CFLAGS) $(DEFS) $(CPPFLAGS) gpshare.@OBJEXT@ preffw.@OBJEXT@ spoolutil.@OBJEXT@ util.@OBJEXT@ gl_getline.@OBJEXT@ version.@OBJEXT@ ncftpget.c -o ../bin/ncftpget@EXEEXT@ $(LDFLAGS) -lncftp -lStrn -lsio $(LIBS)
+	-@$(STRIP) ../bin/ncftpget@EXEEXT@
+
+../bin/ncftpput@EXEEXT@: ncftpput.c gpshare.@OBJEXT@ preffw.@OBJEXT@ spoolutil.@OBJEXT@ util.@OBJEXT@ gl_getline.@OBJEXT@ version.@OBJEXT@ gpshare.h syshdrs.h ../ncftp/util.h ../ncftp/pref.h ../ncftp/spool.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h ../libncftp/libncftp.a
+	@CCDV@$(CC) $(CFLAGS) $(DEFS) $(CPPFLAGS) gpshare.@OBJEXT@ preffw.@OBJEXT@ spoolutil.@OBJEXT@ util.@OBJEXT@ gl_getline.@OBJEXT@ version.@OBJEXT@ ncftpput.c -o ../bin/ncftpput@EXEEXT@ $(LDFLAGS) -lncftp -lStrn -lsio $(LIBS)
+	-@$(STRIP) ../bin/ncftpput@EXEEXT@
+
+../bin/ncftpls@EXEEXT@: ncftpls.c gpshare.@OBJEXT@ preffw.@OBJEXT@ util.@OBJEXT@ gl_getline.@OBJEXT@ version.@OBJEXT@ gpshare.h syshdrs.h ../ncftp/util.h ../ncftp/pref.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h ../libncftp/libncftp.a
+	@CCDV@$(CC) $(CFLAGS) $(DEFS) $(CPPFLAGS) gpshare.@OBJEXT@ preffw.@OBJEXT@ util.@OBJEXT@ gl_getline.@OBJEXT@ version.@OBJEXT@ ncftpls.c -o ../bin/ncftpls@EXEEXT@ $(LDFLAGS) -lncftp -lStrn -lsio $(LIBS)
+	-@$(STRIP) ../bin/ncftpls@EXEEXT@
+
+../bin/ncftpbatch@EXEEXT@: ncftpbatch.c preffw.@OBJEXT@ util.@OBJEXT@ spoolutil.@OBJEXT@ version.@OBJEXT@ gpshare.@OBJEXT@ ../ncftp/util.h ../ncftp/pref.h ../ncftp/spool.h gpshare.h syshdrs.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h ../libncftp/libncftp.a
+	@CCDV@$(CC) $(CFLAGS) $(DEFS) $(CPPFLAGS) preffw.@OBJEXT@ util.@OBJEXT@ spoolutil.@OBJEXT@ version.@OBJEXT@ gpshare.@OBJEXT@ ncftpbatch.c -o ../bin/ncftpbatch@EXEEXT@ $(LDFLAGS) -lncftp -lStrn -lsio $(LIBS)
+	-@$(STRIP) ../bin/ncftpbatch@EXEEXT@
+	-@( cd ../bin ; rm -f ncftpspooler@EXEEXT@ ; ln -s ncftpbatch@EXEEXT@ ncftpspooler@EXEEXT@ )
+
+util.@OBJEXT@: ../ncftp/util.c ../ncftp/util.h syshdrs.h
+	@CCDV@$(CC) $(CFLAGS) $(DEFS) $(CPPFLAGS) -c ../ncftp/util.c
+
+gl_getline.@OBJEXT@: ../ncftp/gl_getline.c ../ncftp/gl_getline.h syshdrs.h
+	@CCDV@$(CC) $(CFLAGS) $(DEFS) $(CPPFLAGS) -c ../ncftp/gl_getline.c
+
+gpshare.@OBJEXT@: gpshare.c gpshare.h syshdrs.h
+	@CCDV@$(CC) $(CFLAGS) $(DEFS) $(CPPFLAGS) -c gpshare.c
+
+spool.@OBJEXT@: ../ncftp/spool.c ../ncftp/spool.h syshdrs.h
+	@CCDV@$(CC) $(CFLAGS) $(DEFS) $(CPPFLAGS) -c ../ncftp/spool.c
+
+spoolutil.@OBJEXT@: ../ncftp/spoolutil.c ../ncftp/spool.h syshdrs.h
+	@CCDV@$(CC) $(CFLAGS) $(DEFS) $(CPPFLAGS) -c ../ncftp/spoolutil.c
+
+preffw.@OBJEXT@: ../ncftp/preffw.c ../ncftp/pref.h syshdrs.h
+	@CCDV@$(CC) $(CFLAGS) $(DEFS) $(CPPFLAGS) -c ../ncftp/preffw.c
+
+version.@OBJEXT@: ../ncftp/version.c
+	@CCDV@$(CC) $(CFLAGS) $(DEFS) $(CPPFLAGS) ../ncftp/version.c -c
+
+clean:
+	/bin/rm -rf $(DPROGS) ../bin/ncftpspooler@EXEEXT@ *.@OBJEXT@ core *.pch SunWS_cache
+
+PACKAGE=Makefile.in   gpshare.c     gpshare.h	  ncftpbatch.c \
+	ncftpget.c    ncftpput.c    syshdrs.h	  ncftpls.c
+
+TMPDIR=/tmp
+TARDIR=sh_util
+
+tarcp:
+	-@mkdir -p $(TMPDIR)/TAR/$(TARDIR)
+	-@chmod ga+r $(PACKAGE)
+	-@chmod 755 $(TMPDIR)/TAR/$(TARDIR)
+	cp -pr $(PACKAGE) $(TMPDIR)/TAR/$(TARDIR)
