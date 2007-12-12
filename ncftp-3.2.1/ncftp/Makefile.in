@@ -1,0 +1,90 @@
+#-----------------------------------------------------------------------------
+#
+# NcFTP makefile for the platform @OS@, on the host @host@.
+#
+#-----------------------------------------------------------------------------
+
+CC=@CC@
+CFLAGS=@CFLAGS@
+#CC=gcc
+#CFLAGS=-O2 -W -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wshadow -Wbad-function-cast -Wwrite-strings -Wconversion
+VPATH=@srcdir@
+CPPFLAGS=-I@MAINDIR@ -I../libncftp -I../Strn -I../sio @CPPFLAGS@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+BINDIR=@bindir@
+SYSCONFDIR=@sysconfdir@
+SOCKS_LIBS=@SOCKS_LIBS@
+LIBS=@LIBS@ $(SOCKS_LIBS)
+STRIP=@STRIP@
+LDFLAGS=-L../libncftp -L../Strn -L../sio @LDFLAGS@
+
+# Any -D definitions:
+BETA=# -DBETA=20
+DEFS=-Dncftp $(BETA) -DO_S=\"@OS@\" -DBINDIR=\"$(BINDIR)\" -DSYSCONFDIR=\"$(SYSCONFDIR)\" @DEFS@@NDEFS@
+
+OBJS=cmds.@OBJEXT@ cmdlist.@OBJEXT@ ls.@OBJEXT@ main.@OBJEXT@ version.@OBJEXT@ shell.@OBJEXT@ util.@OBJEXT@ readln.@OBJEXT@ progress.@OBJEXT@ bookmark.@OBJEXT@ pref.@OBJEXT@ preffw.@OBJEXT@ trace.@OBJEXT@ spool.@OBJEXT@ spoolutil.@OBJEXT@ log.@OBJEXT@ gl_getline.@OBJEXT@
+
+DPROGS=../bin/ncftp@EXEEXT@
+
+all: $(DPROGS)
+	-@echo 'Done making NcFTP.'
+
+../bin/ncftp@EXEEXT@: $(OBJS) ../libncftp/libncftp.a
+@Z30@
+	@CCDV@$(CC) $(CFLAGS) $(DEFS) $(CPPFLAGS) $(OBJS) -o ../bin/ncftp@EXEEXT@ $(LDFLAGS) -lncftp -lStrn -lsio $(LIBS)
+	-@$(STRIP) ../bin/ncftp@EXEEXT@
+
+clean:
+	/bin/rm -rf $(DPROGS) *.@OBJEXT@ core *.pch SunWS_cache
+
+SHELL=/bin/sh
+.SUFFIXES: .c .@OBJEXT@
+
+.c.@OBJEXT@:
+	@CCDV@$(CC) $(CFLAGS) $(DEFS) $(CPPFLAGS) $< -c
+
+PACKAGE=Makefile.in  bookmark.c   bookmark.h   cmdlist.c \
+	cmds.c	     cmds.h \
+	ls.c	     ls.h	  main.c       main.h \
+	pref.c	     pref.h	  progress.c   progress.h \
+	readln.c     readln.h	  shell.c      shell.h \
+	spool.c      spool.h	  syshdrs.h    trace.c \
+	trace.h      util.c	  util.h       version.c \
+	preffw.c     log.c        log.h        gl_getline.c \
+	gl_getline.h    spoolutil.c
+
+TMPDIR=/tmp
+TARDIR=ncftp
+
+tarcp:
+	-@mkdir -p $(TMPDIR)/TAR/$(TARDIR)
+	-@chmod ga+r $(PACKAGE)
+	-@chmod 755 $(TMPDIR)/TAR/$(TARDIR)
+	cp -pr $(PACKAGE) $(TMPDIR)/TAR/$(TARDIR)
+
+### Dependencies #############################################################
+
+version.@OBJEXT@: version.c
+	@CCDV@$(CC) $(CFLAGS) $(DEFS) $(CPPFLAGS) -DO_S=\"@OS@\" $< -c
+
+bookmark.@OBJEXT@: bookmark.c syshdrs.h bookmark.h util.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h
+cmdlist.@OBJEXT@: cmdlist.c syshdrs.h shell.h bookmark.h cmds.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h
+cmds.@OBJEXT@: cmds.c syshdrs.h shell.h util.h ls.h bookmark.h cmds.h main.h \
+ trace.h pref.h spool.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h
+ls.@OBJEXT@: ls.c syshdrs.h util.h ls.h trace.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h
+main.@OBJEXT@: main.c syshdrs.h ls.h bookmark.h cmds.h main.h shell.h \
+ progress.h pref.h readln.h trace.h spool.h util.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h
+pref.@OBJEXT@: pref.c syshdrs.h pref.h util.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h
+preffw.@OBJEXT@: preffw.c syshdrs.h pref.h util.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h
+progress.@OBJEXT@: progress.c syshdrs.h util.h progress.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h
+readln.@OBJEXT@: readln.c syshdrs.h shell.h util.h bookmark.h cmds.h ls.h \
+ readln.h gl_getline.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h
+shell.@OBJEXT@: shell.c syshdrs.h shell.h util.h bookmark.h cmds.h readln.h \
+ trace.h main.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h
+spool.@OBJEXT@: spool.c spool.h syshdrs.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h
+spoolutil.@OBJEXT@: spoolutil.c spool.h syshdrs.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h
+trace.@OBJEXT@: trace.c syshdrs.h trace.h util.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h
+util.@OBJEXT@: util.c syshdrs.h shell.h trace.h util.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h
+log.@OBJEXT@: log.c syshdrs.h log.h util.h ../libncftp/ncftp.h ../libncftp/ncftp_errno.h
+gl_getline.@OBJEXT@: gl_getline.c syshdrs.h gl_getline.h
