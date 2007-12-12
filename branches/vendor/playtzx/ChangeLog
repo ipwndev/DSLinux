@@ -1,0 +1,12 @@
+2005-05-16  Philip Kendall  <pak21-spectrum@srcf.ucam.org>
+
+	* Removed arbitrary limit of 2048 blocks, which would previously
+	  cause a buffer overflow (eg with Summit Software's 'Rescue From
+	  Atlantis', Side A).
+
+	* Didn't fix all the rest of the potential buffer overflows.
+
+	* Didn't update the documentation other than this ChangeLog and
+	  a little piece at the top of README.
+
+	* Released version 0.12c.
