@@ -465,6 +465,7 @@ CONFIG_USER_SL_SL=y
 # CONFIG_USER_VPLAY_VREC is not set
 # CONFIG_USER_VPLAY_MIXER is not set
 # CONFIG_USER_PLAYRT_PLAYRT is not set
+# CONFIG_USER_PLAYTZX_PLAYTZX is not set
 
 #
 # Video tools

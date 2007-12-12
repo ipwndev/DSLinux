@@ -1238,6 +1238,9 @@ CONFIG_USER_MAIL_MAIL_IP
 CONFIG_USER_MADPLAY
   Play MP3 files
 
+CONFIG_USER_PLAYTZX_PLAYTZX
+  Software to replay .TZX files back to a ZX Spectrum
+
 CONFIG_USER_MP3PLAY_MP3PLAY
   Play MP3 files
 

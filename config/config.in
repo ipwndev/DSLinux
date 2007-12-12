@@ -909,6 +909,7 @@ bool 'vplay'			CONFIG_USER_VPLAY_VPLAY
 bool 'vrec'			CONFIG_USER_VPLAY_VREC
 bool 'mixer'			CONFIG_USER_VPLAY_MIXER
 bool 'playrt'			CONFIG_USER_PLAYRT_PLAYRT
+bool 'playtzx'			CONFIG_USER_PLAYTZX_PLAYTZX
 
 comment 'Video tools'
 bool 'camserv'			CONFIG_USER_CAMSERV

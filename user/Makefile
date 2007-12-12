@@ -256,6 +256,7 @@ dir_$(CONFIG_USER_PIXIL)		    += pixil
 dir_$(CONFIG_USER_PLAY_PLAY)                += play
 dir_$(CONFIG_USER_PLAY_TONE)                += play
 dir_$(CONFIG_USER_PLAYRT_PLAYRT)            += playrt
+dir_$(CONFIG_USER_PLAYTZX_PLAYTZX)          += playtzx
 dir_$(CONFIG_USER_PLUG_PLUG)                += plug
 dir_$(CONFIG_USER_POP3PROXY_POP3PROXY)      += pop3proxy
 dir_$(CONFIG_USER_PORTMAP_PORTMAP)          += portmap
