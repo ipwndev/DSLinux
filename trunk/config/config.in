@@ -330,7 +330,7 @@ bool 'discard'			CONFIG_USER_DISCARD_DISCARD
 if [ "$CONFIG_USER_DISCARD_DISCARD" = "y" ]; then
 	bool '   Do not auto install discard' CONFIG_USER_DISCARD_NO_INSTALL
 fi
-
+bool 'inadyn'			CONFIG_USER_INADYN_INADYN
 bool 'inetd-echo'		CONFIG_USER_DISCARD_INETD_ECHO
 if [ "$CONFIG_USER_DISCARD_INETD_ECHO" = "y" ]; then
 	bool '   Do not auto install echo' CONFIG_USER_DISCARD_ECHO_NO_INSTALL
