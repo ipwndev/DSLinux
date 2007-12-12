@@ -144,6 +144,7 @@ CONFIG_LIB_NCURSES_FORCE=y
 # Compression
 #
 # CONFIG_USER_TAR_TAR is not set
+# CONFIG_USER_BZIP2_BZIP2 is not set
 
 #
 # EXT2
