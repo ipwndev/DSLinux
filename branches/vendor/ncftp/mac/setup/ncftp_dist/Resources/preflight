@@ -1,0 +1,59 @@
+#!/bin/sh
+#
+# NcFTP 2.4.3 is included with the Mac OS X installation from Apple.
+# This script tries to preserve it by renaming
+# /usr/bin/ncftp to /usr/bin/ncftp-2.4.3.
+#
+SCRIPT_NAME=`basename "$0"`
+ID="`/usr/bin/id`"
+NCFTP_PKG_DEBUG="no"
+
+if [ "$NCFTP_PKG_DEBUG" = yes ] ; then
+
+	echo "Running the script $SCRIPT_NAME from the Installer as: $ID" > /private/var/tmp/$SCRIPT_NAME.out
+
+	/usr/bin/osascript -l AppleScript <<EOF
+tell application "Finder"
+	display dialog "Running the script $SCRIPT_NAME from the Installer as: $ID"
+end tell
+EOF
+
+fi
+
+#
+# More debug stuff, but this goes to stdout, or while in the installer,
+# to the Installer Log
+#
+echo "Running the script $SCRIPT_NAME from the Installer as: $ID"
+i=0
+for arg in "$@"
+do
+	i=`expr "$i" + 1`
+	echo "    $SCRIPT_NAME arg $i: $arg"
+done
+echo
+
+echo "$SCRIPT_NAME environment:"
+set | sed 's/^/    /;'
+
+echo
+echo "$SCRIPT_NAME execution starting at `date`."
+
+v=`/usr/bin/ncftp -H 2>&1 | sed -n '/^Version:\ *2\./{s/^Version:\ *\(2\..\..\).*$/\1/;p;q;}'`
+case "$v" in
+	2.*)
+		if [ -f /usr/bin/ncftp ] ; then
+			echo /bin/mv /usr/bin/ncftp "/usr/bin/ncftp-$v"
+			/bin/mv /usr/bin/ncftp "/usr/bin/ncftp-$v"
+			echo "(exit status=$?)"
+		fi
+		if [ -f /usr/share/man/man1/ncftp.1 ] ; then
+			echo /bin/mv /usr/share/man/man1/ncftp.1 "/usr/share/man/man1/ncftp-$v.1"
+			/bin/mv /usr/share/man/man1/ncftp.1 "/usr/share/man/man1/ncftp-$v.1"
+			echo "(exit status=$?)"
+		fi
+		;;
+esac
+
+echo "$SCRIPT_NAME execution finished at `date`."
+exit 0
