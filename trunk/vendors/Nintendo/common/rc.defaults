@@ -126,6 +126,10 @@ start_nanox="NO"
 # If you want to start PIXIL at boot, set this to "YES".
 start_pixil="NO"
 
+# To start the boa webserver on boot, set this to "YES"
+# NOTE: The default website is /var/www
+start_boa="YES"
+
 # If you use a proxy server in your environment, specify it here
 # for ViewML.
 export VIEWML_PROXY=""
