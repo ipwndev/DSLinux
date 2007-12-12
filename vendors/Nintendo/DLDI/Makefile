@@ -11,7 +11,7 @@ OPTDIR	 := opt
 
 ROMFS_DIRS := boot dev proc sbin $(FATFS)/linux $(OPTDIR) tmp 
 
-FS_DIRS := etc/rc.d home lib usr/bin usr/games usr/lib usr/share/udhcpc var/tmp var/run var/log
+FS_DIRS := etc/rc.d home lib usr/bin usr/games usr/lib usr/share/udhcpc var/tmp var/run var/log var/www
 
 DEVICES := \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
