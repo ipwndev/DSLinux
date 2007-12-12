@@ -1,0 +1,23 @@
+# Makefile for ncftp
+
+all: .compiled
+
+NCFTP_CONFIGURE_FLAGS=	--host=arm-linux-elf --libdir=$(ROOTDIR)/lib \
+			--includedir=$(ROOTDIR)/include --disable-largefile \
+			--enable-static=yes --enable-shared=no --prefix=/usr/bin
+
+
+.configured:
+	cd src && ./configure $(NCFTP_CONFIGURE_FLAGS)
+	touch $@
+
+.compiled: .configured
+	$(MAKE) -C src
+	touch $@
+
+clean:
+	-[ -f src/Makefile ] && $(MAKE) -C src distclean
+	rm -f .configured .compiled
+
+romfs:
+	$(ROMFSINST) src/bin/ncftp.gdb /bin/ncftp
