@@ -227,6 +227,9 @@ bool 'umount'			CONFIG_USER_MOUNT_UMOUNT
 bool 'fdisk'			CONFIG_USER_FDISK_FDISK
 bool 'sfdisk'			CONFIG_USER_FDISK_SFDISK
 
+comment "Compression"
+bool 'tar'			CONFIG_USER_TAR_TAR
+
 comment 'EXT2'
 bool 'e2fsck'			CONFIG_USER_E2FSPROGS_E2FSCK_E2FSCK
 bool 'mke2fs'			CONFIG_USER_E2FSPROGS_MISC_MKE2FS

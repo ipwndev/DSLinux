@@ -141,6 +141,11 @@ CONFIG_USER_AGETTY_AGETTY=y
 # CONFIG_USER_FDISK_SFDISK is not set
 
 #
+# Compression
+#
+# CONFIG_USER_TAR_TAR is not set
+
+#
 # EXT2
 #
 # CONFIG_USER_E2FSPROGS_E2FSCK_E2FSCK is not set
