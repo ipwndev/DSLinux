@@ -1,8 +1,0 @@
-add_info
-#1 0,"Work"
-#2 1,"Home"
-#3 2,"Fax"
-#4 3,"Mobile"
-#5 4,"Pager"
-#6 5,"E-Mail"
-#7 6,"Web Page"
