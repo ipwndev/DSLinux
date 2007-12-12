@@ -3272,6 +3272,11 @@ CONFIG_USER_BOOTTOOLS_SETBENV
 CONFIG_USER_BOOTTOOLS_RESET
   The uCsimm/uCdimm tools.
 
+CONFIG_USER_MINIZIP_MINIZIP
+  This package enables to extract files from a .zip archive file.
+  It is compatible with PKZip 2.04g, WinZip, InfoZip and more
+  Encryption, span zips and older methods are unsupported
+
 CONFIG_USER_BZIP2_BZIP2
   The high-quality, open-source data compressor
 
