@@ -3386,6 +3386,9 @@ CONFIG_USER_MINI_HTTPD_MINI_HTTPD
 CONFIG_USER_STRACE_STRACE
   Trace system calls and signals.
 
+CONFIG_USER_NCFTP_NCFTP
+  ncftp is a curses based ftp client
+
 CONFIG_USER_NET_TOOLS_ARP
   Manipulate the system ARP cache.
 
