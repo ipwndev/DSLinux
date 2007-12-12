@@ -1,0 +1,2 @@
+SYSHDRS_DEP=syshdrs.h ncftp.h ncftp_errno.h util.h ftp.h
+PCH=
