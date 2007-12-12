@@ -229,6 +229,7 @@ bool 'sfdisk'			CONFIG_USER_FDISK_SFDISK
 
 comment "Compression"
 bool 'tar'			CONFIG_USER_TAR_TAR
+bool 'bzip2'			CONFIG_USER_BZIP2_BZIP2
 
 comment 'EXT2'
 bool 'e2fsck'			CONFIG_USER_E2FSPROGS_E2FSCK_E2FSCK

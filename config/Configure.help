@@ -3272,6 +3272,9 @@ CONFIG_USER_BOOTTOOLS_SETBENV
 CONFIG_USER_BOOTTOOLS_RESET
   The uCsimm/uCdimm tools.
 
+CONFIG_USER_BZIP2_BZIP2
+  The high-quality, open-source data compressor
+
 CONFIG_USER_TAR_TAR
   The GNU Tape Archiving utility
 

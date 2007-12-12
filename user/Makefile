@@ -55,6 +55,7 @@ dir_$(CONFIG_USER_BR2684CTL_BR2684CTL)      += br2684ctl
 dir_$(CONFIG_USER_BRCFG_BRCFG)              += brcfg
 dir_$(CONFIG_USER_BRCTL_BRCTL)              += bridge-utils
 dir_$(CONFIG_USER_BUSYBOX_BUSYBOX)          += busybox
+dir_$(CONFIG_USER_BZIP2_BZIP2)              += bzip2
 dir_$(CONFIG_USER_CAL_CAL)                  += cal
 dir_$(CONFIG_USER_CAL_DATE)                 += cal
 dir_$(CONFIG_USER_CAMSERV)                  += camserv
