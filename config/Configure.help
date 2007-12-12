@@ -1257,6 +1257,10 @@ CONFIG_USER_MUSICBOX_MUSICBOX
 CONFIG_USER_TINYSID_TINYSID
   TinySID is the smallest SID player for c64 SID music.
 
+CONFIG_USER_XMP_XMP
+  The Extended Module Player is a portable command-line module player
+  It supports over 81 different formats
+
 CONFIG_USER_NULL_NULL
   NULL
   
