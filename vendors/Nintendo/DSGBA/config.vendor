@@ -146,6 +146,7 @@ CONFIG_LIB_ZLIB=y
 #
 # CONFIG_USER_TAR_TAR is not set
 # CONFIG_USER_BZIP2_BZIP2 is not set
+# CONFIG_USER_GZIP_GZIP is not set
 
 #
 # EXT2
