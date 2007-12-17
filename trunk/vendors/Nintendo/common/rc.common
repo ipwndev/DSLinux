@@ -27,6 +27,13 @@ then
 	echo "nobody:x:99:99:Nobody:/:" >> /etc/passwd
 fi
 
+if [ "$start_syslogd" = "YES" ]
+then
+		/etc/rc.d/syslogd start
+	else
+		echo "Not starting syslogd"
+fi
+
 # setup networking
 if [ "$enable_network_on_boot" = "YES" ]
 then

@@ -135,6 +135,9 @@ start_boa="NO"
 # and copy to /etc/inadyn.conf
 start_inadyn="NO"
 
+# To start the syslog daemon, set to "YES"
+start_syslogd="NO"
+
 # If you use a proxy server in your environment, specify it here
 # for ViewML.
 export VIEWML_PROXY=""
