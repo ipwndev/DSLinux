@@ -16,7 +16,7 @@ FS_DIRS := etc/rc.d home lib usr/bin usr/games usr/lib usr/share/udhcpc var/tmp 
 DEVICES := \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
 	\
-	mem,c,1,1      kmem,c,1,2         null,c,1,3\
+	mem,c,1,1      kmem,c,1,2         null,c,1,3 \
 	\
 	ram0,b,1,0     ram1,b,1,1 \
 	\
