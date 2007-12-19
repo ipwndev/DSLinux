@@ -219,7 +219,7 @@ romfs:
 	done
 	$(ROMFSINST) dbclient /bin/ssh
 	$(ROMFSINST) -e CONFIG_USER_DROPBEAR_DROPBEAR \
-		-a "#ssh     stream tcp nowait root /usr/bin/dropbear -F -i" /etc/inetd.conf.example
+		-a "#ssh     stream tcp nowait root /usr/bin/dropbear -r /etc/dropbear_rsa_host_key -F -i" /etc/inetd.conf.example
 	$(ROMFSINST) -e CONFIG_USER_DROPBEAR_DROPBEAR \
 		-a "ssh 22/udp" /etc/services
 	$(ROMFSINST) -e CONFIG_USER_DROPBEAR_DROPBEAR \
