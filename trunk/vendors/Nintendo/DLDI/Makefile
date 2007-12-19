@@ -13,6 +13,8 @@ ROMFS_DIRS := boot dev proc sbin $(FATFS)/linux $(OPTDIR) tmp
 
 FS_DIRS := etc/rc.d home lib usr/bin usr/games usr/lib usr/share/udhcpc var/tmp var/run var/log var/www
 
+TTYP_DEVICES = 0 1 2 3 4 5 6 7 8 9 a b c d e f
+
 DEVICES := \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
 	\
@@ -44,10 +46,6 @@ DEVICES := \
 	tty0,c,4,0     tty1,c,4,1         tty2,c,4,2       tty3,c,4,3 \
 	tty4,c,4,4     tty5,c,4,5         tty6,c,4,6       tty7,c,4,7 \
 	\
-	ttyp0,c,3,0    ttyp1,c,3,1        ttyp2,c,3,2      ttyp3,c,3,3 \
-	ttyp4,c,3,4    ttyp5,c,3,5        ttyp6,c,3,6      ttyp7,c,3,7 \
-	ttyp8,c,3,8    ttyp9,c,3,9        ttypa,c,3,10     ttypb,c,3,11 \
-	ttypc,c,3,12   ttypd,c,3,13       ttype,c,3,14     ttypf,c,3,15 \
 	\
 	zero,c,1,5     random,c,1,8       urandom,c,1,9
 
@@ -82,6 +80,11 @@ romfs:
 	$(ROMFSINST) -s $(FATFS)/linux/home /home
 	$(ROMFSINST) -s $(FATFS)/linux/etc /etc
 	$(ROMFSINST) -s /$(FATFS)/linux/var/run/log /dev/log
+	
+	#Create symlinks for ttyp devicess
+	for i in $(TTYP_DEVICES); do \
+		$(ROMFSINST) -s /var/run/ttyp$$i /dev/ttyp$$i; \
+	done
 	
 	# copy some DLDI specific files to romfs
 	$(ROMFSINST) /boot/rc

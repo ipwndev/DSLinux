@@ -212,11 +212,16 @@ tidy:
 	-rm -f *~ *.gcov */*~
 
 romfs:
+	arm-linux-elf-flthdr -s 512000 dropbearkey
 	for p in $(filter-out dbclient,$(PROGRAMS)); \
 	do \
 		$(ROMFSINST) /bin/$$p; \
 	done
 	$(ROMFSINST) dbclient /bin/ssh
 	$(ROMFSINST) -e CONFIG_USER_DROPBEAR_DROPBEAR \
-		-a "#ssh     stream tcp nowait root /bin/dropbear -i" /etc/inetd.conf.example
+		-a "#ssh     stream tcp nowait root /usr/bin/dropbear -F -i" /etc/inetd.conf.example
+	$(ROMFSINST) -e CONFIG_USER_DROPBEAR_DROPBEAR \
+		-a "ssh 22/udp" /etc/services
+	$(ROMFSINST) -e CONFIG_USER_DROPBEAR_DROPBEAR \
+		-a "ssh 22/tcp" /etc/services
 

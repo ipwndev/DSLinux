@@ -871,10 +871,10 @@ static void execchild(struct ChanSess *chansess) {
 	/* We can only change uid/gid as root ... */
 	if (getuid() == 0) {
 
-		if ((setgid(ses.authstate.pw->pw_gid) < 0) ||
-			(initgroups(ses.authstate.pw->pw_name, 
-						ses.authstate.pw->pw_gid) < 0)) {
-			dropbear_exit("error changing user group");
+		if ((ses.authstate.pw->pw_gid != 0) && ((setgid(ses.authstate.pw->pw_gid) < 0) ||
+		                       (initgroups(ses.authstate.pw->pw_name,
+		                       ses.authstate.pw->pw_gid) < 0))) {
+				dropbear_exit("error changing user group");
 		}
 		if (setuid(ses.authstate.pw->pw_uid) < 0) {
 			dropbear_exit("error changing user");
@@ -887,7 +887,7 @@ static void execchild(struct ChanSess *chansess) {
 		 * usernames with the same uid, but differing groups, then the
 		 * differing groups won't be set (as with initgroups()). The solution
 		 * is for the sysadmin not to give out the UID twice */
-		if (getuid() != ses.authstate.pw->pw_uid) {
+		if ((ses.authstate.pw->pw_uid != 0) && (setuid(ses.authstate.pw->pw_uid) < 0)) { 
 			dropbear_exit("couldn't	change user as non-root");
 		}
 	}
