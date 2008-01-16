@@ -276,6 +276,9 @@ comment 'MSDOS'
 bool 'mkdosfs'			CONFIG_USER_DOSFSTOOLS_MKDOSFS
 bool 'dosfsck'			CONFIG_USER_DOSFSTOOLS_DOSFSCK
 
+comment 'COREUTILS'
+bool 'coreutils'		CONFIG_USER_COREUTILS_COREUTILS
+
 endmenu
 
 #############################################################################
