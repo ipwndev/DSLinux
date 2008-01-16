@@ -124,7 +124,7 @@ Jobs(void)
 	STRNCAT(ncftpbatch, "ncftpbatch");
 #endif	/* BINDIR */
 
-	pid = fork();
+	pid = vfork();
 	if (pid < 0) {
 		perror("fork");
 	} else if (pid == 0) {
@@ -177,7 +177,7 @@ RunBatchWithCore(const FTPCIPtr cip)
 	}
 
 	(void) sprintf(pfdstr, "%d", pfd[0]);
-	pid = fork();
+	pid = vfork();
 	if (pid < 0) {
 		(void) close(pfd[0]);
 		(void) close(pfd[1]);

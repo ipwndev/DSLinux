@@ -355,7 +355,7 @@ RunBatch(void)
 	STRNCAT(ncftpbatch, "ncftpbatch");
 #endif	/* BINDIR */
 
-	pid = fork();
+	pid = vfork();
 	if (pid < 0) {
 		perror("fork");
 	} else if (pid == 0) {

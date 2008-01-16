@@ -1629,7 +1629,7 @@ RunBookmarkEditor(char *selectedBmName, size_t dsize)
 		return (-1);
 	}
 #endif
-	pid = (int) fork();
+	pid = (int) vfork();
 	if (pid < 0) {
 		return (-1);
 	} else if (pid == 0) {
@@ -3530,7 +3530,7 @@ ShellCmd(const int argc, char **const argv, const CommandPtr cmdp, const ArgvInf
 
 	osigint = NcSignal(SIGINT, (FTPSigProc) SIG_IGN);
 	ARGSUSED(gUnusedArg);
-	pid = fork();
+	pid = vfork();
 	if (pid < (pid_t) 0) {
 		perror("fork");
 	} else if (pid == 0) {
