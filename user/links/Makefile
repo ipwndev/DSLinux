@@ -2,7 +2,7 @@
 
 all: .compiled
 
-LINKS_CONFIGURE_FLAGS=
+LINKS_CONFIGURE_FLAGS=--with-ssl=$(ROOTDIR)/lib 
 
 ifeq ($(CONFIG_USER_LINKS_WITH_GRAPHICS),y)
 LINKS_CONFIGURE_FLAGS+=--enable-graphics --with-fb \
