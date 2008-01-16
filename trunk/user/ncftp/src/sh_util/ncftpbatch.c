@@ -898,7 +898,7 @@ RunShellCommandWithSpoolItemData(const char *const cmd, const char *const addstr
 		LogPerror("pipe");
 	}
 
-	pid = fork();
+	pid = vfork();
 	if (pid < 0) {
 		(void) close(pfd[0]);
 		(void) close(pfd[1]);
@@ -2069,7 +2069,7 @@ Daemon(void)
 		(void) close(fd);
 	}
 
-	pid = fork();
+	pid = vfork();
 	if (pid < 0)
 		exit(1);
 	else if (pid > 0)
