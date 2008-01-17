@@ -1,8 +1,0 @@
-# Example configuration file for using dyndns.org with inadyn
-update_period_sec 600
-
-username your-username
-password your-password
-
-dyndns_system dyndns@dyndns.org
-alias domain.dyndns.org
