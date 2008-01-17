@@ -406,6 +406,9 @@ CONFIG_USER_NANO
 CONFIG_USER_LEVEE_VI
   A small version of 'vi' for editing files.
 
+CONFIG_USER_LESS_LESS
+  Less is a paging program similar to more
+
 CONFIG_USER_BOA_SRC_BOA
   A small webserver.
   Approx. binary size: 54k

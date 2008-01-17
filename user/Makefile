@@ -186,6 +186,7 @@ dir_$(CONFIG_USER_LANG_A60)                 += a60
 dir_$(CONFIG_USER_LCALC_LCALC)              += lcalc
 dir_$(CONFIG_USER_LCD_LCD)                  += lcd
 dir_$(CONFIG_USER_LEDCON_LEDCON)            += ledcon
+dir_$(CONFIG_USER_LESS_LESS)                += less
 dir_$(CONFIG_USER_LEVEE_VI)                 += levee
 dir_$(CONFIG_USER_LHA_LHA)                  += lha
 dir_$(CONFIG_USER_LINKS_LINKS)              += links

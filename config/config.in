@@ -814,6 +814,7 @@ bool 'hnb'			CONFIG_USER_HNB
 bool 'lcalc'			CONFIG_USER_LCALC_LCALC
 bool 'lcd'			CONFIG_USER_LCD_LCD
 bool 'ledcon'			CONFIG_USER_LEDCON_LEDCON
+bool 'less'			CONFIG_USER_LESS_LESS
 bool 'lha'			CONFIG_USER_LHA_LHA
 bool 'lilo'			CONFIG_USER_LILO_LILO
 bool 'lissa'			CONFIG_USER_LISSA_LISSA
