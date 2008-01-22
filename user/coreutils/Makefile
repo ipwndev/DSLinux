@@ -19,6 +19,7 @@ clean:
 	-[ -f src/Makefile ] && $(MAKE) -C src distclean
 	rm -f .configured .compiled
 romfs:
+	arm-linux-elf-flthdr -s 30000 ./src/src/ls
 	$(ROMFSINST) ./src/src/[ /usr/bin/[
 	$(ROMFSINST) ./src/src/base64 /usr/bin/base64
 	$(ROMFSINST) ./src/src/basename /usr/bin/basename
