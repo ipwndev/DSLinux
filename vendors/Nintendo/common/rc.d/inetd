@@ -29,6 +29,17 @@ case "$1" in
 			echo "but there is no SSH host key yet."
 			/usr/bin/dropbearkey -t rsa -f $SSH_HOST_KEY
 		fi		
+		
+		# Check for existence of samba password
+		# Generate if not found and smbd enabled
+
+		if grep netbios-ssn $INETD_CONF | grep -v "^#" >/dev/null \
+			&& [ ! -e /etc/smbpasswd ]
+		then
+			echo "Generating default smbpasswd"
+			echo "You are advised to change this with smbpasswd"
+			(echo uClinux ; echo uClinux) | /usr/bin/smbpasswd -a root -s
+		fi
 		$DAEMON &
 	;;
 	stop)
