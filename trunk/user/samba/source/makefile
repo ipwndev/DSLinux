@@ -26,10 +26,12 @@ clean:
 	rm -rf build
 
 romfs:
+	arm-linux-elf-flthdr -s 30000 build/bin/smbclient
 	$(ROMFSINST) -e CONFIG_USER_SAMBA_SHARED build/bin/libsmbclient.so /lib/libsmbclient.so.0
 	$(ROMFSINST) -e CONFIG_USER_SAMBA_NMBD build/bin/nmbd /bin/nmbd
 	$(ROMFSINST) -e CONFIG_USER_SAMBA_SMBD build/bin/smbd /bin/smbd
 	$(ROMFSINST) -e CONFIG_USER_SAMBA_SMBD build/bin/smbpasswd /bin/smbpasswd
+	$(ROMFSINST) -e CONFIG_USER_SAMBA_SMBD build/bin/smbclient /bin/smbclient
 	$(ROMFSINST) -e CONFIG_USER_SAMBA_SMBMOUNT build/bin/smbmnt /bin/smbmnt
 	$(ROMFSINST) -e CONFIG_USER_SAMBA_SMBMOUNT build/bin/smbmount /bin/smbmount
 	$(ROMFSINST) -e CONFIG_USER_SAMBA_SMBUMOUNT build/bin/smbumount /bin/smbumount
