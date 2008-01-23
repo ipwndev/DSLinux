@@ -1,6 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
+# Wed Jan 23 19:17:18 2008
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
@@ -734,7 +735,8 @@ CONFIG_RAMFS=y
 #
 # CONFIG_NFS_FS is not set
 # CONFIG_NFSD is not set
-# CONFIG_SMB_FS is not set
+CONFIG_SMB_FS=y
+# CONFIG_SMB_NLS_DEFAULT is not set
 # CONFIG_CIFS is not set
 # CONFIG_NCP_FS is not set
 # CONFIG_CODA_FS is not set
