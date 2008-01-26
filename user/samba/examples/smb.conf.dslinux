@@ -8,7 +8,7 @@ log level = 3
 server string = DSLinux Samba Server %v
 socket options = TCP_NODELAY SO_RCVBUF=8192 SO_SNDBUF=8192
 [share]
-path = /media
+path = /media/
 comment = Root Directory
 valid users = root
 public = yes
