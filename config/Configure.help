@@ -1464,6 +1464,9 @@ CONFIG_USER_UCDSNMP_SNMPD
   net-snmp (www.net-snmp.org) Simple Network Management Protocol implementation.
   Build/Install the agent (snmpd).
 
+CONFIG_USER_NAIL
+  Nail is a mail user agent for Unix systems.
+
 CONFIG_USER_NETSNMP_SNMPD
   Build/Install the agent (snmpd).
 

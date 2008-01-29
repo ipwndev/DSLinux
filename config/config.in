@@ -504,6 +504,7 @@ if [ "$CONFIG_USER_MINI_HTTPD_MINI_HTTPD" = "y" ]; then
 fi
 
 bool 'msntp'			CONFIG_USER_MSNTP_MSNTP
+bool 'nail'			CONFIG_USER_NAIL
 bool 'nasl'			CONFIG_USER_NESSUS_NASL
 bool 'ncftp'			CONFIG_USER_NCFTP_NCFTP
 bool 'netcat'			CONFIG_USER_NETCAT_NETCAT
