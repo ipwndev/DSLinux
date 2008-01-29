@@ -78,7 +78,7 @@ get_pager(void)
 
 	cp = value("PAGER");
 	if (cp == NULL || *cp == '\0')
-		cp = value("bsdcompat") ? "more" : "pg";
+		cp = value("bsdcompat") ? "more" : "less";
 	return cp;
 }
 
