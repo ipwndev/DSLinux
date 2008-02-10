@@ -117,7 +117,7 @@ reset: dirs-reset binutils-reset uClibc-reset sysroot-reset gcc-stage1-reset \
 
 # Use to save disc space.
 clean: binutils-clean uClibc-clean sysroot-clean gcc-clean elf2flt-clean \
-	libelf-clean gdb-clean ndstool-clean dist-clean
+	libelf-clean gdb-clean ndstool-clean
 
 # Nukes everything (including the installed toolchain itself!)
 # Use this to start ALL OVER AGAIN! Use with caution!
@@ -692,10 +692,6 @@ $(CWD)/.stripped:
 dist: $(CWD)/.stripped $(CWD)/.dist-made
 dist-reset:
 	rm -f $(CWD)/.dist-made
-dist-clean:
-	rm -rf $(DISTNAME)
-	rm -f $(DISTNAME).tbz $(DISTNAME).tbz.md5
-	rm -rf $(DISTDIR)
 
 $(CWD)/.dist-made:
 	-[ -d $(DISTNAME) ] && rm -rf $(DISTNAME)
