@@ -206,6 +206,7 @@ dir_$(CONFIG_USER_MATH_TEST)                += mathtest
 dir_$(CONFIG_USER_MATHOMATIC)               += mathomatic
 dir_$(CONFIG_USER_MAWK_AWK)                 += mawk
 dir_$(CONFIG_USER_MC)                       += mc
+dir_$(CONFIG_USER_MKTEMP)                   += mktemp
 dir_$(CONFIG_USER_MPC)                      += mpc
 dir_$(CONFIG_USER_MTDUTILS)                 += mtd-utils
 dir_$(CONFIG_USER_MICROWIN)                 += microwin

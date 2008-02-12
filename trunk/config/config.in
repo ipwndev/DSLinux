@@ -279,6 +279,8 @@ bool 'dosfsck'			CONFIG_USER_DOSFSTOOLS_DOSFSCK
 comment 'COREUTILS'
 bool 'coreutils'		CONFIG_USER_COREUTILS_COREUTILS
 
+bool 'mktemp'			CONFIG_USER_MKTEMP
+
 endmenu
 
 #############################################################################

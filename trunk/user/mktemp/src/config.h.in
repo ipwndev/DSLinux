@@ -1,0 +1,95 @@
+/* config.h.in.  Generated from configure.in by autoheader.  */
+
+#ifndef _MKTEMP_CONFIG_H
+#define _MKTEMP_CONFIG_H
+
+/* Define if your OS uses EBCDIC, not ASCII. */
+#undef HAVE_EBCDIC
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the `lrand48' function. */
+#undef HAVE_LRAND48
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the `mkdtemp' function. */
+#undef HAVE_MKDTEMP
+
+/* Define to 1 if you have the <paths.h> header file. */
+#undef HAVE_PATHS_H
+
+/* Define if your crt0.o defines the __progname symbol for you. */
+#undef HAVE_PROGNAME
+
+/* Define to 1 if you have the `random' function. */
+#undef HAVE_RANDOM
+
+/* Define to 1 if you have the `srandomdev' function. */
+#undef HAVE_SRANDOMDEV
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the `strdup' function. */
+#undef HAVE_STRDUP
+
+/* Define to 1 if you have the `strerror' function. */
+#undef HAVE_STRERROR
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Use the system or private version of mkdtemp? */
+#undef MKDTEMP
+
+/* Use the system or private version of mkstemp? */
+#undef MKSTEMP
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
+#undef TIME_WITH_SYS_TIME
+
+/* Location of random device/stream if you have one. */
+#undef _PATH_RANDOM
+
+/* Deal with ANSI stuff reasonably.  */
+/* XXX */
+#undef  __P
+#if defined (__cplusplus) || defined (__STDC__)
+# define __P(args)		args
+#else
+# define __P(args)		()
+#endif
+
+/* Ignore __attribute__ if non-gcc or gcc < 2.5 */
+#if !defined(__GNUC__) || __GNUC__ < 2 ||  (__GNUC__ == 2 && __GNUC_MINOR__ < 5)
+#define __attribute__(args)
+#endif
+
+/* Define to empty if `const' does not conform to ANSI C. */
+#undef const
+
+/* Define to `int' if <sys/types.h> does not define. */
+#undef ssize_t
+
+#endif /* _MKTEMP_CONFIG_H */
