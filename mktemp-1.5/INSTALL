@@ -1,0 +1,110 @@
+Installation instructions for mktemp
+====================================
+
+Mktemp uses a `configure' script to probe the capabilities and type
+of the system in question.  Please read this document fully before
+configuring and building mktemp.  You may also wish to read the file
+INSTALL.configure which explains more about the `configure' script.
+
+Simple mktemp installation
+==========================
+
+For most systems and configurations it is possible simply to:
+
+    1)  If you previously ran `configure' on a different host
+        you will probably want to do a `make distclean' to remove
+        the old `config.cache' file.  Otherwise, `configure'
+        will complain and refuse to run.  Alternately, you can
+        simply `rm config.cache'.
+
+    2)  You should probably read the `Available configure options' section
+	to see if there are any special options you may want or need.
+
+    2a) If you wish to build mktemp in the source directory, `cd' there
+	and type `./configure'.
+
+    2b) If you wish to build mktemp in another directory and the make
+	program you are using supports the `VPATH' variable (GNU make
+	and most modern make programs do), `cd' the directory where you
+	wish to bulid mktemp and type `/path/to/source/configure'.
+
+    3)  Type `make' to compile mktemp.
+
+    4)  Type `make install' (as root) to install mktemp and its manual
+        page.  You can also install various pieces the package via
+        the install-binaries and install-man make targets.
+
+Available configure options
+===========================
+
+This section describes flags accepted by the mktemp's `configure' script.
+Defaults are listed in brackets after the description.
+
+Configuration:
+  --cache-file=FILE
+	Cache test results in FILE
+
+  --help
+	Print the usage/help info
+
+  --no-create
+	Do not create output files
+
+  --quiet, --silent
+	Do not print `checking...' messages
+
+Directory and file names:
+  --prefix=PREFIX
+	Install architecture-independent files in PREFIX.  [/usr/local]
+
+  --exec-prefix=EPREFIX
+	Install architecture-dependent files in EPREFIX. [same as prefix]
+
+  --bindir=DIR
+	Where the mktemp executable will be installed.  [EPREFIX/bin]
+
+  --mandir=DIR
+	Install man page in DIR [PREFIX/man]
+
+  --srcdir=DIR
+	Find the sources in DIR [configure dir or ..]
+
+Special features/options:
+  --with-CC=path
+	Specifies path to C compiler you wish to use.
+
+  --with-incpath
+	Adds the specified directories to CPPFLAGS so configure and the
+	compiler will look there for include files.  Multiple directories
+	may be specified as long as they are space separated.
+	Eg: --with-incpath="/usr/local/include /opt/include"
+
+  --with-libpath
+        Adds the specified directories to LDFLAGS so configure and
+        the compiler will look there for libraries.  Multiple
+        directories may be specified as with --with-incpath.
+
+  --with-libraries
+        Adds the specified libaries to LIBS so mktemp will link
+        against them.  If the library doesn't start with `-l' or
+        end in `.a' or `.o' a `-l' will be prepended to it.  Multiple
+        libraries may be specified as long as they are space
+        separated.
+
+  --with-man
+	When installing the manual page, install the one in man(7) format.
+
+  --with-mdoc
+	When installing the manual page, install the one in mdoc(7) format.
+
+  --with-random=path
+	Mktemp with use `path' as the path to a device from which to read
+	random data.  This defaults to /dev/urandom if it exists.
+
+  --with-libc
+	Causes mktemp to use the mkstemp(3) and mkdtemp(3) (if it exists)
+	in the system C library instead of mktemp's own private version.
+	You should only enable this option if you know that the version
+	of mkstemp(3) your OS ships with is a good one.
+	NOTE: if your OS doesn't have a mkdtemp(3) function, a rather
+	      simplistic implementation with be used.
