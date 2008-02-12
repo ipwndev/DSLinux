@@ -964,7 +964,10 @@ CONFIG_USER_CLOCK_CLOCK
 
 CONFIG_USER_COREUTILS_COREUTILS
   GNU Coreutils v6.7
- 
+
+CONFIG_USER_MKTEMP
+  A small program to create temporary files
+
 CONFIG_USER_CPU_CPU
   cpu tool
 
