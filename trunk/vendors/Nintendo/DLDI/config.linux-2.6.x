@@ -393,7 +393,7 @@ CONFIG_NETDEVICES=y
 # CONFIG_DUMMY is not set
 # CONFIG_BONDING is not set
 # CONFIG_EQUALIZER is not set
-CONFIG_TUN=n
+# CONFIG_TUN is not set
 
 #
 # PHY device support
@@ -734,8 +734,7 @@ CONFIG_RAMFS=y
 #
 # CONFIG_NFS_FS is not set
 # CONFIG_NFSD is not set
-CONFIG_SMB_FS=n
-# CONFIG_SMB_NLS_DEFAULT is not set
+# CONFIG_SMB_FS is not set
 # CONFIG_CIFS is not set
 # CONFIG_NCP_FS is not set
 # CONFIG_CODA_FS is not set
