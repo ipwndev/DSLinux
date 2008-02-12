@@ -204,6 +204,7 @@ CONFIG_USER_AGETTY_AGETTY=y
 # COREUTILS
 #
 # CONFIG_USER_COREUTILS_COREUTILS is not set
+# CONFIG_USER_MKTEMP is not set
 
 #
 # Network Applications
