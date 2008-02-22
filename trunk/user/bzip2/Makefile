@@ -16,3 +16,4 @@ clean:
 romfs:
 	$(ROMFSINST) src/bzip2 /bin/bzip2
 	$(ROMFSINST) src/bzip2recover /bin/bzip2recover
+	$(ROMFSINST) -m src/bzip2.1 /usr/share/man/bzip2
