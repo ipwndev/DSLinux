@@ -45,4 +45,5 @@ lfn.o: lfn.c common.h io.h dosfsck.h lfn.h file.h
 
 romfs:
 	$(ROMFSINST) dosfsck /usr/bin/dosfsck
+	$(ROMFSINST) -m dosfsck.8 /usr/share/man/dosfsck
 

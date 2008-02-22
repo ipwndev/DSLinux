@@ -39,6 +39,7 @@ romfs:
 	-a "ftp-data 20/tcp" /etc/services
 	$(ROMFSINST) -e CONFIG_USER_FTPD_FTPD \
 	-a "ftp-data 20/udp" /etc/services
+	$(ROMFSINST) -m ftpd.8 /usr/share/man/ftpd
 clean:
 	-rm -f $(EXEC) *.elf *.elf2flt *.gdb *.o
 

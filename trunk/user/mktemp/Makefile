@@ -20,3 +20,4 @@ clean:
 
 romfs:
 	$(ROMFSINST) src/mktemp /bin/mktemp
+	$(ROMFSINST) -m src/mktemp.man /usr/share/man/mktemp

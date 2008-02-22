@@ -1837,18 +1837,32 @@ GAMESDIR=/usr/games
 romfs:
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_ADVENTURE \
 		adventure/adventure $(GAMESDIR)/adventure
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_ADVENTURE \
+		-m adventure/adventure.6 /usr/share/man/adventure
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_ARITHMETIC \
    		arithmetic/arithmetic $(GAMESDIR)/arithmetic
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_ARITHMETIC \
+   		-m arithmetic/arithmetic.6 /usr/share/man/arithmetic
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BACKGAMMON \
 		backgammon/backgammon/backgammon $(GAMESDIR)/backgammon
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BACKGAMMON \
+		-m backgammon/backgammon/backgammon.6 /usr/share/man/backgammon
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BACKGAMMON \
 		backgammon/teachgammon/teachgammon $(GAMESDIR)/teachgammon
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BACKGAMMON \
+		-m backgammon/teachgammon/teachgammon.6 /usr/share/man/teachgammon
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BATTLESTAR \
 	    battlestar/battlestar $(GAMESDIR)/battlestar
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BATTLESTAR \
+	    -m battlestar/battlestar.6 /usr/share/man/battlestar
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BCD \
 	    bcd/bcd $(GAMESDIR)/bcd
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BCD \
+	    -m bcd/bcd.6 /usr/share/man/bcd
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BOGGLE \
 	    boggle/boggle/boggle $(GAMESDIR)/boggle
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BOGGLE \
+	    -m boggle/boggle/boggle.6 /usr/share/man/boggle
 	$(ROMFSINST) -d -e CONFIG_USER_GAMES_BSDGAMES_BOGGLE \
 	    boggle/boggle/helpfile /usr/share/games/bsdgames/boggle/helpfile
 	$(ROMFSINST) -d -e CONFIG_USER_GAMES_BSDGAMES_BOGGLE \
@@ -1858,19 +1872,31 @@ romfs:
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CAESAR \
 	    caesar/caesar $(GAMESDIR)/caesar
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CAESAR \
+	    -m caesar/caesar.6 /usr/share/man/caesar
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CAESAR \
 	    caesar/rot13 $(GAMESDIR)/rot13
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CANFIELD \
 	    canfield/canfield/canfield $(GAMESDIR)/canfield
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CANFIELD \
+	    -m canfield/canfield/canfield.6 /usr/share/man/canfield
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CANFIELD \
 	    canfield/cfscores/cfscores $(GAMESDIR)/cfscores
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CRIBBAGE \
 	    cribbage/cribbage $(GAMESDIR)/cribbage
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_CRIBBAGE \
+	    -m cribbage/cribbage.6 /usr/share/man/cribbage
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_FISH \
 	    fish/fish $(GAMESDIR)/fish
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_FISH \
+	    -m fish/fish.6 /usr/share/man/fish
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_GOMOKU \
 	    gomoku/gomoku $(GAMESDIR)/gomoku
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_GOMOKU \
+	    -m gomoku/gomoku.6 /usr/share/man/gomoku
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_HACK \
 	    hack/hack $(GAMESDIR)/hack
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_HACK \
+	    -m hack/hack.6 /usr/share/man/hack
 	$(ROMFSINST) -d -e CONFIG_USER_GAMES_BSDGAMES_HACK \
 	    hack/data /usr/share/games/bsdgames/hack/data
 	$(ROMFSINST) -d -e CONFIG_USER_GAMES_BSDGAMES_HACK \
@@ -1881,44 +1907,78 @@ romfs:
 	    hack/rumors /usr/share/games/bsdgames/hack/rumors
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_HANGMAN \
 	    hangman/hangman $(GAMESDIR)/hangman
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_HANGMAN \
+	    -m hangman/hangman.6 /usr/share/man/hangman
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_MILLE \
 	    mille/mille $(GAMESDIR)/mille
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_MILLE \
+	    -m mille/mille.6 /usr/share/man/mille
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_MORSE \
 	    morse/morse $(GAMESDIR)/morse
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_NUMBER \
 	    number/number $(GAMESDIR)/number
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_NUMBER \
+	    -m number/number.6 /usr/share/man/number
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_PIG \
 	    pig/pig $(GAMESDIR)/pig
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_PIG \
+	    -m pig/pig.6 /usr/share/man/pig
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_POM \
 	    pom/pom $(GAMESDIR)/pom
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_POM \
+	    -m pom/pom.6 /usr/share/man/pom
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_PPT \
 	    ppt/ppt $(GAMESDIR)/ppt
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_PRIMES \
 	    primes/primes $(GAMESDIR)/primes
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_PRIMES \
+	    -m primes/primes.6 /usr/share/man/primes
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_QUIZ \
 	    quiz/quiz $(GAMESDIR)/quiz
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_QUIZ \
+	    -m quiz/quiz.6 /usr/share/man/quiz
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_RAIN \
 	    rain/rain $(GAMESDIR)/rain
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_RAIN \
+	    -m rain/rain.6 /usr/share/man/rain
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_RANDOM \
 	    random/random $(GAMESDIR)/random
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_RANDOM \
+	    -m random/random.6 /usr/share/man/random
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_ROBOTS \
 	    robots/robots $(GAMESDIR)/robots
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_ROBOTS \
+	    -m robots/robots.6 /usr/share/man/robots
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_SAIL \
 	    sail/sail $(GAMESDIR)/sail
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_SAIL \
+	    -m sail/sail.6 /usr/share/man/sail
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_SNAKE \
 	    snake/snake/snake $(GAMESDIR)/snake
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_SNAKE \
+	    -m snake/snake/snake.6 /usr/share/man/snake
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_SNAKE \
 	    snake/snscore/snscore $(GAMESDIR)/snscore
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_TETRIS \
    		tetris/tetris $(GAMESDIR)/tetris
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_TETRIS \
+   		-m tetris/tetris.6 /usr/share/man/tetris
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_TREK \
 	    trek/trek $(GAMESDIR)/trek
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_TREK \
+	    -m trek/trek.6 /usr/share/man/trek
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_WORM \
 	    worm/worm $(GAMESDIR)/worm
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_WORM \
+	    -m worm/worm.6 /usr/share/man/worm
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_WORMS \
 	    worms/worms $(GAMESDIR)/worms
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_WORMS \
+	    -m worms/worms.6 /usr/share/man/worms
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_WUMP \
 	    wump/wump $(GAMESDIR)/wump
+	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_WUMP \
+	    -m wump/wump.6 /usr/share/man/wump
 	$(ROMFSINST) -d -e CONFIG_USER_GAMES_BSDGAMES_WUMP \
 	    wump/wump.info /usr/share/games/bsdgames/wump.info
 

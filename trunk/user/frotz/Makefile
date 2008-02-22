@@ -283,3 +283,5 @@ help:
 
 romfs:
 	$(ROMFSINST) /usr/games/frotz
+	$(ROMFSINST) -m doc/dfrotz.6 /usr/share/man/dfrotz
+	$(ROMFSINST) -m doc/frotz.6 /usr/share/man/frotz

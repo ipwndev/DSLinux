@@ -21,3 +21,5 @@ clean:
 
 romfs:
 	$(ROMFSINST) src/less /bin/less
+	$(ROMFSINST) -e CONFIG_USER_MANPAGES man /usr/bin/man
+	$(ROMFSINST) -m src/less.nro /usr/share/man/less

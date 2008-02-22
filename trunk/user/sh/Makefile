@@ -12,6 +12,7 @@ $(EXEC): $(OBJS)
 
 romfs:
 	$(ROMFSINST) /bin/$(EXEC)
+	$(ROMFSINST) -m sh.1 /usr/share/man/sh
 
 $(OBJS): sh.h
 

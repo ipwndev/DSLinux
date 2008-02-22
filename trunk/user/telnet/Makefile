@@ -13,6 +13,7 @@ $(EXEC): $(OBJS)
 
 romfs:
 	$(ROMFSINST) /bin/$(EXEC)
+	$(ROMFSINST) -m telnet.1 /usr/share/man/telnet
 
 clean:
 	-rm -f $(EXEC) *.elf *.gdb *.o

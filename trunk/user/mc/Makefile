@@ -27,3 +27,4 @@ clean:
 
 romfs:
 	$(ROMFSINST) src/src/mc /bin/mc
+	$(ROMFSINST) -m src/doc/mc.1 /usr/share/man/mc

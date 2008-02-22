@@ -39,6 +39,8 @@ $(PRODUCT): $(OBJS)
 
 romfs:
 	$(ROMFSINST) /bin/$(PRODUCT)
+	$(ROMFSINST) -m nano.1 /usr/share/man/nano
+	$(ROMFSINST) -m nanorc.5 /usr/share/man/nanorc
 
 clean:
 	rm -rf *~ *.o core *.cache config.status config.log $(PRODUCT) $(PRODUCT).gdb

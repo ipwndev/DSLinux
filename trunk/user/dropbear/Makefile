@@ -224,4 +224,6 @@ romfs:
 		-a "ssh 22/udp" /etc/services
 	$(ROMFSINST) -e CONFIG_USER_DROPBEAR_DROPBEAR \
 		-a "ssh 22/tcp" /etc/services
+	$(ROMFSINST) -m dropbear.8 /usr/share/man/dropbear
+	$(ROMFSINST) -m dropbearkey.8 /usr/share/man/dropbearkey
 

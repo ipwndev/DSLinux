@@ -22,3 +22,4 @@ clean:
 
 romfs:
 	$(ROMFSINST) src/src/fe-text/irssi /bin/irssi
+	$(ROMFSINST) -m docs/irssi.1 /usr/share/man/irssi

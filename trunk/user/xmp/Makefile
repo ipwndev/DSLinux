@@ -19,3 +19,4 @@ clean:
 
 romfs:
 	$(ROMFSINST) src/src/main/xmp /bin/xmp
+	$(ROMFSINST) -m src/docs/xmp.1 /usr/share/man/xmp

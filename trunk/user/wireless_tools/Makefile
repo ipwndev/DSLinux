@@ -130,6 +130,12 @@ romfs:
 	$(ROMFSINST) -e CONFIG_USER_WIRELESS_TOOLS_IWSPY    /bin/iwspy
 	$(ROMFSINST) -e CONFIG_USER_WIRELESS_TOOLS_IWGETID  /bin/iwgetid
 	$(ROMFSINST) -e CONFIG_USER_WIRELESS_TOOLS_IWEVENT  /bin/iwevent
+	$(ROMFSINST) -m iwconfig.8 /usr/share/man/iwconfig
+	$(ROMFSINST) -m iwlist.8 /usr/share/man/iwlist
+	$(ROMFSINST) -m iwpriv.8 /usr/share/man/iwpriv
+	$(ROMFSINST) -m iwspy.8 /usr/share/man/iwspy
+	$(ROMFSINST) -m iwgetid /usr/share/man/getid
+	$(ROMFSINST) -m iwevent.8 /usr/share/man/iwevent
 
 # Compilation of the static library
 $(STATIC): $(OBJS)

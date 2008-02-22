@@ -29,6 +29,7 @@ all:
 
 romfs:
 	$(MAKE) -C src romfs
+	$(ROMFSINST) -m doc/mpc.1 /usr/share/man/mpc
 
 clean:
 	$(MAKE) -C src clean
