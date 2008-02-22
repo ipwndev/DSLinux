@@ -9,6 +9,7 @@
 
 # Provide a default PATH setting to avoid potential problems...
 PATH="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:$PATH"
+NROFF="/usr/bin/nroff"
 
 usage()
 {
@@ -24,7 +25,7 @@ $0: [options] [src] dst
 	-A pattern  : only append text if pattern doesn't exist in file
     -l link     : dst is a link to 'link'.
     -s sym-link : dst is a sym-link to 'sym-link'.
-
+    -m manpage  : Run page through $NROFF before copying
     if "src" is not provided,  basename is run on dst to determine the
     source in the current directory.
 
@@ -122,7 +123,15 @@ sym_link()
 	ln -sf ${src} ${ROMFSDIR}${dst}
 	return $?
 }
-
+man_page()
+{
+	#Man page installation
+	if [ ${CONFIG_USER_MANPAGES} = "y" ]
+	then
+		$NROFF -man ${src} |fmt -w 64 > ${ROMFSDIR}${dst}
+	fi
+	return $?
+}
 #############################################################################
 #
 # main program entry point
@@ -145,7 +154,7 @@ src=
 dst=
 strip=1
 
-while getopts 'dSve:o:A:p:a:l:s:' opt "$@"
+while getopts 'dSve:o:A:p:a:l:s:m' opt "$@"
 do
 	case "$opt" in
 	v) v="1";                           ;;
@@ -158,6 +167,7 @@ do
 	A) pattern="$OPTARG";               ;;
 	l) src="$OPTARG"; func=hard_link;   ;;
 	s) src="$OPTARG"; func=sym_link;    ;;
+	m) func=man_page;   ;;
 
 	*)  break ;;
 	esac

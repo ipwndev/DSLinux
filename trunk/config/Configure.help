@@ -1622,6 +1622,9 @@ CONFIG_PROP_EMCRALINK_EMCRALINK
   CE certification.  If you don't know you need this app it is *very* unlikely
   that you will want it.
 
+CONFIG_USER_MANPAGES
+  Install man pages
+
 CONFIG_USER_MATH_TEST
   A number of programs used to test the proper functioning of the maths
   library.
