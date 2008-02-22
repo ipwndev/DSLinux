@@ -824,6 +824,7 @@ bool 'lissa'			CONFIG_USER_LISSA_LISSA
 bool 'lpr'				CONFIG_USER_LPR
 bool 'mcf5272 cbi client'       CONFIG_USER_USBCBI_USBCBI
 bool 'mcf5272 iso client'       CONFIG_USER_USBISO_USBISO
+bool 'man pages'       		CONFIG_USER_MANPAGES
 bool 'mathstests'		CONFIG_USER_MATH_TEST
 bool 'mathomatic'		CONFIG_USER_MATHOMATIC
 bool 'mawk'			CONFIG_USER_MAWK_AWK
