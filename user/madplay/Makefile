@@ -40,6 +40,7 @@ $(EXEC): $(OBJS)
 # into the DSLinux filesystem image.
 romfs:
 	$(ROMFSINST) /bin/$(EXEC)
+	$(ROMFSINST) -m madplay.1 /usr/share/man/madplay
 
 # clean is another phony target that removes every file generated
 # during the build.

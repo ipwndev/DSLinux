@@ -112,3 +112,4 @@ mrproper: clean
 romfs:
 	$(ROMFSINST) nail /usr/bin/nail
 	$(ROMFSINST) nail.rc.example /etc/nail.rc.example
+	$(ROMFSINST) -m nail.1 /usr/share/man/nail

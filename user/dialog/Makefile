@@ -44,3 +44,4 @@ clean:
 
 romfs:
 	$(ROMFSINST) /bin/$(PROG)
+	$(ROMFSINST) -m dialog.1 /usr/share/man/dialog

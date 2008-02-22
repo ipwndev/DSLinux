@@ -39,4 +39,5 @@ install::
 romfs:
 	$(ROMFSINST) /usr/games/sl
 	$(ROMFSINST) /usr/games/sl-h
+	$(ROMFSINST) -m sl.1 /usr/share/man/sl
 

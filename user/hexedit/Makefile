@@ -34,6 +34,7 @@ $(PRODUCT): $(OBJS)
 
 romfs:
 	$(ROMFSINST) /bin/$(PRODUCT)
+	$(ROMFSINST) -m hexedit.1 /usr/share/man/hexedit 
 
 clean:
 	rm -rf *~ *.o core *.cache config.status config.log $(PRODUCT)

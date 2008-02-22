@@ -107,6 +107,7 @@ romfs:
 	$(ROMFSINST) /bin/traceroute
 	$(ROMFSINST) -e CONFIG_USER_TRACEROUTE_TRACEROUTE \
                 -a "icmp    1       ICMP" /etc/protocols
+	$(ROMFSINST) -m traceroute.8 /usr/share/man/traceroute
 clean: force
 	rm -f $(CLEANFILES)
 	rm -f gnuc.h # fix for distro so the sym link is removed

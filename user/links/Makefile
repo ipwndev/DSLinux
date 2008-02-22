@@ -32,3 +32,4 @@ clean:
 
 romfs:
 	$(ROMFSINST) src/links /bin/links
+	$(ROMFSINST) -m src/links.1 /usr/share/man/links

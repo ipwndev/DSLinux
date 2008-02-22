@@ -21,3 +21,4 @@ src/hnbrc.inc: doc/hnbrc
 
 romfs:
 	$(ROMFSINST) src/hnb /bin/hnb
+	$(ROMFSINST) -m doc/hnb.1 /usr/share/man/hnb

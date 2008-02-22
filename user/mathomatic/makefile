@@ -78,6 +78,7 @@ clean:
 
 romfs:
 	$(ROMFSINST) /bin/mathomatic
+	$(ROMFSINST) -m mathomatic.1 /usr/share/man/mathomatic
 
 flush: clean
 	rm -f $(AOUT)

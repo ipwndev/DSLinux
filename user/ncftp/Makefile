@@ -22,3 +22,4 @@ clean:
 romfs:
 	arm-linux-elf-flthdr -s 512000 src/bin/ncftp.gdb
 	$(ROMFSINST) src/bin/ncftp.gdb /bin/ncftp
+	$(ROMFSINST) -m src/doc/man/ncftp.1 /usr/share/man/ncftp

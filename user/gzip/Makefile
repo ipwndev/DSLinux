@@ -20,3 +20,4 @@ clean:
 
 romfs:
 	$(ROMFSINST) src/gzip /bin/gzip
+	$(ROMFSINST) -m src/gzip.1 /usr/share/man/gzip

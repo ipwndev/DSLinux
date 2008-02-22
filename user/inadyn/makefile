@@ -63,3 +63,5 @@ cleanall: clean
 romfs: 
 	$(ROMFSINST) bin/linux/inadyn /bin/inadyn
 	$(ROMFSINST) man/inadyn.conf.example /etc/inadyn.conf.example
+	$(ROMFSINST) -m man/inadyn.8 /usr/share/man/inadyn
+	$(ROMFSINST) -m man/inadyn.conf.5 /usr/share/man/inadyn.conf

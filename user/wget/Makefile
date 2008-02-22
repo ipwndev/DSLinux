@@ -20,6 +20,7 @@ build: Makefile
 
 romfs:
 	$(ROMFSINST) build/src/wget /bin/wget
+	$(ROMFSINST) -m build/doc/wget.1 /usr/share/man/wget
 
 clean:
 	rm -rf build

@@ -317,4 +317,5 @@ clean:
 
 romfs:
 	$(ROMFSINST) /bin/retawq
+	$(ROMFSINST) -m docu/retawq.1 /usr/share/man/retawq
 
