@@ -388,11 +388,11 @@ perl_construct(pTHXx)
 	("__environ", (unsigned long *) &environ_pointer, NULL);
 #endif /* environ */
 
-#ifndef PERL_MICRO
+//#ifndef PERL_MICRO  //jcw
 #   ifdef  USE_ENVIRON_ARRAY
     PL_origenviron = environ;
 #   endif
-#endif
+//#endif //jcw
 
     /* Use sysconf(_SC_CLK_TCK) if available, if not
      * available or if the sysconf() fails, use the HZ.
@@ -879,7 +879,7 @@ perl_destruct(pTHXx)
     /* if PERL_USE_SAFE_PUTENV is defined environ will not have been copied
      * so we certainly shouldn't free it here
      */
-#ifndef PERL_MICRO
+//#ifndef PERL_MICRO  //jcw
 #if defined(USE_ENVIRON_ARRAY) && !defined(PERL_USE_SAFE_PUTENV)
     if (environ != PL_origenviron && !PL_use_safe_putenv
 #ifdef USE_ITHREADS
@@ -899,7 +899,7 @@ perl_destruct(pTHXx)
 	environ = PL_origenviron;
     }
 #endif
-#endif /* !PERL_MICRO */
+//#endif /* !PERL_MICRO */  //jcw
 
     /* reset so print() ends up where we expect */
     setdefout(Nullgv);
@@ -4673,7 +4673,7 @@ S_init_postdump_symbols(pTHX_ register int argc, register char **argv, register 
 	GvMULTI_on(PL_envgv);
 	hv = GvHVn(PL_envgv);
 	hv_magic(hv, Nullgv, PERL_MAGIC_env);
-#ifndef PERL_MICRO
+//#ifndef PERL_MICRO  //jcw
 #ifdef USE_ENVIRON_ARRAY
 	/* Note that if the supplied env parameter is actually a copy
 	   of the global environ then it may now point to free'd memory
@@ -4714,7 +4714,7 @@ S_init_postdump_symbols(pTHX_ register int argc, register char **argv, register 
 	  }
       }
 #endif /* USE_ENVIRON_ARRAY */
-#endif /* !PERL_MICRO */
+//#endif /* !PERL_MICRO */  //jcw
     }
     TAINT_NOT;
     if ((tmpgv = gv_fetchpv("$",TRUE, SVt_PV))) {
