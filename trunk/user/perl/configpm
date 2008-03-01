@@ -1,4 +1,4 @@
-#!./miniperl -w
+#!/usr/bin/perl -w
 use strict;
 use vars qw(%Config $Config_SH_expanded);
 
