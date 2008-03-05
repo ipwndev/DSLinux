@@ -140,7 +140,7 @@
 <directories>
 <icondir>@prefix@/share/images</icondir>
 <bindir>@prefix@/bin</bindir>
-<themedir>@prefix@/share/themes/pixil</themedir>
+<themedir>@prefix@/share/themes/</themedir>
 </directories>
 
 <categories>
