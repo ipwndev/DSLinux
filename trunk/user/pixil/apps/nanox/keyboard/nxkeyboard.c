@@ -245,6 +245,7 @@ mouseClick(int xpos, int ypos)
 	    usleep(FLASH_DELAY);
 	    invertArea(kentry->ulx, kentry->uly, kentry->lrx, kentry->lry);
 	    GrFlush();
+	    updateWindow();
 
 	    // standard keypress
 	    if (kentry->keycode >= 0) {
