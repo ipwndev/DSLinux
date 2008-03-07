@@ -33533,7 +33533,42 @@ case "$host" in
     arm-*-elf*) # FIXME: Can we get more specific for iPodLinux?
         ARCH=linux
         CheckDummyVideo
+	CheckFBCON
         CheckIPod
+        CheckVisibilityHidden
+        CheckDummyVideo
+        CheckDiskAudio
+        CheckDummyAudio
+        CheckDLOPEN
+        CheckNASM
+        CheckAltivec
+        CheckOSS
+        CheckDMEDIA
+        CheckMME
+        CheckALSA
+        CheckARTSC
+        CheckESD
+        CheckPulseAudio
+        CheckNAS
+        CheckX11
+        CheckNANOX
+        CheckDirectFB
+        CheckPS2GS
+        CheckGGI
+        CheckSVGA
+        CheckVGL
+        CheckWscons
+        CheckAAlib
+        CheckQtopia
+        CheckPicoGUI
+        CheckOpenGLX11
+        CheckInputEvents
+        CheckTslib
+        CheckUSBHID
+        CheckPTHREAD
+        CheckClockGettime
+        CheckLinuxVersion
+        CheckRPATH
         # Set up files for the timer library
         if test x$enable_timers = xyes; then
             cat >>confdefs.h <<\_ACEOF
