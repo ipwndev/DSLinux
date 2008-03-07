@@ -1,7 +1,0 @@
-Thank you for trying NcFTP Client.
-
-If you are one of the many people since 1992 to find NcFTP Client useful,
-we would appreciate a donation, which you can start by clicking the link below.
-Your support allows us to keep maintaining the project!
-
-http://www.ncftp.com/ncftp/donate.html

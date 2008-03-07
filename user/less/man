@@ -1,8 +1,0 @@
-#!/bin/msh
-#Wrapper script for man pages
-if [ ! -f /usr/share/man/$1 ]
-then
-	echo "Man page $1 not found"
-	exit
-fi
-/usr/bin/less -isR /usr/share/man/$1
