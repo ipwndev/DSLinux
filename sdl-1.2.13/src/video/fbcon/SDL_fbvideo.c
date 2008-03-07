@@ -66,6 +66,7 @@ static inline void outb (unsigned char value, unsigned short port)
 
 /* A list of video resolutions that we query for (sorted largest to smallest) */
 static const SDL_Rect checkres[] = {
+#ifndef __uClinux__
 	{  0, 0, 1600, 1200 },		/* 16 bpp: 0x11E, or 286 */
 	{  0, 0, 1408, 1056 },		/* 16 bpp: 0x19A, or 410 */
 	{  0, 0, 1280, 1024 },		/* 16 bpp: 0x11A, or 282 */
@@ -81,6 +82,12 @@ static const SDL_Rect checkres[] = {
 	{  0, 0,  512,  384 },
 	{  0, 0,  320,  240 },
 	{  0, 0,  320,  200 }
+#else
+	{  0, 0,  512,  256 },
+	{  0, 0,  256,  256 },
+	{  0, 0,  256,  192 }
+#endif
+
 };
 static const struct {
 	int xres;
@@ -111,6 +118,7 @@ static const struct {
 	   the 'modeline2fb' perl script included with the fbset package.
 	   These timings were generated for Matrox Millenium I, 15" monitor.
 	*/
+#ifndef __uClinux__
 	{  320,  200, 79440,  16, 16, 20,  4,  48, 1, 0, 2 },	/* 70 Hz */
 	{  320,  240, 63492,  16, 16, 16,  4,  48, 2, 0, 2 },	/* 72 Hz */
 	{  512,  384, 49603,  48, 16, 16,  1,  64, 3, 0, 0 },	/* 78 Hz */
@@ -124,6 +132,11 @@ static const struct {
 	{ 1280, 1024,  9369, 224, 32, 32,  4, 136, 4, 0, 0 },	/* 60 Hz */
 	{ 1408, 1056,  8214, 256, 40, 32,  5, 144, 5, 0, 0 },	/* 60 Hz */
 	{ 1600, 1200,/*?*/0, 272, 48, 32,  5, 152, 5, 0, 0 },	/* 60 Hz */
+#else
+	{  256,  192, 20000,  64, 64, 32,  32, 64, 2, 2, 0 },	/* 50 Hz */
+	{  256,  256, 20000,  64, 64, 32,  32, 64, 2, 2, 0 },	/* 50 Hz */
+	{  512,  256, 20000,  64, 64, 32,  32, 64, 2, 2, 0 },	/* 50 Hz */
+#endif
 #endif
 };
 
@@ -172,11 +185,15 @@ static int SDL_getpagesize(void)
 static void *do_mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset)
 {
 	void *ret;
+#ifndef __uClinux__
 	ret = mmap(start, length, prot, flags, fd, offset);
 	if ( ret == (char *)-1 && (flags & MAP_SHARED) ) {
 		ret = mmap(start, length, prot,
 		           (flags & ~MAP_SHARED) | MAP_PRIVATE, fd, offset);
 	}
+#else
+	ret = mmap(NULL, length,  PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
+#endif
 	return ret;
 }
 
@@ -1298,6 +1315,28 @@ static void FB_WaitVBL(_THIS)
 {
 #ifdef FBIOWAITRETRACE /* Heheh, this didn't make it into the main kernel */
 	ioctl(console_fd, FBIOWAITRETRACE, 0);
+#endif
+#ifdef __uClinux__
+
+	struct fb_vblank blank;
+	
+	if (ioctl(console_fd, FBIOGET_VBLANK, &blank) != 0) {
+		//log_std(("WARNING:video:fb: ioctl(FBIOGET_VBLANK) failed\n"));
+		/* it may be not supported, it isn't an error */
+		return;
+	}
+
+	if ((blank.flags & FB_VBLANK_HAVE_VCOUNT) != 0) {
+		/* favorite choice because you cannot lose sync, it should be irq driven */
+		unsigned start = blank.vcount;
+		//log_debug(("video:fb: using FB_VBLANK_HAVE_VCOUNT\n"));
+		while (start == blank.vcount) {
+			if (ioctl(console_fd, FBIOGET_VBLANK, &blank) != 0) {
+				return;
+			}
+		}
+	}
+
 #endif
 	return;
 }
