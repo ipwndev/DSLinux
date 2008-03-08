@@ -1,7 +1,0 @@
-.config
-.oldconfig
-autoconf.h
-config.in
-images
-romfs
-bulkbuild
