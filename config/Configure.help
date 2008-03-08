@@ -738,6 +738,11 @@ CONFIG_LIB_LIBAES_FORCE
   Only enable this if you want to force the library to be built.  The
   Config will make sure this library is built if it is needed.
 
+ CONFIG_LIB_SDL_FORCE
+  SDL library.
+  Only enable this if you want to force the library to be built.  The
+  Config will make sure this library is built if it is needed.
+
 CONFIG_LIB_LIBSSL_FORCE
   SSL library.
   Only enable this if you want to force the library to be built.  The
@@ -1743,6 +1748,9 @@ CONFIG_USER_GAMES_PACMAN
 
 CONFIG_USER_GAMES_RUBIK
   Non-optimal rubik's cube solver.
+
+CONFIG_USER_UNITS_XRICK
+ Rick Dangerous for the console.
 
 CONFIG_USER_PPPD_WITH_TACACS
   TACACS+ authentication plugin for pppd.

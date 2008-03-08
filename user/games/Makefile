@@ -15,6 +15,7 @@ dir_$(CONFIG_USER_GAMES_DUNGEON)        += dungeon
 dir_$(CONFIG_USER_GAMES_PACMAN)		+= pacman
 dir_$(CONFIG_USER_GAMES_RUBIK)          += rubik
 dir_$(CONFIG_USER_GAMES_SUDOKU)			+= sudoku
+dir_$(CONFIG_USER_GAMES_XRICK)             += xrick
 #dir_$(CONFIG_USER_GAMES_XMAME)		    += xmame
 
 all:
