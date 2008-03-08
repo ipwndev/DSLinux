@@ -11,6 +11,6 @@ clean:
 	rm -f .compiled
 
 romfs:
-	$(ROMFSINST) src/xrick /bin/xrick
+	$(ROMFSINST) src/xrick /usr/games/xrick
 	$(ROMFSINST) -d data.zip /usr/share/games/xrick/data.zip
 

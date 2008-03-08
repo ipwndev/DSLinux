@@ -102,6 +102,8 @@ dir_$(CONFIG_LIB_LIBGETTEXT)	+= gettext
 dir_$(CONFIG_LIB_LIBGETTEXT_FORCE)  += gettext
 dir_$(CONFIG_LIB_LIBGLIB)	+= glib
 dir_$(CONFIG_LIB_LIBGLIB_FORCE)  += glib
+ dir_$(CONFIG_LIB_SDL)       += sdl
+ dir_$(CONFIG_LIB_SDL_FORCE) += sdl
 
 # And build libraries in the prop directory last
 dir_y += $(ROOTDIR)/prop
@@ -194,7 +196,8 @@ LINKLIBS=\
 	$(ROOTDIR)/lib/libiconv/src/lib/.libs/*.a \
 	$(ROOTDIR)/lib/gettext/src/gettext-runtime/intl/.libs/*.a \
 	$(ROOTDIR)/lib/glib/src/glib/.libs/*.a \
-	$(ROOTDIR)/lib/glib/src/gmodule/.libs/*.a
+	$(ROOTDIR)/lib/glib/src/gmodule/.libs/*.a \
+	$(ROOTDIR)/lib/sdl/src/build/.libs/*.a
 
 ##############################################################################
 

@@ -119,8 +119,9 @@ bool 'Build libmad'		CONFIG_LIB_MAD_FORCE
 bool 'Build uClibc++'		CONFIG_LIB_UCLIBCPP_FORCE
 bool 'Build libwww'		CONFIG_LIB_LIBWWW_FORCE
 bool 'Build libiconv'		CONFIG_LIB_LIBICONV_FORCE
-bool 'Build libgettext'	CONFIG_LIB_LIBGETTEXT_FORCE
+bool 'Build libgettext'	        CONFIG_LIB_LIBGETTEXT_FORCE
 bool 'Build libglib'		CONFIG_LIB_LIBGLIB_FORCE
+bool 'Build libSDL'             CONFIG_LIB_SDL_FORCE
 
 comment 'Library Configuration'
 bool 'Support time zones'	CONFIG_LIB_UC_LIBC_TIMEZONE
@@ -871,6 +872,9 @@ if [ "$CONFIG_USER_UNZIP_UNZIP" = "y" ]; then
 	bool '    funzip'		CONFIG_USER_UNZIP_FUNZIP
 fi
 bool 'unzoo'			CONFIG_USER_UNZOO_UNZOO
+if [ "$CONFIG_USER_GAMES_XRICK" = "y" ]; then
+       define_bool CONFIG_LIB_SDL y
+fi
 bool 'zmodem utils'		CONFIG_USER_LRZSZ_LRZSZ
 
 if [ "$CONFIG_USER_LRZSZ_LRZSZ" = "y" ]; then
@@ -1756,6 +1760,7 @@ bool 'pacman'		CONFIG_USER_GAMES_PACMAN
 # bool 'mame'		CONFIG_USER_GAMES_XMAME
 bool 'rubik'		CONFIG_USER_GAMES_RUBIK
 bool 'sudoku'		CONFIG_USER_GAMES_SUDOKU
+bool 'xrick'            CONFIG_USER_GAMES_XRICK
 endmenu
 
 #############################################################################
