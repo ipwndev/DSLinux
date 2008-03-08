@@ -275,16 +275,6 @@ static irqreturn_t ndsfb_interrupt(int irq, void *dev_id, struct pt_regs *regs)
 int scale=0;int xwidth=256;int yheight=192;
 static int ndsfb_check_var(struct fb_var_screeninfo *var, struct fb_info *info)
 {
-	/*
-	 *  FB_VMODE_CONUPDATE and FB_VMODE_SMOOTH_XPAN are equal!
-	 *  as FB_VMODE_SMOOTH_XPAN is only used internally
-	 */
-
-	if (var->vmode & FB_VMODE_CONUPDATE) {
-		var->vmode |= FB_VMODE_YWRAP;
-		var->xoffset = info->var.xoffset;
-		var->yoffset = info->var.yoffset;
-	}
 
 	/*
 	 *  Some very basic checks
@@ -292,41 +282,73 @@ static int ndsfb_check_var(struct fb_var_screeninfo *var, struct fb_info *info)
 
 	if ((var->xres == var->xres_virtual) && (var->yres == var->yres_virtual))
 	{
-		scale=1;
-		xwidth=var->xres;
-		yheight=var->yres;
-		var->xres_virtual = 256;
-		var->yres_virtual = 512;
+
+
+		if (info->par != 0) {
+			var->xres_virtual = 256;
+			var->yres_virtual = 256;
+		
+			if (var->bits_per_pixel != 16 && var->bits_per_pixel != 8)
+				return -EINVAL;
+
+			if (var->xres_virtual < var->xoffset + var->xres)
+				return -EINVAL;
+			if (var->yres_virtual < var->yoffset + var->yres)
+				return -EINVAL;
+		}
+		else
+		{
+			scale=1;
+			xwidth=var->xres;
+			yheight=var->yres;
+			var->xres_virtual = var->xres > 256 ? 512 : 256;
+			var->yres_virtual = var->xres_virtual > 256 ? 256 : 512;
+		}
 	}
 	else
 	{
+		/*
+		 *  FB_VMODE_CONUPDATE and FB_VMODE_SMOOTH_XPAN are equal!
+		 *  as FB_VMODE_SMOOTH_XPAN is only used internally
+		 */
+
+		if (var->vmode & FB_VMODE_CONUPDATE) {
+			var->vmode |= FB_VMODE_YWRAP;
+			var->xoffset = info->var.xoffset;
+			var->yoffset = info->var.yoffset;
+		}
+
 		scale=0;
 		if (var->xres != 256)
 			return -EINVAL;
 		if (var->yres != 192)
 			return -EINVAL;
-	}
-
-	if (var->bits_per_pixel != 16 && var->bits_per_pixel != 8)
-		return -EINVAL;
-
-	if (info->par != 0) {
-		var->xres_virtual = 256;
-		var->yres_virtual = 256;
-	} else {
-		if (var->xres_virtual > 256) {
-			var->xres_virtual = 512;
+		if (info->par != 0) {
+			var->xres_virtual = 256;
 			var->yres_virtual = 256;
 		} else {
-			var->xres_virtual = 256;
-			var->yres_virtual = var->yres_virtual > 256 ? 512 : 256;
+			if (var->xres_virtual > 256) {
+				var->xres_virtual = 512;
+				var->yres_virtual = 256;
+			} else {
+				var->xres_virtual = 256;
+				var->yres_virtual = var->yres_virtual > 256 ? 512 : 256;
+			}
 		}
+
+		if (var->bits_per_pixel != 16 && var->bits_per_pixel != 8)
+		return -EINVAL;
+
+		if (var->xres_virtual < var->xoffset + var->xres)
+			return -EINVAL;
+		if (var->yres_virtual < var->yoffset + var->yres)
+			return -EINVAL;
+
 	}
 
-	if (var->xres_virtual < var->xoffset + var->xres)
-		return -EINVAL;
-	if (var->yres_virtual < var->yoffset + var->yres)
-		return -EINVAL;
+
+
+
 
 	switch (var->bits_per_pixel) {
 	case 8:
