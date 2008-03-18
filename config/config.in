@@ -831,6 +831,7 @@ bool 'mathomatic'		CONFIG_USER_MATHOMATIC
 bool 'mawk'			CONFIG_USER_MAWK_AWK
 bool 'mc'			CONFIG_USER_MC
 bool 'mpc'			CONFIG_USER_MPC
+bool 'ncmpc'			CONFIG_USER_NCMPC
 bool 'mysql'			CONFIG_USER_MYSQL
 if [ "$CONFIG_USER_MYSQL" = "y" ]; then
 	bool '  client library'	CONFIG_USER_MYSQL_CLIB
