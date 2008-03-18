@@ -1,0 +1,113 @@
+#!/bin/tcsh
+echo welcome to the test.
+
+echo ""
+echo Please start the server, esd, in another terminal.
+echo You should hear a series of ascending tones.
+echo press enter to continue...
+echo $< >& /dev/null
+
+#####################################################################
+echo ""
+echo Test "#1": esdcat
+echo -----------------
+echo This test should play a sound to the server.
+echo press enter to continue...
+echo $< >& /dev/null
+
+esdcat -b -m -r 11025 test.wav
+
+#####################################################################
+echo ""
+echo Test "#2": esdcat
+echo -----------------
+echo This test should play the same sound twice as fast.
+echo press enter to continue...
+echo $< >& /dev/null
+
+esdcat -b -m -r 22050 test.wav
+
+#####################################################################
+echo ""
+echo Test "#3": esdmon
+echo -----------------
+echo This first part of this test should monitor the sound
+echo to a temporary file.  The second part of the test 
+echo should play it back identical to the original.
+echo press enter to continue...
+echo $< >& /dev/null
+
+esdmon > sample.raw &
+esdcat -b -m -r 11025 test.wav
+sleep 3
+killall esdmon
+
+echo press enter to continue...
+echo $< >& /dev/null
+esdcat sample.raw
+rm -f sample.raw
+
+#####################################################################
+echo ""
+echo Test "#4": esdrec
+echo -----------------
+echo This part of this test connects the audio input
+echo to the speaker.  You should hear that signal
+echo echoed to the speaker.
+echo press enter to continue...
+echo $< >& /dev/null
+
+esdrec | esdcat &
+
+echo press enter when you are done...
+echo $< >& /dev/null
+
+killall esdrec
+
+#####################################################################
+echo ""
+echo Test "#5": esdctl
+echo -----------------
+if ( $?ESPEAKER ) then
+echo This part of the test does not yet work
+echo properly with the ESPEAKER variable set
+echo and will be bypassed.
+echo press enter to continue...
+echo $< >& /dev/null
+else
+echo This part of this test confirms the control
+echo signals are operational.  you should see
+echo the messages locked, unlocked, standby, 
+echo and resume, on the server terminal.
+echo press enter to continue...
+echo $< >& /dev/null
+
+esdctl unlock lock standby resume
+endif
+#####################################################################
+echo ""
+echo Test "#6": esdsample
+echo --------------------
+echo This part of this test confirms the sample
+echo functionality is operational.  Follow the
+echo directions presented.
+echo press enter to continue...
+echo $< >& /dev/null
+
+esdsample -b -m -r 11025 test.wav
+
+#####################################################################
+echo ""
+echo Test "#7": esdlooop
+echo -------------------
+echo This part of this test confirms the looping
+echo functionality is operational.  Follow the
+echo directions presented.
+echo press enter to continue...
+echo $< >& /dev/null
+
+esdloop -b -m -r 11025 test.wav
+
+#####################################################################
+echo ""
+echo Test concluded.

@@ -1,0 +1,112 @@
+===============
+Version 0.2.38
+===============
+	* Fix 100% CPU problem introduced in 0.2.37 (Joe Marcus Clarke)
+	* Fix libesddsp not linking against libesd (Loïc Minier)
+	* Fix file descriptor leaks (Pierre Ossman)
+	* Fix a build problem with the read/write wrapper (Jean Bréfort)
+	* chdir to "/" when starting up (Dan Winship)
+	* Only install the esddsp man page if we build the binary
+	(<yselkowitz@users.sourceforge.net>)
+
+===============
+Version 0.2.37
+===============
+	* Fix null derefs and leaks reported by Covertiy (kjartan)
+	* Build fixes (David Schleef, Thomas Zajic, Behdad Esfahbod) 
+	* Disable autospawning (David Schleef)
+	* Close filedescriptors and sockets (David Schleef)
+	* Don't terminate until the last sample is done (David Schleef)
+	* Add checks for clients disconnecting (Peter Åstrand)
+	* Updated man pages (Christopher Hanna)
+	* Use pkg-config to check for audiofile (Frederic Peters)
+
+===============
+Version 0.2.36
+===============
+	* New sucker^Wmaintainer (David Schleef)
+	* new arts backend (Igor Mokrushin)
+	* ALSA-1.0 is the new default backend
+	* disable compressed audio from libaudiofile, because it's
+	  broken.
+	* code cleanup and warning fixes (Kjartan Maraas, David Schleef)
+	* OSS emulation fixes in esddsp (Fabian Franz)
+
+===============
+Version 0.2.35
+===============
+	* fix location of configuration file in man (Craig Routledge)
+	* MMAP support for esddsp (from artsdsp, Olivier Blin)
+	* GNU/kFreeBSD support (Robert Milan)
+	* add new default_options in configuration file and environement 
+	  variable, fix regression caused by patch since 0.2.30
+	* use ALSA default alias (Cyrille Chepelov)
+	* clean code (Kjartan Maraas)
+	
+===============
+Version 0.2.34
+===============
+	* don't use C99 extensions (Jens Granseuer)
+
+===============
+Version 0.2.33
+===============
+	* use new ALSA PCM API if available (Lukasz Mach and Eddy Mylyono)
+	* fix build on AIX and OSF (Albert Chin-A-Young)
+	* don't try to close audio device if not opened (Debian)
+	* fix build with latest automake (Stanislav Bradec)
+	* no longer required automake 1.4 (Thomas Cataldo)
+	* Fix Darwin build (Jerry Talkington)
+	* fix typo in manpage (Kjartan Maraas)
+	* Fix crash when AUDIODEV doesn't contain '/' (Stefan Heinsen)
+
+===============
+Version 0.2.32
+===============
+	* Fix build when IPv6 is disabled (Soren Jacobsen)
+	* Fix missing file in tarball (Dan Winship)
+
+===============
+Version 0.2.31
+===============
+	* Fix build on Solaris8
+
+===============
+Version 0.2.30
+===============
+	* IPv6 support (Archana Shah)
+	* Cygwin support (Masahiro Sakai)
+	* MacOS X CoreAudio support (Masanori Sekino)
+	* Always read esd config file, not only when auto-spawning (James Strandboge)
+	* Prevents drop-outs for hardware allowing low period_size (ALSA) (Stanislav)
+	* Man pages fixes (Stanislav)
+	* major code cleanup (Kjartan)
+	* ensure esd_open_audio succeed if interrupted (Arvind)
+	* allow 0 as auto-standby value (Mohammed Waleed Kadous)
+	* allow simultaneous play and record on Solaris (Balamurali)
+	* add support for session name to esdcat (j@thing.net)
+
+New Stuff in EsounD version 0.2.21:
+
+o  esd supports for multiple recording clients
+	- multiple esd_record_stream or esd_record_stream_fallback can
+	now run simultaneously
+
+o  security improvements
+	- you should upgrade to 0.2.21 - older version have security
+	holes, which can compromite account of any esd user
+
+New Stuff in EsounD version 0.2:
+
+o  esd_play_stream_fallback, esd_record_stream_fallback 
+	- if default esd is not available, revert to /dev/dsp
+	for playback/record
+
+o  esd_open_sound
+	- returns -1 if it can't find esd, instead of exiting
+
+o  ESPEAKER environment variable
+	- can be used to play/record/monitor esd on a 
+	remote machine
+
+o  GNU configure-able installation
