@@ -1,0 +1,815 @@
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V3.1//EN" [
+ ]>
+
+<book id="index">
+
+  <!-- ========================================== -->
+
+  <bookinfo>
+    <date>1998-01-13</date>
+    <title>EsounD</title>
+    <subtitle>The Enlightened Sound Daemon</subtitle>
+    <releaseinfo>documentation in progress</releaseinfo>
+    <authorgroup>
+      <author>
+	<firstname>Eric</firstname>
+	<othername>'Ricdude</othername>
+	<surname>Mitchell</surname>
+      </author>
+    </authorgroup>
+    <address>
+      <email>ericmit@ix.netcom.com</email>
+    </address>
+    <copyright>
+      <year>1998</year>
+      <holder>Eric B. Mitchell</holder>
+    </copyright>
+    <legalnotice id="legalnotice">
+      <para>
+	This document can be freely redistributed according to the
+	terms of the GNU General Public License.
+      </para>
+    </legalnotice>
+  </bookinfo>
+  
+  <chapter id="introduction">
+    <title>Introduction</title>
+    
+    <para>
+      So you've got your (insert sound playing program here) cruising
+      at full tilt, and you want to check out this cool Monty Python
+      quote, but you don't want to kill the original sound?  This is
+      just the fix, with a little tweaking, of course. =P
+    </para>
+    
+    <para>
+      The Enlightened Sound Daemon can mix several audio streams into
+      one sound device.  It will mix in pre-loaded samples, too.  Want
+      to play a frightening sound whenever the user presses the
+      &quot;go&quot; button?  No problem, just cache it, and play it
+      back by sample id number.
+    </para>
+    
+    <sect1 id="caveats">
+      <title>Caveats</title>
+      
+      <para>
+	This is hot off the presses software, get it while it's still
+	hot.  It's still got a ways to go yet.  Be prepared for a
+	bumpy ride.  Any and all reasonable patches and improvements
+	accepted.  I expect the communication protocol to change at
+	least once more before it hits 1.0.
+      </para>
+      
+    </sect1>
+    
+    <sect1 id="requirements">
+      <title>Requirements</title>
+
+      <para>
+	The Enlightened Sound Daemon requires the following:
+      </para>
+
+      <para>
+	Linux, version 2.??? or higher.  I run 2.0.34-RH5.1, but I don't think
+	the sound API has significantly changed recently.  If you find it to
+	be incompatible with different kernel/OSS revs, let me know.
+      </para>
+
+      <para>And of course, a sound device.
+      </para>
+
+      <para>
+	Currently, this only runs under Linux.  Everything except recording
+	seems to work ok on SGI/Irix soon.  Reports indicate it works ok on
+	Solaris.  Ports to other platforms are requested.  Basic drivers for
+	other platforms are in the distribution, but may need work from what's
+	in the driver_platform.c files.
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <!-- ========================================== -->
+
+  <chapter id="downloading-compiling-installing">
+    <title>Downloading, Compiling, and Installing</title>
+
+    <sect1 id="downloading">
+      <title>Downloading</title>
+
+      <para>
+	The Enlightened Sound Daemon is available for download from
+
+	<itemizedlist>
+	  <listitem>
+	    <para><ulink url="ftp://ftp.enlightenment.org/pub/ricware/esound-0.2.4.tar.gz">
+		Enlightenment.org public ftp site</ulink></para>
+	  </listitem>
+
+	  <listitem>
+	    <para><ulink url="http://winblowz.com/~e/files/TAR/esound-0.2.4.tar.gz">
+		Winblowz.com Enlightenment Mirror Site</ulink></para>
+	  </listitem>
+
+	  <listitem>
+	    <para><ulink url="http://www.netcom.com/~ericmit/esound_0_2_4.tgz">
+		The EsounD Web Site</ulink></para>
+	  </listitem>
+	</itemizedlist>
+
+      </para>
+
+    </sect1>
+
+    <sect1 id="compiling">
+      <title>Compiling</title>
+
+      <procedure>
+
+	<step>
+	  <para>Extract the contents of the archive.</para>
+	  <literallayout>
+	    <prompt>&gt; </prompt><userinput> tar xvfz esound-0.2.4.tar.gz</userinput>
+	  </literallayout>
+	</step>
+
+	<step>
+	  <para>To compile the package, change to the newly created
+	    esound-0.2.4 directory, and type:</para>
+	  <literallayout>
+	    <prompt>&gt; </prompt><userinput> configure ; make all</userinput>
+	  </literallayout>
+	</step>
+
+	<step>
+	  <para>A sample test script is provided, follow the directions
+	    given by the test script:</para>
+	  <literallayout>
+	    <prompt>&gt; </prompt><userinput> ./test-script</userinput>
+	  </literallayout>
+	</step>
+
+      </procedure>
+
+      <para>
+	The sound daemon, and the command line toolset should build as is.
+	All executables should run fine from the source directory.
+      </para>
+
+    </sect1>
+
+    <sect1 id="installing">
+      <title>Installing</title>
+
+      <procedure>
+	<para>
+	  Installing the EsounD package is accomplished by typing:
+	</para>
+
+	<step>
+	  <para>
+	    <literallayout>
+	      <prompt>&gt; </prompt><userinput> make isntall</userinput>
+	    </literallayout>
+	  </para>
+	</step>
+      </procedure>
+
+      <para>
+	This will copy all relevant files to useful/accessible places.
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <!-- ========================================== -->
+
+  <chapter id="running-esound">
+    <title>Running EsounD</title>
+
+    <sect1 id="esd">
+      <title>esd</title>
+
+      <para>
+	The Enlightened Sound Daemon
+      </para>
+
+      <para>
+	<command>esd</command> <option>[options]</option>
+      </para>
+
+      <informaltable frame="all">
+	<tgroup cols="2">
+	  <thead>
+	    <row><entry>option</entry><entry>purpose</entry></row></thead>
+	  <tbody>
+	    <row>
+	      <entry>-nobeeps</entry>
+	      <entry>inhibits the default startup tone sequence</entry>
+	    </row>
+	    <row>
+	      <entry>-d DEVICE</entry>
+	      <entry>use audio device DEVICE (esd -h for values)</entry>
+	    </row>
+	    <row>
+	      <entry>-b</entry>
+	      <entry>run server in 8 bit sound mode</entry>
+	    </row>
+	    <row>
+	      <entry>-r RATE</entry>
+	      <entry>run server at sample rate of RATE</entry>
+	    </row>
+	    <row>
+	      <entry>-as SECS</entry>
+	      <entry>free audio device after SECS of inactivity</entry>
+	    </row>
+	    <row>
+	      <entry>-vt</entry>
+	      <entry>enable trace diagnostic info (debug builds only)</entry>
+	    </row>
+	    <row>
+	      <entry>-vc</entry>
+	      <entry>enable comms diagnostic info (debug builds only)</entry>
+	    </row>
+	    <row>
+	      <entry>-vm</entry>
+	      <entry>enable mixer diagnostic info (debug builds only)</entry>
+	    </row>
+	    <row>
+	      <entry>-port port</entry>
+	      <entry>accept connections on given port (default=5001)</entry>
+	    </row>
+	  </tbody>
+	</tgroup>
+      </informaltable>
+
+      <para>
+	In addition, "kill -HUP esd-pid resets ownership of the daemon.
+	The file, &tilde;/.esd-auth, is used for authentication, and is
+	created if needed.
+      </para>
+
+    </sect1>
+
+    <sect1 id="esdctl">
+      <title>esdctl</title>
+
+      <para>
+	controls certain aspects of the sound daemon.  
+      </para>
+
+      <para>
+	<command>esdctl</command> <option>[options]</option>
+      </para>
+
+      <informaltable frame="all">
+	<tgroup cols="2">
+	  <thead>
+	    <row><entry>commands</entry><entry>purpose</entry></row></thead>
+	  <tbody>
+	    <row>
+	      <entry>lock</entry>
+	      <entry>foreign clients may not use the server</entry>
+	    </row>
+	    <row>
+	      <entry>unlock</entry>
+	      <entry>foreign clients may use the server</entry>
+	    </row>
+	    <row>
+	      <entry>standby, off</entry>
+	      <entry>suspend sound output for other programs</entry>
+	    </row>
+	    <row>
+	      <entry>resume, on</entry>
+	      <entry>resume sound output</entry>
+	    </row>
+	    <row>
+	      <entry>cache SAMPLE</entry>
+	      <entry>cache sample from file SAMPLE in the server</entry>
+	    </row>
+	    <row>
+	      <entry>getid NAME</entry>
+	      <entry>retrieve a sample id from its name</entry>
+	    </row>
+	    <row>
+	      <entry>free NAME</entry>
+	      <entry>uncache a sample in the server by NAME</entry>
+	    </row>
+	    <row>
+	      <entry>play NAME</entry>
+	      <entry>play a cached sample once</entry>
+	    </row>
+	    <row>
+	      <entry>loop NAME</entry>
+	      <entry>play a cached sample in a loop</entry>
+	    </row>
+	    <row>
+	      <entry>stop NAME</entry>
+	      <entry>stop a looping sample at end of sample</entry>
+	    </row>
+	    <row>
+	      <entry>serverinfo</entry>
+	      <entry>get server info from server</entry>
+	    </row>
+	    <row>
+	      <entry>allinfo</entry>
+	      <entry>get player and sample info from server</entry>
+	    </row>
+	    <row>
+	      <entry>panstream ID LEFT RIGHT</entry>
+	      <entry>set left and right volume levels for a stream</entry>
+	    </row>
+	    <row>
+	      <entry>pansample ID LEFT RIGHT</entry>
+	      <entry>set default left and right volume levels for a sample</entry>
+	    </row>
+	  </tbody>
+	</tgroup>
+      </informaltable>
+
+      <para>
+	lock - only the "owner" of the daemon can play sounds.  the first key
+	(obtained from &tilde;/.esd-auth) submitted to the daemon identifies
+	the owner.
+      </para>
+
+      <para>
+	unlock - anyone can play sounds through the daemon.
+      </para>
+
+      <para>
+	standby - frees the audio device for use by other programs.  all
+	sounds are ignored until the daemon is resumed.
+      </para>
+
+      <para>
+	resume - brings daemon out of standby mode
+      </para>
+
+      <para>
+	NOTE: more than one option may be listed on the command line
+      </para>
+
+    </sect1>
+
+    <sect1 id="esdcat-esdmon-esdrec">
+      <title>esdcat, esdmon, esdrec</title>
+
+      <para>
+	esdcat plays a raw audio stream through the daemon. esdmon outputs the
+	mixed stream from the daemon. esdrec outputs from the sound device's
+	current input.
+      </para>
+
+      <para>
+	<command>esdcat</command> <option>[options] [file=stdin]</option>
+      </para>
+      <para>
+	<command>esdmon</command> <option>[options] [file=stdout]</option>
+      </para>
+      <para>
+	<command>esdrec</command> <option>[options] [file=stdout]</option>
+      </para>
+
+      <informaltable frame="all">
+	<tgroup cols="2">
+	  <thead>
+	    <row><entry>option</entry><entry>purpose</entry></row></thead>
+	  <tbody>
+	    <row>
+	      <entry>-s SERVER</entry>
+	      <entry>communicate with esound running at SERVER</entry>
+	    </row>
+	    <row>
+	      <entry>-b</entry>
+	      <entry>read/write 8 bit sample data</entry>
+	    </row>
+	    <row>
+	      <entry>-m</entry>
+	      <entry>read/write mono data</entry>
+	    </row>
+	    <row>
+	      <entry>-r RATE</entry>
+	      <entry>use a sampling rate of RATE</entry>
+	    </row>
+	  </tbody>
+	</tgroup>
+      </informaltable>
+
+      <para>
+	NOTE: options for esdcat, esdmon, and esdrec default to 16 bit
+	(signed), stereo, 44.1kHz
+      </para>
+
+    </sect1>
+
+    <sect1 id="esdsample-esdloop">
+      <title>esdsample, esdloop</title>
+
+      <para>
+	esdsample is test scaffolding for sample cache, play back, and free.
+	esdloop is test scaffolding for sample cache, loop, and free.  These
+	utilities have no practical purpose beyond testing sample
+	functionality.
+      </para>
+
+      <para>
+	<command>esdsample</command> <option>[options] file</option>
+      </para>
+      <para>
+	<command>esdloop</command>   <option>[options] file</option>
+      </para>
+
+      <informaltable frame="all">
+	<tgroup cols="2">
+	  <thead>
+	    <row><entry>option</entry><entry>purpose</entry></row></thead>
+	  <tbody>
+	    <row>
+	      <entry>-s SERVER</entry>
+	      <entry>communicate with esound running at SERVER</entry>
+	    </row>
+	    <row>
+	      <entry>-b</entry>
+	      <entry>read/write 8 bit sample data</entry>
+	    </row>
+	    <row>
+	      <entry>-m</entry>
+	      <entry>read/write mono data</entry>
+	    </row>
+	    <row>
+	      <entry>-r RATE</entry>
+	      <entry>use a sampling rate of RATE</entry>
+	    </row>
+	  </tbody>
+	</tgroup>
+      </informaltable>
+
+      <para>
+	options:
+	-s server = communicate with esound running at server
+
+	-b = 8 bit unsigned char
+
+	-m = mono
+
+	-r rate = sample rate of rate Hz.
+      </para>
+
+      <para>
+	options for esdsample and esdloop default to 16 bit signed short,
+	stereo, 44.1kHz
+      </para>
+
+    </sect1>
+
+    <sect1 id="environment-variables">
+      <title>Environment Variables</title>
+
+      <para>
+	All client programs (except esdctl) can connect to remote hosts via
+	the <envar>ESPEAKER</envar> environment variable: 
+
+	<literallayout>
+	  <prompt>bash $ </prompt><userinput>export ESPEAKER=inet.addr.of.host:port</userinput>
+
+	  <prompt>tcsh &gt; </prompt><userinput>setenv ESPEAKER inet.addr.of.host:port</userinput>
+	</literallayout>
+
+	The client will connect to EsounD running on the specified host on the
+	specified port.
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <!-- ========================================== -->
+
+  <chapter id="miscellaneous">
+    <title>Miscellaneous Information</title>
+
+    <sect1 id="new-features">
+      <title>New Features</title>
+
+      <para>
+	Version 0.2.4
+
+	more bug fixes, mostly works on irix now.
+
+	incompatible changes to client side API.  streams and samples
+	now have names, and you can specify a host in esd_open_sound().
+      </para>
+
+      <para>
+	Version 0.2.3
+
+	bug fixes
+
+      </para>
+
+      <para>
+	Version 0.2.2
+
+	added reference counting to samples, so freeing samples works
+
+	added first cut at drivers for other platforms.  no idea if they work
+
+      </para>
+
+      <para>
+	Version 0.2.1
+
+	the configure style installation now works if you don't already have a
+	previous version installed.  Evil gnu automake &gt;=P
+
+	better handling of "dead" time: should use 0&percnt; cpu if it's not actually
+	doing anything
+      </para>
+
+      <para>
+	Version 0.2
+
+	a configure style installation is now available.
+
+	added network support
+
+	optional /dev/dsp fallback for stream play and record
+
+	other forgotten features and bug fixes
+
+      </para>
+
+    </sect1>
+
+    <sect1 id="deficiencies">
+      <title>Known Problems, Deficiencies, and Possible Workarounds</title>
+
+      <para>
+	"unsupported sound format: 33" - This happens on cards that don't
+	support playback of 16bit, stereo, 44.1kHz sound.  Try running in 8
+	bit mode (esd -b), or at a lower playback rate (esd -r 22050), or both 
+	(esd -b -r 22050)
+      </para>
+
+      <para>
+	"unable to connect to server at port 35091" - This means the client
+	cannot contact the server.  Make sure you have SysV IPC enabled in
+	your kernel 
+      </para>
+
+      <para>
+	Documentation of the API is in sad shape, but for now it's still in
+	development (i.e. subject to change).  See the source of the sample
+	command line driver utilities (esd?*) for usage.
+      </para>
+
+      <para>
+	Any other pressing issues, problems, or patches may be directed to
+	ericmit@ix.netcom.com.  Please mention EsounD and the version number
+	(date for cvs checkouts) in the subject line.
+      </para>
+
+    </sect1>
+
+    <sect1 id="planned-development">
+      <title>Planned Development and Top Suggestions So Far...</title>
+
+      <para>
+	Porting of more sound playing applications.  For sound programs that
+	send their output to /dev/dsp, this is usually a trivial process.
+	Anyone willing to lend a hand in this effort will be duly appreciated.
+      </para>
+
+    </sect1>
+
+    <sect1 id="feature-additions">
+      <title>Planned Feature Additions</title>
+
+      <para>
+	See the TODO file for unorganized thoughts about where to go from
+	here.
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <!-- ========================================== -->
+
+  <chapter id="supported-programs">
+    <title>Enlightened Sound Daemon Aware Audio Programs</title>
+
+    <sect1 id="emusic">
+      <title>eMusic</title>
+
+      <para>
+	<ulink url="http://www.icom.net/~smelecat/emp3/index.htm"> eMusic</ulink>
+	is an Enlightenend music player, which is capableof playing MP3, MOD,
+	WAV, AU, and CD files.  All graphic elements of the program are fully
+	customizable.
+      </para>
+
+    </sect1>
+
+    <sect1 id="xmp">
+      <title>The Extended Module Player</title>
+
+      <para>
+	<ulink url="http://xmp.home.ml.org"> Extended Mudule Player</ulink>
+	is a MOD tracker, which also has an Xwindows interface.
+      </para>
+
+    </sect1>
+
+    <sect1 id="mpg123">
+      <title>mpg123</title>
+
+      <para>
+	<ulink url="http://www.netcom.com/~ericmit/mpg123_esd.tgz">
+	  mpg123</ulink> is a command line program which plays mpeg layer 3
+	audio files.
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <!-- ========================================== -->
+
+  <chapter id="esound-api">
+    <title>The EsounD API</title>
+
+    <sect1 id="put-something-useful-here">
+      <title>Need to put something useful in here.</title>
+
+      <para>
+	Better yet, extract it from the source files.
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <!-- ========================================== -->
+
+  <chapter id="design-docs">
+    <title>Rough Design Docs</title>
+
+    <sect1 id="covered-formats">
+      <title>Covered Formats</title>
+
+      <para>
+	Digital Waveforms
+      </para>
+
+      <para>
+	No MIDI, No MOD
+      </para>
+
+    </sect1>
+
+    <sect1 id="organization">
+      <title>Client/Server Organization</title>
+
+      <para>
+	Server does the dirty work for byte swapping, scaling, etc.
+      </para>
+
+    </sect1>
+
+    <sect1 id="signal-path">
+      <title>The Audio Signal Path</title>
+
+      <para>
+	The audio signal travels the following path from source to speaker.
+	Samples and streams are read via players
+      </para>
+
+    </sect1>
+
+    <sect1 id="authentication">
+      <title>Authentication Model</title>
+
+      <para>
+	Your .esd_auth file
+      </para>
+
+    </sect1>
+
+    <sect1 id="player-type">
+      <title>The Player Type</title>
+
+      <para>
+	read_player()
+      </para>
+
+    </sect1>
+
+    <sect1 id="anything-else">
+      <title>Anything Else?</title>
+
+      <para>
+	Anything Else?
+      </para>
+
+    </sect1>
+
+  </chapter>
+
+  <!-- ========================================== -->
+
+  <reference>
+
+    <title>EsounD Command Reference</title>
+
+    <refentry id="refentry-esd">
+
+      <refmeta>
+	<refentrytitle>esd</refentrytitle>
+	<manvolnum>1</manvolnum>
+      </refmeta>
+
+      <refnamediv>
+	<refname>esd</refname>
+	<refpurpose>The Enlightened Sound Daemon</refpurpose>
+	<indexterm id="index-esd"><primary>esd</primary></indexterm>
+      </refnamediv>
+
+      <refsynopsisdiv>
+	<refsynopsisdivinfo>
+	  <date>August 26, 1999</date>
+	</refsynopsisdivinfo>
+
+	<synopsis>
+	  esd [options]
+	</synopsis>
+
+	<refsect2 id="rs2-options">
+	  <refsect2info>
+	    <date>6 march 1996</date>
+	  </refsect2info>
+	  <title>options</title>
+	  <variablelist>
+	    <varlistentry>
+	      <term><replaceable class="parameter">-nobeeps</replaceable></term>
+	      <listitem>
+		<para>
+		  Specifies an array of child widgets.  Each child must be
+		  of class RectObj or any subclass thereof.
+		</para>
+	      </listitem>
+	    </varlistentry>
+	    <varlistentry>
+	      <term><replaceable class="parameter">-as [SECS]</replaceable></term>
+	      <listitem>
+		<para>
+		  Specifies the number of elements in <replaceable
+ 	    class="parameter">children</replaceable>.
+		</para>
+	      </listitem>
+	    </varlistentry>
+	  </variablelist>
+	</refsect2>
+      </refsynopsisdiv>
+
+      <refsect1 id="r1-1007-unmanagechildren-2">
+	<title>usage</title>
+	<para>
+	  unmanaging widgets is the usual method for temporarily making
+	  them invisible.  they can be re-managed with
+	  <function>xtmanagechildren()</function>.
+	</para>
+      </refsect1>
+    </refentry>
+
+  </reference>
+
+  <!-- --------------------------------------------------------------------- -->
+
+  <appendix id="Remaining-details">
+    <title>Remaining details</title>
+
+    <para>
+      Although this booklet is quite complete, here I will mention some
+      details I never got to.
+    </para>
+
+    <sect1 id="Use-of-the-word-dude">
+      <title>Use of the word dude</title>
+
+      <para>
+	Here's an example of how to say <emphasis>dude</emphasis>: DUDE.
+
+      </para> 
+
+    </sect1>
+
+  </appendix>
+
+  <!-- --------------------------------------------------------------------- -->
+
+</book>
