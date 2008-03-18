@@ -1268,6 +1268,9 @@ CONFIG_USER_MP3PLAY_MP3PLAY
 CONFIG_USER_MP3PLAY_SWAP_WD
   Swap the meaning of the -w and -d command line options.
 
+CONFIG_USER_ESD
+  The Enlightenment Sound Daemon
+
 CONFIG_USER_MUSICBOX_MUSICBOX
   Front-end for mp3play and mixer
 

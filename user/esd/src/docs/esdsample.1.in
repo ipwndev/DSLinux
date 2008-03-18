@@ -1,0 +1,155 @@
+'\" te
+.TH ESDSAMPLE 1 "EsounD @VERSION@" "February 2006" "Enlightened Sound Daemon"
+.SH "NAME"
+esdsample \- play a sample
+.SH "SYNOPSIS"
+.PP
+\fBesdsample\fR [-\fBs \fIhostname\fR:\fIport\fR\fR] [-\fBb\fR] [-\fBd\fR] [-\fBe\fR] [-\fBh\fR] [-\fBm\fR] [-\fBr \fIfreq\fR\fR] \fB\fIsamplename\fR\fR
+.SH "DESCRIPTION"
+.PP
+The \fBesdsample\fR utility plays a sample using the Enlighted
+Sound Daemon (\fBesd\fR)\&. 
+.SH "OPTIONS"
+.PP
+The following options are supported:
+.sp
+.ne 2
+.mk
+\fB-\fBs \fIhostname\fR:\fIport\fR\fR\fR
+.in +16n
+.rt
+Contact the \fBesd\fR server on \fIhostname\fR at \fIport\fR\&.
+.sp
+.sp 1
+.in -16n
+.sp
+.ne 2
+.mk
+\fB-\fBb\fR\fR
+.in +16n
+.rt
+Specify that
+the output should be in 8-bit format\&. By default, the output is in 16-bit
+format\&.
+.sp
+.sp 1
+.in -16n
+.sp
+.ne 2
+.mk
+\fB-\fBd\fR\fR
+.in +16n
+.rt
+Play the sample
+from file as raw data\&. The default behavior is to read the data from a sound
+file (\fB\&.wav\fR, \fB\&.au\fR, and so on)\&. If
+this option is chosen, \fB\fIsamplename \fR\fRis
+the name of a file\&.
+.sp
+.sp 1
+.in -16n
+.sp
+.ne 2
+.mk
+\fB-\fBe\fR\fR
+.in +16n
+.rt
+Play the sample
+from the \fBesd \fRcache\&. If this option is chosen, \fB\fIsamplename \fR\fR is the name of the sample in the cache\&.
+.sp
+.sp 1
+.in -16n
+.sp
+.ne 2
+.mk
+\fB-\fBh\fR\fR
+.in +16n
+.rt
+Display help
+text, and exit\&.
+.sp
+.sp 1
+.in -16n
+.sp
+.ne 2
+.mk
+\fB-\fBm\fR\fR
+.in +16n
+.rt
+Specify that
+the output should be in mono format\&. By default, the output is in stereo format\&.
+.sp
+.sp 1
+.in -16n
+.sp
+.ne 2
+.mk
+\fB-\fBr \fIfreq\fR\fR\fR
+.in +16n
+.rt
+Specify that the output rate should be set to \fIfreq\fR\&. By default, the output rate is set to 44\&.1 kHz\&.
+.sp
+.sp 1
+.in -16n
+.SH "OPERANDS"
+.PP
+The following operands are supported:
+.sp
+.ne 2
+.mk
+\fB\fB\fIsamplename\fR\fR\fR
+.in +16n
+.rt
+The name of the sample
+to be played\&.  If the -\fBe\fR option is used, \fB\fIsamplename \fR\fRis the \fBesd \fR cache
+name\&. Otherwise, \fB\fIsamplename \fR\fR
+is a filename\&.
+.sp
+.sp 1
+.in -16n
+.SH "EXAMPLES"
+.PP
+\fBExample 1: Playing a sample from a file \fR
+.PP
+.PP
+.nf
+example% \fBesdsample generic\&.wav\fR
+.fi
+.PP
+\fBExample 2: Playing a sample from the esd cache\fR
+.PP
+.PP
+.nf
+example% \fBesdsample -\fBe\fR esdctl:generic\&.wav\fR
+.fi
+(where \fBesdctl:generic\&.wav\fR is the
+cache name)
+.SH "EXIT STATUS"
+.PP
+The following exit values are returned:
+.sp
+.ne 2
+.mk
+\fB\fB0\fR\fR
+.in +9n
+.rt
+Application exited successfully
+.sp
+.sp 1
+.in -9n
+.sp
+.ne 2
+.mk
+\fB\fB>0\fR\fR
+.in +9n
+.rt
+Application
+exited with failure
+.sp
+.sp 1
+.in -9n
+.SH "SEE ALSO"
+.PP
+\&\fIesd\fR\|(1), \fIesdcat\fR\|(1), \fIesddsp\fR\|(1), \fIesdloop\fR\|(1), \fIesdplay\fR\|(1), 
+\&\fIesd-config\fR\|(1), \fIesdctl\fR\|(1), \fIesdfilt\fR\|(1), \fIesdmon\fR\|(1), \fIesdrec\fR\|(1)
+

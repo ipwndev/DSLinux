@@ -1,0 +1,68 @@
+Program History:
+
+    EsounD was coded and maintained by Eric B. Mitchell (aka 'Ricdude) <ericmit@ix.netcom.com>
+    before moving on to other things.
+
+    This was based on a prototype sound daemon created by Carsten 
+    Haitzler (aka The Rasterman).  Some snips of his code are 
+    probably still lurking about, but the overwhelming majority 
+    of it was written from scratch.
+
+Additional Credits:
+
+    Chutt <#E>, for insanely agreeing to alpha test, and porting 
+    Emusic, to EsounD.  Emusic is a highly customizable sound player
+    available from:  http://www.icom.net/~smelecat/emp3/index.htm.
+    And for the initial configure setup
+
+    Elliot Lee <sopwith@redhat.com>, for insanely jumping in and
+    carrying on, during my untimely extended leaves of absence.
+
+    Shaleh <#E>, for "-Wall -pedantic" cleanup patches
+
+    adnans <#E>, threshhold clipping patches
+
+    Peter Asobeck, Sun driver update.
+
+    Jason Ish, BSD patches and debugging.
+
+    Jeff Dubrule, mklinux driver and patches.
+
+    Vendu <#E>, remembering to check for errors in esdcat.
+
+    Brian M. Almeida, Sun driver update.
+
+    Simon Kagedal, for esdplay, a generic audio file player.
+
+    mackman, linuxppc patches.
+
+    Nick Lopez <kimo_sabe@usa.net>: ALSA port.
+
+    Dave Glowacki <dglo@SSEC.WISC.EDU>: audio_hpux patches.
+
+    Kimball Thurston: audio_irix patches.
+
+    Mandrake (Geoff Harrison) <mandrake@mandrake.net>: making sure
+    the library revision numbers actually come out right. :)
+
+    Bibek Sahu: Improved ALSA detection algorithms, filters, mixdown
+    optimizations. 
+
+    Jimmy Olsen <jo@hrp.no>: hpux driver fixes
+
+    Manish Singh <yosh@gimp.org>: misc autoconf hackery, the magic
+    /dev/dsp to esd rerouter.
+
+    Philippe Defert: aix driver fixes
+
+    Miodrag Vallat: unnecessary fsync() cleanup, rounding patch.
+
+    Bob Bell <bobbell@zk3.dec.com> is the man behind audio_osf.c
+
+    A whole list of people in the ChangeLog, who fail to appear here.
+
+    The masses of "early adopters" who beat the snot out of esound
+    early on.
+
+    Your Name Here, simply submit a patch, or port an existing 
+    application for use with this package.

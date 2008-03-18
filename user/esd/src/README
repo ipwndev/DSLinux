@@ -1,0 +1,21 @@
+
+Esound is an audio mixing server that allows multiple
+applications to output sound to the same audio device.
+Development on Esound stopped several years ago, in the
+hope that someone would write a replacement.  Esound is
+seriously lacking in features required for a modern
+desktop environment, particularly for multi-channel
+audio and audio/video synchronization.  However, it is
+part of the GNOME platform (for a little while longer),
+so we slavishly continue to maintain it.  Please don't
+laugh at us.
+
+Bugs should be reported at http://bugzilla.gnome.org.
+It's unlikely that they'll be fixed unless they're
+regressions from recent versions or accompanied by
+patches.
+
+
+
+  --ds
+
