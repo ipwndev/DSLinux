@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+esd_serverdir=@ESD_PC_DIR@
+
+Name: esound
+Description: esound
+Requires: audiofile
+Version: @VERSION@
+Libs: -L${libdir} -lesd @SOUND_LIBS@
+Cflags: -I${includedir}
