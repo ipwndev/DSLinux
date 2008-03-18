@@ -223,6 +223,7 @@ dir_$(CONFIG_USER_NAIL)                     += nail
 dir_$(CONFIG_USER_NANO)                     += nano
 dir_$(CONFIG_USER_JOE)                      += joe
 dir_$(CONFIG_USER_NCFTP_NCFTP)              += ncftp
+dir_$(CONFIG_USER_NCMPC) 	            += ncmpc
 dir_$(CONFIG_USER_NESSUS_NASL)              += nessus
 dir_$(CONFIG_USER_NETCAT_NETCAT)            += netcat
 dir_$(CONFIG_USER_NETFLASH_NETFLASH)        += netflash

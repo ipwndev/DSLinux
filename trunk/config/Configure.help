@@ -3410,6 +3410,9 @@ CONFIG_USER_RECOVER_STATIC_SERVER
 CONFIG_USER_NESSUS_NASL
   The Nessus scripting language (NASL) interpreter.
 
+CONFIG_USER_NCMPC
+  Curses based MPD (http://musicpd.org/) client
+
 CONFIG_USER_MSNTP_MSNTP
   Simple Network Time Protocol utility.
   Approx. binary size: 66k
