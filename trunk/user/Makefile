@@ -108,6 +108,7 @@ dir_$(CONFIG_USER_E2FSPROGS_MISC_MKE2FS)    += e2fsprogs
 dir_$(CONFIG_USER_E2FSPROGS_MISC_MKLOST_FOUND) += e2fsprogs
 dir_$(CONFIG_USER_E2FSPROGS_MISC_TUNE2FS)   += e2fsprogs
 dir_$(CONFIG_USER_E2FSPROGS_MISC_UUIDGEN)   += e2fsprogs
+dir_$(CONFIG_USER_ESD)			    += esd
 dir_$(CONFIG_USER_ELVISTINY_VI)             += elvis-tiny
 dir_$(CONFIG_USER_ETHATTACH_ETHATTACH)      += ethattach
 dir_$(CONFIG_USER_ETHTOOL_ETHTOOL)          += ethtool
