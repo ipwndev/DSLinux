@@ -1849,8 +1849,6 @@ romfs:
 		-m backgammon/backgammon/backgammon.6 /usr/share/man/backgammon
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BACKGAMMON \
 		backgammon/teachgammon/teachgammon $(GAMESDIR)/teachgammon
-	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BACKGAMMON \
-		-m backgammon/teachgammon/teachgammon.6 /usr/share/man/teachgammon
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BATTLESTAR \
 	    battlestar/battlestar $(GAMESDIR)/battlestar
 	$(ROMFSINST) -e CONFIG_USER_GAMES_BSDGAMES_BATTLESTAR \
