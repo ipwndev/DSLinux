@@ -98,8 +98,12 @@ int main(int argc, char **argv)
 			while(strstr(cfg, "=\t"))
 				strcpy(strstr(cfg, "=\t")+1, strstr(cfg,"=\t")+2);
 			if(!strncasecmp(cfg, "AUTOLOGIN=", 10)) {
-				if(strlen(cfg)<11 || (strncasecmp(cfg+10, "Y", 1) && strncasecmp(cfg+10, "1", 1)))
+				if(strlen(cfg)<11 || (strncasecmp(cfg+10, "Y", 1) && strncasecmp(cfg+10, "1", 1))) {
+					/*Fall back to /bin/login */
+					execlp("login", "login", NULL);
+					printf("ERROR: Couldn't exec /bin/login: $s\n", strerror(errno));
 					return 0; /* Why did we get called??? */
+				}
 			} else if(!strncasecmp(cfg, "USER=", 5))
 				user=strdup(cfg+5);
 			else if(!strncasecmp(cfg, "EXEC=", 5))
