@@ -102,8 +102,10 @@ dir_$(CONFIG_LIB_LIBGETTEXT)	+= gettext
 dir_$(CONFIG_LIB_LIBGETTEXT_FORCE)  += gettext
 dir_$(CONFIG_LIB_LIBGLIB)	+= glib
 dir_$(CONFIG_LIB_LIBGLIB_FORCE)  += glib
- dir_$(CONFIG_LIB_SDL)       += sdl
- dir_$(CONFIG_LIB_SDL_FORCE) += sdl
+dir_$(CONFIG_LIB_SDL)       += sdl
+dir_$(CONFIG_LIB_SDL_FORCE) += sdl
+dir_$(CONFIG_LIB_AUDIOFILE) += audiofile
+dir_$(CONFIG_LIB_AUDIOFILE_FORCE) += audiofile
 
 # And build libraries in the prop directory last
 dir_y += $(ROOTDIR)/prop
@@ -197,7 +199,8 @@ LINKLIBS=\
 	$(ROOTDIR)/lib/gettext/src/gettext-runtime/intl/.libs/*.a \
 	$(ROOTDIR)/lib/glib/src/glib/.libs/*.a \
 	$(ROOTDIR)/lib/glib/src/gmodule/.libs/*.a \
-	$(ROOTDIR)/lib/sdl/src/build/.libs/*.a
+	$(ROOTDIR)/lib/sdl/src/build/.libs/*.a \
+	$(ROOTDIR)/lib/audiofile/src/libaudiofile/.libs/*.a
 
 ##############################################################################
 
