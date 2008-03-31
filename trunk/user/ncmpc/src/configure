@@ -4083,13 +4083,13 @@ echo "${ECHO_T}yes" >&6
 
             echo "$as_me:$LINENO: checking GLIB_CFLAGS" >&5
 echo $ECHO_N "checking GLIB_CFLAGS... $ECHO_C" >&6
-            GLIB_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 >= 2.2"`
+#            GLIB_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 >= 2.2"`
             echo "$as_me:$LINENO: result: $GLIB_CFLAGS" >&5
 echo "${ECHO_T}$GLIB_CFLAGS" >&6
 
             echo "$as_me:$LINENO: checking GLIB_LIBS" >&5
 echo $ECHO_N "checking GLIB_LIBS... $ECHO_C" >&6
-            GLIB_LIBS=`$PKG_CONFIG --libs "glib-2.0 >= 2.2"`
+#            GLIB_LIBS=`$PKG_CONFIG --libs "glib-2.0 >= 2.2"`
             echo "$as_me:$LINENO: result: $GLIB_LIBS" >&5
 echo "${ECHO_T}$GLIB_LIBS" >&6
         else
@@ -4114,7 +4114,7 @@ echo "${ECHO_T}$GLIB_LIBS" >&6
   else
      { { echo "$as_me:$LINENO: error: glib-2.2 is required" >&5
 echo "$as_me: error: glib-2.2 is required" >&2;}
-   { (exit 1); exit 1; }; }
+   { (exit 1); }; }
   fi
 
 fi
