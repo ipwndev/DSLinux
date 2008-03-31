@@ -3,11 +3,13 @@
 all: .compiled
 
 NCMPC_CONFIGURE_FLAGS=--disable-nls
-
 .configured:
-	cd src && env CFLAGS="$(CFLAGS)"\
+	cd src && env GLIB_CFLAGS="-I$(ROOTDIR)/include" \
+		GLIB_LIBS="-L$(ROOTDIR)/lib -lglib-2.0 -liconv -lintl" \
+		PKG_CONFIG="no" \
 		./configure --host=arm-linux-elf \
 		--prefix=/nonexistent $(NCMPC_CONFIGURE_FLAGS)
+
 	touch $@
 
 .compiled: .configured
