@@ -25087,7 +25087,7 @@ See the pkg-config man page for more details.
 
 To get pkg-config, see <http://www.freedesktop.org/software/pkgconfig>.
 See \`config.log' for more details." >&2;}
-   { (exit 1); exit 1; }; }
+   { (exit 1); }; }
 else
 	AUDIOFILE_CFLAGS=$pkg_cv_AUDIOFILE_CFLAGS
 	AUDIOFILE_LIBS=$pkg_cv_AUDIOFILE_LIBS
