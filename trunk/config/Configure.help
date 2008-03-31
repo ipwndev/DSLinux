@@ -237,6 +237,9 @@ CONFIG_USER_SASH_SH
 CONFIG_USER_SASH_HISTORY
   Support simple command history in SASH.
 
+CONFIG_USER_SC
+  Simple curses based spreadsheet software
+ 
 CONFIG_USER_APPWEB_APPWEB
   Secure, fast, modular embedded web server supporting Embedded Server Pages.
   Approx. binary size: 110-400k
