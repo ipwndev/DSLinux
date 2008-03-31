@@ -7,7 +7,10 @@ ESD_CONFIGURE_FLAGS=    --disable-alsa --enable-static=yes\
 			--disable-ipv6
 
 .configured:
-	cd src && env CFLAGS="$(CFLAGS)"\
+	cd src && env CFLAGS="$(CFLAGS)" \
+		PKG_CONFIG="no" \
+		AUDIOFILE_LIBS="-L$(ROOTDIR)/lib -laudiofile -lm" \
+		AUDIOFILE_CFLAGS="$(CFLAGS)" \
 		./configure --host=arm-linux-elf \
 		--prefix=/nonexistent $(ESD_CONFIGURE_FLAGS)
 	touch $@
