@@ -1,0 +1,187 @@
+This is a much modified version of the public domain spread sheet sc,
+originally by James Gosling, and posted a number of years ago by Mark
+Weiser as vc.
+
+The current maintainer is Chuck Martin (nrocinu@myrealbox.com).  I
+originally got involved with sc because I wanted a good text-based
+spreadsheet program, and nothing I could find seemed to suit my needs.
+After looking at several different programs, I settled on sc as the
+program with the most promise, especially since source code was available,
+which meant I could modify it to add the features I needed.  Since it
+appeared that no one was maintaining it anymore, I decided to take up the
+cause myself, although I don't want to claim ownership of the program.  I
+would like to thank those who have made their own contributions to making
+sc a better program.
+
+I apologize for taking so long to release this version.  I've been wanting
+to do it for quite some time, but have been holding off until I could find
+the time to update the documentation properly, and other responsibilities
+have prevented me from doing that until recently.  On the bright side,
+this version has been in use more extensively, and I believe it to be
+more stable and bug-free than any previous version.
+
+The CHANGES file lists the changes from 6.1 to 7.16.  Although I've
+already added all of the "must have" features I needed, and then some,
+I'm willing to continue maintaining sc for as long as I'm able, and I'll
+certainly share any new features and bugfixes I come up with.  If anyone
+else finds any bugs or would like to contribute patches, please send them
+to me.  If they're useful and they work, I'll probably add them.  I prefer
+to keep it simple, though, since that's what drew me to sc instead of some
+other "full-featured" spreadsheet in the first place.  I like the Unix
+philosophy of making each program do one thing and do it well, and would
+rather leave all the fancy graphics and other features to other programs
+that are better suited for them.
+
+Many of the items in the TODO list were there before I took over maintaining
+sc, and although I won't be adding those features myself, I left them in
+the list in case someone else still wants to add them.  I've added undo to
+the TODO list because I feel it is a much needed feature, but I won't make
+any promises as to when (or if) I will get to it.  If anyone else would
+like to tackle it, feel free to do so.
+
+I've tried to avoid changing key bindings any more than necessary because
+it could be confusing to people who have been using sc for years if the
+keybindings suddenly change, but in version 7.13, I finally decided to
+change a few things for more compatibility with vi, so that it will be
+easier to move back and forth between the two programs.  For example,
+the ^F and ^B keys now work like J and K (or PageDown/PageUp).  Also,
+the " key is no longer used for entering centered labels, but for named
+delete buffers instead, as it does in vi.  The \ key will take its place
+for entering centered labels.  This will also make it easier to enter a
+so-called "wheel" for filling a cell with a character or string, since
+you'll begin such a string by pressing \ twice.  Also, most keyboards have
+the "\" and "|" on the same key, which should make it easy to remember
+because | is already used for centering an existing string.  I'm sure
+someone will let me know if this causes any problems. :)
+
+In version 7.16, I've added a few more changes in sc's key bindings.
+For one, the range commands now all begin with "r" instead of "/" because
+I intend to add a new search feature that will be more powerful than the
+goto command, and I want to use "/" for that feature.  Also, "n" is now
+used to repeat the last search (the last goto, for now, but that will
+change when the new search feature is implemented).  Since that conflicts
+with the former usage of "n", which was for the note commands, these
+commands now all begin with "*", and following a link to a note now
+requires that "*" be pressed twice in succession.
+
+I've started an announcement-only mailing list for those who would like
+to find out when new versions of sc are available.  If anyone is interested
+in being added to this list, please let me know.  This will not be an
+automated list.  Everything will be done manually, and all names will be
+put in a "Bcc:" header, so there will be no danger of being added to
+someone's spam list.
+
+
+Problems with color:
+
+I'm no longer running ncurses 1.9.9g on any of my machines or machines
+I work with, since it seems to have bugs in the handling of color that
+I've been unable to find a work-around for, and upgrading to the latest
+version seems to eliminate them.  If anyone else finds a way to work
+around these bugs, patches are welcome.
+
+If you have a problem getting highlighting to work when color is enabled,
+you may want to check the value of ncv in your terminfo file (this can
+be checked with the "tput ncv" command at the shell prompt).  This value
+should be an even number in order for standout mode to work.  If ncv is
+odd, try subtracting one and recompiling.  See the man pages for tic and
+infocmp for how to do this.  The linux terminfo file in some older versions
+of ncurses is known to have this problem, for example.  I've also found the
+problem in some versions of the terminfo files for xterm and screen.
+
+
+Compiling the program:
+
+Before you compile, make sure to check the Makefile and uncomment the
+lines that pertain to your system and comment out the lines for Linux.
+If you run Linux, this step won't be necessary, since that's the default
+(since that's what I run).  I haven't tried compiling or running sc on
+anything else, but I've used it on both Slackware 4.0 (with ncurses upgraded
+to version 5.2) and Slackware 7.1, so I hope I haven't broken anything for
+anyone else.  If you get it to compile and run on something else, please
+let me know.  If it doesn't work and you can fix it, please send me a patch.
+
+
+A couple of notes from the previous maintainer:
+
+1) If you have problems with lex.c, and don't care about arrow keys, define
+   SIMPLE (-DSIMPLE in the makefile).  SIMPLE causes the arrow keys to not
+   be used.
+
+2) If you have problems with your yacc saying: too many terminals ...127...
+   find a different yacc: bison, Berkeley yacc, Pd yacc, etc.  AT&T's Sys V
+   yacc has small, fixed sized tables.  SCO will allow dynamic yacc tables
+   when given the correct flags.
+
+
+After you get it built, if you aren't familiar with sc, you might want
+to try "sc tutorial.sc" for a simple introduction to the basic commands.
+Most of the key bindings are patterned after the vi text editor, so if
+you're familiar with that program or its variants, you shouldn't have
+any problems learning sc.  The tutorial is a bit out-of-date, and doesn't
+include any of the new features that have been added since I began
+maintaining sc.  If anyone would like to rectify this situation, feel
+free.  The same goes for the built-in help system (available by pressing
+`?'), although the feature list has grown quite a bit, and that may not be
+easy to do without some major changes to the way the help system works.
+
+If you've used sc before, you may want to check out the CHANGES file
+to see what's changed, and read the man page for more details.
+
+To print a quick reference card, type the command:
+	scqref | [your_printer_commmand]
+
+If you have the command 'file' that uses /etc/magic, and it isn't there
+already, you may want to add the following lines:
+
+# sc:  file(1) magic for "sc" spreadsheet
+#
+38	string		Spreadsheet	sc spreadsheet file
+
+Psc formats ascii files for use in the spreadsheet.  If you don't have
+getopts, there is a public domain version by Henry Spencer hidden away in
+the VMS_NOTES file.
+
+If you'd like to rename the program to something different, just change
+"name=sc" and "NAME=SC" to "name=myfavoritename" and "NAME=MYFAVORITENAME"
+and try "make myfavoritename".  (Does anyone need or use this?  If so,
+please let me know.  Otherwise, I may remove that capability in a future
+version, since it seems to me that it reduces confusion if everyone
+refers to the program by the same name.  (I've been told that there is a
+program called Sunshine Commander that used the same name, but I may still
+drop this, since the sc Spreadsheet Calculator is much more well known)).
+
+Similarly, you can make the documentation with "make myfavoritename.man".
+"make install" will make and install the code in EXDIR.  The installation
+steps and documentation all key off of the name.  The makefile even changes
+the name in the nroffable man page.  If you don't have nroff, you will
+have to change sc.man yourself.
+
+Uninstalling the program is now very easy, if you should want to do this.
+Just do "make uninstall".
+
+
+Finding the latest version:
+
+You should be able to ftp the lastest version of sc from ibiblio.org
+The directory where you should be able to find the latest version is
+/pub/Linux/apps/financial/spreadsheet.  If you can't find it, e-mail me.
+I know this is a Linux specific source, but it's the only place I know
+of.  If anyone knows of a more O/S-neutral location, please let me know.
+
+
+Guarantee:
+
+Since some people are wary of using a program that has no guarantee, I've
+decided to provide the following guarantee:
+
+  It is a well-known fact that any non-trivial program has bugs.  If
+  you haven't found them, you just haven't stumbled upon the proper
+  combinations of actions that will cause the bugs to manifest them-
+  selves.  Since sc stands for "Spreadsheet Calculator", and since a
+  spreadsheet calculator is by definition a non-trivial program, sc is
+  guaranteed to have bugs.
+
+
+Chuck Martin
+nrocinu@myrealbox.com
