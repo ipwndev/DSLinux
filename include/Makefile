@@ -71,7 +71,9 @@ LINKHDRS = \
 	$(ROOTDIR)/lib/glib/src/glib/glib.h,. \
 	$(ROOTDIR)/lib/glib/src/glibconfig.h,. \
 	$(ROOTDIR)/lib/glib/src/glib/,. \
-	$(ROOTDIR)/lib/sdl/src/include/*.h,.
+	$(ROOTDIR)/lib/sdl/src/include/*.h,. \
+	$(ROOTDIR)/lib/audiofile/src/libaudiofile/audiofile.h,. \
+	$(ROOTDIR)/lib/audiofile/src/libaudiofile/aupvlist.h,.
 #
 # Both freeswan and openswan can provide des and crypto headers
 # and we need to make sure we are using the correct ones.

@@ -491,6 +491,10 @@ CONFIG_USER_GDBSERVER_GDBSERVER
   server. (old version - mk68k targets only)
   Approx. binary size: 14k
 
+CONFIG_LIB_AUDIOFILE_FORCE
+  The Audio File Library provides a uniform and elegant API for 
+  accessing a variety of audio file formats
+
 CONFIG_LIB_GPM_FORCE
   The General Purpose Mouse daemon and library.
   With the daemon you can use the mouse on the DSLinux console.
