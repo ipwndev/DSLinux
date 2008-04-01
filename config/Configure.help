@@ -406,6 +406,10 @@ CONFIG_USER_QSPITEST_TEST
 CONFIG_USER_NANO
   A small user-friendly editor for people who can't stand vi.
 
+CONFIG_USER_NGREP
+  ngrep is a pcap-aware tool that will allow you to specify extended 
+  regular or hexadecimal expressions to match against data payloads
+
 CONFIG_USER_LEVEE_VI
   A small version of 'vi' for editing files.
 

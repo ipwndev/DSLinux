@@ -128,6 +128,7 @@ then
 	then
 	/usr/bin/gpm -m /dev/mouse0 -t ps2 &
 	fi
+	export PATH="/usr/bin/coreutils:$(PATH)"
 fi
 
 # show firmware version if configured
