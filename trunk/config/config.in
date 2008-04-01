@@ -381,6 +381,7 @@ if [ "$CONFIG_USER_FREESWAN" = "y" ]; then
  	fi
 fi
 
+
 bool 'openswan-apps'  CONFIG_USER_OPENSWAN
 if [ "$CONFIG_USER_OPENSWAN" = "y" ]; then
       bool '  pluto'	      CONFIG_USER_OPENSWAN_PLUTO_PLUTO
@@ -514,6 +515,10 @@ bool 'ncftp'			CONFIG_USER_NCFTP_NCFTP
 bool 'netcat'			CONFIG_USER_NETCAT_NETCAT
 bool 'netstat-nat'		CONFIG_USER_NETSTAT_NAT_NETSTAT_NAT
 
+bool 'ngrep'			CONFIG_USER_NGREP
+if [ "$CONFIG_USER_NGREP" = "y" ]; then
+	define_bool CONFIG_LIB_LIBPCAP y
+fi
 
 bool 'ntpclient: ntpclient'		CONFIG_USER_NTPCLIENT_NTPCLIENT
 bool 'ntpclient: adjtimex'		CONFIG_USER_NTPCLIENT_ADJTIMEX
