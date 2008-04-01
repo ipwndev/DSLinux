@@ -1,7 +1,0 @@
-1.2.2-pre2: February 21, 2003
-	* Added PixilDT to the 1.2.2-pre2 tree
-	* new build system
-	* removed debugging messages
-	* Changed the .INI file system to check for and write
-	a user .INI file (~/.pixildt/PixilDT.ini)
-	* Made RPMs to work a RPM
