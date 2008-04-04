@@ -12,7 +12,7 @@ SDL_CONFIGURE_FLAGS=	--disable-cdrom --disable-video-opengl \
 			--disable-video-x11-xme --disable-video-x11-xrandr --disable-video-x11-dpms \
 			--disable-video-photon --disable-video-cocoa --enable-pthreads --enable-timers \
 			--disable-pulseaudio --disable-esd \
-			--disable-directfb
+			--disable-video-directfb
 
 .configured:
 	cd src && env CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" \
