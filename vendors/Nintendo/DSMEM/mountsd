@@ -1,2 +1,0 @@
-#!/bin/sh
-/sbin/mount -t vfat /dev/mmcblk1 /sd
