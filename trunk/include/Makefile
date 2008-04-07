@@ -76,7 +76,8 @@ LINKHDRS = \
 	$(ROOTDIR)/lib/audiofile/src/libaudiofile/aupvlist.h,. \
 	$(ROOTDIR)/lib/sdl_mixer/src/SDL_mixer.h,. \
 	$(ROOTDIR)/lib/libogg/src/include/ogg/,. \
-	$(ROOTDIR)/lib/libvorbis/src/include/vorbis/,.
+	$(ROOTDIR)/lib/libvorbis/src/include/vorbis/,. \
+        $(ROOTDIR)/lib/libtremor/src/*.h,tremor
 #
 # Both freeswan and openswan can provide des and crypto headers
 # and we need to make sure we are using the correct ones.
