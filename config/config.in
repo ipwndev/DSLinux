@@ -122,7 +122,9 @@ bool 'Build libwww'		CONFIG_LIB_LIBWWW_FORCE
 bool 'Build libiconv'		CONFIG_LIB_LIBICONV_FORCE
 bool 'Build libgettext'	        CONFIG_LIB_LIBGETTEXT_FORCE
 bool 'Build libglib'		CONFIG_LIB_LIBGLIB_FORCE
+bool 'Build libtremor'          CONFIG_LIB_TREMOR_FORCE
 bool 'Build libSDL'             CONFIG_LIB_SDL_FORCE
+bool 'Build libSDL_Mixer'       CONFIG_LIB_SDL_MIXER_FORCE
 
 comment 'Library Configuration'
 bool 'Support time zones'	CONFIG_LIB_UC_LIBC_TIMEZONE
@@ -880,9 +882,6 @@ if [ "$CONFIG_USER_UNZIP_UNZIP" = "y" ]; then
 	bool '    funzip'		CONFIG_USER_UNZIP_FUNZIP
 fi
 bool 'unzoo'			CONFIG_USER_UNZOO_UNZOO
-if [ "$CONFIG_USER_GAMES_XRICK" = "y" ]; then
-       define_bool CONFIG_LIB_SDL y
-fi
 bool 'zmodem utils'		CONFIG_USER_LRZSZ_LRZSZ
 
 if [ "$CONFIG_USER_LRZSZ_LRZSZ" = "y" ]; then
@@ -1768,11 +1767,20 @@ if [ "$CONFIG_USER_GAMES_BSDGAMES" = "y" ]; then
 fi
 bool 'cnibbles'		CONFIG_USER_GAMES_CNIBBLES
 bool 'dungeon'		CONFIG_USER_GAMES_DUNGEON
+bool 'noiz2sa'		CONFIG_USER_GAMES_NOIZ2SA
+if [ "$CONFIG_USER_GAMES_NOIZ2SA" = "y" ]; then
+       define_bool CONFIG_LIB_LIBTREMOR y
+       define_bool CONFIG_LIB_SDL y
+       define_bool CONFIG_LIB_SDL_MIXER y
+fi
 bool 'pacman'		CONFIG_USER_GAMES_PACMAN
-# bool 'mame'		CONFIG_USER_GAMES_XMAME
 bool 'rubik'		CONFIG_USER_GAMES_RUBIK
 bool 'sudoku'		CONFIG_USER_GAMES_SUDOKU
-bool 'xrick'            CONFIG_USER_GAMES_XRICK
+# bool 'mame'		CONFIG_USER_GAMES_XMAME
+bool 'xrick'		CONFIG_USER_GAMES_XRICK
+if [ "$CONFIG_USER_GAMES_XRICK" = "y" ]; then
+       define_bool CONFIG_LIB_SDL y
+fi
 endmenu
 
 #############################################################################

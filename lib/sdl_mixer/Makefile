@@ -4,7 +4,7 @@ all: .compiled
 
 SDL_MIXER_CONFIGURE_FLAGS=	--disable-music-ogg-shared --disable-music-mp3 \
 				--disable-smpegtest --disable-music-mp3-shared \
-				--disable-shared --disable-sdltest \
+				--enable-music-ogg-tremor --disable-shared --disable-sdltest \
 				--with-sdl-exec-prefix=$(ROOTDIR)/lib/sdl/src
 
 .configured:

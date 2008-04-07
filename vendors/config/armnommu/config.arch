@@ -199,7 +199,7 @@ endif
 ifeq ($(UCLINUX_BUILD_SET),1)
 	EXTRA_CFLAGS := $(CPUFLAGS)
 
-	CXXFLAGS = $(CFLAGS) -fno-exceptions
+	CXXFLAGS = $(CFLAGS) #-fno-exceptions
 
 	# C++ headers, linked into the DSLINUX source tree
 	# use -I because the c++ dirs have to come before the other system dirs.
@@ -208,7 +208,7 @@ ifeq ($(UCLINUX_BUILD_SET),1)
 		CXXFLAGS += -fno-builtin
 		CXXFLAGS += -nostdinc++
 		CXXFLAGS += -DGCC_HASCLASSVISIBILITY
-		CXXFLAGS += -fno-rtti
+		#CXXFLAGS += -fno-rtti
 		LIBGCC :=$(shell $(CXX) $(CXXFLAGS) -print-libgcc-file-name)
 		LIBGCC_DIR:=$(dir $(LIBGCC))
 		CXXLIBS	  =  $(CXXSUP)

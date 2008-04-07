@@ -27,6 +27,7 @@ all: $(EXEC)
 # Translate a .cxx file to produce an object file.
 # CXX: name of the c++ compiler, set by environment
 # CXXFLAGS: needed flags to compile c++ programs, including uClibc++
+CXXFLAGS +=-fno-rtti -fno-exceptions
 %.o: %.cxx 
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 

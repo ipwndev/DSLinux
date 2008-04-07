@@ -749,8 +749,18 @@ CONFIG_LIB_LIBAES_FORCE
   Only enable this if you want to force the library to be built.  The
   Config will make sure this library is built if it is needed.
 
+ CONFIG_LIB_TREMOR_FORCE
+  Tremor library.
+  Only enable this if you want to force the library to be built.  The
+  Config will make sure this library is built if it is needed.
+
  CONFIG_LIB_SDL_FORCE
   SDL library.
+  Only enable this if you want to force the library to be built.  The
+  Config will make sure this library is built if it is needed.
+
+ CONFIG_LIB_SDL_MIXER_FORCE
+  SDL_Mixer library.
   Only enable this if you want to force the library to be built.  The
   Config will make sure this library is built if it is needed.
 
@@ -1756,6 +1766,9 @@ CONFIG_USER_GAMES_CNIBBLES
 CONFIG_USER_GAMES_DUNGEON
   The Dungeon Adventure game.  To play, telnet to port 8899 or run
   dungeon from the command line.
+
+CONFIG_USER_GAMES_NOIZ2SA
+ Noiz2SA for the console.
 
 CONFIG_USER_GAMES_PACMAN
   Pacman for console.
