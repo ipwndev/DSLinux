@@ -6,7 +6,7 @@ all: .compiled
 	$(MAKE) -C src/bulletml/tinyxml
 	$(MAKE)  -C src/bulletml
 	$(MAKE) -C src
-	arm-linux-elf-flthdr -s 512384 src/noiz2sa
+	arm-linux-elf-flthdr -s 16384 src/noiz2sa
 	touch $@
 
 clean:

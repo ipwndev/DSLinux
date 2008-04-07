@@ -27,6 +27,7 @@ MW_PREFIX      := $(BASE_DIR)/../microwin/src
 INSTALL_PREFIX := $(BASE_DIR)/../../romfs/usr/pixil/
 # we don't have static linkage here
 EN_SHARED	= --disable-shared
+CXXFLAGS := $(CXXFLAGS) -fno-rtti -fno-exceptions
 endif
 
 # The base directory for installing
