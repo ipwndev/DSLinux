@@ -9,7 +9,6 @@
 #
 # Include architecture specific build rules.
 #
-
 ifndef ROOTDIR
 ROOTDIR=..
 endif
@@ -110,6 +109,8 @@ dir_$(CONFIG_LIB_LIBOGG)       += libogg
 dir_$(CONFIG_LIB_LIBOGG_FORCE) += libogg
 dir_$(CONFIG_LIB_LIBVORBIS)       += libvorbis
 dir_$(CONFIG_LIB_LIBVORBIS_FORCE) += libvorbis
+dir_$(CONFIG_LIB_LIBTREMOR)       += libtremor
+dir_$(CONFIG_LIB_LIBTREMOR_FORCE) += libtremor
 dir_$(CONFIG_LIB_AUDIOFILE) += audiofile
 dir_$(CONFIG_LIB_AUDIOFILE_FORCE) += audiofile
 
@@ -209,6 +210,7 @@ LINKLIBS=\
 	$(ROOTDIR)/lib/audiofile/src/libaudiofile/.libs/*.a \
 	$(ROOTDIR)/lib/libogg/src/src/.libs/*.a \
 	$(ROOTDIR)/lib/libvorbis/src/lib/.libs/*.a \
+	$(ROOTDIR)/lib/libtremor/src/.libs/*.a \
 	$(ROOTDIR)/lib/sdl_mixer/src/build/.libs/*.a 
 
 ##############################################################################
