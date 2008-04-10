@@ -28,7 +28,7 @@
 #include "soundmanager.h"
 #include "attractmanager.h"
 
-static int noSound = 0;
+static int noSound = 1;
 
 // Initialize and load preference.
 static void initFirst() {
