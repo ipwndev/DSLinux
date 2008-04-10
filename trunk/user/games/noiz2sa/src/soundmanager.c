@@ -97,10 +97,10 @@ void initSound() {
     return;
   }
 
-  audio_rate = 8192;
-  audio_format = AUDIO_S8;
-  audio_channels = 0;
-  audio_buffers = 16384;
+  audio_rate = 44100;
+  audio_format = AUDIO_S16;
+  audio_channels = 1;
+  audio_buffers = 4096;
 
   if (Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers) < 0) {
     fprintf(stderr, "Couldn't open audio: %s\n", SDL_GetError());
