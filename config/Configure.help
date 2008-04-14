@@ -3936,6 +3936,8 @@ CONFIG_PROP_CLAMAV_HELPER
 CONFIG_USER_PIXIL
   The PIXIL PDA GUI from www.pixil.org.
 
+CONFIG_USER_CPSCAN
+  Simple console port scanner
 #
 # END of proprietary config help
 #
