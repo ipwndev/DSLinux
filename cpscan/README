@@ -1,0 +1,26 @@
+ __________________________________
+|Console Port Scan  cpscan-1.2b.tar.gz|
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Thursday 11. August 2003.
+
+I have taken over as maintainer, since freshmeat could not find the 
+original owner. As a part of this, I've moved it to GPL'd release.
+I suppose this is ok for most people, I suppose. If anyone should have 
+anything to add: To late. I'm sorry, but you can't reverse a GPL.
+I have however NOT taken over the copyright. I will claim claim copyright 
+for any addment I made.
+
+Note on translations:
+I'm speaking english and Norwegian. This is the only languages I am going 
+to make it in.
+The portugisean translation that is, is going to be there, but 
+umantained,unless I find someone.
+NEW: Eliran Gonen has translated this program into french.
+
+Install notes:
+make clean;make;make install should do it. I recomend to manually modify 
+Makefile to fit you. If something don't work, mail vidarlo@vestdata.no
+
+THIS PROGRAM COMES WITHOUT ANY WARRAYNTY, EVEN FOR FIT TO A PURPOSE. USE 
+ON OWN RESPONSIBILITY!
