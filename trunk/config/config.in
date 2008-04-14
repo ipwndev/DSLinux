@@ -325,6 +325,7 @@ bool 'bpalogin'			CONFIG_USER_BPALOGIN_BPALOGIN
 bool 'br2684ctl'		CONFIG_USER_BR2684CTL_BR2684CTL
 bool 'brcfg'			CONFIG_USER_BRCFG_BRCFG
 bool 'bridge utils'		CONFIG_USER_BRCTL_BRCTL
+bool 'cpscan'			CONFIG_USER_CPSCAN
 bool 'dhcpcd'			CONFIG_USER_DHCPCD_DHCPCD
 if [ "$CONFIG_USER_DHCPCD_DHCPCD" = "y" ]; then
 	bool '  dhcpcd link-local support'	CONFIG_USER_DHCPCD_LLIP

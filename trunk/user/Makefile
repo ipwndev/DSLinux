@@ -60,6 +60,7 @@ dir_$(CONFIG_USER_CAL_CAL)                  += cal
 dir_$(CONFIG_USER_CAL_DATE)                 += cal
 dir_$(CONFIG_USER_CAMSERV)                  += camserv
 dir_$(CONFIG_USER_CAN_EXAMPLES)             += can4linux
+dir_$(CONFIG_USER_CPSCAN) 	            += cpscan
 dir_$(CONFIG_USER_DICTIONARY_AMERICAN)		+= dict-words
 dir_$(CONFIG_USER_DICTIONARY_BRITISH)		+= dict-words
 dir_$(CONFIG_USER_CAN_HORCH)                += horch
