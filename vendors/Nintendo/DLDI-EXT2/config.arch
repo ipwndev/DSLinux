@@ -1,0 +1,14 @@
+.EXPORT_ALL_VARIABLES:
+
+NDS_COMMON = $(ROOTDIR)/vendors/Nintendo/common
+
+CONSOLE_BAUD_RATE = 115200
+
+# CPUFLAGS :=
+VENDOR_CFLAGS := -mswp-byte-writes -DCONFIG_NDS_ROM8BIT -mcpu=arm946e-s -mfpu=fpe3
+LD_OPTION := -mswp-byte-writes
+# DISABLE_XIP := 1
+DISABLE_MOVE_RODATA := 1
+DISABLE_SHARED_LIBS := 1
+
+include $(ROOTDIR)/vendors/config/armnommu/config.arch

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+mount -t proc none /proc
+mount -t vfat -o noatime /dev/dldi1 /media
+mount -t ramfs none /var/run
+mount -t ramfs none /tmp
+
+. /etc/rc.common
