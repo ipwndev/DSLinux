@@ -1,8 +1,22 @@
 #!/bin/sh
+#Load defaults if rc.conf exists
+if [ -e /etc/rc.conf ]
+then
+        . /etc/rc.conf
+fi
 
 mount -t proc none /proc
-mount -t vfat -o noatime /dev/dldi1 /media
-mount -t ramfs none /var/run
 mount -t ramfs none /tmp
+mount -t ramfs none /var/run
+if [ "$checkfsonboot" = "YES" ]
+then
+	echo "Checking filesystems"
+	e2fsck -n /dev/dldi2
+	dosfsck /dev/dldi1
+else
+	echo "Not checking filesystems on boot"
+	echo "set checkfsonboot="YES" in /etc/rc.conf to enable"
+fi
+mount -t vfat -o noatime /dev/dldi1 /media
 
 . /etc/rc.common

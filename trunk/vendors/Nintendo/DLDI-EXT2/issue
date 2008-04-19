@@ -10,4 +10,4 @@ For further information check:
 [36mhttp://www.dslinux.org/[0m
 
 This is the DLDI-EXT2 version.
-[1;31mYou must type "poweroff" before turning off the DS.[0m
+[1;31mYou must type "/etc/rc.d/shutdown" before turning off the DS.[0m
