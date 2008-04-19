@@ -1,0 +1,8 @@
+#!/bin/sh
+# Shutdown script for DLDI-EXT2 build
+echo "Syncing disks"
+sync
+echo "Remounting root read only"
+umount -r /
+echo "Powering off"
+poweroff
