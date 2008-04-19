@@ -5,5 +5,4 @@ dev-node /dev/tun
 dev tun
 ifconfig 10.8.0.1 10.8.0.2
 log-append /var/log/openvpn.log
-pid /var/run/openpvn.pid
 secret /etc/static.key
