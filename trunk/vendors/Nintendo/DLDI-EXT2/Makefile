@@ -45,6 +45,7 @@ DEVICES = \
 	\
 	mtd0,c,90,0    firmware,c,90,2 \
 	\
+	tun,c,10,200 \
 	tty0,c,4,0     tty1,c,4,1         tty2,c,4,2       tty3,c,4,3 \
 	tty4,c,4,4     tty5,c,4,5         tty6,c,4,6       tty7,c,4,7 \
 	\
@@ -81,7 +82,7 @@ romfs:
 	$(ROMFSINST) $(NDS_COMMON)/rc.common /etc/rc.common
 	$(ROMFSINST) $(NDS_COMMON)/rc.defaults /etc/rc.defaults
 	$(ROMFSINST) $(NDS_COMMON)/rc.d /etc/rc.d
-	$(ROMFSINST) $(NDS_COMMON)/passwd /etc/passwd
+	#$(ROMFSINST) $(NDS_COMMON)/passwd /etc/passwd
 	$(ROMFSINST) -p +x $(NDS_COMMON)/default.script /usr/share/udhcpc/default.script
 	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
 	for i in `find $(ROMFSDIR)/$(FATFS)/linux -type d -empty` ; do touch $$i/.keep; done

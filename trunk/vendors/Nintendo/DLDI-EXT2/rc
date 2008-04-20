@@ -10,9 +10,31 @@ mount -t ramfs none /tmp
 mount -t ramfs none /var/run
 if [ "$checkfsonboot" = "YES" ]
 then
-	echo "Checking filesystems"
-	e2fsck -n /dev/dldi2
-	dosfsck /dev/dldi1
+	echo "Starting fsck"
+	echo "Remounting / read-only"
+	umount -r /
+	echo "Checking /"
+		
+		if e2fsck -n /dev/dldi2
+		then echo "Filesystem OK"
+		else
+		echo "============================================"
+		echo "WARNING! Root filesystem needs manual repair"
+		echo "      Please issue the following commands   "
+		echo "============================================"
+		echo "umount -r /"
+		echo "e2fsck /dev/dldi2"
+		echo "mount -o remount,rw /"
+		echo "/etc/rc.d/shutdown"
+		fi
+	echo "Remounting /"
+	mount -o remount,rw /
+	echo "Checking VFAT"
+	if dosfsck /dev/dldi1
+	then echo "VFAT OK"
+	else
+	echo "WARNING! Manual repair needed for /dev/dldi1"
+	fi
 else
 	echo "Not checking filesystems on boot"
 	echo "set checkfsonboot="YES" in /etc/rc.conf to enable"

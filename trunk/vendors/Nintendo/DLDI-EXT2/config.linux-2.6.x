@@ -744,16 +744,16 @@ CONFIG_RAMFS=y
 #
 # Network File Systems
 #
-CONFIG_NFS_FS=m
-CONFIG_NFS_V3=y
+# CONFIG_NFS_FS is not set
+# CONFIG_NFS_V3 is not set
 # CONFIG_NFS_V3_ACL is not set
 # CONFIG_NFS_V4 is not set
 # CONFIG_NFS_DIRECTIO is not set
 # CONFIG_NFSD is not set
-CONFIG_LOCKD=m
-CONFIG_LOCKD_V4=y
-CONFIG_NFS_COMMON=y
-CONFIG_SUNRPC=m
+# CONFIG_LOCKD is not set
+# CONFIG_LOCKD_V4 is not set
+# CONFIG_NFS_COMMON is not set
+# CONFIG_SUNRPC is not set
 # CONFIG_RPCSEC_GSS_KRB5 is not set
 # CONFIG_RPCSEC_GSS_SPKM3 is not set
 # CONFIG_SMB_FS is not set
