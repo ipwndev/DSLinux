@@ -209,7 +209,7 @@ target_alias = @target_alias@
 # Automake requirements
 AUTOMAKE_OPTIONS = gnits 1.8
 ACLOCAL_AMFLAGS = -I config
-SUBDIRS = intl lib po sed doc testsuite
+SUBDIRS = intl lib po sed testsuite
 noinst_DATA = bootstrap.sh
 noinst_HEADERS = basicdefs.h
 EXTRA_DIST = BUGS THANKS COPYING.DOC README.boot bootstrap.sh 	      \
@@ -678,6 +678,3 @@ update-regex:
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
-
-romfs: 
-	$(ROMFSINST) sed/sed /usr/bin
