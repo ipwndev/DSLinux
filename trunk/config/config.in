@@ -1782,6 +1782,10 @@ bool 'xrick'		CONFIG_USER_GAMES_XRICK
 if [ "$CONFIG_USER_GAMES_XRICK" = "y" ]; then
        define_bool CONFIG_LIB_SDL y
 fi
+bool 'mElite'		CONFIG_USER_GAMES_MELITE
+if [ "$CONFIG_USER_GAMES_MELITE" = "y" ]; then
+       define_bool CONFIG_LIB_SDL y
+fi
 endmenu
 
 #############################################################################

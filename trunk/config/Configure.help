@@ -3402,6 +3402,11 @@ CONFIG_USER_TINYLOGIN_INSTALLER
   commands that are compiled into the binary.  This needs 
   the /proc filesystem to work properly...
 
+CONFIG_USER_GAMES_MELITE
+  A version of Elite using the TinyGL library.  TinyGL is 
+  intended to be a very small implementation of a subset of
+  OpenGL* for embedded systems or games.
+
 CONFIG_LIB_TINYTCL
   Core library which provides a Tcl implementation based
   on Tcl 6.7 with some extensions for compatibility with
