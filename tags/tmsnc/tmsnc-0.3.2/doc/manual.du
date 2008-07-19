@@ -1,0 +1,151 @@
+
+   Updated: November 2005
+   Language: Dutch
+   Translation: DennisCGc <denniscgc@gmail.com>
+     ------------------------------------------------------------------------------------------------
+
+    
+
+NAAM
+
+   tmsnc - console MSN client voor UNIX (Textbased MSN client for UNIX)
+
+SYNTAX:
+
+   tmsnc [-l adres] [-i status] [-uv]  
+
+BESCHRIJVING:
+
+   tmsnc is een console chat programma dat gebruikt maakt van de MSN protocol. De interface is geschreven met
+   behulp van Ncursus en de SSL gedeelte met OpenSSL. Dit maakt het programma goed te poorten en het moet
+   mogelijk zijn om het te draaien onder elke UNIX-achtige systeem.
+
+OPTIES
+
+   -l ADRES
+           Login met de opgegeven ADRES
+   -u
+           Kijkt voor enige updates.
+   -i STATUS
+           Zet de begin status naar STATUS waar STATUS kan zijn; "online", "away", "brb", "busy",
+           "idle", "phone", "lunch" of "hidden".
+   -v
+           Laat versie info zien.
+
+    
+
+MENU
+
+   Gebruik TAB om te schakelen tussen de verschillende lijsten en vensters in de interface. Om een
+   menu te krijgen druk je op enter. Om een van de menu items te kiezen ga je met behulp van de
+   pijltjes toetsen naar beneden of boven, en druk dan op enter om die commando uit te laten voeren.
+    
+
+TALKFILTERS
+
+   Om de vertaling van verzonden berichten te activeren, met die 'praatfilters' moet je eerst
+   libtalkfilters (http://www.hyperrealm.com/main.php?s=talkfilters) installeren, en dan tmsnc hercompileren.
+   Dan ga je naar "Acties->Set filter". Geef dan een van de volgende filter namen op: austro, b1ff,
+   brooklyn, chef, cockney, drawl, dubya, fudd, funetak, jethro, jive, kraut, pansy, pirate,
+   postmodern, redneck, valspeak of warez. Je kan het ook deactiveren door none in te tikken.
+   Nu wordt al je verzonden berichten vertaald.
+    
+
+CONTACT LIJST
+
+   Gebruik de pijltjes toetsen om iemand te kiezen. Druk dan vervolgens op enter om een gesprek te
+   beginnen. Wanneer je een contact hebt gekozen, kan je ook een 'alias' instellen. Dit doe je door
+   naar Contacts->Set custom nick te gaan. Hier geef je vervolgens de nieuwe alias op. Dit kan je ook
+   doen met Contacts->Un-set custom nick. Hierbij verwijder je de alias bij degene.
+    
+
+GESPREKKEN LIJST
+
+   Om te schakelen tussen gesprekken, kies dan de gesprek met de pijltjes toetsen en druk op enter.
+   Een gesprek wordt groen gemarkeerd als er ongelezen berichten zijn.
+
+   In de contact lijst kan je de volgende sneltoetsen gebruiken:
+
+   a      Voeg de geselecteerde contact toe (of als diegene al is toegevoegd, voeg nieuwe contact toe)
+
+   d      Verwijder de geselecteerde contact.
+
+   b      Blokkeer de geselecteerde contact.
+
+   u      Deblokkeer de geselecteerde contact.
+
+
+SNELTOETSEN
+
+   alt-c (of F6)
+           Sluit de huidige gesprek.
+   alt-<nummer>
+	   Schakel naar de gesprek nummer <nummer>. Als <nummer> 0 is, dan wordt de console-venster
+	   actief.
+   alt-a
+           Focus op het menu.
+   alt-s
+           Focus op de contact lijst.
+   alt-x
+           Focus op de gesprekslijst.
+   alt-z
+           Focus op de chat venster.
+    
+
+'POWER' FUNCTIES
+
+   Om de commando-prompt te krijgen, waar je een power functie kan uitvoeren, druk je op ctrl-p.
+   Beschikbare commando's:
+   block all
+           Blokkeert alle contacten.
+   unblock all
+           Deblokkeert alle contacten.
+   remove all
+           Verwijdert alle contacten. WAARSCHUWING: Deze commando is niet omkeerbaar.
+   whoami
+           Geeft weer waaronder je bent aangemeld.
+   export conlist
+           Schrijft je contacten lijst in een bestand.
+   import conlist
+	   Leest contact lijst van een bestand.
+
+    
+
+HUIDIGE AFSPELENDE LIEDJE
+
+   Om in staat te zijn om je huidige liedje (wat je aan het afspelen bent) weer te geven, moet je het
+   aanzetten in ~/.tmsnc/tmsnc.conf.
+   Verwijder het commentaar teken bij display_current_song. TMSNC update dan je liedje elke 15 seconden
+   door het uitvoeren van ~./tmsnc/current_song.sh. De uitvoer bevat de titel van het liedje.
+
+   Kijk hier voor voorbeelden:
+
+   http://tmsnc.sourcefore.net/csong.html
+
+    
+
+BESTANDEN
+
+   ~/.tmsnc/tmsnc.conf
+           Configuratie bestand
+   ~/.tmsnc/aliases.conf
+           Aliasen bestand.
+   ~/.tmsnc/logs/
+           Gespreksgeschiedenis/chatlogs
+    
+
+AUTHORS/CREDITS
+
+   tmsnc was mainly written by Sanoi <sanoix@gmail.com>
+
+   Tmsnc is free software; you can redistribute it and/or modify it under the terms of the IR Public
+   Domain License as published by the IR Group; either version 1.6 of the License, or (at your option)
+   any later version.
+
+   The program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+   even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+   You should have received a copy of the IR Public Domain License along with this program; if not,
+   write to sanoix@gmail.com.
+
+     ------------------------------------------------------------------------------------------------

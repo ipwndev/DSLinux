@@ -1,0 +1,43 @@
+# -*-shell-script-*-
+
+[Meta]
+RootName: @tmsnc.sourceforge.net/tmsnc:$SOFTWAREVERSION
+DisplayName: TMSNC MSN Instant Messaging Client
+ShortName: tmsnc
+Maintainer: The TMSNC Developers <http://tmsnc.sourceforge.net>
+Packager: Taj Morton <taj@wildgardenseed.com>
+Summary: Textbased MSN Client
+URL: http://tmsnc.sourceforge.net
+License: IR Public Domain License (IRPDL) v1.6
+SoftwareVersion: @VERSION@
+PackageVersion: 1
+AutopackageTarget: 1.0
+
+[Description]
+TMSNC is a text based MSN Instant Messaging Client.
+
+[BuildPrepare]
+export APBUILD_BOGUS_DEPS="gpm"
+prepareBuild
+
+[BuildUnprepare]
+unprepareBuild
+
+[Imports]
+echo '*' | import
+
+[Prepare]
+# Dependency checking
+require @gnu.org/ncurses 5.0
+require @linux.schottelius.org/gpm 1.0
+require @openssl.org/openssl 0.9
+
+[Install]
+# Put your installation script here
+installExe bin/*
+installMan 1 man/man1/*
+installLocale share/locale
+
+[Uninstall]
+# Usually just the following line is enough to uninstall everything
+uninstallFromLog
