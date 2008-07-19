@@ -103,10 +103,10 @@ if test "$verbose" = 1; then
 fi
 
 # setup esd to hijack calls made to /dev/dsp
-prefix=/usr/
+prefix=/nonexistent
 exec_prefix=${prefix}
 
-LD_PRELOAD="/usr/lib64//libesddsp.so.0 /usr/lib64//libesd.so.0 $LD_PRELOAD"
+LD_PRELOAD="${exec_prefix}/lib/libesddsp.so.0 ${exec_prefix}/lib/libesd.so.0 $LD_PRELOAD"
 export LD_PRELOAD
 
 # invoke the program with the args given
