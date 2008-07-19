@@ -1,0 +1,114 @@
+#
+# Automatically generated make config: don't edit
+#
+HAVE_DOT_CONFIG=y
+
+#
+# General Configuration
+#
+CONFIG_NANOX=y
+# CONFIG_X11 is not set
+
+#
+# Platform Configuration
+#
+# CONFIG_PLATFORM_X86DEMO is not set
+CONFIG_PLATFORM_IPAQ=y
+# CONFIG_PLATFORM_ZAURUS is not set
+# CONFIG_PLATFORM_TUXSCREEN is not set
+CONFIG_CPU_STRONGARM=y
+
+#
+# Build Options
+#
+COMPILE_CROSS=y
+CROSS_COMPILER_PREFIX="/usr/local/arm/2.95.3/bin/arm-linux-"
+MW_PREFIX="/user/projects/ipaq/buildroot-oz/build/microwin/src/"
+CONFIG_FLNX=y
+CONFIG_FLNX_PDA=y
+CONFIG_FLEK=y
+# CONFIG_DEBUG is not set
+
+#
+# Installation Options
+#
+INSTALL_PREFIX="/user/projects/pixil/distro/"
+CONFIG_SAMPLES=y
+
+#
+# Global Options
+#
+CONFIG_PM=y
+# CONFIG_SYNC is not set
+
+#
+# System Applications
+#
+CONFIG_COLOSSEUM=y
+CONFIG_PAR=y
+CONFIG_PIXILWM=y
+CONFIG_PIXILWM_THEMES=y
+CONFIG_PIXILWM_MENUS=y
+CONFIG_PIXILWM_PM=y
+
+#
+# Applications
+#
+
+#
+# Nano-X Applications
+#
+CONFIG_NXAPPS=y
+CONFIG_NANOX_APPS=y
+CONFIG_NANOX_DVDVIEW=y
+CONFIG_NANOX_FLASHPLAY=y
+CONFIG_NANOX_WCLOCK=y
+
+#
+# Nano-X Input Methods
+#
+CONFIG_NANOX_KEYBOARD=y
+CONFIG_NANOX_SCRIBBLE=y
+
+#
+# Nano-X Games
+#
+CONFIG_GAMES=y
+CONFIG_GAMES_MINESWEEP=y
+CONFIG_GAMES_SNAKE=y
+# CONFIG_GAMES_NXBILL is not set
+# CONFIG_GAMES_DOOM is not set
+
+#
+# FLTK Applications
+#
+CONFIG_FLTKAPPS=y
+CONFIG_PIM_ADDRESS=y
+CONFIG_PIM_NOTEPAD=y
+CONFIG_PIM_TODO=y
+CONFIG_PIM_SCHEDULE=y
+CONFIG_APP_ALARM=y
+CONFIG_APP_CALC=y
+CONFIG_APP_FIND=y
+CONFIG_APP_MP3=y
+CONFIG_MP3_USE_PTHREAD=y
+CONFIG_APP_EMAIL=y
+CONFIG_APP_NETCONFIG=y
+CONFIG_APP_SYSCONFIG=y
+
+#
+# Sysconfig Plugins
+#
+CONFIG_SYSCONF_ABOUT=y
+CONFIG_SYSCONF_BACKLITE=y
+CONFIG_SYSCONF_CLOCK=y
+CONFIG_SYSCONF_MEMORY=y
+CONFIG_SYSCONF_POWER=y
+CONFIG_SYSCONF_REGIONAL=y
+CONFIG_SYSCONF_USERINFO=y
+# CONFIG_VIEWML is not set
+
+#
+# Pixil Desktop
+#
+# CONFIG_PIXILDT is not set

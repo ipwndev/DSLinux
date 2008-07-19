@@ -1,0 +1,6 @@
+#! /bin/bash
+# Simple rtf->txt control sequences remover. Useful when you want read just text
+# Petr Koloros 2003, <silk@sinus.cz>
+# Bugs: no arguments of control sequences disappear
+
+cat $1 | tr -d '{}\n\r' | sed 's/\\pa[rd]\+/ÿ/g; s/\\[^ ]*//g' | tr -s ' ' | tr 'ÿ' '\n' 

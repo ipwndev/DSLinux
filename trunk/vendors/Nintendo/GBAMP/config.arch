@@ -1,0 +1,2 @@
+# VENDOR_CFLAGS := -mswp-byte-writes -DCONFIG_NDS_ROM8BIT
+include $(ROOTDIR)/vendors/Nintendo/common/common-config.arch

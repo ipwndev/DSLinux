@@ -1,0 +1,106 @@
+Using PIXIL with Microwindows
+May 29, 2003
+
+The PIXIL Operating Environment and Applications were initially
+designed to work within the Microwindows graphical windowing
+environment, for an extremely small footprint.  The Microwindows
+environment can be setup to run directly on framebuffer, or, for 
+demonstration, on top of the X11 desktop environment, for people
+without a working framebuffer system.
+
+When PIXIL is configured to run using Microwindows, the determination
+of whether to run on framebuffer or X11 is controlled solely through
+the Microwindows configuration file, microwin/src/config.
+
+The PIXIL Operating Environment can be setup to run directly
+on top of X11, without using Microwindows.  Currently, there is
+no support for the PIXIL Screentop Window Manager, as well as
+other applications dependent on the Nano-X API.  For more
+information, see README.X11.
+
+
+To run PIXIL under the Microwindows graphical environment, 
+you will need to download and build the Nano-X server.  PIXIL
+requires Microwindows version 0.90 or later, available from
+http://www.microwindows.org (microwindows-src-0.90.tar.gz)
+
+To build Microwindows, do the following:
+ 
+1.  Extract Microwindows into a directory:
+	tar zxvf microwindows-src-0.90.tar.gz
+
+2.  Change to the Microwindows source directory:
+	cd microwindows-0.90/src
+
+3.  Select your desired configuration:
+	There are some premade configuration files located
+	in the Configs directory.  Choose one that you want
+	and copy it to 'config'. Following are some
+	useful configurations:
+
+	Configs/config.pixil	Required PIXIL options for framebuffer operation
+	Configs/config.x11	Microwindows on X11 desktop demonstration
+	Configs/config.ipaq	Microwindows on iPAQ
+
+	Make sure that you HAVE_FNT_SUPPORT=Y set,
+	as the Scheduler PIM application uses loadable fonts.
+	Additional image decoders (from the minimal requirements in
+	config.pixil) can be selected for the ViewML browser, if desired.
+
+4.  Build Microwindows:
+	Type "make".  The Nano-X server will reside in the
+	microwindows-0.90/src/bin directory, the libraries in
+	microwindows-0.90/src/lib, and the headers in 
+	microwindows-0.90/src/include.  These will be automatically
+	used when pointed to by the PIXIL configuration file (see below).
+
+5.  Edit the PIXIL config file (config):
+	cd <pixil source dir>
+
+	A. Set MW_PREFIX to the Microwindows src directory:
+		MW_PREFIX="/usr2/microwindows-0.90/src"
+	Edit the config file and change the location of the Microwindows
+	prefix MW_PREFIX (in Build Options) to point at your new distro.  Make
+	sure you specify the /src directory at the end of the path, e.g.
+	if Microwindows was extracted into /usr2/microwindows-0.90, then
+	MW_PREFIX="/usr2/microwindows-0.90/src".
+
+	B. Set CONFIG_NANOX=y
+	This specifies Microwindows to be used as the graphical windowing
+	system.
+
+	C. To build the PIXIL Desktop (the workstation component of
+	the PDA PIM suite), set CONFIG_PIXILDT=y.  Note that currently,
+	this requires an external FLTK library which runs directly on
+	top of X11.  Thus Microwindows must be built using config.x11
+	if it is desired to run both the PDA and Desktop simultaneously
+	for demonsration of syncing, etc.  See README.pixilDT for
+	more information.
+
+	D. Select the installation directory (default /usr/local/pixil):
+		INSTALL_PREFIX="/usr/local/pixil"
+
+6.  Make PIXIL:
+	Type "make".
+
+	If the make fails, it's likely due to insidious GCC compiler
+	version incompatibilities.  For instance, currently
+	the MPEG viewer (CONFIG_DVDVIEW) won't compile using
+	"gcc 2.96 Red Hat 7.0", although it will using
+	"gcc 2.96 Red Hat 7.3 (2.96-113)".  In this case, set CONFIG_DVDVIEW=n
+	and remake. Note that CONFIG_PIXILDT requires GCC 2.96 or
+	greater (see README.pixilDT).
+
+7.  Install PIXIL:
+	Type "make install".
+
+	Currently, PIXIL must be installed in order to automatically
+	put together the directory structure normally compiled for.
+	This process will move the PIXIL binaries (not Microwindows)
+	into the install directory (normally /usr/local/pixil).
+
+8.  Run PIXIL:
+	cd /usr/local/pixil
+	./run_pda.sh
+
+9.  Have fun!

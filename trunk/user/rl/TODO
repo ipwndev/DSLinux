@@ -1,0 +1,24 @@
+* add rl.spec by Chris Knowles
+* maybe add optimization using seek() in file
+* maybe add smarter memory management allocating the buffers only once
+* work out if the arithmetic holds for large values
+* automatically (configure) select the best way to seed the random number
+  generator
+* add error checking of streams using ferror()
+* maybe implement linked list construction for arrays that might grow fast and
+  need a lot of realloc()'s
+* implement sanity checks for testing program
+* implement internationalisation with GNU gettext
+* try using temporary files with pointer into files
+* add options:
+  --dbm  use Berkeley DB for operation instead of using memory. This is useful
+         when FILE is too large to fit into memory. Little cpu/memory usage
+         but much slower
+  -s, --skip-blank  skip blank lines
+* move sources to src directory
+* experiment with different random number generators
+* Find out for which file sizes the random numbers produce accurate
+  results. This really needs some work since some systems (HP-UX and
+  Solaris) have a very low RAND_MAX.
+* add a test suite
+* split on words (split on regexp)

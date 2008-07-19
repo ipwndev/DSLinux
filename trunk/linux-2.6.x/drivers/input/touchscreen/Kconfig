@@ -1,0 +1,147 @@
+#
+# Mouse driver configuration
+#
+menuconfig INPUT_TOUCHSCREEN
+	bool "Touchscreens"
+	help
+	  Say Y here, and a list of supported touchscreens will be displayed.
+	  This option doesn't affect the kernel.
+
+	  If unsure, say Y.
+
+if INPUT_TOUCHSCREEN
+
+config TOUCHSCREEN_BITSY
+	tristate "Compaq iPAQ H3600 (Bitsy) touchscreen"
+	depends on SA1100_BITSY
+	select SERIO
+	help
+	  Say Y here if you have the h3600 (Bitsy) touchscreen.
+
+	  If unsure, say N.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called h3600_ts_input.
+
+config TOUCHSCREEN_CORGI
+	tristate "SharpSL (Corgi and Spitz series) touchscreen driver"
+	depends on PXA_SHARPSL
+	default y	
+	help
+	  Say Y here to enable the driver for the touchscreen on the 
+	  Sharp SL-C7xx and SL-Cxx00 series of PDAs.
+
+	  If unsure, say N.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called corgi_ts.
+
+config TOUCHSCREEN_GUNZE
+	tristate "Gunze AHL-51S touchscreen"
+	select SERIO
+	help
+	  Say Y here if you have the Gunze AHL-51 touchscreen connected to
+	  your system.
+
+	  If unsure, say N.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called gunze.
+
+config TOUCHSCREEN_NDS
+	tristate "Nintendo DS touchscreen"
+	depends on INPUT && INPUT_TOUCHSCREEN && ARCH_NDS
+	help
+	  Say Y here if you are compiling the kernel for the Nintendo DS.
+	  To compile this driver as a module, choose M here:  The module
+	  will be called nds_ts
+
+config TOUCHSCREEN_NDS_DEFAULT_MODE
+       int "Starting mode of the driver."
+       depends on INPUT && INPUT_TOUCHSCREEN && TOUCHSCREEN_NDS && ARCH_NDS
+       default 1
+       help
+	 Determines if the driver returns absolute x/y coordinates
+	 (mode 2), key codes for a keyboard (mode 1), or is currently
+	 disabled (mode 0.)  When in mouse mode, the driver returns
+	 the absolute position of the cursor.  When in keyboard mode,
+	 the driver returns key codes based on the location that the
+	 user touched.  When disabled, the driver does not generate
+	 any input in response to touchscreen activity.
+
+config TOUCHSCREEN_NDS_MAX_KEYBOARDS
+       int "Maxmimum graphical keyboards"
+       default 2
+       depends on INPUT && INPUT_TOUCHSCREEN && TOUCHSCREEN_NDS && ARCH_NDS
+       help
+         The NDS Touchscreen kernel module displays a graphical
+         keyboard on the touch screen when not in mouse mode.  This
+         determines how many graphical keyboards (upper case vs. lower
+         case for example) the module can support.  Leave the default
+         of 2 unless a different type of keyboard is required.
+
+config TOUCHSCREEN_NDS_MAX_KEYCODES
+       int "Maximum keys per keyboard"
+       default 128
+       depends on INPUT && INPUT_TOUCHSCREEN && TOUCHSCREEN_NDS && ARCH_NDS
+       help
+         Determines the maximum number of keys available on the keyboard.
+       
+config TOUCHSCREEN_NDS_DEBUG_LEVEL
+	int "Module debug level"
+	range 0 3
+	default 0
+	depends on INPUT && INPUT_TOUCHSCREEN && TOUCHSCREEN_NDS && ARCH_NDS
+	help
+	  Enables debugging of the touch screen driver.  At level
+	  zero, no debugging messages will appear.  Level three is
+	  maximum verbosity.
+
+config TOUCHSCREEN_ELO
+	tristate "Elo serial touchscreens"
+	select SERIO
+	help
+	  Say Y here if you have an Elo serial touchscreen connected to
+	  your system.
+
+	  If unsure, say N.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called elo.
+
+config TOUCHSCREEN_MTOUCH
+	tristate "MicroTouch serial touchscreens"
+	select SERIO
+	help
+	  Say Y here if you have a MicroTouch (3M) serial touchscreen connected to
+	  your system.
+
+	  If unsure, say N.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called mtouch.
+
+config TOUCHSCREEN_MK712
+	tristate "ICS MicroClock MK712 touchscreen"
+	help
+	  Say Y here if you have the ICS MicroClock MK712 touchscreen
+	  controller chip in your system.
+
+	  If unsure, say N.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called mk712.
+
+config TOUCHSCREEN_HP600
+	tristate "HP Jornada 680/690 touchscreen"
+	depends on SH_HP600 && SH_ADC
+	help
+	  Say Y here if you have a HP Jornada 680 or 690 and want to
+          support the built-in touchscreen.
+
+	  If unsure, say N.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called hp680_ts_input.
+
+endif

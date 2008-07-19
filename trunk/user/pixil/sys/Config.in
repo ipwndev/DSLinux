@@ -1,0 +1,47 @@
+menu "System Applications"
+
+config CONFIG_COLOSSEUM
+       bool "IPC server"
+       default y
+       help
+        Colosseum is the Pixil Inter Process Communications server.
+	It is used to allow easier data sharing between applications.
+	You probably want to say 'Y' here.
+
+config CONFIG_PAR
+       bool "Pixil Application Registry"
+       default y
+       help
+       the Pixil Application Registry (PAR) is used to store application
+       information and configuration information.  It is used by the window
+       manager and all the applications as a central despository for data.
+       You will want to say 'Y' here unless you absolutely know what you are doing.
+
+config CONFIG_PIXILWM
+	bool "Pixil Window Manager"
+	depends on CONFIG_NANOX
+	default y
+	help
+	Say 'yes' here to build the Pixil Window Manager - a majpr part of the 
+	Pixil Operating Environment under Nano-X.
+
+config CONFIG_PIXILWM_THEMES
+       bool "Enable PixilWM themes"
+       depends on CONFIG_PIXILWM
+       default y
+       help
+       Say yes here to enable the PixilWM themes engine
+
+config CONFIG_PIXILWM_MENUS
+       bool "Enable PixilWM system menus"
+       depends on CONFIG_PIXILWM
+       default y
+       help
+       Say yes here to enable the PixilWM system menus
+
+config CONFIG_PIXILWM_PM
+       bool
+       depends on CONFIG_PIXILWM && CONFIG_PM
+       default y
+
+endmenu

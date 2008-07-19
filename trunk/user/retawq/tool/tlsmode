@@ -1,0 +1,56 @@
+#! /bin/sh
+# retawq/tool/tlsmode - calculate TLS/SSL mode information
+# This file is part of retawq (<http://retawq.sourceforge.net/>), a network
+# client created by Arne Thomassen; retawq is basically released under certain
+# versions of the GNU General Public License and WITHOUT ANY WARRANTY.
+# Read the file COPYING for license details, README for program information.
+# Copyright (C) 2004-2005 Arne Thomassen <arne@arne-thomassen.de>
+
+# This shell script is automatically executed during configuration of the
+# program, to prepare compilation. Don't start it manually.
+
+# step 1: prepare
+
+#me=`echo "$0" | sed 's,.*[/],,'`
+me="$0"
+
+case "x$0" in
+  xtool/tlsmode) ;;
+  *) echo "$me: must be executed as 'tool/tlsmode'" >&2; (exit 1); exit 1 ;;
+esac
+
+case "x$#" in
+  x2) ;;
+  *) echo "$me: usage: $me <task> <OPTION_TLS>" >&2; (exit 1); exit 1 ;;
+esac
+
+task="$1"
+option_tls="$2"
+
+# step 2: calculate information
+
+cflags=
+liblink=
+
+case "x$option_tls" in
+  x0) ;; # xnone) ;;
+  x1) # xgnutls | xGnuTLS)
+    cflags=`libgnutls-config --cflags`;
+    liblink=`libgnutls-config --libs` ;;
+  x2) # xopenssl | xOpenSSL)
+    cflags=`pkg-config --cflags openssl`;
+    liblink=`pkg-config --libs openssl` ;;
+  x3) # xmatrixssl | xMatrixSSL)
+    liblink='-lmatrixssl' ;;
+  *) echo "$me: bad OPTION_TLS parameter" >&2; (exit 1); exit 1 ;;
+esac
+
+# step 3: look what to do with the calculated information
+
+case "x$task" in
+  x--cflags) echo "$cflags" ;;
+  x--libs) echo "$liblink" ;;
+  *) echo "$me: bad task parameter" >&2; (exit 1); exit 1 ;;
+esac
+
+:; exit 0

@@ -1,0 +1,59 @@
+# Kconfig for uClinux(non-paged MM) depend configurations
+# Hyok S. Choi <hyok.choi@samsung.com>
+
+config SET_MEM_PARAM
+	bool "Set flash/sdram size and base addr"
+	help
+	  Say Y to manually set the base addresses and sizes.
+	  otherwise, the default values are assigned.
+
+config DRAM_BASE
+	hex '(S)DRAM Base Address' if SET_MEM_PARAM
+	default 0x01000000 if ARCH_ATMEL
+	default 0x01000000 if ARCH_S3C3410
+	default 0x0C000000 if ARCH_S3C44B0
+	default 0x00000000 if ARCH_S5C7375
+	default 0x00000000 if ARCH_ESPD_4510B
+	default 0x10000000 if ARCH_S3C24A0 
+	default 0x40000000 if ARCH_P2001
+	default 0x00000000 if ARCH_INTEGRATOR
+	default	0x02000000 if ARCH_NDS
+	default 0x00800000
+
+config DRAM_SIZE
+	hex '(S)DRAM SIZE' if SET_MEM_PARAM
+	default 0x00600000 if ARCH_ATMEL
+	default 0x01000000 if ARCH_S3C3410
+	default 0x01000000 if ARCH_S3C44B0
+	default 0x00400000 if ARCH_S5C7375
+	default 0x00800000 if ARCH_ESPD_4510B
+	default 0x04000000 if ARCH_S3C24A0 
+	default 0x04000000 if ARCH_P2001
+	default 0x08000000 if ARCH_INTEGRATOR
+	default	0x00400000 if ARCH_NDS
+	default 0x00800000
+
+config FLASH_MEM_BASE
+	hex 'FLASH Base Address' if SET_MEM_PARAM
+	default 0x01600000 if ARCH_ATMEL
+	default 0x00000000 if ARCH_S3C3410
+	default 0x00000000 if ARCH_S3C44B0
+	default 0x08000000 if ARCH_S5C7375
+	default 0x01000000 if ARCH_ESPD_4510B
+	default 0x02000000 if ARCH_P2001
+	default 0x24000000 if ARCH_INTEGRATOR
+	default	0x08000000 if ARCH_NDS
+	default 0x00400000
+
+config FLASH_SIZE
+	hex 'FLASH Size' if SET_MEM_PARAM
+	default 0x00200000 if ARCH_ATMEL
+	default 0x00200000 if ARCH_S3C3410
+	default 0x00200000 if ARCH_S3C44B0
+	default 0x00200000 if ARCH_S5C7375
+	default 0x00200000 if ARCH_ESPD_4510B
+	default 0x00400000 if ARCH_P2001
+	default 0x01000000 if ARCH_INTEGRATOR
+	default 0x02000000 if ARCH_NDS
+	default 0x00400000
+

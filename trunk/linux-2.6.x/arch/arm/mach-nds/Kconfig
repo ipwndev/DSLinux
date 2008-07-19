@@ -1,0 +1,79 @@
+menu "Nintendo DS Options"
+
+config NDS_TEXT_CONSOLE
+	bool "Nintendo DS text console"
+	depends on ARCH_NDS
+	default n
+	help
+	 Saying Y here allows for early-boot debugging of dslinux.
+	 With the nds console you can see messages printed before
+	 the framebuffer comes up. This is mostly used by dslinux
+	 developers for debugging.
+	 If unsure, say N.
+
+config NDS_TEXT_CONSOLE_STEP_BY_STEP
+	bool "Step-by-step debugging of the dslinux boot process"
+	depends on NDS_TEXT_CONSOLE
+	default n
+	help
+	 Saying yes here will enable code that busy-waits for the A key
+	 to be pressed after printing a line to the console.
+	 This allows for step-by-step debugging of the dslinux boot
+	 process. You really only want this if you are debugging a
+	 boot problem.
+	 If in doubt, say N.
+
+config NDS_FASTGBA
+	bool "Fast bus cycles on GBA slot ROM"
+	depends on ARCH_NDS
+	default n
+	help
+	 Saying yes here will allow to get the maximum processing
+	 power from your GBA flash card. All timing parameters are
+	 set to their fastest values.
+	 If unsure, say N.
+
+config NDS_SOUNDTEST
+	bool "Little module for testing the ARM7 sound output"
+	depends on ARCH_NDS
+	default n
+	help
+	 Helper tool for ARM7 sound testing.
+	 If unsure, say N.
+
+config NDS_ROM8BIT
+	bool "Support for using GBA ROM space as 8-bit-writable memory"
+	depends on ARCH_NDS
+	default n
+	help
+	 Saying Y here will enable the code to use the GBA ROM memory
+         area as general purpose RAM. You need a GBA cardridge with RAM
+         in the GBA ROM area, and a special gnu compiler for this.
+	 If unsure, say N.
+
+config	NDS_BLK_M3CF
+	bool "Block device support for the M3 Compact Flash Adaptor"
+	depends on ARCH_NDS
+	default n
+	help
+	 Saying Y here will include a block driver for the M3 CF card.
+	 If unsure, say N.
+
+config	NDS_BLK_SCCF
+	bool "Block device support for the Supercard Compact Flash Adaptor"
+	depends on ARCH_NDS
+	default n
+	help
+	 Saying Y here will include a block driver for the Supercard CF.
+	 If unsure, say N.
+
+config NDS_SWAP_LR
+	bool "Swap L and R buttons"
+	depends on ARCH_NDS
+	default n
+	help
+	  Saying Y will swap the L and R hardware buttons so that R is shift 
+	      and L is control.
+	  This is useful if you are left handed or your L button is broken.
+
+endmenu

@@ -1,0 +1,23 @@
+#!/bin/sh
+
+mount -t proc none /proc
+mount -t ramfs none /var
+
+mount -t jffs2 /dev/rom1 /sram
+if [ "$?" != "0" ]
+then
+	echo "Could not mount /sram. You should run the command:"
+	echo "    eraseall /dev/mtd1"
+	echo "This may erase game saves!"
+	echo "[31mMAKE A BACKUP FIRST![0m"
+	echo
+	echo "See [36mhttp://www.dslinux.org/wiki/Running_DSLinux[0m"
+	echo "for more information."
+	echo
+fi
+
+mkdir /var/tmp
+mkdir /var/home
+mkdir /var/run
+
+. /etc/rc.common

@@ -1,0 +1,69 @@
+PIXIL 1.2 Desktop Dependencies
+-------------------------------
+
+The PIXIL 1.2 Desktop is dependent on the following Linux features:
+
+1. RedHat 7.1 or 7.2
+2. The expect package being present. If this is not installed, you
+   can retrieve and install it from the RedHat installation CDs.
+3. XFree86 version 4.1 or above
+4. Working serial port.
+
+Installation of the Expect Package
+-----------------------------------
+The majority of RedHat installation contain the expect packages already
+installed. However, there are installation options which will not
+install this feature. PIXIL 1.2 depends on the expect program to 
+interact with the PDA.
+
+For convenience's sake, Century has placed the RPMs for the expect packages
+in the same location as where you obtained the original PIXIL distribution.
+Additionally, you can obtain the RedHat RPMs from your original RedHat
+installation CDs, or from one of the many mirrors available on the 
+Internet.
+
+For RedHat 7.1, the RPM is named:
+
+expect-5.31-53.i386.rpm
+
+and for RedHat 7.2:
+
+expect-5.32.2-65.i386.rpm
+
+Install the appropriate package on your desktop system before attempting
+to run PIXIL synchronization.
+
+Installation of the Desktop Software
+-------------------------------------
+
+Installing the desktop software is simply a matter of unpacking the 
+pixil-1.2-desktop.tar.gz file into an appropriate place on your desktop
+system. Common locations are /usr/local, or even the home directory
+of an individual user. For example, to install in /usr/local:
+
+cd /usr/local
+tar xzvf /home/user/pixil-1.2-desktop.tar.gz
+
+This will create a subdirectory called pixil-1.2 which contains all of the
+binaries and other scripts needed to run PIXIL 1.2 Desktop.
+
+Following the unpacking of the distribution, all that remains is to 
+setup PIXIL 1.2 for a given user. This is done by following these steps:
+
+1. Log in as the desired user.
+2. Change directories to the installation location of pixil 1.2. In the
+   above example, this would be /usr/local/pixil-1.2
+3. Run the shell script Setup.sh 
+
+The Setup.sh script will ask a couple of questions. Normally, the default
+values provided will be sufficient for most installations. The Setup.sh
+script writes a configuration file in the home directory of the user
+running it. This file is called .pixilrc, and can be modified by hand
+if needed.
+
+Running PIXIL Desktop
+----------------------
+To start the PIXIL 1.2 desktop software, run the PixilDT script from the
+installation directory. For the example given above, this would be
+/usr/local/pixil-1.2/PixilDT.
+

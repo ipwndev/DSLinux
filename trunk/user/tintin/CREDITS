@@ -1,0 +1,35 @@
+Special thanks to the following
+-------------------------------
+Peter Unold                                the original Tintin III
+Jeremy C. Jack                             see mods/1.5.mods
+Bill Reiss                                 see mods/1.5.mods
+David A. Wagner                            see mods/1.5.mods
+Harald Evensen                             many bug insights
+David Hedbot                               original GNU autoconfig
+Andrew Chernov                             FreeBSD bug fixes
+Jim Goddard                                SOCKS #ifdefs
+Greg Jarman                                original #if code
+Yoon-Chan Jhi                              see mods/ycjhi.mods
+Peter Kjellerstedt                         see mods/pkj.mods
+Robert Ellsworth                           see mods/rse.mods
+Sverre Norrman                             see mods/sverre.mods
+Davin Chan                                 see mods/dsc.mods
+Chitchat                                   see mods/dsc.mods
+Kuang-che Wu                               see mods/dsc.mods
+Sean Butler                                see mods/sbutler.mods
+Igor van den Hoven                         see mods/igor.mods
+Julia Longtin                              see mods/juri.mods
+
+
+Testers
+-------
+Too many to list at this current time.  We thank you all though!
+You are important to tintin's success.
+
+
+Current Tintin++ Development Team
+---------------------------------
+Igor van den Hoven - mudclient@gmail.com
+
+The email must contain either tintin, tintin++, mud, or client in
+the subject / message. Otherwise it'll go straight to the spambox.

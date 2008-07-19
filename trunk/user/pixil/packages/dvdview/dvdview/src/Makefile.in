@@ -1,0 +1,91 @@
+
+LIBVIDEOGFXROOT = ../libvideogfx
+
+BINDIR  = .
+
+PRGNAME = dvdview
+
+COMMONOBJS = main.o error.o \
+	     input/streamsrc_istr.o \
+	     input/streamsrc_cin.o \
+             system/sysdec1.o system/sysdemux.o system/resync.o \
+             system/videoauconv.o system/ptsvideo.o \
+             system/syncer.o \
+	     utility/bytebuffer.o utility/fastalloc.o \
+             video12/vidsyntax.o \
+             video12/viddec_mods.o \
+             video12/vdecoder.o \
+             video12/modules/mcomp_sgl_simple.o \
+             video12/modules/idct_arai.o \
+             output/out_x11.o \
+             output/out_yuv.o \
+             output/out_ppm.o \
+             output/accumulator.o \
+             options.o \
+             vpostproc/buffer.o \
+             vpostproc/postproc.o \
+             vpostproc/pp_mblks.o \
+             vpostproc/pp_mv.o \
+             vpostproc/pp_mvcol.o \
+             vpostproc/pp_qscale.o \
+             vpostproc/pp_fps.o \
+             vpostproc/pp_resize.o \
+             vpostproc/pp_filteredresize.o \
+
+#             tests/system1.o tests/memalloc.o tests/vidaccess.o \
+#             tests/videodec.o \
+#             vpostproc/pp_imgtype.o \
+
+MMXOBJS =    video12/modules/mcomp_sgl_mmx.o \
+             video12/modules/mmxidct.o \
+
+LINUXOBJS =  output/out_mgavid.o input/streamsrc_linux_vcd.o
+
+OBJS = $(COMMONOBJS) @OBJLIST@ # $(ARCHOBJS) $(MOCOBJS)
+
+CC = @CC@
+SHELL = /bin/bash
+PROFILEFLAGS =
+DEBUGFLAGS = -g
+CFLAGS = @CFLAGS@ $(PROFILEFLAGS) $(DEBUGFLAGS)
+OPTIMIZE = -O3
+INCLUDES = -I/usr/include/g++ -I$(LIBVIDEOGFXROOT) -I. # -I$(QTROOT)/include
+LNPATH   = -L/usr/X11R6/lib # -L$(QTROOT)/lib
+CPPFLAGS = $(INCLUDES)
+LNFLAGS  = $(LNPATH) $(PROFILEFLAGS) $(DEBUGFLAGS)
+DEFS = # -DNDEBUG
+
+LIBS = @LDFLAGS@ @LIBS@
+
+
+%.d: %.cc
+	@echo "updating dependencies... ($<)"
+	@$(SHELL) -ec "$(CC) -MM $(CPPFLAGS) $(DEFS) $< | \
+              sed 's@\($(*F)\)\.o@\$*.o $@ @g' > $@; [ -s $@ ] || rm -f $@"
+
+%.d: %.S
+	touch $@
+
+moc_%.cc: %.hh
+	moc -f $< -o $@
+
+.cc.o:
+	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFS) $(INCLUDES) -o $@ -c $<
+
+$(BINDIR)/$(PRGNAME): $(OBJS) $(LIBVIDEOGFXROOT)/libvideogfx/.libs/libvideogfx.a
+	$(CC) $(LNFLAGS) -o $@ $(OBJS) $(LIBVIDEOGFXROOT)/libvideogfx/.libs/libvideogfx.a $(LIBS)
+
+ifneq ($(MAKECMDGOALS),clean)
+include $(OBJS:.o=.d)
+endif
+
+clean:
+	@rm -f $(OBJS:.o=.cc~)
+	@rm -f $(OBJS:.o=.hh~)
+	@rm -f $(OBJS)
+	@rm -f $(MOCOBJS)
+	@rm -f $(OBJS:.o=.d)
+	@rm -f *~ */*~ core gmon.out
+	@rm -f $(PRGNAME)
+	@rm -f Makefile
+

@@ -1,0 +1,20 @@
+Release Notes for PIXIL 1.2
+----------------------------
+
+Desktop Synchronization
+------------------------
+
+The following is a list of known issues with the PIXIL desktop
+synchronization under Linux.
+
+1. Note text for both the Notes application and the Scheduler do
+   not currently synchronize in either direction.
+
+2. There isn't currently a synchronization status indicator for the
+   desktop application.
+
+3. Errors during synchronization are not reported to the user.
+
+4. Synchronization can only be initiated from the desktop side.
+
+5. Synchronization is limited to 115,200bps, and cannot be changed.

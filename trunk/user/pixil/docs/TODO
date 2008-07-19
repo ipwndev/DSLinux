@@ -1,0 +1,8 @@
+ccache fixes for g++ compiles
+configure changes for dvdview for X11
+make global find work
+replace original copyright headers in calc, scribble, mail?
+check pixil-1.20/microwindows diffs for nanowm fixes to flnx
+replace database with SQL version
+
+add tcp/ip connect facility for sync

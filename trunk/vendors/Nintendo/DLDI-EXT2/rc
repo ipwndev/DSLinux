@@ -1,0 +1,44 @@
+#!/bin/sh
+#Load defaults if rc.conf exists
+if [ -e /etc/rc.conf ]
+then
+        . /etc/rc.conf
+fi
+
+mount -t proc none /proc
+mount -t ramfs none /tmp
+mount -t ramfs none /var/run
+if [ "$checkfsonboot" = "YES" ]
+then
+	echo "Starting fsck"
+	echo "Remounting / read-only"
+	umount -r /
+	echo "Checking /"
+		
+		if e2fsck -n /dev/dldi2
+		then echo "Filesystem OK"
+		else
+		echo "============================================"
+		echo "WARNING! Root filesystem needs manual repair"
+		echo "      Please issue the following commands   "
+		echo "============================================"
+		echo "umount -r /"
+		echo "e2fsck /dev/dldi2"
+		echo "mount -o remount,rw /"
+		echo "/etc/rc.d/shutdown"
+		fi
+	echo "Remounting /"
+	mount -o remount,rw /
+	echo "Checking VFAT"
+	if dosfsck /dev/dldi1
+	then echo "VFAT OK"
+	else
+	echo "WARNING! Manual repair needed for /dev/dldi1"
+	fi
+else
+	echo "Not checking filesystems on boot"
+	echo "set checkfsonboot="YES" in /etc/rc.conf to enable"
+fi
+mount -t vfat -o noatime /dev/dldi1 /media
+
+. /etc/rc.common

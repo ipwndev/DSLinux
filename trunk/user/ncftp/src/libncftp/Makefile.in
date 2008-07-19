@@ -1,0 +1,356 @@
+#-----------------------------------------------------------------------------
+#
+# LibNcFTP makefile for the platform @OS@, on the host @host@.
+#
+#-----------------------------------------------------------------------------
+PKGNAME=libncftp
+VERSION=@LIBNCFTP_VERSION@
+PREFIX=@prefix@
+
+@SET_MAKE@
+CC=@CC@
+DEFS=-DO_S=\"@OS@\" @DEFS@@NDEFS@
+CFLAGS=@CFLAGS@
+#CC=gcc
+#CFLAGS=-g -W -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wshadow -Wbad-function-cast -Wwrite-strings -Wconversion
+VPATH=@srcdir@
+CPPFLAGS=@CPPFLAGS@
+
+LIB=libncftp.a
+LIBSO=libncftp.so.2
+LIBSOS=libncftp.so
+
+CFILES=c_chdir.c c_chdir3.c c_chdirlist.c c_chmod.c c_delete.c c_exists.c c_filetype.c c_getcwd.c c_mkdir.c c_mlist1.c c_modtime.c c_opennologin.c c_rename.c c_rhelp.c c_rmdir.c c_rmdirr.c c_size.c c_sizemdtm.c c_symlink.c c_type.c c_umask.c c_utime.c errno.c ftp.c ftw.c io_get.c io_getfiles.c io_getmem.c io_getonefile.c io_gettar.c io_list.c io_listmem.c io_put.c io_putfiles.c io_putmem.c io_putonefile.c io_util.c lglob.c lglobr.c linelist.c open.c rcmd.c rftw.c rglob.c rglobr.c u_close.c u_decodeurl.c u_decodehost.c u_error.c u_fileextn.c u_getcwd.c u_gethome.c u_getopt.c u_getpass.c u_getpw.c u_getusr.c u_getutc.c u_gmtime.c u_localtime.c u_misc.c u_miscdebug.c u_mkdirs.c u_pathcat.c u_printf.c u_rebuildci.c u_scram.c u_shutdownci.c u_signal.c u_slash.c u_unmdtm.c unls.c u_feat.c
+
+OBJS=c_chdir.@OBJEXT@ c_chdir3.@OBJEXT@ c_chdirlist.@OBJEXT@ c_chmod.@OBJEXT@ c_delete.@OBJEXT@ c_exists.@OBJEXT@ c_filetype.@OBJEXT@ c_getcwd.@OBJEXT@ c_mkdir.@OBJEXT@ c_mlist1.@OBJEXT@ c_modtime.@OBJEXT@ c_opennologin.@OBJEXT@ c_rename.@OBJEXT@ c_rhelp.@OBJEXT@ c_rmdir.@OBJEXT@ c_rmdirr.@OBJEXT@ c_size.@OBJEXT@ c_sizemdtm.@OBJEXT@ c_symlink.@OBJEXT@ c_type.@OBJEXT@ c_umask.@OBJEXT@ c_utime.@OBJEXT@ errno.@OBJEXT@ ftp.@OBJEXT@ ftw.@OBJEXT@ io_get.@OBJEXT@ io_getfiles.@OBJEXT@ io_getmem.@OBJEXT@ io_getonefile.@OBJEXT@ io_gettar.@OBJEXT@ io_list.@OBJEXT@ io_listmem.@OBJEXT@ io_put.@OBJEXT@ io_putfiles.@OBJEXT@ io_putmem.@OBJEXT@ io_putonefile.@OBJEXT@ io_util.@OBJEXT@ lglob.@OBJEXT@ lglobr.@OBJEXT@ linelist.@OBJEXT@ open.@OBJEXT@ rcmd.@OBJEXT@ rftw.@OBJEXT@ rglob.@OBJEXT@ rglobr.@OBJEXT@ u_close.@OBJEXT@ u_decodeurl.@OBJEXT@ u_decodehost.@OBJEXT@ u_error.@OBJEXT@ u_fileextn.@OBJEXT@ u_getcwd.@OBJEXT@ u_gethome.@OBJEXT@ u_getpass.@OBJEXT@ u_getopt.@OBJEXT@ u_getpw.@OBJEXT@ u_getusr.@OBJEXT@ u_getutc.@OBJEXT@ u_gmtime.@OBJEXT@ u_localtime.@OBJEXT@ u_misc.@OBJEXT@ u_miscdebug.@OBJEXT@ u_mkdirs.@OBJEXT@ u_pathcat.@OBJEXT@ u_printf.@OBJEXT@ u_rebuildci.@OBJEXT@ u_scram.@OBJEXT@ u_shutdownci.@OBJEXT@ u_signal.@OBJEXT@ u_slash.@OBJEXT@ u_unmdtm.@OBJEXT@ unls.@OBJEXT@ u_feat.@OBJEXT@
+
+SOBJS=c_chdir.so c_chdir3.so c_chdirlist.so c_chmod.so c_delete.so c_exists.so c_filetype.so c_getcwd.so c_mkdir.so c_mlist1.so c_modtime.so c_opennologin.so c_rename.so c_rhelp.so c_rmdir.so c_rmdirr.so c_size.so c_sizemdtm.so c_symlink.so c_type.so c_umask.so c_utime.so errno.so ftp.so ftw.so io_get.so io_getfiles.so io_getmem.so io_getonefile.so io_gettar.so io_list.so io_listmem.so io_put.so io_putfiles.so io_putmem.so io_putonefile.so io_util.so lglob.so lglobr.so linelist.so open.so rcmd.so rftw.so rglob.so rglobr.so u_close.so u_decodeurl.so u_decodehost.so u_error.so u_fileextn.so u_getcwd.so u_gethome.so u_getopt.so u_getpass.so u_getpw.so u_getusr.so u_getutc.so u_gmtime.so u_localtime.so u_misc.so u_miscdebug.so u_mkdirs.so u_pathcat.so u_printf.so u_rebuildci.so u_scram.so u_shutdownci.so u_signal.so u_slash.so u_unmdtm.so unls.so u_feat.so
+
+# LIBSET=@LIBSET@
+LIBSET=$(LIB)
+
+CCDV=@CCDV@
+SHELL=/bin/sh
+.SUFFIXES: .c .o .so
+
+all: $(LIBSET)
+	@( cd ../sio ; $(MAKE) "CC=$(CC)" "CFLAGS=$(CFLAGS)" )
+	@( cd ../Strn ; $(MAKE) "CC=$(CC)" "CFLAGS=$(CFLAGS)" )
+	@[ ! -d ./samples/minincftp ] || ( cd ./samples/minincftp && $(MAKE) )
+	@[ ! -d ./samples/misc ] || ( cd ./samples/misc && $(MAKE) )
+	@[ ! -d ./samples/monkey ] || ( cd ./samples/monkey && $(MAKE) )
+	@[ ! -d ./samples/ncftpget ] || ( cd ./samples/ncftpget && $(MAKE) )
+	@[ ! -d ./samples/ncftpls ] || ( cd ./samples/ncftpls && $(MAKE) )
+	@[ ! -d ./samples/ncftpput ] || ( cd ./samples/ncftpput && $(MAKE) )
+	@[ ! -d ./samples/ncftpftw ] || ( cd ./samples/ncftpftw && $(MAKE) )
+	@[ ! -d ./samples/ncftpsyncput ] || ( cd ./samples/ncftpsyncput && $(MAKE) )
+	@[ ! -d ./samples/simpleget ] || ( cd ./samples/simpleget && $(MAKE) )
+	@echo 'Done.'
+
+$(LIB): $(OBJS)
+	-@/bin/rm -f $(LIB)
+	@CCDV@@AR@ r $(LIB) $(OBJS)
+	-@chmod 644 $(LIB)
+	-@@RANLIB@ $(LIB)
+	@/bin/ls -l $(LIB)
+
+shared: $(LIBSO)
+
+so: $(LIBSO)
+
+$(LIBSO): $(SOBJS)
+	/bin/rm -f $(LIBSO) $(LIBSOS)
+	$(CC) -shared -Wl,-soname,$(LIBSO) -o $(LIBSO) $(SOBJS)
+	/bin/ln -s $(LIBSO) $(LIBSOS)
+	-@/bin/ls -l $(LIBSOS) $(LIBSO)
+
+soinstall: $(LIBSO)
+	[ -d "$(PREFIX)/lib" ] || mkdir -m 755 "$(PREFIX)/lib"
+	[ -d "$(PREFIX)/include" ] || mkdir -m 755 "$(PREFIX)/include"
+	cp $(LIBSO) $(PREFIX)/lib/$(LIBSO)
+	( cd $(PREFIX)/lib ; /bin/rm -f $(LIBSOS) ; /bin/ln -s $(LIBSO) $(LIBSOS) )
+	cp ncftp.h ncftp_errno.h $(PREFIX)/include
+	-chmod a+r $(PREFIX)/lib/$(LIBSO) $(PREFIX)/include/ncftp.h $(PREFIX)/include/ncftp_errno.h
+
+install: $(LIB)
+	[ -d "$(PREFIX)/lib" ] || mkdir -m 755 "$(PREFIX)/lib"
+	[ -d "$(PREFIX)/include" ] || mkdir -m 755 "$(PREFIX)/include"
+	cp $(LIB) $(PREFIX)/lib/$(LIB)
+	-@@RANLIB@ $(PREFIX)/lib/$(LIB)
+	cp ncftp.h ncftp_errno.h $(PREFIX)/include
+	-chmod a+r $(LIB) $(PREFIX)/lib/$(LIB) $(PREFIX)/include/ncftp.h $(PREFIX)/include/ncftp_errno.h
+	( cd ../sio ; $(MAKE) "PREFIX=$(PREFIX)" install)
+	( cd ../Strn ; $(MAKE) "PREFIX=$(PREFIX)" install_min )
+
+.c.o:
+	@CCDV@$(CC) $(CFLAGS) $(DEFS) $(CPPFLAGS) $< -c
+
+.c.so:
+	@CCDV@$(CC) -fpic $(CFLAGS) $(DEFS) $(CPPFLAGS) $*.c -c -o $*.so
+
+### Archiving #################################################################
+
+TARDIR=libncftp-$(VERSION)
+TMPDIR=/tmp
+STGZFILE=libncftp-$(VERSION)-src.tar.gz
+
+gz sgz: $(PACKAGE)
+	./mksrctar.sh $(TARDIR) $(STGZFILE) '@TAR@' '@TARFLAGS@'
+
+### Cleaning supplies ########################################################
+
+clean:
+	-/bin/rm -rf *.@OBJEXT@ *.so $(PCH) $(LIB) $(LIBSO) $(LIBSOS) core *.pch libncftp.opt libncftp.plg libncftp.ncb SunWS_cache
+	@[ ! -d ./samples/minincftp ] || ( cd ./samples/minincftp && $(MAKE) clean )
+	@[ ! -d ./samples/misc ] || ( cd ./samples/misc && $(MAKE) clean )
+	@[ ! -d ./samples/monkey ] || ( cd ./samples/monkey && $(MAKE) clean )
+	@[ ! -d ./samples/ncftpget ] || ( cd ./samples/ncftpget && $(MAKE) clean )
+	@[ ! -d ./samples/ncftpls ] || ( cd ./samples/ncftpls && $(MAKE) clean )
+	@[ ! -d ./samples/ncftpput ] || ( cd ./samples/ncftpput && $(MAKE) clean )
+	@[ ! -d ./samples/ncftpftw ] || ( cd ./samples/ncftpftw && $(MAKE) clean )
+	@[ ! -d ./samples/ncftpsyncput ] || ( cd ./samples/ncftpsyncput && $(MAKE) clean )
+	@[ ! -d ./samples/simpleget ] || ( cd ./samples/simpleget && $(MAKE) clean )
+	@( cd ../sio ; $(MAKE) clean )
+	@( cd ../Strn ; $(MAKE) clean )
+
+distclean: clean
+	-/bin/rm -f ccdv
+	-find . \
+	           -name config.status -exec rm {} \; \
+		-o -name config.cache -exec rm {} \; \
+		-o -name config.log -exec rm {} \; \
+		-o -name config.h -exec rm {} \; \
+		-o -name Makefile -exec rm {} \;
+	-find ./../libncftp/../sio \
+	           -name config.status -exec rm {} \; \
+		-o -name config.cache -exec rm {} \; \
+		-o -name config.log -exec rm {} \; \
+		-o -name config.h -exec rm {} \; \
+		-o -name Makefile -exec rm {} \;
+	-find ./../libncftp/../Strn \
+	           -name config.status -exec rm {} \; \
+		-o -name config.cache -exec rm {} \; \
+		-o -name config.log -exec rm {} \; \
+		-o -name config.h -exec rm {} \; \
+		-o -name Makefile -exec rm {} \;
+	@echo "Warning: configure may have automatically patched ncftp.h"
+
+### Dependencies #############################################################
+
+dep:
+	$(CC) -MM $(CPPFLAGS) $(CFILES)
+
+@LIBNCFTP_PRECOMP@
+
+c_chdir3.o: c_chdir3.c $(SYSHDRS_DEP)
+c_chdir3.so: c_chdir3.c $(SYSHDRS_DEP)
+
+c_chdir.o: c_chdir.c $(SYSHDRS_DEP)
+c_chdir.so: c_chdir.c $(SYSHDRS_DEP)
+
+c_chdirlist.o: c_chdirlist.c $(SYSHDRS_DEP)
+c_chdirlist.so: c_chdirlist.c $(SYSHDRS_DEP)
+
+c_chmod.o: c_chmod.c $(SYSHDRS_DEP)
+c_chmod.so: c_chmod.c $(SYSHDRS_DEP)
+
+c_delete.o: c_delete.c $(SYSHDRS_DEP)
+c_delete.so: c_delete.c $(SYSHDRS_DEP)
+
+c_exists.o: c_exists.c $(SYSHDRS_DEP)
+c_exists.so: c_exists.c $(SYSHDRS_DEP)
+
+c_filetype.o: c_filetype.c $(SYSHDRS_DEP)
+c_filetype.so: c_filetype.c $(SYSHDRS_DEP)
+
+c_getcwd.o: c_getcwd.c $(SYSHDRS_DEP)
+c_getcwd.so: c_getcwd.c $(SYSHDRS_DEP)
+
+c_mkdir.o: c_mkdir.c $(SYSHDRS_DEP)
+c_mkdir.so: c_mkdir.c $(SYSHDRS_DEP)
+
+c_mlist1.o: c_mlist1.c $(SYSHDRS_DEP)
+c_mlist1.so: c_mlist1.c $(SYSHDRS_DEP)
+
+c_modtime.o: c_modtime.c $(SYSHDRS_DEP)
+c_modtime.so: c_modtime.c $(SYSHDRS_DEP)
+
+c_opennologin.o: c_opennologin.c $(SYSHDRS_DEP)
+c_opennologin.so: c_opennologin.c $(SYSHDRS_DEP)
+
+c_rename.o: c_rename.c $(SYSHDRS_DEP)
+c_rename.so: c_rename.c $(SYSHDRS_DEP)
+
+c_rhelp.o: c_rhelp.c $(SYSHDRS_DEP)
+c_rhelp.so: c_rhelp.c $(SYSHDRS_DEP)
+
+c_rmdir.o: c_rmdir.c $(SYSHDRS_DEP)
+c_rmdir.so: c_rmdir.c $(SYSHDRS_DEP)
+
+c_rmdirr.o: c_rmdirr.c $(SYSHDRS_DEP)
+c_rmdirr.so: c_rmdirr.c $(SYSHDRS_DEP)
+
+c_size.o: c_size.c $(SYSHDRS_DEP)
+c_size.so: c_size.c $(SYSHDRS_DEP)
+
+c_sizemdtm.o: c_sizemdtm.c $(SYSHDRS_DEP)
+c_sizemdtm.so: c_sizemdtm.c $(SYSHDRS_DEP)
+
+c_symlink.o: c_symlink.c $(SYSHDRS_DEP)
+c_symlink.so: c_symlink.c $(SYSHDRS_DEP)
+
+c_type.o: c_type.c $(SYSHDRS_DEP)
+c_type.so: c_type.c $(SYSHDRS_DEP)
+
+c_umask.o: c_umask.c $(SYSHDRS_DEP)
+c_umask.so: c_umask.c $(SYSHDRS_DEP)
+
+c_utime.o: c_utime.c $(SYSHDRS_DEP)
+c_utime.so: c_utime.c $(SYSHDRS_DEP)
+
+errno.o: errno.c $(SYSHDRS_DEP)
+errno.so: errno.c $(SYSHDRS_DEP)
+
+ftp.o: ftp.c $(SYSHDRS_DEP)
+ftp.so: ftp.c $(SYSHDRS_DEP)
+
+ftw.o: ftw.c $(SYSHDRS_DEP)
+ftw.so: ftw.c $(SYSHDRS_DEP)
+
+io_get.o: io_get.c $(SYSHDRS_DEP)
+io_get.so: io_get.c $(SYSHDRS_DEP)
+
+io_getfiles.o: io_getfiles.c $(SYSHDRS_DEP)
+io_getfiles.so: io_getfiles.c $(SYSHDRS_DEP)
+
+io_getmem.o: io_getmem.c $(SYSHDRS_DEP)
+io_getmem.so: io_getmem.c $(SYSHDRS_DEP)
+
+io_getonefile.o: io_getonefile.c $(SYSHDRS_DEP)
+io_getonefile.so: io_getonefile.c $(SYSHDRS_DEP)
+
+io_gettar.o: io_gettar.c $(SYSHDRS_DEP)
+io_gettar.so: io_gettar.c $(SYSHDRS_DEP)
+
+io_list.o: io_list.c $(SYSHDRS_DEP)
+io_list.so: io_list.c $(SYSHDRS_DEP)
+
+io_listmem.o: io_listmem.c $(SYSHDRS_DEP)
+io_listmem.so: io_listmem.c $(SYSHDRS_DEP)
+
+io_put.o: io_put.c $(SYSHDRS_DEP)
+io_put.so: io_put.c $(SYSHDRS_DEP)
+
+io_putfiles.o: io_putfiles.c $(SYSHDRS_DEP)
+io_putfiles.so: io_putfiles.c $(SYSHDRS_DEP)
+
+io_putmem.o: io_putmem.c $(SYSHDRS_DEP)
+io_putmem.so: io_putmem.c $(SYSHDRS_DEP)
+
+io_putonefile.o: io_putonefile.c $(SYSHDRS_DEP)
+io_putonefile.so: io_putonefile.c $(SYSHDRS_DEP)
+
+io_util.o: io_util.c $(SYSHDRS_DEP)
+io_util.so: io_util.c $(SYSHDRS_DEP)
+
+lglob.o: lglob.c $(SYSHDRS_DEP)
+lglob.so: lglob.c $(SYSHDRS_DEP)
+
+lglobr.o: lglobr.c $(SYSHDRS_DEP)
+lglobr.so: lglobr.c $(SYSHDRS_DEP)
+
+linelist.o: linelist.c $(SYSHDRS_DEP)
+linelist.so: linelist.c $(SYSHDRS_DEP)
+
+open.o: open.c $(SYSHDRS_DEP)
+open.so: open.c $(SYSHDRS_DEP)
+
+rcmd.o: rcmd.c $(SYSHDRS_DEP)
+rcmd.so: rcmd.c $(SYSHDRS_DEP)
+
+rftw.o: rftw.c $(SYSHDRS_DEP)
+rftw.so: rftw.c $(SYSHDRS_DEP)
+
+rglob.o: rglob.c $(SYSHDRS_DEP)
+rglob.so: rglob.c $(SYSHDRS_DEP)
+
+rglobr.o: rglobr.c $(SYSHDRS_DEP)
+rglobr.so: rglobr.c $(SYSHDRS_DEP)
+
+u_close.o: u_close.c $(SYSHDRS_DEP)
+u_close.so: u_close.c $(SYSHDRS_DEP)
+
+u_decodehost.o: u_decodehost.c $(SYSHDRS_DEP)
+u_decodehost.so: u_decodehost.c $(SYSHDRS_DEP)
+
+u_decodeurl.o: u_decodeurl.c $(SYSHDRS_DEP)
+u_decodeurl.so: u_decodeurl.c $(SYSHDRS_DEP)
+
+u_error.o: u_error.c $(SYSHDRS_DEP)
+u_error.so: u_error.c $(SYSHDRS_DEP)
+
+u_fileextn.o: u_fileextn.c $(SYSHDRS_DEP)
+u_fileextn.so: u_fileextn.c $(SYSHDRS_DEP)
+
+u_getcwd.o: u_getcwd.c $(SYSHDRS_DEP)
+u_getcwd.so: u_getcwd.c $(SYSHDRS_DEP)
+
+u_gethome.o: u_gethome.c $(SYSHDRS_DEP)
+u_gethome.so: u_gethome.c $(SYSHDRS_DEP)
+
+u_getopt.o: u_getopt.c $(SYSHDRS_DEP)
+u_getopt.so: u_getopt.c $(SYSHDRS_DEP)
+
+u_getpass.o: u_getpass.c $(SYSHDRS_DEP)
+u_getpass.so: u_getpass.c $(SYSHDRS_DEP)
+
+u_getpw.o: u_getpw.c $(SYSHDRS_DEP)
+u_getpw.so: u_getpw.c $(SYSHDRS_DEP)
+
+u_getusr.o: u_getusr.c $(SYSHDRS_DEP)
+u_getusr.so: u_getusr.c $(SYSHDRS_DEP)
+
+u_getutc.o: u_getutc.c $(SYSHDRS_DEP)
+u_getutc.so: u_getutc.c $(SYSHDRS_DEP)
+
+u_gmtime.o: u_gmtime.c $(SYSHDRS_DEP)
+u_gmtime.so: u_gmtime.c $(SYSHDRS_DEP)
+
+u_localtime.o: u_localtime.c $(SYSHDRS_DEP)
+u_localtime.so: u_localtime.c $(SYSHDRS_DEP)
+
+u_misc.o: u_misc.c $(SYSHDRS_DEP)
+u_misc.so: u_misc.c $(SYSHDRS_DEP)
+
+u_miscdebug.o: u_miscdebug.c $(SYSHDRS_DEP)
+u_miscdebug.so: u_miscdebug.c $(SYSHDRS_DEP)
+
+u_mkdirs.o: u_mkdirs.c $(SYSHDRS_DEP)
+u_mkdirs.so: u_mkdirs.c $(SYSHDRS_DEP)
+
+unls.o: unls.c $(SYSHDRS_DEP)
+unls.so: unls.c $(SYSHDRS_DEP)
+
+u_pathcat.o: u_pathcat.c $(SYSHDRS_DEP)
+u_pathcat.so: u_pathcat.c $(SYSHDRS_DEP)
+
+u_printf.o: u_printf.c $(SYSHDRS_DEP)
+u_printf.so: u_printf.c $(SYSHDRS_DEP)
+
+u_rebuildci.o: u_rebuildci.c $(SYSHDRS_DEP)
+u_rebuildci.so: u_rebuildci.c $(SYSHDRS_DEP)
+
+u_scram.o: u_scram.c $(SYSHDRS_DEP)
+u_scram.so: u_scram.c $(SYSHDRS_DEP)
+
+u_shutdownci.o: u_shutdownci.c $(SYSHDRS_DEP)
+u_shutdownci.so: u_shutdownci.c $(SYSHDRS_DEP)
+
+u_signal.o: u_signal.c $(SYSHDRS_DEP)
+u_signal.so: u_signal.c $(SYSHDRS_DEP)
+
+u_slash.o: u_slash.c $(SYSHDRS_DEP)
+u_slash.so: u_slash.c $(SYSHDRS_DEP)
+
+u_unmdtm.o: u_unmdtm.c $(SYSHDRS_DEP)
+u_unmdtm.so: u_unmdtm.c $(SYSHDRS_DEP)

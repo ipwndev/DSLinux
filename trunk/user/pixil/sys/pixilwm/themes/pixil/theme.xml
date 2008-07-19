@@ -1,0 +1,117 @@
+<!-- PIXIL theme -->
+
+<client>
+<padding>1 1 1 1</padding>
+</client>
+
+<border_top>
+<widget name="border">
+<states>
+<active>
+<bgcolor>#000000</bgcolor>
+</active>
+</states>
+</widget>
+</border_top>
+
+<border_left>
+<widget name="border">
+<states>
+<active>
+<bgcolor>#000000</bgcolor>
+</active>
+</states>
+</widget>
+</border_left>
+
+<border_right>
+<widget name="border">
+<states>
+<active>
+<bgcolor>#000000</bgcolor>
+</active>
+</states>
+</widget>
+</border_right>
+
+<border_bottom>
+<widget name="border">
+<states>
+<active>
+<bgcolor>#000000</bgcolor>
+</active>
+</states>
+</widget>
+</border_bottom>
+
+<titlebar>
+
+<widget name="caption">
+
+<width>20 170</width>
+<height>16 16</height>
+
+<states>
+
+<active>
+<image>active_caption.gif</image>
+<fgcolor>#FFFFFF</fgcolor>
+<bgcolor>#0066CC</bgcolor>
+</active>
+
+<inactive>
+<image>inactive_caption.gif</image>
+<fgcolor>#FFFFFF</fgcolor>
+<bgcolor>#666666</bgcolor>
+</inactive>
+
+</states>
+
+</widget>
+
+
+<widget name="titlebar">
+
+<height>16 16</height>cvs 
+<states>
+<active>
+<bgcolor>#0066CC</bgcolor>
+</active>
+<inactive>
+<bgcolor>#666666</bgcolor>
+</inactive>
+</states>
+</widget>
+
+<widget name="closebutton">
+
+<width>17 17</width>
+<height>16 16</height>
+<hotspot>1 0 16 16</hotspot>
+
+<states>
+
+<active>
+<image>active_close.gif</image>
+<fgcolor>#FFFFFF</fgcolor>
+<bgcolor>#0066CC</bgcolor>
+</active>
+
+<inactive>
+<image>inactive_close.gif</image>
+<fgcolor>#FFFFFF</fgcolor>
+<bgcolor>#0066CC</bgcolor>
+</inactive>
+
+</states>
+</widget>
+
+</titlebar>
+
+
+
+
+
+
+
+

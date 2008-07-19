@@ -1,0 +1,1278 @@
+# retawq/i18n/fr.po - French message catalog
+# This file is part of retawq (<http://retawq.sourceforge.net/>), a network
+# client created by Arne Thomassen; retawq is basically released under certain
+# versions of the GNU General Public License and WITHOUT ANY WARRANTY.
+# Read the file COPYING for license details, README for program information.
+# Copyright (C) 2001-2005 Arne Thomassen <arne@arne-thomassen.de>
+msgid ""
+msgstr ""
+"Project-Id-Version: retawq 0.2.6b\n"
+"POT-Creation-Date: 2005-03-19 00:00+0000\n"
+"PO-Revision-Date: 2005-03-19 00:00+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+domain "retawq"
+
+# cookie.c
+
+msgid " (expired)"
+msgstr " (expiré)"
+
+msgid "%s\n<br>%s=%s, domain=%s, path=%s, comment=%s, %sflags=%d%s%s%s"
+msgstr "%s\n<br>%s=%s, domaine=%s, chemin=%s, commentaire=%s, %sflags=%d%s%s%s"
+
+msgid ", ports="
+msgstr ", ports="
+
+msgid "\n<br>cookies:"
+msgstr "\n<br>les cookies :"
+
+msgid "expiry=%ld, "
+msgstr "expiration=%ld, "
+
+# cursesbi.c
+
+msgid "bad terminfo file"
+msgstr "mauvais fichier terminfo"
+
+msgid "bad value of environment variable TERM"
+msgstr "mauvaise valeur de la variable d'environnement TERM"
+
+msgid "required value missing in terminfo file"
+msgstr "valeur requise est absent dans le fichier terminfo"
+
+# cursesx.c
+
+msgid "can't create window"
+msgstr "ne peut pas créer fenêtre"
+
+msgid "can't watch X display connections"
+msgstr "ne peut pas observer des connexions de l'affichage X"
+
+# init.c
+
+msgid "%s\"%s\" isn't a regular file"
+msgstr "%s\"%s\" n'est pas un fichier régulier"
+
+msgid "%scan't get system information about \"%s\" (error #%d, %s)"
+msgstr "%simpossible d'acheter des informations par \"%s\" (erreur %d, %s)"
+
+msgid "%scan't open \"%s\" (error #%d, %s)"
+msgstr "%simpossible d'ouvrir \"%s\" (erreur %d, %s)"
+
+msgid "%scan't read file \"%s\" (error #%d, %s)"
+msgstr "%simpossible de lire le fichier \"%s\" (erreur %d, %s)"
+
+msgid "%sfile \"%s\" is empty"
+msgstr "%sle fichier \"%s\" est vide"
+
+msgid "%sparsing the built-in configuration%s"
+msgstr "%stravaille configuration interne%s"
+
+msgid "%sreading file \"%s\""
+msgstr "%slire le fichier \"%s\""
+
+msgid "%swarning: %s\n"
+msgstr "%s attention : %s\n"
+
+msgid "; skipping section"
+msgstr "; section ignorée"
+
+msgid "; try \"retawq --help\""
+msgstr "; essayez \"retawq --help\""
+
+msgid "Fcolors"
+msgstr "Fcouleur"
+
+msgid "Fcookies"
+msgstr "Fcookies"
+
+msgid "Fkeymaps"
+msgstr "Fkeymaps"
+
+msgid "Flocal CGI"
+msgstr "Flocal CGI"
+
+msgid "Flocal directory options"
+msgstr "Foptions de contenu des répertoires locals"
+
+msgid "Fnews"
+msgstr "FUsenet"
+
+msgid "Run-time configuration: "
+msgstr "Configuration : "
+
+msgid "\"allow\" or \"deny\" expected"
+msgstr "\"allow\" ou \"deny\" attendu"
+
+msgid "bad command identifier"
+msgstr "mauvaise désignation de commande"
+
+msgid "bad key identifier"
+msgstr "mauvaise désignation de touche"
+
+msgid "bad keymap kind; skipping section"
+msgstr "mauvais type de keymap; section ignorée"
+
+msgid "can't initialize terminal"
+msgstr "ne peut pas initialiser le terminal"
+
+msgid "configuration section %s (line %d): %s"
+msgstr "configuration section %s (ligne %d) : %s"
+
+msgid "ignoring repeated option"
+msgstr "option définée plusieurs fois ignorée"
+
+msgid "need to be launched on a terminal"
+msgstr "il faut ouvrir dans un terminal"
+
+msgid "no subsections possible; skipping remainder of section"
+msgstr "pas de sous-section possible; reste de section ignoré"
+
+msgid "number expected (0..3)"
+msgstr "nombre attendu (0..3)"
+
+msgid "path must be absolute or \"*\"; skipping remainder of section"
+msgstr "chemin d'accès doit être absolu ou \"*\"; reste de section ignoré"
+
+msgid "repeatedly defined key"
+msgstr "touche définée plusieurs fois"
+
+msgid "retawq: "
+msgstr "retawq : "
+
+msgid "too many arguments in line"
+msgstr "trop d'arguments dans la ligne"
+
+msgid "unknown command-line option: \"%s\"%s"
+msgstr "inconnue commande : \"%s\"%s"
+
+msgid "unknown section name \"%s\"; skipping section"
+msgstr "nom de section \"%s\" inconnu; section ignorée..."
+
+msgid "won't allow everything (\"*\") for security reasons; skipping remainder of section"
+msgstr "ne permet pas tout (\"*\") pour sûreté; reste de section ignoré"
+
+# main.c
+
+msgid "# Session file for retawq (http://retawq.sourceforge.net/)\n"
+msgstr "# Fichier de séance pour retawq (http://retawq.sourceforge.net/)\n"
+
+msgid "%s - error #%d, %s"
+msgstr "%s - erreur %d, %s"
+
+msgid "%s server %s:%d can't protect data - allow cleartext?"
+msgstr "%s serveur %s:%d ne peut pas protéger dates - permettre clair?"
+
+msgid "%s%s%s %s for %s %s%s%s:%d: "
+msgstr "%s%s%s %s pour %s %s%s%s:%d : "
+
+msgid "(cookies) "
+msgstr "(cookies) "
+
+msgid "(new window)"
+msgstr "(nouvelle fenêtre)"
+
+msgid ", (s)kip"
+msgstr ", (s)auter"
+
+msgid "Add Bookmark"
+msgstr "Ajouter un signet"
+
+msgid "Ambiguous command - "
+msgstr "Commande équivoque - "
+
+msgid "Apply"
+msgstr "Appliquer"
+
+msgid "Back"
+msgstr "Retour"
+
+msgid "Can't find marker \"%s\" in URL pattern"
+msgstr "Impossible de trouver la marque \"%s\" dans le lien"
+
+msgid "Can't find the jump shortcut \"%s\""
+msgstr "Impossible de trouver le saut-raccourci \"%s\""
+
+msgid "Can't reset - not inside a form?"
+msgstr "Impossible de rétablir - pas dans un formulaire ?"
+
+msgid "Can't save"
+msgstr "Ne peut pas sauvegarder"
+
+msgid "Can't submit - not inside a form?"
+msgstr "Impossible d'envoyer - pas dans un formulaire ?"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Cancelled\n"
+msgstr "Annulé\n"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Command only available in console mode\n"
+msgstr "Commande est disponible seulement dans mode console\n"
+
+msgid "Confirmation Required"
+msgstr "Confirmation requise"
+
+msgid "Connecting to %s"
+msgstr "Connecte avec %s"
+
+msgid "Context"
+msgstr "Contexte"
+
+msgid "Creating: "
+msgstr "Créer : "
+
+msgid "Do not edit manually while retawq is running!"
+msgstr "N'éditez pas manuellement tant que retawq est utilisé !"
+
+msgid "Document empty"
+msgstr "Document vide"
+
+msgid "Done"
+msgstr "Fini"
+
+msgid "Download"
+msgstr "Télécharger"
+
+msgid "Download from: "
+msgstr "Télécharger de : "
+
+msgid "Download to: "
+msgstr "Télécharger dans : "
+
+msgid "Dump"
+msgstr "Ecrire"
+
+msgid "Dump to File"
+msgstr "Ecrire dans le fichier"
+
+msgid "Dump to: "
+msgstr "Ecrire dans : "
+
+msgid "Edit URL: "
+msgstr " Modifier le lien : "
+
+msgid "Enable this Element"
+msgstr "Activer cet élément"
+
+msgid "Enforced Reload"
+msgstr "Rechargement forcé"
+
+msgid "Enter URL"
+msgstr "Entrer un lien"
+
+msgid "Execute"
+msgstr "Exécuter"
+
+msgid "Execute Shell Command"
+msgstr "Exécuter ligne de commandes"
+
+msgid "Execute shell command: "
+msgstr "Exécuter ligne de commandes : "
+
+msgid "Failed!"
+msgstr "Échec !"
+
+msgid "Fdownloads"
+msgstr "Ftéléchargement"
+
+msgid "Fdumps"
+msgstr "Fdumps"
+
+msgid "File exists - (o)verwrite, (a)ppend, (c)ancel?\n"
+msgstr "Fichier existe - éc(r)aser, (a)jouter, a(n)nuler ?\n"
+
+msgid "File size: local %d, remote %d"
+msgstr "Taille du fichier : local %d, distant %d"
+
+msgid "Forward"
+msgstr "En avant"
+
+msgid "Found!"
+msgstr "Trouvé !"
+
+msgid "Fscroll bars"
+msgstr "Fbarres de défilement"
+
+msgid "Ftext-mode mouse"
+msgstr "Fsouris du mode texte"
+
+msgid "Fthis kind of menus"
+msgstr "Fcette sorte de menus"
+
+msgid "Go"
+msgstr "Aller"
+
+msgid "Go to URL: "
+msgstr "Aller au lien : "
+
+msgid "Hashmarks: %s\n"
+msgstr "Marques du progrès : %s\n"
+
+msgid "History"
+msgstr "Historique"
+
+msgid "Jump"
+msgstr "Sauter"
+
+msgid "Jump to URL"
+msgstr "Sauter au lien"
+
+msgid "Jump to: "
+msgstr "Sauter à : "
+
+msgid "Key not handled"
+msgstr "Touche pas maniée"
+
+msgid "Keyboard command not handled"
+msgstr "Commande pas maniée"
+
+msgid "Local current directory: \"%s\"\n"
+msgstr "Répertoire local actuel : \"%s\"\n"
+
+msgid "No URL history available yet!"
+msgstr "Pas encore d'historique des liens !"
+
+msgid "No bookmarks document URL configured"
+msgstr "Pas de lien de signets configuré"
+
+msgid "No home URL configured"
+msgstr "Pas de lien d'accueil configuré"
+
+msgid "No jump shortcuts configured"
+msgstr "Pas de saut-raccourci configuré"
+
+msgid "No open window!"
+msgstr "Pas de fenêtre!"
+
+msgid "No search engine URL configured"
+msgstr "Pas de lien de recherche configuré"
+
+msgid "No shell command given"
+msgstr "Pas de ligne de commandes donné"
+
+msgid "Not connected (or no task selected)\n"
+msgstr "Pas connecté (ou pas de connexion sélectionné)\n"
+
+msgid "Not found!"
+msgstr "Pas trouvé !"
+
+msgid "Open Link in New Window"
+msgstr "Ouvrir le lien dans une nouvelle fenêtre"
+
+msgid "Open Local File/Directory"
+msgstr "Ouvrir un fichier/répertoire local..."
+
+msgid "Open in New Window"
+msgstr "Ouvrir dans une nouvelle fenêtre"
+
+msgid "Options"
+msgstr "Options"
+
+msgid "Overwrite existing%s?"
+msgstr "Écraser l'existant%s ?"
+
+msgid "Proceed"
+msgstr "Continuer"
+
+msgid "Proxy login failed"
+msgstr "Échec de l'authentification sur le proxy"
+
+msgid "Quit"
+msgstr "Quitter"
+
+msgid "Really close this window?"
+msgstr "Vraiment fermer cette fenêtre ?"
+
+msgid "Really enable this element?"
+msgstr "Vraiment activer cet élément ?"
+
+msgid "Really interpret as HTML?"
+msgstr "Vraiment saisir comme HTML ?"
+
+msgid "Really quit retawq?"
+msgstr "Vraiment quitter retawq ?"
+
+msgid "Really reset this form?"
+msgstr "Vraiment rétablir ce formulaire ?"
+
+msgid "Really submit this form to \"%s\" (%s)?"
+msgstr "Vraiment envoyer ce formulaire à \"%s\" (%s) ?"
+
+msgid "Received %d %sbytes"
+msgstr "Reçu %d %soctets"
+
+msgid "Reload"
+msgstr "Recharger"
+
+msgid "Removing: "
+msgstr "Eliminer : "
+
+msgid "Result of \"%s\""
+msgstr "Résultat de \"%s\""
+
+msgid "Resume"
+msgstr "Continuer"
+
+msgid "Resume Session"
+msgstr "Continuer une Séance"
+
+msgid "Resume session from: "
+msgstr "Continuer la séance de : "
+
+msgid "Resume upload? [(r)esume, (o)verwrite%s]"
+msgstr "Continuer envoyation ? [(c)ontinuer, (e)craser%s]"
+
+msgid "Save"
+msgstr "Sauvegarder"
+
+msgid "Save As..."
+msgstr "Sauvegarder dans..."
+
+msgid "Save Document"
+msgstr "Sauvegarder un document"
+
+msgid "Save Link As..."
+msgstr "Sauvegarder le lien dans..."
+
+msgid "Save Session"
+msgstr "Sauvegarder une Séance"
+
+msgid "Save document as: "
+msgstr "Sauvegarder le document dans : "
+
+msgid "Save session as: "
+msgstr "Sauvegarder la séance dans : "
+
+msgid "Saving"
+msgstr "Sauvegarde"
+
+msgid "Search"
+msgstr "Rechercher"
+
+msgid "Search String"
+msgstr "Chercher un texte"
+
+msgid "Search string backwards: "
+msgstr "Chercher en arrière : "
+
+msgid "Search string: "
+msgstr "Chercher : "
+
+msgid "Sending: "
+msgstr "Envoye : "
+
+msgid "Show Element Info"
+msgstr "Montrer information sur l'élément"
+
+msgid "Source Code"
+msgstr "Code source"
+
+msgid "Submit this Form"
+msgstr "Envoyer ce formulaire"
+
+msgid "Switching to: "
+msgstr "Changer à : "
+
+msgid "TLS error - %s"
+msgstr "Erreur TLS - %s"
+
+msgid "TLS handshaking"
+msgstr "négociation TLS"
+
+msgid "Task"
+msgstr "Connexion"
+
+msgid "Terminal too small"
+msgstr "Terminal trop petit"
+
+msgid "That's not a link"
+msgstr "Ceci n'est pas un lien"
+
+msgid "This element is disabled!"
+msgstr "Cet élément est désactivé !"
+
+msgid "This element is read-only!"
+msgstr "Cet élément est inchangeable !"
+
+msgid "This selection list is empty!"
+msgstr "Cette liste de sélection est vide !"
+
+msgid "Too few arguments\n"
+msgstr "Trop peu d'arguments\n"
+
+msgid "Too many arguments\n"
+msgstr "Trop d'arguments\n"
+
+msgid "Too many tasks\n"
+msgstr "Trop de connexions\n"
+
+msgid "URL: "
+msgstr "lien : "
+
+msgid "Unknown command. Try \"help\".\n"
+msgstr "Commande inconnue. Essayez \"help\".\n"
+
+msgid "Upload local file: "
+msgstr "Envoyer fichier local : "
+
+msgid "Upload to FTP URL: "
+msgstr "Envoyer à lien FTP : "
+
+msgid "Waiting for reply"
+msgstr "Attente de la réponse"
+
+msgid "Window List"
+msgstr "Des fenêtres"
+
+msgid "\nEntering console runmode. Use the command \"help\" for a list of commands.\n"
+msgstr "\nUtilise le mode console. Entrez la commande \"help\" pour voir la liste des commandes.\n"
+
+msgid "append to remote file"
+msgstr "ajouter au fichier distant"
+
+msgid "automated"
+msgstr "automatique"
+
+msgid "busy"
+msgstr "occupé"
+
+msgid "can't download to file"
+msgstr "ne peut pas télécharger dans fichier"
+
+msgid "can't dump line"
+msgstr "ne peut pas écrire la ligne"
+
+msgid "can't dump to file"
+msgstr "ne peut pas écrire dans le fichier"
+
+msgid "change local directory"
+msgstr "changer répertoire local"
+
+msgid "change remote directory"
+msgstr "changer répertoire distant"
+
+msgid "change to remote parent directory"
+msgstr "changer dans répertoire parent"
+
+msgid "close some connection(s)"
+msgstr "fermer des connexions"
+
+msgid "customized"
+msgstr "personnalisé"
+
+msgid "delete remote directory"
+msgstr "éliminer un répertoire distant"
+
+msgid "delete remote file"
+msgstr "éliminer un fichier distant"
+
+msgid "disabled "
+msgstr "désactivé, "
+
+msgid "disk cache file"
+msgstr "fichier d'antémémoire"
+
+msgid "download via URL"
+msgstr "télécharger par un lien"
+
+msgid "execext-shell configuration: %s"
+msgstr "\"execext-shell\" configuration: %s"
+
+msgid "execute a shell command"
+msgstr "exécuter une ligne de commandes"
+
+msgid "file field"
+msgstr "fichier"
+
+msgid "fragment not found"
+msgstr "ancre introuvable"
+
+msgid "hashmarks on/off"
+msgstr "(dés)activer les marques du progrès"
+
+msgid "hidden field"
+msgstr "caché"
+
+msgid "label a task"
+msgstr "inscrire une connexion"
+
+msgid "list contents of remote directory"
+msgstr "montrer le contenu du répertoire distant"
+
+msgid "looking for fragment"
+msgstr "recherche d'ancre"
+
+msgid "make remote directory"
+msgstr "créer un répertoire distant"
+
+msgid "mouse click: %d, %d"
+msgstr "clic de souris : %d, %d"
+
+msgid "mouse off"
+msgstr "souris désactivée"
+
+msgid "mouse on"
+msgstr "souris activée"
+
+msgid "multi-option "
+msgstr "multi-option, "
+
+msgid "no task\n"
+msgstr "pas de connexion\n"
+
+msgid "of %d "
+msgstr "de %d "
+
+msgid "open a connection to a server (via URL)"
+msgstr "ouvrir une connexion avec un serveur (par un lien)"
+
+msgid "password"
+msgstr "mot de passe"
+
+msgid "password field"
+msgstr "mot de passe"
+
+msgid "print help information"
+msgstr "montrer information d'aide"
+
+msgid "print remote working directory"
+msgstr "montrer le nom du répertoire distant actuel"
+
+msgid "print version information"
+msgstr "montrer information sur la version"
+
+msgid "proxy"
+msgstr "proxy"
+
+msgid "quit retawq"
+msgstr "quitter retawq"
+
+msgid "radio button"
+msgstr "bouton radio"
+
+msgid "read-only "
+msgstr "inchangeable "
+
+msgid "receive one file"
+msgstr "recevoir un fichier"
+
+msgid "reset button"
+msgstr "bouton de rétablissement"
+
+msgid "script status: "
+msgstr "état du script : "
+
+msgid "selection"
+msgstr "liste"
+
+msgid "send a verbatim command"
+msgstr "envoyer une commande littérale"
+
+msgid "send account"
+msgstr "envoyer un compte"
+
+msgid "send password"
+msgstr "envoyer un mot de passe"
+
+msgid "send site-specific command"
+msgstr "envoyer une commande serveur-spécifique"
+
+msgid "send username"
+msgstr "envoyer un nom d'utilisateur"
+
+msgid "server"
+msgstr "serveur"
+
+msgid "server status: "
+msgstr "état du serveur : "
+
+msgid "set file transfer restart marker"
+msgstr "définir la marque du continuation du transfert du fichier"
+
+msgid "set file transfer type to ASCII"
+msgstr "ajuster le type du transfert à ASCII"
+
+msgid "set file transfer type to binary"
+msgstr "ajuster le type du transfert à \"binary\""
+
+msgid "show information about existing task(s)"
+msgstr "montrer information des travails"
+
+msgid "source"
+msgstr "source"
+
+msgid "standard"
+msgstr "standard"
+
+msgid "start TLS/SSL handshake (p/c/s)"
+msgstr "commencer le négociation TLS/SSL (p/c/s)"
+
+msgid "submit button"
+msgstr "bouton d'envoi"
+
+msgid "switch to <task-id>"
+msgstr "changer à <travail-id>"
+
+msgid "text field"
+msgstr "texte"
+
+msgid "text-area field"
+msgstr "texte multiligne"
+
+msgid "upload one file"
+msgstr "envoyer un fichier"
+
+msgid "upload via URL"
+msgstr "envoyer par un lien"
+
+msgid "username"
+msgstr "nom d'utilisateur"
+
+# parser.c
+
+msgid "Reset"
+msgstr "Rétablir"
+
+msgid "Submit"
+msgstr "Envoyer"
+
+msgid "[a form image]"
+msgstr "[une image de formulaire]"
+
+msgid "[a frame]"
+msgstr "[un cadre]"
+
+msgid "[a push button]"
+msgstr "[un bouton]"
+
+msgid "[an option]"
+msgstr "[une option]"
+
+# renderer.c
+
+msgid "[an embedded object of type \"%s\"]"
+msgstr "[un objet du type \"%s\"]"
+
+msgid "[an embedded object]"
+msgstr "[un objet]"
+
+msgid "[an image-map hotspot]"
+msgstr "[une région d'imagemap]"
+
+msgid "[empty selection list]"
+msgstr "[liste de sélection vide]"
+
+# resource.c
+
+msgid " <b>Warning</b>: this version is out of date!"
+msgstr " <b>Attention</b> : cette version est vieilli!"
+
+msgid " line"
+msgstr " ligne"
+
+msgid " lines"
+msgstr " lignes"
+
+msgid "(Attached resource)"
+msgstr "(Ressource attachée)"
+
+msgid "(de-)compression"
+msgstr "(dé-)compression"
+
+msgid "(de-)cryption"
+msgstr "(dé-)cryption"
+
+msgid "(no error)"
+msgstr "(pas d'erreur)"
+
+msgid "(no subject)"
+msgstr "(pas de sujet)"
+
+msgid "(request state unknown - internal error)"
+msgstr "(état de demande inconnu - erreur interne)"
+
+msgid "(resource state unknown - internal error)"
+msgstr "(état de la ressource inconnu - erreur interne)"
+
+msgid "; IP address: "
+msgstr "; addresse IP : "
+
+msgid "; not HTTP/1.1"
+msgstr "; pas de HTTP/1.1"
+
+msgid "; server: \""
+msgstr "; serveur : \""
+
+msgid "<html><head><title>About retawq</title></head>\n<body>\n<h3 align=\"center\"><b>retawq %s (%s mode%s)</b></h3>\n<p>The web browser <b>retawq</b> is released <b>without any warranty</b>. The project home page is <a href=\"http://retawq.sourceforge.net/\">retawq.sourceforge.net</a>.</p>\n"
+msgstr "<html><head><title>&Agrave; propos de retawq</title></head>\n<body>\n<h3 align=\"center\"><b>retawq %s (mode %s%s)</b></h3>\n<p>Le navigateur <b>retawq</b> est publi&eacute; <b>sans aucune garantie</b>. Le page du projet est <a href=\"http://retawq.sourceforge.net/\">retawq.sourceforge.net</a>.</p>\n"
+
+msgid "<p>Currently using <a href=\"http://directory.fsf.org/ncurses.html\">ncurses</a> library version \"%s\".</p>\n"
+msgstr "<p>Utilise la bibliothèque <a href=\"http://directory.fsf.org/ncurses.html\">ncurses</a> version \"%s\".</p>\n"
+
+msgid "<p>Currently using <a href=\"http://www.gnupg.org/\">libgcrypt</a> library version %s.%s</p>\n"
+msgstr "<p>Utilise la bibliothèque <a href=\"http://www.gnupg.org/\">libgcrypt</a> version %s.%s</p>\n"
+
+msgid "<p>Currently using <a href=\"http://www.gnutls.org/\">GnuTLS</a> library version %s.%s</p>\n"
+msgstr "<p>Utilise la bibliothèque <a href=\"http://www.gnutls.org/\">GnuTLS</a> version %s.%s</p>\n"
+
+msgid "<p>Currently using <a href=\"http://www.gtk.org/\">GTK</a> library version %d.%d.%d on display \"%s\".</p>\n"
+msgstr "<p>Utilise la bibliothèque <a href=\"http://www.gtk.org/\">GTK</a> version %d.%d.%d à l'affichage \"%s\".</p>\n"
+
+msgid "<p>Currently using <a href=\"http://www.openssl.org/\">OpenSSL</a> library version \"%s\".%s</p>\n"
+msgstr "<p>Utilise la bibliothèque <a href=\"http://www.openssl.org/\">OpenSSL</a> version \"%s\".%s</p>\n"
+
+msgid "<p>Currently using <a href=\"http://www.x.org/\">X Window System</a> library version %d.%d (vendor: %s, release %d) on display \"%s\".</p>\n"
+msgstr "<p>Utilise la bibliothèque <a href=\"http://www.x.org/\">X</a> version %d.%d (vendor : %s, release %d) à l'affichage \"%s\".</p>\n"
+
+msgid "<p>No information known yet.</p>\n"
+msgstr "<p>Rien connu.</p>\n"
+
+msgid "<p>Start messages:"
+msgstr "<p>Des messages du départ :"
+
+msgid "<p>This program contains support for: "
+msgstr "<p>Ce programme gère : "
+
+msgid "<p>Using <a href=\"http://www.matrixssl.org/\">MatrixSSL</a>.</p>\n"
+msgstr "<p>Utilise <a href=\"http://www.matrixssl.org/\">MatrixSSL</a>.</p>\n"
+
+msgid "<p>none</p>"
+msgstr "<p>aucun</p>"
+
+msgid "Activity"
+msgstr "Activité"
+
+msgid "Bad URL"
+msgstr "Mauvais lien"
+
+msgid "Bad request kind (internal error)"
+msgstr "Mauvais type de demande (erreur interne)"
+
+msgid "Can't calculate random numbers"
+msgstr "Impossible de calculer des nombres aléatoires"
+
+msgid "Can't create internal pipe"
+msgstr "Impossible de créer canal interne"
+
+msgid "Can't create new process"
+msgstr "Impossible de créer nouvelle processus"
+
+msgid "Can't create socket"
+msgstr "Impossible de créer un socket"
+
+msgid "Can't execute program"
+msgstr "Impossible d'exécuter le programme"
+
+msgid "Can't lookup host name"
+msgstr "Impossible de rechercher le nom d'hôte"
+
+msgid "Can't read/write file/directory"
+msgstr "Impossible de lire/écrire le fichier/répertoire"
+
+msgid "Connecting"
+msgstr "Connecte"
+
+msgid "Connection failed"
+msgstr "Échec de la connexion"
+
+msgid "Connection refused"
+msgstr "Connexion refusée"
+
+msgid "Contents of FTP directory \"%s\""
+msgstr "Contenu du répertoire FTP \"%s\""
+
+msgid "Contents of local directory \"%s\""
+msgstr "Contenu du répertoire local \"%s\""
+
+msgid "Contents of the host information cache"
+msgstr "Contenu du cache des informations des hôtes"
+
+msgid "Document complete"
+msgstr "Document complet"
+
+msgid "Exchanging messages"
+msgstr "Transmission des messages"
+
+msgid "Forbidden by configuration"
+msgstr "Interdit par configuration"
+
+msgid "Help"
+msgstr "Aide"
+
+msgid "Hostname missing"
+msgstr "Pas de nom d'hôte"
+
+msgid "Index of news articles %d-%d in the group %s on the server %s, latest first"
+msgstr "Index des articles d'Usenet %d-%d dans le groupe %s sur le serveur %s, dernier d'abord"
+
+msgid "Internal handshake bug"
+msgstr "Erreur interne de déroulement"
+
+msgid "List of available news groups on the server %s"
+msgstr "Liste des groupes disponibles d'Usenet sur le serveur %s"
+
+msgid "Local CGI error: can't execute \"%s\" (error #%d, %s)%s"
+msgstr "\"Local CGI\" erreur : ne peut pas exécuter \"%s\" (erreur %d, %s)%s"
+
+msgid "Looking up host name"
+msgstr "Recherche du nom d'hôte"
+
+msgid "News group %s, articles %d-%d, server %s"
+msgstr "Groupe d'Usenet %s, articles %d-%d, serveur %s"
+
+msgid "News groups on %s"
+msgstr "Groupes d'Usenet sur %s"
+
+msgid "Parent directory"
+msgstr "Répertoire parent"
+
+msgid "Port number invalid"
+msgstr "Mauvais numéro de port"
+
+msgid "Preparing"
+msgstr "Prépare"
+
+msgid "Proxy authentication required"
+msgstr "Il faut authentifier sur le proxy"
+
+msgid "Receiving"
+msgstr "Receve"
+
+msgid "Redirection problem"
+msgstr "Problème de redirection"
+
+msgid "Scheme/protocol disabled"
+msgstr "Schème/protocole désactivé"
+
+msgid "Server closed connection"
+msgstr "Le serveur a fermé la connexion"
+
+msgid "Server response invalid"
+msgstr "Mauvaise réponse du serveur"
+
+msgid "Specific network unreachable"
+msgstr "Adresse spécifique inaccessible"
+
+msgid "Stopped"
+msgstr "Stoppé"
+
+msgid "TLS-related error"
+msgstr "Erreur TLS"
+
+msgid "This directory is empty."
+msgstr "Ce répertoire est vide."
+
+msgid "Time-out (server busy)"
+msgstr "Délai d'attente dépassé (serveur surchargé)"
+
+msgid "Unknown scheme/protocol"
+msgstr "Schéma/protocole inconnu"
+
+msgid "\n<br>port %d: scheme %s; flags: %d"
+msgstr "\n<br>port %d : schème %s; flags : %d"
+
+msgid "\n<br>port %d: scheme %s; flags: %d; rating: %d%s%s%s%s"
+msgstr "\n<br>port %d : schème %s; flags : %d; note : %d%s%s%s%s"
+
+msgid "\n<p>IP address: "
+msgstr "\n<p>addresse IP : "
+
+msgid "\n<p>name: \"%s\"; flags: %d"
+msgstr "\n<p>nom : \"%s\"; flags : %d"
+
+msgid "account required"
+msgstr "compte requis"
+
+msgid "application data"
+msgstr "dates d'application"
+
+msgid "authentication required"
+msgstr "il faut authentifier"
+
+msgid "can't create thread"
+msgstr "impossible de créer un thread"
+
+msgid "can't execute \"%s\""
+msgstr "ne peut pas exécuter \"%s\""
+
+msgid "can't setup file descriptors"
+msgstr "ne peut pas préparer"
+
+msgid "ciphers"
+msgstr "chiffres"
+
+msgid "content follows"
+msgstr "contenu suive"
+
+msgid "disconnecting"
+msgstr "disconnecte"
+
+msgid "entering passive mode"
+msgstr "entrer dans mode passif"
+
+msgid "error"
+msgstr "erreur"
+
+msgid "fatal alert"
+msgstr "avis fatal"
+
+msgid "file"
+msgstr "fichier"
+
+msgid "file/directory not found"
+msgstr "fichier/répertoire introuvable"
+
+msgid "group selected"
+msgstr "groupe sélectionné"
+
+msgid "handshake"
+msgstr "négociation"
+
+msgid "initialization"
+msgstr "initialisation"
+
+msgid "intermediary"
+msgstr "passager"
+
+msgid "library feature unimplemented"
+msgstr "fonction du bibliothèque indisponible"
+
+msgid "logged in"
+msgstr "connecté"
+
+msgid "memory"
+msgstr "mémoire vive"
+
+msgid "news groups follow"
+msgstr "groupes d'Usenet suivent"
+
+msgid "no such article"
+msgstr "article inconnu"
+
+msgid "no such news group"
+msgstr "groupe d'Usenet inconnu"
+
+msgid "okay"
+msgstr "bien"
+
+msgid "packet"
+msgstr "paquet"
+
+msgid "password required"
+msgstr "mot de passe requis"
+
+msgid "protected reply"
+msgstr "réponse protégée"
+
+msgid "public key"
+msgstr "clé public"
+
+msgid "read"
+msgstr "lire"
+
+msgid "read(DNS) failed"
+msgstr "read(DNS) échoué"
+
+msgid "redirection"
+msgstr "redirection"
+
+msgid "request error"
+msgstr "erreur de demande"
+
+msgid "retawq Compile-Time Configuration Options"
+msgstr "retawq Options du configuration de compilation"
+
+msgid "retawq: OpenSSL initialization failed\n"
+msgstr "retawq : initialisation d'OpenSSL échoué\n"
+
+msgid "retawq: TLS library error during operation \"%s\": #%d%s%s - %s\n"
+msgstr "retawq: erreur de la bibliothèque TLS par opération \"%s\": #%d%s%s - %s\n"
+
+msgid "retawq: execext-shell error: %s (error #%d, %s)"
+msgstr "retawq : erreur \"execext-shell\" : %s (erreur %d, %s)"
+
+msgid "retawq: local CGI error: can't setup file descriptors (error #%d, %s)\n"
+msgstr "retawq : \"local CGI\" erreur : ne peut pas préparer (erreur %d, %s)\n"
+
+msgid "server closed"
+msgstr "le serveur a fermé"
+
+msgid "server error"
+msgstr "erreur de serveur"
+
+msgid "server ready"
+msgstr "serveur prêt"
+
+msgid "service not available"
+msgstr "service indisponible"
+
+msgid "session expired"
+msgstr "séance expirée"
+
+msgid "transfer successful"
+msgstr "transfert fini"
+
+msgid "transient server problem"
+msgstr "problème passager du serveur"
+
+msgid "write"
+msgstr "écrire"
+
+msgid "write(DNS) failed"
+msgstr "write(DNS) échoué"
+
+# stuff.c
+
+msgid "(disabled)"
+msgstr "(désactivé)"
+
+msgid "(unknown)"
+msgstr "(inconnu)"
+
+msgid "; error #%d, %s\n"
+msgstr "; erreur %d, %s\n"
+
+msgid "Directory"
+msgstr "Répertoire"
+
+msgid "F(this kind of) execution of external programs"
+msgstr "F(ce type d')exécution des programmes externes"
+
+msgid "File"
+msgstr "Fichier"
+
+msgid "Fjumps"
+msgstr "Fsaut-raccourcis"
+
+msgid "Fsessions"
+msgstr "Fséances"
+
+msgid "Login failed"
+msgstr "Échec de l'authentification"
+
+msgid "bad value"
+msgstr "mauvaise valeur"
+
+msgid "button"
+msgstr "bouton"
+
+msgid "byte"
+msgstr "octet"
+
+msgid "bytes"
+msgstr "octets"
+
+msgid "can't open X Window System display"
+msgstr "impossible d'ouvrir un affichage X"
+
+msgid "checkbox"
+msgstr "case à cocher"
+
+msgid "feature \"%s\" was disabled at compile-time%s"
+msgstr "le soutien de \"%s\" a été désactivé par compilation%s"
+
+msgid "graphics"
+msgstr "graphique"
+
+msgid "image"
+msgstr "image"
+
+msgid "link"
+msgstr "un lien"
+
+msgid "no"
+msgstr "non"
+
+msgid "off"
+msgstr "désactivé"
+
+msgid "out of memory"
+msgstr "mémoire vive saturée"
+
+msgid "retawq: fatal error: "
+msgstr "retawq : erreur fatale : "
+
+msgid "retawq: terminated by a signal\n"
+msgstr "retawq : terminé par un signal\n"
+
+msgid "text"
+msgstr "texte"
+
+msgid "too many objects"
+msgstr "trop d'objets"
+
+msgid "write() failed"
+msgstr "échec de l'écriture"
+
+msgid "yes"
+msgstr "oui"
+
+# wk.c
+
+msgid "Bookmark"
+msgstr "Signet"
+
+msgid "Document Info"
+msgstr "Information sur le document"
+
+msgid "Finformation window"
+msgstr "FFenêtre d'information"
+
+msgid "Forms: "
+msgstr "Des Formulaires : "
+
+msgid "Frames: "
+msgstr "Des Cadres : "
+
+msgid "Home"
+msgstr "Accueil"
+
+msgid "Images: "
+msgstr "Des Images : "
+
+msgid "Information about \"%s\""
+msgstr "information sur \"%s\""
+
+msgid "Links: "
+msgstr "Des Liens : "
+
+msgid "Location: "
+msgstr "Localité : "
+
+msgid "New Window"
+msgstr "Nouvelle fenêtre"
+
+msgid "Open Local File..."
+msgstr "Ouvrir un fichier local..."
+
+msgid "Open Relative URL..."
+msgstr "Accéder un lien relatif..."
+
+msgid "Open URL..."
+msgstr "Accéder un lien..."
+
+msgid "Really repost form data?"
+msgstr "Vraiment re-envoyer ce formulaire ?"
+
+msgid "Size: "
+msgstr "Taille : "
+
+msgid "Stop"
+msgstr "Stopper"
+
+msgid "Title: "
+msgstr "Titre : "
+
+msgid "View"
+msgstr "Vue"
+
+msgid "Window"
+msgstr "Fenêtre"

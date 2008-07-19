@@ -1,0 +1,13 @@
+#!/bin/sh
+
+mount -t proc none /proc
+mount -t vfat -o noatime /dev/hda1 /gbamp
+# some CF cards do not have a partition table
+# try mounting /dev/hda if mounting /dev/hda1 fails
+if [ "$?" != "0" ]
+then
+	mount -t vfat -o noatime /dev/hda /gbamp
+	[ "$?" = "0" ] || echo "Sorry, failed to mount your CF card."
+fi
+mount -t ramfs none /var/run
+. /etc/rc.common

@@ -1,0 +1,63 @@
+/*BODY, TD
+{
+	font-size: 10pt;
+	color: buttontext;
+	font-family: Tahoma, Sans-Serif;
+	background-color: buttonface;
+	cursor:default;
+	border: solid 0px buttonface;
+}
+*/
+
+
+/*button styles*/
+.over
+{
+	border-right: buttonshadow 1px solid;
+	border-top: buttonhighlight 1px solid;
+	border-left: buttonhighlight 1px solid;
+	border-bottom: buttonshadow 1px solid;
+	cursor:hand;
+}
+.down
+{
+	border-right: buttonhighlight 1px solid;
+	border-top: buttonshadow 1px solid;
+	border-left: buttonshadow 1px solid;
+	border-bottom: buttonhighlight 1px solid;
+	cursor:hand;
+}
+.out
+{
+	border:buttonface 1px solid;
+	cursor:hand;
+}
+
+/*menu styles*/
+
+.menuover
+{
+	/*font: menu;*/
+	color: highlighttext;
+	background-color: highlight;
+	cursor:default;
+}
+.menudown
+{	
+	/*font: menu;*/
+	color: highlighttext;
+	background-color: highlight;
+	cursor:default;
+}
+.menuout
+{
+	/*font: menu;*/
+	color: menutext;
+	background-color: menu;
+	cursor:default;
+}
+
+/*
+<link rel="stylesheet" type="text/css" href="toolbars/leftpanel.css"></link>
+<script language=javascript src="toolbars/leftpanel.js"></script>
+*/

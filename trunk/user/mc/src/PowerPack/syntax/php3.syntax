@@ -1,0 +1,888 @@
+##########################################################################
+#
+# php3 syntax rules version 0.0.19 (2000.05.11)
+#
+# Cooledit syntax file for php3 files created by:
+#
+#   Szatanik Krzysztof "Diabl0/MAO" <diabl0@yoyo.pl>
+#
+##########################################################################
+#
+# There is still a few commands understod...
+#
+#  If you made any changes in this file (eg. adding new commands or
+# changing color design) please mail me your new version.
+#
+##########################################################################
+# Assumes you've set a dark background, e.g. navy blue.
+
+context default
+    
+context <? ?> brightred/
+    keyword '*' green/6
+    keyword whole "*" green/6
+    keyword linestart //*\n white/26
+    keyword $ cyan/7
+    keyword ( cyan/5
+    keyword ) cyan/5
+    keyword } brightmagenta/19
+    keyword { brightmagenta/19
+    keyword = brightmagenta/19
+
+	keyword whole require brightgreen/17
+	keyword whole and brightgreen/17
+	keyword whole while brightgreen/17
+
+    
+	keyword whole array brightgreen/17
+        keyword whole array_count_values brightgreen/17
+	keyword whole array_flip brightgreen/17
+        keyword whole array_keys brightgreen/17
+	keyword whole array_merge brightgreen/17
+        keyword whole array_pad brightgreen/17
+	keyword whole array_pop brightgreen/17
+        keyword whole array_push brightgreen/17
+	keyword whole array_reverse brightgreen/17
+        keyword whole array_shift brightgreen/17
+	keyword whole array_slice brightgreen/17
+        keyword whole array_splice brightgreen/17
+	keyword whole array_unshift brightgreen/17
+        keyword whole array_values brightgreen/17
+	keyword whole array_walk brightgreen/17
+        keyword whole arsort brightgreen/17
+	keyword whole asort brightgreen/17
+        keyword whole compact brightgreen/17
+	keyword whole count brightgreen/17
+        keyword whole current brightgreen/17
+	keyword whole each brightgreen/17
+        keyword whole end brightgreen/17
+	keyword whole extract brightgreen/17
+        keyword whole in_array brightgreen/17
+	keyword whole key brightgreen/17
+        keyword whole krsort brightgreen/17
+	keyword whole ksort brightgreen/17
+        keyword whole list brightgreen/17
+	keyword whole next brightgreen/17
+        keyword whole pos brightgreen/17
+	keyword whole prev brightgreen/17
+        keyword whole range brightgreen/17
+	keyword whole reset brightgreen/17
+        keyword whole rsort brightgreen/17
+	keyword whole shuffle brightgreen/17
+        keyword whole sizeof brightgreen/17
+	keyword whole sort brightgreen/17
+        keyword whole uasort brightgreen/17
+	keyword whole uksort brightgreen/17
+        keyword whole usort brightgreen/17
+
+        keyword whole aspell_new brightgreen/17
+	keyword whole aspell_check brightgreen/17
+        keyword whole aspell_check-raw brightgreen/17
+	keyword whole aspell_suggest brightgreen/17
+        keyword whole  brightgreen/17
+
+        keyword whole bcadd brightgreen/17
+	keyword whole bccomp brightgreen/17
+        keyword whole bcdiv brightgreen/17
+	keyword whole bcmod brightgreen/17
+        keyword whole bcmul brightgreen/17
+	keyword whole bcpow brightgreen/17
+        keyword whole bcscale brightgreen/17
+	keyword whole bcsqrt brightgreen/17
+        keyword whole bcsub brightgreen/17
+
+        keyword whole  brightgreen/17
+
+        keyword whole JDToGregorian brightgreen/17
+	keyword whole GregorianToJD brightgreen/17
+        keyword whole JDToJulian brightgreen/17
+	keyword whole JulianToJD brightgreen/17
+        keyword whole JDToJewish brightgreen/17
+	keyword whole JewishToJD brightgreen/17
+        keyword whole JDToFrench brightgreen/17
+	keyword whole FrenchToJD brightgreen/17
+        keyword whole JDMonthName brightgreen/17
+	keyword whole JDDayOfWeek brightgreen/17
+        keyword whole easter_date brightgreen/17
+	keyword whole easter_days brightgreen/17
+        keyword whole  brightgreen/17
+
+
+        keyword whole  brightgreen/17
+	keyword whole checkdate brightgreen/17
+        keyword whole date brightgreen/17
+	keyword whole getdate brightgreen/17
+        keyword whole gettimeofday brightgreen/17
+	keyword whole gmdate brightgreen/17
+        keyword whole gmmktime brightgreen/17
+	keyword whole gmstrftime brightgreen/17
+        keyword whole microtime brightgreen/17
+	keyword whole mktime brightgreen/17
+        keyword whole strftime brightgreen/17
+	keyword whole time brightgreen/17
+        keyword whole  brightgreen/17
+
+        keyword whole chdir brightgreen/17
+	keyword whole dir brightgreen/17
+        keyword whole closedir brightgreen/17
+	keyword whole opendir brightgreen/17
+        keyword whole readdir brightgreen/17
+	keyword whole rewinddir brightgreen/17
+        keyword whole  brightgreen/17
+	keyword whole dl brightgreen/17
+        keyword whole  brightgreen/17
+	keyword whole escapeshellcmd brightgreen/17
+        keyword whole exec brightgreen/17
+	keyword whole passthru brightgreen/17
+        keyword whole system brightgreen/17
+
+	keyword whole basename brightgreen/17
+        keyword whole chgrp brightgreen/17
+	keyword whole chmod brightgreen/17
+        keyword whole chown brightgreen/17
+	keyword whole clearstatcache brightgreen/17
+        keyword whole copy brightgreen/17
+	keyword whole delete brightgreen/17
+        keyword whole dirname brightgreen/17
+	keyword whole diskfreespace brightgreen/17
+        keyword whole fclose brightgreen/17
+	keyword whole feof brightgreen/17
+        keyword whole fgetc brightgreen/17
+	keyword whole fgetcsv brightgreen/17
+        keyword whole fgets brightgreen/17
+	keyword whole fgetss brightgreen/17
+        keyword whole file brightgreen/17
+	keyword whole file_exists brightgreen/17
+        keyword whole fileatime brightgreen/17
+	keyword whole filectime brightgreen/17
+        keyword whole filegroup brightgreen/17
+	keyword whole fileinode brightgreen/17
+        keyword whole filemtime brightgreen/17
+	keyword whole fileowner brightgreen/17
+        keyword whole fileperms brightgreen/17
+	keyword whole filesize brightgreen/17
+        keyword whole filetype brightgreen/17
+	keyword whole flock brightgreen/17
+        keyword whole fopen brightgreen/17
+	keyword whole fpassthru brightgreen/17
+        keyword whole fputs brightgreen/17
+	keyword whole fread brightgreen/17
+        keyword whole fseek brightgreen/17
+	keyword whole ftell brightgreen/17
+        keyword whole fwrite brightgreen/17
+	keyword whole set_file_buffer brightgreen/17
+        keyword whole is_dir brightgreen/17
+	keyword whole is_executable brightgreen/17
+        keyword whole is_file brightgreen/17
+	keyword whole is_link brightgreen/17
+        keyword whole is_readable brightgreen/17
+	keyword whole is_writeable brightgreen/17
+        keyword whole link brightgreen/17
+	keyword whole linkinfo brightgreen/17
+        keyword whole mkdir brightgreen/17
+	keyword whole pclose brightgreen/17
+        keyword whole popen brightgreen/17
+	keyword whole readfile brightgreen/17
+        keyword whole readlink brightgreen/17
+	keyword whole rename brightgreen/17
+        keyword whole rewind brightgreen/17
+	keyword whole rmdir brightgreen/17
+        keyword whole stat brightgreen/17
+	keyword whole lstat brightgreen/17
+        keyword whole symlink brightgreen/17
+	keyword whole tempnam brightgreen/17
+        keyword whole touch brightgreen/17
+	keyword whole umask brightgreen/17
+        keyword whole unlink brightgreen/17
+
+        keyword whole  brightgreen/17
+	keyword whole ftp_connect brightgreen/17
+        keyword whole ftp_login brightgreen/17
+	keyword whole ftp_pwd brightgreen/17
+        keyword whole ftp_cdup brightgreen/17
+	keyword whole ftp_chdir brightgreen/17
+        keyword whole ftp_mkdir brightgreen/17
+	keyword whole ftp_rmdir brightgreen/17
+        keyword whole ftp_nlist brightgreen/17
+	keyword whole ftp_rawlist brightgreen/17
+        keyword whole ftp_systype brightgreen/17
+	keyword whole ftp_pasv brightgreen/17
+        keyword whole ftp_get brightgreen/17
+	keyword whole ftp_fget brightgreen/17
+        keyword whole ftp_put brightgreen/17
+	keyword whole ftp_fput brightgreen/17
+        keyword whole ftp_size brightgreen/17
+	keyword whole ftp_mdtm brightgreen/17
+        keyword whole ftp_rename brightgreen/17
+	keyword whole ftp_delete brightgreen/17
+        keyword whole ftp_quit brightgreen/17
+
+	keyword whole header brightgreen/17
+        keyword whole setcookie brightgreen/17
+
+
+
+        keyword whole GetImageSize brightgreen/17
+	keyword whole ImageArc brightgreen/17
+        keyword whole ImageChar brightgreen/17
+	keyword whole ImageCharUp brightgreen/17
+        keyword whole ImageColorAllocate brightgreen/17
+	keyword whole ImageColorAt brightgreen/17
+        keyword whole ImageColorClosest brightgreen/17
+	keyword whole ImageColorExact brightgreen/17
+        keyword whole ImageColorResolve brightgreen/17
+	keyword whole ImageColorSet brightgreen/17
+        keyword whole ImageColorsForIndex brightgreen/17
+	keyword whole ImageColorsTotal brightgreen/17
+        keyword whole ImageColorTransparent brightgreen/17
+	keyword whole ImageCopyResized brightgreen/17
+        keyword whole ImageCreate brightgreen/17
+	keyword whole ImageCreateFromGif brightgreen/17
+        keyword whole ImageDashedLine brightgreen/17
+	keyword whole ImageDestroy brightgreen/17
+        keyword whole ImageFill brightgreen/17
+	keyword whole ImageFilledPolygon brightgreen/17
+        keyword whole ImageFilledRectangle brightgreen/17
+	keyword whole ImageFillToBorder brightgreen/17
+        keyword whole ImageFontHeight brightgreen/17
+	keyword whole ImageFontWidth brightgreen/17
+        keyword whole ImageGif brightgreen/17
+	keyword whole ImageInterlace brightgreen/17
+        keyword whole ImageLine brightgreen/17
+	keyword whole ImageLoadFont brightgreen/17
+        keyword whole ImagePolygon brightgreen/17
+	keyword whole ImagePSBBox brightgreen/17
+        keyword whole ImagePSEncodeFont brightgreen/17
+	keyword whole ImagePSFreeFont brightgreen/17
+        keyword whole ImagePSLoadFont brightgreen/17
+	keyword whole ImagePSText brightgreen/17
+        keyword whole ImageRectangle brightgreen/17
+	keyword whole ImageSetPixel brightgreen/17
+        keyword whole ImageString brightgreen/17
+	keyword whole ImageStringUp brightgreen/17
+        keyword whole ImageSX brightgreen/17
+	keyword whole ImageSY brightgreen/17
+        keyword whole ImageTTFBBox brightgreen/17
+	keyword whole ImageTTFText brightgreen/17
+
+
+	keyword whole imap_append brightgreen/17
+        keyword whole imap_base64 brightgreen/17
+	keyword whole imap_body brightgreen/17
+        keyword whole imap_check brightgreen/17
+	keyword whole imap_close brightgreen/17
+        keyword whole imap_createmailbox brightgreen/17
+	keyword whole imap_delete brightgreen/17
+        keyword whole imap_deletemailbox brightgreen/17
+	keyword whole imap_expunge brightgreen/17
+        keyword whole imap_fetchbody brightgreen/17
+	keyword whole imap_fetchstructure brightgreen/17
+        keyword whole imap_header brightgreen/17
+	keyword whole imap_headers brightgreen/17
+        keyword whole imap_listmailbox brightgreen/17
+	keyword whole imap_getmailboxes brightgreen/17
+        keyword whole imap_listsubscribed brightgreen/17
+	keyword whole imap_getsubscribed brightgreen/17
+        keyword whole imap_mail_copy brightgreen/17
+	keyword whole imap_mail_move brightgreen/17
+        keyword whole imap_num_msg brightgreen/17
+	keyword whole imap_num_recent brightgreen/17
+        keyword whole imap_open brightgreen/17
+	keyword whole imap_ping brightgreen/17
+        keyword whole imap_renamemailbox brightgreen/17
+	keyword whole imap_reopen brightgreen/17
+        keyword whole imap_subscribe brightgreen/17
+	keyword whole imap_undelete brightgreen/17
+        keyword whole imap_unsubscribe brightgreen/17
+	keyword whole imap_qprint brightgreen/17
+        keyword whole imap_8bit brightgreen/17
+	keyword whole imap_binary brightgreen/17
+        keyword whole imap_scanmailbox brightgreen/17
+	keyword whole imap_mailboxmsginfo brightgreen/17
+        keyword whole imap_rfc822_write_address brightgreen/17
+	keyword whole imap_rfc822_parse_adrlist brightgreen/17
+        keyword whole imap_setflag_full brightgreen/17
+	keyword whole imap_clearflag_full brightgreen/17
+        keyword whole imap_sort brightgreen/17
+	keyword whole imap_fetchheader brightgreen/17
+        keyword whole imap_uid brightgreen/17
+	keyword whole imap_msgno brightgreen/17
+        keyword whole imap_search brightgreen/17
+	keyword whole imap_last_error brightgreen/17
+        keyword whole imap_errors brightgreen/17
+	keyword whole imap_alerts brightgreen/17
+        keyword whole imap_status brightgreen/17
+	keyword whole imap_utf7_decode brightgreen/17
+        keyword whole imap_utf7_encode brightgreen/17
+
+        keyword whole error_log brightgreen/17
+	keyword whole error_reporting brightgreen/17
+        keyword whole extension_loaded brightgreen/17
+	keyword whole getenv brightgreen/17
+        keyword whole get_cfg_var brightgreen/17
+	keyword whole get_current_user brightgreen/17
+        keyword whole get_magic_quotes_gpc brightgreen/17
+	keyword whole get_magic_quotes_runtime brightgreen/17
+        keyword whole getlastmod brightgreen/17
+	keyword whole getmyinode brightgreen/17
+        keyword whole getmypid brightgreen/17
+	keyword whole getmyuid brightgreen/17
+        keyword whole getrusage brightgreen/17
+	keyword whole phpinfo brightgreen/17
+        keyword whole phpversion brightgreen/17
+	keyword whole php_logo_guid brightgreen/17
+        keyword whole putenv brightgreen/17
+	keyword whole set_magic_quotes_runtime brightgreen/17
+        keyword whole set_time_limit brightgreen/17
+	keyword whole zend_logo_guid brightgreen/17
+
+
+
+
+        keyword whole mail brightgreen/17
+
+        keyword whole Abs brightgreen/17
+	keyword whole Acos brightgreen/17
+        keyword whole Asin brightgreen/17
+	keyword whole Atan brightgreen/17
+        keyword whole Atan2 brightgreen/17
+	keyword whole base_convert brightgreen/17
+        keyword whole BinDec brightgreen/17
+	keyword whole Ceil brightgreen/17
+        keyword whole Cos brightgreen/17
+	keyword whole DecBin brightgreen/17
+        keyword whole DecHex brightgreen/17
+	keyword whole DecOct brightgreen/17
+        keyword whole Exp brightgreen/17
+	keyword whole Floor brightgreen/17
+        keyword whole getrandmax brightgreen/17
+	keyword whole HexDec brightgreen/17
+        keyword whole Log brightgreen/17
+	keyword whole Log10 brightgreen/17
+        keyword whole max brightgreen/17
+	keyword whole min brightgreen/17
+        keyword whole mt_rand brightgreen/17
+	keyword whole mt_srand brightgreen/17
+        keyword whole mt_getrandmax brightgreen/17
+	keyword whole number_format brightgreen/17
+        keyword whole OctDec brightgreen/17
+	keyword whole pi brightgreen/17
+        keyword whole pow brightgreen/17
+	keyword whole rand brightgreen/17
+        keyword whole round brightgreen/17
+	keyword whole Sin brightgreen/17
+        keyword whole Sqrt brightgreen/17
+	keyword whole srand brightgreen/17
+        keyword whole Tan brightgreen/17
+
+
+        keyword whole connection_aborted brightgreen/17
+	keyword whole connection_status brightgreen/17
+        keyword whole connection_timeout brightgreen/17
+	keyword whole define brightgreen/17
+        keyword whole defined brightgreen/17
+	keyword whole die brightgreen/17
+        keyword whole eval brightgreen/17
+	keyword whole exit brightgreen/17
+        keyword whole func_get_arg brightgreen/17
+	keyword whole func_get_args brightgreen/17
+        keyword whole func_num_args brightgreen/17
+	keyword whole function_exists brightgreen/17
+        keyword whole get_browser brightgreen/17
+	keyword whole ignore_user_abort brightgreen/17
+        keyword whole iptcparse brightgreen/17
+
+        keyword whole leak brightgreen/17
+	keyword whole pack brightgreen/17
+        keyword whole register_shutdown_function brightgreen/17
+	keyword whole serialize brightgreen/17
+        keyword whole sleep brightgreen/17
+	keyword whole uniqid brightgreen/17
+        keyword whole unpack brightgreen/17
+	keyword whole unserialize brightgreen/17
+        keyword whole usleep brightgreen/17
+
+        keyword whole mysql_affected_rows brightgreen/17
+	keyword whole mysql_change_user brightgreen/17
+        keyword whole mysql_close brightgreen/17
+	keyword whole mysql_connect brightgreen/17
+        keyword whole mysql_create_db brightgreen/17
+	keyword whole mysql_data_seek brightgreen/17
+        keyword whole mysql_db_query brightgreen/17
+	keyword whole mysql_drop_db brightgreen/17
+        keyword whole mysql_errno brightgreen/17
+	keyword whole mysql_error brightgreen/17
+        keyword whole mysql_fetch_array brightgreen/17
+	keyword whole mysql_fetch_field brightgreen/17
+        keyword whole mysql_fetch_lengths brightgreen/17
+	keyword whole mysql_fetch_object brightgreen/17
+        keyword whole mysql_fetch_row brightgreen/17
+	keyword whole mysql_field_name brightgreen/17
+        keyword whole mysql_field_seek brightgreen/17
+	keyword whole mysql_field_table brightgreen/17
+        keyword whole mysql_field_type brightgreen/17
+	keyword whole mysql_field_flags brightgreen/17
+        keyword whole mysql_field_len brightgreen/17
+	keyword whole mysql_free_result brightgreen/17
+        keyword whole mysql_insert_id brightgreen/17
+	keyword whole mysql_list_fields brightgreen/17
+        keyword whole mysql_list_dbs brightgreen/17
+	keyword whole mysql_list_tables brightgreen/17
+        keyword whole mysql_num_fields brightgreen/17
+	keyword whole mysql_num_rows brightgreen/17
+        keyword whole mysql_pconnect brightgreen/17
+	keyword whole mysql_query brightgreen/17
+        keyword whole mysql_result brightgreen/17
+	keyword whole mysql_select_db brightgreen/17
+        keyword whole mysql_tablename brightgreen/17
+
+        keyword whole checkdnsrr brightgreen/17
+	keyword whole closelog brightgreen/17
+        keyword whole debugger_off brightgreen/17
+	keyword whole debugger_on brightgreen/17
+        keyword whole fsockopen brightgreen/17
+	keyword whole gethostbyaddr brightgreen/17
+        keyword whole gethostbyname brightgreen/17
+	keyword whole gethostbynamel brightgreen/17
+        keyword whole getmxrr brightgreen/17
+	keyword whole getprotobyname brightgreen/17
+        keyword whole getprotobynumber brightgreen/17
+	keyword whole getservbyname brightgreen/17
+        keyword whole getservbyport brightgreen/17
+	keyword whole openlog brightgreen/17
+        keyword whole pfsockopen brightgreen/17
+	keyword whole set_socket_blocking brightgreen/17
+        keyword whole syslog brightgreen/17
+
+	keyword whole OCIDefineByName brightgreen/17
+        keyword whole OCIBindByName brightgreen/17
+	keyword whole OCILogon brightgreen/17
+        keyword whole OCIPLogon brightgreen/17
+	keyword whole OCINLogon brightgreen/17
+        keyword whole OCILogOff brightgreen/17
+	keyword whole OCIExecute brightgreen/17
+        keyword whole OCICommit brightgreen/17
+	keyword whole OCIRollback brightgreen/17
+        keyword whole OCINewDescriptor brightgreen/17
+	keyword whole OCIRowCount brightgreen/17
+        keyword whole OCINumCols brightgreen/17
+	keyword whole OCIResult brightgreen/17
+        keyword whole OCIFetch brightgreen/17
+	keyword whole OCIFetchInto brightgreen/17
+        keyword whole OCIFetchStatement brightgreen/17
+	keyword whole OCIColumnIsNULL brightgreen/17
+        keyword whole OCIColumnSize brightgreen/17
+	keyword whole OCIServerVersion brightgreen/17
+        keyword whole OCIStatementType brightgreen/17
+	keyword whole OCINewCursor brightgreen/17
+        keyword whole OCIFreeStatement brightgreen/17
+	keyword whole OCIFreeCursor brightgreen/17
+        keyword whole OCIColumnName brightgreen/17
+	keyword whole OCIColumnType brightgreen/17
+        keyword whole OCIParse brightgreen/17
+	keyword whole OCIError brightgreen/17
+        keyword whole OCIInternalDebug brightgreen/17
+
+        keyword whole odbc_autocommit brightgreen/17
+	keyword whole odbc_binmode brightgreen/17
+        keyword whole odbc_close brightgreen/17
+	keyword whole odbc_close_all brightgreen/17
+        keyword whole odbc_commit brightgreen/17
+	keyword whole odbc_connect brightgreen/17
+        keyword whole odbc_cursor brightgreen/17
+	keyword whole odbc_do brightgreen/17
+        keyword whole odbc_exec brightgreen/17
+	keyword whole odbc_execute brightgreen/17
+        keyword whole odbc_fetch_into brightgreen/17
+	keyword whole odbc_fetch_row brightgreen/17
+        keyword whole odbc_field_name brightgreen/17
+	keyword whole odbc_field_type brightgreen/17
+        keyword whole odbc_field_len brightgreen/17
+	keyword whole odbc_free_result brightgreen/17
+        keyword whole odbc_longreadlen brightgreen/17
+	keyword whole odbc_num_fields brightgreen/17
+        keyword whole odbc_pconnect brightgreen/17
+	keyword whole odbc_prepare brightgreen/17
+        keyword whole odbc_num_rows brightgreen/17
+	keyword whole odbc_result brightgreen/17
+        keyword whole odbc_result_all brightgreen/17
+	keyword whole odbc_rollback brightgreen/17
+        keyword whole odbc_setoption brightgreen/17
+
+        keyword whole Ora_Bind brightgreen/17
+	keyword whole Ora_Close brightgreen/17
+        keyword whole Ora_ColumnName brightgreen/17
+	keyword whole Ora_ColumnType brightgreen/17
+        keyword whole Ora_Commit brightgreen/17
+	keyword whole Ora_CommitOff brightgreen/17
+        keyword whole Ora_CommitOn brightgreen/17
+	keyword whole Ora_Error brightgreen/17
+        keyword whole Ora_ErrorCode brightgreen/17
+	keyword whole Ora_Exec brightgreen/17
+        keyword whole Ora_Fetch brightgreen/17
+	keyword whole Ora_GetColumn brightgreen/17
+        keyword whole Ora_Logoff brightgreen/17
+	keyword whole Ora_Logon brightgreen/17
+        keyword whole Ora_Open brightgreen/17
+	keyword whole Ora_Parse brightgreen/17
+        keyword whole Ora_Rollback brightgreen/17
+
+        keyword whole preg_match brightgreen/17
+	keyword whole preg_match_all brightgreen/17
+        keyword whole preg_replace brightgreen/17
+	keyword whole preg_split brightgreen/17
+        keyword whole preg_quote brightgreen/17
+	keyword whole preg_grep brightgreen/17
+        keyword whole Pattern Modifiers brightgreen/17
+	keyword whole Pattern Syntax brightgreen/17
+        keyword whole  brightgreen/17
+	keyword whole PDF_get_info brightgreen/17
+        keyword whole PDF_set_info_creator brightgreen/17
+	keyword whole PDF_set_info_title brightgreen/17
+        keyword whole PDF_set_info_subject brightgreen/17
+	keyword whole PDF_set_info_keywords brightgreen/17
+        keyword whole PDF_set_info_author brightgreen/17
+	keyword whole PDF_open brightgreen/17
+        keyword whole PDF_close brightgreen/17
+	keyword whole PDF_begin_page brightgreen/17
+        keyword whole PDF_end_page brightgreen/17
+	keyword whole PDF_show brightgreen/17
+        keyword whole PDF_show_xy brightgreen/17
+	keyword whole PDF_set_font brightgreen/17
+        keyword whole PDF_set_leading brightgreen/17
+	keyword whole PDF_set_text_rendering brightgreen/17
+        keyword whole PDF_set_horiz_scaling brightgreen/17
+	keyword whole PDF_set_text_rise brightgreen/17
+        keyword whole PDF_set_text_matrix brightgreen/17
+	keyword whole PDF_set_text_pos brightgreen/17
+        keyword whole PDF_set_char_spacing brightgreen/17
+	keyword whole PDF_set_word_spacing brightgreen/17
+        keyword whole PDF_continue_text brightgreen/17
+	keyword whole PDF_stringwidth brightgreen/17
+        keyword whole PDF_save brightgreen/17
+	keyword whole PDF_restore brightgreen/17
+        keyword whole PDF_translate brightgreen/17
+	keyword whole PDF_scale brightgreen/17
+        keyword whole PDF_rotate brightgreen/17
+	keyword whole PDF_setflat brightgreen/17
+        keyword whole PDF_setlinejoin brightgreen/17
+	keyword whole PDF_setlinecap brightgreen/17
+        keyword whole PDF_setmiterlimit brightgreen/17
+	keyword whole PDF_setlinewidth brightgreen/17
+        keyword whole PDF_setdash brightgreen/17
+	keyword whole PDF_moveto brightgreen/17
+        keyword whole PDF_curveto brightgreen/17
+	keyword whole PDF_lineto brightgreen/17
+        keyword whole PDF_circle brightgreen/17
+	keyword whole PDF_arc brightgreen/17
+        keyword whole PDF_rect brightgreen/17
+	keyword whole PDF_closepath brightgreen/17
+        keyword whole PDF_stroke brightgreen/17
+	keyword whole PDF_closepath_stroke brightgreen/17
+        keyword whole PDF_fill brightgreen/17
+	keyword whole PDF_fill_stroke brightgreen/17
+        keyword whole PDF_closepath_fill_stroke brightgreen/17
+	keyword whole PDF_endpath brightgreen/17
+        keyword whole PDF_clip brightgreen/17
+	keyword whole PDF_setgray_fill brightgreen/17
+        keyword whole PDF_setgray_stroke brightgreen/17
+	keyword whole PDF_setgray brightgreen/17
+        keyword whole PDF_setrgbcolor_fill brightgreen/17
+	keyword whole PDF_setrgbcolor_stroke brightgreen/17
+        keyword whole PDF_setrgbcolor brightgreen/17
+	keyword whole PDF_add_outline brightgreen/17
+        keyword whole PDF_set_transition brightgreen/17
+	keyword whole PDF_set_duration brightgreen/17
+        keyword whole PDF_open_gif brightgreen/17
+	keyword whole PDF_open_memory_image brightgreen/17
+        keyword whole PDF_open_jpeg brightgreen/17
+	keyword whole PDF_close_image brightgreen/17
+        keyword whole PDF_place_image brightgreen/17
+	keyword whole PDF_put_image brightgreen/17
+        keyword whole PDF_execute_image brightgreen/17
+	keyword whole pdf_add_annotation brightgreen/17
+        keyword whole  brightgreen/17
+	keyword whole pg_Close brightgreen/17
+        keyword whole pg_cmdTuples brightgreen/17
+	keyword whole pg_Connect brightgreen/17
+        keyword whole pg_DBname brightgreen/17
+	keyword whole pg_ErrorMessage brightgreen/17
+        keyword whole pg_Exec brightgreen/17
+	keyword whole pg_Fetch_Array brightgreen/17
+        keyword whole pg_Fetch_Object brightgreen/17
+	keyword whole pg_Fetch_Row brightgreen/17
+        keyword whole pg_FieldIsNull brightgreen/17
+	keyword whole pg_FieldName brightgreen/17
+        keyword whole pg_FieldNum brightgreen/17
+	keyword whole pg_FieldPrtLen brightgreen/17
+        keyword whole pg_FieldSize brightgreen/17
+	keyword whole pg_FieldType brightgreen/17
+        keyword whole pg_FreeResult brightgreen/17
+	keyword whole pg_GetLastOid brightgreen/17
+        keyword whole pg_Host brightgreen/17
+	keyword whole pg_loclose brightgreen/17
+        keyword whole pg_locreate brightgreen/17
+	keyword whole pg_loopen brightgreen/17
+        keyword whole pg_loread brightgreen/17
+	keyword whole pg_loreadall brightgreen/17
+        keyword whole pg_lounlink brightgreen/17
+	keyword whole pg_lowrite brightgreen/17
+        keyword whole pg_NumFields brightgreen/17
+	keyword whole pg_NumRows brightgreen/17
+        keyword whole pg_Options brightgreen/17
+	keyword whole pg_pConnect brightgreen/17
+        keyword whole pg_Port brightgreen/17
+	keyword whole pg_Result brightgreen/17
+        keyword whole pg_tty brightgreen/17
+
+        keyword whole posix_kill brightgreen/17
+	keyword whole posix_getpid brightgreen/17
+        keyword whole posix_getppid brightgreen/17
+	keyword whole posix_getuid brightgreen/17
+        keyword whole posix_geteuid brightgreen/17
+	keyword whole posix_getgid brightgreen/17
+        keyword whole posix_getegid brightgreen/17
+	keyword whole posix_setuid brightgreen/17
+        keyword whole posix_setgid brightgreen/17
+	keyword whole posix_getgroups brightgreen/17
+        keyword whole posix_getlogin brightgreen/17
+	keyword whole posix_getpgrp brightgreen/17
+        keyword whole posix_setsid brightgreen/17
+	keyword whole posix_setpgid brightgreen/17
+        keyword whole posix_getpgid brightgreen/17
+	keyword whole posix_getsid brightgreen/17
+        keyword whole posix_uname brightgreen/17
+	keyword whole posix_times brightgreen/17
+        keyword whole posix_ctermid brightgreen/17
+	keyword whole posix_ttyname brightgreen/17
+        keyword whole posix_isatty brightgreen/17
+	keyword whole posix_getcwd brightgreen/17
+        keyword whole posix_mkfifo brightgreen/17
+	keyword whole posix_getgrnam brightgreen/17
+        keyword whole posix_getgrgid brightgreen/17
+	keyword whole posix_getpwnam brightgreen/17
+        keyword whole posix_getpwuid brightgreen/17
+	keyword whole posix_getrlimit brightgreen/17
+        keyword whole  brightgreen/17
+	keyword whole recode_string brightgreen/17
+        keyword whole recode_file brightgreen/17
+
+        keyword whole ereg brightgreen/17
+	keyword whole ereg_replace brightgreen/17
+        keyword whole eregi brightgreen/17
+	keyword whole eregi_replace brightgreen/17
+        keyword whole split brightgreen/17
+	keyword whole sql_regcase brightgreen/17
+        keyword whole  brightgreen/17
+	keyword whole sem_get brightgreen/17
+        keyword whole sem_acquire brightgreen/17
+	keyword whole sem_release brightgreen/17
+        keyword whole shm_attach brightgreen/17
+	keyword whole shm_detach brightgreen/17
+        keyword whole shm_remove brightgreen/17
+	keyword whole shm_put_var brightgreen/17
+        keyword whole shm_get_var brightgreen/17
+	keyword whole shm_remove_var brightgreen/17
+        keyword whole  brightgreen/17
+	keyword whole session_start brightgreen/17
+        keyword whole session_destroy brightgreen/17
+	keyword whole session_name brightgreen/17
+        keyword whole session_module_name brightgreen/17
+	keyword whole session_save_path brightgreen/17
+        keyword whole session_id brightgreen/17
+	keyword whole session_register brightgreen/17
+        keyword whole session_unregister brightgreen/17
+	keyword whole session_is_registered brightgreen/17
+        keyword whole session_decode brightgreen/17
+	keyword whole session_encode brightgreen/17
+        keyword whole  brightgreen/17
+	keyword whole snmpget brightgreen/17
+        keyword whole snmpset brightgreen/17
+	keyword whole snmpwalk brightgreen/17
+        keyword whole snmpwalkoid brightgreen/17
+	keyword whole snmp_get_quick_print brightgreen/17
+        keyword whole snmp_set_quick_print brightgreen/17
+
+        keyword whole solid_close brightgreen/17
+	keyword whole solid_connect brightgreen/17
+        keyword whole solid_exec brightgreen/17
+	keyword whole solid_fetchrow brightgreen/17
+        keyword whole solid_fieldname brightgreen/17
+	keyword whole solid_fieldnum brightgreen/17
+        keyword whole solid_freeresult brightgreen/17
+	keyword whole solid_numfields brightgreen/17
+        keyword whole solid_numrows brightgreen/17
+	keyword whole solid_result brightgreen/17
+        keyword whole  brightgreen/17
+
+        keyword whole AddCSlashes brightgreen/17
+	keyword whole AddSlashes brightgreen/17
+        keyword whole bin2hex brightgreen/17
+	keyword whole Chop brightgreen/17
+        keyword whole Chr brightgreen/17
+	keyword whole chunk_split brightgreen/17
+        keyword whole convert_cyr_string brightgreen/17
+	keyword whole count_chars brightgreen/17
+        keyword whole crypt brightgreen/17
+	keyword whole echo brightgreen/17
+        keyword whole explode brightgreen/17
+	keyword whole flush brightgreen/17
+        keyword whole get_html_translation_table brightgreen/17
+	keyword whole get_meta_tags brightgreen/17
+        keyword whole htmlentities brightgreen/17
+	keyword whole htmlspecialchars brightgreen/17
+        keyword whole implode brightgreen/17
+	keyword whole join brightgreen/17
+        keyword whole ltrim brightgreen/17
+	keyword whole md5 brightgreen/17
+        keyword whole Metaphone brightgreen/17
+	keyword whole nl2br brightgreen/17
+        keyword whole Ord brightgreen/17
+	keyword whole parse_str brightgreen/17
+        keyword whole print brightgreen/17
+	keyword whole printf brightgreen/17
+        keyword whole quoted_printable_decode brightgreen/17
+	keyword whole QuoteMeta brightgreen/17
+        keyword whole rawurldecode brightgreen/17
+	keyword whole rawurlencode brightgreen/17
+        keyword whole setlocale brightgreen/17
+	keyword whole similar_text brightgreen/17
+        keyword whole soundex brightgreen/17
+	keyword whole sprintf brightgreen/17
+        keyword whole strcasecmp brightgreen/17
+	keyword whole strchr brightgreen/17
+        keyword whole strcmp brightgreen/17
+	keyword whole strcspn brightgreen/17
+        keyword whole strip_tags brightgreen/17
+	keyword whole StripCSlashes brightgreen/17
+        keyword whole StripSlashes brightgreen/17
+	keyword whole stristr brightgreen/17
+        keyword whole strlen brightgreen/17
+	keyword whole strpos brightgreen/17
+        keyword whole strrchr brightgreen/17
+	keyword whole str_repeat brightgreen/17
+        keyword whole strrev brightgreen/17
+	keyword whole strrpos brightgreen/17
+        keyword whole strspn brightgreen/17
+	keyword whole strstr brightgreen/17
+        keyword whole strtok brightgreen/17
+	keyword whole strtolower brightgreen/17
+        keyword whole strtoupper brightgreen/17
+	keyword whole str_replace brightgreen/17
+        keyword whole strtr brightgreen/17
+	keyword whole substr brightgreen/17
+        keyword whole substr_replace brightgreen/17
+	keyword whole trim brightgreen/17
+        keyword whole ucfirst brightgreen/17
+	keyword whole ucwords brightgreen/17
+        keyword whole  brightgreen/17
+	keyword whole sybase_affected_rows brightgreen/17
+        keyword whole sybase_close brightgreen/17
+	keyword whole sybase_connect brightgreen/17
+        keyword whole sybase_data_seek brightgreen/17
+	keyword whole sybase_fetch_array brightgreen/17
+        keyword whole sybase_fetch_field brightgreen/17
+	keyword whole sybase_fetch_object brightgreen/17
+        keyword whole sybase_fetch_row brightgreen/17
+	keyword whole sybase_field_seek brightgreen/17
+        keyword whole sybase_free_result brightgreen/17
+	keyword whole sybase_num_fields brightgreen/17
+        keyword whole sybase_num_rows brightgreen/17
+	keyword whole sybase_pconnect brightgreen/17
+        keyword whole sybase_query brightgreen/17
+	keyword whole sybase_result brightgreen/17
+        keyword whole sybase_select_db brightgreen/17
+
+        keyword whole base64_decode brightgreen/17
+	keyword whole base64_encode brightgreen/17
+        keyword whole parse_url brightgreen/17
+	keyword whole urldecode brightgreen/17
+        keyword whole urlencode brightgreen/17
+
+        keyword whole doubleval brightgreen/17
+	keyword whole empty brightgreen/17
+        keyword whole gettype brightgreen/17
+	keyword whole intval brightgreen/17
+        keyword whole is_array brightgreen/17
+	keyword whole is_double brightgreen/17
+        keyword whole is_float brightgreen/17
+	keyword whole is_int brightgreen/17
+        keyword whole is_integer brightgreen/17
+	keyword whole is_long brightgreen/17
+        keyword whole is_object brightgreen/17
+	keyword whole is_real brightgreen/17
+        keyword whole is_string brightgreen/17
+	keyword whole isset brightgreen/17
+        keyword whole settype brightgreen/17
+	keyword whole strval brightgreen/17
+        keyword whole unset brightgreen/17
+
+        keyword whole  brightgreen/17
+	keyword whole qmail brightgreen/17
+        keyword whole vmailmgr package brightgreen/17
+	keyword whole vm_adduser brightgreen/17
+        keyword whole vm_addalias brightgreen/17
+	keyword whole vm_passwd brightgreen/17
+        keyword whole vm_delalias brightgreen/17
+	keyword whole vm_deluser brightgreen/17
+        keyword whole  brightgreen/17
+	keyword whole wddx_serialize_value brightgreen/17
+        keyword whole wddx_serialize_vars brightgreen/17
+	keyword whole wddx_packet_start brightgreen/17
+        keyword whole wddx_packet_end brightgreen/17
+	keyword whole wddx_add_vars brightgreen/17
+        keyword whole wddx_deserialize brightgreen/17
+
+        keyword whole xml_parser_create brightgreen/17
+	keyword whole xml_set_object brightgreen/17
+        keyword whole xml_set_element_handler brightgreen/17
+	keyword whole xml_set_character_data_handler brightgreen/17
+        keyword whole xml_set_processing_instruction_handler brightgreen/17
+	keyword whole xml_set_default_handler brightgreen/17
+        keyword whole xml_set_unparsed_entity_decl_handler brightgreen/17
+	keyword whole xml_set_notation_decl_handler brightgreen/17
+        keyword whole xml_set_external_entity_ref_handler brightgreen/17
+	keyword whole xml_parse brightgreen/17
+        keyword whole xml_get_error_code brightgreen/17
+	keyword whole xml_error_string brightgreen/17
+        keyword whole xml_get_current_line_number brightgreen/17
+	keyword whole xml_get_current_column_number brightgreen/17
+        keyword whole xml_get_current_byte_index brightgreen/17
+	keyword whole xml_parser_free brightgreen/17
+        keyword whole xml_parser_set_option brightgreen/17
+	keyword whole xml_parser_get_option brightgreen/17
+        keyword whole utf8_decode brightgreen/17
+	keyword whole utf8_encode brightgreen/17
+        keyword whole  brightgreen/17
+
+        keyword whole gzclose brightgreen/17
+	keyword whole gzeof brightgreen/17
+        keyword whole gzfile brightgreen/17
+	keyword whole gzgetc brightgreen/17
+        keyword whole gzgets brightgreen/17
+	keyword whole gzgetss brightgreen/17
+        keyword whole gzopen brightgreen/17
+	keyword whole gzpassthru brightgreen/17
+        keyword whole gzputs brightgreen/17
+	keyword whole gzread brightgreen/17
+        keyword whole gzrewind brightgreen/17
+	keyword whole gzseek brightgreen/17
+        keyword whole gztell brightgreen/17
+	keyword whole gzwrite brightgreen/17
+        keyword whole readgzfile brightgreen/17
+
+# Rest functions
+
+    	keyword whole include brightgreen/17
+    	keyword whole if brightgreen/17
+    	keyword whole else brightgreen/17
+    	keyword whole if brightgreen/17
+    	keyword whole or brightgreen/17
+    	keyword whole switch brightgreen/17
+    	keyword whole case brightgreen/17
+    	keyword whole break brightgreen/17
+    	keyword whole global brightgreen/17
+    	keyword whole function brightmagenta/17
+
+context /\* \*/ white/26
+

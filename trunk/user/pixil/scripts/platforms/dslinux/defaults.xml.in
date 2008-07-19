@@ -1,0 +1,406 @@
+<global>
+
+<preferences>
+
+<category name="language">
+<pref key="default" type=STR>english</pref>
+</category>
+
+<category name="backlight">
+<pref key="level" type=INT>1</pref>
+<pref key="ac_to" type=INT>200</pref>
+<pref key="bat_to" type=INT>30</pref>
+<pref key="mode" type=INT>1</pref>
+</category>
+
+<category name="pwrmgmt">
+<pref key="ac_to" type=INT>500</pref>
+<pref key="bat_to" type=INT>45</pref>
+</category>
+
+<category name="power">
+<pref key="ac_off" type=BOOL>0</pref>
+<pref key="ac_offval" type=INT>120</pref>
+<pref key="bat_off" type=BOOL>1</pref>
+<pref key="bat_offval" type=INT>120</pref>
+</category>
+
+<category name="backlight">
+<pref key="ac_level" type=INT>100</pref>
+<pref key="bat_level" type=INT>100</pref>
+</category>
+
+<category name="network">
+<pref key="location" type=STR>home</pref>
+<pref key="state" type=BOOL>on</pref>
+</category>
+
+<category name="sounds">
+<pref key="state" type=BOOL>on</pref>
+</category>
+
+<category name="alarms">
+<pref key="state" type=BOOL>on</pref>
+<pref key="sound" type=BOOL>on</pref>
+</category>
+
+<category name="syslog">
+<pref key="critical">@prefix@/var/log/critical.log</pref>
+<pref key="error">@prefix@/var/log/error.log</pref>
+<pref key="message">@prefix@/var/log/message.log</pref>
+<pref key="debug">@prefix/var/log/debug.log</pref>
+</category>
+
+<category name="timezone">
+<pref key="home_tz" type=STR>Salt Lake City,UT,US/Mountain</pref>
+<pref key="visit_tz" type=STR>London,EN,Europe/London</pref>
+<pref key="home_active" type=BOOL>Yes</pref>
+</category>
+
+<category name="scripts">
+<pref key="ifup">@prefix@/share/scripts/pixil-ifup</pref>
+<pref key="ifdown">@prefix@/share/scripts/pixil-ifdown</pref>
+<pref key="netconf">@prefix@/share/scripts/pixil-network.conf</pref>
+</category>
+
+<category name="appsizes">
+<pref key="w_x" type=INT>0</pref>
+<pref key="w_y" type=INT>0</pref>
+<pref key="w_w" type=INT>240</pref>
+<pref key="w_h" type=INT>282</pref>
+<pref key="mb_x" type=INT>8</pref>
+<pref key="mb_y" type=INT>6</pref>
+<pref key="mb_w" type=INT>80</pref>
+<pref key="mb_h" type=INT>15</pref>
+<pref key="menu_x" type=INT>1</pref>
+<pref key="menu_y" type=INT>4</pref>
+<pref key="menu_w" type=INT>238</pref>
+<pref key="menu_h" type=INT>25</pref>
+<pref key="cl_x" type=INT>147</pref>
+<pref key="cl_y" type=INT>6</pref>
+<pref key="cl_w" type=INT>85</pref>
+<pref key="cl_h" type=INT>15</pref>
+<pref key="button_x" type=INT>8</pref>
+<pref key="button_y" type=INT>264</pref>
+<pref key="button_w" type=INT>60</pref>
+<pref key="button_h" type=INT>15</pref>
+</category>
+
+<category name="appfonts">
+<pref key="lbl_font" type=INT>8</pref>
+<pref key="lbl_size" type=INT>12</pref>
+<pref key="txt_font" type=INT>8</pref>
+<pref key="txt_size" type=INT>12</pref>
+<pref key="big_font" type=INT>9</pref>
+<pref key="big_size" type=INT>16</pref>
+<pref key="sm_font" type=INT>15</pref>
+<pref key="sm_size" type=INT>6</pref>
+</category>
+
+<category name="appcolors">
+<pref key="appbg" type=COLOR>#FFFFFF</pref>
+<pref key="appfg" type=COLOR>#000000</pref>
+<pref key="appsel" type=COLOR>#CCCCCC</pref>
+<pref key="buttonface" type=COLOR>#0066CC</pref>
+<pref key="buttontext" type=COLOR>#FFFFFF</pref>
+<pref key="buttonpush" type=COLOR>#333333</pref>
+<pref key="button3dlite" type=COLOR>#FFFFFF</pref>
+<pref key="button3ddark" type=COLOR>#333333</pref>
+<pref key="hilight" type=COLOR>#0066CC</pref>
+<pref key="hilighttext" type=COLOR>#FFFFFF</pref>
+<pref key="hilightlite" type=COLOR>#FFFFFF</pref>
+<pref key="hilightdark" type=COLOR>#CCCCCC</pref>
+<pref key="titlefg" type=COLOR>#FFFFFF</pref>
+<pref key="titlebg" type=COLOR>#0066CC</pref>
+<pref key="scrollface" type=COLOR>#0066CC</pref>
+<pref key="scrolllite" type=COLOR>#000000</pref>
+<pref key="scrolldark" type=COLOR>#000000</pref>
+<pref key="scrolltray" type=COLOR>#FFFFFF</pref>
+<pref key="radiofill" type=COLOR>#000000</pref>
+<pref key="editorbg" type=COLOR>#FFFFFF</pref>
+<pref key="editorfg" type=COLOR>#000000</pref>
+<pref key="editorsel" type=COLOR>#CCCCCC</pref>
+</category>
+
+<category name="SystemConfigurator">
+<pref key="default_util" type=STR>userinfo</pref>
+</category>
+
+</preferences>
+</global>
+
+<capabilities>
+<cap name="nxsync">nxtodo nxschedule nxaddress nxnotepad</cap>
+<cap name="nxgblsearch">nxtodo nxschedule nxaddress nxnotepad</cap>
+<cap name="SystemConf">@prefix@/share/sysconfig</cap>
+</capabilities>
+
+<screentop>
+
+<directories>
+<icondir>@prefix@/share/images</icondir>
+<bindir>@prefix@/bin</bindir>
+<themedir>@prefix@/share/themes/</themedir>
+</directories>
+
+<categories>
+
+<category name="pim">
+<title>PIM</title>
+<applist>nxtodo nxschedule nxaddress nxnotepad calc nxfind pimsync</applist>
+</category>
+
+<category name="games">
+<title>Games</title>
+<applist>nxbill minesweep snake nxdoom</applist>
+</category>
+
+<category name="utils">
+<title>Utilities</title>
+<applist>worldclock netconfig sysconfig loadmon nxterm poweroff</applist>
+</category>
+
+<category name="internet">
+<title>Internet</title>
+<applist>email viewml</applist>
+</category>
+
+<category name="multimedia">
+<title>Multimedia</title>
+<applist>fltksplay</applist>
+</category>
+
+</categories>
+
+<inputs>
+
+<input name="nxkeyboard">
+<title>Keyboard</title>
+<app>nxkeyboard</app>
+<icon>nxkbd.gif</icon>
+</input>
+
+<input name="nxscribble">
+<title>Handwriting</title>
+<app>nxscribble</app>
+<icon>nxscribble.gif</icon>
+</input>
+
+</inputs>
+
+<settings>
+
+<bgimage>pixilsplash_dslinux.gif</bgimage>
+<bgstyle>bottom</bgstyle>
+
+<applets>
+<applet name="date">date</applet>
+<applet name="backlight">backlight</applet>
+<applet name="battery">battery</applet>
+</applets>
+
+<colors>
+<color name="bgcolor">#FFFFFF</color>
+<color name="iconbgcolor">#FFFFFF</color>
+<color name="iconfgcolor">#000000</color>
+<color name="taskbar">#0066CC</color>
+</colors>
+
+</settings>
+
+</screentop>
+
+<application>
+
+<app name="minesweep">
+<title>Mine Sweeper</title>
+<exec>@prefix@/bin/minesweep</exec>
+<icon>mine_sweeper.gif</icon>
+<workdir>@prefix@/</workdir>
+</app>
+
+<app name="nxdoom">
+<title>nxDoom</title>
+<exec>@prefix@/bin/nxdoom</exec>
+<icon>nxdoom.gif</icon>
+<workdir>@prefix@/share/doom/</workdir>
+</app>
+
+<app name="snake">
+<title>Snake</title>
+<exec>@prefix@/bin/nxsnake</exec>
+<icon>snake.gif</icon>
+<workdir>@prefix@/</workdir>
+</app>
+
+<app name="pimsync">
+<title>Sync</title>
+<exec>@prefix@/bin/pimsync</exec>
+<icon>synchronize.gif</icon>
+</app>
+
+<app name="syncagent">
+<exec>@prefix@/bin/syncagent</exec>
+</app>
+
+<app name="nxfind">
+<title>Global Search</title>
+<exec>@prefix@/bin/gfind</exec>
+<icon>global_search.gif</icon>
+</app>
+
+<app name="fltksplay">
+<title>MP3 Player</title>
+<exec>@prefix@/bin/pixil-splay</exec>
+<icon>mp3_player.gif</icon>
+<preferences>
+<category name="paths">
+<pref key="mp3dir" type=STR>@prefix@/share/mp3/</pref>
+</category>
+</preferences>
+</app>
+
+<app name="nxflash">
+<title>Flash Player</title>
+<exec>@prefix@/bin/nxflashplay</exec>
+<defargs>@prefix@/share/flash/ScreenSaver.swf</defargs>
+</app>
+
+<app name="nxtodo">
+<title>ToDo</title>
+<exec>@prefix@/bin/todo</exec>
+<workdir>@prefix@/share/data/</workdir>
+<icon>to_do.gif</icon>
+<defargs>-p @prefix@/share/data/</defargs>
+</app>
+
+<app name="nxschedule">
+<title>Scheduler</title>
+<exec>@prefix@/bin/schedule</exec>
+<workdir>@prefix@/share/data/</workdir>
+<icon>scheduler.gif</icon>
+<defargs>-p @prefix@/share/data/</defargs>
+<preferences>
+<category name="alarm">
+<pref key="alarm" type=STR>@prefix@/share/sounds/alarm.wav</pref>
+</category>
+</preferences>
+</app>
+
+<app name="calc">
+<title>Calculator</title>
+<exec>@prefix@/bin/calc</exec>
+<workdir>@prefix@/share/data/</workdir>
+<icon>calculator.gif</icon>
+<defargs></defargs>
+</app>
+
+<app name="nxaddress">
+<title>Address Book</title>
+<exec>@prefix@/bin/address</exec>
+<workdir>@prefix@/share/data/</workdir>
+<icon>address_book.gif</icon>
+<defargs>-p @prefix@/share/data/</defargs>
+</app>
+
+<app name="nxnotepad">
+<title>Notes</title>
+<exec>@prefix@/bin/notepad</exec>
+<workdir>@prefix@/share/data</workdir>
+<icon>notes.gif</icon>
+<defargs>-p @prefix@/share/data/</defargs>
+</app>
+
+<app name="poweroff">
+<title>Power Off</title>
+<exec>/bin/poweroff</exec>
+<workdir>/bin</workdir>
+<icon>terminal.gif</icon>
+<defargs></defargs>
+</app>
+
+<app name="worldclock">
+<title>World Clock</title>
+<exec>@prefix@/bin/wclock</exec>
+<workdir>@prefix@/share/worldclock/</workdir>
+<icon>clock.gif</icon>
+<defargs></defargs>
+<preferences>
+<category name="settings">
+<pref key="datapath" type=STR>@prefix@/share/worldclock/</pref>
+<pref key="local_city" type=STR>Salt Lake City</pref>
+<pref key="remote_city" type=STR>New York</pref>
+</category>
+</preferences>
+</app>
+
+<app name="email">
+<title>Email</title>
+<exec>@prefix@/bin/mail</exec>
+<workdir>@prefix@/share/data/</workdir>
+<icon>email.gif</icon>
+<defargs>-p @prefix@/share/data/</defargs>
+</app>
+
+<app name="viewml">
+<title>ViewML Web Browser</title>
+<exec>@prefix@/bin/viewml</exec>
+<icon>viewml.gif</icon>
+<defargs>-ufile://@prefix@/share/html/index.html -w240 -h320</defargs>
+</app>
+
+<app name="nxbill">
+<title>nxBill</title>
+<exec>@prefix@/bin/nxbill</exec>
+<workdir>@prefix@/share/nxbill/</workdir>
+<icon>nxbill.gif</icon>
+<defargs>-I @prefix@/share/nxbill</defargs>
+</app>
+
+<app name="netconfig">
+<title>Network Config</title>
+<exec>@prefix@/bin/netconfig</exec>
+<workdir>@prefix@/share/data/</workdir>
+<icon>network_config.gif</icon>
+<defargs></defargs>
+</app>
+
+<app name="loadmon">
+<title>Load Monitor</title>
+<exec>@prefix@/bin/nxloadmon</exec>
+<workdir>@prefix@/share/data/</workdir>
+<icon>loadmonitor.gif</icon>
+<defargs>foo bar</defargs>
+</app>
+
+<app name="nxterm">
+<title>Linux Terminal</title>
+<exec>@prefix@/bin/nxterm</exec>
+<workdir>@prefix@/</workdir>
+<icon>terminal.gif</icon>
+<defargs></defargs>
+</app>
+
+<app name="nxkeyboard">
+<title>Keyboard</title>
+<exec>@prefix@/bin/nxkeyboard</exec>
+<workdir>@prefix@/</workdir>
+<defargs>-d @prefix@/share/keymaps -m com</defargs>
+</app>
+
+<app name="nxscribble">
+<title>Handwriting</title>
+<exec>@prefix@/bin/nxscribble</exec>
+<workdir>@prefix@/share/scribble</workdir>
+<defargs></defargs>
+</app>
+
+<app name="sysconfig">
+<title>System Config</title>
+<exec>@prefix@/bin/sysconfig</exec>
+<workdir>@prefix@/bin</workdir>
+<defargs></defargs>
+<icon>sys_config.gif</icon>
+</app>
+
+</application>

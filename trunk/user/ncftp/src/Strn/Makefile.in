@@ -1,0 +1,152 @@
+#
+# Strn makefile
+#
+VER=@STRN_VERSION@
+prefix=@prefix@
+MAN=@mandir@
+SHELL=/bin/sh
+.SUFFIXES: .c .o .so
+LIB=libStrn.a
+LIBSO=libStrn.so.1
+LIBSOS=libStrn.so
+CC=@CC@
+CPPFLAGS=@CPPFLAGS@
+#CFLAGS=-O2
+CFLAGS=@CFLAGS@
+DEFS=@DEFS@@NDEFS@
+
+CFILES=\
+	DStrCat.c      DStrFree.c  Dynscpy.c	Strncpy.c   strtokc.c \
+	DStrCatList.c  DStrInit.c  Dynsrecpy.c	Strnpcat.c  \
+	DStrCpy.c      DStrNew.c   StrFree.c	Strnpcpy.c \
+	DStrCpyList.c  Dynscat.c   Strncat.c	Strntok.c
+
+HFILES=\
+	DStrInternal.h	Strn.h	   syshdrs.h
+
+OBJS=\
+	DStrCat.o      DStrFree.o  Dynscpy.o	Strncpy.o   strtokc.o \
+	DStrCatList.o  DStrInit.o  Dynsrecpy.o	Strnpcat.o  \
+	DStrCpy.o      DStrNew.o   StrFree.o	Strnpcpy.o \
+	DStrCpyList.o  Dynscat.o   Strncat.o	Strntok.o
+
+SOBJS=\
+	DStrCat.so      DStrFree.so  Dynscpy.so	Strncpy.so   strtokc.so \
+	DStrCatList.so  DStrInit.so  Dynsrecpy.so  Strnpcat.so \
+	DStrCpy.so      DStrNew.so   StrFree.so	Strnpcpy.so \
+	DStrCpyList.so  Dynscat.so   Strncat.so	Strntok.so
+
+all: static
+	-@echo "Done making Strn."
+
+static: $(LIB)
+
+$(LIB): $(OBJS)
+	@CCDV@@AR@ r $(LIB) $(OBJS)
+	-@chmod 644 "$(LIB)"
+	-@RANLIB@ "$(LIB)"
+	-@echo "$(VER)" > Strn.version
+	-@/bin/ls -l "$(LIB)"
+
+.c.o:
+	@CCDV@$(CC) $(CFLAGS) $(DEFS) $(CPPFLAGS) $< -c
+
+.c.so:
+	@CCDV@$(CC) -fpic $(CFLAGS) $(CPPFLAGS) $(DEFS) $*.c -c -o $*.so
+
+dynamic: $(LIBSO)
+
+shared: $(LIBSO)
+
+so: $(LIBSO)
+
+$(LIBSO): $(SOBJS)
+	/bin/rm -f "$(LIBSO)" "$(LIBSOS)"
+	$(CC) -shared "-Wl,-soname,$(LIBSO)" -o "$(LIBSO)" $(SOBJS)
+	/bin/ln -s "$(LIBSO)" "$(LIBSOS)"
+	-@/bin/ls -l "$(LIBSOS)" "$(LIBSO)"
+
+soinstall: $(LIBSO)
+	cp "$(LIBSO)" "$(prefix)/lib/$(LIBSO)"
+	( cd "$(prefix)/lib" ; /bin/ln -s "$(LIBSO)" "$(LIBSOS)" )
+	cp Strn.h "$(prefix)/include/Strn.h"
+	-chmod a+r "$(prefix)/lib/$(LIBSO)" "$(prefix)/include/Strn.h"
+
+tester: $(LIB) tester.c
+	$(CC) $(CFLAGS) tester.c -o tester -I. -L. -lStrn
+
+clean:
+	/bin/rm -rf "$(LIB)" "$(LIBSO)" *.@OBJEXT@ *.so tester core *.pch SunWS_cache
+
+distclean: clean
+	-/bin/rm -f config.h Makefile config.status config.cache config.log Strn.version
+
+install_min:
+	if test ! -d $(prefix)/include ; then mkdir -p "$(prefix)/include" ; fi
+	if test ! -d $(prefix)/lib ; then mkdir -p "$(prefix)/lib" ; fi
+	cp "$(LIB)" "$(prefix)/lib"
+	-@@RANLIB@ "$(prefix)/lib/$(LIB)"
+	cp Strn.h "$(prefix)/include/Strn.h"
+	-chmod 664 "$(prefix)/include/Strn.h" "$(prefix)/lib/$(LIB)"
+
+install:
+	if test ! -d $(prefix)/include ; then mkdir -p "$(prefix)/include" ; fi
+	if test ! -d $(prefix)/lib ; then mkdir -p "$(prefix)/lib" ; fi
+	cp "$(LIB)" Strn.version "$(prefix)/lib"
+	-@@RANLIB@ "$(prefix)/lib/$(LIB)"
+	cp Strn.h "$(prefix)/include/Strn.h"
+	-chmod 664 "$(prefix)/include/Strn.h" "$(prefix)/lib/Strn.version" "$(prefix)/lib/$(LIB)"
+	-cp Strn.3 "$(MAN)/man3/Strn.3"
+	-chmod 664 "$(MAN)/man3/Strn.3"
+	-ln "$(MAN)/man3/Strn.3" "$(MAN)/man3/Strncpy.3"
+	-ln "$(MAN)/man3/Strn.3" "$(MAN)/man3/Strncat.3"
+
+uninstall:
+	/bin/rm -f "$(prefix)/lib/$(LIB)" "$(prefix)/include/Strn.h" "$(prefix)/lib/Strn.version"
+
+PACKAGE=configure Makefile.in configure.in config.h.in Strn.dsp Strn.dsw tester.c $(CFILES) $(HFILES)
+
+TMPDIR=/tmp
+TARDIR=Strn
+TARFILE=$(TARDIR).tar
+TGZFILE=$(TARDIR).tgz
+
+tarcp:
+	-@mkdir -p $(TMPDIR)/TAR/$(TARDIR)
+	-@chmod ga+r $(PACKAGE)
+	-@chmod 755 $(TMPDIR)/TAR/$(TARDIR)
+	cp -pr $(PACKAGE) $(TMPDIR)/TAR/$(TARDIR)
+
+tar: $(PACKAGE)
+	-@mkdir $(TMPDIR)/TAR
+	-@mkdir $(TMPDIR)/TAR/$(TARDIR)
+	-@chmod ga+r $(PACKAGE)
+	-@chmod 755 $(TMPDIR)/TAR/$(TARDIR)
+	cp -pr $(PACKAGE) $(TMPDIR)/TAR/$(TARDIR)
+	( cd $(TMPDIR)/TAR ; @TAR@ @TARFLAGS@ $(TARFILE) ./$(TARDIR) )
+	cp $(TMPDIR)/TAR/$(TARFILE) .
+	-@chmod 644 $(TARFILE)
+	-@rm -rf $(TMPDIR)/TAR
+	-@ls -l $(TARFILE)
+
+gz: tar
+	gzip -c $(TARFILE) > $(TGZFILE)
+	-@rm $(TARFILE)
+	-@chmod 644 $(TGZFILE)
+	-@ls -l $(TGZFILE)
+
+DStrCat.o: DStrCat.c Strn.h DStrInternal.h syshdrs.h
+DStrCatList.o: DStrCatList.c Strn.h DStrInternal.h syshdrs.h
+DStrCpy.o: DStrCpy.c Strn.h DStrInternal.h syshdrs.h
+DStrCpyList.o: DStrCpyList.c Strn.h DStrInternal.h syshdrs.h
+DStrFree.o: DStrFree.c Strn.h DStrInternal.h syshdrs.h
+DStrInit.o: DStrInit.c Strn.h DStrInternal.h syshdrs.h
+DStrNew.o: DStrNew.c Strn.h DStrInternal.h syshdrs.h
+Dynscpy.o: Dynscpy.c Strn.h syshdrs.h
+Dynscat.o: Dynscat.c Strn.h syshdrs.h
+Strncat.o: Strncat.c Strn.h syshdrs.h
+Strncpy.o: Strncpy.c Strn.h syshdrs.h
+Strnpcat.o: Strnpcat.c Strn.h syshdrs.h
+Strnpcpy.o: Strnpcpy.c Strn.h syshdrs.h
+Strntok.o: Strntok.c Strn.h syshdrs.h
+strtokc.o: strtokc.c Strn.h syshdrs.h

@@ -1,0 +1,621 @@
+# Warning: Structure of this file has changed completely with version 3.0
+#
+# All lines starting with # or empty lines are thrown away.
+# Lines starting in the first column should have following format:
+#
+# keyword/descNL, i.e. everything after keyword/ until new line is desc
+#
+# keyword can be: 
+#
+#    shell (desc is, when starting with a dot, any extension (no wildcars), 
+#          i.e. matches all the files *desc . Example: .tar matches *.tar;
+#          if it doesn't start with a dot, it matches only a file of that name)
+#
+#    regex (desc is an extended regular expression)
+#          Please note that we are using the GNU regex library and thus
+#          \| matches the literal | and | has special meaning (or) and
+#          () have special meaning and \( \) stand for literal ( ).
+#
+#    type  (file matches this if `file %f` matches regular expression desc
+#          (the filename: part from `file %f` is removed))
+#
+#    directory (matches any directory matching regular expression desc)
+#
+#    include (matches an include directive)
+#
+#    default (matches any file no matter what desc is)
+#
+# Other lines should start with a space or tab and should be in the format:
+#
+# keyword=commandNL (with no spaces around =), where keyword should be: 
+#
+#    Open (if the user presses Enter or doubleclicks it), 
+#
+#    View (F3), Edit (F4), Drop (user drops some files on it) or any other
+#
+#    user defined name (those will be listed in the extension dependent popup
+#    menu). This is not implemented yet for the text edition but will be
+#    implemented some day so feel free to add useful actions here.
+#
+#    Title is the default icon title for objects. %p is expanded into the
+#    name of that file and %d/%p to a name with full path. Default title
+#    (if none is specified) is %p
+#
+#    Include is the keyword used to add any further entries from an include/
+#    section
+#
+# command is any one-line shell command, with the following substitutions:
+#
+# %% -> % character
+# %p -> name of the current file (without path, but pwd is its path)
+# %f -> name of the current file. Unlike %p, if file is located on a 
+#	non-local virtual filesystem, i.e. either tarfs, mcfs or ftpfs,
+#	then the file will be temporarily copied into a local directory
+#	and %f will be the full path to this local temporal file.
+#	If you don't want to get a local copy and want to get the
+#	virtual fs path (like /#ftp:ftp.cvut.cz/pub/hungry/xword), then
+#	use %d/%p instead of %f.
+# %d -> name of the current directory (pwd, without trailing slash)
+# %s -> "selected files", i.e. space separated list of tagged files if any
+#       or name of the current file
+# %t -> list of tagged files
+# %u -> list of tagged files (they'll be untaged after the command)
+#
+# (If these 6 letters are in uppercase, they refer to the other panel.
+# But you shouldn't have to use it in this file.)
+#
+#
+# %cd -> the rest is a path mc should change into (cd won't work, since it's
+#	a child process).  %cd handles even vfs names.
+#
+# %view -> the command you type will be piped into mc's internal file viewer
+#	if you type only the %view and no command, viewer will load %f file
+#	instead (i.e. no piping, so it is different to %view cat %f)
+#	%view may be directly followed by {} with a list of any of
+#	ascii (Ascii mode), hex (Hex mode), nroff (color highlighting for
+#	text using backspace for bold and underscore) and unform
+#	(no highlighting for nroff sequences) separated by commas.
+#
+# %var -> You use it like this: %var{VAR:default}.  This macro will expand
+#       to the value of the VAR variable in the environment if it's set
+#       otherwise the value in default will be used.  This is similar to
+#       the Bourne shell ${VAR-default} construct.
+#
+# %q -> will be replaced with a list of files user dropped on it
+#	with full pathnames (only applicable in the Drop command).
+#
+# Rules are applied from top to bottom, thus the order is important.
+# If some actions are missing, search continues as if this target didn't
+# match (i.e. if a file matches the first and second entry and View action
+# is missing in the first one, then on pressing F3 the View action from
+# the second entry will be used. default should catch all the actions.
+#
+# Any new entries you develop for you are always welcome if they are
+# useful on more than one system.  You can send your modifications
+# by e-mail to mc-devel@gnome.org
+
+
+### Changes ###
+#
+# Reorganization: 2000-05-01 Michal Svec <rebel@penguin.cz>
+
+
+### TODO ###
+#
+# Postscript	Open: ps2svga [gs -DEVICE=jpeg|zgv or something]
+# Images		asciiview
+# RTF		rtf2html
+# 
+# All X Apps	[Nothing/Warning] if no DISPLAY
+# Not found	[Default/Warning]
+# Empty Output	[Default/Warning]
+# Edit:		CopyOut+EDIT+CopyIn
+# Security	Check gzip/bzip EDIT (mktemp)
+# 
+# Maybe:	Open/XOpen/GOpen/KOpen/... for Console/X/GNOME/KDE/etc.
+
+
+### Sources ###
+
+# C
+shell/.c
+	Open=%var{EDITOR:vi} %f
+	Compile=%var{CC:cc} -O -c %f
+	Link=%var{CC:cc} -O -o %d/`basename %f .c` %f
+
+# Fortran
+shell/.f
+	Open=%var{EDITOR:vi} %f
+	Compile=f77 -O -c %f
+	Compile and Link=f77 -O %f
+	
+# Header
+shell/.h
+	Open=%var{EDITOR:vi} %f
+
+# Object
+shell/.o
+	#Open=%var{PAGER:more} %f
+	View=%view{ascii} nm %f
+	Link=%var{CC:cc} -O %f
+	Disassemble=%view{ascii} objdump -d -r %f
+
+# Asm
+shell/.s
+	Open=%var{EDITOR:vi} %f
+	Assemble=%var{CC:cc} -O -c %f
+	Link=%var{CC:cc} -O -o %d/`basename %f .s` %f
+
+# C++
+regex/\.(C|cc|[Cc][Pp][Pp])$
+	Open=%var{EDITOR:vi} %f
+	Compile=c++ -O -c %f
+	Link=c++ -O -o %d/`basename %f .c` %f
+
+### Documentation ###
+
+# Texinfo
+regex/\.(te?xi|texinfo)$
+
+# GNU Info page
+type/^Info\ text
+	Open=info -f %f
+
+shell/.info
+	Open=info -f %f
+
+# Manual page
+# Exception - .so libraries are not manual pages
+regex/\.(so|so\.[0-9\.]*)$
+	View=%view{ascii} nm %f
+
+regex/(([^0-9]|^[^\.]*)\.([1-9][A-Za-z]*|n)|\.man)$
+	Open=groff  -Tlatin1 -mandoc %f | %var{PAGER:more}
+	View=%view{ascii,nroff} groff  -Tlatin1 -mandoc %f
+
+# Troff with me macros.
+# Exception - "read.me" is not a nroff file.
+shell/read.me
+	Open=
+	View=
+
+shell/.me
+	Open=groff  -Tlatin1 -me %f | %var{PAGER:more}
+	View=%view{ascii,nroff} groff  -Tlatin1 -me %f
+
+# Troff with ms macros.
+shell/.ms
+	Open=groff  -Tlatin1 -ms %f | %var{PAGER:more}
+	View=%view{ascii,nroff} groff  -Tlatin1 -ms %f
+
+# Manual page - compressed
+regex/([^0-9]|^[^\.]*)\.([1-9][a-z]?|n)\.g?[Zz]$
+	Open=gzip -dc %f | groff  -Tlatin1 -mandoc | %var{PAGER:more}
+	View=%view{ascii,nroff} gzip -dc %f | groff  -Tlatin1 -mandoc
+
+regex/([^0-9]|^[^\.]*)\.([1-9][a-z]?|n)\.bz$
+	Open=bzip -dc %f | groff  -Tlatin1 -mandoc | %var{PAGER:more}
+	View=%view{ascii,nroff} bzip -dc %f | groff  -Tlatin1 -mandoc
+
+regex/([^0-9]|^[^\.]*)\.([1-9][a-z]?|n)\.bz2$
+	Open=bzip2 -dc %f | groff  -Tlatin1 -mandoc | %var{PAGER:more}
+	View=%view{ascii,nroff} bzip2 -dc %f | groff  -Tlatin1 -mandoc
+
+
+### Images ###
+
+type/^GIF
+	Include=image-options
+
+type/^JPEG
+	Include=image-options
+
+type/^(sticky JPEG)
+	Include=image-options
+
+
+type/^PC\ bitmap
+	Include=image-options
+
+type/^PNG
+	Include=image-options
+
+type/^TIFF
+	Include=image-options
+
+type/^PBM
+	Include=image-options
+
+type/^PGM
+	Include=image-options
+
+type/^PPM
+	Include=image-options
+	
+type/^(GIMP XCF)
+	Open=gimp %f > /dev/null 2>&1
+
+shell/.xbm
+	#Open=bitmap %f
+	Open=xnview %f > /dev/null 2>&1
+
+shell/.xpm
+	Include=image-options
+	#View=xnview %f
+
+regex/\.([Pp][Cc][Xx])$
+	#Include=image-options
+	open=xnview %f > /dev/null 2>&1
+
+include/image-options
+	Open=if [ "$DISPLAY" = "" ]; then zgv %f; else (gqview %f > /dev/null 2>&1 &); fi
+	View=%view{ascii} identify %f
+	#View=%view{ascii} asciiview %f
+	Set root window to this image=background-properties --setwallpaper %f &
+	Display this file=ee %f &
+
+
+### Sound files ###
+
+regex/\.(wav|WAV|Wav|snd|SND|Snd|voc|VOC|Voc|au|AU|Au)$
+       Open=play %f
+
+regex/\.(mod|MOD|Mod|s3m|S3M|S3m|xm|XM|Xm)$
+       Open=mikmod %f
+       #Open=tracker %f
+
+regex/\.(wav22|WAV22)$
+       Open=vplay -s 22 %f
+
+regex/\.([Mm][Pp]3)$
+	Open=mpg123 %f
+	View=%view{ascii} mpg123 -tn1 %f 2>&1|grep -E "^(Title|Album|Comment|MPEG|$)"
+	
+regex/\.([Oo][Gg][Gg])$
+	Open=ogg123 %f
+
+
+### Multimedia ###
+
+# Macromedia Flash .swf
+regex/\.([sS][Ww][Ff])$
+    Open=gflashplayer %f > /dev/null 2>&1 &
+
+regex/\.(mpe?g|MPE?G|Mpe?g)$
+	Open=mplayer %f >/dev/null 2>&1 &
+	#Open=mtvp %f 2>/dev/null&
+	#Open=mtv %f 2>/dev/null&
+	#Open=gtv %f 2>/dev/null&
+	#Open=plaympeg %f 2>/dev/null&
+	#Open=mpeg_play %f &
+	#Open(big)=mpeg_play -dither 2x2 %f &
+	#Open(gray)=mpeg_play -dither gray %f &
+
+regex/\.(avi|AVI|Avi|mov|MOV|Mov|asf|ASF|Asf)$
+	#Open=xanim %f 2>/dev/null&
+	Open=mplayer %f >/dev/null 2>&1 &
+
+regex/\.(rm|RM|Rm|ram|RAM|Ram)$
+	Open=realplay %f&
+
+
+### Documents ###
+
+# Postscript
+type/^PostScript
+	Open=gv %f&
+	View=%view{ascii} ps2ascii %f
+	View with GhostView=gv %f
+
+# PDF
+type/^PDF
+	Open=xpdf %f&
+	#Open=acroread %f&
+	#Open=ghostview %f&
+	View=%view{ascii} pdftotext %f -
+
+# html
+regex/\.([Hh][Tt][Mm][Ll]|[Hh][Tt][Mm]|[Ss][Hh][Tt][Mm][Ll])$
+	#Open=if echo "%d/%p" | grep ^ftp; then $viewer %d/%p; else $viewer file:%p; fi
+	#Open=if [ x$DISPLAY = x ]; then links %f; else (mozilla file://%d/%f > /dev/null 2>&1 &); fi
+	Open=if [ x$DISPLAY = x ]; then links %f; else (galeon -n %d/%f > /dev/null 2>&1 &); fi
+	#Open=if [ x$DISPLAY = x ]; then links %f; else (opera -newwindow %d/%f > /dev/null 2>&1 &); fi
+	#Open=if [ x$DISPLAY = x ]; then links %f; else (phoenix file://%d/%f > /dev/null 2>&1 &); fi
+	View=%view{ascii} lynx -dump -force_html %f; 
+	Run with AppletViewer=appletviewer %f
+	View with lynx=lynx file://%f
+
+# StarOffice and OpenOffice
+shell/.sdw
+	Open=soffice %f
+
+# AbiWord
+shell/.abw
+	Open=abiword %f
+
+# Microsoft Word Document
+regex/\.([Dd][Oo][Cc]|DO[CT]|[Ww]ri|WRI)$
+	View=%view{ascii} catdoc -w %f || word2x -f text %f - || strings %f
+type/^Microsoft\ Word
+	View=%view{ascii} catdoc -w %f || word2x -f text %f - || strings %f
+
+# Microsoft Excel Worksheet
+regex/\.([Xx][Ll][Ss]|XL[SW])$
+	View=%view{ascii} xls2csv %f || strings %f
+type/^Microsoft\ Excel
+	View=%view{ascii} xls2csv %f || strings %f
+
+# Framemaker
+type/^FrameMaker
+	Open=fmclient -f %f
+
+# DVI
+regex/\.([Dd]vi|DVI)$
+	Open=if [ x$DISPLAY = x ]; then dvisvga %f; else (xdvi %f &); fi
+	View=%view{ascii} dvi2tty %f
+	Convert file to Postscript=dvips %f
+
+# TeX
+regex/\.([Tt]ex|TEX|TeX)$
+	Open=%var{EDITOR:vi} %f
+	TeX this file=tex %f
+	LaTeX this file=latex %f
+
+
+### Miscellaneous ###
+
+# nindendo emulator
+regex/\.([Nn][Ee][Ss])$
+    #Open=tuxnes %f
+	Open=ines %f
+
+regex/\.([Ee][Xx][Ee])$
+    Open=wine %f
+
+shell/^RMAIL$
+	Start Emacs on this RMAIL file=emacs %f
+	Open=emacs %f
+
+#type/^(M|m)ail
+#	Open=elm -f %f
+#	View=%view{ascii} mcmfmt < %f
+
+# core
+shell/core
+
+# Makefile
+regex/[Mm]akefile
+	Open=make -f %f %{Enter parameters}
+
+# Imakefile
+shell/Imakefile
+	Open=xmkmf -a
+
+# Executables
+type/\ executable
+	Open=./%f
+	Drop=%f %q
+	Execute in XTerm=xterm -e %f &
+	View Required Libraries=%view{ascii} ldd %f
+	Strip binary=strip %f
+
+# dbf
+regex/\.(dbf|DBF)$
+       Open=%view{ascii} dbview %f
+       View=%view{ascii} dbview -b %f
+
+# REXX script
+regex/\.(rexx|rex|cmd)$
+       Open=rexx %f %{Enter parameters};echo "Press ENTER";read y
+
+
+### Archives ###
+
+# .tgz, .tpz, .tar.gz, .tar.z, .tar.Z
+regex/\.t([gp]?z|ar\.g?[zZ])$
+	Open=%cd %d/%p#tar
+	View=%view{ascii} gzip -dc %f 2>/dev/null | tar tvvf -
+	Extract=gzip -dc %f 2>/dev/null | tar xf -
+regex/\.([Tt][Bb][zZ]2)$
+	Open=%cd %d/%p#tar
+	View=%view{ascii} gzip -dc %f 2>/dev/null | tar tvvf -
+	Extract=gzip -dc %f 2>/dev/null | tar xf -
+regex/\.tar\.bz$
+	Open=%cd %d/%p#tar
+	View=%view{ascii} bzip -dc %f 2>/dev/null | tar tvvf -
+	Extract=bzip -dc %f 2>/dev/null | tar xf -
+regex/\.tar\.bz2$
+	Open=%cd %d/%p#tar
+	View=%view{ascii} bzip2 -dc %f 2>/dev/null | tar tvvf -
+	Extract=bzip2 -dc %f 2>/dev/null | tar xf -
+
+# .tar.F - used in QNX
+regex/\.tar\.F$
+	Open=%cd %d/%p#tar
+	View=%view{ascii} freeze -dc %f 2>/dev/null | tar tvvf -
+	Extract=freeze -dc %f 2>/dev/null | tar xf -
+
+# tar
+regex/\.([Tt][Aa][Rr])$
+#regex/\.(tar|TAR)$
+#type/^(GNU tar archive)
+	Open=%cd %d/%p#tar
+	View=%view{ascii} tar tvvf %f
+	Extract=tar xf %f
+
+# zip
+regex/\.([ZzJj][IiAa][PpRr])$
+#type/^((Zip)|(sticky Zip))
+	Open=%cd %d/%p#zip
+	View=%view{ascii} unzip -v %f
+	Extract=unzip %f
+	Extract (with flags)=I=%{Enter any Unzip flags:}; if test -n "$I"; then unzip $I %f; fi
+	Unzip=unzip %f '*'
+
+# zoo
+regex/\.(zoo|ZOO)$
+	Open=%cd %d/%p#zoo
+	View=%view{ascii} zoo l %f
+	Extract=zoo x %f '*'
+	
+# lha
+regex/\.(lha|LHA|lzh|LZH)$
+	Open=%cd %d/%p#lha
+	View=%view{ascii} lha l %f
+	Extract=lharc x %f '*'
+	Extract (with flags)=I=%{Enter any LHarc flags:}; if test -n "$I"; then lharc x $I %f; fi
+
+# arj
+regex/\.[Aa]([Rr][Jj]|[0-9][0-9])$
+	Open=%cd %d/%p#uarj
+	View=%view{ascii} arj l %f
+	Extract=unarj x %f '*'
+	Extract (with flags)=I=%{Enter any Unarj flags:}; if test -n "$I"; then unarj x $I %f; fi
+
+# lha
+regex/\.([lL][Zz][Hh]|[Ll][Hh][Aa])$
+	Open=%cd %d/%p#lha
+	View=%view{ascii} lha l %f
+	Extract=ha xy %f '*'
+	Extract (with flags)=I=%{Enter any HA flags:}; if test -n "$I"; then ha xy $I %f; fi
+
+# ha
+regex/\.([Hh][Aa])$
+	Open=%cd %d/%p#uha
+	View=%view{ascii} ha lf %f
+	Extract=ha xy %f '*'
+	Extract (with flags)=I=%{Enter any HA flags:}; if test -n "$I"; then ha xy $I %f; fi
+
+# rar
+regex/\.([Rr][Aa][Rr])$
+#type/^(RAR)|(sticky RAR)
+	Open=%cd %d/%p#rar
+	View=%view{ascii} rar v -c- %f
+	Extract=rar x -c- %f '*'
+	Extract (with flags)=I=%{Enter any RAR flags:}; if test -n "$I";then rar x $I %f; fi
+
+# cpio
+shell/.cpio.Z
+	Open=%cd %d/%p#cpio
+	View=%view{ascii} compress -dc '%f' | cpio -ictv
+	Extract=compress -dc '%f' | cpio -ic
+shell/.cpio.gz
+	Open=%cd %d/%p#cpio
+	View=%view{ascii} gzip -dc '%f' | cpio -ictv
+	Extract=gzip -dc '%f' | cpio -ic
+shell/.cpio
+	Open=%cd %d/%p#cpio
+#	View=%view{ascii} cat '%f' | cpio -ictv
+	View=%view{ascii} cpio --list --verbose < "%f"
+	Extract=cat '%f' | cpio -ic
+
+# ls-lR
+regex/(^|\.)ls-?lR$
+	Open=%cd %d/%p#lslR
+regex/(^|\.)ls-?lR\.(g?z|Z)$
+	Open=%cd %d/%p#lslR
+	View=%view{ascii} gunzip -c %f
+
+# ftplist
+regex/\.ftplist$
+	Open=%cd %d/%p#ftplist
+	
+# patch
+regex/\.(diff|patch)(\.(bz2|gz|Z))?$
+        Open=%cd %d/%p#patchfs
+
+# gzip
+type/^gzip
+	Open=gzip -dc %f | %var{PAGER:more}
+	View=%view{ascii} gzip -dc %f 2>/dev/null
+	Edit=I=`date +%%s`; export I; gzip -cd %f >/tmp/gzed.$I && %var{EDITOR:vi} /tmp/gzed.$I && gzip -c /tmp/gzed.$I > %f; rm -f /tmp/gzed.$I
+	Uncompress=gunzip %f
+
+# bzip2
+type/^bzip2
+	Open=bzip2 -dc %f | %var{PAGER:more}
+	View=%view{ascii} bzip2 -dc %f 2>/dev/null
+	Edit=I=`date +%%s`; export I; bzip2 -cd %f >/tmp/bzed.$I && %var{EDITOR:vi} /tmp/bzed.$I && bzip2 -c /tmp/bzed.$I > %f; rm -f /tmp/bzed.$I
+	Uncompress=bunzip2 %f
+
+# bzip
+type/^bzip
+	Open=bzip -dc %f | %var{PAGER:more}
+	View=%view{ascii} bzip -dc %f 2>/dev/null
+	Edit=I=`date +%%s`; export I; bzip -cd %f >/tmp/bzed.$I && %var{EDITOR:vi} /tmp/bzed.$I && bzip -c /tmp/bzed.$I > %f; rm -f /tmp/bzed.$I
+	Uncompress=bunzip %f
+
+# compress
+type/^compress
+	Open=gzip -dc %f | %var{PAGER:more}
+	View=%view{ascii} gzip -dc %f 2>/dev/null
+	Edit=I=`date +%%s`; export I; gzip -cd %f >/tmp/gzed.$I && %var{EDITOR:vi} /tmp/gzed.$I && gzip -c /tmp/gzed.$I > %f; rm -f /tmp/gzed.$I
+
+# ar library
+regex/\.s?a$
+	Open=%cd %d/%p#arfs
+	#Open=%view{ascii} ar tv %f
+	View=%view{ascii} nm %f
+
+# trpm
+regex/\.trpm$
+	Open=%cd %d/%p#trpm
+	View=%view{ascii} rpm -qivl --scripts `basename %p .trpm`
+
+# Source RPMs (SuSE uses *.spm, others use *.src.rpm)
+regex/\.(spm|src\.rpm)$
+	Open=%cd %d/%p#rpm
+	View=%view{ascii} rpm -qivlp --scripts %f
+	Install this RPM=rpm -i %f
+	Rebuild this RPM=rpm --rebuild %f
+	Check signature=rpm --checksig %f
+
+# Compiled RPMs
+type/^(RPM)
+	Open=%cd %d/%p#rpm
+	View=%view{ascii} rpm -qivlp --scripts %f
+	Install this RPM=rpm -i %f
+	Upgrade this RPM=rpm -U %f
+	Check signature=rpm --checksig %f
+
+# deb
+regex/\.deb$
+	Open=%cd %d/%p#deb
+	View=%view{ascii} dpkg-deb -c %f
+
+# Start addind of my vfs [da]	
+
+type/^(M|m)ail
+	Open=%cd %d/%p#mailfs
+	View=%view{ascii} mcmfmt < %f
+
+# .esp
+regex/\.(esp|ESP)$
+	Open=%cd %d/%p#esp
+	View=%view{ascii} unesp v %f
+	Extract=unesp x %f
+	Icon=compressed.xpm
+
+
+### Directories ###
+
+directory/^\.\.$
+directory/^News$
+directory/^Mail$
+directory/^\..*$
+directory/^.*$
+	Start XTerm here=cd %p; exec xterm &
+	Make tar.gz=I=%{Enter destination file name:}; if test -n "$I"; then tar cvf - %p | gzip > $I; fi
+
+
+### Default ###
+
+# Default target for anything not described above
+default/*
+	Open=
+	View=
+	Drop=
+	Title=%p
+
+
+### EOF ###

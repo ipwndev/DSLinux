@@ -1,0 +1,78 @@
+                                           _nnnn_    C++
+                                     C    dGGGGMMb  
+                                         @p~qp~~qMb
+                                         M|@||@) M|  ARM Assembly
+   *********************************     @,----.JM|
+   *       DSLinux Toolchain       *    JS^\__/  qKL
+   *********************************   dZP        qKRb
+                                      dZP          qKKb
+                                     fZP            SMMb
+                                     HZM            MMMM
+                                     FqM            MMMM
+                                   __| ".        |\dS"qML
+                                   |    `.       | `' \Zq
+ To build the toolchain, run:     _)      \.___.,|     .'
+                                  \____   )MMMMMP|   .'
+        make                           `-'       `--' 
+
+in the current directory. The build will take a while even on
+a fast computer.
+
+If you already have a devkitARM-based toolchain installed, you
+should remove devkitARM binaries from your PATH *before* you
+start building the new toolchain. You can also simply rename the
+devkitARM directory to something else, for example devkitARM.dontuse.
+
+You will need the following software installed on your system
+for the build to succeed:
+
+        * binutils
+        * gcc
+        * g++
+        * make
+        * patch
+        * bzip2
+        * GNU awk - most often called 'gawk'
+        * wget
+
+All this software should be packaged with any general purpose Linux
+distribution.
+
+The build will want to download a couple of files (about 40MB total).
+If you want to get the files now and build the toolchain later, run:
+
+        make fetch
+
+To clean out files left over after the build, run:
+
+        make clean
+
+To remove *everything* INCLUDING THE COMPILED TOOLCHAIN, run:
+
+        make nuke
+             |
+             +---- Use with caution!
+
+If there is an error during the build, please try to paste at least
+50 lines above the "make: Error X" line into your problem report.
+Otherwise no one will be able to figure out the error.
+
+Once the error is fixed (by you or someone else), run make again.
+The build will continue from where it failed.
+
+To use your self-compiled toolchain, run this command to put the
+toolchain binaries in your PATH, assuming your dslinux source tree
+resides in ~/dslinux:
+
+        export PATH=~/dslinux/toolchain/prefix/bin:$PATH
+
+Before compiling DSLinux with the new toolchain for the first
+time, you should run make menuconfig and select the following
+option:
+
+  ---> Kernel/Library/Defaults Selection
+    --->  [*] Default all settings (lose changes)
+
+Otherwise your build might fail.
+
+Good luck!

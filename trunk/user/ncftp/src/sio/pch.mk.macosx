@@ -1,0 +1,5 @@
+syshdrs.p: syshdrs.h sio.h usio.h
+	$(CC) -precomp $(CFLAGS) $(CPPFLAGS) $(DEFS) syshdrs.h -o syshdrs.p
+
+PCH=syshdrs.p
+SYSHDRS_DEP=syshdrs.p

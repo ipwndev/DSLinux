@@ -1,0 +1,8 @@
+ September 27, 2007
+ 
+ Notable changes for DSLinux port, using TinTin   version 1.96.8:
+ 
+ -Resized output of "help credits" to fit screen size
+ -Added note at bottom of credits confirming this is the DSLinux version
+ -Added automatic saving and loading of data at boot and exit, from /var/tt  
+ -Chat.c disables pThreads if unavailable

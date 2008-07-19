@@ -1,0 +1,21 @@
+Here's the status of the various ports:
+
+Mac:
+Josh Adams <jadams@hyperimage.com> mostly finished this, based on a beta
+of 2.0, but never released it for some reason.
+
+Java:
+Greg Seidman <anthro@cs.umd.edu> and I were working on this, but it's been
+stalled for a while.  We'll finish it at some point.
+
+XFree86 for OS/2:
+Darwin O'Connor <doconno@cc.UManitoba.CA> ported it, and you can get it from
+http://home.cc.umanitoba.ca/~doconno/xprogs.html
+
+Linux SVGA:
+I got this mostly working on a beta of 2.0, but it had a couple problems
+(mouse support wasn't very good, no menus or windows), and is now hopelessly
+outdated.  It does have an XPM and XBM reader.  So, if anyone wants to
+finish this (write the missing parts and the new parts), let me know.
+
+Brian (bwelling@tis.com)

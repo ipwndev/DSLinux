@@ -1,0 +1,53 @@
+#!/bin/sh
+
+# Network configuration script for the Pixil Operating Environment
+#
+# Usage:  ./pixil-ifdown <device> 
+
+# Explanation:
+# Bring down the specified interface
+
+CONFIG=${1}
+
+[ -z "${CONFIG}" ] && {
+  echo "usage:  ./pixil-ifdown <config | device>"
+  exit 1
+}
+
+[ -f "${CONFIG}" ] || CONFIG=/usr/pixil/scripts/pixil-${CONFIG}.conf
+[ -f "${CONFIG}" ] || {
+  echo "Usage:  ./pixil-ifdown <config | device>"
+  exit 1
+}
+
+source ${CONFIG}
+
+# First, check if the interface is up
+
+if [ -z ifconfig ${DEVICE} 2>/dev/null | grep " UP " >/dev/null 2>&1 ]; then
+   echo "Device ${DEVICE} is not started!"
+   exit 1
+fi
+
+if [ "${PROTO}" = dynamic ]; then
+   [ -n "`/sbin/pidof -x pump`" ] && { 
+     /sbin/pump -r -i ${DEVICE}
+  }
+fi
+
+#if [ "${PROTO}" = dynamic ]; then
+#   [ -n "'/sbin/pidof -x dhcpcd'" ] && {
+#	/sbin/dhcpcd -k ${DEVICE}
+#   }
+#fi
+
+/sbin/ifconfig ${DEVICE} down
+
+# Wait a little while (thanks redhat for this code)
+
+waited=0
+
+while /sbin/ifconfig ${DEVICE} 2>/dev/null | grep " UP " >/dev/null 2>&1 && [ "$waited" -lt 50 ]; do
+    sleep 1
+   waited=$(($waited + 1))
+done

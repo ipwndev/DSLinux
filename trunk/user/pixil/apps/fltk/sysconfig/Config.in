@@ -1,0 +1,80 @@
+menu "Sysconfig Plugins"
+depends CONFIG_APP_SYSCONFIG
+
+config CONFIG_SYSCONF_ABOUT
+       bool "About plugin"
+       default y
+       help
+	Say 'yes' here to build the about plugin for
+	the system configuration utility.  The about
+	plugin describes the current system settings.
+
+
+config CONFIG_SYSCONF_BACKLITE
+       bool "Backlite plugin"
+       default y
+       depends CONFIG_PM
+       help
+	Say 'yes' here to build the backlite plugin for
+	the system configuration utility.   The backlite
+	plugin allows the user to set brightness and 
+	screen settings.
+
+#config CONFIG_SYSCONF_CAL
+#       bool "Calibration plugin"
+#       default y
+#       depends on CONFIG_NANOX 
+#       help
+#	Say 'yes' here to build the calibration plugin for
+#	the system configuration utility. The calibration
+#	plugin allows the user to readjust the mouse settings.
+
+config CONFIG_SYSCONF_CLOCK
+       bool "CLock plugin"
+       default y
+       help
+	Say 'yes' here to build the clock plugin for
+	the system configuration utility. The clock
+	plugin allows the user to set the current date
+	and time.
+
+config CONFIG_SYSCONF_MEMORY
+       bool "Memory plugin"
+       default y
+       help
+	Say 'yes' here to build the memory plugin for
+	the system configuration utility. The memory
+	plugin allows the user to review the current
+	memory and flash usage.
+
+config CONFIG_SYSCONF_POWER
+       bool "Power plugin"
+       default y
+       depends CONFIG_PM
+       help
+	Say 'yes' here to build the power plugin for
+	the system configuration utility.  The power
+	plugin allows the user to review power settings
+	to conserve battery space.
+
+config CONFIG_SYSCONF_REGIONAL
+       bool "Regional plugin"
+       default y
+       help
+	Say 'yes' here to build the reginal plugin for
+	the system configuration utility.  The regional
+	plugin allows the user to set regional preferences
+	based on their preferred country.
+
+config CONFIG_SYSCONF_USERINFO
+       bool "User Info plugin"
+       default y
+       help
+	Say 'yes' here to build the user info plugin for
+	the system configuration utility.  The user info
+	plugin allows the user to set personal information
+	(name, e-mail, etc..).
+
+endmenu
+
+

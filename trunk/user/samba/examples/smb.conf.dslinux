@@ -1,0 +1,17 @@
+[global]
+workgroup = WORKGROUP
+netbios name = Nintendo DS
+security = user
+log file = /var/log/log.%m
+max log size = 50
+log level = 3
+server string = DSLinux Samba Server %v
+socket options = TCP_NODELAY SO_RCVBUF=8192 SO_SNDBUF=8192
+[share]
+path = /media/
+comment = Root Directory
+valid users = root
+public = yes
+read only = no
+writable = yes
+guest only = no

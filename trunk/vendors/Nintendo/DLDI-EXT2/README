@@ -1,0 +1,9 @@
+This is an experimental build that requires you to partition your media card:
+First partition (/dev/dldi1) - Whatever filesystem your SC/M3/Whatever firmware can handle
+
+Second partition (/dev/dldi2) - ext2
+
+Use fakeroot to build as I haven't worked out why mknod hasn't got the right permissions.
+Once built, copy images/dslinux.nds to /dev/dldi1 and extract AS ROOT images/dslinux-ext2-data.tgz to /dev/dldi2.
+
+To shutdown, use the provided /etc/rc.d/shutdown to avoid filesystem damage

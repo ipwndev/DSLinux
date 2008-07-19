@@ -1,0 +1,13 @@
+#!/bin/sh
+wfc1='essid="test  ws"
+wepkey="aabbccddeeff0011223344556677"
+ip=
+gateway=
+dns1=
+dns2=
+netmask='
+case $1 in
+-c) [ $2 = 1 ] && echo "$wfc1" || exit 1 ;;
+-c1) echo "$wfc1" ;;
+*) exit 1 ;;
+esac

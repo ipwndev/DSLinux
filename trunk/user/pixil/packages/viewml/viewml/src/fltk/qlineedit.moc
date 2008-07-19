@@ -1,0 +1,78 @@
+/****************************************************************************
+** QLineEdit meta object code from reading C++ file 'qlineedit.h'
+**
+** Created: Tue Nov 14 10:25:10 2000
+**      by: The Qt Meta Object Compiler ($Revision$)
+**
+** WARNING! All changes made in this file will be lost!
+*****************************************************************************/
+
+#if !defined(Q_MOC_OUTPUT_REVISION)
+#define Q_MOC_OUTPUT_REVISION 2
+#elif Q_MOC_OUTPUT_REVISION != 2
+#error "Moc format conflict - please regenerate all moc files"
+#endif
+
+#include "qlineedit.h"
+#include <qmetaobject.h>
+
+
+const char *QLineEdit::className() const
+{
+    return "QLineEdit";
+}
+
+QMetaObject *QLineEdit::metaObj = 0;
+
+
+#if QT_VERSION >= 200
+static QMetaObjectInit init_QLineEdit(&QLineEdit::staticMetaObject);
+
+#endif
+
+void QLineEdit::initMetaObject()
+{
+    if ( metaObj )
+	return;
+    if ( strcmp(QWidget::className(), "QWidget") != 0 )
+	badSuperclassWarning("QLineEdit","QWidget");
+
+#if QT_VERSION >= 200
+    staticMetaObject();
+}
+
+void QLineEdit::staticMetaObject()
+{
+    if ( metaObj )
+	return;
+    QWidget::staticMetaObject();
+#else
+
+    QWidget::initMetaObject();
+#endif
+
+    typedef void(QLineEdit::*m2_t0)(const char*);
+    typedef void(QLineEdit::*m2_t1)();
+    m2_t0 v2_0 = &QLineEdit::textChanged;
+    m2_t1 v2_1 = &QLineEdit::returnPressed;
+    QMetaData *signal_tbl = new QMetaData[2];
+    signal_tbl[0].name = "textChanged(const char*)";
+    signal_tbl[1].name = "returnPressed()";
+    signal_tbl[0].ptr = *((QMember*)&v2_0);
+    signal_tbl[1].ptr = *((QMember*)&v2_1);
+    metaObj = new QMetaObject( "QLineEdit", "QWidget",
+	0, 0,
+	signal_tbl, 2 );
+}
+
+// SIGNAL textChanged
+void QLineEdit::textChanged( const char* t0 )
+{
+    activate_signal( "textChanged(const char*)", t0 );
+}
+
+// SIGNAL returnPressed
+void QLineEdit::returnPressed()
+{
+    activate_signal( "returnPressed()" );
+}

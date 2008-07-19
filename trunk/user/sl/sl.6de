@@ -1,0 +1,49 @@
+.TH SL 6 "16. Juli 2004"
+\"
+\" Translated into german by Helge Kreutzmann <kreutzm@itp.uni-hannover.de>
+.UC 5
+.SH NAME
+sl \- stellt Animationen für Benutzer, die versehentlich
+.B sl
+anstatt
+.BR ls 
+eingeben, dar.
+.SH "ÜBERSICHT"
+.B sl
+[
+.B \-alFe
+]
+.SH BESCHREIBUNG
+.B sl 
+stellt Animationen mit dem Ziel dar, Benutzer, die versehentlich
+.B sl 
+anstatt 
+.BR ls  
+eingeben, zu korrigieren.
+.SH OPTIONEN
+.TP
+.B \-a
+Ein Unfall scheint zu passieren. Sie werden mit den um Hilfe rufenden Personen
+Mitleid haben.
+.TP
+.B \-l
+Zeigt einen kleinen.
+.TP
+.B \-F
+Er fliegt.
+.TP
+.B \-e
+Erlaubt die Unterbrechung mit Strg+C.
+.PP
+.SH "SIEHE AUCH"
+.BR ls (1)
+.SH FEHLER
+Selten wird der Inhalt des aktuellen Verzeichnisses angezeigt.
+.SH AUTOR
+.B sl
+wurde von Toyoda Masashi <toyoda@is.titech.ac.jp> geschrieben. Diese Handbuchseite
+wurde von Brian Ristuccia <brianr@debian.org> und Kenshi Muto <kmuto@debian.org>
+für das Debian GNU/Linux-System geschrieben aber darf auch von anderen unter der
+gleichen Lizenz wie
+.B sl 
+verwendet werden.

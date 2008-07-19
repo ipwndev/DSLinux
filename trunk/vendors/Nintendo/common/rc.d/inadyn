@@ -1,0 +1,34 @@
+#!/bin/sh
+
+[ -e /etc/rc.defaults ] && . /etc/rc.defaults
+[ -e /etc/rc.conf ] && . /etc/rc.conf
+
+CONFIG=/etc/inadyn.conf
+
+
+case "$1" in
+	start)
+		if [ ! -f $CONFIG ]
+		then
+			echo "Error: Configuration file $CONFIG not found!"
+			echo "Please read /etc/inadyn.conf.example"
+			echo "Copy and edit it to /etc/inadyn.conf"
+			exit 1
+		fi
+
+		echo "Starting inadyn"
+		inadyn --input_file $CONFIG >> /var/log/inadyn.log&
+	;;
+	stop)
+		echo "Stopping inadyn"
+		killall inadyn
+	;;	
+	restart)
+		$0 stop
+		$0 start
+	;;
+	*)
+		echo "Usage: $0 <start|stop|restart>"
+		exit 1
+	;;
+esac
