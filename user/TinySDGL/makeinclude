@@ -17,7 +17,7 @@ LFLAGS=$(LDFLAGS)
 # OpenGL configuration (for the examples only)
 
 # use TinySDGL 
-GL_LIBS= -L../lib -lTinySDGL 
+GL_LIBS= -L../lib -L$(ROOTDIR)/lib -lTinySDGL -lSDL -lpthread
 GL_INCLUDES= -I../include
 GL_DEPS= ../lib/libTinySDGL.a
 
