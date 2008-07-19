@@ -890,6 +890,7 @@ CONFIG_USER_BUSYBOX_AUTOWIDTH=y
 # CONFIG_USER_GAMES_RUBIK is not set
 # CONFIG_USER_GAMES_SUDOKU is not set
 # CONFIG_USER_GAMES_XRICK is not set
+# CONFIG_USER_GAMES_MELITE is not set
 
 #
 # Miscellaneous Configuration
