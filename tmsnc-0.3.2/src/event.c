@@ -509,7 +509,7 @@ UI_do_command(session, ui, c, ret, retsize)
     case cmd_manual:
         def_prog_mode();
         endwin();
-        if ((r = vfork()) == 0) {
+        if ((r = fork()) == 0) {
             r = execlp("man", "man", "tmsnc", NULL);
             reset_prog_mode();
             refresh();
