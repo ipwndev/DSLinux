@@ -3943,6 +3943,9 @@ CONFIG_USER_PIXIL
 
 CONFIG_USER_CPSCAN
   Simple console port scanner
+
+CONFIG_USER_TMSNC
+  Console based MSN client
 #
 # END of proprietary config help
 #
