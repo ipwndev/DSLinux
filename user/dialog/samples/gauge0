@@ -1,0 +1,20 @@
+#!/bin/sh
+# $Id$
+: ${DIALOG=dialog}
+
+PCT=10
+(
+sleep 1
+while test $PCT != 110
+do
+echo "XXX"
+echo $PCT
+echo "The new\n\
+message ($PCT percent)"
+echo "XXX"
+PCT=`expr $PCT + 10`
+sleep 1
+done
+) |
+
+$DIALOG --title "GAUGE" --gauge "Hi, this is a gauge widget" 0 0 0

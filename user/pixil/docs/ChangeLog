@@ -1,0 +1,203 @@
+1.2.3 September 11, 2003 Greg Haerr <greg@censoft.com>
+	* first public release of eval, commercial and GPL versions
+	* tidy up "make clean" for cvs diff
+1.2.3-rc1 September 10, 2003 Greg Haerr <greg@censoft.com>
+	(Jason)
+	* Added config.ARM for default ARM compilation
+	* Changed config to build PixilDT for x86 desktop builds
+	* Added README for ARM compilation (pixil/docs/README.ARM)
+	* Updated many of the configuration files from Jordan's patch
+	* added dvdview-1.1.0d(1.2.0pre), flash-0.4.10a, nxdoom-src packages
+	* added 1.2.2-rc2 modifications to dvdview, flash, nxdoom (Greg)
+	* added dvdview -U fullscreen option
+	(Jordan)
+	* Added packaging support for viewml, nxdoom, dvdview, and flash
+	* Changed compilation order for the above projects
+	* Cleaned up the Makefile for FLNX, fixed for cross-compilation
+	* General ARM cross-compilation fixes
+	* Updated header files to show licensing and URL information
+
+1.2.2 May 30, 2003 Greg Haerr <greg@censoft.com> (pixil-1.2.2.tar.gz)
+	* updated documentation, added license files
+	* added USE_CACHE=1 for fast builds
+	* built default config pixilDT uses external fltk-1.0.11
+	* removed libwwwzip.a requirement (libwww 5.3.2 or 5.4.0)
+
+1.2.2-rc2 May 14, 2003 jordanc <jordan@cosmicpenguin.net>
+	* scripts/platforms/x86-demo/defaults.xml.in: Changed the nxdoom
+		icon and fixed the sync so that only address is used
+	* apps/nanox/Config.in: Added CONFIG_FLASH_RGB555
+	* docs/README.sync: More SYNC documentation
+	* Rules.make: Removed the native libraries during a clean
+	* docs/config.pixil: Added config.pixil example
+	* docs/README.x11: New readme information for X11 builds
+	* scripts/platforms/x86-demo/Makefile: Fixed the install script so
+		that a run_pda.sh file doesn't get created for X11 builds
+	* libs/pim/nxmenuwindow.cxx: #ifdefed a section for X11 builds
+	* libs/flnx/src/Fl_Slider.cxx: Fixed a slight slider drawing issue.
+	* include/sync/coder.h: Status() conflicted with something under
+		X11, so I removed it for X11 builds
+	* docs/README.microwindows: More README changes for MW builds
+	* docs/README: Small README changes
+	* apps/viewml/src/Makefile: -D_NANOX should only be used when
+		CONFIG_NANOX=y
+	* apps/fltk/sysconfig/clock/nxsunclock.cxx: Removed useless
+		nano-X.h
+	* apps/fltk/netconfig/: dns_setup.cxx, ip_setup.cxx,
+		net_config.cxx, ppp_modem.cxx: Removed unneeded n_x.h and nano-X.h
+		from all files
+	* apps/fltk/find/nxfindapp.cxx: #ifdefed a screentop action only
+		allowable under Nano-X
+	* apps/fltk/find/Makefile: Moved -lwm under ifdef CONFIG_NANOX
+	* apps/fltk/Config.in: X11 build fix - MP3 player and Network
+		config do not work under X11
+	* docs/ChangeLog-1.2.2-rc1: Changelog for 1.2.2-rc1
+
+1.2.2-rc1 May 13, 2003 jordanc <jordan@cosmicpenguin.net>
+	* apps/fltk/sysconfig/backlite/backlite.cxx: Fixed Greg's backlight
+		slider
+	* Rules.make: Added a clean target for the par database stuff in
+		the platforms dir
+	* apps/nanox/misc/Makefile: added clean target to get rid of the
+		evidence
+	* libs/flnx/src/fl_font.cxx: Added the pda3x6.fnt
+	* sys/syncagent/src/main.c: Handle IPC and network errors more
+		gracefully
+	* sys/pixilwm/screensaver.c: Add backlight changes regardless of PM
+		status
+	* sys/pixilwm/Makefile: Always build in -lpixil for the window
+		manager
+	* sys/par/lib/par_api.c: fixed par_getApplication to be less
+		restrictive
+	* scripts/platforms/x86-demo/run_pixil.sh.in: Added the MWFONTDIR
+		flag
+	* pixilDT/syncapp/Makefile: Changed the name of syncapp to
+		dtsyncapp
+	* pixilDT/src/Sync.cpp: Fixed the flags issue FIxed the extra field
+		on the Address Book record removed bugs fixed the segfault issue
+		removed debugging info
+	* pixilDT/src/PixilDTApp.cpp: Fixed the CloseSync() so that it
+		actually closes the sync app
+	* pixilDT/src/NxDbRow.cpp: Removed debug noise and fixed the record
+		flags
+	* pixilDT/src/NxDbAccess.cpp: Removed some debug noise
+	* pixilDT/src/Makefile: Removed the -efence library from the
+		desktop
+	* pixilDT/run_desktop.sh.in: Added the path for the dtsyncapp
+	* libs/pixlib/Makefile: Tuxscreen now has its own set of functions
+	* libs/pixlib/platform/tuxscreen/: backlight.c, calibrate.c,
+		powermgmt.c, sound_dsp.c, sysinfo.c, tuxscreen.c: Added tuxscreen
+		specific functions
+	* libs/pim/nxapp.cxx: Several slight fixes regarding the sync
+	* apps/fltk/sync/sync_ui.cxx: Removed the slider and fixed
+		everything for a 1 button release
+	* apps/games/minesweep/minesweep.c: Added <nxcolors.h>
+	* scripts/platforms/x86-demo/Makefile: Fixed sample file copies
+	* sys/par/tools/Makefile: Buildroot fixes
+	* sys/par/lib/Makefile: Buildroot fixes
+	* scripts/platforms/tuxscreen/nxstart.sh: Set the script to
+		executable, and automatically kill the nano-X and clserver mods
+		when the user Ctrl-Cs out of the pixilwm
+	* scripts/platforms/: ipaq/Makefile, tuxscreen/Makefile,
+		zaurus/Makefile: Slight changes for the ARM devices
+	* libs/xml/Makefile: Build changes - much cleaner
+	* scripts/platforms/x86-demo/defaults.xml.in: Added the syncagent
+		capability
+
+1.2.2-pre10 (c. May 10, 2003)
+	* Added Zaurus support
+	* Added Tuxscreen support
+	* Continued sync support - two way sync enabled between DT and PDA
+	* Made PM support optional
+	* Added screensaver support to PixilWM
+	* Added better power management suport to PixiWM
+	* Added applet support to PixilWM
+	* Fixed APM parsing in pixilb
+	* Removed mandatory gettext support from PixilDT
+	* Added checks for older compilers
+	* Renamed several entries in the database
+	* Added a sample DVD view mpeg
+	* Added a real test MP3
+	* Fixed drawing issues in sysconfig/power managment
+	* Changed default target for .cc files
+	* Fixed image support in NxBill
+	* fixed nxTerm issues
+	* Updated all platform scripts to use nxcal
+
+1.2.2-pre9 (c. May 7, 2003)
+        * Added Ipaq support
+	* Added Ipaq power management support 
+	* Added support for grabbing the SUSPEND key in the window manager
+	* Added dvdview to the build
+	* Added -L landscape support to dvdview
+	* Added flash player
+	* Various size optimizations
+	* Added sync agent for PDA
+	* added sync agent for Desktop - forked and piped to the desktop
+	* added sync infrastructure to the Desktop (very alpha)
+	
+1.2.2-pre8 (c. April 4, 2003)
+
+1.2.2-pre7 (c. March 21, 2003)
+	* Fixed many bugs
+	* Added sample data to most of the PIMs, the MP3 player and
+	  the browser
+	* Added Doom and the world clock
+	* Added PixilDT to the master build and install
+	* Changed the install scheme to be more orgainized for a demo
+	
+1.2.2-pre6
+	* Fixed Truetype drawing issues, and rearranged some of the 
+	* build options.
+	* Added ViewML
+
+1.2.2-pre5 (c. Mar 14, 2003)
+	* Fixed PAR segfault when it tried to add new blocks
+	* Fixed PAR error when no data was available (in nodes)
+	* Fixed IPC loop on a SIGPIPE
+	* Fixed font issues in nxmenubutton.c and other places
+	* Fixed color and formatting in the sysconfig applets
+	* Added individual config options for the sysconfig applets
+	* Modified the default path to /usr/local/pixil
+	
+1.2.2-pre4
+	* New build system (based on the kernel config)
+	* Moved Pixil specific FLNX into the distro
+
+1.2.2-pre3
+	* Colosseum now removes the named socket when it exists
+	* Sysconfig has been totally revamped to use a plugin
+	  scheme.  
+	* Other bug fixes and useless messages removed
+
+1.2.2-pre2 February 21, 2003
+	* added PixilDT to the tree (see pixilDT/ChangeLog for info)
+	* Added color support to the Terminal Emulator
+	* Updated the Nano-X games to better versions
+	* More bug fixes
+	* Cleaned up the code slightly
+
+1.2.2-pre1 Feburary 18, 2003
+	* Fixes to the build system
+	* Added a default MP3 path to the MP3 player
+	* Changed the look of the CPU load monitor
+	* Removed debug messages throughout
+	* Bug fixes to work in an RPM situation
+        * Retag with the CCL/GPL 
+	
+1.2.1 "Phoenix" January 10, 2003
+        * Initial build with the new build system
+	* Features:
+		Nano-X window manager
+		Nano-X utilities: clock, load monitor, terminal, keyboard, 
+		scribble
+		Nano-X games:  minesweeper, snake, nxBill
+		IPC server (Colosseum)
+		application registry database (PAR)
+		PIM Suites:  address, scheduler, todo, notepad, e-mail client
+		Utilities:  calculator, system config, network config
+		Multimedia:  MP3 player
+
+1.2.0 October 31, 2002 Pixil v1.2 final (pixil-1.20.tar.gz)
+1.1.0 ?
+1.0.0 October 23, 2001 Pixil Operating Enironment first release (pixil_oe-1.0.tar.gz)

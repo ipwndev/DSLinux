@@ -1,0 +1,34 @@
+# modified by A'rpi/ESP-team  <arpi@esp-team.scene.hu>
+
+context default
+    keyword linestart Begin3		brightmagenta/20
+    keyword linestart Title:		brightred/9
+    keyword linestart Version:		brightred/9
+    keyword linestart Entered-date:	brightred/9
+    keyword linestart Description:	brightred/9
+    keyword linestart Keywords:		brightred/9
+    keyword linestart Author:		brightred/9
+    keyword linestart Maintained-by:	brightred/9
+    keyword linestart Alternate-site:	brightred/9
+    keyword linestart Primary-site:	brightred/9
+    keyword linestart Original-site:	brightred/9
+    keyword linestart Platforms:	brightred/9
+    keyword linestart Copying-policy:	brightred/9
+    keyword linestart End		brightmagenta/20
+
+    keyword whole GPL			green/6
+    keyword whole BSD			green/6
+    keyword whole Shareware		green/6
+
+    keyword whole sunsite.unc.edu	green/6
+    keyword wholeright \s+tar+gz	brightgreen/6
+    keyword wholeright \t+tar+gz	brightgreen/6
+
+    keyword whole \s*@*\s(*)	cyan/16
+    keyword whole <*@*>		cyan/16
+
+context exclusive linestart Title: \n	white/26
+#brightred/9
+#    keyword \s+\n		yellow/26
+
+###############################################################################

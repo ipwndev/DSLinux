@@ -1,0 +1,52 @@
+# modified by A'rpi/ESP-team  <arpi@esp-team.scene.hu>
+
+context default
+# brightcyan/17
+    keyword whole &*; brightgreen/16
+    keyword $+(*) yellow/18
+    keyword $+\s yellow/18
+    keyword $+\n yellow/18
+    keyword $+$ yellow/18
+    keyword $B yellow/18
+    keyword $I yellow/18
+    keyword $BI yellow/18
+    keyword $U yellow/18
+    keyword $R yellow/18
+    keyword ( yellow/18
+    keyword ) yellow/18
+    keyword #+= brightred/11
+    keyword # brightred/11
+
+    keyword %1 yellow/26
+    keyword %2 yellow/26
+    keyword %3 yellow/26
+    keyword %4 yellow/26
+    keyword %5 yellow/26
+
+context <!-- --> brightmagenta/26
+context ` ` brightmagenta/26
+
+context exclusive $+( ) white/26
+    keyword whole &*; brightgreen/16
+    keyword %1 yellow/26
+    keyword %2 yellow/26
+    keyword %3 yellow/26
+    keyword %4 yellow/26
+    keyword %5 yellow/26
+
+#context $+( ) yellow/18
+#    keyword (*) white/26
+#    keyword whole &*; brightgreen/16
+
+#context exclusive $I( ) white/26
+#context exclusive $U( ) white/26
+#context exclusive $BI( ) white/26
+
+#context #+= # brightgreen/16
+#    keyword #+= white/26
+
+context < > brightcyan/17
+    keyword whole "*" cyan/5
+    keyword "*" cyan/5
+
+###############################################################################

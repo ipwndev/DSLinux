@@ -1,0 +1,671 @@
+context default
+#	brackets ({[< )}]>
+	keyword whole texture brightgreen
+	keyword whole pigment brightgreen
+	keyword whole normal brightgreen
+	keyword whole finish brightgreen
+# objects
+    keyword whole object yellow
+    keyword whole camera yellow
+	keyword whole background yellow
+	keyword whole sky_sphere yellow
+	keyword whole global_settings yellow
+	keyword whole fog yellow
+	keyword whole rainbow yellow
+	keyword whole light_source yellow
+# shapes
+	keyword whole sphere yellow
+	keyword whole box yellow
+	keyword whole cone yellow
+	keyword whole cylinder yellow
+	keyword whole plane yellow
+    keyword whole disc yellow
+	keyword whole bicubic_patch yellow
+	keyword whole blob yellow
+	keyword whole height_field yellow
+	keyword whole lathe yellow
+	keyword whole mesh yellow
+	keyword whole polygon yellow
+	keyword whole prism yellow
+	keyword whole superellipsoid yellow
+	keyword whole sor yellow
+	keyword whole text yellow
+	keyword whole torus yellow
+    keyword whole triangle yellow
+# CSG stuff	
+	keyword whole union brightblue
+	keyword whole intersection brightblue
+	keyword whole difference brightblue
+	keyword whole merge brightblue
+# keywords
+    keyword whole abs white
+    keyword whole acos white
+    keyword whole acosh white
+    keyword whole adaptive white
+    keyword whole adc_bailout white
+    keyword whole agate white
+    keyword whole agate_turb white
+    keyword whole all white
+    keyword whole alpha white
+    keyword whole ambient white
+    keyword whole ambient_light white
+    keyword whole angle white
+    keyword whole aperture white
+    keyword whole append white
+    keyword whole arc_angle white
+    keyword whole area_light white
+    keyword whole array white
+    keyword whole asc white
+    keyword whole asin white
+    keyword whole asinh white
+    keyword whole assumed_gamma white
+    keyword whole atan white
+    keyword whole atan2 white
+    keyword whole atanh white
+    keyword whole average white
+    keyword whole background white
+    keyword whole bezier_spline white
+    keyword whole black_hole white
+    keyword whole blue white
+    keyword whole blur_samples white
+    keyword whole bounded_by white
+    keyword whole bozo white
+    keyword whole brick white
+    keyword whole brick_size white
+    keyword whole brightness white
+    keyword whole brilliance white
+    keyword whole bumps white
+    keyword whole bump_map white
+    keyword whole bump_size white
+    keyword whole caustics white
+    keyword whole ceil white
+    keyword whole checker white
+    keyword whole chr white
+    keyword whole clipped_by white
+    keyword whole clock white
+    keyword whole clock_delta white
+    keyword whole color white
+    keyword whole color_map white
+    keyword whole colour white
+    keyword whole colour_map white
+    keyword whole component white
+    keyword whole composite white
+    keyword whole concat white
+    keyword whole confidence white
+    keyword whole conic_sweep white
+    keyword whole control0 white
+    keyword whole control1 white
+    keyword whole cos white
+    keyword whole cosh white
+    keyword whole count white
+    keyword whole crackle white
+    keyword whole crand white
+    keyword whole cube white
+    keyword whole cubic white
+    keyword whole cubic_spline white
+    keyword whole cubic_wave white
+    keyword whole cylindrical white
+    keyword whole defined white
+    keyword whole degrees white
+    keyword whole density white
+    keyword whole density_file white
+    keyword whole density_map white
+    keyword whole dents white
+    keyword whole diffuse white
+    keyword whole dimensions white
+    keyword whole dimension_size white
+    keyword whole direction white
+    keyword whole distance white
+    keyword whole distance_maximum white
+    keyword whole div white
+    keyword whole eccentricity white
+    keyword whole emission white
+    keyword whole error white
+    keyword whole error_bound white
+    keyword whole exp white
+    keyword whole extinction white
+    keyword whole fade_distance white
+    keyword whole fade_power white
+    keyword whole falloff white
+    keyword whole falloff_angle white
+    keyword whole false white
+    keyword whole file_exists white
+    keyword whole filter white
+    keyword whole fisheye white
+    keyword whole flatness white
+    keyword whole flip white
+    keyword whole floor white
+    keyword whole focal_point white
+    keyword whole frequency white
+    keyword whole gif white
+    keyword whole gradient white
+    keyword whole granite white
+    keyword whole gray_threshold white
+    keyword whole green white
+    keyword whole hexagon white
+    keyword whole hf_gray_16 white
+    keyword whole hierarchy white
+    keyword whole hollow white
+    keyword whole hypercomplex white
+    keyword whole image_map white
+    keyword whole int white
+    keyword whole interior white
+    keyword whole interpolate white
+    keyword whole intervals white
+    keyword whole inverse white
+    keyword whole ior white
+    keyword whole irid white
+    keyword whole irid_wavelength white
+    keyword whole jitter white
+    keyword whole julia_fractal white
+    keyword whole lambda white
+    keyword whole leopard white
+    keyword whole linear_spline white
+    keyword whole linear_sweep white
+    keyword whole location white
+    keyword whole log white
+    keyword whole looks_like white
+    keyword whole look_at white
+    keyword whole low_error_factor white
+    keyword whole mandel white
+    keyword whole map_type white
+    keyword whole marble white
+    keyword whole material white
+    keyword whole material_map white
+    keyword whole matrix white
+    keyword whole max white
+    keyword whole max_iteration white
+    keyword whole max_trace_level white
+    keyword whole media white
+    keyword whole media_attenuation white
+    keyword whole media_interaction white
+    keyword whole metallic white
+    keyword whole min white
+    keyword whole minimum_reuse white
+    keyword whole mod white
+    keyword whole mortar white
+    keyword whole nearest_count white
+    keyword whole no white
+    keyword whole no_shadow white
+    keyword whole number_of_waves white
+    keyword whole octaves white
+    keyword whole off white
+    keyword whole offset white
+    keyword whole omega white
+    keyword whole omnimax white
+    keyword whole on white
+    keyword whole once white
+    keyword whole onion white
+    keyword whole open white
+    keyword whole orthographic white
+    keyword whole panoramic white
+    keyword whole perspective white
+    keyword whole pgm white
+    keyword whole phase white
+    keyword whole phong white
+    keyword whole phong_size white
+    keyword whole pi white
+    keyword whole planar white
+    keyword whole png white
+    keyword whole point_at white
+    keyword whole poly white
+    keyword whole poly_wave white
+    keyword whole pot white
+    keyword whole pow white
+    keyword whole ppm white
+    keyword whole precision white
+    keyword whole pwr white
+    keyword whole quadratic_spline white
+    keyword whole quadric white
+    keyword whole quartic white
+    keyword whole quaternion white
+    keyword whole quick_color white
+    keyword whole quick_colour white
+    keyword whole quilted white
+    keyword whole radial white
+    keyword whole radians white
+    keyword whole radiosity white
+    keyword whole radius white
+    keyword whole ramp_wave white
+    keyword whole rand white
+    keyword whole range white
+    keyword whole ratio white
+    keyword whole reciprocal white
+    keyword whole recursion_limit white
+    keyword whole red white
+    keyword whole reflection white
+    keyword whole reflection_exponent white
+    keyword whole refraction white
+    keyword whole repeat white
+    keyword whole rgb white
+    keyword whole rgbf white
+    keyword whole rgbft white
+    keyword whole rgbt white
+    keyword whole right white
+    keyword whole ripples white
+    keyword whole rotate white
+    keyword whole roughness white
+    keyword whole samples white
+    keyword whole scale white
+    keyword whole scallop_wave white
+    keyword whole scattering white
+    keyword whole seed white
+    keyword whole shadowless white
+    keyword whole sin white
+    keyword whole sine_wave white
+    keyword whole sinh white
+    keyword whole sky white
+    keyword whole slice white
+    keyword whole slope_map white
+    keyword whole smooth white
+    keyword whole smooth_triangle white
+    keyword whole specular white
+    keyword whole spherical white
+    keyword whole spiral1 white
+    keyword whole spiral2 white
+    keyword whole spotlight white
+    keyword whole spotted white
+    keyword whole sqr white
+    keyword whole sqrt white
+    keyword whole str white
+    keyword whole strcmp white
+    keyword whole strength white
+    keyword whole strlen white
+    keyword whole strlwr white
+    keyword whole strupr white
+    keyword whole sturm white
+    keyword whole substr white
+    keyword whole sys white
+    keyword whole t white
+    keyword whole tan white
+    keyword whole tanh white
+    keyword whole tga white
+    keyword whole thickness white
+    keyword whole threshold white
+    keyword whole tightness white
+    keyword whole tile2 white
+    keyword whole tiles white
+    keyword whole track white
+    keyword whole transform white
+    keyword whole translate white
+    keyword whole transmit white
+    keyword whole triangle_wave white
+    keyword whole true white
+    keyword whole ttf white
+    keyword whole turbulence white
+    keyword whole turb_depth white
+    keyword whole type white
+    keyword whole u white
+    keyword whole ultra_wide_angle white
+    keyword whole up white
+    keyword whole use_color white
+    keyword whole use_colour white
+    keyword whole use_index white
+    keyword whole u_steps white
+    keyword whole v white
+    keyword whole val white
+    keyword whole variance white
+    keyword whole vaxis_rotate white
+    keyword whole vcross white
+    keyword whole vdot white
+    keyword whole vlength white
+    keyword whole vrotate white
+    keyword whole v_steps white
+    keyword whole warp white
+    keyword whole water_level white
+    keyword whole waves white
+    keyword whole while white
+    keyword whole width white
+    keyword whole wood white
+    keyword whole wrinkles white
+    keyword whole x white
+    keyword whole y white
+    keyword whole yes white
+    keyword whole z white
+
+    keyword whole #break brightred
+    keyword whole #while brightred
+    keyword whole #case brightred
+    keyword whole #debug brightred
+    keyword whole #declare brightred
+    keyword whole #default brightred
+    keyword whole #else brightred
+    keyword whole #end brightred
+    keyword whole #fclose brightred
+    keyword whole #fopen brightred
+    keyword whole #local brightred
+    keyword whole #macro brightred
+    keyword whole #read brightred
+    keyword whole #render brightred
+    keyword whole #statistics brightred
+    keyword whole #switch brightred
+    keyword whole #undef brightred
+    keyword whole #version brightred
+    keyword whole #warning brightred
+    keyword whole #write brightred
+    keyword whole #if brightred
+    keyword whole #ifdef brightred
+    keyword whole #iff brightred
+    keyword whole #ifndef brightred
+    keyword whole #include brightred
+
+# colours
+    keyword whole Red magenta
+    keyword whole Green magenta
+    keyword whole Blue magenta
+    keyword whole Yellow magenta
+    keyword whole brightmagenta magenta
+    keyword whole Magenta magenta
+    keyword whole Clear magenta
+    keyword whole White magenta
+    keyword whole Black magenta
+    keyword whole Gray05 magenta
+    keyword whole Gray10 magenta
+    keyword whole Gray15 magenta
+    keyword whole Gray20 magenta
+    keyword whole Gray25 magenta
+    keyword whole Gray30 magenta
+    keyword whole Gray35 magenta
+    keyword whole Gray40 magenta
+    keyword whole Gray45 magenta
+    keyword whole Gray50 magenta
+    keyword whole Gray55 magenta
+    keyword whole Gray60 magenta
+    keyword whole Gray65 magenta
+    keyword whole Gray70 magenta
+    keyword whole Gray75 magenta
+    keyword whole Gray80 magenta
+    keyword whole Gray85 magenta
+    keyword whole Gray90 magenta
+    keyword whole Gray95 magenta
+    keyword whole DimGray magenta
+    keyword whole DimGrey magenta
+    keyword whole Gray magenta
+    keyword whole Grey magenta
+    keyword whole LightGray magenta
+    keyword whole LightGrey magenta
+    keyword whole VLightGray magenta
+    keyword whole VLightGrey magenta
+    keyword whole Aquamarine magenta
+    keyword whole BlueViolet magenta
+    keyword whole Brown magenta
+    keyword whole CadetBlue magenta
+    keyword whole Coral magenta
+    keyword whole CornflowerBlue magenta
+    keyword whole DarkGreen magenta
+    keyword whole DarkOliveGreen magenta
+    keyword whole DarkOrchid magenta
+    keyword whole DarkSlateBlue magenta
+    keyword whole DarkSlateGray magenta
+    keyword whole DarkSlateGrey magenta
+    keyword whole DarkTurquoise magenta
+    keyword whole Firebrick magenta
+    keyword whole ForestGreen magenta
+    keyword whole Gold magenta
+    keyword whole Goldenrod magenta
+    keyword whole GreenYellow magenta
+    keyword whole IndianRed magenta
+    keyword whole Khaki magenta
+    keyword whole LightBlue magenta
+    keyword whole LightSteelBlue magenta
+    keyword whole LimeGreen magenta
+    keyword whole Maroon magenta
+    keyword whole MediumAquamarine magenta
+    keyword whole MediumBlue magenta
+    keyword whole MediumForestGreen magenta
+    keyword whole MediumGoldenrod magenta
+    keyword whole MediumOrchid magenta
+    keyword whole MediumSeaGreen magenta
+    keyword whole MediumSlateBlue magenta
+    keyword whole MediumSpringGreen magenta
+    keyword whole MediumTurquoise magenta
+    keyword whole MediumVioletRed magenta
+    keyword whole MidnightBlue magenta
+    keyword whole Navy magenta
+    keyword whole NavyBlue magenta
+    keyword whole Orange magenta
+    keyword whole OrangeRed magenta
+    keyword whole Orchid magenta
+    keyword whole PaleGreen magenta
+    keyword whole Pink magenta
+    keyword whole Plum magenta
+    keyword whole Salmon magenta
+    keyword whole SeaGreen magenta
+    keyword whole Sienna magenta
+    keyword whole SkyBlue magenta
+    keyword whole SlateBlue magenta
+    keyword whole SpringGreen magenta
+    keyword whole SteelBlue magenta
+    keyword whole Tan magenta
+    keyword whole Thistle magenta
+    keyword whole Turquoise magenta
+    keyword whole Violet magenta
+    keyword whole VioletRed magenta
+    keyword whole Wheat magenta
+    keyword whole YellowGreen magenta
+    keyword whole SummerSky magenta
+    keyword whole RichBlue magenta
+    keyword whole Brass magenta
+    keyword whole Copper magenta
+    keyword whole Bronze magenta
+    keyword whole Bronze2 magenta
+    keyword whole Silver magenta
+    keyword whole BrightGold magenta
+    keyword whole OldGold magenta
+    keyword whole Feldspar magenta
+    keyword whole Quartz magenta
+    keyword whole Mica magenta
+    keyword whole NeonPink magenta
+    keyword whole DarkPurple magenta
+    keyword whole NeonBlue magenta
+    keyword whole CoolCopper magenta
+    keyword whole MandarinOrange magenta
+    keyword whole LightWood magenta
+    keyword whole MediumWood magenta
+    keyword whole DarkWood magenta
+    keyword whole SpicyPink magenta
+    keyword whole SemiSweetChoc magenta
+    keyword whole BakersChoc magenta
+    keyword whole Flesh magenta
+    keyword whole NewTan magenta
+    keyword whole NewMidnightBlue magenta
+    keyword whole VeryDarkBrown magenta
+    keyword whole DarkBrown magenta
+    keyword whole DarkTan magenta
+    keyword whole GreenCopper magenta
+    keyword whole DkGreenCopper magenta
+    keyword whole DustyRose magenta
+    keyword whole HuntersGreen magenta
+    keyword whole Scarlet magenta
+    keyword whole Med_Purple magenta
+    keyword whole Light_Purple magenta
+    keyword whole Very_Light_Purple magenta
+
+# textures
+    keyword whole Jade_Map brightmagenta
+    keyword whole Jade brightmagenta
+    keyword whole Red_Marble_Map brightmagenta
+    keyword whole Red_Marble brightmagenta
+    keyword whole White_Marble_Map brightmagenta
+    keyword whole White_Marble brightmagenta
+    keyword whole LBlue brightmagenta
+    keyword whole Vein brightmagenta
+    keyword whole Blood_Marble_Map brightmagenta
+    keyword whole Blood_Marble brightmagenta
+    keyword whole Blue_Agate_Map brightmagenta
+    keyword whole Blue_Agate brightmagenta
+    keyword whole Sapphire_Agate_Map brightmagenta
+    keyword whole Sapphire_Agate brightmagenta
+    keyword whole Brown_Agate_Map brightmagenta
+    keyword whole Brown_Agate brightmagenta
+    keyword whole Pink_Granite_Map brightmagenta
+    keyword whole Pink_Granite brightmagenta
+    keyword whole PinkAlabaster brightmagenta
+    keyword whole Blue_Sky_Map brightmagenta
+    keyword whole Blue_Sky brightmagenta
+    keyword whole Bright_Blue_Sky brightmagenta
+    keyword whole Blue_Sky2 brightmagenta
+    keyword whole Blue_Sky3 brightmagenta
+    keyword whole Blood_Sky brightmagenta
+    keyword whole Apocalypse brightmagenta
+    keyword whole Clouds brightmagenta
+    keyword whole FBM_Clouds brightmagenta
+    keyword whole Shadow_Clouds brightmagenta
+    keyword whole Cherry_Wood brightmagenta
+    keyword whole Pine_Wood brightmagenta
+    keyword whole Dark_Wood brightmagenta
+    keyword whole Tan_Wood brightmagenta
+    keyword whole White_Wood brightmagenta
+    keyword whole Tom_Wood brightmagenta
+    keyword whole DMFWood1 brightmagenta
+    keyword whole DMFWood2 brightmagenta
+    keyword whole DMFWood3 brightmagenta
+    keyword whole DMFWood4 brightmagenta
+    keyword whole DMFWood5 brightmagenta
+    keyword whole DMFWood6 brightmagenta
+    keyword whole DMFLightOak brightmagenta
+    keyword whole DMFDarkOak brightmagenta
+    keyword whole EMBWood1 brightmagenta
+    keyword whole Yellow_Pine brightmagenta
+    keyword whole Rosewood brightmagenta
+    keyword whole Sandalwood brightmagenta
+    keyword whole Glass_Finish brightmagenta
+    keyword whole Glass brightmagenta
+    keyword whole Glass2 brightmagenta
+    keyword whole Glass3 brightmagenta
+    keyword whole Green_Glass brightmagenta
+    keyword whole NBglass brightmagenta
+    keyword whole NBoldglass brightmagenta
+    keyword whole NBwinebottle brightmagenta
+    keyword whole NBbeerbottle brightmagenta
+    keyword whole Ruby_Glass brightmagenta
+    keyword whole Dark_Green_Glass brightmagenta
+    keyword whole Yellow_Glass brightmagenta
+    keyword whole Orange_Glass brightmagenta
+    keyword whole Vicks_Bottle_Glass brightmagenta
+    keyword whole Metal brightmagenta
+    keyword whole Chrome_Texture brightmagenta
+    keyword whole Brass_Texture brightmagenta
+    keyword whole Gold_Texture brightmagenta
+    keyword whole Bronze_Texture brightmagenta
+    keyword whole Copper_Texture brightmagenta
+    keyword whole Silver_Texture brightmagenta
+    keyword whole Chrome_Metal brightmagenta
+    keyword whole Brass_Metal brightmagenta
+    keyword whole Bronze_Metal brightmagenta
+    keyword whole Gold_Metal brightmagenta
+    keyword whole Silver_Metal brightmagenta
+    keyword whole Copper_Metal brightmagenta
+    keyword whole Polished_Chrome brightmagenta
+    keyword whole Polished_Brass brightmagenta
+    keyword whole New_Brass brightmagenta
+    keyword whole Spun_Brass brightmagenta
+    keyword whole Brushed_Aluminum brightmagenta
+    keyword whole SilverFinish brightmagenta
+    keyword whole Silver1_Colour brightmagenta
+    keyword whole Silver2_Colour brightmagenta
+    keyword whole Silver3_Colour brightmagenta
+    keyword whole Silver1 brightmagenta
+    keyword whole Silver2 brightmagenta
+    keyword whole Silver3 brightmagenta
+    keyword whole Brass_Valley brightmagenta
+    keyword whole Rust brightmagenta
+    keyword whole Rusty_Iron brightmagenta
+    keyword whole Soft_Silver brightmagenta
+    keyword whole Metallic_Finish brightmagenta
+    keyword whole New_Penny brightmagenta
+    keyword whole Tinny_Brass brightmagenta
+    keyword whole Gold_Nugget brightmagenta
+    keyword whole Aluminum brightmagenta
+    keyword whole Bright_Bronze brightmagenta
+    keyword whole Candy_Cane brightmagenta
+    keyword whole Peel brightmagenta
+    keyword whole Y_Gradient brightmagenta
+    keyword whole X_Gradient brightmagenta
+    keyword whole Water brightmagenta
+    keyword whole Cork brightmagenta
+    keyword whole Lightening_CMap1 brightmagenta
+    keyword whole Lightening1 brightmagenta
+    keyword whole Lightening_CMap2 brightmagenta
+    keyword whole Lightening2 brightmagenta
+    keyword whole Starfield brightmagenta
+
+# finishes
+    keyword whole Dull green
+    keyword whole Shiny green
+    keyword whole Phong_Dull green
+    keyword whole Phong_Shiny green
+    keyword whole Glossy green
+    keyword whole Phong_Glossy green
+    keyword whole Luminous green
+    keyword whole Mirror green
+
+
+# symbols
+    keyword /\* brown/22
+    keyword \*/ brown/22
+#    keyword // brown/22
+
+    keyword \+ yellow
+    keyword - yellow
+    keyword \* yellow
+#    keyword / yellow
+    keyword % yellow
+    keyword = yellow
+    keyword != yellow
+    keyword == yellow
+    keyword { white
+    keyword } white
+    keyword ( white
+    keyword ) white
+    keyword [ white
+    keyword ] white
+    keyword , white
+    keyword : white
+    keyword ; brightred
+    keyword > brightmagenta
+    keyword < brightmagenta
+
+context exclusive /\* \*/ brown/22
+context // \n brown/19
+
+context linestart # \n brightred
+    keyword \\\n yellow
+    keyword /\**\*/ brown
+    keyword "+" red
+    keyword <+> red
+
+context " " green
+    keyword \+ yellow
+    keyword - yellow
+    keyword \* yellow
+    keyword / yellow
+    keyword , white
+
+context exclusive ( ) white
+    keyword < yellow
+    keyword > yellow
+    keyword \+ yellow
+    keyword - yellow
+    keyword \* yellow
+    keyword / yellow
+    keyword % yellow
+    keyword = yellow
+    keyword != yellow
+    keyword == yellow
+    keyword & yellow
+    keyword | yellow
+    keyword , white
+
+context exclusive < > brightmagenta
+    keyword ( white
+    keyword ) white
+    keyword \+ yellow
+    keyword - yellow
+    keyword \* yellow
+    keyword / yellow
+    keyword , white
+
+###############################################################################
+
+

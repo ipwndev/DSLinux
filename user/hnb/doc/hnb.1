@@ -1,0 +1,60 @@
+.TH HNB SECTION "May 15, 2001"
+.SH NAME
+hnb \- Hierarchical notebook
+.SH SYNOPSIS
+.B hnb
+[\fIfile\fP]
+[\fIoptions\fP]
+[\fIcommand\fP [\fIcommand\fP] .. ]
+.SH DESCRIPTION
+This manual page documents briefly the \fBhnb\fP hierarchical notebook.
+
+\fBhnb\fP is an ncurses program to organize many kinds of data in one place, for
+example addresses, todo lists, ideas, book reviews or to store snippets of
+brainstorming, to make a structured packing list or just to take random notes. 
+It can export ascii/html/latex/postscript, supports todo checkboxes, checkbox
+trees with percentages and searching.
+
+\fBhnb\fP uses a simple ascii file for storing your notes. This file can be
+specified on the command line. If not specified, ~/.hnb is loaded (or created
+if missing).
+.SH OPTIONS
+\fBhnb\fP can be invoked with the following options:
+.TP
+.B \-h, \-\-help
+Show summary of options.
+.TP
+.B \-v, \-\-version
+Show version of program.
+.TP
+.B \-t, \-\-tutorial
+Load the tutorial instead of a database.
+.TP
+.B \-rc <\fIfile\fP>
+Load an other config file than default.
+.TP
+.B \-ui <curses|cli>
+Specify user interface to use.
+.TP
+.B \-e
+Run commands in noninteractive mode (start hnb with the cli ui and type
+`help' to get more information).
+.SH FILES
+.IP ~/.hnb
+The default file for your notes. To use an other, specify its name on
+the command line.
+
+.IP ~/.hnbrc
+The default configuration file. To load an other config file than default,
+use the \fB-rc\fP command-line option.
+
+.SH SEE ALSO
+For more information on the usage of the program, load the tutorial or
+press \fBF1\fP in the program.
+
+hnb homepage: http://hnb.sourceforge.net
+.SH AUTHOR
+hnb was written by 0yvind Kolas <pippin@users.sourceforge.net>.
+
+This manual page was written by Andras Bali <drewie@bigfoot.com>,
+for the Debian GNU/Linux system (but may be used by others).

@@ -1,0 +1,54 @@
+#! /bin/sh
+# retawq/tool/instdocu - install the documentation
+# This file is part of retawq (<http://retawq.sourceforge.net/>), a network
+# client created by Arne Thomassen; retawq is basically released under certain
+# versions of the GNU General Public License and WITHOUT ANY WARRANTY.
+# Read the file COPYING for license details, README for program information.
+# Copyright (C) 2004-2005 Arne Thomassen <arne@arne-thomassen.de>
+
+# This shell script is automatically executed during "make install".
+# Don't start it manually.
+
+# step 1: prepare
+
+#me=`echo "$0" | sed 's,.*[/],,'`
+me="$0"
+
+case "x$0" in
+  xtool/instdocu) ;;
+  *) echo "$me: must be executed as 'tool/instdocu'" >&2; (exit 1); exit 1 ;;
+esac
+
+case "x$#" in
+  x1) ;;
+  *) echo "$me: usage: $me <path>" >&2; (exit 1); exit 1 ;;
+esac
+
+path="$1"
+
+case "x$path" in
+  x/*) ;;
+  *) echo "$me: path must be absolute" >&2; (exit 1); exit 1 ;;
+esac
+
+case "x$path" in
+  */) ;;
+  *) path="$path/" ;;
+esac
+
+# case "x$path" in
+#   x*retawq*) ;;
+#   *) path="$path"retawq/ ;;
+# esac
+
+# CHECKME: "-p" portability...
+mkdir -p "$path" || { echo "$me: can't create directory $path" >&2; (exit 1); exit 1; }
+
+# step 2: copy the files
+
+cp -f README INSTALL "$path"
+cd docu/
+cp -f *.html example* retawq.lsm "$path"
+sed 's,\.\./,,' <index.html >"$path"index.html
+sed 's,\.\./,,' <ctconfig.html >"$path"ctconfig.html
+sed 's,\.\./,,' <user_guide.html >"$path"user_guide.html

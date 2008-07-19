@@ -1,0 +1,305 @@
+Advanced Midnight Commander rel.12   by  A'rpi/ESP-team
+==================================
+Send ideas and bugreports to: arpi@esp-team.scene.hu
+Download latest: ftp://esp-team.scene.hu/esp-team/linux/
+
+Special thanks to DrN0 & BB for great ideas & testing!
+
+(The original README file is renamed to README.ORIG)
+
+About:
+~~~~~~
+The goal of this project is creating a stable, well-working,
+usefull version of well-known Midnight Commander, without bugs.
+I'm bored waiting for bugfixes, so I did it. I'm fixing
+all bugs reported by my friends, or by YOU!
+
+Why is it an alternate version of mc, instead applying patches
+to main mc project? The original mc is now about v4.5.49, with
+more and more bugs, and some very bad structure changes.
+I like mc 4.1.x series much better, it has well-designed
+structures, easy to add new features. Maybe I'll port these
+changes to 4.5.x series, when it gets stable.
+Btw. I back-ported all new usefull things appeared in 4.5.x.
+
+Quick installation:   (keep this order!)
+~~~~~~~~~~~~~~~~~~~
+    1.	Check/edit mc.configure, and execute it:
+	    ./mc.configure
+        (remove --without-gpm-mouse for console mouse support)    
+	You can also use ./configure, specifying options manually.
+    2.	Compile it:
+    	    make
+    3.	If compilation successful, remove your old mc version, because it
+        DOES CONFLICT with this. At least delete everything from /usr/lib/mc:
+	    rm -rf /usr/lib/mc ~/.mc ~/.cedit
+    4.  Install the new mc:
+	    make install
+
+New features in rel.12:       beep, mc.ext, more bugfixes...
+~~~~~~~~~~~~~~~~~~~~~~~
+    General:
+        - Applied patches from Andrew V. Samoilov
+          - fixes possible buffer overflow in edit/syntax.c (1st line >79char)
+          - In edit/editcmd.c we really need to check close's return value,
+            or data can be lost.
+          - vfs.c: change behavior when leading tilde cannot be expanded
+          - fixes bad read(...)==sizeof (buffer) checks in file copy routines
+        - Using new method for detecting 'mc in mc':
+          - defining MC_CONTROL_PID env.var from first mc (but not in gmc !)
+          - checking for this var in mc's main()
+          It seems to works well, so enabled by default!
+        - Beep when finished file-op (copy/move/rename/delete)   [idea: Aries]
+          .mc/ini option line:   beep_when_finished=<mode>
+          modes:
+            0 = no beep   [default]
+            1 = beep only after multiple fileops
+            2 = beep after single or multiple fileops
+
+    Scripts:
+        - New .deb view (F3) command in mc.ext, works without dpkg-deb, and
+          shows both description and filelist (requires ar and tar)
+        - Same for .rpm files
+        - Added .esp to mc.ext, now you can enter and list .esp files
+
+    Install:
+        - ./configure display message, if run without options
+          (many user ran it instead mc.configure, so 'make' failed...)
+
+New features in rel.11:       small bugfixes...
+~~~~~~~~~~~~~~~~~~~~~~~
+    General:
+        - "Don't allow running mc from mc" feature DISABLED by default,
+          because the lame GNOME users (gnome somehow defines MC's environment
+          maybe because gmc...)
+          To enable, edit src/main.c, delete the line:
+             #define MC_IN_MC_ALLOWED
+          before 'make'
+        - Applied patches from Andrew V. Samoilov
+          - pipe mode display fixed (prw-rw-r-- instead of srw-rw-r--)
+          - In src/user.c char* is used instead of char [] in sizeof;
+          - fix typo in source
+        - 'bsize' user defined listing element didn't work for directories
+          (using with "show directory sIzes")  [Alexander Knyazev]
+        - panel->has_dir_sizes was not reset on directory change
+          (the 'bsize' fix showed this out...)
+    Cons.saver:
+        - some fix for tty>=10, solved BB's bug.
+        - just a question: why is cons.saver suid-root? it works without it too!
+
+New features in rel.10:       subshell...
+~~~~~~~~~~~~~~~~~~~~~~~
+    General:
+        - CTRL+O is not allowed if your subshell is active (if you see
+          the prompt, then press ENTER to bring it back to inactive state)
+          You can DISABLE this feature changing this option line:
+            subshell_blocks_ctrlo=0
+          in your ~/.mc/ini or system-wide configfile.
+        - New option for commandline prompt type:
+            command_prompt_type=2       (DEFAULT)
+              0: empty prompt, just like with disabled subshell
+                 ("# " for root and "$ " for simple users)
+              1: prompt is the current directory
+              2: get from the subshell (original behavior)
+          Why? Getting prompt from subshell is very "unstable", because
+               mc don't know that really prompt is readed, or just 
+               output of some running program... I suggest prompt_type=0 !
+        - New option to control CWD (path) exchange between subshell & MC:
+                allow_subshell_chdir=1  (DEFAULT)
+            You can disallow subshell to change MC's current directory.
+            (For example if you type "cd /usr/local/bin" in ctrl+o subshell
+            mode, then switch back to MC with ctrl+o, you will be in
+            /usr/local/bin if this option = 1, stay in your original
+            path (before switching to subshell) if option = 0)
+    FTPfs:
+        - Enabled interrupt-key (mostly CTRL+C) while resolving hostname
+          (You can break endless waiting after a mistyped URL...)
+        
+New features in rel.9:        small fixes
+~~~~~~~~~~~~~~~~~~~~~~
+    General:
+        - Allow extra "anykey"s at "Press any key to continue..."
+          [idea by Beregnyei Balazs]
+          (replaced xgetch() with get_key_code(0) in main.c)
+        - Alt-\ (or ESC \) calls Directory Hotlist, instead of Unselect panel.
+          (so you can access hotlist from vt100-like terminals, or via ssh)
+        - Don't allow running mc from mc    [idea by Beregnyei Balazs]
+        
+    FTPfs:
+        - forced directory re-read after F5/F6/F8
+          (replaced ftpfs_hint_reread(1) with ftpfs_flushdir() in file.c)
+    ExtFS:
+        - ftplist fixed:  (for details press F3 on /usr/lib/mc/extfs/ftplist)
+          - shows sitenames as files instead of links (entering now works!)
+          - supports copyout (F3 shows real site URL)
+
+
+New features in rel.8:        better Selection, Rename, F11-F20 support
+~~~~~~~~~~~~~~~~~~~~~~
+    General:
+        - file/directory selection: (input dialog of grey + and - keys)
+            (some bugfix and modification in cmd.c)
+          OLD:  (standard mc)
+                "mask"  -> select files only
+                "/mask" or "mask/" -> select dirs only
+                "*"     -> select all files
+                "/*" or "*/"  -> select all dirs
+          NEW:  (mc-A8)  [idea by KohiNoor]
+                "mask"  -> select files only
+                "mask/" -> select dirs only
+                "/mask" -> select files and dirs
+                "*"     -> select all files
+                "*/"    -> select all dirs
+                "/"     -> select all files & dirs
+        - F16 (shift+F6) = Rename dir/file
+          same as F6 (Move), but destination dir isn't shown in input dialog
+        - Slang: ESC+[!@#$%^&*()] means F11-F20 keys (usefull on vt100 terminals)
+          for example creating a new file in editor, press ESC and Shift+4 ($)
+          (instead of Shift+F4, which works only on raw console)
+          Problem: With hungarian keyboard layout it's useless :(
+    EXTfs:
+        - rpm: fix for buggy rpm2cpio 3.0.4 (which doesn't supports
+          input on stdin)
+    Docs: added 'About' section above
+
+New features in rel.7:        FTPfs fixes
+~~~~~~~~~~~~~~~~~~~~~~
+    General:
+        - name_quote(): quoting semicolon ";"
+          now such dirnames are allowed too:
+            Hulye` nevu" ko:nyvta'r ;-)
+    EXTfs:
+        - extra chars allowed in dir/filename when entering .ZIP files
+        - same for RAR, ESP, ls-lR, CPIO, AR, ftplist
+        
+    FTPfs:
+        These problems occured only if high network load (pingflooded host)
+        or slow modem connection:
+        - ftpfs_close(): send ABORT command if simple close(dsock) failed.
+          (in some extreme cases old mc could hang on ftp close)
+        - ftpfs_read(): workaround for a bug in mc's View (F3), triggered 
+           by new FTPfs. From the manpage of read(2):
+           RETURN VALUE: "It is *not* an  error  if  this  number  is
+           smaller  than the number of bytes requested; this may hap-
+           pen for example because fewer bytes are actually available
+           right  now (maybe because we were close to end-of-file, or
+           because we are reading from a pipe, or from  a  terminal)"
+          => F3 on FTP files works again! :)
+        - same for ftpfs_write(), maybe required by something...
+        Simple reproductable bugs:
+        - ftpfs_stat(): didn't work if the file is open (because of locking)
+          => F4 on FTP files works again! :)
+        - rewritten ftpfs_[un]getlocal() (required by VFS, for example
+          entering into a ZIP-file on ftp)
+          WARNING: changed archive files aren't re-upload! Q: What VFS's can
+          change the file? I think none.
+        - ftpfs_lseek() hack, required for entering .tar.bz2 files on FTP
+          (pre-read first 10kb to a temporary buffer allowing lseek() of
+          first bytes)
+    BUGS:
+        - mc hangs when viewing (F3) files with .ms extension :(
+          (not my bug, original mc does same.)
+          Command:  " nroff  -Tascii -ms Filelist.ms"
+
+
+New features in rel.6:        FXP (server-to-server FTP) support
+~~~~~~~~~~~~~~~~~~~~~~
+    FTPfs:
+        - initial FXP support, works for simple file transfers
+        - implemented reget & append with fxp
+        - enabled interrupt key (ctrl+C) for the whole FXP transfer
+
+        Note: Enabling FXP support in wu.ftpd:
+          You have to insert these lines into /etc/ftpaccess:
+          (and run wu.ftpd with -a from /etc/inetd.conf)
+              pasv-allow remote 0.0.0.0/0
+              port-allow remote 0.0.0.0/0
+
+    General:
+        - "cd quoted_dirname" works for dirnames with '%' too
+          (mc quotes '%' to '%%' instead '\%')
+
+    Docs:
+        - "Ctrl+A" replaced with "Alt+A" bellow
+
+New features in rel.5:        ExtFS, Quick-CD, DOCs
+~~~~~~~~~~~~~~~~~~~~~~
+    Docs:
+	- Added 'Quick installation' notes above
+	- PowerPack/README file added, it contains information about the pack
+	- Changed MC version to 4.1.35-A5, so F1 or mc -V reports release ver.
+    General:
+	- quick CD supports wildcards (eg. typing 'cd foo*bar?z' works...)
+	  (modified examine_cd() in command.c, added my wildcard_cmp_names())
+	- Alt+A (ESC a) and Alt+Shift+A (ESC A) also quote pathname
+	  ("ln -s " Alt+A Ctrl+Enter TAB "apoc.mp3" now works...)
+        - quick cd unquote path (required for using with above alt+a thing...)
+        - %Ld changed to %lld (it compiles on AIX too)
+    ExtFS:
+	- PowerPack/extfs directory removed, modified files moved to
+          vfs/extfs, so they're automatically installed for you!
+        - rpm fs ported from 4.5.49 (more faster file copyout)
+        - cpio fs fixed to work with rpm fs.
+        - fixed mawk->@AWK@ in hp48 fs
+        - fs changes to ./configure, ./configure.in and vfs/Makefile.in
+        - NTF system support to zip fs (what system is NTF???)  [3dsftk3.zip]
+
+New features in rel.4:        64-bit filesizes
+~~~~~~~~~~~~~~~~~~~~~~
+    General:
+	- type of panel->total changed to 64-bit 'long long' from 'long int'
+	  => summared size is correct selecting more than 2GB now!
+	- directory sizes also uses _internal_ 64-bit numbers
+	- new 64-bit fsize field into struct file_entry and
+	  every 'buf.st-size' changed to 'fsize'
+	  => full 64-bit filesize calculation (up to 8,589 million gigabyte!)
+    PowerPack:
+	- mp3rename added, see PowerPack/mp3rename/README
+
+New features in rel.3:        FTPfs, copy dialog
+~~~~~~~~~~~~~~~~~~~~~~
+    General:
+	- Copy/Move dialog: shows destination filename, not only path
+	- Copying file dialog shows ETA and BPS (transfer speed)
+	- Reget function for normal filesystems too (for broken copys
+	  of very large files (because diskfull, etc) it's very usefull)
+    FTPfs:
+	- direct ftp file read/write (instead using tempfiles...)
+	- implemented rename()
+	- detailed logging (start mc with -l logfilename)
+	- 'Append' supported if copying local->ftp  (using 'APPE' instead 'STOR')
+	- 'Reget' works in all cases:  local->local, local->ftp, ftp->local, ftp->ftp
+
+New features in rel.2:        FTPfs, dirsize
+~~~~~~~~~~~~~~~~~~~~~~
+    General:
+	- Directory sizes (F9/C/I) works on special dirnames (with spaces etc)
+    FTPfs:
+	- working symlinks (at ftp.scene.hu and ftp.kfki.hu too)
+
+New features in rel.1:        Syntax hi-lighting
+~~~~~~~~~~~~~~~~~~~~~~
+    Editor:
+	- Syntax hilighting definition file (~/.cedit/Syntax) supports
+	  'include' so separated syntax def files from /usr/lib/mc/syntax
+	  can be used.
+    PowerPack:
+	- modified Syntax hilighting files, for C, HTML, BAPC, LSM, etc.
+	- fixed zipfs, now works with MSDOS pkzip'ed files too
+	- added espfs, you can browse files of ESP-team's ESP archiver
+
+TODO: (future plans)
+~~~~~
+        - show one/selected directory size with F3 [Mik]
+        - better .deb extfs support:
+          A, bugfixing current extfs script [Aries]
+          B, use 'ar x' and tarfs instead dpkg
+        - save cursor position for F3 and F4 by file
+        - find & fix hotkey problems with debian linux (F9/C/I, Ctrl-Y, etc)
+        - get CTRL+O working without cons.saver support (disable panels...)
+        - better F9/Options menu [Aries]
+	- 'directory sizes' command on ftpfs
+        - support windows directory listing format in FTP
+        - textmode screensavers? [Aries]
+	- internal/external mp3 ID3-tag editor?
+

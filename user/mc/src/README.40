@@ -1,0 +1,350 @@
+Advanced Midnight Commander mc-4.1.x-MP       [by  Olegarch]
+=======================================
+Send ideas and bugreports to: olegarch@linuxinside.com
+Download latest: http://mc.linuxinside.com/
+
+(The original README file is renamed to README.ORIG)
+(The README file from A'rpi's/ESP MC is renamed to README.A12)
+
+About:
+~~~~~~
+The goal of this project is creating a stable, well-working, usefull 
+console-only version of well-known Midnight Commander, without bugs 
+and garbage, like tk, xv and gnome. 
+
+I'm bored waiting for bugfixes, and A'rpi's ESP team stops their work in 
+this direction too, so I did it. I'm fixing all (found) bugs, reported by my 
+friends, and made some really pleasent new features, like real-time clock, 
+or filegroups colorizing.
+
+- Why is it an alternate version of mc, instead applying patches
+to main mc project? 
+
+- The original mc is now about v4.6.x, with more and more bugs, 
+"monster from the console" grows more and more, and now it has some 
+very bad structural changes, tons of garbage code, and finally - 
+there is no possibilities to compile it without some X parts, like Glib
+(that is support-library for GTK+).
+
+When I use linux - i want to use fast and powerfull _console_ file manager, 
+and I like mc 4.1.x series much better: it has well-designed structures, 
+easy to add new features.
+
+Btw. I back-ported some of new usefull things appeared in 4.5.x and 4.6.x, 
+make some fixes, catch some memory leaks, and so on...
+
+
+Quick installation:   (keep this order!)
+~~~~~~~~~~~~~~~~~~~
+    1.	Check/edit mc.configure, and execute it:
+	    ./mc.configure
+        (remove --without-gpm-mouse for console mouse support)
+	You can also use ./configure, specifying options manually.
+    NOTE:
+        You can use "mc-[SYSTEM_CLASS_NAME].configure" scripts for 
+	different systems, if you can't or wan't read simple "./configure 
+	--help", and/or can't combine some necessary commandline keys 
+	of "configure" in conclusion.
+
+    2.	Compile it:
+    	    make
+
+    3.	If compilation successful, remove your old mc version, because it
+        DOES CONFLICT with this. At least delete everything from /usr/lib/mc:
+	    rm -rf /usr/lib/mc ~/.mc
+
+    4.  Install the new mc:
+	    make install
+
+
+ToDo:
+~~~~~
+	- moved to separate "TODO" [ -> README.TODO.40 ] file.
+
+New features in 4.1.40-pre9:    (Metal is forever!)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    General:
+	- ADDED: EXTFS patches from Hatred: 
+		 * New EXTFS behaviour: strings from Miguel's "url" format:
+		   "rpm:cpio:/path/ar.rpm/ar.cpio/path2" 
+		   converted to strings in "#proski/" format, at form:
+		   "/path/ar.rpm#rpm/ar.cpio#cpio/path2"
+
+		!!! Warning: Looks buggy (don't enter archives from simple user), 
+		    if user not delete previos MC init file. Don't fear. ;)
+
+	- ADDED: EXTFS mkdir/rmdir/unlink features for archives, EXPERIMENTAL!
+	- ADDED: Some new keybindings: 
+		 * CTRL+` - "toggle bookmark" in editor
+		 * ALT+INS - "Paste from clipboard" in editor (as Sh-INS)
+		 * Ctrl+LEFT, Ctrl+RIGHT - fast horizontal movement (10 chars)
+		   in Viewer
+	- ADDED: "External Scripting" function in Editor. Thanx to Gergely
+		 Szasz for original idea.
+	- ADDED: "CD-recording" into PowerPack. Thanx to Bart Friederichs for 
+		  original realisation. But it's incomplete, and WET yet!
+	- ADDED: "Double frames" feature and option for panels, EXPERIMENTAL!
+		 Possibly will work only with PC/KOI 8bit character mappings
+	- ADDED: "Show mountpoint info" feature and option for panels:
+		 * Shows [ FreeSize / TotalSize ] on panel's bottom for current 
+		   mountpoint
+	- ADDED: "Panel Scrollbar" option for panels: shows scrollbar
+	- ADDED: "Fullscreen mode" for Viewer, which binded on F11 fkey:
+		 * very useful for ebook-reading process on PDAs and notebooks
+		   with small screen: statusline and keybar dissapoints reader 
+		   person because useful text smaller on two lines.
+	- CHANGED: "Layout" dialog:
+		 * Added options - "Double frames", "Panel Scrollbar", "Show 
+		   mountpoint info"
+		 * Added "l&Ynx-like motion" option, moved from "Configuration"
+		 * Re-layed some elemenths of "Layout" dialog
+	- CHANGED: panel menu for mountpoints rewritten from scratch:
+		 * now we has possibility to show: mountpoint name, size of 
+		   FS at mountpoint, free space, mounted device name, full 
+		   path on mountpoint (from panel's history) and HotKeys. 
+		   Work will be continued. FEATURE IS EXPERIMENTAL!
+		 * "mc_cd_mountpoint_and_dir" setup option: allow to CD into
+		   last used directory of selected MountPoint. INI option, off
+		   by default.
+
+		!!! Warning: Needs BeOS and QNX FIXES! Code revision requered.
+
+	- CHANGED: "Enter" key behaviour for Viewer: now scroll text by page, 
+		   nor line:
+		 * very useful for ebook-reading process on PDAs and notebooks, 
+		   where is absent PgUP and PgDN keys: BkSPC and Enter are 
+		   changing them.
+	- FIXED: Some security fixes applied, some memleaks catched
+	- FIXED: 2GB limit in directory size counters not has a place anymore
+
+		!!! Warning: Possible bugs! Needs more code revision.
+
+	- FIXED: With native SLANG compilation problem connected with placement
+		 of nice rotating dash.
+	- FIXED: Single search-string buffer for all search/replace ops
+	- FIXED: Duplicates in all historys unnecessary and must be off!
+	- FIXED: Menubar now has HotKeys highlights
+	- FIXED: Listbox now has HotKeys (when exist) showing with highlights.
+	- REMOVED: (temporaly, I hope) all ".po" files, except "ru.po". 
+		   Maintainer waits for your suggestions about your locales.
+    Scripts:
+        - VFS scripts: 
+	    * zip: bugfixes, optimisation, BeOS archives support
+	    * rar: bugfixes
+	    * trpm: bugfixes
+	    * rpm: bugfixes
+	    * deb: bugfixes
+	    * lha: bugfixes
+    	    * cab (by Guus Jansman): added, unchecked yet
+	- mc.ext reworked
+	- Syntax config file reworked
+	- ru.po language file finished
+    Install:
+        - No changes.
+
+New features in 4.1.40-pre8:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    General:
+	- ADDED: "Free all VFS now" and "Refresh" buttons for "Active VFS" 
+	         dialog (which binded on "Ctrl+x a")
+	- ADDED: "Free all VFS now" feature in "Commands" menu
+	- ADDED: "find First entry only" feature in "Find File" dialog. This 
+		 option gave possibility to find only first entry of searching 
+		 text definition, one per file
+	- ADDED: initial support of MultiScreen feature (thanx a lot to 
+	         Walery Studennikov for idea, primal MC realisation and help 
+		 in porting to mc-MP)
+		 Keybindings for this feature are next (for both panels and 
+		 editor):
+		  * Alt+d - "Dialogs" menu  (This keybinding is TEMPLATE and 
+		    must be changed as soon as possible)
+		  * Alt+i - "Next Dialog"
+		  * Alt+u - "Previous Dialog"
+	- ADDED: "HotKeys filesort" feature and keybindings (Ctrl+x 1,2,3,...,7)
+	         for Re-Sorting files in panels (sort by name, extension, etc), 
+		 indicator feature (that shows current sorting state ) is also 
+		 realized
+	- ADDED: "Charsets" additional keybinding [Shift-F8] (for editor)
+    	- IMPROVED: BeOS support (PE5/Dan0 +BONE, thanx to Smedos for help)
+    	- IMPROVED: Horizontal resplitter (Ctrl+LEFT|RIGHT|END) now works only 
+	            if cmdline buffer is clear
+    	- IMPROVED: Ctrl+H behaviour is changed:
+		    * IF cmdline buffer is clear - Ctrl+H Shows/Hides hidden 
+		      files/dirs, else Ctrl+H works as BackSpace
+	- FIXED: SunOS/Solaris support (thanx to Mikhail Yu. Fursov for 
+	         Solaris's "strsep"=="getToken" analogy) 
+
+	        * SOLARIS PORT TESTED WITH GCC ONLY!
+
+	- FIXED: editor behaviour with search in "re-encoding" mode
+	- FIXED: editor statusline info shorts, when clock display is on 
+	         (useful for 80x25 mode, but can be reverted to an older view)
+	- FIXED: editor bookmarks shows correctly with [n]curses
+	- FIXED: viewer's hex editor correctly shows cursor colors with [n]curses
+
+	        * possible need some colour-corrections for slang/xterm mode
+		
+	- FIXED: viewer's hex editor "offset marks" currently has 8 chars, that
+	         revert old-style "5-chars marks" for correction of indecorous 
+		 figure, "inheritance" of older MCs
+	- FIXED: viewer's status line dynamicly follows long of i18n string 
+	         values (including "Col:", "Offset:", "File:", "bytes", and so 
+		 on)
+
+    Scripts:
+        - Added some "mc-[SYSTEM_CLASS_NAME].configure" scripts for 
+	  different systems: for most impatient persons, who can't read 
+	  simple "./configure --help", and/or can't combine some necessary 
+	  commandline keys of "configure" in conclusion.
+	- audio vfs partially reworked
+
+
+New features in 4.1.40-pre7:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    General:
+    	- Added initial support for BeOS port (still needs work in this 
+	  direction)
+    	- ADDED new core feature:
+	  * Test filetype before execute (thanx to Hatred for patch)
+    	- ADDED new keybinding for panel:
+	  * F3 - compute size of single selected directory or 
+	    group of directoryes (thanx to Hatred for idea)
+    	- ADDED "classical colors" color scheme (so many requests...)
+	  "-Y" command line parameter makes Midnight Commander blue-oriented
+	- FIXED: single fileop segfault bug 
+	         (all systems, thanx to Anton Kovalenko)
+	- FIXED: external viewer segfault bug 
+	         (all systems, thanx to Anton Kovalenko)
+	- FIXED: when mcedit (in pre6 only) tried to open ZIPped (archived)
+	         files, it qualifies as non-regular ones and never opens
+		 (all systems)
+	- IMPROVED: console mode in FreeBSD 5.x (must work for now)
+    Scripts:
+        - Partially changed most of vfs scripts
+	- mc.ext partially reworked
+    Install:
+        - No changes
+
+New features in 4.1.40-pre6:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    General:
+    	- Added some new keybindings for viewer (CTRL+PgUp|PgDn)
+	- Completly revorked engine of internal editor.
+    	- Added new features for editor:
+	  * Alt+TAB coninues tapped word, if it present earlier
+	  * Search/Replace now has possibility to set bookmarks
+	  * Editor store position (line and column) of edited file 
+	    (instead line-only in prvious versions of mc-MP)
+
+	    !!! don't forget to delete your previous ~/.mc/edit.pos !!!
+
+	- FIXED: xBSD compilation/usage:
+	  * HARD testing required!
+    	- FIXED: Content search segfault bug (in FreeBSD)
+    	- FIXED: HotList segfault bug
+	- IMPROVED: viewer now store line and fullpath of viewed file 
+	  (instead line and filename-only)
+    Scripts:
+        - No changes.
+    Install:
+        - No changes.
+
+New features in 4.1.40-pre5:    (Bene! it's almost stable)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    General:
+    	- Added support for charsets in panel mode:
+	  * Shift+F8 keybinding
+	- Added "View save line" feature and option.
+	- CORE/Editor bugfix: many, many, many bugs.
+    Scripts:
+        - No changes.
+    Install:
+        - No changes.
+
+New features in 4.1.40-pre4:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    General:
+	- Added "full" syntax highlighting support:
+	  * Slang & (N)Curses both now correctly supported
+    	- Added initial support for FreeBSD (cons25) console mode.
+    	- Added own mkstemp, reverts unsecure tmpnam usage to secure one
+    	- Added new one filegroup: database
+	- Added new syntax files for awk, post script, universal and dos files
+	- Partially revorked most of internal engines.
+	- Most compilation warnings their fixed.
+	- Most bugs are catched (hope so) for now.
+    Scripts:
+        - No changes.
+    Install:
+        - No changes.
+
+New features in 4.1.40-pre3:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	- Bugfix release
+
+New features in 4.1.40-pre2:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    General:
+	- Added "Save position" feature (and menu option) for editor 
+	  * After exit from text editor saves line of cursor position,
+	    and set it with next text edition.
+    	- Added new configuration parameters into "Options" menu
+	  * Added "Beep-After-FileOp" setup
+	  * Added "Clock type" setup
+    	- Added new menu parameter for "Sort Order" dialog:
+	  * Executables now can go on top of the list (after the directories)
+	- Added panel menu for mountpoints:
+	  * like Alt-F1/F2 in NC/VC/DN/Far: realized in Shift-F1/F2 (F11/F12)
+	- Added panels vertical resizer/horizontal resplitter keybindings:
+	  * Ctrl-UP/DOWN/LEFT/RIGHT/END
+	- Added new panel keybindings: 
+	  * Search: Shift-F7 (F17)
+	  * FTP client interface fast call: "Ctrl+x f"
+	  * FullPath/Alternative FullPath moves into commandline: Alt+a/A
+	  * FullPath + selected filename moves into commandline: Alt+F|f
+	  * Show/Hide hidden filesand dirs: Ctrl+h
+	- "Beep-After-FileOp" cosmetical re-engine (thanx DN team for idea 
+	  of sound).
+    Scripts:
+        - Rar vfs script partially reworked.
+    Install:
+        - No changes.
+
+New features in 4.1.40-pre1:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    General:
+    	- New 3.11.5 editor:
+	  * Partially ported from Cooledit-3.17.7
+	  ! Much more powerful editor than original (2.1) one.
+    	- New bookmarks management feature for editor:
+	  * Correctly works (Ctrl-Alt-Ins|Up|Down) for console
+	  * With highlighting (instead "blind bookmarks" in 4.6)
+    	- Added "character encoding" feature for viewer and editor:
+	  * Correctly works for both input and output
+    	- Added realtime clock in menu line:
+	  * Excepts viewer
+	  * On/Off option for editor's "Status line" 
+	   (if On - possible bugs in search/replace dialog handling)
+	- Added filegroups colorization for panels:
+	  * Colorization of six file-groups (by extention).
+    	- Added some new key-combinations:
+	  * Local copy/Rename: Shift-F5|F6 (for panels)
+	  * Exit: Alt-X|x (for panels, editor and viewer)
+	  * Encodings menu: Ctrl-t (for viewer and editor)
+	  * Bookmark control: Alt-Ctrl-Ins, Alt-Ctrl-UP|DOWN (for editor)
+    	- Improved colorization of interface:
+	  * Corrected menu colorization 
+	  * Changed default panel colors to darker ones (no more suckin' blue!)
+	- Improved panel ministatus:
+	  * Fileselection size info now has personal place
+    	- Improved "content search" routine:
+	  * Now works without egrep
+    	- Improved directory history menu (Alt-Shift-H in panel):
+	  * Left/Right menu placement
+    	- Improved command line history menu functionality
+	- GLIB/GTK+/GNOME/Tcl/Tk/GUI parts now totaly removed (Oh, yes!)
+	- Many bugs catched
+    Scripts:
+        - Improved lslR vfs script.
+    Install:
+        - No changes.

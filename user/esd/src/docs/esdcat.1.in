@@ -1,0 +1,105 @@
+'\" te
+.IX Title "ESDCAT 1"
+.TH ESDCAT 1 "EsounD @VERSION@" "Feb 2006" "Enlightened Sound Daemon"
+.SH "NAME"
+esdcat \- play a sound file from \fBstdin\fR
+.SH "SYNOPSIS"
+.PP
+\fBesdcat\fR [-\fBs \fIhostname\fR:\fIport\fR\fR] [\f(CW\*(C`\-n\*(C'\fR name] [-\fBb\fR] [-\fBh\fR] [-\fBm\fR] [-\fBr \fIfreq\fR\fR] < file
+.SH "DESCRIPTION"
+.PP
+The \fBesdcat\fR application pipes data from \fBstdin \fRto the sound device, using the Enlightened Sound Daemon (\fBesd\fR)\&.
+.PP
+.SH "OPTIONS"
+.PP
+The following options are supported:
+.sp
+.ne 2
+.mk
+\fB-\fBs \fIhostname\fR:\fIport\fR\fR\fR
+.in +16n
+.rt
+Contact the \fBesd\fR server on \fIhostname\fR at \fIport\fR\&.
+.sp
+.sp 1
+.in -16n
+.sp
+.ne 2
+.mk
+\fB-\fBb\fR\fR
+.in +16n
+.rt
+Specify that
+the output should be in 8-bit format\&. By default, the output is in 16-bit
+format\&.
+.sp
+.sp 1
+.in -16n
+.sp
+.ne 2
+.mk
+\fB-\fBh\fR\fR
+.in +16n
+.rt
+Display help
+text, and exit\&.
+.sp
+.sp 1
+.in -16n
+.sp
+.ne 2
+.mk
+\fB-\fBm\fR\fR
+.in +16n
+.rt
+Specify that
+the output should be in mono format\&. By default, the output is in stereo format\&.
+.sp
+.sp 1
+.in -16n
+.sp
+.ne 2
+.mk
+\fB-\fBr \fIfreq\fR\fR\fR
+.in +16n
+.rt
+Specify that the output rate should be set to \fIfreq\fR\&. By default, the output rate is set to 44\&.1 kHz\&.
+.sp
+.sp 1
+.in -16n
+.SH "EXAMPLES"
+.PP
+\fBExample 1: Playing a sound file "beep" from stdin\fR
+.PP
+.PP
+.nf
+example% \fBesdcat < beep\fR
+.fi
+.SH "EXIT STATUS"
+.PP
+The following exit values are returned:
+.sp
+.ne 2
+.mk
+\fB\fB0\fR\fR
+.in +9n
+.rt
+Application exited successfully
+.sp
+.sp 1
+.in -9n
+.sp
+.ne 2
+.mk
+\fB\fB>0\fR\fR
+.in +9n
+.rt
+Application
+exited with failure
+.sp
+.sp 1
+.in -9n
+.SH "SEE ALSO"
+.IX Header "SEE ALSO"
+\&\fIesd\fR\|(1), \fIesddsp\fR\|(1), \fIesdfilt\fR\|(1), \fIesdloop\fR\|(1), \fIesdplay\fR\|(1), \fIesdsample\fR\|(1),
+\&\fIesd-config\fR\|(1), \fIesdctl\fR\|(1), \fIesdmon\fR\|(1), \fIesdrec\fR\|(1)

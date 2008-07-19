@@ -1,0 +1,244 @@
+# DOS files syntax by Olegarch  <olegarch@mail.ru>
+# GPL v2
+#
+# (c) 2003
+#
+
+context default
+
+    keyword whole 0\{xX\}\[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\] magenta
+
+# Internal commands supported by Command.com
+
+    keyword whole BREAK brightred
+    keyword whole CHCP white
+    keyword whole CHDIR white
+    keyword whole CD white
+    keyword whole CLS white
+    keyword whole COPY white
+    keyword whole CTTY white
+    keyword whole DATE white
+    keyword whole DEL white
+    keyword whole DIR white
+    keyword whole ERASE white
+    keyword whole EXIT white
+    keyword whole LOADHIGH white
+    keyword whole LH white
+    keyword whole MD white
+    keyword whole MKDIR white
+    keyword whole PATH white
+    keyword whole TEMP white
+    keyword whole PROMPT white
+    keyword whole REN white
+    keyword whole RENAME white
+    keyword whole RD white
+    keyword whole RMDIR white
+    keyword whole TIME white
+    keyword whole TYPE white
+    keyword whole VER white
+    keyword whole VERIFY white
+    keyword whole VOL white
+
+    keyword whole \{Bb\}reak brightred
+    keyword whole \{Cc\}h\{Cc\}p white
+    keyword whole \{Cc\}h\{Dd\}ir white
+    keyword whole \{Cc\}d white
+    keyword whole \{Cc\}ls white
+    keyword whole \{Cc\}opy white
+    keyword whole \{Cc\}\{Tt\}\{Tt\}\{Yy\} white
+    keyword whole \{Dd\}ate white
+    keyword whole \{Dd\}el white
+    keyword whole \{Dd\}ir white
+    keyword whole \{Ee\}rase white
+    keyword whole \{Ee\}xit white
+    keyword whole \{Ll\}oad\{Hh\}igh white
+    keyword whole \{Ll\}h white
+    keyword whole \{Mm\}d white
+    keyword whole \{Mm\}k\{Dd\}ir white
+    keyword whole \{Pp\}ath white
+    keyword whole \{Tt\}emp white
+    keyword whole \{Pp\}prompt white
+    keyword whole \{Rr\}en white
+    keyword whole \{Rr\}ename white
+    keyword whole \{Rr\}d white
+    keyword whole \{Rr\}m\{Dd\}ir white
+    keyword whole \{Tt\}ime white
+    keyword whole \{Tt\}ype white
+    keyword whole \{Vv\}er white
+    keyword whole \{Vv\}erify white
+    keyword whole \{Vv\}ol white
+
+# Commands related to Batch files and the Config.sys file
+
+    keyword whole DOS brightgreen
+    keyword whole HIGH green
+    keyword whole UMB red
+
+    keyword whole BUFFERS brightgreen
+    keyword whole CALL brightmagenta
+    keyword whole CHOICE brightmagenta
+    keyword whole COUNTRY brightmagenta
+    keyword whole DEVICE brightmagenta
+    keyword whole DEVICEHIGH brightmagenta
+    keyword whole DO brightmagenta
+    keyword whole ECHO brightmagenta
+    keyword whole ERRORLEVEL brightred
+    keyword whole EXIST brightred
+    keyword whole FOR yellow
+    keyword whole FCBS brightmagenta
+    keyword whole FILES brightgreen
+    keyword whole GOTO white
+    keyword whole IF white
+    keyword whole IN brightmagenta
+    keyword whole INCLUDE brightmagenta
+    keyword whole LASTDRIVE brightgreen
+    keyword whole MENUCOLOR yellow
+    keyword whole MENUDEFAULT red
+    keyword whole MENUITEM green
+    keyword whole NUMLOCK brightmagenta
+    keyword whole NOT brightred
+    keyword whole PAUSE brightred
+    keyword whole SET brightmagenta
+    keyword whole SHELL brightgreen
+    keyword whole SHIFT brightmagenta
+    keyword whole STACKS brightgreen
+    keyword whole SUBMENU brightblue
+    keyword whole SWITCHES brightmagenta
+
+    keyword whole \{Bb\}uffers brightgreen
+    keyword whole \{Cc\}all brightmagenta
+    keyword whole \{Cc\}hoice brightmagenta
+    keyword whole \{Cc\}ountry brightmagenta
+    keyword whole \{Dd\}evice brightmagenta
+    keyword whole \{Dd\}evice\{Hh\}igh brightmagenta
+    keyword whole \{Dd\}o brightmagenta
+    keyword whole \{Dd\}os brightmagenta
+    keyword whole \{Ee\}cho brightmagenta
+    keyword whole \{Ee\}rror\{Ll\}evel brightred
+    keyword whole \{Ee\}xist brightred
+    keyword whole \{Ff\}or yellow
+    keyword whole \{Ff\}\{Cc\}\{Bb\}\{Ss\} brightmagenta
+    keyword whole \{Ff\}iles brightgreen
+    keyword whole \{Gg\}o\{Tt\}o white
+    keyword whole \{Ii\}f white
+    keyword whole \{Ii\}n brightmagenta
+    keyword whole \{Ii\}nclude brightmagenta
+    keyword whole \{Ll\}LAST\{Dd\}DRIVE brightgreen
+    keyword whole \{Mm\}enu\{Cc\}olor yellow
+    keyword whole \{Mm\}enu\{Dd\}efault red
+    keyword whole \{Mm\}enu\{Ii\}tem green
+    keyword whole \{Nn\}um\{Ll\}ock brightmagenta
+    keyword whole \{Nn\}ot brightred
+    keyword whole \{Pp\}ause brightred
+    keyword whole \{Ss\}et brightmagenta
+    keyword whole \{Ss\}hell brightgreen
+    keyword whole \{Ss\}hift brightmagenta
+    keyword whole \{Ss\}tacks brightgreen
+    keyword whole \{Ss\}ub\{Mm\}enu brightblue
+    keyword whole \{Ss\}witches brightmagenta
+
+# External commands, they are just exe & com files
+
+    keyword whole ANSI yellow
+    keyword whole APPEND yellow
+    keyword whole ATTRIB yellow
+    keyword whole CHCP yellow
+    keyword whole CHKDSK yellow
+    keyword whole CHKSTATE yellow
+    keyword whole COMMAND yellow
+    keyword whole DEBUG yellow
+    keyword whole DEFRAG yellow
+    keyword whole DELTREE yellow
+    keyword whole DISKCOMP yellow
+    keyword whole DISKCOPY yellow
+    keyword whole DISPLAY yellow
+    keyword whole DOSKEY yellow
+    keyword whole DOSSHELL yellow
+    keyword whole DRIVER yellow
+    keyword whole DRIVPARM yellow
+    keyword whole DRVSPACE yellow
+    keyword whole EDIT yellow
+    keyword whole EGA yellow
+    keyword whole EMM386 yellow
+    keyword whole EXPAND yellow
+    keyword whole FASTHELP yellow
+    keyword whole FASTOPEN yellow
+    keyword whole FC yellow
+    keyword whole FDISK yellow
+    keyword whole FIND yellow
+    keyword whole FORMAT yellow
+    keyword whole GRAPHICS yellow
+    keyword whole HELP yellow
+    keyword whole MOVE yellow
+    keyword whole HIMEM yellow
+    keyword whole INSTALL yellow
+    keyword whole INSTALLHIGH yellow
+    keyword whole INTERLNK yellow
+    keyword whole INTERSVR yellow
+    keyword whole KEYB yellow
+    keyword whole LABEL yellow
+    keyword whole LOADFIX yellow
+    keyword whole MEM yellow
+    keyword whole MEMMAKER yellow
+    keyword whole MORE yellow
+    keyword whole MSCDEX yellow
+    keyword whole MSD yellow
+    keyword whole NLSFUNC yellow
+    keyword whole POWER yellow
+    keyword whole PRINT yellow
+    keyword whole QBASIC yellow
+    keyword whole RAMDRIVE yellow
+    keyword whole REPLACE yellow
+    keyword whole RESTORE yellow
+    keyword whole SCANDISK yellow
+    keyword whole SETVER yellow
+    keyword whole SHARE yellow
+    keyword whole SMARTDRV yellow
+    keyword whole SORT yellow
+    keyword whole SUBST yellow
+    keyword whole SYS yellow
+    keyword whole EXE yellow
+    keyword whole COM yellow
+    keyword whole TREE yellow
+    keyword whole UNDELETE yellow
+    keyword whole UNFORMAT yellow
+    keyword whole XCOPY yellow
+
+    keyword \\ cyan
+    keyword :\\ cyan
+    keyword / cyan
+    keyword :/ cyan
+    keyword whole \%\* brightgreen
+    keyword whole \%\$ brightgreen
+    keyword whole \%\[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789\]+\% brightgreen
+    keyword whole \%\[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_0123456789@~\]+ brightgreen
+    keyword >> brightred
+    keyword | brightred
+    keyword > brightred
+    keyword < brightred
+    keyword \+ brightred
+    keyword - brightred
+    keyword \* brightred
+    keyword % brightred
+    keyword = brightred
+    keyword { white
+    keyword } white
+    keyword ( white
+    keyword ) white
+#    keyword [*] cyan
+    keyword . cyan
+    keyword ' green
+    keyword , cyan
+    keyword ; yellow
+
+context " " green
+#context ' ' brightgreen
+context :: \n magenta
+	keyword $+:*$ black green
+
+context linestart : \n white brown
+context linestart [*] \n white brown
+context linestart @ \n gray
+context exclusive /\* \*/ brown
+context linestart rem \n brown
+context linestart REM \n brown

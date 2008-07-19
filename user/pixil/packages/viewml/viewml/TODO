@@ -1,0 +1,31 @@
+ViewML Browser Things to Do
+
+This is by no means complete. Please subscribe to the
+ViewML development mailing list at: www.viewml.com/mailinglist
+
+For anonymous CVS access:
+1. Set your CVSROOT as such:
+     export CVSROOT=:pserver:anoncvs@cvs.viewml.com:/usr/cvs
+2. Run "cvs login" and use a password of "guest".
+3. Run "cvs co viewml"
+
+Last Updated Tuesday, November 14th, 2000
+
+Assigned Tasks
+====================================
+Cleanup in the source tree to prune unused leftover KDE code
+Make POST forms work
+Return pressed callback in edit controls
+Callbacks implemented for multi-line edits.
+
+Unassigned Tasks
+====================================
+Pound on JavaScript
+Some functions in src/fltk/qdrawutil.cpp need finished
+Finish implementation of QPainter class
+Clean up all warnings
+Clean up the function inlining
+Make everything smaller on disk
+  (maybe removing some inlines...)
+Reduce runtime memory impact
+

@@ -1,0 +1,276 @@
+# syntax rules version 68
+# (after the slash is a Cooledit color, 0-26 or any of the X colors in rgb.txt)
+# black
+# red
+# green
+# brown
+# blue
+# magenta
+# cyan
+# lightgray
+# gray
+# brightred
+# brightgreen
+# yellow
+# brightblue
+# brightmagenta
+# brightcyan
+# white
+
+file gobledy_gook #\sHelp\ssupport\sother\sfile\stypes
+context default
+file gobledy_gook #\sby\scoding\srules\sin\s~/.cedit/syntax.
+context default
+file gobledy_gook #\sSee\sman/syntax\sin\sthe\ssource\sdistribution
+context default
+file gobledy_gook #\sand\sconsult\sthe\sman\spage.
+context default
+
+
+file ..\*\\.(diff|rej|patch)$ Diff\sOutput ^diff
+include diff.syntax
+
+file ..\*\\.(PS|ps|EPS|eps|AI|ai)$ Post\sScript\sDocument
+include ps.syntax
+
+file ..\*\\.(inc|pov|POv)$ Pov\sRay\sScene
+include pov.syntax
+
+file ..\*\\.(csd|CSD)$ C\sSound\sFile
+include csd.syntax
+
+file ..\*\\.(po|PO)$ PO\sLanguage\sDefinition\sFile
+include po.syntax
+
+file ..\*\\.(tcl|tk|TCL|TK)$ TCL/TK\sFile
+include tcl.syntax
+
+file ..\*\\.(reg|REG|ini|INI|bat|BAT|sys|SYS)$ DOS\sFile
+include dos.syntax
+
+file ..\*\\.(m4|M4)$ M4\sFile
+include m4.syntax
+
+file ..\*\\.lsm$ LSM\sFile
+include lsm.syntax
+
+file ..\*\\.(lisp|el|elc|EL|ELC|LISP)$ LSM\sFile
+include lisp.syntax
+
+file ..\*\\.sh$ Shell\sScript ^#!\s\*/.\*/(ksh|bash|sh|pdkzsh)
+include sh.syntax
+
+file ..\*\\.(mod|pl|PL])$ Perl\sProgram ^#!\s\*/.\*/perl
+include perl.syntax
+
+file ..\*\\.(py|PY])$ Python\sProgram ^#!\s\*/.\*/python
+include python.syntax
+
+file ..\*\\.(roff|nroff|man|[0-9n]|[0-9]x)$ NROFF\sSource
+include nroff.syntax
+
+file ..\*\\.(htm|html|HTM|HTML|shtml|SHTML|sgml|SGML)$ HTML\sFile
+include html.syntax
+
+file ..\*\\.(pp|PP|pas|PAS)$ Pascal\sProgram
+include pascal.syntax
+
+file ..\*\\.(ada|adb|ADA|ADB)$ Ada\sProgram
+include ada95.syntax
+
+file ..\*\\.tex$ LaTeX\s2e\sDocument
+include latex.syntax
+
+file ..\*\.(texi|texinfo|TEXI|TEXINFO)$ Texinfo\sDocument
+include texinfo.syntax
+
+file ..\*\\.([chC]|CC|cxx|cc|cpp|CPP|CXX)$ C/C\+\+\sProgram
+include c.syntax
+
+file ..\*\\.[fF]$ Fortran\sProgram
+include fortran.syntax
+
+file ..\*\\.i$ SWIG\sSource
+include swig.syntax
+
+file ..\*\\.(php|php[0-2]|php[4-9])$ PHP\sProgram
+include php.syntax
+
+file ..\*\\.(php3)$ PHP\sProgram
+include php3.syntax
+
+file ..\*\\.(java|JAVA|Java|jav)$ Java\sProgram
+include java.syntax
+
+file ..\*\\.(js|JS)$ JavaScript\sProgram
+include js.syntax
+
+file ..\*\\.(st)$ SmallTalk\sProgram
+include smalltalk.syntax
+
+file ..\*\\.(ml|mli|mly|mll|mlp)$ ML\sProgram
+include ml.syntax
+
+file ..\*\\.(ly|fly|sly)$ Lilypond\sSource
+include mudela.syntax
+
+file .\*ChangeLog$ GNU\sDistribution\sChangeLog\sFile
+include changelog.syntax
+
+file .\*Makefile[\\\.a-z]\*$ Makefile
+include makefile.syntax
+
+file ..\*\\.(bap|bp2|bp3|bpp|bpe|lib|l32)$ BAssPasC\sProgram
+include bapc.syntax
+
+file ..\*\\.(mhtml|mac)$ Macro-HTML\sSource
+include mhtml.syntax
+
+file ..\*\\.(asm|ASM)$ ASM\sAssembly
+include asm.syntax
+
+file ..\*\\.(pic|PIC)$ PIC\sMicrocontroller\sAssembler\sSource
+include pic.syntax
+
+file ..\*\\.(lua|LUA)$ LUA\sSource
+include lua.syntax
+
+file ..\*\\.(p|P)$ Prolog\sProgram
+include prolog.syntax
+
+file ..\*\\.(xml|XML)$ XML\sFile <?xml
+include xml.syntax
+
+file ..\*\\.(css|CSS)$ CSS\sFile <?xml
+include css.syntax
+
+file ..\*\\.(sql|SQL)$ SQL\sFile
+include sql.syntax
+
+file Don_t_match_me Mail\sfolder ^From\s
+include mail.syntax
+
+file ..\*\\.(mail)$ Mail\sFile
+include mail.syntax
+
+file ..\*\\.(spec)$ Spec\sFile
+include spec.syntax
+
+file ..\*\\.(awk)$ Spec\sFile
+include awk.syntax
+
+file ..\*\\.(yab|YAB])$ YaBasic\sProgram ^#!\s\*/.\*/yabasic$
+include yabasic.syntax
+
+file .\*(S|s)yntax$ Syntax\sHighlighting\sdefinitions
+
+context default cyan
+    keyword whole spellch\eck yellow/24
+    keyword whole keyw\ord yellow/24
+    keyword whole whole\[\t\s\]l\inestart brightcyan/17
+    keyword whole whole\[\t\s\]l\inestart brightcyan/17
+    keyword whole wh\oleleft\[\t\s\]l\inestart brightcyan/17
+    keyword whole wh\oleright\[\t\s\]l\inestart brightcyan/17
+    keyword whole l\inestart\[\t\s\]wh\ole
+    keyword whole l\inestart\[\t\s\]wh\ole
+    keyword whole l\inestart\[\t\s\]wh\oleleft
+    keyword whole l\inestart\[\t\s\]wh\oleright
+    keyword wholeleft whole\s brightcyan/17
+    keyword wholeleft whole\t brightcyan/17
+    keyword whole wh\oleleft brightcyan/17
+    keyword whole wh\oleright brightcyan/17
+    keyword whole lin\[e\]start brightcyan/17
+    keyword whole c\ontext\[\t\s\]exclusive brightred/18
+    keyword whole c\ontext\[\t\s\]default brightred/18
+    keyword whole c\ontext brightred/18
+    keyword whole wh\olechars\[\t\s\]left brightcyan/17
+    keyword whole wh\olechars\[\t\s\]right brightcyan/17
+    keyword whole wh\olechars brightcyan/17
+    keyword whole f\ile green/6
+    keyword whole in\clude brightred/18
+    keyword \[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_\].syntax brightblue
+
+    keyword whole 0 lightgray/0
+    keyword whole 1 lightgray/1
+    keyword whole 2 lightgray/2
+    keyword whole 3 lightgray/3
+    keyword whole 4 lightgray/4
+    keyword whole 5 lightgray/5
+    keyword whole 6 lightgray/6
+    keyword whole 7 lightgray/7
+    keyword whole 8 lightgray/8
+    keyword whole 9 lightgray/9
+    keyword whole 10 lightgray/10
+    keyword whole 11 lightgray/11
+    keyword whole 12 lightgray/12
+    keyword whole 13 lightgray/13
+    keyword whole 14 lightgray/14
+    keyword whole 15 lightgray/15
+    keyword whole 16 lightgray/16
+    keyword whole 17 lightgray/17
+    keyword whole 18 lightgray/18
+    keyword whole 19 lightgray/19
+    keyword whole 20 lightgray/20
+    keyword whole 21 lightgray/21
+    keyword whole 22 lightgray/22
+    keyword whole 23 lightgray/23
+    keyword whole 24 lightgray/24
+    keyword whole 25 lightgray/25
+    keyword whole 26 lightgray/26
+
+    keyword wholeleft black black/0 white/26
+    keyword wholeleft red red/DarkRed
+    keyword wholeleft green green/green3
+    keyword wholeleft brown brown/saddlebrown
+    keyword wholeleft blue blue/blue3
+    keyword wholeleft magenta magenta/magenta3
+    keyword wholeleft cyan cyan/cyan3
+    keyword wholeleft lightgray lightgray/lightgray
+    keyword wholeleft gray gray/gray
+    keyword wholeleft brightred brightred/red
+    keyword wholeleft brightgreen brightgreen/green1
+    keyword wholeleft yellow yellow/yellow
+    keyword wholeleft brightblue brightblue/blue1
+    keyword wholeleft brightmagenta brightmagenta/magenta
+    keyword wholeleft brightcyan brightcyan/cyan1
+    keyword wholeleft white white/26
+
+    keyword (*) white
+    keyword {*} white
+    keyword [*] white
+    keyword \\{*} white
+    keyword \\[*] white
+    keyword \\s brightcyan
+    keyword \\n brightcyan
+    keyword \\t brightcyan
+    keyword \\r brightcyan
+    keyword > yellow
+    keyword < yellow
+    keyword \\ brightgreen
+    keyword / brightgreen
+    keyword - yellow
+    keyword | yellow
+    keyword \+ yellow
+    keyword \* yellow
+    keyword % yellow
+    keyword ~ yellow
+    keyword = yellow
+    keyword ! yellow
+    keyword ? yellow
+    keyword { white
+    keyword } white
+    keyword ( white
+    keyword ) white
+    keyword [ white
+    keyword ] white
+    keyword ^ brightmagenta
+    keyword , white
+    keyword . white
+    keyword : white
+    keyword ; brightred
+    keyword $ brightmagenta
+
+context linestart # \n brown/22
+
+file .\* unknown
+include unknown.syntax

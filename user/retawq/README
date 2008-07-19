@@ -1,0 +1,28 @@
+retawq/README - basic information
+This file is part of retawq (<http://retawq.sourceforge.net/>), a network
+client created by Arne Thomassen; retawq is basically released under certain
+versions of the GNU General Public License and WITHOUT ANY WARRANTY.
+Read the file COPYING for license details.
+Copyright (C) 2001-2005 Arne Thomassen <arne@arne-thomassen.de>
+
+retawq is an interactive, multi-threaded network client (web browser) for text
+terminals on computers with Unix-like operating systems. It is written in C,
+fast, small, nicely configurable, and comfortable; e.g. the low-level network
+communications are performed in a non-blocking way, and you can keep open as
+many "virtual windows" as you want and work simultaneously in two of them in a
+split-screen mode.
+
+Requirements: a Unix-like operating system, a C compiler; recommended: a curses
+library for text terminal control, a pthreads (Posix threads) library
+
+For installation instructions, read the file INSTALL.
+
+For extensive documentation, open the file retawq/docu/index.html with a web
+browser.
+
+The project home page is <http://retawq.sourceforge.net/>. There you can find
+more information about the project and the most recent version of the package.
+
+Please note that this is an early release of retawq (technobabble: "alpha
+development status"). Although it works for me, it might have severe bugs -
+this project is still quite experimental...

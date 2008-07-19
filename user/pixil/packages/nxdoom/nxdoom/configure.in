@@ -1,0 +1,61 @@
+dnl # nxDOOM configure script
+dnl # Based on the SDL DOOM 1.10 which was based on ID Software DOOM
+dnl # Process this file with autoconf to come up with a configure script 
+
+AC_INIT(README.NANOX)
+
+dnl Setup for automake
+AM_INIT_AUTOMAKE(nxdoom, 1.00)
+
+dnl # Check the various tools we need
+
+AC_PROG_MAKE_SET
+AC_PROG_CC
+AC_PROG_INSTALL
+
+dnl # Check if the user specifed where Microwindows lives
+dnl # Otherwise, we will assume that it lives in the standard location
+
+AC_ARG_WITH(microwin, [ --with-microwin=[microwindows path] Prefix where microwindows is installed],
+nanox_prefix="$withval", nanox_prefix="/usr/local/censoft/ipaq/strongarm")
+
+AC_ARG_ENABLE(dsp, [ --enable-dsp Use /dev/dsp for sound],
+SOUNDFLAGS="-DUSE_DSP")
+
+AC_ARG_ENABLE(esd, [ --enable-esound Use ESD for sound],
+SOUNDFLAGS="-DUSE_ESOUND")
+
+AC_ARG_ENABLE(ipaq, [ --enable-ipaq  Sets the system to build an binary for the Compaq Ipaq],
+[ do_ipaq="1"
+  echo "Building for the Ipaq... adding structure packing"
+],
+echo "Bulding for the X86 desktop..."
+)
+
+#file_list="$nanox_prefix/include/nano-X.h $nanox_prefix/lib/libnano-X.a"
+
+#AC_CHECK_FILES($file_list, , 
+#AC_MSG_ERROR([** nano-X.h not found in $nanox_prefix/include!])
+#)
+
+CFLAGS="-g -O2 $SOUNDFLAGS"
+
+if test x$do_ipaq != x; then
+   CFLAGS="$CFLAGS -fpack-struct -mstructure-size-boundary=8"
+fi
+
+CFLAGS="$CFLAGS -I$nanox_prefix/include -L$nanox_prefix/lib -D_REENTRANT"
+
+LIBS="-lnano-X"
+
+NANOX_CFLAGS=$CFLAGS
+NANOX_LIBS=$LIBS
+
+AC_SUBST(NANOX_CFLAGS)
+AC_SUBST(NANOX_LIBS)
+AC_SUBST(LIBS)
+
+# Finally create all the generated files
+AC_OUTPUT([
+Makefile
+])

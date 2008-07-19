@@ -1,0 +1,93 @@
+Playing back "other" sound formats:
+-----------------------------------
+
+The esdplay utility can be used to play a variety of audio files.
+However, it can't play everything.  The sox utility understands
+many more types of audio files.
+
+The sound utility, sox, can be used with esd in primarily two ways.
+
+Method 1:  use sox to convert the file format ahead of time.
+Method 2:  use sox to generate output on stdout, and pipe into esdcat
+
+For accurate playback using either method, be sure to match the 
+audio format (size/signedness of data, number of channels, and 
+sample rate) between sox and esd.  Converting mono to stereo, or
+changing the sampling rate with sox is probably not necessary for
+live playback, as it will have little effect on sound quality, 
+and merely chew up additional CPU.  For example to play back a sample
+that was recorded in Sun audio format (.au), mono, at 8000 Hz, using
+esdcat, type the following:
+
+sox sample.au -c 1 -r 8000 -t ub - | esdcat -b -m -r 8000
+
+sox arguments: 	-t ub	= data type unsigned byte
+		-c 1 	= mono
+		-r 8000 = sample rate 8000 Hz
+		-	= output file
+
+esdcat arguments: -b	= data type unsigned byte
+		-m	= mono
+		-r 8000	= sample rate 8000 Hz
+
+Currently, esd only supports unsigned byte, and signed word data types.
+
+
+Playing back mp3 files:
+-----------------------
+From Wayne Johnson,
+mpg123 -s sample.mp3 | esdcat
+
+NOTE: recent versions of mpg123 support esd directly.
+Type "make" to see possible executable varieties.
+
+
+Checking recording capabilities:
+--------------------------------
+
+To make sure the recoding works, try this WITHOUT esd running:
+
+dd bs=8k count=4 </dev/audio > sample.au
+
+
+Cthugha - An Oscilloscope on Acid
+---------------------------------
+
+version 1.2:
+
+    esd
+    xcthugha --listen
+    esdmon > /tmp/cthugha.com
+
+NOTE: xcthugha may complain about:
+Can't open `/dev/dsp' for writing. (16 - Device or resource busy)
+No problem, keep on truckin'. esd gets the sound device, and 
+cthugha gets the data it needs.
+
+version 1.3:
+
+    mkfifo /tmp/cthugha.esd 
+    xcthugha --play /tmp/cthugha.esd --silent &
+    esdmon > /tmp/cthugha.esd
+
+ESD auto spawning:
+------------------
+
+libesd will automaticall spawn esd if it's not available when an esd using
+application opens a connection to esd. By default the command issued is:
+esd -terminate -nobeeps -as 2
+BUT
+if you wish to use different options, you can set the 
+ESD_SPAWN_OPTIONS
+environment variable that will contain the options passed to esd.
+for example - if I:
+export ESD_SPAWN_OPTIONS="-terminate -nobeeps"
+esd is run with:
+esd -terminate -nobeeps
+
+if you set the environment variable (contents are irrelevant) called
+ESD_NO_SPAWN
+libesd will not attempt to spawn esd. and simply fail to connect.
+
+You can also put these settings in $(sysconfdir)/esd.conf, or ~/.esd.conf.
+See $(sysconfdir)/esd.conf for an example of how to make the config file.

@@ -1,0 +1,91 @@
+# JOE syntax highlight file for diff/patch files
+# 2004-05-11 Tom Marshall <tommy@home.tig-grr.com>
+
+# Start from beginning of file when sync is lost
+-
+
+# Color definitions
+=Idle
+=Options	blue
+=FileNew	bold green
+=FileOld	bold red
+=DiffStuff	magenta
+=DelLine	red
+=AddLine	green
+=Unchanged
+
+:reset Idle
+	*		goo
+	"\n"		reset
+	"d"		goo		buffer
+	"-"		preudiff	buffer
+	"*"		precdiff	buffer
+	"0-9"		ndiff		recolor=-1
+
+# Unified diff?
+:preudiff Idle
+	*		goo		strings
+	"---"		udiffold	recolor=-3
+done
+	"-"		preudiff
+
+# Context diff?
+:precdiff Idle
+	*		goo		strings
+	"***"		cdiffbegin	recolor=-3
+done
+	"*"		precdiff
+
+:options Options
+	*		options
+	"\n"		reset
+
+:goo Idle
+	*		goo		strings
+	"diff"		options		recolor=-4
+done
+	"\n"		reset
+
+:udiff Idle
+	*		reset
+	"-"		udiffold	recolor=-1
+	"+"		udiffnew	recolor=-1
+	"@"		udiffhunkbegin	recolor=-1
+	"\n"		reset
+
+:udiffold FileOld
+	*		udiffold
+	"\n"		udiff
+
+:udiffnew FileNew
+	*		udiffnew
+	"\n"		udiff
+
+:udiffhunkbegin DiffStuff
+	*		udiffhunkbegin
+	"\n"		udiffhunk
+
+:udiffhunk Idle
+	*		reset
+	"d"		goo		buffer
+	"-"		udiffoldordel	recolor=-1
+	"+"		udiffadd	recolor=-1
+	" "		udiffctx	recolor=-1
+	"@"		udiffhunkbegin	recolor=-1
+
+:udiffoldordel Idle
+	*		udiffdel	recolor=-2
+	"\n"		udiffdel	recolor=-2 noeat
+	"-"		udiffold	recolor=-2
+
+:udiffdel DelLine
+	*		udiffdel
+	"\n"		udiffhunk
+
+:udiffadd AddLine
+	*		udiffadd
+	"\n"		udiffhunk
+
+:udiffctx Unchanged
+	*		udiffctx
+	"\n"		udiffhunk

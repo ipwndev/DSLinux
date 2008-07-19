@@ -1,0 +1,24 @@
+MP3 file renamer v1.0 by A'rpi/ESP-team      idea: DrN0
+~~~~~~~~~~~~~~~~~~~~~
+1. Configure it:  edit mp3rename.c, comment/delete parts you don't need
+   (it's well commented, in hungarian :))
+   
+2. Compile & Install:
+   gcc mp3rename.c -o mp3rename
+   mv mp3rename /usr/local/bin/mp3rename
+
+3. Select Commands/Menu file edit in mc, and copy this to there:
+--------------------------------------------------
++ t t
+R       Rename tagged MP3 files
+	set %u;
+	while [ -n "$1" ]; do
+	  mp3rename "$1" || echo tag "$1" >>$MC_CONTROL_FILE
+	  shift
+	done
+
++ ! t t
+R       Rename MP3 file
+	mp3rename "./%0f"
+--------------------------------------------------
+4. Restart mc, and enjoy mp3rename :)  (select mp3 files and press F2/R)

@@ -1,0 +1,139 @@
+# Automatically generated from Makeconfig.in.  Do not edit.
+# Makeconfig.in - configuration included in Makefiles after substitution.
+#
+# Copyright (c) 1997, 1998, 1999, 2000, 2003, 2004 Joseph Samuel Myers.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+# 3. The name of the author may not be used to endorse or promote products
+#    derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+# IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+# AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+# OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+
+# If some variables are unexpanded in Makeconfig, this shouldn't be a
+# problem, it will be because they weren't configured since the relevant
+# games weren't being built.
+
+# Source directory
+SRCDIR := $(ROOTDIR)/user/games/bsdgames
+# Build directories
+BUILDDIRS := adventure arithmetic atc backgammon battlestar bcd boggle caesar canfield countmail cribbage dab fish gomoku hack hangman mille monop morse number phantasia pig pom ppt primes quiz rain random robots sail snake tetris trek wargames worm worms wtf wump
+# Installation prefix
+INSTALL_PREFIX := $(ROOTDIR)/user/games/bsdgames/debian/bsdgames
+# Games directory
+GAMESDIR := /bin
+# Daemon directory
+SBINDIR := /bin
+# Other binaries directory
+USRBINDIR := 
+# Manual pages, section 6
+MAN6DIR := /usr/share/man/man6
+# Manual pages, section 8
+MAN8DIR := 
+# Manual pages, section 5
+MAN5DIR := 
+# Constant data (arch-independent)
+SHAREDIR := /usr/share/games/bsdgames
+# Miscellaneous documentation
+DOCDIR := /usr/share/doc/bsdgames
+# Variable data
+VARLIBDIR := /var/games/bsdgames
+# Directory for hidden games (dm)
+LIBEXECDIR := @libexecdir@
+# Installation commands, with install -c -o whatever -s etc.
+INSTALL_BINARY := install -c -m 0755
+INSTALL_SCRIPT := install -c -m 0755
+INSTALL_SCORE_GAME := install -c -m 0755
+INSTALL_DAEMON := install -c -m 0755
+INSTALL_MANUAL := $(ROOTDIR)/user/games/bsdgames/install-man
+INSTALL_DATA := install -c -m 0644
+INSTALL_VARDATA := install -c -m 0644
+INSTALL_DM := @install_dm@
+INSTALL_SAIL_DIR := install -d -m 0750
+INSTALL_HACK_DIR := install -d -m 0755
+# Is INSTALL_VARDATA actually needed (for games that start with non-empty
+# scorefile?)
+# For games which can start with empty scorefile we do:
+INSTALL_SCORE_FILE := $(ROOTDIR)/user/games/bsdgames/install-score
+# Definitions of INSTALL_* that may have -s added
+# This first one should no longer be needed
+DEFS_TO_PASS := INSTALL_BINARY="$(INSTALL_BINARY)" \
+	INSTALL_SCORE_GAME="$(INSTALL_SCORE_GAME)" \
+	INSTALL_DAEMON="$(INSTALL_DAEMON)" INSTALL_DM="$(INSTALL_DM)"
+# For the top level install-strip target
+DEFS_TO_PASS_STRIP := INSTALL_BINARY="$(INSTALL_BINARY) -s" \
+	INSTALL_SCORE_GAME="$(INSTALL_SCORE_GAME) -s" \
+	INSTALL_DAEMON="$(INSTALL_DAEMON) -s" INSTALL_DM="$(INSTALL_DM) -s"
+# srcdir/hide-game or :
+HIDE_GAME := :
+
+# Compilation details
+#CC := gcc
+#CXX := g++
+OPTIMIZE := -g -O2
+WARNING := -Wall -W -Wstrict-prototypes -Wmissing-prototypes -Wpointer-arith -Wcast-align -Wcast-qual -Wwrite-strings
+CXX_WARNING := -Wall -W -Wpointer-arith -Wcast-align -Wcast-qual -Wwrite-strings
+NATIVE_CFLAGS := $(OPTIMIZE) $(WARNING) 
+NATIVE_CXXFLAGS := $(OPTIMIZE) $(CXX_WARNING) 
+CFLAGS += $(OPTIMIZE) $(WARNING) 
+CXXFLAGS += $(OPTIMIZE) $(CXX_WARNING) 
+#LDFLAGS := 
+FGETLN_DEFS := 
+GETLOADAVG_DEFS := 
+STRLCPY_DEFS := 
+GETPROGNAME_DEFS := 
+NCURSES_LIB := -lncurses
+NCURSES_INCS := -I$(ROOTDIR)/lib/libncurses/include
+OPENSSL_LIB := 
+OPENSSL_INCS := 
+BASE_INCS := -Iinclude $(NCURSES_INCS) $(OPENSSL_INCS)
+BASE_LIBS := 
+YACC := bison -y
+LEX := flex
+LEX_LIB := -lfl
+
+# More paths
+PAGER := /usr/bin/pager
+
+# Individual games
+ATC_DIR := /usr/share/games/bsdgames/atc
+ATC_SCOREFILE := /var/games/bsdgames/atc_score
+BATTLESTAR_SCOREFILE := /var/games/bsdgames/battlestar.log
+BOGGLE_DIR := /usr/share/games/bsdgames/boggle
+DICTIONARY_SRC := $(ROOTDIR)/user/games/bsdgames/temp-dictionary
+CANFIELD_SCOREFILE := /var/games/bsdgames/cfscores
+CRIBBAGE_INSTRFILE := /usr/share/games/bsdgames/cribbage.instr
+CRIBBAGE_SCOREFILE := /var/games/bsdgames/criblog
+FISH_INSTRFILE := /usr/share/games/bsdgames/fish.instr
+FORTUNE_DIR := @fortune_dir@
+FORTUNE_TYPE := @fortune_type@
+HACK_DIR := /var/games/bsdgames/hack
+MONOP_CARDSFILE := /usr/share/games/bsdgames/monop-cards.pck
+PHANTASIA_DIR := /var/games/bsdgames/phantasia
+QUIZ_DIR := /usr/share/games/bsdgames/quiz
+ROBOTS_SCOREFILE := /var/games/bsdgames/robots_roll
+ROGUE_SCOREFILE := @rogue_scorefile@
+SAIL_SCOREFILE := /var/games/bsdgames/saillog
+SAIL_DIR := /var/games/bsdgames/sail
+SNAKE_SCOREFILE := /var/games/bsdgames/snake.log
+SNAKE_RAWSCOREFILE := /var/games/bsdgames/snakerawscores
+TETRIS_SCOREFILE := /var/games/bsdgames/tetris-bsd.scores
+WTF_ACRONYMFILE := /usr/share/games/bsdgames/acronyms
+WUMP_INFOFILE := /usr/share/games/bsdgames/wump.info

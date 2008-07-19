@@ -1,0 +1,43 @@
+menu "Nano-X Applications"
+depends CONFIG_NANOX
+
+config CONFIG_NXAPPS
+       bool "Build Nano-X Applications"
+       default y
+       help
+       Say yes here to build the Nano-X applications
+
+config CONFIG_NANOX_APPS
+       bool "Nano-X Utilities"
+       depends CONFIG_NXAPPS
+       default y
+
+config CONFIG_NANOX_DVDVIEW
+       bool "DVDView for Nano-X"
+       depends CONFIG_NXAPPS 
+       default y
+       help
+       Say yes here to build DVDView for Nano-X to watch movies.
+
+config CONFIG_NANOX_WCLOCK
+       bool "Nano-X World Clock"
+       depends CONFIG_NXAPPS
+       default y
+       
+menu "Nano-X Input Methods"
+depends CONFIG_NXAPPS
+       
+config CONFIG_NANOX_KEYBOARD
+       bool "Keyboard"
+       default y
+       help
+       Say yes here to build the Nano-X keyboard input method
+
+config CONFIG_NANOX_SCRIBBLE
+       bool "Scribble"
+       default y
+       help
+       Say yes here to build the Nano-X scribble application
+
+endmenu
+endmenu

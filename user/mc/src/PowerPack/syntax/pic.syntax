@@ -1,0 +1,126 @@
+# This is Cooledit syntax-file for
+# Microchip PIC-microcontroller.
+# Created by Henry Palonen, h@yty.net
+# Feel free to copy & modify this.
+# Thanks to cooledit author for
+# such a great editor !
+
+context default
+# Basic definitions
+    keyword whole SET cyan/5
+    keyword whole DEVICE cyan/5
+    keyword whole INCLUDE cyan/5
+    keyword whole CONFIG cyan/5
+    keyword whole EQU cyan/5
+    
+# Move or define data
+    keyword whole MOVLW yellow/24
+    keyword whole MOVF yellow/24
+    keyword whole MOVWF yellow/24
+
+# Change register contents
+    keyword whole CLRF yellow/24
+    keyword whole CLRW yellow/24
+    keyword whole COMF yellow/24
+    keyword whole DECF yellow/24
+    keyword whole INCF yellow/24
+    keyword whole BCF yellow/24
+    keyword whole BSF yellow/24
+    keyword whole RLF yellow/24
+    keyword whole RRF yellow/24
+    keyword whole SWAPF yellow/24
+
+# Control program flow
+    keyword whole GOTO yellow/24
+    keyword whole CALL yellow/24
+    keyword whole RETURN yellow/24
+    keyword whole RETLW yellow/24
+    keyword whole RETFIE yellow/24
+    keyword whole BTFSC yellow/24
+    keyword whole BTFSS yellow/24
+    keyword whole DECFSZ yellow/24
+    keyword whole INCFSZ yellow/24
+
+# Nothing
+    keyword whole NOP yellow/24
+
+# Control microcontroller
+    keyword whole CLRWDT yellow/24
+    keyword whole OPTION yellow/24
+    keyword whole SLEEP yellow/24
+    keyword whole TRIS yellow/24
+    keyword whole ANDLW yellow/24
+    keyword whole ANDWF yellow/24
+    keyword whole IORLW yellow/24
+    keyword whole IORWF yellow/24
+    keyword whole XORLW yellow/24
+    keyword whole XORWF yellow/24
+
+# Arithmetic
+    keyword whole ADDWF yellow/24
+    keyword whole ADDLW yellow/24
+    keyword whole SUBLW yellow/24
+    keyword whole SUBWF yellow/24
+
+# Variables. These are based to
+# pic16c84.h which comes with picasm
+# assembly-program by
+# Timo Rossi, trossi@iki.fi
+
+    keyword whole W brightmagenta/19
+    keyword whole F brightmagenta/19
+    keyword whole C brightmagenta/19
+    keyword whole Z brightmagenta/19
+    keyword whole INDF green/6
+    keyword whole IND0 green/6
+    keyword whole TMR0 green/6
+    keyword whole RTCC green/6
+    keyword whole PCL green/6
+    keyword whole STATUS green/6
+    keyword whole FSR green/6
+    keyword whole PORTA green/6
+    keyword whole PORTB green/6
+    keyword whole EEDATA green/6
+    keyword whole EEADR green/6
+    keyword whole PCLATH green/6
+    keyword whole INTCON green/6
+    keyword whole OPTIO green/6
+    keyword whole TRISA green/6
+    keyword whole TRISB green/6
+    keyword whole EECON1 green/6
+    keyword whole EECON2 green/6
+    keyword whole IRP green/6
+    keyword whole RP1 green/6
+    keyword whole RP0 green/6
+    keyword whole TO green/6
+    keyword whole PD green/6
+    keyword whole DC green/6
+    keyword whole GIE green/6
+    keyword whole EEIE green/6
+    keyword whole RTIE green/6
+    keyword whole INTE green/6
+    keyword whole RBIE green/6
+    keyword whole RTIF green/6
+    keyword whole INTF green/6
+    keyword whole RBIF green/6
+    keyword whole RBPU green/6
+    keyword whole INTEDG green/6
+    keyword whole RTS green/6
+    keyword whole RTE green/6
+    keyword whole PSA green/6
+    keyword whole PS2 green/6
+    keyword whole PS1 green/6
+    keyword whole PS0 green/6
+    keyword whole EEIF green/6
+    keyword whole WRERR green/6
+    keyword whole WREN green/6
+    keyword whole EWR green/6
+    keyword whole ERD green/6
+
+# How can we do that "label" - thing ?
+#    keyword *:  brightred/20
+    
+context linestart ; \n brown/22
+context ; \n brown/22
+context " " green/6
+context ' ' green/6
