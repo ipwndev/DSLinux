@@ -50,7 +50,7 @@ UI_play_sound(sound)
     else if (sound == SOUND_ERROR)
         snprintf(buffer, sizeof(buffer), "%s/.tmsnc/sounds/%s",
                  cf->homedir, cf->sound.error);
-    if ((c = fork()) == 0) {
+    if ((c = vfork()) == 0) {
         /*
          * redirect stdout and stderr to /dev/null 
          */

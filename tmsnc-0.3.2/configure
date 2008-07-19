@@ -5488,7 +5488,7 @@ if test "$has_curses" = false ; then
 echo "$as_me: error: You don't seem to have the curses headers installed" >&2;}
    { (exit 1); exit 1; }; }
 fi
-CURSES_LIBS="$CURSES_LIBS -lpanel -lform"
+CURSES_LIBS="-lpanel -lform $CURSES_LIBS"
 
 
       if test "X$prefix" = "XNONE"; then
