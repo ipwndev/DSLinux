@@ -641,6 +641,7 @@ fi
 bool 'thttpd'			CONFIG_USER_THTTPD_THTTPD
 bool 'tinyirc'			CONFIG_USER_TINYIRC_TINYIRC
 bool 'tintin++'			CONFIG_USER_TINTIN_TINTIN
+bool 'tmsnc'			CONFIG_USER_TMSNC
 bool 'traceroute'		CONFIG_USER_TRACEROUTE_TRACEROUTE
 
 bool 'vconfig'			CONFIG_USER_VCONFIG_VCONFIG

@@ -391,6 +391,7 @@ dir_$(CONFIG_USER_TINYSID_TINYSID)          += tinysid
 dir_$(CONFIG_USER_TINYTCL_TCLSH)            += tinytcl
 dir_$(CONFIG_USER_TIP_TIP)                  += tip
 dir_$(CONFIG_USER_TIMEPEG_TPT)              += tpt
+dir_$(CONFIG_USER_TMSNC)              	    += tmsnc
 dir_$(CONFIG_USER_TRACEROUTE_TRACEROUTE)    += traceroute
 dir_$(CONFIG_USER_TRIPWIRE_SIGGEN)          += tripwire
 dir_$(CONFIG_USER_TRIPWIRE_TRIPWIRE)        += tripwire
