@@ -1,0 +1,117 @@
+/* src/config.h.in.  Generated from configure.in by autoheader.  */
+
+/* Found some version of curses that we're going to use */
+#undef HAS_CURSES
+
+/* Define if you have the iconv() function. */
+#undef HAVE_ICONV
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the `nsl' library (-lnsl). */
+#undef HAVE_LIBNSL
+
+/* Define to 1 if you have the `socket' library (-lsocket). */
+#undef HAVE_LIBSOCKET
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* openssl executable path */
+#undef HAVE_OPENSSL
+
+/* Define to 1 if you have the `resizeterm' function. */
+#undef HAVE_RESIZETERM
+
+/* Define to 1 if you have the `resize_term' function. */
+#undef HAVE_RESIZE_TERM
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* libtalkfilters */
+#undef HAVE_TALKFILTERS
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to 1 if you have the `use_default_colors' function. */
+#undef HAVE_USE_DEFAULT_COLORS
+
+/* Define to 1 if you have the `wadd_wch' function. */
+#undef HAVE_WADD_WCH
+
+/* Define as const if the declaration of iconv() needs const. */
+#undef ICONV_CONST
+
+/* If your curses does not have color define this one */
+#undef NO_COLOR_CURSES
+
+/* Name of package */
+#undef PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
+#undef TIME_WITH_SYS_TIME
+
+/* Define to 1 if your <sys/time.h> declares `struct tm'. */
+#undef TM_IN_SYS_TIME
+
+/* Use Ncurses? */
+#undef USE_NCURSES
+
+/* Use SunOS SysV curses? */
+#undef USE_SUNOS_CURSES
+
+/* Use SystemV curses? */
+#undef USE_SYSV_CURSES
+
+/* Version number of package */
+#undef VERSION
+
+/* curses routines to work with wide chars are available */
+#undef WIDE_NCURSES
+
+/* Enable X/Open Unix extensions */
+#ifndef _XOPEN_SOURCE_EXTENDED
+# define _XOPEN_SOURCE_EXTENDED
+#endif
+
+/* Define to `int' if <sys/types.h> does not define. */
+#undef pid_t
+
+/* Define to `unsigned int' if <sys/types.h> does not define. */
+#undef size_t
