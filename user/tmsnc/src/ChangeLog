@@ -1,0 +1,187 @@
+Changelog for TMSNC
+
++ = Feature added
+- = Feature removed
+% = Bugfix
+
+Version 0.3.2
+ + Partial group support: sort contact list by groups (one contact one group only)
+ + Using "f" key to change contact list showing mode (addr/nickname/psm etc)
+ + Show Buddies' Personal Message (PSM support)
+ + Support PAGE_UP/PAGE_DOWN key in contact list
+ + Improved focusing routines
+ + Better cursor-follow-marker functions
+ + Made mouse-support optional
+ % Fixed "most of contacts blocked" bug (thanks poppyer)
+ % The yellow border now follows the focus properly
+ % Fixed "send msg crash after sb left a conversation" bug
+ % Fixed "border remains yellow on unfocus" bug
+
+Version 0.3.1
+ + Display current playing song option in tmsnc.conf
+ + Added support for setting personal message (menu item)
+ - Removed gettext support
+ + Optimized panel handling
+ + Window in focus is now shown in yellow
+ + Changed the window border style
+
+Version 0.3.0
+ + Upgraded protocol to MSNP11
+ + Added a bar for showing latest server message
+ + No limit of how many contacts you can have (dynamically allocated)
+ + Much improved multi-principal support
+ + Added "Invite principal" menu item
+ % Patched another cause of terminal freeze
+ % Fixed all warnings when compiling
+ % Code clean-up
+
+Version 0.2.5
+ + F6 closes window
+ + Added three power-commands 'whoami', 'export conlist' and 'import conlist'
+ + Added option in tmsnc.conf for making the cursor follow the marker
+ + Added translations for french and portuguese
+ + Added an input field in the console for commands
+ % Got rid of a segfault which occured when you resized the terminal
+ % Fixed a bug which caused tmsnc to freeze when closing a window
+ % New size of conversation list
+ % Fixed some bugs in the URL decoding routine
+ % Removed format string vulnerability
+
+Version 0.2.4
+ + Shortcut keys are now typed with alt-<something>
+ + Power functions (block/unblock/remove all contacts)
+ % Fixed a bug which caused tmsnc to hang
+ % Cleaned some ugly code
+
+Version 0.2.3
+ + Wrote a replacement function for fgets() that doesn't require a (FILE *) pointer
+ + Improved quitting routines, ctrl-C can now be used everywhere in the program
+ % Resizing works in the login screen again
+ % Re-coded large portions of the core functions (improved stability)
+ % Re-coded function for retrieving the contact-list
+ % Fixed a bug where not all contacts were loaded into the contact-list
+ % Fixed an iconv related bug
+ % Zero the password field after failed login
+
+Version 0.2.2
+ + UTF-8 support!
+ + Added color to the timestamps
+ + Added 'Redraw interface' menu item
+ + Changed the color of the TMSNC logo to blue (meaningless)
+ + Added seeding routine for the SSL
+ + F7 and F8 rotate the focus in the interface
+ + Added translation for brazilian portuguese (pt_BR)
+ + Re-coded timeout routines for retrieving the contact list
+ % Removed a segfault in the login process
+
+Version 0.2.1
+ + Added talkfilter support
+ + Added sound support
+ + ctrl-e and then a number 1-9 switches between open conversations
+ + Added -i option for specifying the initial status on login
+ + Block/Un-block/Delete now takes the contact marked on the list
+ + Added colors to the menu to improve visibility
+ + Better error-handling when sending invalid messages etc.
+ % Now compiles on BSD again
+ % Fixed bug where messages appeared in wrong windows
+ % Fixed some color issues in the conversation list
+
+Version 0.2.0
+ + Total rewriting of the interface (kept core functions only)
+ + Autologging of conversations
+ + Gettext support (translators needed!!)
+ + Rewritten documentation
+ + Shortcut keys (only close conversation so far)
+ + Nicer colors in the contact list
+ + Green means new message in conversation list
+ + Custom nicknames support
+ + Outdated configuration file warnings
+ + The login screen is now a part of the ncurses interface
+ + Automatically answer to the QNG messages from the server
+ % Removed the library
+ % Fixed an issue with the authentication
+ % There will be no more missing messages
+
+Version 0.2.0b
+ + Sound support! :) (see tmsnc.conf)
+ + Restructured sourcecode (now libcmsn + tmsnc)
+ + Colors can now be entered in RGB format in tmsnc.conf
+ % Fixed problem with passwords containing weird symbols
+ % Logging now works, use the '/log' command
+ % Fixed and issue with auto-login
+ % Fixed 'make' incompatability on BSD systems
+
+Version 0.1.5
+ + Auto-invite principal if the person has left and you
+   are sending a new message.
+ + Command history (use left and right arrows)
+ + Your status is always shown in the interface
+ % Re-use windows really works this time
+ % The contact-list is updated and sorted properly
+
+Version 0.1.4
+ + Added '/invite' command
+ + Change colors in the UI by editing tmsnc.conf
+ % Resizing is prettier
+ % Removed some UI glitches in the contact-list
+ % Segfault on empty contact-list removed
+ % Got rid of newline in the console window
+
+Version 0.1.3
+ + Talkfilters (b1ff, chef, drawl, jive, pirate, postmodern, warez)
+ + Configure script added
+ + Added gnu_getpass so the GNU zealots don't freak out
+ + Moved configuration to .tmsnc/tmsnc.conf
+ + Re-use windows
+ + Sorted contact-list
+ + Auto-login capability
+ + Code clean-up and reformating
+
+Version 0.1.2
+ + Send away-message automatically (added entry for it in ~/.tmsnc)
+ + Some interface enhancements from Alien:
+    (1) It is now possible to use tmsnc on terminals with
+        black text on white background.
+    (2) The contact list is updated on every contact status change.
+    (3) Removed the empty line between messages in a chat window.
+ % Multilined messages are now displayed.
+ % A couple of segfaults removed
+
+Version 0.1.1
+ + Major facelift with scrollable contact-list
+ + Pressing 'Return' initiates chat session with marked contact
+ + Add/Remove/Block contacts
+ + Timestamps
+ + '/logging <on|off>' toggles logging on and off
+ + Resizable windows (SIGWINCH handler)
+ + F7 or '/window close' closes current window
+ + Now comes with a manual! :D
+
+Version 0.1.0
+ + Status bar on login
+ + New ASCII logo
+ + Your current nickname is shown
+ + New e-mail notifictations from Hotmail
+ + If a remote error occurs, show what happened
+ % Fixed various memory allocation (malloc) errors
+ % "Fatal error: Out of memory" bug fixed
+ % Do not interpret backspace as '^?'
+
+Version 0.1.0b
+ + International character support
+ + Change status
+ + Change nickname
+ + Formatted messages
+ + Configuration file (~/.tmsnc)
+ + In TMSNC Config: initial status and message format
+ % Don't send empty messages
+
+Version 0.1.0a
+ + Log in/out
+ + Retrieve list of users
+ + See who's online and their status
+ + Get e-mail notifications from Hotmail
+ + Initiate/join chat sessions
+ + Send/receive messages
+ + Switch between windows using TAB or "/window <number>"
+ + Close windows and therefore the conversation using "/window close"
