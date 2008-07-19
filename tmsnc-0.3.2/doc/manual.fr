@@ -1,0 +1,156 @@
+NOM
+
+   tmsnc - Client MSN en mode texte pour UNIX
+
+SYNOPSIS
+
+   tmsnc [-l adresse] [-i status] [-uv]  
+
+DESCRIPTION
+
+   tmsnc est un client de messagerie instantanée en mode texte qui utilise le protocole MSN.
+   L'interface utilise la librairie Ncurses et la couche SSL du projet OpenSSL. Cela rend le
+   programme très portable et peut être utilisé sur n'importe quel système de type UNIX.
+
+OPTIONS
+
+   -l ADRESSE
+           Connexion avec le compte Passport spécifiée
+   -u
+           Vérifie si des mises à jour sont disponibles.
+   -i STATUS
+           Définit le statut initial à STATUS où STATUS est :
+             "online" (en ligne),
+             "away"(absent),
+             "brb" (de retour dans une minute),
+             "busy" (occupé),
+             "idle" (inactif),
+             "phone" (au téléphone),
+             "lunch" (parti(e) manger),
+             "hidden" (caché(e)).
+   -v
+           Affiche les informations de version.
+
+    
+
+MENU
+
+   Utilisez la touche TAB pour circuler parmi les différentes listes et fenêtres de l'interface.
+   Pour dérouler un menu, appuyez sur ENTREE. Pour choisir un élément du menu, déplacez-vous
+   jusqu'à lui à l'aide des touches fléchées et appuyez sur ENTREE pour exécuter la commande.
+
+    
+
+TALKFILTERS
+
+   Pour utiliser les fonctionalités de traduction des messages envoyés avec talkfilters, vous devez
+   installer la librairie libtalkfilters avant (http://www.hyperrealm.com/main.php?s=talkfilters) et
+   recompiler tmsnc. Allez ensuite dans le menu "Actions->Set filter". Entrez l'un des noms de filtre
+   suivants : austro, b1ff, brooklyn, chef, cockney, drawl, dubya, fudd, funetak, jethro, jive, kraut,
+   pansy, pirate, postmodern, redneck, valspeak ou warez. Vous pouvez également désactiver les
+   talkfilters en entrant "none" comme nom de filtre. Maintenant, tous les messages que vous envoyez
+   seront traduits. (NdT : les talkfilters ne travaillent que sur des messages en anglais, leur
+   comportement  sur des textes français n'a pas été essayé ...)
+
+
+
+LISTE DE CONTACTS
+
+   Utilisez les touches fléchées pour sélectionner un contact. Appuyez sur ENTREE pour débuter une
+   conversation avec le contact sélectionné. Vous pouvez éventuellement personnaliser le pseudonyme
+   du contact choisi en utilisant le menu "Contact->Set custom nick". De la même manière, vous pouvez
+   restaurer le pseudonyme choisi par le contact sélectionné en utilisant le menu "Contact->Un-set
+   custom nick".
+
+    
+
+LISTE DES CONVERSATIONS
+
+   Pour basculer d'une conversation démarrée à une autre, sélectionnez la conversation à l'aide des
+   touches fléchées et appuyez sur ENTREE. Les conversations (non sélectionnées) marquées en vert
+   contiennent des messages non lus.
+
+   Dans la liste des contacts, vous pouvez utiliser les raccourcis clavier suivants :
+
+   a      Ajouter le contact sélectionné (ou ajoute un nouveau contact s'il existe déjà).
+
+   d      Supprime le contact sélectionné.
+
+   b      Bloque le contact sélectionné.
+
+   u      Débloque le contact sélectionné.
+
+
+RACCOURCIS CLAVIER
+
+   ALT-C (ou F6)
+           Ferme la conversation courante.
+   ALT-<chiffre>
+           Bascule vers la conversation identifiée par <chiffre>. Si <chiffre> est 0, la fenêtre
+           de console est activée.
+   ALT-A
+           Active la barre de menus.
+   ALT-S
+           Active la liste de contacts.
+   ALT-X
+           Active la liste des conversations.
+   ALT-Z
+           Active la fenêtre de dialogue.
+    
+
+FONCTIONS AVANCÉES
+
+   Pour afficher la fenêtre de saisie de fonction avancée, appuyez sur CTRL-P
+   Commandes disponibles :
+   block all
+           Bloque tous les contacts.
+   unblock all
+           Débloque tous les contacts.
+   remove all
+           Supprime tous les contacts. ATTENTION : Cette commande est irréversible !!
+   whoami
+           Affiche votre profil de connexion.
+   export conlist
+           Exporte la liste de contacts dans un fichier.
+   import conlist
+           Importe la liste de contacts depuis un fichier.
+
+    
+
+MUSIQUE ACTUELLEMENT JOUÉE
+
+   Si vous souhaitez afficher la musique actuellement jouée, vous devez l'activer en modifiant le
+   fichier ~/.tmsnc/tmsnc.conf. Décommentez l'option display_current_song. TMSNC rafraîchit la
+   musique en cours toutes les 15 secondes en exécutant le script ~/.tmsnc/current_song.sh.
+   Ce script renvoie le nom de la chanson.
+
+   Vous pouvez regarder ici pour des exemples de script shell :
+
+   http://tmsnc.sourcefore.net/csong.html
+
+    
+
+FICHIERS
+
+   ~/.tmsnc/tmsnc.conf
+           Fichier de configuration
+   ~/.tmsnc/aliases.conf
+           Fichier d'alias
+   ~/.tmsnc/logs/
+           Historiques des conversations
+    
+
+AUTEURS/CREDITS
+
+   tmsnc a été principalement écrit par Sanoi <sanoix@gmail.com>
+
+   tmsnc est un logiciel libre, vous pouvez le redistribuer et/ou le modifier selon les termes de la
+   IR Public Domain License publiée par IR Group, selon la version 1.6 de la Licence, ou toute version
+   plus récente si vous le souhaitez.
+
+   Ce logiciel est livré tel quel dans l'espoir qu'il vous soit utile mais SANS AUCUNE GARANTIE, ni
+   explicite ni implicite, y compris les garanties de commercialisation ou d'adaptation dans un but
+   spécifique.
+
+   Vous devriez avoir reçu une copie de la IR Public Domain License avec ce programme, si vous ne
+   l'avez pas reçue, demandez-en une copie à sanoix@gmail.com
