@@ -15,11 +15,11 @@
  */
 
 #include "config.h"
-#if defined(USE_NCURSES) && !defined(RENAMED_NCURSES)
-#include <ncurses.h>
-#else
+//#if defined(USE_NCURSES) && !defined(RENAMED_NCURSES)
+//#include <ncurses.h>
+//#else
 #include <curses.h>
-#endif
+//#endif
 #include <form.h>
 #include <panel.h>
 #include <pthread.h>
