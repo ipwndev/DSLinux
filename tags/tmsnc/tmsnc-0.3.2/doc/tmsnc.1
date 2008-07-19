@@ -1,0 +1,160 @@
+.TH Tmsnc 1 "November 2005" "Texbased MSN Client"
+.SH NAME
+tmsnc \- Textbased MSN client for UNIX
+.SH SYNOPSIS
+.B tmsnc
+[-l address] [-i status] [-uv]
+.SH DESCRIPTION
+.B tmsnc
+is a textbased chat client that uses the MSN protocol. The interface
+is written in the Ncurses library and the SSL part in OpenSSL. This makes
+the program very portable and it should be able to run on any UNIX-like system.
+.SH OPTIONS
+.TP
+.BI "\-l ADDRESS"
+Login with the specified
+.I ADDRESS
+.TP
+.BI "\-u"
+Check for updates.
+.TP
+.BI "\-i STATUS"
+Set initial presence status to
+.I STATUS
+where
+.I STATUS
+is "online", "away", "brb", "busy", "idle", "phone", "lunch" or "hidden".   
+.TP
+.BI "\-v"
+Display version information.
+
+.SH MENU
+Use TAB to switch between the different lists and windows in the interface.
+To pull down a menu, press enter. To choose one of the menu items, go up and down
+with the arrow keys and then press enter to execute the command.
+
+.SH TALKFILTERS
+To enable translation of outgoing messages using talkfilters, you first have to install
+libtalkfilters (http://www.hyperrealm.com/main.php?s=talkfilters) and re-compile tmsnc.
+Then you go to the "Actions->Set filter" menu-item. Enter one of the following filter-names:
+austro, b1ff, brooklyn, chef, cockney, drawl, dubya, fudd, funetak, jethro, jive, kraut, pansy, 
+pirate, postmodern, redneck, valspeak, or warez. You can also disable talkfilters by 
+typing in "none". Now all your outgoing messages will get translated.
+
+.SH CONTACT LIST
+Use the arrow keys to choose a contact. Press enter to initialize a conversation.
+While having a contact selected you can go to the menu and choose
+.B Contacts->Set custom nick
+to give the selected contact a custom nickname.
+Similarily while having a contact selected you can un-set the custom nickname
+by choosing the menu-item 
+.B Contacts->Un-set custom nick
+.
+.TP
+In the contact list you can use the following short-cut keys.
+.TP
+.BI "a"
+Add the selected contact (or if it is already added then add a new contact).
+.TP
+.BI "d"
+Delete the selected contact.
+.TP
+.BI "b"
+Block the selected contact.
+.TP
+.BI "u"
+Un-block the selected contact.
+.TP
+.BI "i"
+Invite contact to the current conversation.
+.TP
+.BI "I"
+Display information about the selected contact.
+
+
+.SH CONVERSATION LIST
+To switch to an open conversation, select the conversation with the 
+arrow keys and press enter. A conversation will be marked green
+if there are unread messages.
+.SH SHORTCUT KEYS
+.TP
+.BI "alt-c"
+Close the current conversation.
+.TP
+.BI "alt-<number>"
+Switch to the conversation represented by <number>. If <number> is 0,
+the console-window will be activated.
+.TP
+.BI "alt-a"
+Focus on the menu.
+.TP
+.BI "alt-s"
+Focus on the contact list.
+.TP
+.BI "alt-x"
+Focus on the conversation list.
+.TP
+.BI "alt-z"
+Focus on the chat window.
+.SH POWER FUNCTIONS
+To bring up the prompt to enter a power-command, press ctrl-p.
+.TP
+Available commands:
+.TP
+.BI "block all"
+Block all contacts.
+.TP
+.BI "unblock all"
+Unblock all contacts.
+.TP
+.BI "remove all"
+Remove all contacts. WARNING: This command is not reversable.
+.TP
+.BI "whoami"
+Displays who you are currently logged in as.
+.TP
+.BI "export conlist"
+Write contact-list to a file.
+.TP
+.BI "import conlist"
+Read contact-list from a file.
+
+.SH CURRENT PLAYING SONG
+In order to display your current playing song you have to enable it
+in ~/.tmsnc/tmsnc.conf first. Uncomment the display_current_song option.
+TMSNC updates the current playing song every 15 seconds by executing
+~/.tmsnc/current_song.sh. The output is sent the song's name.
+
+Look here for sample shell scripts:
+.sp
+.I
+http://tmsnc.sourcefore.net/csong.html
+
+
+.SH FILES
+.TP
+.I ~/.tmsnc/tmsnc.conf
+Configuration file
+.TP
+.I ~/.tmsnc/aliases.conf
+Aliases file
+.TP
+.I ~/.tmsnc/logs/
+Conversation logs
+.SH AUTHORS/CREDITS
+.B tmsnc
+was mainly written by Sanoi
+.B <sanoix@gmail.com>
+.sp
+Tmsnc is free software; you can redistribute it and/or modify
+it under the terms of the IR Public Domain License as published by
+the IR Group; either version 1.6 of the License, or
+(at your option) any later version.
+
+The program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+You should have received a copy of the IR Public Domain License
+along with this program; if not, write to sanoix@gmail.com.
+

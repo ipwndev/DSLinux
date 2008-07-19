@@ -1,0 +1,39 @@
+TMSNC - Textbased MSN Client v0.3.2
+
+Install by running:
+
+	./configure
+	make
+
+and then as root you run
+
+	make install
+
+and TMSNC is installed in /usr/local/bin unless you specified another path.
+
+Note: If you are upgrading from an earlier version you may want to delete your tmsnc.conf file.
+
+If it refuses to compile, make sure you've installed ncurses-dev and libssl-dev. If it 
+still doesn't want to work, e-mail me (sanoix@gmail.com).
+
+Currently these are the things you can do in TMSNC:
+ * Log in/out
+ * Retrieve list of users
+ * See who's online and their status
+ * Get e-mail notifications from Hotmail
+ * Initiate/join chat sessions
+ * Send/receive messages
+ * Switch between windows using TAB
+ * Change your status
+ * Change your name
+ * Change your personal message
+ * Display current playing song
+ * Use talkfilters
+ * Invite principals
+ * Use international characters
+ * Add new contacts
+ * Accept new contacts adding you
+ * Block/remove contacts
+ * Change the interface's colors
+ * Log conversations
+ * Use sound to notify you of events
