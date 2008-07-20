@@ -6,7 +6,7 @@
 getip | read IP
 
 DAEMON=esd
-OPTIONS="-b -r 22050 -bind $IP -tcp -promiscuous"
+OPTIONS="-nobeeps -r 32768 -bind $IP -tcp -promiscuous"
 case "$1" in
 	start)
 		echo "Starting $DAEMON"
