@@ -1,0 +1,81 @@
+1999-08-29  Yann Dirson  <ydirson@multimania.com>
+
+	* Release 1999.08.29.
+
+1999-08-29  Yann Dirson  <ydirson@multimania.com>
+
+	* generic: removed debian/ dir.
+
+1999-08-25  Yann Dirson  <ydirson@multimania.com>
+
+	* consolefonts/Makefile.am (PSF_FILES): clarified font list.
+
+	* Included cp866-8x16.psf from Dmitry M. Klimoff (in my folder since
+	October '97 !)
+
+	* Included uaw.kmap and uaw_uni.kmap, koi8u.acm and ruscii.acm
+
+	* Included mac-de2-ext.kmap from Thomas Adams.
+
+	* Included fixed trf.kmap (turkish), from H. Turgut Uyar.
+
+1999-08-23  Yann Dirson  <ydirson@multimania.com>
+
+	* Applied patch to de.kmap to fix Ctrl-], from Michael.Weber
+	<Michael.Weber@Post.RWTH-Aachen.DE>.
+
+	* Applied patch to et.kmap and et-nodeadkeys.kmap, from Ville
+	Hallik.
+
+	* Included us-latin1.kmap from Nicolás Lichtmaier.
+
+	* Included lat7-14.psf (iso8859-13) font from Ilya Ketris.  No SFM
+	though.
+
+	* Included lv-latin4 and lv-latin7 keymaps from Ilya Ketris,
+	assuming they are qwerty.  Seem to be incomplete ?
+
+1999-04-15  Yann Dirson  <ydirson@multimania.com>
+
+	* Released 1999.04.15.
+
+1999-04-15  Yann Dirson  <ydirson@multimania.com>
+
+	* Included new keymap files from kbd 0.99: br-abnt2, es-cp850, mk,
+	ru3, ru4, ua-utf-ws, ua-utf, ua-ws.
+	
+	* Updated keymaps from kbd 0.99: cz-lat2, cz-lat2-prog,
+	cz-us-qwertz.
+	
+	* Included new include kmap from kbd 0.99:
+	linux-with-modeshift-altgr.inc.
+	
+	* Included new fonts from kbd 0.99: koi8r-8x8, koi8u_8x8,
+	koi8u_8x14, koi8u_8x16, ruscii_8x8, ruscii_8x14, ruscii_8x16.
+	Turned koi8r-8x8 into a PSF file.
+	
+	* Included new tables from kbd 0.99: koi8u.sfm, ruscii.sfm,
+	koi8u2ruscii.trans.
+	
+	* Renamed with .trans suffix old 8bit ACMs: null, space, zero,
+	trivial, vga2iso, koi2alt.
+	
+	* Fixed the dist build process to include doc/ subdirs.
+
+1999-04-08  Yann Dirson  <ydirson@multimania.com>
+
+	* Upgraded unimap directory to Unicode 2.1.8.
+
+1999-04-01  Yann Dirson  <ydirson@multimania.com>
+
+	* Split out of console-tools.
+	
+	* Fixed build process somewhat.
+	
+	* Install unicode files into /usr/share/unidata/.
+	
+	* Included et.kmap and et-nodeadkeys.kmap from Ville Hallik.
+	
+	* Included PSF fonts: lat0-sun16, lat2-sun16, lat2u-16.
+	
+	* Included debian/ directory.

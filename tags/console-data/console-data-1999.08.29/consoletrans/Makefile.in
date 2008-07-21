@@ -1,0 +1,284 @@
+# Makefile.in generated automatically by automake 1.4 from Makefile.am
+
+# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+# -*- makefile -*-
+
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+
+DESTDIR =
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+
+top_builddir = ..
+
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+transform = @program_transform_name@
+
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+CATALOGS = @CATALOGS@
+CATOBJEXT = @CATOBJEXT@
+CC = @CC@
+COMPRESSOR_EXT = @COMPRESSOR_EXT@
+COMPRESSOR_OPTS = @COMPRESSOR_OPTS@
+DATADIRNAME = @DATADIRNAME@
+FONTDIR = @FONTDIR@
+GENCAT = @GENCAT@
+GMOFILES = @GMOFILES@
+GMSGFMT = @GMSGFMT@
+GT_NO = @GT_NO@
+GT_YES = @GT_YES@
+INCLUDE_LOCALE_H = @INCLUDE_LOCALE_H@
+INSTOBJEXT = @INSTOBJEXT@
+INTLDEPS = @INTLDEPS@
+INTLLIBS = @INTLLIBS@
+INTLOBJS = @INTLOBJS@
+KEYMAPDIR = @KEYMAPDIR@
+MAKEINFO = @MAKEINFO@
+MKINSTALLDIRS = @MKINSTALLDIRS@
+MSGFMT = @MSGFMT@
+OLDKEYMAPDIR = @OLDKEYMAPDIR@
+PACKAGE = @PACKAGE@
+POFILES = @POFILES@
+POSUB = @POSUB@
+RANLIB = @RANLIB@
+TRANSDIR = @TRANSDIR@
+USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
+USE_NLS = @USE_NLS@
+VERSION = @VERSION@
+VIDEOMODEDIR = @VIDEOMODEDIR@
+l = @l@
+translit = @translit@
+
+AUTOMAKE_OPTIONS = foreign
+
+SUFFIXES = .fallback .nofallback
+
+MK_FALLBACK = $(top_srcdir)/local-scripts/make-fallbacks.pl
+MK_NOFALLBACK = $(top_srcdir)/local-scripts/make-nofallbacks.pl
+
+EXTRA_DIST = $(SFM_FILES) $(ACM_FILES) $(FB_FILES) $(OLD_ACM_FILES) 	UTF-tmpl.8bit UTF-tmpl.8bit.in
+
+
+pkgdatadir = $(datadir)/$(TRANSDIR)
+
+unidatadir = ${top_srcdir}/unidata
+
+pkgdata_DATA = $(SFM_FILES:=.$(COMPRESSOR_EXT)) $(ACM_FILES:=.$(COMPRESSOR_EXT)) 	 $(FB_FILES:=.$(COMPRESSOR_EXT)) $(OLD_ACM_FILES)
+
+
+CLEANFILES = $(SFM_FILES:=.$(COMPRESSOR_EXT)) $(ACM_FILES:=.$(COMPRESSOR_EXT)) 	 $(FB_FILES:=.$(COMPRESSOR_EXT))
+
+
+AUTO_FALLBACKS = latin_diacr arabic_forms
+
+AUTO_FALLBACKS_FB = $(AUTO_FALLBACKS:=.fallback)
+AUTO_FALLBACKS_NFB = $(AUTO_FALLBACKS:=.nofallback)
+
+# We don't put these ones in distclean because it's quite
+# heavy to recompute.
+MAINTAINERCLEANFILES = $(AUTO_FALLBACKS:=.fallback) $(AUTO_FALLBACKS:=.nofallback)
+
+latin_diacr_PATTERN = '^LATIN (SMALL|CAPITAL) (LETTER|LIGATURE) ((?:LONG|OPEN|DOTLESS) )?([^ ;]+)( DIGRAPH)?(?:( WITH ([^;]+?))( AND ([^;]+))?)?$$'
+latin_diacr_TRANSLATIONS = 'LATIN $$1 $$2 $$3$$4$$5$$6' 'LATIN $$1 $$2 $$3$$4$$5' 'LATIN $$1 $$2 $$4$$5'
+latin_diacr_HOPEFULL_PATTERN = '^LATIN'
+
+arabic_forms_PATTERN = '^ARABIC LETTER ([^ ;]+)(?: (ISOLATED|INITIAL|MEDIAL|FINAL) FORM)?$$'
+arabic_forms_TRANSLATIONS = 'ARABIC LETTER $$1'
+arabic_forms_HOPEFULL_PATTERN = '^ARABIC LETTER [^;]+ (ISOLATED|INITIAL|MEDIAL|FINAL) FORM$$'
+
+SFM_FILES =  iso01.sfm iso02.sfm iso03.sfm iso04.sfm iso05.sfm iso06.sfm iso07.sfm iso08.sfm iso09.sfm iso10.sfm iso14.sfm iso15.sfm ECMA144.sfm cp437.sfm def.sfm ethiopic.sfm koi8-r.sfm lat1.sfm lat1u.sfm lat2u.sfm lat4.sfm lat4u.sfm armscii8.sfm cp850.sfm cp850b.sfm tcvn.sfm viscii.sfm koi8u.sfm ruscii.sfm
+
+
+OLD_ACM_FILES = null.trans space.trans trivial.trans zero.trans vga2iso.trans koi2alt.trans koi8u2ruscii.trans cp437_to_iso01.trans cp850_to_iso01.trans viscii1.0_to_tcvn.trans viscii1.0_to_viscii1.1.trans
+
+
+ACM_FILES =  cp437.acm iso01.acm iso02.acm iso03.acm iso04.acm iso05.acm iso06.acm iso07.acm iso08.acm iso09.acm iso10.acm straight-to-font.acm iso15.acm iso02+euro.acm koi8u.acm ruscii.acm
+
+
+FB_FILES =  $(AUTO_FALLBACKS_FB) $(AUTO_FALLBACKS_NFB) graph.fallback math.fallback misc.fallback typo.fallback qrczak.fallback
+
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+CONFIG_CLEAN_FILES = 
+DATA =  $(pkgdata_DATA)
+
+DIST_COMMON =  Makefile.am Makefile.in
+
+
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+
+TAR = tar
+GZIP_ENV = --best
+all: all-redirect
+.SUFFIXES:
+.SUFFIXES: .fallback .nofallback
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOMAKE) --foreign --include-deps consoletrans/Makefile
+
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
+
+install-pkgdataDATA: $(pkgdata_DATA)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)
+	@list='$(pkgdata_DATA)'; for p in $$list; do \
+	  if test -f $(srcdir)/$$p; then \
+	    echo " $(INSTALL_DATA) $(srcdir)/$$p $(DESTDIR)$(pkgdatadir)/$$p"; \
+	    $(INSTALL_DATA) $(srcdir)/$$p $(DESTDIR)$(pkgdatadir)/$$p; \
+	  else if test -f $$p; then \
+	    echo " $(INSTALL_DATA) $$p $(DESTDIR)$(pkgdatadir)/$$p"; \
+	    $(INSTALL_DATA) $$p $(DESTDIR)$(pkgdatadir)/$$p; \
+	  fi; fi; \
+	done
+
+uninstall-pkgdataDATA:
+	@$(NORMAL_UNINSTALL)
+	list='$(pkgdata_DATA)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(pkgdatadir)/$$p; \
+	done
+tags: TAGS
+TAGS:
+
+
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+subdir = consoletrans
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pr $$/$$file $(distdir)/$$file; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
+	  fi; \
+	done
+info-am:
+info: info-am
+dvi-am:
+dvi: dvi-am
+check-am: all-am
+check: check-am
+installcheck-am:
+installcheck: installcheck-am
+install-exec-am:
+install-exec: install-exec-am
+
+install-data-am: install-pkgdataDATA
+install-data: install-data-am
+
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+install: install-am
+uninstall-am: uninstall-pkgdataDATA
+uninstall: uninstall-am
+all-am: Makefile $(DATA)
+all-redirect: all-am
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
+installdirs:
+	$(mkinstalldirs)  $(DESTDIR)$(pkgdatadir)
+
+
+mostlyclean-generic:
+
+clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
+
+distclean-generic:
+	-rm -f Makefile $(CONFIG_CLEAN_FILES)
+	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+
+maintainer-clean-generic:
+	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
+mostlyclean-am:  mostlyclean-generic
+
+mostlyclean: mostlyclean-am
+
+clean-am:  clean-generic mostlyclean-am
+
+clean: clean-am
+
+distclean-am:  distclean-generic clean-am
+
+distclean: distclean-am
+
+maintainer-clean-am:  maintainer-clean-generic distclean-am
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+
+maintainer-clean: maintainer-clean-am
+
+.PHONY: uninstall-pkgdataDATA install-pkgdataDATA tags distdir info-am \
+info dvi-am dvi check check-am installcheck-am installcheck \
+install-exec-am install-exec install-data-am install-data install-am \
+install uninstall-am uninstall all-redirect all-am all installdirs \
+mostlyclean-generic distclean-generic clean-generic \
+maintainer-clean-generic clean mostlyclean distclean maintainer-clean
+
+
+include $(top_builddir)/Make.rules
+
+fallbacks: $(AUTO_FALLBACKS:=.fallback) $(AUTO_FALLBACKS:=.nofallback)
+force-fallbacks:
+	rm -f $(AUTO_FALLBACKS:=.fallback) $(AUTO_FALLBACKS:=.nofallback)
+	make fallbacks
+
+#$(AUTO_FALLBACKS:=.fallback) : %.fallback : ../UnicodeData-2.txt $(MK_FALLBACK)
+$(AUTO_FALLBACKS_FB) : %.fallback : ${unidatadir}/UnicodeData-2.txt $(MK_FALLBACK)
+	@echo
+	$(MK_FALLBACK) $($*_PATTERN) $($*_TRANSLATIONS) < $< > $@
+
+#$(AUTO_FALLBACKS:=.nofallback) : %.nofallback : ../UnicodeData-2.txt $(MK_FALLBACK)
+$(AUTO_FALLBACKS_NFB) : %.nofallback : ${unidatadir}/UnicodeData-2.txt $(MK_FALLBACK)
+	@echo
+	$(MK_NOFALLBACK) $($*_PATTERN) $($*_HOPEFULL_PATTERN) < $< > $@
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:

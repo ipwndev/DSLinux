@@ -1,0 +1,29 @@
+# broken bar (¦) : vertical bar (|)
+U+00A6 U+007C
+
+# inv. ? (¿) : ?
+U+00BF U+003F
+
+# inv. ! (¡) : !
+U+00A1 U+0021
+
+# diaeresis (¨) : "
+U+00A8 U+0022
+
+# acute (´) : '
+U+00B4 U+0027
+
+# copyright (©) : C
+U+00A9 U+0043
+
+# registered (®) : R
+U+00AE U+0052
+
+# superscript 1 (¹) : 1
+U+00B9 U+0031
+
+# superscript 2 (²) : 2
+U+00B2 U+0032
+
+# superscript 3 (³) : 3
+U+00B3 U+0033
