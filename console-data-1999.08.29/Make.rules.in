@@ -1,0 +1,12 @@
+# -*- makefile -*-
+
+# turn around automake 1.2
+COMPRESSOR = @MAIN_COMPRESSOR@
+COMPRESSOR_EXT = @COMPRESSOR_EXT@
+COMPRESSOR_OPTS = @COMPRESSOR_OPTS@
+
+%.$(COMPRESSOR_EXT): %
+	@mkdir -p $(dir $@)
+	@echo -n .
+	@rm -f $@
+	@$(COMPRESSOR) $(COMPRESSOR_OPTS) <$< >$@

@@ -1,0 +1,320 @@
+# marc.shapiro@inria.fr 4-october-1998
+# French Macintosh keyboard
+# attempt to align to the standard Mac meaning of keys.
+# mostly intuitive!
+# option=AltGr; Apple/Command=Alt (==> meta)
+
+# TODO: CONTROL AND META COMBINATIONS
+
+charset "iso-8859-1"
+keymaps 0-9,11-12
+
+keycode	53 = Escape	
+		alt	keycode 53 =	Meta_Escape
+	shift	alt keycode 53 =	Meta_Escape
+
+# 1st row
+keycode	10 = at			numbersign
+		alt	keycode 10 =	Meta_at
+		control keycode	10 = 	nul
+	shift	alt	keycode 10 =	Meta_numbersign
+
+keycode  18 = ampersand        one
+		alt	keycode	18 =	Meta_ampersand
+	shift	alt 	keycode	18 =	Meta_one
+
+keycode  19 = eacute           two
+	shift	alt	keycode	19 =	Meta_two
+
+keycode	20 = quotedbl	         three
+		alt	keycode 20 =	Meta_quotedbl
+	shift	alt	keycode	20 =	Meta_three
+
+keycode	21 = apostrophe	       four
+		alt	keycode 21 =	Meta_apostrophe
+	shift	alt	keycode	21 =	Meta_four
+
+keycode	23 = parenleft	        five             braceleft 	bracketleft
+		alt	keycode 23 =	Meta_parenleft
+	shift	alt	keycode	23 =	Meta_five
+
+# **** insert meta, control
+keycode  22 = section            six
+		shift	alt	keycode	22 =	Meta_six
+
+keycode  26 = egrave           seven            guillemotleft	guillemotright
+		shift	alt	keycode	26 =	Meta_seven
+
+keycode	28 = exclam	       eight
+		alt	keycode 28 =	Meta_exclam
+	shift	alt	keycode	28 =	Meta_eight
+
+keycode  25 = ccedilla         nine
+		shift	alt	keycode	25 =	Meta_nine
+
+keycode  29 = agrave           zero
+		shift	alt	keycode	29 =	Meta_zero
+
+keycode	27 = parenright		degree          braceright 	bracketright
+		alt	keycode 27 =	Meta_parenright
+
+keycode	24 = minus			underscore
+		alt	keycode 24 =	Meta_minus
+	shift 	alt	keycode  24 = 	Meta_underscore
+	shift	control keycode 24 =	Control_underscore
+
+keycode	51 = Delete
+		alt    	keycode  51 =	Meta_Delete
+	shift	alt     keycode  51 =	Meta_Delete
+
+# 2nd row
+
+keycode	48 = Tab	
+		alt     keycode  48 = Meta_Tab
+	shift	alt     keycode  48 = Meta_Tab
+
+keycode  12 = a
+keycode  13 = z
+keycode  14 = e
+keycode  15 = r
+keycode  17 = t
+keycode  16 = y
+keycode  32 = u
+keycode  34 = i
+keycode  31 = o
+keycode  35 = p
+
+keycode  33 = dead_circumflex		dead_diaeresis
+		control	keycode	33 = 	Control_asciicircum
+
+keycode	30 = dollar			asterisk	VoidSymbol	yen
+		alt	keycode 30 =	Meta_dollar
+	shift	alt keycode 30 =	Meta_dollar
+
+keycode	36 = Return	
+
+# 3d row
+
+keycode  57 = Caps_Lock
+keycode  0 = q
+keycode  1 = s
+keycode  2 = d
+keycode  3 = f
+keycode  5 = g
+keycode  4 = h
+keycode  38 = j
+keycode  40 = k
+keycode  37 = l
+			altgr	keycode 37 = notsign
+	shift		altgr	keycode 37 = bar
+#		alt	altgr	keycode 37 = Meta_notsign # Doesn't work???
+	shift	alt	altgr	keycode 37 = Meta_bar
+
+keycode  41 = m
+
+keycode  39 = ugrave		percent
+	shift	alt	keycode	39 =	Meta_percent
+
+keycode  42 = dead_grave 	sterling		at	numbersign
+		alt	keycode 42 =	Meta_grave
+#	shift	alt	keycode 42 =	Meta_sterling # doesn't work ?
+		altgr	keycode 42 =	Meta_at
+	shift	altgr	keycode 42 =	Meta_numbersign
+
+# 4th row
+keycode  56 = Shift
+
+keycode  50 = less 		greater
+		alt	keycode	50 =	Meta_less
+	shift	alt	keycode	50 =	Meta_greater
+
+keycode  6 = w
+keycode  7 = x
+keycode  8 = c
+keycode  9 = v
+keycode  11 = b
+
+keycode  45 = +n		N		dead_tilde
+		control	keycode	45 =	Control_n
+	shift	control	keycode	45 =	Control_n
+		alt	keycode	45 =	Meta_n
+	shift	alt	keycode	45 =	Meta_n
+
+keycode	46 = comma			question
+		alt	keycode 46 =	Meta_comma
+	shift	alt 	keycode 46 =	Meta_question
+	shift	control	keycode 46 =	Delete
+
+keycode	43 = semicolon			period
+		alt	keycode 43 =	Meta_semicolon
+	shift	alt keycode 43 =	Meta_period
+
+keycode	47 = colon			slash		division	backslash
+		alt	keycode 47 =	Meta_colon
+	shift	alt	keycode  47 =	Meta_slash
+	shift	altgr	control	keycode	47 =	Control_backslash
+
+keycode	44 = equal			plus
+		alt	keycode 44 =	Meta_equal
+	shift	alt	keycode 44 =	Meta_plus
+
+# 5th row
+keycode  54 = Control
+
+# Option key:
+keycode  58 = AltGr
+
+# Apple/Command key:
+keycode  55 = Alt
+
+keycode  49 = space
+	control keycode  49 = nul
+	alt     keycode  49 = Meta_space
+
+# 'fn' (yellow key labels)
+
+## TO DO
+# keycode 35 = KP_Multiply
+
+# function keys
+
+keycode    127 = F1               F11              Console_13
+	control keycode    127 = F1
+	alt     keycode    127 = Console_1
+	control	alt     keycode    127 = Console_1
+keycode    127 = F2               F12              Console_14
+	control keycode    127 = F2
+	alt     keycode    127 = Console_2
+	control	alt     keycode    127 = Console_2
+keycode  99 = F3               F13              Console_15
+	control keycode  99 = F3
+	alt     keycode  99 = Console_3
+	control	alt     keycode  99 = Console_3
+keycode    127 = F4               F14              Console_16
+	control keycode    127 = F4
+	alt     keycode    127 = Console_4
+	control	alt     keycode    127 = Console_4
+keycode  96 = F5               F15              Console_17
+	control keycode  96 = F5
+	alt     keycode  96 = Console_5
+	control	alt     keycode  96 = Console_5
+keycode  97 = F6               F16              Console_18
+	control keycode  97 = F6
+	alt     keycode  97 = Console_6
+	control	alt     keycode  97 = Console_6
+keycode  98 = F7               F17              Console_19
+	control keycode  98 = F7
+	alt     keycode  98 = Console_7
+	control	alt     keycode  98 = Console_7
+# keycode   58 = F8               F18              Console_20
+#	control keycode   58 = F8
+#	alt     keycode   58 = Console_8
+#	control	alt     keycode   58 = Console_8
+keycode    127 = F9               F19              Console_21
+	control keycode    127 = F9
+	alt     keycode    127 = Console_9
+	control	alt     keycode    127 = Console_9
+keycode     127 = F10              F20              Console_22
+	control keycode     127 = F10
+	alt     keycode     127 = Console_10
+	control	alt     keycode     127 = Console_10
+keycode  71 = Num_Lock
+keycode     127 = Scroll_Lock      Show_Memory      Show_Registers
+	control keycode     127 = Show_State
+	alt     keycode     127 = Scroll_Lock
+keycode  89 = KP_7
+	alt     keycode  89 = Ascii_7
+keycode  91 = KP_8
+	alt     keycode  91 = Ascii_8
+keycode  92 = KP_9
+	alt     keycode  92 = Ascii_9
+keycode  78 = KP_Subtract
+keycode  86 = KP_4
+	alt     keycode  86 = Ascii_4
+keycode  87 = KP_5
+	alt     keycode  87 = Ascii_5
+keycode  88 = KP_6
+	alt     keycode  88 = Ascii_6
+keycode  69 = KP_Add
+keycode  83 = KP_1
+	alt     keycode  83 = Ascii_1
+keycode  84 = KP_2
+	alt     keycode  84 = Ascii_2
+keycode  85 = KP_3
+	alt     keycode  85 = Ascii_3
+keycode  82 = KP_0
+	alt     keycode  82 = Ascii_0
+keycode  65 = KP_Period
+#	altgr   control keycode  65 = Boot
+	control alt     keycode  65 = Boot
+keycode   127 = Last_Console
+keycode   127 =
+keycode   127 = less             greater          bar
+	alt     keycode   127 = Meta_less
+keycode   62 = F11              F11              Console_23
+	control keycode   62 = F11
+	alt     keycode   62 = Console_11
+	control	alt     keycode   62 = Console_11
+keycode     127 = F12              F12              Console_24
+	control keycode     127 = F12
+	alt     keycode     127 = Console_12
+	control	alt     keycode     127 = Console_12
+keycode  76 = KP_Enter
+keycode  75 = KP_Divide
+keycode   127 = Control_backslash
+	control keycode   127 = Control_backslash
+	alt     keycode   127 = Control_backslash
+
+keycode   127 = Break
+keycode    127 = Find
+keycode  62 = Up
+keycode    127 = Prior
+	shift   keycode    127 = Scroll_Backward
+keycode  59 = Left
+        alt     keycode  59 = Decr_Console
+keycode  60 = Right
+        alt     keycode  60 = Incr_Console
+keycode    127 = Select
+keycode  61 = Down
+keycode    127 = Next
+	shift   keycode    127 = Scroll_Forward
+keycode    127 = Insert
+keycode    127 = Remove
+#	altgr   control keycode    127 = Boot
+	control alt     keycode    127 = Boot
+string F1 = "\033[[A"
+string F2 = "\033[[B"
+string F3 = "\033[[C"
+string F4 = "\033[[D"
+string F5 = "\033[[E"
+string F6 = "\033[17~"
+string F7 = "\033[18~"
+string F8 = "\033[19~"
+string F9 = "\033[20~"
+string F10 = "\033[21~"
+string F11 = "\033[23~"
+string F12 = "\033[24~"
+string F13 = "\033[25~"
+string F14 = "\033[26~"
+string F15 = "\033[28~"
+string F16 = "\033[29~"
+string F17 = "\033[31~"
+string F18 = "\033[32~"
+string F19 = "\033[33~"
+string F20 = "\033[34~"
+string Find = "\033[1~"
+string Insert = "\033[2~"
+string Remove = "\033[3~"
+string Select = "\033[4~"
+string Prior = "\033[5~"
+string Next = "\033[6~"
+string F21 = ""
+string F22 = ""
+string F23 = ""
+string F24 = ""
+string F25 = ""
+string F26 = ""
+keycode 127 =
+# 	control shift keycode 127 = Boot
+control alt keycode 65 = Boot
+control alt keycode 117 = Boot

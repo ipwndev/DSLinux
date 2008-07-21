@@ -1,0 +1,29 @@
+# This files gives fallback for math character from the following charsets:
+# cp437 latin1
+
+# BEWARE: These approximations will give FALSE display. Use with caution. It
+#  will be better when we can specially highlight such approximations.
+
+# empty set ED (∅) : ostroke (Ø) : zero (0) : o
+U+2205 U+00D8 U+0030 U+006F
+
+# identical (≡) : equal
+U+2261 U+003D
+
+# greater or equal (≥) : greater
+U+2265 U+003E
+
+# less or equal (≤) : less
+U+2264 U+003C
+
+# division (÷) : /
+U+00F7 U+002F
+
+# multiply (×) : * : x (x should never show up)
+U+00D7 U+002A U+0078
+
+# superscript small N (ⁿ) : n
+U+207F U+006E
+
+# Pi (π) : box-drawing (╥)
+U+03C0 U+2565

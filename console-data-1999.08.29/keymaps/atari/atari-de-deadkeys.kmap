@@ -1,0 +1,256 @@
+#
+#           Keyboard Mapping for Atari Keyboards, German Layout
+#           ---------------------------------------------------
+#
+# Copyright 1994 Roman Hodek
+# Updated August 1998 Roman Hodek
+#
+# This file is subject to the terms and conditions of the GNU General Public
+# License.  See the file README.legal in the main directory of this archive
+# for more details.
+#
+# Notes:
+# ------
+#
+# This keymap does not use an AltGr key, since the Atari keyboard
+# doesn't have such a key. Most times, the Alt key takes over the role
+# of AltGr.
+#
+# Some mappings you might want to know about:
+#  - ClrHome is Home (aka Find)
+#  - Shift+ClrHome is End (aka Select)
+#  - Shift+Up/Down are Page Up/Down (aka Prior/Next)
+#  - Alt + the numbers of the keypad lets you enter a character by its
+#    decimal code
+#  - Shift+Control + one of a,b,c,d,e,f or a number on the keypad lets
+#    you enter the hex code of a character
+#  - Alt+CapsLock is NumLock
+#  - You can enter F11..F20 by pressing Shift+F1..F10
+#  - Console (vt) switching:
+#     Alt+F1..F10 switch to console 1..10
+#     Shift+Alt+F1..F10 switch to console 11..20
+#     Control+Alt+F1..F10 switch to console 21..30
+#     Shift+Control_Alt+F1..F10 switch to console 31..40
+#     Alt+Left/Right switches to previous/next console
+#     Alt+Undo switches to last console
+#     Alt+Control+Undo sends a keyboard request to the init process; 
+#       the default action is to spawn a new console
+#  - Kernel information:
+#     Alt+Help, Shift+Alt+Help, Control+Alt+Help: system status
+#     Control+Help: registers
+#     Shift+Help: memory info
+#    (Note: with a 2.1 kernel and MAGIC_SYSRQ enabled, Alt+Help is SysRq)
+#  - Shift+Undo sends a signal to the current foreground process (same as ^C) 
+#  - Alt+Up/Down scroll the console up/down (if implemented in the kernel)
+#  - Alt+Ins stops/starts output (Scroll_Lock function, same as ^S/^Q)
+#  - Control+Alt+Delete reboots the system, as usual (by sending a request to
+#    the init process)
+#
+# There is no natural way to generate Meta codes for the characters [,],{,},
+# @ and \, that already need Alt to be pressed together with one of the 
+# umlaut keys. I've choosen the following scheme, though it may not be
+# very intuitive in all cases (who knows a better solution??):
+# 1) The key with Alt (and maybe shift) gives the character engraved to the
+#    right (i.e. [,@,\,...)
+# 2) The key with Control (and maybe shift) gives the control character
+#    corresponding the the character engraved to the _right_, if one exists.
+#    This happens because the umlaut characters have no corresponding control
+#    character anyway.
+# 3) The key with Control and Alt (and maybe shift) gives the Meta equivalent
+#    (with 8. bit set or prepended by ESC) of the character engraved to the
+#    right. Again, Meta's of the umlaut characters do not exist, since they
+#    already have their 8. bit set.
+# One could argue that it would be more consistent to require Alt and Control
+# to be pressed to get the control characters (case 2). That's true, but in
+# my opinion, it is even more inconsistent to generate Meta codes without the
+# Alt key pressed (but just with Control). And it would be very bad, if the
+# Meta versions of [,{,@,... could not be typed at all!
+#
+# I've kept the convention that the digit keys 2..8 on the main keyboard
+# generate the control characters not corresponding to letters (^@, ^[ .. ^_
+# and ^?=DEL) when pressed with Control. It is convention, too, that the shift
+# key must not be pressed for this effect. Also, Meta+Control plus these keys
+# give the Metas of these controls.
+#
+# The current loadkeys (0.96) doesn't know names for KP_Parenleft (0x0312) and
+# KP_Parenright, so I had to write them down as hex codes :-(
+#
+
+charset "iso-8859-1"
+keymaps 0-1,4-5,8-9,12-13
+strings as usual
+compose as usual for "iso-8859-1"
+
+#             plain            Shift            Control          Shift+Control               Alt              Shift+Alt        Control+Alt      Shift+Ctrl+Alt
+keycode   1 = Escape           Escape           Escape           Escape                      Meta_Escape      Meta_Escape      Meta_Escape      Meta_Escape
+keycode   2 = one              exclam           VoidSymbol       VoidSymbol                  Meta_one         Meta_exclam      VoidSymbol       VoidSymbol
+# nul = Control_at
+keycode   3 = two              quotedbl         nul              VoidSymbol                  Meta_two         Meta_quotedbl    Meta_nul         VoidSymbol
+keycode   4 = three            section          Escape           VoidSymbol                  Meta_three       Meta_numbersign  Meta_Escape      VoidSymbol
+keycode   5 = four             dollar           Control_backslash VoidSymbol                 Meta_four        Meta_dollar      Meta_Control_backslash VoidSymbol
+keycode   6 = five             percent          Control_bracketright VoidSymbol              Meta_five        Meta_percent     Meta_Control_bracketright VoidSymbol
+keycode   7 = six              ampersand        Control_asciicircum VoidSymbol               Meta_six         Meta_ampersand   Meta_Control_asciicircum VoidSymbol
+keycode   8 = seven            slash            Control_underscore VoidSymbol                Meta_seven       Meta_slash       Meta_Control_underscore VoidSymbol
+keycode   9 = eight            parenleft        Delete           VoidSymbol                  Meta_eight       Meta_parenleft   Meta_Delete      VoidSymbol
+keycode  10 = nine             parenright       VoidSymbol       VoidSymbol                  Meta_nine        Meta_parenright  VoidSymbol       VoidSymbol
+keycode  11 = zero             equal            VoidSymbol       VoidSymbol                  Meta_zero        Meta_equal       VoidSymbol       VoidSymbol
+keycode  12 = ssharp           question         VoidSymbol       VoidSymbol                  Meta_question    Meta_question    VoidSymbol       VoidSymbol
+keycode  13 = dead_acute       dead_grave       VoidSymbol       VoidSymbol                  Meta_apostrophe  Meta_grave       VoidSymbol       VoidSymbol
+keycode  14 = Delete           Delete           Delete           Delete                      Meta_Delete      Meta_Delete      Meta_Delete      Meta_Delete
+keycode  15 = Tab              Tab              Tab              Tab                         Meta_Tab         Meta_Tab         Meta_Tab         Meta_Tab
+keycode  16 = +q
+keycode  17 = +w
+keycode  18 = +e
+ shift control keycode 18 = Hex_E
+keycode  19 = +r
+keycode  20 = +t
+keycode  21 = +z
+keycode  22 = +u
+keycode  23 = +i
+keycode  24 = +o
+keycode  25 = +p
+keycode  26 = +udiaeresis      +Udiaeresis      nul              Control_backslash           at               backslash        Meta_at          Meta_backslash
+keycode  27 = plus             asterisk         Control_bracketright VoidSymbol              Meta_plus        Meta_asterisk    Meta_Control_bracketright VoidSymbol
+keycode  28 = Return           Return           Return           Return                      Meta_Control_m   Meta_Control_m   Return           Return
+keycode  29 = Control
+keycode  30 = +a
+ shift control keycode 30 = Hex_A
+keycode  31 = +s
+keycode  32 = +d
+ shift control keycode 32 = Hex_D
+keycode  33 = +f
+ shift control keycode 33 = Hex_F
+keycode  34 = +g
+keycode  35 = +h
+keycode  36 = +j
+keycode  37 = +k
+keycode  38 = +l
+# Escape = Control-[
+keycode  39 = +odiaeresis      +Odiaeresis       Escape          VoidSymbol                  bracketleft      braceleft         Meta_bracketleft Meta_braceleft
+keycode  40 = +adiaeresis      +Adiaeresis       Control_bracketright VoidSymbol             bracketright     braceright        Meta_bracketright Meta_braceright        
+keycode  41 = numbersign       dead_circumflex   Control_asciicircum Control_asciicircum     Meta_numbersign  Meta_asciicircum  Meta_Control_asciicircum Meta_Control_asciicircum
+keycode  42 = Shift
+keycode  43 = dead_tilde       bar               VoidSymbol      VoidSymbol                  Meta_asciitilde  Meta_bar          VoidSymbol      VoidSymbol
+keycode  44 = +y
+keycode  45 = +x
+keycode  46 = +c
+ shift control keycode 46 = Hex_C
+keycode  47 = +v
+keycode  48 = +b
+ shift control keycode 48 = Hex_B
+keycode  49 = +n
+keycode  50 = +m
+keycode  51 = comma            semicolon         dead_cedilla    VoidSymbol                  Meta_comma       Meta_semicolon    VoidSymbol      VoidSymbol
+keycode  52 = period           colon             VoidSymbol      VoidSymbol                  Meta_period      Meta_colon        VoidSymbol      VoidSymbol
+keycode  53 = minus            underscore        Control_underscore Control_underscore       Meta_minus       Meta_underscore   Meta_Control_underscore Meta_Control_underscore
+keycode  54 = Shift
+keycode  55 =
+keycode  56 = Alt
+keycode  57 = space            space             nul             nul                         Meta_space       Meta_space        Meta_nul        Meta_nul
+keycode  58 = Caps_Lock
+ alt keycode  58 = Num_Lock        
+keycode  59 = F1               F11               F1              F1                          Console_1        Console_11        Console_21      Console_31
+keycode  60 = F2               F12               F2              F2                          Console_2        Console_12        Console_22      Console_32
+keycode  61 = F3               F13               F3              F3                          Console_3        Console_13        Console_23      Console_33
+keycode  62 = F4               F14               F4              F4                          Console_4        Console_14        Console_24      Console_34
+keycode  63 = F5               F15               F5              F5                          Console_5        Console_15        Console_25      Console_35
+keycode  64 = F6               F16               F6              F6                          Console_6        Console_16        Console_26      Console_36
+keycode  65 = F7               F17               F7              F7                          Console_7        Console_17        Console_27      Console_37
+keycode  66 = F8               F18               F8              F8                          Console_8        Console_18        Console_28      Console_38
+keycode  67 = F9               F19               F9              F9                          Console_9        Console_19        Console_29      Console_39
+keycode  68 = F10              F20               F10             F10                         Console_10       Console_20        Console_30      Console_40
+keycode  69 =
+keycode  70 =
+# ClrHome
+keycode  71 = Find             Select           Find             Select                      Find             Select           Find             Select
+keycode  72 = Up               Prior            Up               Prior                       Scroll_Backward  Prior            Up               Prior
+keycode  73 =
+keycode  74 = KP_Subtract     
+keycode  75 = Left            
+ alt keycode  75 = Decr_Console
+keycode  76 =
+keycode  77 = Right           
+ alt keycode  77 = Incr_Console
+keycode  78 = KP_Add          
+keycode  79 =
+keycode  80 = Down             Next             Down             Next                        Scroll_Forward   Next             Down             Next
+keycode  81 =
+keycode  82 = Insert
+ alt keycode  82 = Scroll_Lock
+keycode  83 = Remove           Remove           Remove           Remove                      Meta_Delete      Meta_Delete      Boot             Meta_Delete
+keycode  84 =
+keycode  85 =
+keycode  86 =
+keycode  87 =
+keycode  88 =
+keycode  89 =
+keycode  90 =
+keycode  91 =
+keycode  92 =
+keycode  93 =
+keycode  94 =
+keycode  95 =
+keycode  96 = less             greater          VoidSymbol       VoidSymbol                  Meta_less        Meta_greater     VoidSymbol       VoidSymbol
+# F246 = Undo
+keycode  97 = F246             Break            F246             F246                        Last_Console     F246             Spawn_Console    F246
+keycode  98 = Help             Show_Memory      Show_Registers   VoidSymbol                  Show_State       Show_State       Show_State       VoidSymbol
+keycode  99 = 0x0312 # K_PPARENL; loadkeys has no symbol for this :-(
+keycode 100 = 0x0313 # K_PPARENR
+keycode 101 = KP_Divide
+keycode 102 = KP_Multiply
+keycode 103 = KP_7
+ shift keycode 103 = Find
+ shift control keycode 103 = Hex_7
+ alt keycode 103 = Ascii_7
+keycode 104 = KP_8            
+ shift keycode 104 = Up
+ shift control keycode 104 = Hex_8
+ alt keycode 104 = Ascii_8
+keycode 105 = KP_9            
+ shift keycode 105 = Prior
+ shift control keycode 105 = Hex_9
+ alt keycode 105 = Ascii_9
+keycode 106 = KP_4            
+ shift keycode 106 = Right
+ shift control keycode 106 = Hex_4
+ alt keycode 106 = Ascii_4
+keycode 107 = KP_5            
+ shift control keycode 107 = Hex_5
+ alt keycode 107 = Ascii_5
+keycode 108 = KP_6            
+ shift keycode 108 = Left
+ shift control keycode 108 = Hex_6
+ alt keycode 108 = Ascii_6
+keycode 109 = KP_1            
+ shift keycode 109 = Select
+ shift control keycode 109 = Hex_1
+ alt keycode 109 = Ascii_1
+keycode 110 = KP_2            
+ shift keycode 110 = Down
+ shift control keycode 110 = Hex_2
+ alt keycode 110 = Ascii_2
+keycode 111 = KP_3            
+ shift keycode 111 = Next
+ shift control keycode 111 = Hex_3
+ alt keycode 111 = Ascii_3
+keycode 112 = KP_0            
+ shift keycode 112 = Insert
+ shift control keycode 112 = Hex_0
+ alt keycode 112 = Ascii_0
+keycode 113 = KP_Period       
+ shift keycode 113 = Remove
+ alt control keycode 113 = Boot
+keycode 114 = KP_Enter        
+keycode 115 =
+keycode 116 =
+keycode 117 =
+keycode 118 =
+keycode 119 =
+keycode 120 =
+keycode 121 =
+keycode 122 =
+keycode 123 =
+keycode 124 =
+keycode 125 =
+keycode 126 =
+keycode 127 =

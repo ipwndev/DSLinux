@@ -1,0 +1,68 @@
+dnl -*- sh -*-
+dnl Process this file with autoconf to produce a configure script.
+
+# Initialize
+AC_INIT(keymaps/i386/qwerty/us.kmap)
+
+#AC_CONFIG_AUX_DIR(autoconf)
+AM_INIT_AUTOMAKE(console-data, 1999.08.29)
+
+# Defaults
+AC_PREFIX_DEFAULT(/usr)
+
+ct_CHECK_WITH_PROGS([main_compressor], [gzip lzop bzip2 compress])
+
+case $ct_cv_prog_MAIN_COMPRESSOR in
+    gzip)
+	COMPRESSOR_OPTS="-9"
+	COMPRESSOR_EXT="gz"
+    ;;
+    lzop)
+	COMPRESSOR_OPTS="-9"
+	COMPRESSOR_EXT="lzo"
+    ;;
+    bzip2)
+	COMPRESSOR_OPTS="-9"
+	COMPRESSOR_EXT="bz2"
+    ;;
+    compress)
+	COMPRESSOR_EXT="Z"
+    ;;
+    *)
+    ;;
+esac
+AC_SUBST(COMPRESSOR_OPTS)
+AC_SUBST(COMPRESSOR_EXT)
+
+
+#
+####################
+
+# Allow local data dir, but not do that by default (not FSSTND-compliant ?)
+kb_localdatadir_default=/usr/local/share     # iff --enable-localdatadir without specific dir
+
+AC_ARG_ENABLE([localdatadir], 
+  [  --enable-localdatadir   additional directory to search for data files [NONE]],
+  [ case ${enableval} in
+      no) ;;
+      yes) ] AC_DEFINE_UNQUOTED(LOCALDATADIR, "$kb_localdatadir_default") [ ;;
+      *) ] AC_DEFINE_UNQUOTED(LOCALDATADIR, "$enableval") [ ;;
+  esac;
+  ])
+
+# Additional defs to ensure consistency
+TRANSDIR=consoletrans
+FONTDIR=consolefonts
+KEYMAPDIR=keymaps
+OLDKEYMAPDIR=keytables
+VIDEOMODEDIR=videomodes
+
+AC_SUBST(TRANSDIR)
+AC_SUBST(FONTDIR)
+AC_SUBST(KEYMAPDIR)
+AC_SUBST(OLDKEYMAPDIR)
+AC_SUBST(VIDEOMODEDIR)
+
+# Output
+AC_OUTPUT([Makefile Make.rules doc/Makefile
+  consolefonts/Makefile consoletrans/Makefile keymaps/Makefile])

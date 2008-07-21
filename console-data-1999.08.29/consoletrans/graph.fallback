@@ -1,0 +1,84 @@
+# This files gives fallback from semi-graphic characters (from eg. IBM's cp437)
+# to semi-graphic and ASCII approximations.
+
+# Here's a UTF8 summary of those chars for testing through head(1):
+#
+# ┌─┬┐ ╔═╦╗ 
+# │ ││ ║ ║║ ╒╤╕ ╓╥╖
+# ├─┼┤ ╠═╬╣ ╞╪╡ ╟╫╢
+# └─┴┘ ╚═╩╝ ╘╧╛ ╙╨╜
+
+# These approximation might not be the best ones; fell free to send any
+# improvements or alternatives.
+
+# ASCII may give:
+#
+# -|=
+#
+# .+. .=:=.
+# +++ :=:=:
+# `+' `=:='
+
+
+# single to double, then ASCII
+
+U+2502 U+2551 U+007C
+U+2500 U+2550 U+002D
+
+U+250C U+255A U+002E
+U+251C U+2560 U+002B
+U+2514 U+255A U+0060
+
+U+252C U+2566 U+002B
+U+253C U+256C U+002B
+U+2534 U+2569 U+002B
+
+U+2510 U+2557 U+002E
+U+2524 U+2563 U+002B
+U+2518 U+255D U+002E
+
+
+# double to single, then ASCII
+
+U+2551 U+2502 U+007C
+U+2550 U+2500 U+003D
+
+U+255A U+250C U+002E
+U+2560 U+251C U+003A
+U+255A U+2514 U+0060
+
+U+2566 U+252C U+003A
+U+256C U+253C U+003A
+U+2569 U+2534 U+003A
+
+U+2557 U+2510 U+002E
+U+2563 U+2524 U+003A
+U+255D U+2518 U+002E
+
+# mixed single/double to single, then double, then ASCII
+# single vert + double horiz, then double V + single H
+
+U+2552 U+250C U+255A U+002E
+U+255E U+251C U+2560 U+003A
+U+2558 U+2514 U+255A U+0060
+
+U+2564 U+252C U+2566 U+003A
+U+256A U+253C U+256C U+003A
+U+2567 U+2534 U+2569 U+003A
+
+U+2555 U+2510 U+2557 U+002E
+U+2561 U+2524 U+2563 U+003A
+U+255B U+2518 U+255D U+0027
+
+
+U+2553 U+250C U+255A U+002E
+U+255F U+251C U+2560 U+002B
+U+2559 U+2514 U+255A U+0060
+
+U+2565 U+252C U+2566 U+002B
+U+256B U+253C U+256C U+002B
+U+2568 U+2534 U+2569 U+002B
+
+U+2556 U+2510 U+2557 U+002E
+U+2562 U+2524 U+2563 U+002B
+U+255C U+2518 U+255D U+0027
