@@ -1,0 +1,528 @@
+  The Linux Console Tools
+  Yann Dirson, dirson@debian.org
+  18 May 1999
+  ____________________________________________________________
+
+  Table of Contents
+
+
+  1. Status of this document
+
+     1.1 Other documents
+
+  2. What the Linux Console Tools are
+
+  3. Understanding the big picture of the console
+
+  4. What is Unicode
+
+  5. Understanding and setting up the keyboard driver
+
+     5.1 How it works
+     5.2 See also
+
+  6. Understanding and setting up the screen driver
+
+     6.1 Unicode is everywhere
+        6.1.1 Screen Font Maps
+        6.1.2 SFM Fallback tables
+     6.2 The unicode screen-mode
+     6.3 The byte screen-mode
+        6.3.1 Charset slots
+     6.4 Special UCS2 codes
+     6.5 About the old 8-bit ``screen maps''
+     6.6 See also
+
+  7. Font files
+
+     7.1 The formats
+     7.2 Tools
+        7.2.1 Font-files manipulation tools
+        7.2.2 Font editors
+
+  8. The libraries
+
+     8.1 libconsole,
+     8.2 libcfont,
+     8.3 libctutils,
+
+  9. The future of the console driver and of the Linux Console Tools
+
+
+
+  ______________________________________________________________________
+
+  11..  SSttaattuuss ooff tthhiiss ddooccuummeenntt
+
+  This is an introduction to the Linux Console Tools package.  You
+  should refer to the manpages for more details.
+
+
+  11..11..  OOtthheerr ddooccuummeennttss
+
+  The Linux Console Tools WWW site
+  <http://www.multimania.com/ydirson/en/lct/> may contain additionnal
+  informations, latest news, and such.
+
+  Files in the doc/contrib/ directory are unsupported, and may be
+  obsolete, but are provided just in case someone needs them.
+
+  README.{acm,sfm,keytables} give some info on the respective included
+  data files.
+
+  kbd.FAQ.* is the Console and Keyboard HOWTO by Andries Brouwer, as
+  included in kbd 0.97.  It would need some corrections, though.
+
+
+
+  22..  WWhhaatt tthhee LLiinnuuxx CCoonnssoollee TToooollss aarree
+
+  The Linux Console Tools are a set of programs allowing the user to
+  setup/customize your console (restricted meaning: text mode screen +
+  keyboard only).  It is derived from version 0.94 of the kbd package,
+  and has benefited from most features introduced in kbd until version
+  0.97.
+
+  The Linux Console Tools are still under development, but using it just
+  as a replacement for kbd should be quite safe, at it fixes many bugs
+  kbd has.
+
+
+  33..  UUnnddeerrssttaannddiinngg tthhee bbiigg ppiiccttuurree ooff tthhee ccoonnssoollee
+
+  The console driver is currently made of 2 sub-drivers: the keyboard
+  driver, and the screen driver.  Basically, the keyboard driver sends
+  characters to your application, then the application does its own job,
+  and sends to the screen driver the characters to be displayed.
+
+
+  44..  WWhhaatt iiss UUnniiccooddee
+
+  Traditionnaly, character encodings use 8 bits, and thus are limited to
+  256 characters.  This causes problems because:
+
+  1. it's not enough for some languages;
+
+  2. people speaking languages using different encodings have to choose
+     which one they use, and have to switch the system's state when
+     changing the language, which makes it difficult to mix several
+     languages in the same file;
+
+  3. etc...
+
+  Thus the UCS (Universal Character Set), also know as _U_n_i_c_o_d_e was
+  created to handle and mix all of our world's scripts.  This is a
+  32-bit (4 bytes) encoding, otherwise known as UCS4 because of the size
+  of its characters, which is normalised by ISO as the 10646-1 standard.
+  The most widely used characters from UCS are contained in the UCS2
+  16-bit subset of UCS; this is the subset used by the Linux console.
+
+  For convenience, the UTF8 encoding was designed as a variable-length
+  encoding (with 8 bytes of maximum length) with ASCII compatibility;
+  all chars that have a UCS4 encoding can be expressed as a UTF8
+  sesquence, and vice-versa.
+
+  The Unicode consortium <http://unicode.org> defines additional
+  properties for UCS2 characters.
+
+  See: unicode(7), utf-8(7).
+
+
+
+
+  55..  UUnnddeerrssttaannddiinngg aanndd sseettttiinngg uupp tthhee kkeeyybbooaarrdd ddrriivveerr
+
+  55..11..  HHooww iitt wwoorrkkss
+
+  The keyboard driver is made up several levels:
+
+
+  +o  the keyboard hardware, which turns the user's finger moves into so-
+     called _s_c_a_n_c_o_d_e_s (Disclaimer: this is not really part of the
+     software driver itself; no support is provided for bugs in this
+     domain ;-).  An event (key pressed or released) generates from 1 to
+     6 _s_c_a_n_c_o_d_e_s.
+
+  +o  a mechanism turning _s_c_a_n_c_o_d_e_s into _k_e_y_c_o_d_e_s using a translation-
+     table which you can access with the getkeycodes(8) and
+     setkeycodes(8) utilities.  You will only need to look at that if
+     you have some sort of non-standard (or programmable ?) keys on your
+     keyboard.  AFAIK, these keycodes are the same among a set of
+     keyboards sharing the same hardware, but differing in the symbols
+     drawn on the keys.
+
+  +o  a mechanism turning _k_e_y_c_o_d_e_s into _c_h_a_r_a_c_t_e_r_s using a _k_e_y_m_a_p. You
+     can access this _k_e_y_m_a_p using the loadkeys(1) and dumpkeys(1)
+     utilities.
+
+  The keyboard driver can be in one of 4 modes (which you can access
+  using kbd_mode(1)), which will influence what type of data
+  applications will get as keyboard input:
+
+
+  +o  the scancode (K_RAW) mode, in which the application gets scancodes
+     for input.  It is used by applications that implement their own
+     keyboard driver.  For example, X11 does that.
+
+  +o  the keycode (K_MEDIUMRAW) mode, in which the application gets
+     information on which keys (identified by their keycodes) get
+     pressed and released.  AFAIK, no real-life application uses this
+     mode.
+
+  +o  the ASCII (K_XLATE) mode, in which the application effectively gets
+     the characters as defined by the _k_e_y_m_a_p, using an 8-bit encoding.
+     In this mode, the Ascii_0 to Ascii_9 keymap symbols allow to
+     compose characters by giving their decimal 8bit-code, and Hex_0 to
+     Hex_F do the same with (2-digit) hexadecimal codes.
+
+  +o  the Unicode (K_UNICODE) mode, which at this time only differs from
+     the ASCII mode by allowing the user to compose UTF8 unicode
+     characters by their decimal value, using Ascii_0 to Ascii_9 (who
+     needs that ?), or their hexadecimal (4-digit) value, using Hex_0 to
+     Hex_9.  A keymap can be set up to produce UTF8 sequences (with a
+     U+XXXX pseudo-symbol, where each X is an hexadecimal digit), but be
+     warned that these UTF8 sequences will also be produced even in
+     ASCII mode.  I think this is a bug in the kernel.
+
+  BBEE WWAARRNNEEDD that putting the keyboard in RAW or MEDIUMRAW mode will make
+  it unusable for most applications.  Use showkey(1) to get a demo of
+  these special modes, or to find out what scancodes/keycodes are
+  produced by a specific key.
+
+
+  55..22..  SSeeee aallssoo
+
+  keytables(5), setleds(1), setmetamode(1).
+
+
+
+  66..  UUnnddeerrssttaannddiinngg aanndd sseettttiinngg uupp tthhee ssccrreeeenn ddrriivveerr
+
+  66..11..  UUnniiccooddee iiss eevveerryywwhheerree
+
+  66..11..11..  SSccrreeeenn FFoonntt MMaappss
+
+  In recent (as of 1998/08/11) kernels, the screen driver is based on
+  16-bit unicode (UCS2) encoding, which means that every console-font
+  loaded sshhoouulldd be defined using a _u_n_i_c_o_d_e _S_c_r_e_e_n _F_o_n_t _M_a_p (SFM for
+  short), which tells, for each character in the font, the list of UCS2
+  characters it will render. (-- SFM's were formerly called ``Unicode
+  Map'', or ``unimap'' for short, but this term should be dropped, as
+  now what they called ``screen maps'' uses Unicode as well: it probably
+  confuses many many people--)
+
+
+  66..11..22..  SSFFMM FFaallllbbaacckk ttaabblleess
+
+  Starting with release 1997.11.13 of the Linux Console Tools,
+  consolechars(8) now understands _S_F_M _f_a_l_l_b_a_c_k _t_a_b_l_e_s.  Before that,
+  SFM's should contain at the same time the Unicode of the characters it
+  was primarily meant to render, as well as any approximations the user
+  would like to.  These fallback tables allow to only put the primary
+  mappings in the SFM provided with the font-file, and to _s_e_p_a_r_a_t_e_l_y
+  keep a list telling _`_`_i_f _n_o _g_l_y_p_h _f_o_r _t_h_a_t _c_h_a_r_a_c_t_e_r _i_s _a_v_a_i_l_a_b_l_e _i_n
+  _t_h_e _c_u_r_r_e_n_t _f_o_n_t_, _t_h_e_n _t_r_y _t_o _d_i_s_p_l_a_y _i_t _w_i_t_h _t_h_e _g_l_y_p_h _f_o_r _t_h_i_s _o_n_e_,
+  _o_r _e_l_s_e _t_h_e _o_n_e _f_o_r _t_h_a_t _o_n_e_, _o_r _._._._'_'.  This permits to keep in one
+  only place all possible fallbacks, and everyone will be able to choose
+  which fallback tables (s)he wants.  Have a look at
+  data/consoletrans/*.fallback for examples.
+
+  A fallback-table file is made of fallback entries, each entry being on
+  its own line. Empty lines, and lines beginning with the # comment
+  character are ignored.
+
+  A fallback entry is a series of 2 or more UCS2 codes. The first one is
+  the character for which we want a glyph; the following ones are those
+  whose glyph we want to use when no glyph designed specially for our
+  character is available. The order of the codes defines a priority
+  order (own glyph if available, then second char's, then the third's,
+  etc.)
+
+  If a SFM was to be loaded, fallback mappings are added to this map
+  before it is loaded. If there was not (ie. a font without SFM was
+  loaded, and no --sfm option was given to consolechars, or the --force-
+  no-sfm option was given), then the current SFM is requested from the
+  kernel, the fallback mappings are added, and the resulting SFM is
+  loaded back into the kernel.
+
+  Note that each fallback entry is checked against the original SFM, not
+  against the SFM we get by adding former fallback entries to the
+  original SFM (the one read from a file, or given by the kernel); this
+  applies even to entries in different files, and thus the order of -k
+  options has no effect. If you want some entries to be influenced by
+  previous ones, you will have to use different fallback files, and to
+  load them with several consecutive invocations of consolechars -k.
+
+
+  66..22..  TThhee uunniiccooddee ssccrreeeenn--mmooddee
+
+  There are basically 2 screen-modes (byte mode and UTF mode).  The
+  simpler to explain is the UTF mode, in which the bytes received from
+  the application (ie. written to the console screen) are interpreted as
+  UTF8 sequences, which are converted in the ``equivalent UCS2 codes'',
+  and then looked-up in the SFM to determine the glyphs used to display
+  each character.
+  Switching to and from UTF mode is done by sending to the screen the
+  escape sequences <ESC>%G and <ESC>%@ respectively.  You may use the
+  unicode_start(1) and unicode_stop(1) scripts instead, as they also
+  change the keyboard mode, and let you optionally change the screen-
+  font.
+
+  Use vt-is-UTF8(1) to find out whether active VT is in UTF mode.
+
+
+  66..33..  TThhee bbyyttee ssccrreeeenn--mmooddee
+
+  The byte mode is a bit more complicated, as it uses an additional map
+  to transform the byte-characters sent by the application into UCS2
+  characters, which are then treated as told above.  This map I call the
+  Application Charset Map (ACM), because it defines the encoding the
+  application uses, but it used to be called a ``screen map'', or
+  ``console map'' (this comes from the time where the screen driver
+  didn't use Unicode, and there was only one Map down there).
+
+  Although there is only one ACM active at a given time, there are 4 of
+  them at any time in the kernel; 3 of them are built-in and never
+  change, and they define the IBM codepage 437 (the i386's default, and
+  thus the kernel's default even on other archs), the DEC VT100 charset,
+  and the ISO latin1 charset; the 4th is user-definable, and defaults on
+  boot to the ``straight to font'' mapping, decribed below under
+  ``Special UCS2 codes''.
+
+  The consolechars(1) command can be used to change the ACM, as well as
+  the font and its associated SFM.
+
+
+  66..33..11..  CChhaarrsseett sslloottss
+
+  The Linux Console Driver has 2 slots for charsets, labeled _G_0 and _G_1.
+  Each of these slots contains a reference to one of the 4 kernel ACMs,
+  3 of which are predefined to provide the _c_p_4_3_7, _i_s_o_0_1, and _v_t_1_0_0
+  _g_r_a_p_h_i_c_s charsets.  The 4th one is user-definable; this is the one you
+  can set with consolechars --acm and get with consolechars --old-acm.
+
+  Versions of the Linux Console Tools prior to 1998.08.11, as well as
+  all versions of kbd at least until 0.96a, were always assuming you
+  wanted to use the G0 slot, pointing to the user-defined ACM.  You can
+  now use the charset utility to tune your charset slots.
+
+  You will note that, although each VT has its own slot settings, there
+  is only one user-defined ACM for use by all the VTs.  That is, whereas
+  you can have tty1 using _G_0_=_c_p_4_3_7 and _G_1_=_v_t_1_0_0, at the same time as
+  tty2 using _G_0_=_i_s_o_0_1 and _G_1_=_i_s_o_0_2 (user-defined), you ccaannnnoott have at
+  the same time tty1 using _i_s_o_0_2 and tty2 using _i_s_o_0_3.  This is a
+  limitation of the linux kernel.
+
+  Note that you can emulate such a setting using the filterm utility,
+  with your console in UTF8-mode, by telling filterm to translate screen
+  output on-the-fly to UTF8.
+
+  You'll find ffiilltteerrmm in the kkoonnwweerrtt package, by Marcin Kowalczyk, which
+  is available from his WWW site
+  <http://kki.net.pl/qrczak/programy/index.html>.
+
+
+
+  66..44..  SSppeecciiaall UUCCSS22 ccooddeess
+
+  There are special UCS2 values you should care about, but the present
+  list is probably not exhaustive:
+
+  +o  codes C from U+F000 to U+F1FF are not looked-up in the SFM, and
+     directly accesses the character in font-position C & 0x01FF (yes, a
+     font can be 512-chars on many hardware platforms, like VGA).  This
+     is refered to as the _s_t_r_a_i_g_h_t _t_o _f_o_n_t zone.
+
+
+  +o  code U+FFFD is the _r_e_p_l_a_c_e_m_e_n_t _c_h_a_r_a_c_t_e_r, usually at font-position
+     0 in a font.  It is displayed by the kernel each time the
+     application requested a unicode character that is not present in
+     the SFM.  This allows not only the driver to be safe in Unicode
+     mode, but also prevents displaying invalid characters when the ACM
+     on a particular VT contains characters not in the current font !
+
+
+  66..55..  AAbboouutt tthhee oolldd 88--bbiitt ````ssccrreeeenn mmaappss''''
+
+  There was a time where the kernel didn't know anything about Unicode.
+  In this ancient time, Application Charset Maps were called ``screen
+  maps'', and just mapped the application's characters into font
+  positions.  The file format used for these 8bit ACM's is still
+  supported for backward compatibility, but should not be used any more.
+
+  The old way of using custom ACM's didn't know about unicode, so the
+  ACM had to depend on the font.  Now, as each VT chooses its own ACM
+  (from the 4 ones in the kernel at a given time), and as the console-
+  font is common to all VT's, we can use a charset even if the font
+  can't display all of its characters; it will then display the
+  replacement character (U+FFFD).
+
+
+  66..66..  SSeeee aallssoo
+
+  psfaddtable(1), psfgettable(1), psfstriptable(1), showfont(1).
+
+
+
+  77..  FFoonntt ffiilleess
+
+  77..11..  TThhee ffoorrmmaattss
+
+  The primary font file format for the Linux Console Tools, as of
+  version 0.2.x, is the PSF format, which is also used by kbd.  0.3.x
+  will introduce the XPSF format, which will be able to replace all
+  existing file formats.
+
+  Raw fonts can be converted into PSF files with the font2psf(1)
+  (written by Martin Lohner, SuSE GmbH).
+
+  Versions 0.2.x do not have support for the CP format again - this will
+  come back in the 0.3.x development branch.
+
+
+  77..22..  TToooollss
+
+  77..22..11..  FFoonntt--ffiilleess mmaanniippuullaattiioonn ttoooollss
+
+  The psfaddtable(1), psfgettable(1), and psfstriptable(1) tools are
+  provided by the Linux Console Tools for manipulation of the SFM
+  embedded in PSF files.  These are the only font-manipulation tools
+  provided by the Linux Console Tools as of version 0.2.x.  The
+  font2psf(1) tool is available in the contrib directory to convert old
+  raw fonts into PSF fonts.
+
+  There are plans for a more generic font-conversion tool based on
+  libcfont.  It will be mostly trivial to write once work on libcfont
+  will be advanced enough.
+  The only way provided by the Linux Console Tools to display a font's
+  contents is to load it, and then to display it using showfont(1).
+
+
+  77..22..22..  FFoonntt eeddiittoorrss
+
+  I do not curently know of a good font-editor suitable for editing
+  console fonts.  I tried fonter, but this one has a bad design flaw:
+  you can only properly edit cp437 fonts (or maybe ASCII-based fonts if
+  you like unreadable screens) because it works on the console and loads
+  the font you are editing.  I was told about cse which I did not tried
+  yet.  Marcin Kowalczyk is working on the fonty
+  <http://kki.net.pl/qrczak/programy/index.html> tool (which I did not
+  check yet either), which will help font designers, but is not AFAIK a
+  real editor.  Robert de Bath works on his own tools
+  <http://www.cix.co.uk/~mayday/font.tgz> which handle a variety of file
+  formats and table formats.
+
+
+
+  88..  TThhee lliibbrraarriieess
+
+  There are several shared libraries installed by the Linux Console
+  Tools.  They were at first meant just to share code betwwen the
+  various utilities (kbd has lots of duplicated code), but they could be
+  used as a base to build new tools.
+
+  However, they are not yet ready for production use (hence the version
+  number 0.0.0), and are absolutely not complete nor coherent at the
+  time.
+
+  Here is a summary of what they are meant to become:
+
+
+  88..11..  <<llcctt//kkssyymmss..hh>> lliibbccoonnssoollee,, <<llcctt//ccoonnssoollee..hh>>  ++
+
+  is a meant to be a collection of:
+
+  +o  wrappers around the kernel-level functionnalities, which should be
+     as kernel-version-independant as reasonable;
+
+  +o  higher-level interfaces to these functionnalities.
+
+  Maybe this goal overlaps with some part of libggi (see ``The
+  future''), but I didn't investigate that for now.
+
+
+  88..22..  lliibbccffoonntt,, <<llcctt//ffoonntt..hh>>
+
+  is meant to provide a high-level interface to console-font file-
+  handling. It also exports the lower-level functions used to construct
+  higher-level ones.
+
+  It only supports for now some low- to medium-level functions that ease
+  writing programs, but I hope to make it a lot more than that,
+  especially with the coming of the XPSF file-format (see doc/font-
+  formats/xpsf.draft for details).
+
+  As of release 1998.08.11, implementation of higher-level interface has
+  just started.
+
+
+  88..33..  <<llcctt//uunniiccooddee..hh>> lliibbccttuuttiillss,, <<llcctt//uuttiillss..hh>>  ++
+
+  is a collection of misc utility functions for use by the 2 other libs
+  and by the tools. I hope most this stuff will one day make its way to
+  an existing general purpose utility-library.  Any offers welcomed.
+
+
+
+  99..  TThhee ffuuttuurree ooff tthhee ccoonnssoollee ddrriivveerr aanndd ooff tthhee LLiinnuuxx CCoonnssoollee TToooollss
+
+  The Linux Console Tools were derived from kbd.  It is not a good thing
+  to have two distinct distributions for these tools, so we once hoped
+  we'd manage to finally merge the two packages back, together with
+  Andries Brouwer, who still maintains kbd.  However, due to the lack of
+  technical cooperation from kbd's maintainer, and to the growing gap
+  with kbd, this project is now on hold.
+
+  The driver in 2.2.x kernel has been reworked a lot, and it seems it
+  will continue to evolve in 2.3.x.  There are already some new
+  features, such as fonts with width != 8, which will be supported in
+  the future.
+
+  There is an ongoing project, known as GGI (for General Graphical
+  Interface), which is in the process of, among other things,
+  revolutionarize the way the console is handled.  Have a look at their
+  WWW site <http://www.ggi-project.org/> for details.
+
+  As far as possible, I will try to keep the Linux Console Tools in sync
+  with what is developped for the kernel, and to what gets added to new
+  releases of kbd but I have to look better at the current state of the
+  GGI project before I give any more info.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,127 @@
+#! /bin/sh
+
+# wrapper around consolechars(8), 
+# expanding arguments just in case abreviated args get changed.
+
+usage ()
+{
+    echo >&2 "Usage: `basename $0` [<fontfile>] [-m <mapfile>] [-u <unimapfile>]"
+    echo >&2 "          [-o <oldfontfile>] [-om <oldmapfile>] [-ou <oldunimapfile>]"
+    echo >&2 "          [-h] [-v] [-V] [-<N>]"
+    exit 1
+}
+
+warning ()
+{
+    echo >&2 'Warning: this is a shell wrapper; consider using consolechars(8)'
+}
+
+OPTIONS=""
+QUIET=0
+
+if [ $# = 0 ] ; then
+    OPTIONS="--default-font"
+fi
+
+while [ $# -gt 0 ] ; do
+    case $1 in
+# 	--quiet)
+# 	    QUIET=1
+# 	    shift
+# 	    ;;
+	-v)
+	    OPTIONS="$OPTIONS --verbose"
+	    shift
+	    ;;
+	-h)
+	    warning
+	    usage
+	    exit 0
+	    ;;
+	-V)
+	    OPTIONS="$OPTIONS --version"
+	    shift
+	    ;;
+
+	-m)
+	    if [ "$NEWMAP" = "" ]; then
+		if [ "$2" = "none" ]; then
+		    echo >&2 'Warning: "-m none" does nothing; ignored.'
+		else
+		    NEWMAP="--acm $2"
+		shift
+		shift
+		fi
+	    else
+		usage
+	    fi
+	    ;;
+      
+	-u)
+	    if [ "$NEWUNIMAP" = "" ]; then
+		if [ "$2" = "none" ]; then
+		    NEWUNIMAP="--force-no-sfm"
+		else
+		    NEWUNIMAP="--sfm $2"
+		    shift
+		    shift
+		fi
+	    else
+		usage
+	    fi
+	    ;;
+      
+	-o)
+	    if [ "$OLDFONT" = "" ]; then
+		OLDFONT="--old-font-raw $2"
+		shift
+		shift
+	    else
+		usage
+	    fi
+	    ;;
+      
+	-om)
+	    if [ "$OLDMAP" = "" ]; then
+		OLDMAP="-old-acm $2"
+		shift
+		shift
+	    else
+		usage
+	    fi
+	    ;;
+      
+	-ou)
+	    if [ "$OLDUNIMAP" = "" ]; then
+		OLDUNIMAP="-old-sfm $2"
+		shift
+		shift
+	    else
+		usage
+	    fi
+	    ;;
+      
+	-*)
+	    # redirect to /dev/null to prevent test barfing on non-numeric args
+	    if [ "$CHARSIZE" = "" -a "${1#-}" -gt 0 -a "${1#-}" -lt 32 ] 2>/dev/null; then
+		CHARSIZE="--char-height ${1#-}"
+		shift
+	    else
+		usage
+	    fi
+	    ;;
+      
+	*)
+	    if [ "$NEWFONT" = "" ]; then
+		NEWFONT="--font $1"
+		shift
+	    else
+		usage
+	    fi
+	;;
+    esac
+done
+
+test $QUIET = 1 || warning
+
+consolechars $OPTIONS $CHARSIZE $NEWFONT $NEWUNIMAP $NEWMAP $OLDFONT $OLDUNIMAP $OLDMAP

@@ -1,0 +1,77 @@
+.TH CHARSET 1 "10 Aug 1998" "Console tools" "Linux User's Manual"
+
+.SH NAME
+charset \- Set an ACM for use in one of the G0/G1 charset slots.
+
+.SH SYNOPSIS
+.BI "charset [" -v "] " G0 | G1 " [" cp437 | iso01 | vt100 | user | <acm_name> ]
+
+.SH DESCRIPTION
+The linux console has 2 slots for charsets, labeled
+.I G0
+and
+.IR G1 .
+.B charset
+changes the slot in use by the current VT to either
+.I G0
+or
+.IR G1 ,
+and fills the slot either with one of the 3 predefined ACMs
+.RI ( cp437 ", " iso01 ", " vt100 )
+or with a user-defined ACM.
+
+You can ask for the current user-defined ACM by specifying
+.IR user ,
+or ask a new ACM to be loaded from a file into the user slot, by
+specifying a filename.
+
+You will note that, although each VT has its own slot settings, there
+is only one user-defined ACM for all the VTs.  That is, whereas you
+can have tty1 using 
+.I G0=cp437
+and
+.IR G1=vt100 ,
+at the same time as tty2 using
+.I G0=iso01
+and
+.I G1=iso02
+(user-defined), you
+.B cannot
+have at the same time tty1 using 
+.I iso02
+and tty2 using
+.IR iso03 .
+This is a limitation of the linux kernel.
+
+Note that you can emulate such a setting using the
+.BR filterm (1)
+utility, with your console in UTF8-mode, by telling
+.B filterm
+to translate screen output on-the-fly to UTF8.
+
+You'll find
+.BR filterm (1)
+in the
+.BR konwert (1)
+package, by Marcin Kowalczyk, which is available from
+.IR http://qrczak.home.ml.org/ .
+
+.SH OPTIONS
+.TP
+.I -v
+be verbose.
+.B charset
+will then print what it does as it does it.
+
+.SH BUGS
+
+.B charset
+cannot determine which of the 2 slots is in use at a given time, so
+you have to tell him which one you want, even if you don't want to
+change to the other one.  This is a limitation of the console driver.
+
+.SH "SEE ALSO"
+
+.BR consolechars (8),
+.BR unicode_start (1),
+.BR filterm (1).

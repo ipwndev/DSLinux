@@ -1,0 +1,304 @@
+* Short-term plans:
+
+** implement libcfont
+
+** writing tools to convert between libcfont-supported formats
+
+** move font files out of console-tools, distributed in BDF (or other
+  source) format, with PSF files built from them.  That should (at
+  last) provide homogeneous font-families.
+
+** again, separate correctly libcfont from libconsole (esp. wrt cfontdesc)
+
+
+* General:
+
+** keyboard/screen should be restored to a default state on user logout (when
+  it is VT-specific ;)
+  
+** clearly define which functionnalities aim at the sysadmin, and which at the
+  user - make the drivers/utilities evolve according to these guidelines.
+  (eg. currently some programs are documented in man.8, and I can't see
+  what's the logic behind that [ydi])
+
+** rename "screen/console map" to "application charset map"
+
+** rename "unimap" to "screen font map"
+
+
+
+* tools-level:
+
+** finish openvt integration into console-tools (getopt, gettext, ...)
+
+
+** doc:
+
+*** create missing manpages.
+
+*** use DEFKMAP (now defined in lib/console.h) to build loadkeys.1
+
+*** update setleds docstring and manpage.
+
+
+** libcfont
+
+** add BDF format, and maybe Qrczak's too
+
+** add sfm-loading code into read_simple_font().  Requires that
+  findfile() is reentrant.
+
+
+** libconsole
+
+*** cleanup lib/ksyms.[ch] from 'externs'.
+
+*** move keymap-loading stuff into lib/.
+
+
+** libctutils
+
+*** implement some consistant verbosity mechanism.
+
+*** make findfile() reentrant.  Use a context as parameter ?
+
+*** turn forks into threads in findfile.c.
+
+*** in findfile::do_pipe(), feeder could be spared when identifier exists
+  and decompressor doesn't.
+
+*** maybe findfile() should not search the path when there are slashes in the
+  filename.
+
+*** add info function for findfile() about supported decompressor programs,
+  for use in --help messages.
+
+*** magics mechanism should be split out of findfile() for easier use
+  by other stuff.
+
+
+** libs - general
+  
+*** cleanup libs dependancies.
+
+*** suppress non-local exit() calls.
+
+*** make interfaces independant from kernel structures.
+
+
+** consolechars:
+
+*** move default font/sfm/acm/kmap-loading code into libconsole.
+
+*** should SIGWINCH gpm if necessary. Use a conffile in /usr/lib in which
+  programs needing that should register; provide registering script.
+
+*** -om should output ASCII files.
+
+*** -m should be able to read wg15-locale files from
+  /usr/share/i18n/charmap/. Use sed-script to convert input for this ?
+
+*** should allow to choose one of the 3 default tables
+  (cp437/latin1/dec).
+
+*** should allow kernel-level font-reset (see PIO_FONTRESET ioctl -
+  unimplemented ?).
+
+*** honour font-height argument when saving a font, warning if
+  significantly different from effective height (eg. +-2 scanlines ?).
+
+*** should allow the user to set a font without resizing the screen (is it
+  implemented in kernel ?).
+
+
+** keyboard:
+
+*** auto-generate fallback tables from the Unicode official table, other than
+  for latin characters (eg. arabic, greek).
+  
+*** showkey: add command for showing keys in K_UNICODE mode ?
+
+*** showkey: find a way to implement an alternative to --keymap, displaying eg.
+  modifier keys.  Emulate the kernel's behaviour ?  Link with part of the
+  kernel's code ?  Ask the kernel for current keymap translations ?
+
+
+** screen-font tools:
+
+*** showcfont could get screen geometry to make all chars fit on one screen.
+
+
+** font-file tools:
+
+*** design and implement XPSF format to supercede PSF, CPI and CP.
+
+*** drop CP production from codepage ?
+
+*** make psf* use find*() to open fonts/unimaps
+
+*** generalize psf_read_header() for use in setfont.c::loadnewfont() and psftool
+
+
+
+** configure.in / acinclude.m4
+
+*** allow {PIO,GIO}_*X ioctl's to be:
+  - detected in running kernel
+  - {en,dis}abled at configure-time
+  
+*** Add support for debugging libs (-lcheck, dmalloc, checker, etc.)
+
+
+
+** General:
+
+*** further support assert / -DNDEBUG
+
+*** make a `showpalette' tool.
+
+*** fully GNU-ify command-line interfaces (use getopt_long; esp. add
+  --help/--version to all programs) - mostly done by Alastair.
+
+*** get in touch with the GGI team to have the lct support their
+  driver.  Already tried without success (no answer).
+
+
+
+* kernel-level:
+
+** Closely look at what the GGI project has done. <http://synergy.foo.net/~ggi>
+
+** Keyboard:
+
+*** factorize keyboard.c and keyb_m68k.c
+
+*** strings produced by a function key cannot contain \000;
+  many other places this char is excluded
+
+*** investigate a new keyboard model with the following constraints:
+ - special keys do not clash with Unicode.
+ - keymap symbols always map to unicode, and a single keymap is used for both
+   UTF and 8bit modes. Then Application Charset Map is used if the console is
+   in 8bit mode to pass the TTY driver the correct byte, ignoring Unicodes
+   not in current ACM.
+ - thus there would be no need for a keyboard unicode mode.
+ - ASCII_[0-9] keys would be used as now (identity mapping) when in 8bit
+   mode, and in Unicode mode would be turned to Unicode using the current ACM
+   (for now it matches unicodes by decimal value, who uses that outside of
+   latin1 ?)
+
+
+** Font support:
+
+*** add some #def telling how big a font can be used with PIO_FONTX ?
+
+
+** Unicode support:
+
+*** selection can now cut & paste 8-bit chars, but not yet Unicode (vc_scrbuf
+  should probably be UCS2-encoded, instead of fontpos-encoded)
+
+*** compose does not work together with Unicode
+  (struct kbdiacr has three chars: base + diacr -> result,
+   but the result should be a string)
+
+*** current status (translation table, Unicode output) can be set,
+  but not read out from the kernel; thus, showfont changes the
+  status, but cannot restore it
+
+*** con_write(): what if conv_uni_to_pc(U+fffd) returns -4 (not found) ? 
+  Is it possible ? (see PIO_UNIMAP)
+
+*** what should set-font without unimap do (ie. when hashtable_contents_valid == 0) ? 
+  Forbid P/GIO_UNIMAPSCRN ?  Sanity check on MAPSCRN, maybe with fix for values
+  not in straight-to-font zone ?
+
+
+** Virtual terminals:
+
+*** implement VT groups:
+  + Span attributes between console/group/VT. (videomode, size, font, unimap
+    would be useful group attributes). 
+  + Perhaps hierarchical groups if it turns out they would be useful (the
+    console being the largest group, VTs being smallest), with "attribute
+    inheritance and move", allowing to customize which parameters are shared.
+    In clear, one should be able to specify which group in the hierarchy
+    carries which attribute (like font, VT size, etc.) ; there will be
+    constraints on attribute placements/values in the hierarchy: font is
+    cell-size dependant ; multiple unimaps sharing one font are likely not to
+    happen, but who knows ; color maps are independant. One might eg. want a
+    small-chars ASCII VT, and a larger-chars Arabic or Ethiopic VT.
+  + Newly allocated VT belongs to active VT's group (to active group if
+    hierarchical).
+  + VT can then change its group to another's group (join) or create its own.
+  + New keymap symbols for in-group navigation (assuming hierarchical):
+    > {Next,Prev}_Group would act with group as {Incr,Decr}_Console do now
+    > Show_Group could display (during 1s or so) current active_group
+      (eg. print as N/N/../N where the first position is for the widest group
+      containing active VT, the last position is for the active group, each
+      position is for one hierarchical group between those, and the number
+      displayed in each position is the nuber of the smallest VT in that
+      group. If I'm not mistaken, it should be unambiguous)
+    > {Up,Down}_Group would change active_group within current VT's
+      ancestors, displaying like Show_Group
+    > {Next,Prev}_VT would be like {Incr,Decr}_Console, but inside
+      active_group
+
+
+
+** General:
+
+*** vt_kern.h::BROKEN_GRAPHICS_PROGRAMS should be config-time option ?
+*** <linux/tty.h>::MAX_NR_USER_CONSOLES should be config-time parameter ?
+*** vga.c::CAN_LOAD_{EGA_FONTS,PALETTE} should be config-time option ?
+
+
+
+** Find in driver:
+
+*** VGA_CAN_DO_64KB
+
+
+
+** Optimization:
+
+*** in consolemap.c::con_get_unimap() : why do put_user() use '+' and not '|' ?
+*** console.c::scrw2glyph()	: idem
+*** console.c::con_write()	: idem (grep "scr_writew")
+*** console.c::console_print()	: idem (grep "scr_writew")
+
+*** console.c::con_write()	: "c > 0x7f" should be "c & 0x80"
+
+*** console.c::insert_char() : would spare "tmp" by copying RtoL
+
+
+** Points to be investigated:
+
+*** what was so messy with VTs of potentially different sizes (apart from
+  font-size problems, which would be solved by the "groups" idea) ?
+
+*** why is inv_norm_transl[]==inverse_translations[LAT1_MAP] the only static
+  inverse_translations[*_MAP] in consolemap.c ?
+  
+*** in consolemap.c::set_inverse_transl(): is it widely accepted that SHY and
+  such are in encoded to be < 32 ?   What about 127-255 ?  SHY is 0xAD in
+  latin1 !  Is it just the comment that is incorrect, or is it the code ?
+  
+*** could find no doc about special unicodes U+fffd (replacement char),
+  U+fff[ef] (non-printable), U+feff, U+200[a-f] ("zero-width space")
+
+*** some .h files use MAX_NR_CONSOLES without including <linux/tty.h>. Is this reasonable ?
+*** some .c files use HZ without including <asm/param.h> (esp. console.c)
+  
+*** renamings:
+
+**** consolemap.c::translations -> 8bit_to_ucs2?
+**** consolemap.c::inverse_translations -> fontpos_to_8bit_tables
+**** consolemap.c::inv_translate -> fontpos_to_8bit(_current)?
+**** consolemap.c::conv_uni_to_pc -> conv_uni_to_fontpos | apply_unimap
+
+
+
+* FAQ
+
+** document the XKB extension to X11
