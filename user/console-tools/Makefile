@@ -30,6 +30,9 @@ romfs:
 			src/fontfiletools/psfgettable /usr/bin
 	$(ROMFSINST) -e CONFIG_USER_CONSOLETOOLS_FONTFILETOOLS \
 			src/fontfiletools/psfstriptable /usr/bin
+	#Install .psf fonts if consolechars is enabled
+	$(ROMFSINST) -e CONFIG_USER_CONSOLETOOLS_SCREENFONTTOOLS \
+			consolefonts /usr/share/consolefonts
 	$(ROMFSINST) -e CONFIG_USER_CONSOLETOOLS_SCREENFONTTOOLS \
 			src/screenfonttools/consolechars /usr/bin
 	$(ROMFSINST) -e CONFIG_USER_CONSOLETOOLS_SCREENFONTTOOLS \

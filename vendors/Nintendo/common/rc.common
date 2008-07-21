@@ -13,6 +13,18 @@ else
 	echo "to create /etc/rc.conf to customise your dslinux installation."
 fi
 
+if [ ! "$font" = "" ]
+then
+	if [ -e "$font" ]
+	then
+		echo "Changing font size to $font" 
+		echo "Type 'consolechars -R' to revert" 
+		/usr/bin/consolechars -f $font
+	else
+		echo "$font does not exist!"
+	fi
+fi
+
 # /opt is BEFORE /usr/bin to speed up some applications
 PATH=/bin:/sbin:/opt:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 export PATH
