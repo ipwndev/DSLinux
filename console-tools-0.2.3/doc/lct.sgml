@@ -1,0 +1,437 @@
+<!doctype linuxdoc PUBLIC "-//LinuxDoc//DTD LinuxDoc 96//EN" [
+<!entity lct "Linux Console Tools">
+<!entity kbd "<tt/kbd/">
+]>
+
+<article>
+   
+<title>The Linux Console Tools
+<author>Yann Dirson, <tt/dirson@debian.org/
+<date>18 May 1999
+
+<toc>
+
+
+<sect>Status of this document
+<p>
+This is an introduction to the &lct; package.  You should refer to the
+manpages for more details.
+
+<sect1>Other documents
+<p>
+The &lct; <url url="http://www.multimania.com/ydirson/en/lct/"
+name="WWW site"> may contain additionnal informations, latest news,
+and such.
+
+Files in the <tt>doc/contrib/</tt> directory are unsupported, and may
+be obsolete, but are provided just in case someone needs them.
+
+<tt/README.{acm,sfm,keytables}/ give some info on the respective
+included data files.
+
+<tt/kbd.FAQ.*/ is the Console and Keyboard HOWTO by Andries Brouwer,
+as included in &kbd; 0.97.  It would need some corrections, though.
+
+
+<sect>What the &lct; are
+<p>
+The &lct; are a set of programs allowing the user to setup/customize
+your console (restricted meaning: text mode screen + keyboard only).
+It is derived from version 0.94 of the &kbd; package, and has
+benefited from most features introduced in &kbd; until version 0.97.
+
+The &lct; are still under development, but using it just as a
+replacement for &kbd; should be quite safe, at it fixes many bugs
+&kbd; has.
+
+<sect>Understanding the big picture of the console
+<p>
+The console driver is currently made of 2 sub-drivers: the keyboard driver,
+and the screen driver.  Basically, the keyboard driver sends characters to
+your application, then the application does its own job, and sends to the
+screen driver the characters to be displayed.
+
+<sect>What is Unicode<label id="sec-unicode">
+<p>
+Traditionnaly, character encodings use 8 bits, and thus are limited to 256
+characters.  This causes problems because:
+<enum>
+<item> it's not enough for some languages;
+<item> people speaking languages using different encodings have to
+choose which one they use, and have to switch the system's state when
+changing the language, which makes it difficult to mix several languages in
+the same file;
+<item> etc...
+</enum>
+
+Thus the UCS (Universal Character Set), also know as <em/Unicode/ was
+created to handle and mix all of our world's scripts.  This is a
+32-bit (4 bytes) encoding, otherwise known as UCS4 because of the size
+of its characters, which is normalised by ISO as the 10646-1 standard.
+The most widely used characters from UCS are contained in the UCS2
+16-bit subset of UCS; this is the subset used by the Linux console.
+
+For convenience, the UTF8 encoding was designed as a variable-length
+encoding (with 8 bytes of maximum length) with ASCII compatibility;
+all chars that have a UCS4 encoding can be expressed as a UTF8
+sesquence, and vice-versa.
+
+<url name="The Unicode consortium" url="http://unicode.org"> defines
+additional properties for UCS2 characters.
+
+See: <tt/unicode(7)/, <tt/utf-8(7)/.
+
+<sect>Understanding and setting up the keyboard driver
+
+<sect1>How it works
+<p>
+The keyboard driver is made up several levels:
+
+<itemize>
+<item> the keyboard hardware, which turns the user's finger moves into
+so-called <em/scancodes/ (Disclaimer: this is not really part of the
+software driver itself; no support is provided for bugs in this domain
+;-).  An event (key pressed or released) generates from 1 to 6
+<em/scancodes/.
+
+<item> a mechanism turning <em/scancodes/ into <em/keycodes/ using a
+translation-table which you can access with the <tt/getkeycodes(8)/
+and <tt/setkeycodes(8)/ utilities.  You will only need to look at that
+if you have some sort of non-standard (or programmable ?) keys on your
+keyboard.  AFAIK, these keycodes are the same among a set of keyboards
+sharing the same hardware, but differing in the symbols drawn on the
+keys.
+
+<item> a mechanism turning <em/keycodes/ into <em/characters/ using a
+<em/keymap/. You can access this <em/keymap/ using the
+<tt/loadkeys(1)/ and <tt/dumpkeys(1)/ utilities.
+</itemize>
+
+The keyboard driver can be in one of 4 modes (which you can access
+using <tt/kbd_mode(1)/), which will influence what type of data
+applications will get as keyboard input:
+
+<itemize>
+<item> the scancode (<tt/K_RAW/) mode, in which the application gets
+scancodes for input.  It is used by applications that implement their
+own keyboard driver.  For example, X11 does that.
+
+<item> the keycode (<tt/K_MEDIUMRAW/) mode, in which the application
+gets information on which keys (identified by their keycodes) get
+pressed and released.  AFAIK, no real-life application uses this mode.
+
+<item> the ASCII (<tt/K_XLATE/) mode, in which the application
+effectively gets the characters as defined by the <em/keymap/, using
+an 8-bit encoding.  In this mode, the <tt/Ascii_0/ to <tt/Ascii_9/
+keymap symbols allow to compose characters by giving their decimal
+8bit-code, and <tt/Hex_0/ to <tt/Hex_F/ do the same with (2-digit)
+hexadecimal codes.
+
+<item> the Unicode (<tt/K_UNICODE/) mode, which at this time only
+differs from the ASCII mode by allowing the user to compose UTF8
+unicode characters by their decimal value, using Ascii_0 to Ascii_9
+(who needs that ?), or their hexadecimal (4-digit) value, using Hex_0
+to Hex_9.  A keymap can be set up to produce UTF8 sequences (with a
+<tt/U+XXXX/ pseudo-symbol, where each <tt/X/ is an hexadecimal digit),
+but be warned that these UTF8 sequences will also be produced even in
+ASCII mode.  I think this is a bug in the kernel.
+</itemize>
+
+<bf/BE WARNED/ that putting the keyboard in <tt/RAW/ or <tt/MEDIUMRAW/
+mode will make it unusable for most applications.  Use <tt/showkey(1)/ to
+get a demo of these special modes, or to find out what
+scancodes/keycodes are produced by a specific key.
+
+<sect1>See also
+<p>
+<tt/keytables(5)/, <tt/setleds(1)/, <tt/setmetamode(1)/.
+
+
+<sect>Understanding and setting up the screen driver
+
+<sect1>Unicode is everywhere
+
+<sect2>Screen Font Maps
+<p>
+In recent (as of 1998/08/11) kernels, the screen driver is based on
+16-bit unicode (UCS2) encoding, which means that every console-font
+loaded <bf/should/ be defined using a <em/unicode Screen Font Map/
+(SFM for short), which tells, for each character in the font, the list
+of UCS2 characters it will render.
+<footnote>SFM's were formerly called ``Unicode Map'', or ``unimap''
+for short, but this term should be dropped, as now what they called
+``screen maps'' uses Unicode as well: it probably confuses many many
+people</footnote>
+
+<sect2>SFM Fallback tables
+<p>
+Starting with release 1997.11.13 of the &lct;, <tt/consolechars(8)/
+now understands <em/SFM fallback tables/.  Before that, SFM's should
+contain at the same time the Unicode of the characters it was
+primarily meant to render, as well as any approximations the user
+would like to.  These fallback tables allow to only put the primary
+mappings in the SFM provided with the font-file, and to
+<em/separately/ keep a list telling <em>``if no glyph for that
+character is available in the current font, then try to display it
+with the glyph for this one, or else the one for that one, or
+...''</em>.  This permits to keep in one only place all possible
+fallbacks, and everyone will be able to choose which fallback tables
+(s)he wants.  Have a look at <tt>data/consoletrans/*.fallback</tt> for
+examples.
+
+A fallback-table file is made of fallback entries, each entry being on
+its own line. Empty lines, and lines beginning with the <tt/&num;/
+comment character are ignored.
+
+A fallback entry is a series of 2 or more UCS2 codes. The first one is
+the character for which we want a glyph; the following ones are those
+whose glyph we want to use when no glyph designed specially for our
+character is available. The order of the codes defines a priority
+order (own glyph if available, then second char's, then the third's,
+etc.)
+
+If a SFM was to be loaded, fallback mappings are added to this map
+before it is loaded. If there was not (ie. a font without SFM was
+loaded, and no <tt/--sfm/ option was given to <tt/consolechars/, or
+the <tt/--force-no-sfm/ option was given), then the current SFM is
+requested from the kernel, the fallback mappings are added, and the
+resulting SFM is loaded back into the kernel.
+
+Note that each fallback entry is checked against the original SFM, not
+against the SFM we get by adding former fallback entries to the
+original SFM (the one read from a file, or given by the kernel); this
+applies even to entries in different files, and thus the order of
+<tt/-k/ options has no effect. If you want some entries to be
+influenced by previous ones, you will have to use different fallback
+files, and to load them with several consecutive invocations of
+<tt/consolechars -k/.
+
+<sect1>The unicode screen-mode
+<p>
+There are basically 2 screen-modes (byte mode and UTF mode).  The
+simpler to explain is the UTF mode, in which the bytes received from
+the application (ie. written to the console screen) are interpreted as
+UTF8 sequences, which are converted in the <ref id="sec-unicode"
+name="equivalent UCS2 codes">, and then looked-up in the SFM to
+determine the glyphs used to display each character.
+
+Switching to and from UTF mode is done by sending to the screen the
+escape sequences <tt/&lt;ESC&gt;%G/ and <tt/&lt;ESC&gt;%@/
+respectively.  You may use the <tt/unicode_start(1)/ and
+<tt/unicode_stop(1)/ scripts instead, as they also change the keyboard
+mode, and let you optionally change the screen-font.
+
+Use <tt/vt-is-UTF8(1)/ to find out whether active VT is in UTF mode.
+
+<sect1>The byte screen-mode
+<p>
+The byte mode is a bit more complicated, as it uses an additional map
+to transform the byte-characters sent by the application into UCS2
+characters, which are then treated as told above.  This map I call the
+Application Charset Map (ACM), because it defines the encoding the
+application uses, but it used to be called a ``screen map'', or
+``console map'' (this comes from the time where the screen driver
+didn't use Unicode, and there was only one Map down there).
+
+Although there is only one ACM active at a given time, there are 4 of
+them at any time in the kernel; 3 of them are built-in and never
+change, and they define the IBM codepage 437 (the i386's default, and
+thus the kernel's default even on other archs), the DEC VT100 charset,
+and the ISO latin1 charset; the 4th is user-definable, and defaults on
+boot to the ``straight to font'' mapping, decribed below under
+``Special UCS2 codes''.
+
+The <tt/consolechars(1)/ command can be used to change the ACM, as
+well as the font and its associated SFM.
+
+<sect2>Charset slots
+<p>
+The Linux Console Driver has 2 slots for charsets, labeled <em/G0/ and
+<em/G1/.  Each of these slots contains a reference to one of the 4
+kernel ACMs, 3 of which are predefined to provide the <em/cp437/,
+<em/iso01/, and <em/vt100 graphics/ charsets.  The 4th one is
+user-definable; this is the one you can set with <tt/consolechars
+--acm/ and get with <tt/consolechars --old-acm/.
+
+Versions of the &lct; prior to 1998.08.11, as well as all versions of
+&kbd; at least until 0.96a, were always assuming you wanted to use
+the G0 slot, pointing to the user-defined ACM.  You can now use the
+<tt/charset/ utility to tune your charset slots.
+
+You will note that, although each VT has its own slot settings, there
+is only one user-defined ACM for use by all the VTs.  That is, whereas
+you can have tty1 using <em/G0=cp437/ and <em/G1=vt100/, at the same
+time as tty2 using <em/G0=iso01/ and <em/G1=iso02/ (user-defined), you
+<bf/cannot/ have at the same time tty1 using <em/iso02/ and tty2 using
+<em/iso03/.  This is a limitation of the linux kernel.
+
+Note that you can emulate such a setting using the <tt/filterm/
+utility, with your console in UTF8-mode, by telling <tt/filterm/ to
+translate screen output on-the-fly to UTF8.
+
+You'll find <bf/filterm/ in the <bf/konwert/ package, by Marcin
+Kowalczyk, which is available from <url name="his WWW site"
+url="http://kki.net.pl/qrczak/programy/index.html">.
+
+
+<sect1>Special UCS2 codes
+<p>
+There are special UCS2 values you should care about, but the present
+list is probably not exhaustive:
+
+<itemize>
+<item> codes <tt/C/ from <tt/U+F000/ to <tt/U+F1FF/ are not looked-up
+in the SFM, and directly accesses the character in font-position <tt/C
+&amp; 0x01FF/ (yes, a font can be 512-chars on many hardware
+platforms, like VGA).  This is refered to as the <em/straight to font/
+zone.
+  
+<item>code <tt/U+FFFD/ is the <em/replacement character/, usually at
+font-position 0 in a font.  It is displayed by the kernel each time
+the application requested a unicode character that is not present in
+the SFM.  This allows not only the driver to be safe in Unicode mode,
+but also prevents displaying invalid characters when the ACM on a
+particular VT contains characters not in the current font !
+</itemize>
+
+<sect1>About the old 8-bit ``screen maps''
+<p>
+There was a time where the kernel didn't know anything about Unicode.
+In this ancient time, Application Charset Maps were called ``screen
+maps'', and just mapped the application's characters into font
+positions.  The file format used for these 8bit ACM's is still
+supported for backward compatibility, but should not be used any more.
+
+The old way of using custom ACM's didn't know about unicode, so the
+ACM had to depend on the font.  Now, as each VT chooses its own ACM
+(from the 4 ones in the kernel at a given time), and as the
+console-font is common to all VT's, we can use a charset even if the
+font can't display all of its characters; it will then display the
+replacement character (<tt/U+FFFD/).
+
+<sect1>See also
+<p>
+<tt/psfaddtable(1)/, <tt/psfgettable(1)/, <tt/psfstriptable(1)/,
+<tt/showfont(1)/.
+
+
+<sect>Font files
+
+<sect1>The formats
+<p>
+The primary font file format for the &lct;, as of version 0.2.x, is
+the PSF format, which is also used by &kbd;.  0.3.x will introduce the
+XPSF format, which will be able to replace all existing file formats.
+
+Raw fonts can be converted into PSF files with the <tt/font2psf(1)/
+(written by Martin Lohner, SuSE GmbH).
+
+Versions 0.2.x do not have support for the CP format again - this will
+come back in the 0.3.x development branch.
+
+<sect1>Tools
+
+<sect2>Font-files manipulation tools
+<p>
+The <tt/psfaddtable(1)/, <tt/psfgettable(1)/, and
+<tt/psfstriptable(1)/ tools are provided by the &lct; for manipulation
+of the SFM embedded in PSF files.  These are the only
+font-manipulation tools provided by the &lct; as of version 0.2.x.
+The <tt/font2psf(1)/ tool is available in the <tt/contrib/ directory
+to convert old raw fonts into PSF fonts.
+
+There are plans for a more generic font-conversion tool based on
+libcfont.  It will be mostly trivial to write once work on libcfont
+will be advanced enough.
+
+The only way provided by the &lct; to display a font's contents is to load it, and then to display it using <tt/showfont(1)/.
+
+<sect2>Font editors
+<p>
+I do not curently know of a good font-editor suitable for editing
+console fonts.  I tried <tt/fonter/, but this one has a bad design
+flaw: you can only properly edit cp437 fonts (or maybe ASCII-based
+fonts if you like unreadable screens) because it works on the console
+and loads the font you are editing.  I was told about <tt/cse/ which I
+did not tried yet.  Marcin Kowalczyk is working on the <url
+url="http://kki.net.pl/qrczak/programy/index.html" name="fonty"> tool
+(which I did not check yet either), which will help font designers,
+but is not AFAIK a real editor.  Robert de Bath works on <url
+url="http://www.cix.co.uk/~mayday/font.tgz" name="his own tools">
+which handle a variety of file formats and table formats.
+
+
+<sect>The libraries
+<p>
+There are several shared libraries installed by the &lct;.  They were
+at first meant just to share code betwwen the various utilities
+(&kbd; has lots of duplicated code), but they could be used as a
+base to build new tools.
+
+However, they are not yet ready for production use (hence the version
+number 0.0.0), and are absolutely not complete nor coherent at the
+time.
+
+Here is a summary of what they are meant to become:
+
+<sect1>libconsole, <tt>&lt;lct/console.h&gt;</tt> +
+<tt>&lt;lct/ksyms.h&gt;</tt>
+<p>
+is a meant to be a collection of:
+<itemize>
+<item> wrappers around the kernel-level functionnalities, which should
+be as kernel-version-independant as reasonable; 
+<item> higher-level interfaces to these functionnalities.
+</itemize>
+
+Maybe this goal overlaps with some part of libggi (see <ref name="The
+future" id="sec-future">), but I didn't investigate that for now.
+
+<sect1>libcfont, <tt>&lt;lct/font.h&gt;</tt>
+<p>
+is meant to provide a high-level interface to console-font
+file-handling. It also exports the lower-level functions used to
+construct higher-level ones.
+
+It only supports for now some low- to medium-level functions that ease
+writing programs, but I hope to make it a lot more than that,
+especially with the coming of the XPSF file-format (see
+<tt>doc/font-formats/xpsf.draft</tt> for details).
+
+As of release 1998.08.11, implementation of higher-level interface has
+just started.
+
+<sect1>libctutils, <tt>&lt;lct/utils.h&gt;</tt> +
+<tt>&lt;lct/unicode.h&gt;</tt>
+<p>
+is a collection of misc utility functions for use by the 2 other libs
+and by the tools. I hope most this stuff will one day make its way to
+an existing general purpose utility-library.  Any offers welcomed.
+
+
+<sect>The future of the console driver and of the &lct;<label
+id="sec-future">
+<p>
+The &lct; were derived from kbd.  It is not a good thing to have two
+distinct distributions for these tools, so we once hoped we'd manage
+to finally merge the two packages back, together with Andries Brouwer,
+who still maintains &kbd;.  However, due to the lack of technical
+cooperation from &kbd;'s maintainer, and to the growing gap with
+&kbd;, this project is now on hold.
+
+The driver in 2.2.x kernel has been reworked a lot, and it seems it
+will continue to evolve in 2.3.x.  There are already some new
+features, such as fonts with width != 8, which will be supported in
+the future.
+
+There is an ongoing project, known as GGI (for General Graphical
+Interface), which is in the process of, among other things,
+revolutionarize the way the console is handled.  Have a look at <url
+url="http://www.ggi-project.org/" name="their WWW site"> for details.
+
+As far as possible, I will try to keep the &lct; in sync with what is
+developped for the kernel, and to what gets added to new releases of
+kbd but I have to look better at the current state of the GGI project
+before I give any more info.
+
+</article>
