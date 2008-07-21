@@ -1,0 +1,234 @@
+# Makefile.in generated automatically by automake 1.4 from Makefile.am
+
+# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+# -*- makefile -*-
+
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+
+DESTDIR =
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+
+top_builddir = ..
+
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+transform = @program_transform_name@
+
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+CATALOGS = @CATALOGS@
+CATOBJEXT = @CATOBJEXT@
+CC = @CC@
+COMPRESSOR_EXT = @COMPRESSOR_EXT@
+COMPRESSOR_OPTS = @COMPRESSOR_OPTS@
+DATADIRNAME = @DATADIRNAME@
+FONTDIR = @FONTDIR@
+GENCAT = @GENCAT@
+GMOFILES = @GMOFILES@
+GMSGFMT = @GMSGFMT@
+GT_NO = @GT_NO@
+GT_YES = @GT_YES@
+INCLUDE_LOCALE_H = @INCLUDE_LOCALE_H@
+INSTOBJEXT = @INSTOBJEXT@
+INTLDEPS = @INTLDEPS@
+INTLLIBS = @INTLLIBS@
+INTLOBJS = @INTLOBJS@
+KEYMAPDIR = @KEYMAPDIR@
+MAKEINFO = @MAKEINFO@
+MKINSTALLDIRS = @MKINSTALLDIRS@
+MSGFMT = @MSGFMT@
+OLDKEYMAPDIR = @OLDKEYMAPDIR@
+PACKAGE = @PACKAGE@
+POFILES = @POFILES@
+POSUB = @POSUB@
+RANLIB = @RANLIB@
+TRANSDIR = @TRANSDIR@
+USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
+USE_NLS = @USE_NLS@
+VERSION = @VERSION@
+VIDEOMODEDIR = @VIDEOMODEDIR@
+l = @l@
+translit = @translit@
+
+AUTOMAKE_OPTIONS = foreign
+
+EXTRA_DIST = $(PSF_FILES) $(CP_FILES)
+
+pkgdatadir = $(datadir)/$(FONTDIR)
+
+pkgdata_DATA = $(PSF_FILES:=.$(COMPRESSOR_EXT)) $(CP_FILES)
+
+CLEANFILES = $(PSF_FILES:=.$(COMPRESSOR_EXT))
+
+CP_FILES =  161.cp 162.cp 163.cp 164.cp 165.cp 737.cp 880.cp 972.cp
+
+
+PSF_FILES =  Agafari-12.psf Agafari-14.psf Agafari-16.psf Goha-12.psf Goha-14.psf Goha-16.psf GohaClassic-12.psf GohaClassic-14.psf GohaClassic-16.psf Cyr_a8x14.psf Cyr_a8x16.psf Cyr_a8x8.psf LatArCyrHeb-08.psf LatArCyrHeb-14.psf LatArCyrHeb-16+.psf LatArCyrHeb-16.psf LatArCyrHeb-19.psf Mik_8x16.psf alt-8x14.psf alt-8x16.psf alt-8x8.psf altb-8x16.psf altc-8x16.psf aply16.psf cp850-8x14.psf cp850-8x16.psf cp850-8x8.psf cp865-8x14.psf cp865-8x16.psf cp865-8x8.psf cp866-8x16.psf def2_8x16.psf default8x16.psf default8x9.psf gr.f14.psf gr.f16.psf gr8x14.psf gr8x16.psf gr8x6.psf gr8x7.psf gr8x8.psf greek.psf gr737-8x8-2.psf gr737-8x8.psf gr737-9x14-2.psf gr737-9x14.psf gr737-9x16-2.psf gr737-9x16-medieval.psf gr737-9x16.psf grcourier.psf grfixed.psf iso01.f08.psf iso01.f14.psf iso01.f16.psf iso01a-8x14.psf iso01a-8x16.psf iso01a-8x8.psf iso02.f08.psf iso02.f14.psf iso02.f16.psf iso03.f08.psf iso03.f14.psf iso03.f16.psf iso04.f08.psf iso04.f14.psf iso04.f16.psf iso05.f08.psf iso05.f14.psf iso05.f16.psf iso06.f08.psf iso06.f14.psf iso06.f16.psf iso07.f08.psf iso07.f14.psf iso07.f16.psf iso08.f08.psf iso08.f14.psf iso08.f16.psf iso09.f08.psf iso09.f14.psf iso09.f16.psf iso10.f08.psf iso10.f14.psf iso10.f16.psf iso14.f16.psf koi8-14.psf koi8-8x14.psf koi8-8x16.psf koi8-8x8.psf koi8b-8x16.psf koi8c-8x16.psf koi8r-8x8.psf koi8u_8x14.psf koi8u_8x16.psf koi8u_8x8.psf ruscii_8x14.psf ruscii_8x16.psf ruscii_8x8.psf lat1-08.psf lat1-10.psf lat1-12.psf lat1-14.psf lat1-16.psf lat1u-08.psf lat1u-10.psf lat1u-12.psf lat1u-14.psf lat1u-16.psf lat2-08.psf lat2-10.psf lat2-12.psf lat2-14.psf lat2-16.psf lat2u-16.psf lat4-08.psf lat4-10.psf lat4-12.psf lat4-14.psf lat4-16+.psf lat4-16.psf lat4-19.psf lat4u-08.psf lat4u-10.psf lat4u-12.psf lat4u-14.psf lat4u-16+.psf lat4u-16.psf lat4u-19.psf lat4a-08.psf lat4a-10.psf lat4a-12.psf lat4a-14.psf lat4a-16+.psf lat4a-16.psf lat4a-19.psf lat7-14.psf lat0-sun16.psf lat2-sun16.psf  lat0-08.psf lat0-10.psf lat0-12.psf lat0-14.psf lat0-16.psf arm8.psf t.psf t850b.psf tcvn8x16.psf viscii10-8x16.psf
+
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+CONFIG_CLEAN_FILES = 
+DATA =  $(pkgdata_DATA)
+
+DIST_COMMON =  Makefile.am Makefile.in
+
+
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+
+TAR = tar
+GZIP_ENV = --best
+all: all-redirect
+.SUFFIXES:
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOMAKE) --foreign --include-deps consolefonts/Makefile
+
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
+
+install-pkgdataDATA: $(pkgdata_DATA)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)
+	@list='$(pkgdata_DATA)'; for p in $$list; do \
+	  if test -f $(srcdir)/$$p; then \
+	    echo " $(INSTALL_DATA) $(srcdir)/$$p $(DESTDIR)$(pkgdatadir)/$$p"; \
+	    $(INSTALL_DATA) $(srcdir)/$$p $(DESTDIR)$(pkgdatadir)/$$p; \
+	  else if test -f $$p; then \
+	    echo " $(INSTALL_DATA) $$p $(DESTDIR)$(pkgdatadir)/$$p"; \
+	    $(INSTALL_DATA) $$p $(DESTDIR)$(pkgdatadir)/$$p; \
+	  fi; fi; \
+	done
+
+uninstall-pkgdataDATA:
+	@$(NORMAL_UNINSTALL)
+	list='$(pkgdata_DATA)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(pkgdatadir)/$$p; \
+	done
+tags: TAGS
+TAGS:
+
+
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+subdir = consolefonts
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pr $$/$$file $(distdir)/$$file; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
+	  fi; \
+	done
+info-am:
+info: info-am
+dvi-am:
+dvi: dvi-am
+check-am: all-am
+check: check-am
+installcheck-am:
+installcheck: installcheck-am
+install-exec-am:
+install-exec: install-exec-am
+
+install-data-am: install-pkgdataDATA
+install-data: install-data-am
+
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+install: install-am
+uninstall-am: uninstall-pkgdataDATA
+uninstall: uninstall-am
+all-am: Makefile $(DATA)
+all-redirect: all-am
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
+installdirs:
+	$(mkinstalldirs)  $(DESTDIR)$(pkgdatadir)
+
+
+mostlyclean-generic:
+
+clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
+
+distclean-generic:
+	-rm -f Makefile $(CONFIG_CLEAN_FILES)
+	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+
+maintainer-clean-generic:
+mostlyclean-am:  mostlyclean-generic
+
+mostlyclean: mostlyclean-am
+
+clean-am:  clean-generic mostlyclean-am
+
+clean: clean-am
+
+distclean-am:  distclean-generic clean-am
+
+distclean: distclean-am
+
+maintainer-clean-am:  maintainer-clean-generic distclean-am
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+
+maintainer-clean: maintainer-clean-am
+
+.PHONY: uninstall-pkgdataDATA install-pkgdataDATA tags distdir info-am \
+info dvi-am dvi check check-am installcheck-am installcheck \
+install-exec-am install-exec install-data-am install-data install-am \
+install uninstall-am uninstall all-redirect all-am all installdirs \
+mostlyclean-generic distclean-generic clean-generic \
+maintainer-clean-generic clean mostlyclean distclean maintainer-clean
+
+
+include $(top_builddir)/Make.rules
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:

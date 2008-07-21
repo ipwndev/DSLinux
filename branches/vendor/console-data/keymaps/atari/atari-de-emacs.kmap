@@ -1,0 +1,514 @@
+#           Keyboard Mapping for Atari Keyboards, German Layout
+#           ---------------------------------------------------
+#
+# Copyright 1994 Roman Hodek
+#
+# This file is subject to the terms and conditions of the GNU General Public
+# License.
+#
+# Notes:
+# ------
+#
+# This file assumes that the currently active mapping is the Atari default
+# mapping (US layout) in my version as found in drivers/char/defkeymap.c
+# (conditionalized to machine type). Only the necessary alternations are
+# done!
+#
+# Dead keys (i.e. pressing ^ and e gives œ, an e with hat) are not
+# used, because I consider this annoying. All characters needed for 
+# German are possible without deadkeys. If you want them, apply the following
+# replacements:
+#   grave       -> dead_grave
+#   apostrophe  -> dead_acute
+#   asciicircum -> dead_circumflex
+#   asciitilde  -> dead_tilde
+# In atari-german-deadkeys.map exactly this is done.
+#
+# Lines commented out by '!' are settings that are done implicitly by
+# loadkeys.
+#
+# There is no natural way to generate Meta codes for the characters [,],{,},
+# @ and \, that already need Alt to be pressed together with one of the 
+# umlaut keys. I've choosen the following scheme, though it may not be
+# very intuitive in all cases (who knows a better solution??):
+# 1) The key with Alt (and maybe shift) gives the character engraved to the
+#    right (i.e. [,@,\,...)
+# 2) The key with Control (and maybe shift) gives the control character
+#    corresponding the the character engraved to the _right_, if one exists.
+#    This happens because the umlaut characters have no corresponding control
+#	 character anyway.
+# 3) The key with Control and Alt (and maybe shift) gives the Meta equivalent
+#    (with 8. bit set or prepended by ESC) of the character engraved to the
+#	 right. Again, Meta's of the umlaut characters do not exist, since they
+#	 already have their 8. bit set.
+# One could argue that it would be more consistent to require Alt and Control
+# to be pressed to get the control characters (case 2). That's true, but in
+# my opinion, it is even more inconsistent to generate Meta codes without the
+# Alt key pressed (but just with Control). And it would be very bad, if the
+# Meta versions of [,{,@,... could not be typed at all!
+#
+# I've kept the convention that the digit keys 2..8 on the main keyboard
+# generate the control characters not corresponding to letters (^@, ^[ .. ^_
+# and ^?=DEL) when pressed with Control. It is convention, too, that the shift
+# key must not be pressed for this effect. Also, Meta+Control plus these keys
+# give the Metas of these controls.
+#
+# The standard loadkeys (at least the version I have) doesn't understand the
+# combination of Meta and Control in symbolic names (i.e. Meta_Control_a is
+# invalid, but some names like Meta_Backspace or Meta_Tab are). For this
+# reason, I replaced the offending names by their numeric equivalent. This
+# depends on KT_META being 8!
+#
+# The umlaut keys cannot be set via ?diaeresis, because this would make them
+# to be of type KT_LATIN1, and they should be type KT_LETTER to be affected
+# by CAPSLOCK. Their definition is thus in hex :-(
+#
+
+# only define tables for plain, shift, ctrl, shift+ctrl, alt, shift+alt,
+# alt+ctrl, shift+alt+ctrl, i.e. always AltGr omitted
+keymaps 0,1,4,5,8,9,12,13
+strings as usual
+compose as usual for "iso-8859-1"
+
+keycode   0 =
+
+keycode	  1 = Escape					Escape \
+			  Escape					Escape \
+			  Meta_Escape				Meta_Escape \
+			  Meta_Escape				Meta_Escape 
+
+keycode	  2 = one						exclam \
+			  VoidSymbol				VoidSymbol \
+			  Meta_one					Meta_exclam \
+			  VoidSymbol				VoidSymbol
+
+# nul = Control_at
+keycode	  3 = two 						quotedbl \
+			  nul						nul \
+			  Meta_two					Meta_quotedbl \
+			  Meta_nul					VoidSymbol
+
+# Meta_Escape = Control_bracketleft
+keycode	  4 = three						section \
+			  Escape					VoidSymbol \
+			  Meta_three				VoidSymbol \
+			  Meta_Escape				VoidSymbol
+
+keycode	  5 = four						dollar \
+			  Control_backslash			VoidSymbol \
+			  Meta_four					Meta_dollar \
+			  Meta_Control_backslash	VoidSymbol
+
+keycode	  6 = five						percent \
+			  Control_bracketright		VoidSymbol \
+			  Meta_five					Meta_percent \
+			  Meta_Control_bracketright	VoidSymbol
+
+keycode	  7 = six						ampersand \
+			  Control_asciicircum		VoidSymbol \
+			  Meta_six					Meta_ampersand \
+			  Meta_Control_asciicircum	VoidSymbol
+
+keycode	  8 = seven						slash \
+			  Control_underscore		VoidSymbol \
+			  Meta_seven				Meta_slash \
+			  Meta_Control_underscore	VoidSymbol
+
+keycode	  9 = eight						parenleft \
+			  Delete					VoidSymbol \
+			  Meta_eight				Meta_parenleft \
+			  Meta_Delete				VoidSymbol
+
+keycode	 10 = nine						parenright \
+			  VoidSymbol				VoidSymbol \
+			  Meta_nine					Meta_parenright \
+			  VoidSymbol				VoidSymbol
+
+keycode	 11 = zero						equal \
+			  VoidSymbol				VoidSymbol \
+			  Meta_zero					Meta_equal \
+			  VoidSymbol				VoidSymbol
+
+# ssharp has 8th bit already set, so don't define meta code for it!
+keycode	 12 = ssharp					question \
+			  VoidSymbol				VoidSymbol \
+			  VoidSymbol				Meta_question \
+			  VoidSymbol				VoidSymbol
+
+# F23 for making emacs C-x C-' easier
+keycode	 13 = apostrophe				grave \
+			  F23						VoidSymbol \
+			  Meta_apostrophe			Meta_grave \
+			  VoidSymbol				VoidSymbol
+
+# Backspace key should send ^? code to distinguish from C-h
+keycode	 14 = Delete					Delete \
+              Delete					Delete \
+              Meta_Delete				Meta_Delete \
+
+# F21 for emacs C-TAB
+keycode	 15 = Tab						Tab \
+			  F21						F21 \
+			  Meta_Tab					Meta_Tab \
+			  VoidSymbol				VoidSymbol
+
+keycode	 16 = +q
+keycode	 17 = +w
+keycode	 18 = +e
+keycode	 19 = +r
+keycode	 20 = +t
+keycode	 21 = +z
+keycode	 22 = +u
+keycode	 23 = +i
+keycode	 24 = +o
+keycode	 25 = +p
+
+# without Alt or Control: umlaut
+# with Control: Control chars for Alt chars
+# with Alt: standard Atari alternate symbols
+# with Alt and Control: Meta's for Alt chars (Who knows a better way
+#                       to implement these?)
+keycode	 26 = +udiaeresis				+Udiaeresis \
+			  nul						Control_backslash \
+			  at						backslash \
+			  Meta_at					Meta_backslash
+
+keycode	 27 = plus						asterisk \
+			  VoidSymbol				VoidSymbol \
+			  Meta_plus					Meta_asterisk \
+			  VoidSymbol				VoidSymbol
+
+keycode	 28 = Return					Return \
+              Linefeed					Linefeed \
+              Meta_Control_m			Meta_Control_m \
+              Meta_Linefeed				Meta_Linefeed
+
+keycode	 29 = Control		  
+
+keycode	 30 = +a
+keycode	 31 = +s
+keycode	 32 = +d
+keycode	 33 = +f
+keycode	 34 = +g
+keycode	 35 = +h
+keycode	 36 = +j
+keycode	 37 = +k
+keycode	 38 = +l
+
+# without Alt or Control: umlaut
+# with Control: Control chars for Alt chars
+# with Alt: standard Atari alternate symbols
+# with Alt and Control: Meta's for Alt chars (Who knows a better way
+#                       to implement these?)
+# Escape = Control_bracketleft
+# braceleft has no associated Control code
+keycode	 39 = +odiaeresis				+Odiaeresis \
+			  Escape					VoidSymbol \
+			  bracketleft				braceleft \
+			  Meta_bracketleft			Meta_braceleft
+
+# without Alt or Control: umlaut
+# with Control: Control chars for Alt chars
+# with Alt: standard Atari alternate symbols
+# with Alt and Control: Meta's for Alt chars (Who knows a better way
+#                       to implement these?)
+# braceright has no associated Control code
+keycode	 40 = +adiaeresis				+Adiaeresis \
+			  Control_bracketright		VoidSymbol \
+  			  bracketright				braceright \
+  			  Meta_bracketright			Meta_braceright
+
+# ^^ at unshifted, too, for convenience
+keycode	 41 = numbersign				asciicircum \
+			  Control_asciicircum		Control_asciicircum \
+			  Meta_numbersign			Meta_asciicircum \
+			  Meta_Control_asciicircum	Meta_Control_asciicircum
+
+keycode	 42 = Shift			  
+
+keycode	 43 = asciitilde				bar \
+			  VoidSymbol				VoidSymbol \
+			  Meta_asciitilde			Meta_bar \
+			  VoidSymbol				VoidSymbol
+
+keycode	 44 = +y
+keycode	 45 = +x
+keycode	 46 = +c
+keycode	 47 = +v
+keycode	 48 = +b
+keycode	 49 = +n
+keycode	 50 = +m
+
+keycode	 51 = comma						semicolon \
+			  VoidSymbol				VoidSymbol \
+			  Meta_comma				Meta_semicolon \
+			  VoidSymbol				VoidSymbol
+
+keycode	 52 = period					colon \
+			  VoidSymbol				VoidSymbol \
+              Meta_period				Meta_colon \
+			  VoidSymbol				VoidSymbol
+
+# ^_ at unshifted, too, for convenience
+keycode	 53 = minus						underscore \
+			  Control_underscore		Control_underscore \
+			  Meta_minus				Meta_underscore \
+			  Meta_Control_underscore	Meta_Control_underscore
+
+keycode	 54 = Shift			  
+keycode	 55 =
+keycode	 56 = Alt
+
+keycode	 57 = space						space \
+			  nul						nul \
+			  Meta_space				Meta_space \
+			  Meta_nul					Meta_nul
+
+keycode	 58 = Caps_Lock
+
+# ctrl+Fx conventionally is the same as without
+keycode	 59 = F1						F11 \
+			  F1						F11 \
+			  Console_1					Console_11 \
+			  VoidSymbol				VoidSymbol
+
+keycode	 60 = F2						F12 \
+			  F2						F12 \
+			  Console_2					Console_12 \
+			  VoidSymbol				VoidSymbol
+
+keycode	 61 = F3						F13 \
+			  F3						F13 \
+			  Console_3					Console_13 \
+			  VoidSymbol				VoidSymbol
+
+keycode	 62 = F4						F14 \
+			  F4						F14 \
+			  Console_4					Console_14 \
+			  VoidSymbol				VoidSymbol
+
+keycode	 63 = F5						F15 \
+			  F5						F15 \
+			  Console_5					Console_15 \
+			  VoidSymbol				VoidSymbol
+
+keycode	 64 = F6						F16 \
+			  F6						F16 \
+			  Console_6					Console_16 \
+			  VoidSymbol				VoidSymbol
+
+keycode	 65 = F7						F17 \
+			  F7						F17 \
+			  Console_7					Console_17 \
+			  VoidSymbol				VoidSymbol
+
+keycode	 66 = F8						F18 \
+			  F8						F18 \
+			  Console_8					Console_18 \
+			  VoidSymbol				VoidSymbol
+
+keycode	 67 = F9						F19 \
+			  F9						F19 \
+			  Console_9					Console_19 \
+			  VoidSymbol				VoidSymbol
+
+keycode	 68 = F10						F20 \
+			  F10						F20 \
+			  Console_10				Console_20 \
+			  VoidSymbol				VoidSymbol
+
+keycode	 69 =
+keycode	 70 =
+
+keycode	 71 = Home						End \
+			  Meta_less					Meta_greater \
+			  Meta_less					Meta_greater \
+			  Meta_less					Meta_greater
+
+# C-up = M-C-a = beginning-of-defun
+keycode	 72 = Up						PageUp \
+			  Meta_Control_a			Up \
+			  PageUp						Meta_less \
+			  Scroll_Backward			Scroll_Backward
+
+keycode	 73 =
+
+keycode	 74 = KP_Subtract	  
+
+# C-left = M-a = backward-sentence/c-beginning-of-statement
+keycode	 75 = Left						Left \
+			  Meta_a					Decr_Console \
+			  Meta_b					Meta_B \
+			  Left						Left
+
+keycode	 76 =
+
+# C-right = M-e = forward-sentence/c-end-of-statement
+keycode	 77 = Right						Right \
+			  Meta_e					Incr_Console \
+			  Meta_f					Meta_F \
+			  Right						Right
+
+keycode	 78 = KP_Add		  
+
+keycode	 79 =
+
+# C-down = M-C-e = end-of-defun
+keycode	 80 = Down						PageDown \
+			  Meta_Control_e			Down \
+			  PageDown						Meta_greater \
+			  Scroll_Forward			Scroll_Forward
+
+keycode	 81 =
+
+# C-Ins = F24 -> overwrite-mode
+# M-C-Ins = F25 -> auto-fill-mode
+# S-M-C-Ins = F22 -> insert-header-defines
+keycode	 82 = Insert					Insert \
+			  F24						Insert \
+			  Insert					Insert \
+			  F25						F22
+
+# S-Del -> C-w -> kill-region
+# C-Del -> M-C-? -> backward-kill-word
+# S-C-Del -> M-C-k -> kill-sexp
+# M-Del -> M-d -> kill-word
+# C-A-D -> BOOT
+keycode 83 = Remove						Control_w \
+			 Meta_Delete				Meta_Control_k \
+			 Meta_d						Meta_D \
+			 Boot						Meta_Control_d
+
+keycode	 84 =
+keycode	 85 =
+keycode	 86 =
+keycode	 87 =
+keycode	 88 =
+keycode	 89 =
+keycode	 90 =
+keycode	 91 =
+keycode	 92 =
+keycode	 93 =
+keycode	 94 =
+keycode	 95 =
+
+keycode	 96 = less						greater \
+			  VoidSymbol				VoidSymbol \
+			  Meta_less					Meta_greater \
+			  VoidSymbol				VoidSymbol
+
+# Undo: (strange key: doesn't generate any keycode with Control, Alt get
+# unpressed magically...)
+keycode	 97 = Macro						Break
+
+# Help:
+keycode	 98 = Help						Show_Memory \
+			  Show_Registers			Last_Console \
+			  Show_State				VoidSymbol \
+			  KeyboardSignal			Num_Lock
+
+# is really '(' on keypad, on my keyboard PageUp
+# C-PageUp -> M-C-a = beginning-of-defun
+# S-C-PageUp = F27 -> C-x [ = backward-page
+# M-PageUp -> M-{ = backward-paragraph
+keycode	 99 = PageUp					Scroll_Backward \
+			  Meta_Control_a			F27 \
+			  Meta_braceleft			PageUp \
+			  PageUp					PageUp
+
+# is really ')' on keypad, on my keyboard PageDown
+# C-PageDown -> M-C-e = end-of-defun
+# S-C-PageDown = F28 -> C-x ] = forward-page
+# M-PageDown -> M-} = forward-paragraph
+keycode	100 = PageDown					Scroll_Forward \
+			  Meta_Control_e			F28 \
+			  Meta_braceleft			PageDown \
+			  PageDown					PageDown
+
+keycode 101 = KP_Divide		  
+
+keycode 102 = KP_Multiply	  
+
+keycode 103 = KP_7						Home \
+			  seven						VoidSymbol \
+			  Ascii_7					VoidSymbol \
+			  VoidSymbol				VoidSymbol
+
+keycode 104 = KP_8						Up \
+			  eight						VoidSymbol \
+			  Ascii_7					VoidSymbol \
+			  VoidSymbol				VoidSymbol
+
+keycode 105 = KP_9						PageUp \
+			  nine						VoidSymbol \
+			  Ascii_9					VoidSymbol \
+			  VoidSymbol				VoidSymbol
+
+keycode 106 = KP_4						Left \
+			  four						VoidSymbol \
+			  Ascii_4					VoidSymbol \
+			  VoidSymbol				VoidSymbol
+
+keycode 107 = KP_5						VoidSymbol \
+			  five						VoidSymbol \
+			  Ascii_5					VoidSymbol \
+			  VoidSymbol				VoidSymbol
+
+keycode 108 = KP_6						Right \
+			  six						VoidSymbol \
+			  Ascii_6					VoidSymbol \
+			  VoidSymbol				VoidSymbol
+
+keycode 109 = KP_1						End \
+			  one						VoidSymbol \
+			  Ascii_1					VoidSymbol \
+			  VoidSymbol				VoidSymbol
+
+keycode 110 = KP_2						Down \
+			  two						VoidSymbol \
+			  Ascii_2					VoidSymbol \
+			  VoidSymbol				VoidSymbol
+
+keycode 111 = KP_3						PageDown \
+			  three						VoidSymbol \
+			  Ascii_3					VoidSymbol \
+			  VoidSymbol				VoidSymbol
+
+keycode 112 = KP_0						Insert \
+			  zero						VoidSymbol \
+			  Ascii_0					VoidSymbol \
+			  VoidSymbol				VoidSymbol
+
+keycode 113 = KP_Period					Remove \
+			  period					VoidSymbol \
+			  VoidSymbol				VoidSymbol \
+			  VoidSymbol				VoidSymbol
+
+keycode 114 = KP_Enter
+
+keycode 115 =
+keycode 116 =
+keycode 117 =
+keycode 118 =
+keycode 119 =
+keycode 120 =
+keycode 121 =
+keycode 122 =
+keycode 123 =
+keycode 124 =
+keycode 125 =
+keycode 126 =
+keycode 127 =
+
+string Help = "\033[P"
+
+# own extensions
+string F21 = "\033[31~"
+string F22 = "\033[32~"
+string F23 = "\033[33~"
+string F24 = "\033[34~"
+string F25 = "\033[35~"
+string F26 = "\033[36~"
+string F27 = "\030["
+string F28 = "\030]"
+
