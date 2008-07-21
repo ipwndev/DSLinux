@@ -113,7 +113,7 @@ translit = @translit@
 
 AUTOMAKE_OPTIONS = foreign
 
-SUBDIRS = lib fontfiletools vttools screenfonttools contrib doc compat include examples po intl
+SUBDIRS = lib fontfiletools vttools screenfonttools contrib compat include examples po intl
 
 
 EXTRA_DIST = BUGS RELEASE CREDITS COPYING.kbd local-scripts/* *.lsm
