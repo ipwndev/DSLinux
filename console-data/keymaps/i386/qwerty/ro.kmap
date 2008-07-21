@@ -1,0 +1,75 @@
+# us.map
+charset "iso-8859-2"
+keymaps 0-6,8-9,12
+alt_is_meta
+include "qwerty-layout"
+include "linux-with-alt-and-altgr"
+strings as usual
+
+keycode   1 = Escape
+keycode   2 = one		exclam
+keycode   3 = two		at		at		at		nul		nul
+keycode   4 = three            numbersign
+ control keycode   4 = Escape
+keycode   5 = four             dollar           dollar           dollar		Control_backslash
+keycode   6 = five             percent
+ control keycode   6 = Control_bracketright
+keycode   7 = six              asciicircum
+ control keycode   7 = Control_asciicircum
+keycode   8 = seven            ampersand        braceleft	braceleft	Control_underscore
+keycode   9 = eight            asterisk         bracketleft	bracketleft	Delete
+keycode  10 = nine             parenleft        bracketright	bracketright
+keycode  11 = zero             parenright       braceright	braceright
+keycode  12 = minus            underscore       backslash	backslash	Control_underscore Control_underscore
+keycode  13 = equal            plus
+keycode  14 = Delete
+keycode  15 = Tab
+keycode  26 = bracketleft      braceleft
+	control	keycode  26 = Escape
+keycode  27 = bracketright     braceright       asciitilde       asciitilde	Control_bracketright
+keycode  28 = Return
+	alt	keycode  28 = Meta_Control_m
+keycode  29 = Control
+keycode  39 = semicolon        colon
+keycode  40 = apostrophe       quotedbl
+	control	keycode  40 = Control_g
+keycode  41 = grave            asciitilde
+	control	keycode  41 = nul
+keycode  42 = Shift
+keycode  43 = backslash        bar
+	control	keycode  43 = Control_backslash
+keycode  51 = comma            less
+keycode  52 = period           greater
+keycode  53 = slash            question
+	control	keycode  53 = Delete
+keycode  54 = Shift
+keycode  56 = Alt
+keycode  57 = space
+	control	keycode  57 = nul
+keycode  58 = Caps_Lock
+keycode  86 = less             greater          bar
+keycode  97 = Control
+
+keycode 102 = Control_a
+keycode 107 = Control_e
+
+#
+# Caracterele româneºti sunt mapate astfel:
+#  AltGr + a = ã
+#  AltGr + i = î
+#  AltGr + s = º
+#  AltGr + t = þ
+#  AltGr +  = â
+
+altgr keycode 20 = +0xFE
+shift altgr keycode 20 = +0xDE
+
+altgr keycode 23 = icircumflex
+shift altgr keycode 23 = Icircumflex
+
+altgr keycode 30 = +0xE3
+
+altgr keycode 31 = +0xBA
+shift altgr keycode 31 = +0xAA
+
+altgr keycode 41 = acircumflex

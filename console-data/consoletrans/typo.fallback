@@ -1,0 +1,11 @@
+# This files gives fallback for typographical character from the following charsets:
+# cp437 latin1
+
+# mid dot (·) : bullet (•) : sq bullet (■)
+U+00B7 U+2022 U+221A
+
+# bullet (•) : mid dot (·) : sq bullet (■)
+U+2022 U+00B7 U+221A
+
+# no-break space ( ) : space
+U+00A0 U+0020
