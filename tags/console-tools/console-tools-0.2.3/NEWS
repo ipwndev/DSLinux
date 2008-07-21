@@ -1,0 +1,515 @@
+====================
+
+* Major changes in console-tools-0.2.3:
+
+** Italian, Danish, and Estonian messages.
+
+** Several bugfixes.  Please look at the ChangeLog file for details.
+
+====================
+
+* Major changes in console-tools-0.2.2:
+
+** Russian and german messages.
+
+** Several bugfixes.  Please look at the ChangeLog file for details.
+
+====================
+
+* Major changes in console-tools-0.2.1:
+
+** Czech messages.
+
+** Several bugfixes.  Please look at the ChangeLog file for details.
+
+====================
+
+* Major changes in console-tools-0.2.0:
+
+** Note-worthy changes:
+
+*** Fully gettextized, ready for l10n.
+
+*** Iso-8859-15 support.
+
+*** psfaddtable(1) long option --chartable was renamed to --sfm.
+
+*** New numbering scheme: 0.2.x is the first stable branch, 0.3.x will
+be the first unstable branch, and so on, just like what the Linux
+kernel uses.
+
+*** The data files are now distributed in the `console-data' package.
+
+*** The configure script accepts a --with-unicodedata option to allow
+giving a path to the UnicodeData file, available in console-data or on
+unicode.org.
+
+*** A CVS repository has been set up, although it is not available for
+public access yet - still experimenting.
+
+
+** Corrected bugs:
+
+*** unicode_start does not use the compatibility setfont script any more.
+
+*** minor fixes to openvt(1).
+
+====================
+
+* Major changes in console-tools-1999.03.02:
+
+** Note-worthy changes:
+
+*** This release should compile without rerunning automake.
+
+
+** Corrected bugs:
+
+*** german and swedish keymaps were fixed.
+
+
+====================
+
+* Major changes in console-tools-1999.02.28:
+
+** Note-worthy changes:
+
+*** Should now compile out-of-the-box on all Linux archs (hopefully).
+
+*** Many new and updated data files.
+
+*** New keysym: Uncaps_Shift is an alias for CapsShift (from kbd 0.97).
+
+*** New contrib programs cad, font2psf and splitfont (from kbd 0.97).
+
+*** New program openvt (formerly known as `open'), based on the one in
+  kbd 0.97.
+
+*** consolechars now supports the --rom-font command for kernels
+  supporting reloading a font from video ROM (from kbd 0.97).
+
+*** loadkeys now supports ISO-8859-14 (latin8) symbols for Celtic charmap.
+
+*** showkey now supports a --unicode mode (preliminary support).
+
+*** Package has been gettextized.  Localazation in french and gaelic has been
+  started (both are really young for now !).
+
+*** All program now support long options, especially --help and --version.
+
+*** More consistency with GNU tools, by using stdout for printing when
+  invoked with --help or --version.
+
+*** (mostly) In sync with kbd 0.97.
+
+*** Start of a Linux Console CREDITS file.
+
+
+** Corrected bugs:
+
+*** Stop sending SIGWINCH to process specified by /tmp/selection.pid.
+
+*** Did not try /dev/tty0 when looking for a VC.
+
+*** Fixed a bug preventing to load some PSF files.
+
+*** Suppressed spurrious "Trying..." debugging messages when loading a
+  font, and configured --without-debugging.
+
+====================
+
+* Major changes in console-tools-1998.08.11:
+
+** Note-worthy changes:
+
+*** First support for the new KDFONTOP kernel interface, up to date with
+  kernel 2.1.115 (no support for custom font-width yet).
+
+*** Support for CP file-format was temporarily dropped.  It should
+  come back with the next release.
+
+*** New keymap `sundvorak'.
+
+*** Updated keymaps for Linux/Atari.
+
+*** New keymap include file vim-compose-latin1.inc, to get VIM-like
+  compose sequences.
+
+*** showcfont(1) now uses a 32-column layout when displaying a
+  512-chars font, so that it fits on a standard 80x25 screen.
+
+*** charset(1) is now documented.
+
+*** Real implementation of high-level libcfont has begun.
+
+*** XPSF draft file-format has been revised.  Implementation should
+  start with the next release.  Please comment.
+
+
+** Corrected bugs:
+
+*** Writing an SFM in a PSF file was not bigendian-safe.
+
+*** consolechars(8) could be interrupted by a SIGCHLD while reading a
+  font.
+
+*** unicode_{start,stop} are now more robust; they had problem when
+  the keyboard and display modes were out-of-sync.
+
+*** showcfont(1) was still documented in showfont.1.
+
+====================
+
+* Major changes in console-tools-1998.06.03:
+
+** Note-worthy changes:
+
+*** Up to date with kbd 0.96a.
+
+*** `showfont' has been renamed to "showcfont" to avoid a name-clash
+  with an xcontrib program.
+
+*** `consolechars' now accepts a --g1 option, which activates the G1
+  charset with the user-defined ACM, instead of the G0 charset, which
+  is the default.
+
+*** New script `charset' to allow the user to setup G0/G1 charsets.
+
+*** `loadkeys' now supports a --quiet option, as well as different
+  verbosity levels.
+
+*** `dumpkeys' now supports more output formats (see new --shape
+  option).
+
+*** Keymaps now support include files, "strings as usual" and "compose
+  as usual" shortcuts, and symbolic names for the 3rd argument in
+  Compose statements.
+
+*** New keymaps: i386/qwerty/{ru-yawerty,ru_win}, mac/mac-us-{std,ext}.
+
+*** Updated keymaps: dk, dk-latin1.
+
+*** Specific symbols for latin5 (iso-8859-9) are now supported by
+  loadkeys and dumpkeys.
+
+*** Keymaps are now organized in a hierarchical manner to ease user's
+  choice.
+
+*** File specifications can now include sequences of star characters
+  in their path, with the meaning of "at most as much subdir-levels as
+  the number of stars".  Eg, "/usr/share/keymaps/**/mymap" can match
+  "/usr/share/keymaps/mymap", "/usr/share/keymaps/mac/mymap", or
+  "/usr/share/keymaps/i386/qwerty/mymap".  Note that "any/*/dir",
+  unlike in the shell-syntax, can match "any/dir" as well as
+  "any/other/dir".  Please try not to rely too much on this syntax (I
+  don't like it, and it may change), which kbd 0.96{,a} uses almost
+  only internally, although console-tools uses it externally too.  I
+  document it so you know it is there, should the need arise.
+
+*** Keymaps are now refered to as "keymaps", not "keytables".  This is
+  reflected in the directory name (/usr/share/keymaps/), and the
+  manpage name (keymaps.5).  Note that /usr/local/share/keytables/ is
+  still scanned in addition to /usr/local/share/keymaps/ when
+  --enable-local-dir is configured.
+
+*** keypad.kmap is now installed as keypad.inc.  It should be included
+  in your keymap.
+
+*** `loadkeys' now supports a --quiet option, as well as different
+  verbosity levels.
+
+*** `dumpkeys' now supports more output formats (see new --shape
+  option).
+
+*** Improved autogenerated sample fallback table for latin diacritics
+  (renamed to latin_diacr.fallback); added autogenerated sample
+  fallback table for arabic forms.
+
+
+** Corrected bugs:
+
+*** Option handling in `loadkeys' and `dumpkeys' was broken with
+  --help and usage messages not causing the program to exit.
+
+*** Keymaps without a "keymaps" line are now correctly handled.
+
+*** "make install" does not fail if a previous version is already
+  installed.
+
+*** Corrected various minor bugs, and some erroneous documentation.
+
+
+====================
+
+* Major changes in console-tools-1998.04.08:
+
+** Note-worthy changes:
+
+*** The SFM fallback-tables can now be safely compressed, and are
+  installed compressed by default.
+
+*** The tools can now handle data files compressed with any supported
+  method, not just the one selected.
+
+*** Now support the bzip2 and lzop compression programs.
+
+*** HTML docs are build by default.
+
+*** The lct.sgml document was (hopefully) improved.
+
+*** Builds of resizecons and keycode-progs now enabled by default, so that
+  I get quicker feedback on what problems they may cause on other archs.
+
+*** New keymaps: croatian, cz-us-qwertz, sunt5-fr-latin1
+
+
+** Corrected bugs:
+
+*** Compressed-file handling should not cause reads to fail any more because
+  of SIGCHLD.
+
+*** There was a poorly-tested problem with compressed-file handling.
+
+*** The Makefile.am's were fixed to fully support "uninstall" and build
+  in any dir.
+
+*** Fixed se-latin1 keymap for caps-lock on 3 characters.
+
+
+====================
+
+* Major changes in console-tools-1997.12.16:
+
+** Note-worthy changes:
+
+*** The SFM fallback-table mechanism has been improved: multiple
+  tables may be loaded with one command.
+
+*** The keyboard tools now support ethiopic keysyms (from kbd-0.95).
+
+*** "consolechars -U" now outputs corresponding UTF chars inside
+  comments.
+
+*** Data files were sync-ed to kbd-0.95.
+
+
+** Corrected bugs:
+
+*** The compressed-files installation problem has been fixed.
+
+
+====================
+
+* Major changes in console-tools-1997.11.13:
+
+** Note-worthy changes:
+
+*** Written some doc; have a look at doc/lct.txt.
+
+*** All provided fonts are now either in PSF or in CP format; several
+  PSF now include their SFM as well.
+
+*** consolechars(8) has started to supports "SFM fallback tables" (-k
+  option).  Support is however limited to one fallback-table per
+  command-line invocation, and implementation is not really
+  satisfying.
+
+*** consolechars(8) now support 2 new flags: "--no-act" and
+  "--default-font", the latter being equivalent to setfont(1) called
+  without arguments.
+
+*** filename-syntax for default fonts has changed: "default8x08"
+  instead of "default8x8", for better file-sorting.
+
+*** updated/new keymaps: "fi-latin1.kmap", "ru-ms.kmap".
+
+  
+** Corrected bugs:
+
+*** compat scripts now call consolechars(8).
+
+*** gzip issuing warnings should not cause programs to fail with only
+  little clue.  We now let gzip print its warning, and it's not fatal
+  any more.
+
+*** "gr*.psf" were NOT PSF files (RAW format) !
+
+*** "configure --enable-local-datadir" prevent correct compilation of
+  the package.
+
+*** Fixed consolechars.8.
+
+
+====================
+
+* Major changes in console-tools-1997.10.28:
+
+** Note-worthy changes:
+
+*** setfont(8) has been renamed consolechars(8).
+
+*** setfont(8), loadunimap(1), saveunimap(1), mapscrn(1) are available, as
+  wrapper scripts around consolechars(8), by using the --use-kbd-compat
+  option to `configure'.
+
+*** clrunimap(1) is no more installed by "make install". You'll need to
+  install it manually if you really want it, which you probably don't.
+  
+*** showfont(1) has been thoroughly rewritten. It now uses left-to-right-then-
+  top-to-bottom display style, as was probably expected by many people ;),
+  and can now display 512-chars fonts. Some bugs were fixed (see below).
+
+*** New keymap (keypad.kmap, extracted from lt.kmap) allowing build of UCS2
+  chars using Ctrl-Shift-numbers, to be used as overriding keymap. 
+  Eg. of use: "loadkeys fr-pc keypad"
+
+*** New program vt-is-UTF8(1), to check if a VT is in UTF8- or byte-mode.
+
+*** unicode_start(1) doesn't load a default font any more when called without
+  arguments; it just switches to screen and keyboard modes.
+  
+*** Several new manpages.
+
+*** Updated the following data-files: lt{,.l4}.kmap
+  lat4{,u}-{08,10,12,14,16,16+,19}.psf lat4{,u}.sfm koi8-r.sfm cf.kmap
+
+*** New 512-chars font file LatArCyrHeb (in size 8, 14, 16, 16+, 19),
+  containing all characters from iso8859-1 through -10, except from -5 (greek
+  characters).
+  
+
+** Corrected bugs:
+
+*** Fixed showfont(1) display of characters 27 and 27+128.
+
+*** Fixed dumpkeys(1) check of the validity of "--charset" argument.
+
+*** Fixed loading of CP font-files.
+
+*** Fixed display bug in showkey(1), when called with no command.
+
+*** Fixed showfont(1) to restore original mode (UTF8- or byte-) on exit.
+
+
+====================
+
+* Major changes in console-tools-1997.10.14:
+
+** Note-worthy changes:
+
+*** `setfont' now loads the default unimap ("def.uni") when loading a default
+  font, to help the kernel keeping up-to-date unimap.
+  
+*** Added warning-printing to `setfont' for operations leading the kernel
+  to an invalid-unimap state ("load a font" && "-u none" || "load a font not
+  containing a unimap" && "no external unimap specified").
+
+*** `resizevt' has been renamed `resizecons' again, as all VTs (for noa) are
+  resized at the same time.
+
+*** Added "--with-compressor" option to `configure' script.
+
+*** Several manpages updates.
+
+*** New doc file: BUGS (formerly contained in TODO).
+
+
+** Corrected bugs:
+
+*** Fixed "setfont -{op,opu}" to correctly outputs 512-chars fonts when
+  console is in 512-chars more.
+
+*** Fixed "setfont -{or,op,opu} to be robust, and not to produce invalid
+  or empty font-files when all data isn't available.
+  
+*** Fixed "setfont -{ou,opu}" to handle the case where the unimap is
+  considered invalid by the kernel.
+  
+*** Fixed behaviour of `deallocvt' - now tries do deallocate all args, even if
+  one failed.
+  
+*** Fixed "--help" handling in `dumpkeys' - now lists really-available charsets
+  for "--charset" option, instead of hard-coded string.
+
+*** Fixed validity check on arguments to "--charset" in `dumpkeys' - now
+  properly rejects requests for unknown charsets.
+
+*** Fixed problem which used to forbid the tools to use "-" as filenames on
+  command-lines when the compression-support was not compiled in.
+
+
+====================
+
+* Major changes from kbd-0.94 to console-tools-1997.10.03:
+
+** Note-worthy changes:
+
+*** source-tree was completely reorganized, and now uses autoconf/automake/
+  libtool to build.
+
+*** PSF font-files can now be safely compressed.
+
+*** 16-bit screen-maps can be loaded (by "setfont -m" or "mapscrn"), instead of
+  just 8-bit maps interpreted as straight-to-font. This allows to have
+  correct interpretation of chars sent to the console, even when the input
+  encoding does not completely map to the font. Test for example something
+  like "setfont iso02.f08 -u iso02 -mlatin1" to display, as far as possible,
+  latin1 texts with a iso02 font loaded.
+
+*** Generated 16-bit screen-maps are provided for common encodings. Take a
+  look at consoletrans/UTF-tmpl.8bit if you need some more.
+  
+*** "setfont -om" now produces a 16-bit binary map instead of a 8-bit one.
+  "setfont -m" can read them.
+
+*** spawn_console and spawn_login are not built any more, as "init" should be
+  used to log into dynamically spawned consoles if no more than that is
+  needed. They are still provided as example code for those who'd like to
+  customize their console-spawn mechanism.
+  
+*** "resizecons" and "sti" have been respectively renamed "resizevt" and
+  "writevt"  for consistency.
+
+*** Programs can now search /usr/local/share/ as well as /usr/share/ for input
+  files, but it is disabled by default, because probably not
+  FSSTND-compliant. See "configure --help".
+    
+*** setfont(8) can now ouput PSF files: mode 0, ie. 256 chars without unimap, with
+  -op; mode 2, ie. 256 chars with unimap, with -opu.
+  
+*** setfont's "-o" option has been obsoleted by "-or", for "old RAW font", but is
+  still accepted for compatibility. "-op[u]" should probably be used whereever
+  "-o" was used.
+  
+*** showkey(1) now accepts one more command (--keymap) to allow installers to
+  test a new keymap.
+  
+*** showkey(1) now allows the user to set the timeout (--timeout); still
+  defaults to 10s.
+  
+*** "Magics" for MS-DOS CPI files, and codepage(1)-produced CP files are now
+  available (see fontfiletools/fonts.magic).
+
+*** Added documentation on font-file formats used.
+
+
+** Corrected bugs:
+
+*** reading a unicode-map from a PSF file is now bigendian-safe.
+
+*** Compressed files are now identified by checking magic numbers instead of
+  filename's extension.
+  
+*** Compressed files are now found even when given fullname including ".gz"
+  suffix.
+  
+*** vcstime now correctly handles screen widths from 128 up to 255
+  (limitation is now in /dev/vcsa structure).
+
+*** Now setfont rejects "-m none -m <file>" and "-u none -u <file>".
+
+*** screendump doesn't need /dev/vcsa0 any more, but /dev/vcsa.
+
+*** showkey(1) now properly rejects simultaneous multiple commands.
+
+*** showkey(1) now properly reports when keyboard was in unicode mode.

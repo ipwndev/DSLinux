@@ -1,0 +1,50 @@
+.TH VT\-IS\-UTF8 1 "10 Aug 1998" "Console tools" "Linux User's Manual"
+
+.SH NAME
+vt-is-UTF8 \- check whether current VT is in UTF8- or byte-mode.
+
+.SH SYNOPSIS
+.BI "vt-is-UTF8 [" -h | --help "] [" -V | --version "] [" -q | --quiet ]
+
+.SH DESCRIPTION
+.B vt-is-UTF8
+checks whether the current VT is in UTF8 mode, by writing (and erasing
+afterwards) a 3-byte-long UTF8 sequence, and looking how much chars where
+displayed by the console driver.
+
+A message telling in which mode the console is is then written to stdout
+(except if the
+.I --quiet
+option was given).
+
+If the 
+.I --quiet
+option is not given, the value returned is 1 if an error occurs, else 0.
+
+.SH OPTIONS
+.TP
+.I -h --help
+display version number, a short help message and exit.
+
+.TP
+.I -V --version
+display version number and exit.
+
+.TP
+.I -q --quiet
+do not print on stdout in with mode we are, but return the state as
+exit-status 1 if in UTF8-mode, 0 if in byte-mode. In case of error, 0 is
+returned and a message is displayed on stderr.
+
+.SH BUGS
+The check should be done by directly asking the kernel, which is not possible
+as of kernels 2.0.x.
+
+As of kernel 2.0.35, the byte-mode is sometimes erroneously detected
+as UTF8-mode, after switching from a 512-chars font to a 256-chars
+font.  This is probably a console-driver bug.
+
+.SH "SEE ALSO"
+
+.BR unicode_start (1),
+.BR unicode_stop (1).

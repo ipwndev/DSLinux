@@ -1,0 +1,114 @@
+This is at least a partial credits-file of people that have
+contributed to the Linux console subsystems, including tools and
+drivers.
+
+You are encouraged to contact me <ydirson@multimania.com> about any
+incorrect/missing info for this file.
+
+The format of this file was shamelessly stolen from the CREDITS file
+in the Linux kernel distribution.
+
+It is sorted by name and formatted to allow easy grepping and
+beautification by scripts.  The fields are: name (N), email (E),
+web-address (W), PGP key ID and fingerprint (P), description (D), and
+snail-mail address (S).
+
+----------
+
+N: H. Peter Anvin.
+E: hpa@transmeta.com
+D: Original author of unicode support in the console driver.
+D: Original author of psfaddtable, psfgettable, psfstriptable.
+D: Some latin1 fonts
+
+N: Andries Brouwer
+E: aeb@cwi.nl
+D: Original author of several console utilities, and patches to others.
+D: Keyboard and Console HOWTO.
+D: Current maintainer of the kbd package (console-tools' ancestor)
+S: Netherlands
+
+N: Lorenzo Cappelletti
+E: lorencap@tin.it
+D: Italian message catalog
+S: Italy
+
+N: Eugene G. Crosser
+E: crosser@average.org
+D: Original author of setfont and mapscrn.
+D: Kernel driver patches
+
+N: Yann Dirson
+E: ydirson@multimania.com
+W: http://www.multimania.com/ydirson/
+D: Current maintainer of the Linux Console Tools.
+D: Introduced many bugs and several useful features in this code.
+D: SFM fallback mechanism
+S: France
+
+N: Ville Hallik
+E: Ville.Hallik@mail.ee
+D: Estonian keymaps
+D: iso-8859-15 keymap encoding
+
+N: Joel Hoffman
+E: joel@wam.umd.edu
+
+N: Jakub Jelinek
+E: jj@sunsite.ms.mff.cuni.cz
+S: Czech Republic ?
+
+N: Risto Kankkunen
+D: Original author of dumpkeys and loadkeys
+
+N: Dmitry M. Klimoff
+E: dmk@kosnet.ru
+D: ru-ms.kmap, cp866-8x16.psf
+
+N: Ilya Ketris
+E: ilya@gde.to
+D: iso-8859-4 keysyms (fix), latvian keymaps, latin7.14.psf
+D: Russian message catalog
+
+N: Birger Langkjer
+E: birger.langkjer@image.dk
+D: Danish message catalog
+
+N: Nicolás Lichtmaier
+E: nick@debian.org
+D: us-latin1 keymap
+
+N: Alastair McKinstry
+E: amck@maths.tcd.ie
+D: I18n of the console tools
+D: ISO-8859-14 (latin8) data files and keysyms
+D: Reading glibc (wg15) charmaps as ACMs
+D: Misc patches
+
+N: Jiri Pavlovsky
+E: pavlovsk@ff.cuni.cz
+D: Czech message catalog
+S: Czech Republic ?
+
+N: Edmund Rano
+E: edmund@rano.demon.co.uk
+D: Kernel patch for UTF8 selection on the console
+
+N: H. Turgut Uyar
+E: uyar@cs.itu.edu.tr
+D: turkish keymap
+
+N: Stanislav V. Voronyi
+E: stas@esc.kharkov.com
+D: Console driver hacker
+D: Ukrainian fonts & maps
+
+N: Armin Wolfermann
+E: armin@wolfermann.org
+D: German message catalog
+
+N: Pavel Zaboj
+D: Some latin2 fonts
+
+----------
+End of the Linux Console CREDITS file.
