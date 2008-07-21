@@ -1,0 +1,37 @@
+#! /bin/sh
+
+echo >&2 'Warning: this is a shell wrapper; consider using consolechars(8)'
+
+usage ()
+{
+  echo >&2 "Usage: `basename $0` <mapfile> -o <oldmapfile>"
+  exit 1
+}
+
+if [ $# = 0 ]; then
+  usage
+fi
+
+while [ $# -gt 0 ] ; do
+  case $1 in
+    -o)
+      if [ "$OLDMAP" = "" ]; then
+        OLDMAP="--old-acm $2"
+        shift
+        shift
+      else
+        usage
+      fi
+      ;;
+    *)
+      if [ "$NEWMAP" = "" ]; then
+        NEWMAP="--acm $1"
+        shift
+      else
+        usage
+      fi
+      ;;
+  esac
+done
+
+consolechars $NEWMAP $OLDMAP
