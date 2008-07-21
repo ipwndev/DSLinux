@@ -3946,6 +3946,23 @@ CONFIG_USER_CPSCAN
 
 CONFIG_USER_TMSNC
   Console based MSN client
+
+CONFIG_USER_WARP
+  Realtime picture 'gooing' demo
+
+CONFIG_USER_CONSOLETOOLS_CONSOLETOOLS
+  Console Tools is a set of tools allowing a 
+  Linux user to set up the console's behaviour
+
+CONFIG_USER_CONSOLETOOLS_FONTFILETOOLS
+  A set of tools to modify PSF fonts
+
+CONFIG_USER_CONSOLETOOLS_SCREENFONTTOOLS
+  A set of tools for changing the font
+
+CONFIG_USER_CONSOLETOOLS_VTTOOLS
+  A set of tools for controlling VT's
+
 #
 # END of proprietary config help
 #

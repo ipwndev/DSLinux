@@ -23,4 +23,32 @@ clean:
 	rm -f .configured .compiled
 
 romfs:
-	$(ROMFSINST) src/screenfonttools/consolechars /usr/bin
+	
+	$(ROMFSINST) -e CONFIG_USER_CONSOLETOOLS_FONTFILETOOLS \
+			src/fontfiletools/psfaddtable /usr/bin
+	$(ROMFSINST) -e CONFIG_USER_CONSOLETOOLS_FONTFILETOOLS \
+			src/fontfiletools/psfgettable /usr/bin
+	$(ROMFSINST) -e CONFIG_USER_CONSOLETOOLS_FONTFILETOOLS \
+			src/fontfiletools/psfstriptable /usr/bin
+	$(ROMFSINST) -e CONFIG_USER_CONSOLETOOLS_SCREENFONTTOOLS \
+			src/screenfonttools/consolechars /usr/bin
+	$(ROMFSINST) -e CONFIG_USER_CONSOLETOOLS_SCREENFONTTOOLS \
+			src/screenfonttools/showcfont /usr/bin
+	$(ROMFSINST) -e CONFIG_USER_CONSOLETOOLS_VTTOOLS \
+			src/vttools/chvt /usr/bin
+	$(ROMFSINST) -e CONFIG_USER_CONSOLETOOLS_VTTOOLS \
+			src/vttools/deallocvt /usr/bin
+	$(ROMFSINST) -e CONFIG_USER_CONSOLETOOLS_VTTOOLS \
+			src/vttools/fgconsole /usr/bin
+	$(ROMFSINST) -e CONFIG_USER_CONSOLETOOLS_VTTOOLS \
+			src/vttools/openvt /usr/bin
+	$(ROMFSINST) -e CONFIG_USER_CONSOLETOOLS_VTTOOLS \
+			src/vttools/screendump /usr/bin
+	$(ROMFSINST) -e CONFIG_USER_CONSOLETOOLS_VTTOOLS \
+			src/vttools/setvesablank /usr/bin
+	$(ROMFSINST) -e CONFIG_USER_CONSOLETOOLS_VTTOOLS \
+			src/vttools/vcstime /usr/bin
+	$(ROMFSINST) -e CONFIG_USER_CONSOLETOOLS_VTTOOLS \
+			src/vttools/vt-is-UTF8 /usr/bin
+	$(ROMFSINST) -e CONFIG_USER_CONSOLETOOLS_VTTOOLS \
+			src/vttools/writevt /usr/bin
