@@ -1,0 +1,105 @@
+.TH SHOWKEY 1 "09 Oct 1997" "Console tools" "Linux User's Manual"
+
+.SH NAME
+showkey \- examine the scan codes and keycodes sent by the keyboard
+
+.SH SYNOPSIS
+.BI "showkey [ -[" hVskm "] | " --help " | " --version " | " --scancodes
+.BI "| " --keycodes " | " --keymap " ] [ " -t " N | " --timeout= "N ]"
+.IX "showkey command" "" "\fLshowkey\fR command"  
+
+.SH DESCRIPTION
+.PP
+.B showkey
+prints to standard output either the scan codes, the keycode, or the
+character of each key pressed/released. The program runs until 10 seconds (or
+the amount of time specified by the
+.I --timeout
+or 
+.I -t
+option) has elapsed since the last key press or release event, or until it
+receives a suitable signal, like SIGTERM, from another process.
+
+.B showkey
+has three modes of operation, scancode dumping, keycode dumping, and keymap
+testing, selected by a command line option (see below).
+
+.SH COMMANDS
+.TP
+.I \-h \-\-help
+.B showkey
+prints to the standard error output its version number, a short usage
+message, then exits.
+.TP
+.I \-V \-\-version
+.B showkey
+prints to the standard error output its version number, then exits.
+.TP
+.I \-s \-\-scancodes
+Starts
+.B showkey
+in scan code dump mode.
+
+In this mode,
+.B showkey
+prints in hexadecimal format each byte received from the keyboard to the
+standard output. A new line is printed when an interval of about 0.1 seconds
+occurs between the bytes received, or when the internal receive buffer fills
+up. This can be used to determine roughly, what byte sequences the keyboard
+sends at once on a given key press. The scan code dumping mode is primarily
+intended for debugging the keyboard driver or other low level interfaces. As
+such it shouldn't be of much interest to the regular end-user.
+.TP
+.I \-k \-\-keycodes
+Starts
+.B showkey
+in keycode dump mode. This is the default, when no command is specified is
+specified.
+
+In this mode,
+.B showkey
+prints to the standard output the keycode number or each key pressed or
+released. The kind of the event, press or release, is also reported.
+Keycodes are numbers assigned by the kernel to each individual physical
+key. Every key has always only one associated keycode number, whether
+the keyboard sends single or multiple scan codes when pressing it. Using
+.B showkey
+in this mode, you can find out what numbers to use in your personalized
+keymap files.
+.TP
+.I \-m \-\-keymap
+Starts
+.B showkey
+in keycode dump mode.
+
+In this mode,
+.B showkey
+displays the characters as they are translated by the kernel using the
+current keymap. It may be useful to writers of install programs, to allow the
+user to test a new keyboard before really installing it.
+
+.SH OPTIONS
+.TP
+.I \-t N  \-\-timeout=N
+This option changes the timeout (in seconds) from its default of 10s.
+
+.SH AUTHOR
+.B showkey
+was developped by Risto Kankkunen for kbd-0.81.
+.PP
+It was later extended by Yann Dirson <dirson@debian.org> to support the
+.I --keymap
+command and the
+.I --timeout
+option.
+
+.SH BUGS
+The
+.I --keymap
+mode should report action keys by displaying what action should be performed,
+instead of executing the action.
+
+.SH "SEE ALSO"
+.BR loadkeys (1),
+.BR dumpkeys (1),
+.BR keymaps (5).

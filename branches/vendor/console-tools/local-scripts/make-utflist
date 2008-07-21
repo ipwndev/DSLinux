@@ -1,0 +1,51 @@
+#! /usr/bin/perl
+# -*- perl -*-
+
+UNICODE: while (<STDIN>) 
+{
+#     ($code, $label, $categ, $comClass,
+#      $bidiClass, $decompos, $decDigit, $digit, 
+#      $numeric, $mirror, $oldName, $comment,
+#      $upper, $lower, $title) = split (/;/);
+
+    ($code, $label, $categ, undef,
+     undef, undef, undef, undef,
+     undef, undef, undef, $comment,
+     undef, undef, undef) = split (/;/);
+
+    # skip control chars
+    next UNICODE if (index ($categ, "C") == 0);
+    
+    # print UCS value
+    printf ("%s   ", $code);
+
+    # read as UCS2
+    $code = hex($code);
+    
+    # print as UTF8
+    if ($code < 0x80) {
+	printf ("%c", $code);
+    } elsif ($code < 0x800) {
+	printf ("%c", 0xC0 | ($code >> 6));
+	printf ("%c", 0x80 | ($code & 0x3F));
+    } else {
+	printf ("%c", 0xE0 | ($code >> 12));
+	printf ("%c", 0x80 | (($code >> 6) & 0x3F));
+	printf ("%c", 0x80 | ($code & 0x3F));
+    }
+
+    # label
+    printf ("   %s", $label);
+
+    # comment if any
+    if ($comment ne "") {
+	printf (" (%s)", $comment);
+    }
+
+    print "\n";
+
+#     # old name if any
+#     if ($oldName ne "") {
+# 	printf ("           [ %s ]\n", $oldName);
+#     }
+}

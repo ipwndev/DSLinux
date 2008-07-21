@@ -1,0 +1,30 @@
+.TH UNICODE_START 1 "28 Oct 1997" "Console tools" "Linux User's Manual"
+
+.SH NAME
+unicode_start \- put the console in Unicode mode.
+
+.SH SYNOPSIS
+.B unicode_start
+.BI [ " font " [ " screen-font-map " "] ]"
+
+.SH DESCRIPTION
+The
+.B unicode_start
+command puts both the screen and the keyboard in
+.IR "Unicode mode" ,
+and maybe load the given
+.I font
+and
+.IR "screen-font map" . 
+If no args are given, the current 
+.I font
+and
+.IR "screen-font map"
+will be used.
+
+.SH BUGS
+You might get into trouble if you don't have a screen-font map loaded.
+
+.SH "SEE ALSO"
+.BR unicode_stop (1),
+.BR consolechars (8).

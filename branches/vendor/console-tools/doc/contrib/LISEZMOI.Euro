@@ -1,0 +1,168 @@
+		     EURO PACK pour Linux, version 1.3
+		     *********************************
+	Copyright (c) 1998, Guylhem AZNAR <guylhem@oeil.qc.ca>, GPL
+
+
+0. CONTENU
+**********
+
+Vous trouverez ici :
+* fr-latin0.map : table de clavier Français-Latin0 pour linux-console
+* fr-latin0.xmod : table de clavier Français-Latin0 pour X11-xmodmap
+* fr-latin0 : table de clavier Français-Latin0 pour X11-xkb
+* other-latin0.map : table de clavier Latin0 générique pour linux-console
+* other-latin0.xmod : table de clavier Latin0 générique pour X11-xmodmap
+* des fichiers .psf : polices Latin0 pour linux-console
+* des fichiers .bdf : polices Latin0 pour X11
+* deux fichiers .gif pour expliquer visuellement les petites différences
+entre le latin0 & le latin1, compatibles à 99%
+
+1. COMMENT S'EN SERVIR
+**********************
+
+1.1 SOUS LINUX-CONSOLE
+**********************
+
+Taper par exemple pour lat0-16.psf (ou un autre psf) :
+
+		setfont ./lat0-16.psf
+
+Si vous avez un clavier AZERTY français :
+
+		loadkeys ./fr-latin0.map
+
+Sinon :
+
+		loadkeys ./other-latin0.map
+
+
+1.1.1 SPÉCIFIQUEMENT AU CLAVIER AZERTY FRANÇAIS
+***********************************************
+
+Ça y est, vous pouvez taper du texte latin0 sous linux en mode console !
+Seules 2 touches ont été modifiées : 
+
+ * carré : sert à oe liés & OE liés, en AltGr on trouve les guillemets qui
+sont normalement directement accessibles
+
+ * dollar / livre / symbole monnaitaire international : étant donné que
+nôtre monnaie principale est *L'EURO* et non le dollar, cette touche sert
+désormais à l'euro & aux cents.
+
+Le dollar & la livre, très utiles quand même, sont disponibles en AltGr.
+Le symbole monnaitaire international ayant disparu de la norme latin0, il
+n'est plus disponible.
+
+1.1.2 POUR LES AUTRES CLAVIERS
+******************************
+
+L'euro & les cents ont été rajoutés respectivement en AltGr (e) & en AltGr (c)
+La touche AltGr a donc été rajoutée ; pour utiliser ces fonctions avec
+toute table de clavier, il suffit de charger other-latin0.map après vôtre
+table nationale.
+
+1.1.3 DANS LES DEUX CAS
+***********************
+
+Home, End, Delete, Backspace ont été corrigés & les touches « windows » ont
+été correctement définies, pour passer d'une console virtuelle à l'autre.
+
+Des « composes », séquences à préfixer par la touche compose (SysReq) ont
+étés rajoutés, mais cela reste transparent pour l'utilisateur.
+
+Par exemple:
+ COMPOSE ^ (s,S,z,Z) sert à obtenir les lettres finlandaises rajoutées
+ COMPOSE " (y,Y) sert à obtenir les y trémas franço-néerlandais rajoutés
+ COMPOSE - (e,c,l,y) sert à obtenir l'euro, le cent, la livre, le yen
+
+1.2 SOUS X11
+************
+
+Sous root cette fois, taper par exemple pour Xlat0-10x20.pcf (ou un autre pcf) :
+
+		bdftopcf Xlat0-10x20.pcf > Xlat0-10x20-lat0.pcf
+		gzip Xlat0-10x20-lat0.pcf
+		mv Xlat0-10x20-lat0.pcf.gz /usr/X11R6/lib/X11/fonts/misc
+		mkfontdir /usr/X11R6/lib/X11/fonts/misc
+
+1.2.1 SPÉCIFIQUEMENT AU CLAVIER AZERTY FRANÇAIS
+***********************************************
+
+Pour utiliser xkb (solution recommandée) :
+
+		cp fr-latin0 /usr/X11R6/lib/X11/xkb/symbols
+
+Sinon, en utilisant xmodmap :
+
+		cp fr-latin0.xmod /usr/X11R6/lib/X11/xinit/Xmodmap
+		cp fr-latin0.xmod ~/.Xmodmap
+
+Puis éditer votre XF86Config pour y rajouter dans la section « Keyboard » :
+
+		XkbKeycodes     "xfree86"
+		XkbRules        "xfree86"
+		XkbTypes        "default"
+		XkbCompat       "default"
+		XkbSymbols      "fr-latin0(pc102)"
+		XkbGeometry     "pc(pc102)"
+		XkbModel        "pc102"
+
+1.2.2 POUR LES AUTRES CLAVIERS
+******************************
+
+La seule solution est d'utiliser xmodmap, avec xkb chargeant votre table de
+clavier nationale :
+
+		cp other-latin0.xmod /usr/X11R6/lib/X11/xinit/Xmodmap
+		cp other-latin0.xmod ~/.Xmodmap
+		cp other-latin0.xmod ~/.Xmodmap
+
+ou en faisant tout avec xmodmap, en supposant que vous ayez déjà un
+~/.Xmodmap qui fonctionne bien :
+
+		cat other-latin0.xmod >> /usr/X11R6/lib/X11/xinit/Xmodmap
+		cat other-latin0.xmod >> ~/.Xmodmap
+
+1.2.3 DANS LES DEUX CAS
+***********************
+
+De là, redémarrer X ou taper :
+
+		xset +fp /usr/X11R6/lib/X11/fonts/misc
+
+Si vous utilisez xmodmap, lancez :
+
+		xmodmap ~/.Xmodmap
+
+Pour choisir les polices latin0, lancer xfontsel et chercher les encodages
+iso8859-15.
+
+Plus simplement, taper :
+
+	grep Xlat0-10x20-lat0.pcf /usr/X11R6/lib/X11/fonts/misc/fonts*
+
+Puis utiliser le second paramètre comme nom de police, par exemple avec
+xiterm ou rxvt :
+
+	xiterm -fn -misc-fixed-medium-r-normal--20-200-75-75-c-100-iso8859-15
+
+2. RÉACTIONS
+************
+
+Je suis bien entendu intéressé par toutes vos réactions, positives ou
+négatives.
+
+Certaines modification peuvent vous sembler très importante (l'Euro
+remplaçant le dollar mis en AltGr, ou les oe liés à la place des
+guillemets) mais, hélas!, il n'y a guère de possibilitées pour rajouter
+tous les symboles européens sur nos claviers déjà normalisés.
+
+J'ai essayé de procéder avec la plus grande transparence possible, en
+privilégiant l'ergonomie de la majorité des utilisateurs, mais je suis
+pourtant conscient que AltGr Euro= dollar va par exemple beaucoup géner les
+programmeurs.
+
+Signalez-moi vos bugs & dites-moi si vous êtes satisfaits de mon travail !
+
+					Guylhem Aznar <guylhem@oeil.qc.ca>
+					ou <guylhem@barberouge.linux.lmm.com>

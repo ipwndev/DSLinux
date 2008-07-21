@@ -1,0 +1,354 @@
+
+		eXtended PC Font Format (xpsf) -- draft specifications
+		======================================================
+
+		     (C) 1997,98 Yann Dirson <dirson@debian.org>
+
+
+IMPORTANT NOTICE:
+
+  This document is a draft for a file-format.  Please do not use it
+yet to implement any software.  You may do what you want with it
+according to the GPL, version 2, except from redistributing a modified
+version with the same name without permission.
+
+
+0. Changes
+
+1998/08/10: replaced version-based compatibility mechanism with bitfields
+	as suggested by hpa.
+1998/08/10: reduced size of section-id from u16 to u8.
+1998/08/10: compressed syntax description by using type definitions inside
+	structure definitions.
+1998/08/10: added section for copyright and license.
+1998/08/10: fixed section-ids: obsolete xpsf_console_override_map was
+	still allocated.
+1998/08/10: mentionned VGA pseudo-9bit-wide characters.
+1998/08/10: proposed a 4-byte magic.
+1998/08/10: don't allow a glyph to have no UTF8 mapping.
+1998/08/10: use UTF8 instead of UCS2 to describe glyphs.
+1998/08/06: `=' in the description grammar was ambiguous - replaced one of
+	the 2 meanings with `:'.
+1998/08/06: changed how integer types are named.
+1998/08/06: added note that virtual fonts may not be necessary.
+1998/04/20: updated author's e-mail.
+1998/04/20: changed ref from libconsole to libcfont.
+1998/04/20: suggested more width for magic.
+1998/04/20: changed section name from xpsf_font_data to xpsf_fixed_font_data.
+1998/04/20: minor clarifications.
+1997/09/27: removed console-maps sections - I finally understand what they
+	are for.
+1997/09/04: initial draft release.
+	
+
+1. Summary
+
+ The future XPSF format is intended to be a replacement for all
+current font-file formats used with the console utilities ('kbd' and
+`console-tools').  For this, it should have all features from PSF,
+cpi, and cp file-formats, and more.
+
+ Among these:
+ 
+a * Should have a magic number for easy file-format identification.
+b * Should be easily extendable (esp. should feature file-format version nb),
+  while remaining as readable as possible for any program knowning of an old
+  version.  If however the file could be misinterpreted by a program not
+  knowing about the new features, there should be a mean to warn the program.
+b2* Similarly, backward compatibility has to be ensured, but the existence in
+  older version of the file-format of obsolete section-types should not force
+  a new program to support these obsolete sections.
+c * Multiple font-sizes (both in height and width) in one file.
+d * Unicode-Glyph map shared by all contained font-sizes.
+e * File-format should be machine-independant.
+f * Allow more than UCS2 for unimap (eg. UCS4).
+g * File format should be described by a sort of context-free grammar (ie. no
+  chained data).
+h * All sections of a file should tell their length, in order to skip them
+  easily.
+i * Font-size specific unicode-map overrides, for cases where eg. some
+  characters are (hopefully temporarily) not available at one size).
+j * Maybe provide virtual fonts support, to avoid character-description
+  duplication.  For example, building individual isoXX/codepages by mapping
+  them into a larger font with a custom encoding will save the storage place
+  needed by all those duplicated characters.  This one may not be necessary,
+  and may be dropped in the final spec.
+k * Provide enough info, whatever redundant, to allow just-sufficient
+  malloc's while reading.
+l * Make it possible to use VGA pseudo-9bit fonts.
+m * Copyright and redistribution info MUST be included.  Too many fonts are
+  available on the net without such information, and are thus legally unusable.
+
+ Functions to manipulate files in the XPSF format will be included in
+libcfont.  Tools to handle them and convert to/from XPSF will be provided
+with the console utilities. 
+
+ As soon as these draft specs seems sufficent, file-format version number
+will be incremented to 1, and implementation will start.
+
+
+2. Possible solutions.
+
+a * Suggest variation on PSF magic number (which is 0x36 0x04).  A 4-byte magic
+  will lower the risk of misinterpreting random data as XPSF.
+  0x36 0x05 0x84 0xBF seems unassigned.
+
+b * Extendability can be achieved through file sectionning, with identifiers
+  on sections telling their contents.  Upward readability can be achieved by
+  additionnaly providing the length of each header and associated data part
+  at the very start of each header; backward compatibility will also use
+  header length.
+
+    Features will be listed in this specification, classified in 2
+  groups: features whose lack cause incompatibility, and features whose
+  lack still allows read-only compatibility.  Each of them will be
+  allocated a bit in a fileheader bitfield (one bitfield for each
+  group).  Each file will have to declare, in its bitfields, which of
+  these features it uses.
+    When a reader does not support a feature in the second group (R/O
+  compatibility), it will know that it can read the file, at the expense
+  of not understanding all of the info in it (it should then not attempt
+  to modify the file), but will still correctly understand the infos it
+  could read.
+    When a reader does not support a feature in the first group, it
+  will know that even when attempting to read the stuff it thinks it
+  could understand, it would mis-interpret them because of the missing
+  feature.
+    Bitfields won't be included in the whole, but for each, the useful width
+  in bytes will be specified, followed by the declared number of least signifant
+  bytes of the field.  With only a byte to declare a length, that leaves 256*8
+  = 2048 possible bits, which should be more than we'll ever need.
+
+b2* Each section-type may become obsolete at any time; when it occurs it
+  should be documented in a special section of the XPSF specs, telling the
+  first version of the specs when the section was made obsolete.  Then any XPSF
+  file which declares to comply with a given file-format will not feature any
+  obsolete section-type.
+    Then the reading program will be allowed not to implement obsolete
+  features, but the mechanism described above will allow to detect old files
+  that should not be read.
+   
+c * Multiple font-sizes can be included as multiple sections of the
+  "font-data" type, which will include information on size (both height and
+  width, as some system may allow widths different from 8).
+
+d * Unicode mapping can be described in specific sections.  Each font_data
+  section will have references to the corresponding map in the file.  This
+  will even allow multiple maps in one file, FWIW.
+
+e * Machine-independance: use XDR for output ?  Study the problem of
+  header/data length then.  Or just use little-endian for numbers ?
+
+f * UCS2, as shown in the PSF format, causes some waste of space for
+  common encodings, mainly due to the fact that we need to use 0xFFFF as
+  a separator.  Using UTF8 to describe the mappings will allow to use
+  only 0xFF as a separator.  The ASCII set will give us a small benefit
+  too, being encoded in 1 byte instead of 2, and most widly-used chars
+  will stay on 2 bytes (latin, cyrillic, arabic, hebrew...), only more
+  exotic chars will take one more byte.  This will also make it possible
+  to use chars outside of the Basic Multilingal Plane (ie. UCS2).
+
+g * No problem.
+
+h * see `b'.
+
+i * Can be defined as a section refering to the map to be overriden, and
+  containing a list of override entries.
+
+j * A 1st step will be to provide virtual mapping into a single font
+  (possibly larger).  The virtual-font section will provide a reference to a
+  single font-file, and an array of size <font_size> of character-positions
+  telling for each fontpos in the virtual font, in which fontpos the
+  corresponding glyph should be found.  The virtual-font section should be
+  handled by programs as as-many font-data sections that the target font-file
+  contains, using the relevant font_height and font_width.
+    To save space and have some flexibility, the references to the target
+  characters will be allowed in several sizes ; the chosen size will be
+  specified in the section as the number of bits.  It is expected that this
+  size will be a power of 2 compatible with available computers (ie., in
+  1997: 8, 16, 32), but this is not enforced, and programs may make use of
+  other sizes, but then SHOULD NOT rely on third-party XPSF-aware programs to
+  be able to read them.
+    Should the need arise, as an XPSF-file can eventually contain several
+  fonts with different mappings, fields could be added in the virtual-font
+  to specify, if any, a mapping in the target file on which to restrict
+  target font-data sections (ie. only target sections with this encoding will
+  be seen by the virtual-font section).  But placing different mappings in the
+  same XPSF file is discouraged, unless you really have use of it; probably
+  override-maps should be sufficient for most usages.
+
+k * a "count" field has to be available before every variable-size array.
+
+l * these can be encoded as standard 9-bit fonts.  The reading
+  software will check for VGA-ification and take care of possibly
+  reordering the chars.
+
+m * a specific section type describe copyright and license.  It is the mandatory
+  first section in an XPSF file.  We distinguish the copyright string, such as
+  "(c) 1997,98 John Doe and others", and the license, such as "GPL" or a more
+  descriptive text.  These strings shall be UTF8-encoded to ensure they won't
+  be erroneously displayed using an incompatible charset.
+    Maybe it should be allowed for an OS or a software package to install a
+  separate text file describing the license.  In this case the `license' field in
+  the XPSF file should be an absolute path to this file (to be distinguished
+  by the leading `/' (slash) character), and reading software should normally
+  fail to read the font, with an explicit message.
+
+
+3. Draft specifications
+
+ The file format is described here in sort-of EBNF notation.
+Upper-case WORDS represent terminal symbols, ie. (mostly) C types;
+lower-case words represent non-terminal symbols, ie. symbols defined
+in terms of other symbols.
+ sym1 sym2	is sym1 followed by sym2
+ sym1 | sym2	is either sym1 or sym2
+ [sym]		is an optional symbol
+ {sym}		is a symbol that can be repeated 0 or more times
+ {sym}*N	is a symbol that must be repeated N times
+ Comments are introduced with a # sign.
+
+ The integer types are specified using their length expressed in decimal
+notation, prefixed with `u' for unsigned types, or `s' for signed types.
+Eg, `u16' denotes a "16-bit unsigned integer".
+
+#
+
+Allocated features whose lack cause incompatibility:
+
+       Bit	Feature
+       ----------------
+	0	Fixed bitmap font limited to size 256x256,
+		with UTF8 mapping.
+	1	UTF8 override map.
+
+
+Allocated features whose lack still allows read-only compatibility:
+
+       Bit	Feature
+       ----------------
+	[None]
+	
+#
+
+xpsf_file :
+		xpsf_header
+		xpsf_section		# id = xpsf_copyright
+		{xpsf_section}
+
+xpsf_header :
+		magic_id
+		format_version
+		header_length : u16
+		font_size
+		nb_sections : u16
+		features_incompat : large_bitfield
+		features_ro_compat : large_bitfield
+
+# magic number proposal:
+magic_id :
+		u8 = 0x36
+		u8 = 0x05
+		u8 = 0x84
+		u8 = 0xBF
+
+format_version :
+		u16 = 0		# first implementation will be 1
+
+font_size :
+		u32		# number of chars in font - enough for UCS4 ;)
+				# note that as data_length is a u32 too, not all
+				# 16M chars of such a font would fit in one section.
+				# A new file-format will probably be needed before that :)
+
+large_bitfield :
+		real_size_1: u8	# effective width in bytes, minus 1
+		{BIT}*<8*(real_size_1+1)>
+
+#
+
+xpsf_section :
+		xpsf_section_header
+		xpsf_section_data
+
+xpsf_section_header :
+		header_length = 8
+		data_length : u32
+		section_id : u8
+
+xpsf_section_data :
+		  xpsf_copyright		# id = 0x00
+		| xpsf_fixed_font_data		# id = 0x01
+		| xpsf_UTF8_map			# id = 0x02
+		| xpsf_UTF8_override_map	# id = 0x03
+(		| xpsf_virtual_font_data	# id = 0x04)
+
+
+# Copyright and distribution licence
+# Appeared in release: 1
+
+xpsf_copyright :
+		copyright : string
+		distribution_licence : string
+
+string :
+		string_length : u16
+		{UTF8}*<string_length>
+		
+# A font data of a particular size
+# Appeared in release: 1
+
+xpsf_fixed_font_data :
+		char_height : u8
+		char_width : u8
+		{{BIT}*<char_width>}*<char_height>
+		UTF8_map_ref : file_offset
+
+file_offset :
+		u32		
+
+
+# Unicode fontpos-to-UTF8 map
+# Appeared in release: 1
+
+xpsf_UTF8_map :
+		{ UTF8_array psf_separator }*<font_size>
+
+UTF8_array :
+		UTF8			# at least one.
+		{ UTF8 }		# any necessary number of times
+
+UTF8 :
+		u8			# at least 1 byte
+		{u8}
+
+psf_separator :
+		u8 = 0xFF
+
+# Unicode fontpos-to-UTF8 override-map
+# Appeared in release: 1
+
+xpsf_UTF8_override_map :
+		parent_map : file_offset
+		nb_entries : u16
+		fontpos_size
+		{ fontpos UTF8 {UTF8} psf_separator }*<nb_entries>
+
+fontpos_size :
+		u8			# typically 8, 16 or 32
+
+fontpos :
+		{BIT}*<fontpos_size>
+
+# Virtual-font
+# May not appear in release 1
+
+xpsf_virtual_font_data :
+		target_name_length : u16
+		target_name
+		fontpos_size
+		{ fontpos }*<font_size>
+
+target_name :
+		{u8}*<target_name_length - 1>
+		u8=0x00

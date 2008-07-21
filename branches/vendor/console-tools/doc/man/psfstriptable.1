@@ -1,0 +1,25 @@
+.TH PSFSTRIPTABLE 1 "28 Oct 1997" "Console tools" "Linux User's Manual"
+
+.SH NAME
+psfstriptable \- remove the embedded Unicode character table from a console font
+
+.SH SYNOPSIS
+.B psfstriptable
+.I fontfile [outfile]
+
+.SH DESCRIPTION
+.IX "psfstriptable command" "" "\fLpsfstriptable\fR command"  
+
+.B psfstriptable
+reads a .psf format console font from
+.IR fontfile ,
+or standard input if
+.I fontfile
+is a single dash (\-), which may have an embedded Unicode font table, and
+writes (to standard output or the specified file) a .psf format console font
+file without an embedded character table.
+
+.SH "SEE ALSO"
+.BR consolechars (8),
+.BR psfaddtable (1),
+.BR psfgettable (1).
