@@ -108,11 +108,17 @@ dns1=""
 dns2=""
 
 # If you want to start inetd on boot, say "YES" here
-# Don't forget to edit /etc/inetd.conf!
+# Don't forget to create /etc/inetd.conf!
+# To override the default options use:
+# inetd_config="/path/to/inetd.conf"
+# ssh_host_key="/path/to/ssh.key"
 start_inetd="NO"
 
 # To start openvpn on boot say "YES" here
 # Please read /etc/openvpn.conf.example
+# Check /var/log/openvpn.log for error messages
+# to override the default config file location use:
+# openvpn_config="/path/to/openvpn.conf"
 start_openvpn="NO"
 
 # If you want to see your DS firmware version on boot,
@@ -128,17 +134,24 @@ start_pixil="NO"
 
 # To start the boa webserver on boot, set this to "YES"
 # NOTE: The default website is /var/www
+# To override the default docroot, use:
+# boa_options="-d -c /var/www"
 start_boa="NO"
 
 # To start the inadyn DynDns.org client, set to "YES"
-# NOTE: Please edit /etc/inadyn.conf.example
-# and copy to /etc/inadyn.conf
+# Please read /etc/inadyn.conf.example
+# Check /var/log/inadyn.log for error messages
+# To override the default config file location use:
+# inadyn_config="/path/to/inadyn.conf"
 start_inadyn="NO"
 
 # To start the syslog daemon, set to "YES"
+# This will create logs in /var/log
 start_syslogd="NO"
 
 # To start the Enlightenment Sound Daemon, set to "YES"
+# To override default esd options use:
+# esd_options="-nobeeps -r 32768 -bind ipaddressofnds -tcp -promiscuous"
 start_esd="NO"
 
 # If you use a proxy server in your environment, specify it here
