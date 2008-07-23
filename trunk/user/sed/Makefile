@@ -20,4 +20,5 @@ clean:
 	rm -f .configured .compiled
 
 romfs:
+	arm-linux-elf-flthdr -s 8192 src/sed/sed
 	$(ROMFSINST) src/sed/sed /bin/sed
