@@ -3963,6 +3963,12 @@ CONFIG_USER_CONSOLETOOLS_SCREENFONTTOOLS
 CONFIG_USER_CONSOLETOOLS_VTTOOLS
   A set of tools for controlling VT's
 
+CONFIG_USER_DIFFUTILS_CMP
+  You can use the cmp command to show the offsets and line numbers where two files differ.
+
+CONFIG_USER_DIFFUTILS_DIFF
+  You can use the diff command to show differences between two files, 
+  or each corresponding file in two directories. 
 #
 # END of proprietary config help
 #
