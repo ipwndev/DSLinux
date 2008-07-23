@@ -4,55 +4,127 @@
 [ -e /etc/rc.conf ] && . /etc/rc.conf
 
 DAEMON=inetd
-INETD_CONF=/etc/inetd.conf
-SSH_HOST_KEY=/etc/dropbear_rsa_host_key
+default_inetd_config=/etc/inetd.conf
+default_ssh_host_key=/etc/dropbear_rsa_host_key
 
 case "$1" in
 	start)
-		echo "Starting $DAEMON"
-		
-		# Check for existence of config file
-		if [ ! -f $INETD_CONF ]
+		if [ ! -f "/var/run/$DAEMON.pid" ]
 		then
-			echo "$INETD_CONF not found!"
-			echo "Please read /etc/inetd.conf.example"
+			echo "Starting $DAEMON"
+			# Set defaults if none specified in /etc/rc.conf
+			if [ $inetd_config="" ]
+			then
+				echo "No inetd.conf specified in rc.conf, using default location"
+				INETD_CONF=$default_inetd_config
+			else
+				INETD_CONF=$inetd_config
+			fi
+
+			if [ $ssh_host_key="" ]
+			then
+				echo "No ssh hostkey specified in rc.conf, using default location"
+				SSH_HOST_KEY=$default_ssh_host_key
+			else
+				SSH_HOST_KEY=$ssh_host_key
+			fi
+
+			# Check for existence of config file
+			if [ ! -f $INETD_CONF ]
+			then
+				echo "$INETD_CONF not found!"
+				echo "Please read /etc/inetd.conf.example"
+				exit 1
+			fi
+	
+			# Check for existence of dropbear key
+			# Generate if not found and sshd enabled
+	
+			if grep ssh $INETD_CONF | grep -v "^#" >/dev/null \
+				&& [ ! -e $SSH_HOST_KEY ]
+			then
+				echo "You have enabled dropbear in $INETD_CONF"
+				echo "but there is no SSH host key yet."
+				/usr/bin/dropbearkey -t rsa -f $SSH_HOST_KEY
+			fi		
+			# Check for existence of samba password
+			# Generate if not found and smbd enabled
+
+			if grep netbios-ssn $INETD_CONF | grep -v "^#" >/dev/null \
+				&& [ ! -e /etc/smbpasswd ]
+			then
+				echo "Generating default smbpasswd"
+				echo "You are advised to change this with smbpasswd"
+				(echo uClinux ; echo uClinux) | /usr/bin/smbpasswd -a root -s
+			fi
+			# Start Daemon
+			$DAEMON $INETD_CONF &
+			# Don't need to create pid as inetd does this for us
+			# Check Daemon launched OK
+			if ps -fp$! > /dev/null 2>&1
+			then
+				echo "  >> OK"
+			else
+				echo "  ** FAILED"
+			fi
+		else
+			# Daemon already running, show status
+			$0 status
 			exit 1
 		fi
-
-		# Check for existence of dropbear key
-		# Generate if not found and sshd enabled
-
-		if grep ssh $INETD_CONF | grep -v "^#" >/dev/null \
-			&& [ ! -e $SSH_HOST_KEY ]
-		then
-			echo "You have enabled dropbear in $INETD_CONF"
-			echo "but there is no SSH host key yet."
-			/usr/bin/dropbearkey -t rsa -f $SSH_HOST_KEY
-		fi		
-		
-		# Check for existence of samba password
-		# Generate if not found and smbd enabled
-
-		if grep netbios-ssn $INETD_CONF | grep -v "^#" >/dev/null \
-			&& [ ! -e /etc/smbpasswd ]
-		then
-			echo "Generating default smbpasswd"
-			echo "You are advised to change this with smbpasswd"
-			(echo uClinux ; echo uClinux) | /usr/bin/smbpasswd -a root -s
-		fi
-		$DAEMON &
-	;;
+		;;
 	stop)
+		# Make sure we don't nuke this script 
+		# in the process of stopping daemon.
+		# killall will kill this script as well
+		# as it shares the same ps name
+		if [ ! -f "/var/run/$DAEMON.pid" ]
+                then                                   
+			# Daemon not running, show status
+                        $0 status
+			exit 1
+		fi
 		echo "Stopping $DAEMON"
-		kill -9 `pidof $DAEMON`
-	;;	
+		# kill daemon
+		kill `cat /var/run/$DAEMON.pid`
+		# Remove pid
+		rm /var/run/$DAEMON.pid
+		echo "  >> OK"
+		;;
 	restart)
-		$0 stop
-		$0 start
-	;;
-	*)
-		echo "Usage: $0 <start|stop|restart>"
-		exit 1
-	;;
-esac
+		# If daemon not running, start
+		# Otherwise start and stop daemon
+		# Ugly hack as ps id's change when using
+		# $0 start and $0 stop
 
+		if [ ! -f "/var/run/$DAEMON.pid" ]
+		then
+			echo "$DAEMON not running, starting"
+			exec /etc/rc.d/$DAEMON start
+		else
+			echo "Stopping $DAEMON"
+			# kill daemon
+			kill `cat /var/run/$DAEMON.pid`
+			# Remove pid
+			rm /var/run/$DAEMON.pid
+			echo "  >> OK"
+			exec /etc/rc.d/$DAEMON start
+		fi
+		;;
+
+	status)
+		
+		if [ ! -f "/var/run/$DAEMON.pid" ]
+		then
+			echo "$DAEMON is not running or pidfile does not exist"
+		else
+			DAEMONPID=`cat /var/run/$DAEMON.pid`
+			echo "$DAEMON is running with pid $DAEMONPID"
+		fi
+		;;
+	*)
+		echo "Usage: $0 <start|stop|restart|status>"
+		exit 1
+		;;
+esac
+# vim:ts=4:sw=4:ic:ai:nows:
