@@ -798,6 +798,7 @@ if [ "$CONFIG_USER_CLAMAV_CLAMAV" = "y" ]; then
 	define_bool CONFIG_LIB_PTHREAD y
 fi
 bool 'clock'			CONFIG_USER_CLOCK_CLOCK
+bool 'cmp'			CONFIG_USER_DIFFUTILS_CMP
 bool 'consoletools'		CONFIG_USER_CONSOLETOOLS_CONSOLETOOLS
 if [ "$CONFIG_USER_CONSOLETOOLS_CONSOLETOOLS" = "y" ]; then
 	bool 'fontfiletools'	CONFIG_USER_CONSOLETOOLS_FONTFILETOOLS
@@ -815,6 +816,7 @@ if [ "$CONFIG_USER_DICTIONARY" = "y" ]; then
 bool '   American'		CONFIG_USER_DICTIONARY_AMERICAN
 bool '   British'		CONFIG_USER_DICTIONARY_BRITISH
 fi
+bool 'diff'			CONFIG_USER_DIFFUTILS_DIFF
 bool 'de2ts-cal'		CONFIG_USER_DE2TSCAL_DE2TSCAL
 bool 'dlditool'			CONFIG_USER_DLDITOOL_DLDITOOL
 bool 'expat-examples'		CONFIG_USER_EXPAT_EXAMPLES
@@ -890,6 +892,10 @@ if [ "$CONFIG_USER_UNZIP_UNZIP" = "y" ]; then
 	bool '    funzip'		CONFIG_USER_UNZIP_FUNZIP
 fi
 bool 'unzoo'			CONFIG_USER_UNZOO_UNZOO
+bool 'warp'			CONFIG_USER_WARP
+if [ "$CONFIG_USER_WARP" = "y" ]; then
+       define_bool CONFIG_LIB_SDL y
+fi
 bool 'zmodem utils'		CONFIG_USER_LRZSZ_LRZSZ
 
 if [ "$CONFIG_USER_LRZSZ_LRZSZ" = "y" ]; then
