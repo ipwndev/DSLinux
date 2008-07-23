@@ -5,9 +5,8 @@ all: .compiled
 DIFFUTILS_CONFIGURE_FLAGS=--disable-largefile --disable-nls
 
 .configured:
-	cd src && ./configure --host=arm-linux-elf \
-		--includedir=$(ROOTDIR)/include \
-		--libdir=$(ROOTDIR)/lib \
+	cd src && env CFLAGS="$(CFLAGS)" \
+		./configure --host=arm-linux-elf \
 		--prefix=/nonexistent $(DIFFUTILS_CONFIGURE_FLAGS)
 	touch $@
 
