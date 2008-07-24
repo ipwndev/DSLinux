@@ -40,6 +40,19 @@ CONFIG_DEFAULTS_NINTENDO_DLDI
              use this unless you are doing low-level device
              support hacking.
 
+CONFIG_DEFAULTS_RELEASE_BUILD
+  Compile an official release of DSLinux.
+  If you're not Kineox, you don't want this option.
+
+  This option causes the revision number of the top-level directory
+  of your working copy to show up in the file /etc/revision.
+  This information is used by the automatic update script.
+
+  Before you enable this, make sure your working copy of DSLinux has
+  been uniformly updated to the same revision, i.e. your working
+  copy does not consist of mixed revisions. To achieve this, run
+  'svn update' in the top directory of your working copy before
+  enabling this option.
 
 Prompt to override the current config settings
 CONFIG_DEFAULTS_OVERRIDE

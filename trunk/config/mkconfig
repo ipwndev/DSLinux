@@ -80,6 +80,7 @@ do
 	oldv=$v
 done
 
+echo "bool 'Compile a release build'	CONFIG_DEFAULTS_RELEASE_BUILD"
 echo "endmenu"
 
 #############################################################################
