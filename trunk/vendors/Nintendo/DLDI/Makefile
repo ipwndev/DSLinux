@@ -99,6 +99,7 @@ romfs:
 	# copy the default DHCPD script
 	$(ROMFSINST) -p +x $(NDS_COMMON)/default.script /usr/share/udhcpc/default.script
 	# create version information
+	echo `svn info|grep Revision|sed s/Revision\:\ //` > $(ROMFSDIR)/etc/revision
 	echo "$(VERSIONSTR) -- " `date` > $(ROMFSDIR)/etc/version
 	# make sure that empty directories are not removed
 	for i in `find $(ROMFSDIR)/$(FATFS)/linux -type d -empty` ; do touch $$i/.keep; done
