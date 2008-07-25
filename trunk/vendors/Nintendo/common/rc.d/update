@@ -113,9 +113,7 @@ case "$ARG1" in
 		echo "Download complete"
 		;;
 	install)
-		# Check for update
-		$0 check
-		# Download
+		# Download (checks for update also)
 		$0 download
 		# Unpack
 		# Get DOWNLOADTO from file
