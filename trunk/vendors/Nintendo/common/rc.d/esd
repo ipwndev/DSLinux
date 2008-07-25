@@ -14,14 +14,14 @@ case "$1" in
 		
 		if [ ! -f "/var/run/$DAEMON.pid" ]
 		then
+			# Start Daemon
+			echo "Starting $DAEMON"
 			# Set default options if none set in rc.conf
 			if [ $esd_options="" ]
 			then
 				echo "No options set in rc.conf for $DAEMON, using defaults"
 				esd_options=$DEFAULTOPTS
 			fi
-			# Start Daemon
-			echo "Starting $DAEMON"
 			$DAEMON $esd_options &
 			# Get Daemon pid
 			# Strip script PID from pidof output
