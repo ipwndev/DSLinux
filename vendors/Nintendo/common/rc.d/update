@@ -130,7 +130,10 @@ case "$ARG1" in
 		echo "Unpacking complete"
 		echo "syncing disk"
 		sync
-		echo "Update complete! Please poweroff"
+		echo "Update complete!"
+		echo "If your firmware does not support Autopatching,"
+		echo "please patch /media/dslinux.nds before restarting"
+		echo "eg: dlditool /path/to/dldi /media/dslinux.nds
 		exit 0
 		;;
 	*)
