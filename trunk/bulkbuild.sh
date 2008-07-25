@@ -17,6 +17,13 @@ else
 	update_config="# CONFIG_DEFAULTS_VENDOR_UPDATE is not set"
 fi
 
+if [ "$1" = "-r" ]
+then
+	release_config="CONFIG_DEFAULTS_RELEASE_BUILD=y"
+else
+	release_config="# CONFIG_DEFAULTS_RELEASE_BUILD is not set"
+fi
+
 mktopconfig() {
 	cat > .config <<EOF
 CONFIG_DEFAULTS_NINTENDO=y
@@ -33,6 +40,7 @@ CONFIG_PRODUCT=$1
 CONFIG_LINUXDIR=linux-2.6.x
 CONFIG_LIBCDIR=uClibc
 CONFIG_LANGUAGE=
+$release_config
 EOF
 }
 
