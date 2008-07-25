@@ -34,7 +34,7 @@ case "$ARG1" in
 		set -- $line
 		if [ $2 -gt 4000 ]
 		then 
-			echo "$2 Kb of extra RAM detected"
+			echo "$2 KB of extra RAM detected"
 		else
 			echo "No extra RAM detected, exiting"
 			exit 1
