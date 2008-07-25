@@ -121,6 +121,18 @@ then
 		echo "Not starting esd: network is down"
 	fi
 fi
+
+# Check for update if specified
+if [ "$check_update" = "YES" ]
+then
+	if [ "$__network_up" = "YES" ]
+	then
+		echo "Checking for update"
+		/etc/rc.d/update check
+	else
+		echo "Not checking for update: network is down"
+	fi
+fi
 # set hostname
 hostname $hostname
 
