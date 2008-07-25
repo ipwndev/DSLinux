@@ -11,14 +11,14 @@ case "$1" in
 		
 		if [ ! -f "/var/run/$DAEMON.pid" ]
 		then
+			# Start Daemon
+			echo "Starting $DAEMON"
 			# Set default options if none set in rc.conf
 			if [ $boa_options="" ]
 			then
 				echo "No options set in rc.conf for $DAEMON, using defaults"
 				boa_options=$DEFAULTOPTS
 			fi
-			# Start Daemon
-			echo "Starting $DAEMON"
 			$DAEMON $boa_options &
 			# Get Daemon pid
 			# Strip script PID from pidof output
