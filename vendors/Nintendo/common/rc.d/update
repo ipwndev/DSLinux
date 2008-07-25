@@ -18,7 +18,7 @@
 # calculate disk space needed and disk free
 
 [ -e /etc/rc.defaults ] && . /etc/rc.defaults
-[ -e /etc/update.conf ] && . /etc/update.conf
+[ -e /etc/rc.conf ] && . /etc/rc.conf
 
 # Set default mirror to Kineox
 DEFAULTMIRROR="http://kineox.free.fr/DS/"
@@ -39,18 +39,32 @@ case "$ARG1" in
 			echo "No extra RAM detected, exiting"
 			exit 1
 		fi
-		# Remove temp file if found
+		# Remove previous temp file if found
 		if [ -f /tmp/update.mirror ]
 		then
 			rm /tmp/update.mirror
 		fi
-		if [ $MIRROR="" ]
+		if [ -z "$MIRROR" ]
 		then
 			echo "No mirror specified, defaulting to $DEFAULTMIRROR"
 			MIRROR=$DEFAULTMIRROR
 		fi
 		#Write $MIRROR to tmp file as export doesn't seem to work
 		echo $MIRROR > /tmp/update.mirror
+		# Clear out previous temp file if found
+		if [ -f /tmp/update.downloadto ]
+		then
+			rm /tmp/update.downloadto
+		fi
+		if [ -z "$DOWNLOADTO" ] 
+		then
+			echo "No download location specified, downloading to /media"
+			DOWNLOADTO="/media"
+		else	
+			echo "Downloading to $DOWNLOADTO"
+		fi
+		#Write $DOWNLOADTO to tmp file as export doesn't seem to work
+		echo $DOWNLOADTO > /tmp/update.downloadto
 		if [ ! -f /etc/revision ]
 		then
 			echo "No /etc/revision found!"
@@ -94,17 +108,14 @@ case "$ARG1" in
 			echo "Could not find /tmp/update.mirror"
 			exit 1
 		fi
-		# Clear out any previous temp file
+		# Get DOWNLOADTO from file
 		if [ -f /tmp/update.downloadto ]
 		then
-			rm /tmp/update.downloadto
+			DOWNLOADTO=`cat /tmp/update.downloadto`
+		else
+			echo "Could not find /tmp/update.downloadto"
+			exit 1
 		fi
-		if [ $DOWNLOADTO="" ]
-		then
-			echo "No download location specified, downloading to /media"
-			DOWNLOADTO="/media"
-		fi
-		echo $DOWNLOADTO > /tmp/update.downloadto
 		if [ -f $DOWNLOADTO/dslinux-dldi.tgz ]
 		then
 			echo "Previous download detected"
