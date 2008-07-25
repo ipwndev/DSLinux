@@ -164,4 +164,7 @@ export VIEWML_PROXY=""
 # font="/usr/share/consolefonts/alt-8x8.psf"
 font=""
 
+# To check for updates from Kineox on boot, change to "YES"
+check_update="NO"
+
 # End of file.
