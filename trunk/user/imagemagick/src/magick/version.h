@@ -46,7 +46,7 @@ extern "C" {
 #define MagickQuantumDepth  "Q?"
 #define MagickQuantumRange  "?"
 #endif
-#define MagickReleaseDate  "07/14/08"
+#define MagickReleaseDate  "07/28/08"
 #if !defined(MAGICKCORE_HDRI_SUPPORT)
 #define MagickHDRISupport ""
 #else
@@ -61,7 +61,7 @@ extern "C" {
 #define MagickVersion MagickPackageName " " MagickLibVersionText " " \
   MagickReleaseDate " " MagickQuantumDepth " " MagickSupport \
   "http://www.imagemagick.org"
-#define MagickHomeURL  "file:///usr/share/doc/ImageMagick-6.4.2/index.html"
+#define MagickHomeURL  "file:///nonexistent/share/doc/ImageMagick-6.4.2/index.html"
 
 extern MagickExport char
   *GetMagickHomeURL(void);
