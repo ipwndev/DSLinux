@@ -13,6 +13,7 @@ IMAGEMAGICK_CONFIGURE_FLAGS=  --disable-largefile \
 			--without-jbig --without-jp2 \
 			--without-lcms --without-openexr \
 			--without-tiff --without-perl \
+			--with-included-ltdl \
 			--without-x --with-jpeg --enable-embeddable
 .configured:
 	cd src && env CFLAGS="$(CFLAGS)"\
@@ -33,5 +34,6 @@ romfs:
 	@for i in $(BIN);\
 	do \
 		echo "installing $$i";\
+		arm-linux-elf-flthdr -s 8192 $(i)
 		$(ROMFSINST) src/utilities/$$i /usr/bin/;\
 	done
