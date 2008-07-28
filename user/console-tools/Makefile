@@ -9,7 +9,7 @@ CONSOLETOOLS_CONFIGURE_FLAGS=   --enable-static=yes --enable-shared=no \
 				--disable-keycode-progs
 
 .configured:
-	cd src && env LIBS="-lintl -liconv"\
+	cd src &&env LIBS="-lintl -liconv" CFLAGS="$(CFLAGS)"\
 		./configure --host=arm-linux-elf \
 		--prefix=/nonexistent $(CONSOLETOOLS_CONFIGURE_FLAGS)
 	touch $@
