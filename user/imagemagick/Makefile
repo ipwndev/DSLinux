@@ -34,6 +34,6 @@ romfs:
 	@for i in $(BIN);\
 	do \
 		echo "installing $$i";\
-		arm-linux-elf-flthdr -s 8192 $(i)
+		arm-linux-elf-flthdr -s 8192 src/utilities/$$i;\
 		$(ROMFSINST) src/utilities/$$i /usr/bin/;\
 	done

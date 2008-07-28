@@ -6,14 +6,10 @@
 /* config/config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Define if coders and filters are to be built as modules. */
-#ifndef MAGICKCORE_BUILD_MODULES 
-#define MAGICKCORE_BUILD_MODULES  1 
-#endif
+/* #undef BUILD_MODULES */
 
 /* Define if you have the bzip2 library */
-#ifndef MAGICKCORE_BZLIB_DELEGATE 
-#define MAGICKCORE_BZLIB_DELEGATE  1 
-#endif
+/* #undef BZLIB_DELEGATE */
 
 /* Define if you have CAIRO library */
 /* #undef CAIRO_DELEGATE */
@@ -22,11 +18,13 @@
 /* #undef CIPHER_SUPPORT */
 
 /* Define to 1 if the `closedir' function returns void instead of `int'. */
-/* #undef CLOSEDIR_VOID */
+#ifndef MAGICKCORE_CLOSEDIR_VOID 
+#define MAGICKCORE_CLOSEDIR_VOID  1 
+#endif
 
 /* Location of coder modules */
 #ifndef MAGICKCORE_CODER_PATH 
-#define MAGICKCORE_CODER_PATH  "/usr/lib/ImageMagick-6.4.2/modules-Q16/coders/" 
+#define MAGICKCORE_CODER_PATH  "/nonexistent/lib/ImageMagick-6.4.2/modules-Q16/coders/" 
 #endif
 
 /* Subdirectory of lib where coder modules are installed */
@@ -36,7 +34,7 @@
 
 /* Directory where architecture-dependent configuration files live. */
 #ifndef MAGICKCORE_CONFIGURE_PATH 
-#define MAGICKCORE_CONFIGURE_PATH  "/usr/lib/ImageMagick-6.4.2/config/" 
+#define MAGICKCORE_CONFIGURE_PATH  "/nonexistent/lib/ImageMagick-6.4.2/config/" 
 #endif
 
 /* Subdirectory of lib where architecture-dependent configuration files live.
@@ -50,7 +48,7 @@
 
 /* Directory where ImageMagick documents live. */
 #ifndef MAGICKCORE_DOCUMENTATION_PATH 
-#define MAGICKCORE_DOCUMENTATION_PATH  "/usr/share/doc/ImageMagick-6.4.2/" 
+#define MAGICKCORE_DOCUMENTATION_PATH  "/nonexistent/share/doc/ImageMagick-6.4.2/" 
 #endif
 
 /* Define if you have Display Postscript */
@@ -58,19 +56,21 @@
 
 /* Build self-contained, embeddable, zero-configuration ImageMagick
    (experimental) */
-/* #undef EMBEDDABLE_SUPPORT */
+#ifndef MAGICKCORE_EMBEDDABLE_SUPPORT 
+#define MAGICKCORE_EMBEDDABLE_SUPPORT  1 
+#endif
 
 /* exclude deprecated methods in MagickCore API */
 /* #undef EXCLUDE_DEPRECATED */
 
 /* Directory where executables are installed. */
 #ifndef MAGICKCORE_EXECUTABLE_PATH 
-#define MAGICKCORE_EXECUTABLE_PATH  "/usr/bin/" 
+#define MAGICKCORE_EXECUTABLE_PATH  "/nonexistent/bin/" 
 #endif
 
 /* Location of filter modules */
 #ifndef MAGICKCORE_FILTER_PATH 
-#define MAGICKCORE_FILTER_PATH  "/usr/lib/ImageMagick-6.4.2/modules-Q16/filters/" 
+#define MAGICKCORE_FILTER_PATH  "/nonexistent/lib/ImageMagick-6.4.2/modules-Q16/filters/" 
 #endif
 
 /* Subdirectory of lib where filter modules are installed */
@@ -79,67 +79,43 @@
 #endif
 
 /* Define if you have FONTCONFIG library */
-#ifndef MAGICKCORE_FONTCONFIG_DELEGATE 
-#define MAGICKCORE_FONTCONFIG_DELEGATE  1 
-#endif
+/* #undef FONTCONFIG_DELEGATE */
 
 /* Define if you have FlashPIX library */
 /* #undef FPX_DELEGATE */
 
 /* Define if you have FreeType (TrueType font) library */
-#ifndef MAGICKCORE_FREETYPE_DELEGATE 
-#define MAGICKCORE_FREETYPE_DELEGATE  1 
-#endif
+/* #undef FREETYPE_DELEGATE */
 
 /* Define if you have Ghostscript library or framework */
-#ifndef MAGICKCORE_GS_DELEGATE 
-#define MAGICKCORE_GS_DELEGATE  1 
-#endif
+/* #undef GS_DELEGATE */
 
 /* Define if you have GVC library */
-#ifndef MAGICKCORE_GVC_DELEGATE 
-#define MAGICKCORE_GVC_DELEGATE  1 
-#endif
+/* #undef GVC_DELEGATE */
 
 /* Define to 1 if you have the `argz_add' function. */
-#ifndef MAGICKCORE_HAVE_ARGZ_ADD 
-#define MAGICKCORE_HAVE_ARGZ_ADD  1 
-#endif
+/* #undef HAVE_ARGZ_ADD */
 
 /* Define to 1 if you have the `argz_append' function. */
-#ifndef MAGICKCORE_HAVE_ARGZ_APPEND 
-#define MAGICKCORE_HAVE_ARGZ_APPEND  1 
-#endif
+/* #undef HAVE_ARGZ_APPEND */
 
 /* Define to 1 if you have the `argz_count' function. */
-#ifndef MAGICKCORE_HAVE_ARGZ_COUNT 
-#define MAGICKCORE_HAVE_ARGZ_COUNT  1 
-#endif
+/* #undef HAVE_ARGZ_COUNT */
 
 /* Define to 1 if you have the `argz_create_sep' function. */
-#ifndef MAGICKCORE_HAVE_ARGZ_CREATE_SEP 
-#define MAGICKCORE_HAVE_ARGZ_CREATE_SEP  1 
-#endif
+/* #undef HAVE_ARGZ_CREATE_SEP */
 
 /* Define to 1 if you have the <argz.h> header file. */
-#ifndef MAGICKCORE_HAVE_ARGZ_H 
-#define MAGICKCORE_HAVE_ARGZ_H  1 
-#endif
+/* #undef HAVE_ARGZ_H */
 
 /* Define to 1 if you have the `argz_insert' function. */
-#ifndef MAGICKCORE_HAVE_ARGZ_INSERT 
-#define MAGICKCORE_HAVE_ARGZ_INSERT  1 
-#endif
+/* #undef HAVE_ARGZ_INSERT */
 
 /* Define to 1 if you have the `argz_next' function. */
-#ifndef MAGICKCORE_HAVE_ARGZ_NEXT 
-#define MAGICKCORE_HAVE_ARGZ_NEXT  1 
-#endif
+/* #undef HAVE_ARGZ_NEXT */
 
 /* Define to 1 if you have the `argz_stringify' function. */
-#ifndef MAGICKCORE_HAVE_ARGZ_STRINGIFY 
-#define MAGICKCORE_HAVE_ARGZ_STRINGIFY  1 
-#endif
+/* #undef HAVE_ARGZ_STRINGIFY */
 
 /* Define to 1 if you have the <arm/limits.h> header file. */
 /* #undef HAVE_ARM_LIMITS_H */
@@ -160,7 +136,9 @@
 #endif
 
 /* Define to 1 if you have the `clock_gettime' function. */
-/* #undef HAVE_CLOCK_GETTIME */
+#ifndef MAGICKCORE_HAVE_CLOCK_GETTIME 
+#define MAGICKCORE_HAVE_CLOCK_GETTIME  1 
+#endif
 
 /* Define to 1 if you have the `closedir' function. */
 #ifndef MAGICKCORE_HAVE_CLOSEDIR 
@@ -208,9 +186,7 @@
 /* #undef HAVE_DLD_H */
 
 /* Define to 1 if you have the `dlerror' function. */
-#ifndef MAGICKCORE_HAVE_DLERROR 
-#define MAGICKCORE_HAVE_DLERROR  1 
-#endif
+/* #undef HAVE_DLERROR */
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #ifndef MAGICKCORE_HAVE_DLFCN_H 
@@ -232,9 +208,7 @@
 #endif
 
 /* Define to 1 if the system has the type `error_t'. */
-#ifndef MAGICKCORE_HAVE_ERROR_T 
-#define MAGICKCORE_HAVE_ERROR_T  1 
-#endif
+/* #undef HAVE_ERROR_T */
 
 /* Define to 1 if you have the `execvp' function. */
 #ifndef MAGICKCORE_HAVE_EXECVP 
@@ -260,9 +234,7 @@
 #endif
 
 /* Define to 1 if you have the <ft2build.h> header file. */
-#ifndef MAGICKCORE_HAVE_FT2BUILD_H 
-#define MAGICKCORE_HAVE_FT2BUILD_H  1 
-#endif
+/* #undef HAVE_FT2BUILD_H */
 
 /* Define to 1 if you have the `ftime' function. */
 #ifndef MAGICKCORE_HAVE_FTIME 
@@ -308,22 +280,16 @@
 #endif
 
 /* Define if you have the <lcms.h> header file. */
-#ifndef MAGICKCORE_HAVE_LCMS_H 
-#define MAGICKCORE_HAVE_LCMS_H  1 
-#endif
+/* #undef HAVE_LCMS_H */
 
 /* Define if you have the <lcms/lcms.h> header file. */
 /* #undef HAVE_LCMS_LCMS_H */
 
 /* Define if you have the libdl library or equivalent. */
-#ifndef MAGICKCORE_HAVE_LIBDL 
-#define MAGICKCORE_HAVE_LIBDL  1 
-#endif
+/* #undef HAVE_LIBDL */
 
 /* Define if libdlloader will be built on this platform */
-#ifndef MAGICKCORE_HAVE_LIBDLLOADER 
-#define MAGICKCORE_HAVE_LIBDLLOADER  1 
-#endif
+/* #undef HAVE_LIBDLLOADER */
 
 /* Define to 1 if you have the `gcov' library (-lgcov). */
 /* #undef HAVE_LIBGCOV */
@@ -340,15 +306,11 @@
 
 /* Define to 1 if the type `long double' works and has more range or precision
    than `double'. */
-#ifndef MAGICKCORE_HAVE_LONG_DOUBLE 
-#define MAGICKCORE_HAVE_LONG_DOUBLE  1 
-#endif
+/* #undef HAVE_LONG_DOUBLE */
 
 /* Define to 1 if the type `long double' works and has more range or precision
    than `double'. */
-#ifndef MAGICKCORE_HAVE_LONG_DOUBLE_WIDER 
-#define MAGICKCORE_HAVE_LONG_DOUBLE_WIDER  1 
-#endif
+/* #undef HAVE_LONG_DOUBLE_WIDER */
 
 /* Define to 1 if you have the `lstat' function. */
 #ifndef MAGICKCORE_HAVE_LSTAT 
@@ -361,9 +323,7 @@
 #endif
 
 /* Define this if a modern libltdl is already installed */
-#ifndef MAGICKCORE_HAVE_LTDL 
-#define MAGICKCORE_HAVE_LTDL  1 
-#endif
+/* #undef HAVE_LTDL */
 
 /* Define to 1 if you have the <machine/param.h> header file. */
 /* #undef HAVE_MACHINE_PARAM_H */
@@ -387,14 +347,10 @@
 #endif
 
 /* Define to 1 if you have a working `mmap' system call. */
-#ifndef MAGICKCORE_HAVE_MMAP 
-#define MAGICKCORE_HAVE_MMAP  1 
-#endif
+/* #undef HAVE_MMAP */
 
 /* Define to 1 if you have a working `mmap' system call. */
-#ifndef MAGICKCORE_HAVE_MMAP_FILEIO 
-#define MAGICKCORE_HAVE_MMAP_FILEIO  1 
-#endif
+/* #undef HAVE_MMAP_FILEIO */
 
 /* Define to 1 if you have the `munmap' function. */
 #ifndef MAGICKCORE_HAVE_MUNMAP 
@@ -430,9 +386,7 @@
 #endif
 
 /* Define to 1 if you have the `posix_fallocate' function. */
-#ifndef MAGICKCORE_HAVE_POSIX_FALLOCATE 
-#define MAGICKCORE_HAVE_POSIX_FALLOCATE  1 
-#endif
+/* #undef HAVE_POSIX_FALLOCATE */
 
 /* Define to 1 if you have the `pow' function. */
 /* #undef HAVE_POW */
@@ -503,14 +457,10 @@
 #endif
 
 /* X11 server supports shape extension */
-#ifndef MAGICKCORE_HAVE_SHAPE 
-#define MAGICKCORE_HAVE_SHAPE  1 
-#endif
+/* #undef HAVE_SHAPE */
 
 /* X11 server supports shared memory extension */
-#ifndef MAGICKCORE_HAVE_SHARED_MEMORY 
-#define MAGICKCORE_HAVE_SHARED_MEMORY  1 
-#endif
+/* #undef HAVE_SHARED_MEMORY */
 
 /* Define if you have the shl_load function. */
 /* #undef HAVE_SHL_LOAD */
@@ -599,10 +549,14 @@
 #endif
 
 /* Define to 1 if you have the `strlcat' function. */
-/* #undef HAVE_STRLCAT */
+#ifndef MAGICKCORE_HAVE_STRLCAT 
+#define MAGICKCORE_HAVE_STRLCAT  1 
+#endif
 
 /* Define to 1 if you have the `strlcpy' function. */
-/* #undef HAVE_STRLCPY */
+#ifndef MAGICKCORE_HAVE_STRLCPY 
+#define MAGICKCORE_HAVE_STRLCPY  1 
+#endif
 
 /* Define to 1 if you have the `strncasecmp' function. */
 #ifndef MAGICKCORE_HAVE_STRNCASECMP 
@@ -714,44 +668,28 @@
 #endif
 
 /* Define to 1 if you have the <tiffconf.h> header file. */
-#ifndef MAGICKCORE_HAVE_TIFFCONF_H 
-#define MAGICKCORE_HAVE_TIFFCONF_H  1 
-#endif
+/* #undef HAVE_TIFFCONF_H */
 
 /* Define to 1 if you have the `TIFFGetConfiguredCODECs' function. */
-#ifndef MAGICKCORE_HAVE_TIFFGETCONFIGUREDCODECS 
-#define MAGICKCORE_HAVE_TIFFGETCONFIGUREDCODECS  1 
-#endif
+/* #undef HAVE_TIFFGETCONFIGUREDCODECS */
 
 /* Define to 1 if you have the `TIFFMergeFieldInfo' function. */
-#ifndef MAGICKCORE_HAVE_TIFFMERGEFIELDINFO 
-#define MAGICKCORE_HAVE_TIFFMERGEFIELDINFO  1 
-#endif
+/* #undef HAVE_TIFFMERGEFIELDINFO */
 
 /* Define to 1 if you have the `TIFFReadEXIFDirectory' function. */
-#ifndef MAGICKCORE_HAVE_TIFFREADEXIFDIRECTORY 
-#define MAGICKCORE_HAVE_TIFFREADEXIFDIRECTORY  1 
-#endif
+/* #undef HAVE_TIFFREADEXIFDIRECTORY */
 
 /* Define to 1 if you have the `TIFFSetErrorHandlerExt' function. */
-#ifndef MAGICKCORE_HAVE_TIFFSETERRORHANDLEREXT 
-#define MAGICKCORE_HAVE_TIFFSETERRORHANDLEREXT  1 
-#endif
+/* #undef HAVE_TIFFSETERRORHANDLEREXT */
 
 /* Define to 1 if you have the `TIFFSetTagExtender' function. */
-#ifndef MAGICKCORE_HAVE_TIFFSETTAGEXTENDER 
-#define MAGICKCORE_HAVE_TIFFSETTAGEXTENDER  1 
-#endif
+/* #undef HAVE_TIFFSETTAGEXTENDER */
 
 /* Define to 1 if you have the `TIFFSetWarningHandlerExt' function. */
-#ifndef MAGICKCORE_HAVE_TIFFSETWARNINGHANDLEREXT 
-#define MAGICKCORE_HAVE_TIFFSETWARNINGHANDLEREXT  1 
-#endif
+/* #undef HAVE_TIFFSETWARNINGHANDLEREXT */
 
 /* Define to 1 if you have the `TIFFSwabArrayOfTriples' function. */
-#ifndef MAGICKCORE_HAVE_TIFFSWABARRAYOFTRIPLES 
-#define MAGICKCORE_HAVE_TIFFSWABARRAYOFTRIPLES  1 
-#endif
+/* #undef HAVE_TIFFSWABARRAYOFTRIPLES */
 
 /* Define to 1 if you have the `times' function. */
 #ifndef MAGICKCORE_HAVE_TIMES 
@@ -789,9 +727,7 @@
 #endif
 
 /* This value is set to 1 to indicate that the system argz facility works */
-#ifndef MAGICKCORE_HAVE_WORKING_ARGZ 
-#define MAGICKCORE_HAVE_WORKING_ARGZ  1 
-#endif
+/* #undef HAVE_WORKING_ARGZ */
 
 /* Define to 1 if the system has the type `_Bool'. */
 #ifndef MAGICKCORE_HAVE__BOOL 
@@ -830,9 +766,7 @@
 /* #undef JBIG_DELEGATE */
 
 /* Define if you have JPEG version 2 "Jasper" library */
-#ifndef MAGICKCORE_JP2_DELEGATE 
-#define MAGICKCORE_JP2_DELEGATE  1 
-#endif
+/* #undef JP2_DELEGATE */
 
 /* Define if you have JPEG library */
 #ifndef MAGICKCORE_JPEG_DELEGATE 
@@ -840,13 +774,11 @@
 #endif
 
 /* Define if you have LCMS library */
-#ifndef MAGICKCORE_LCMS_DELEGATE 
-#define MAGICKCORE_LCMS_DELEGATE  1 
-#endif
+/* #undef LCMS_DELEGATE */
 
 /* Directory where architecture-dependent files live. */
 #ifndef MAGICKCORE_LIBRARY_PATH 
-#define MAGICKCORE_LIBRARY_PATH  "/usr/lib/ImageMagick-6.4.2/" 
+#define MAGICKCORE_LIBRARY_PATH  "/nonexistent/lib/ImageMagick-6.4.2/" 
 #endif
 
 /* Subdirectory of lib where ImageMagick architecture dependent files are
@@ -859,21 +791,19 @@
 /* #undef LQR_DELEGATE */
 
 /* Define if using libltdl to support dynamically loadable modules */
-#ifndef MAGICKCORE_LTDL_DELEGATE 
-#define MAGICKCORE_LTDL_DELEGATE  1 
-#endif
+/* #undef LTDL_DELEGATE */
 
 /* Define if the OS needs help to load dependent libraries for dlopen(). */
-/* #undef LTDL_DLOPEN_DEPLIBS */
+#ifndef MAGICKCORE_LTDL_DLOPEN_DEPLIBS 
+#define MAGICKCORE_LTDL_DLOPEN_DEPLIBS  1 
+#endif
 
 /* Define if dlopen(NULL) is able to resolve symbols from the main program. */
-#ifndef MAGICKCORE_LTDL_DLOPEN_SELF_WORKS 
-#define MAGICKCORE_LTDL_DLOPEN_SELF_WORKS  1 
-#endif
+/* #undef LTDL_DLOPEN_SELF_WORKS */
 
 /* Define to the system default library search path. */
 #ifndef MAGICKCORE_LT_DLSEARCH_PATH 
-#define MAGICKCORE_LT_DLSEARCH_PATH  "/lib:/usr/lib:/usr/lib/atlas:/usr/lib64/atlas:/usr/local/lib:/usr/lib/mysql:/usr/lib64/mysql:/usr/lib64/octave-3.0.1:/usr/lib64/qt-3.3/lib:/usr/lib64/tcl8.5:/usr/lib/xulrunner-1.9:/usr/lib64/xulrunner-1.9" 
+#define MAGICKCORE_LT_DLSEARCH_PATH  "/lib:/usr/lib" 
 #endif
 
 /* Define to the extension used for runtime loadable modules, say, ".so". */
@@ -883,9 +813,7 @@
 
 /* Define to the name of the environment variable that determines the run-time
    module search path. */
-#ifndef MAGICKCORE_LT_MODULE_PATH_VAR 
-#define MAGICKCORE_LT_MODULE_PATH_VAR  "LD_LIBRARY_PATH" 
-#endif
+/* #undef LT_MODULE_PATH_VAR */
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */
@@ -909,9 +837,7 @@
 /* #undef NO_MINUS_C_MINUS_O */
 
 /* Define if you have OPENEXR library */
-#ifndef MAGICKCORE_OPENEXR_DELEGATE 
-#define MAGICKCORE_OPENEXR_DELEGATE  1 
-#endif
+/* #undef OPENEXR_DELEGATE */
 
 /* Name of package */
 #ifndef MAGICKCORE_PACKAGE 
@@ -985,7 +911,7 @@
 
 /* Directory where architecture-independent configuration files live. */
 #ifndef MAGICKCORE_SHARE_CONFIGURE_PATH 
-#define MAGICKCORE_SHARE_CONFIGURE_PATH  "/usr/share/ImageMagick-6.4.2/config/" 
+#define MAGICKCORE_SHARE_CONFIGURE_PATH  "/nonexistent/share/ImageMagick-6.4.2/config/" 
 #endif
 
 /* Subdirectory of lib where architecture-independent configuration files
@@ -996,12 +922,12 @@
 
 /* Directory where architecture-independent files live. */
 #ifndef MAGICKCORE_SHARE_PATH 
-#define MAGICKCORE_SHARE_PATH  "/usr/share/ImageMagick-6.4.2/" 
+#define MAGICKCORE_SHARE_PATH  "/nonexistent/share/ImageMagick-6.4.2/" 
 #endif
 
 /* The size of `off_t', as computed by sizeof. */
 #ifndef MAGICKCORE_SIZEOF_OFF_T 
-#define MAGICKCORE_SIZEOF_OFF_T  8 
+#define MAGICKCORE_SIZEOF_OFF_T  4 
 #endif
 
 /* The size of `signed int', as computed by sizeof. */
@@ -1011,7 +937,7 @@
 
 /* The size of `signed long', as computed by sizeof. */
 #ifndef MAGICKCORE_SIZEOF_SIGNED_LONG 
-#define MAGICKCORE_SIZEOF_SIGNED_LONG  8 
+#define MAGICKCORE_SIZEOF_SIGNED_LONG  4 
 #endif
 
 /* The size of `signed long long', as computed by sizeof. */
@@ -1026,7 +952,7 @@
 
 /* The size of `size_t', as computed by sizeof. */
 #ifndef MAGICKCORE_SIZEOF_SIZE_T 
-#define MAGICKCORE_SIZEOF_SIZE_T  8 
+#define MAGICKCORE_SIZEOF_SIZE_T  4 
 #endif
 
 /* The size of `unsigned int', as computed by sizeof. */
@@ -1036,12 +962,12 @@
 
 /* The size of `unsigned int*', as computed by sizeof. */
 #ifndef MAGICKCORE_SIZEOF_UNSIGNED_INTP 
-#define MAGICKCORE_SIZEOF_UNSIGNED_INTP  8 
+#define MAGICKCORE_SIZEOF_UNSIGNED_INTP  4 
 #endif
 
 /* The size of `unsigned long', as computed by sizeof. */
 #ifndef MAGICKCORE_SIZEOF_UNSIGNED_LONG 
-#define MAGICKCORE_SIZEOF_UNSIGNED_LONG  8 
+#define MAGICKCORE_SIZEOF_UNSIGNED_LONG  4 
 #endif
 
 /* The size of `unsigned long long', as computed by sizeof. */
@@ -1063,9 +989,7 @@
 #endif
 
 /* Define if you have TIFF library */
-#ifndef MAGICKCORE_TIFF_DELEGATE 
-#define MAGICKCORE_TIFF_DELEGATE  1 
-#endif
+/* #undef TIFF_DELEGATE */
 
 /* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
 #ifndef MAGICKCORE_TIME_WITH_SYS_TIME 
@@ -1087,9 +1011,7 @@
 /* #undef WITH_DMALLOC */
 
 /* Define if you have wmflite library */
-#ifndef MAGICKCORE_WMFLITE_DELEGATE 
-#define MAGICKCORE_WMFLITE_DELEGATE  1 
-#endif
+/* #undef WMFLITE_DELEGATE */
 
 /* Define if you have wmf library */
 /* #undef WMF_DELEGATE */
@@ -1108,17 +1030,15 @@
 #endif
 
 /* Define if you have X11 library */
-#ifndef MAGICKCORE_X11_DELEGATE 
-#define MAGICKCORE_X11_DELEGATE  1 
-#endif
+/* #undef X11_DELEGATE */
 
 /* Define if you have XML library */
-#ifndef MAGICKCORE_XML_DELEGATE 
-#define MAGICKCORE_XML_DELEGATE  1 
-#endif
+/* #undef XML_DELEGATE */
 
 /* Define to 1 if the X Window System is missing or not being used. */
-/* #undef X_DISPLAY_MISSING */
+#ifndef MAGICKCORE_X_DISPLAY_MISSING 
+#define MAGICKCORE_X_DISPLAY_MISSING  1 
+#endif
 
 /* Define if you have zlib compression library */
 #ifndef MAGICKCORE_ZLIB_DELEGATE 
@@ -1126,9 +1046,7 @@
 #endif
 
 /* Number of bits in a file offset, on hosts where this is settable. */
-#ifndef MAGICKCORE__FILE_OFFSET_BITS 
-#define MAGICKCORE__FILE_OFFSET_BITS  64 
-#endif
+/* #undef _FILE_OFFSET_BITS */
 
 /* Define to 1 to make fseeko visible on some hosts (e.g. glibc 2.2). */
 /* #undef _LARGEFILE_SOURCE */
@@ -1174,7 +1092,9 @@
 
 
 /* Define so that glibc/gnulib argp.h does not typedef error_t. */
-/* #undef __error_t_defined */
+#ifndef MAGICKCORE___error_t_defined 
+#define MAGICKCORE___error_t_defined  1 
+#endif
 
 /* Define to appropriate substitue if compiler does not have __func__ */
 /* #undef __func__ */
@@ -1183,7 +1103,9 @@
 /* #undef const */
 
 /* Define to a type to use for `error_t' if it is not otherwise available. */
-/* #undef error_t */
+#ifndef _magickcore_error_t 
+#define _magickcore_error_t  int 
+#endif
 
 /* Define to `__inline__' or `__inline' if that's what the C compiler
    calls it, or to nothing if 'inline' is not supported under any name.  */
