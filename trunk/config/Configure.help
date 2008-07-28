@@ -3982,6 +3982,13 @@ CONFIG_USER_DIFFUTILS_CMP
 CONFIG_USER_DIFFUTILS_DIFF
   You can use the diff command to show differences between two files, 
   or each corresponding file in two directories. 
+
+CONFIG_USER_IMAGEMAGICK
+  ImageMagick is a software suite to create, edit, and compose bitmap 
+  images.  It can read, convert and write images in a variety of 
+  formats (over 100), translate, flip, mirror, rotate, scale, shear 
+  and transform images, adjust image colors, apply various special 
+  effects, or draw text, lines, polygons, ellipses and Bezier curves
 #
 # END of proprietary config help
 #
