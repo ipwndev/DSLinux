@@ -833,6 +833,7 @@ bool 'grep'			CONFIG_USER_GREP_GREP
 bool 'hd'			CONFIG_USER_HD_HD
 bool 'hexedit'			CONFIG_USER_HEXEDIT_HEXEDIT
 bool 'hnb'			CONFIG_USER_HNB
+bool 'ImageMagick'		CONFIG_USER_IMAGEMAGICK
 bool 'lcalc'			CONFIG_USER_LCALC_LCALC
 bool 'lcd'			CONFIG_USER_LCD_LCD
 bool 'ledcon'			CONFIG_USER_LEDCON_LEDCON
