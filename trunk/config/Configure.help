@@ -3989,6 +3989,10 @@ CONFIG_USER_IMAGEMAGICK
   formats (over 100), translate, flip, mirror, rotate, scale, shear 
   and transform images, adjust image colors, apply various special 
   effects, or draw text, lines, polygons, ellipses and Bezier curves
+
+CONFIG_USER_PV
+  Pipe Viewer is a terminal-based tool for monitoring the progress 
+  of data through a pipeline.
 #
 # END of proprietary config help
 #

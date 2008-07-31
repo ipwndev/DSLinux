@@ -267,6 +267,7 @@ dir_$(CONFIG_USER_PCMCIA_CS)                += pcmcia-cs
 dir_$(CONFIG_USER_PERL_PERL)                += perl
 dir_$(CONFIG_USER_PING_PING)                += ping
 dir_$(CONFIG_USER_PIXIL)		    += pixil
+dir_$(CONFIG_USER_PV)			    += pv
 dir_$(CONFIG_USER_PLAY_PLAY)                += play
 dir_$(CONFIG_USER_PLAY_TONE)                += play
 dir_$(CONFIG_USER_PLAYRT_PLAYRT)            += playrt
