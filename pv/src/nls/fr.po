@@ -1,0 +1,387 @@
+msgid ""
+msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-03-06 12:09+0000\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Date: 1999-06-01 15:18:29+0100\n"
+"From: Andrew Wood <ivarch@ubik>\n"
+"Xgettext-Options: --default-domain=pkgbuild --directory=./.pkgdir --add-"
+"comments --keyword=_ --keyword=N_\n"
+"Files: src/getopt/getopt.c src/getopt/getopt1.c src/version.c src/main/init."
+"c src/main/help.c src/main/xpmptr.c src/guts/load.c src/guts/stop.c src/guts/"
+"configure.c src/guts/make.c src/guts/install.c src/guts/prefs.c src/ui/"
+"generate.c src/ui/main.c src/ui/xpm.c src/ui/status.c src/ui/activate.c src/"
+"ui/handlers/main.c src/ui/handlers/package.c src/ui/handlers/prefs.c src/ui/"
+"handlers/dirsel.c src/ui/handlers/popup.c src/ui/handlers/help.c src/ui/"
+"textout.c src/ui/report.c src/ui/callback.c src/nls/intl/bindtextdom.c src/"
+"nls/intl/dcgettext.c src/nls/intl/dgettext.c src/nls/intl/finddomain.c src/"
+"nls/intl/gettext.c src/nls/intl/loadmsgcat.c src/nls/intl/localealias.c src/"
+"nls/intl/textdomain.c src/nls/intl-cat/cat-compat.c src/nls/intl-gett/intl-"
+"compat.c\n"
+
+#: src/pv/file.c:164
+msgid "failed to close file"
+msgstr "la fermeture du fichier a échoué"
+
+#: src/pv/file.c:183
+msgid "failed to read file"
+msgstr "la lecture du fichier a échoué"
+
+#: src/pv/file.c:192
+msgid "failed to stat file"
+msgstr "échec à statuer sur le fichier"
+
+#: src/pv/file.c:201
+msgid "failed to stat output file"
+msgstr "échec à statuer sur le fichier de sortie"
+
+#: src/pv/file.c:222
+msgid "input file is output file"
+msgstr "fichiers d'entré et de sortie sont les mêmes"
+
+#: src/pv/display.c:190
+#, fuzzy
+msgid "G"
+msgstr "GO"
+
+#: src/pv/display.c:193
+#, fuzzy
+msgid "M"
+msgstr "MO"
+
+#: src/pv/display.c:196
+#, fuzzy
+msgid "k"
+msgstr "kO"
+
+#: src/pv/display.c:204
+msgid "GB"
+msgstr "GO"
+
+#: src/pv/display.c:207
+msgid "MB"
+msgstr "MO"
+
+#: src/pv/display.c:210
+msgid "kB"
+msgstr "kO"
+
+#: src/pv/display.c:212
+msgid "B"
+msgstr "O"
+
+#: src/pv/display.c:244
+#, fuzzy
+msgid "G/s"
+msgstr "GO/s"
+
+#: src/pv/display.c:247
+#, fuzzy
+msgid "M/s"
+msgstr "MO/s"
+
+#: src/pv/display.c:250
+#, fuzzy
+msgid "k/s"
+msgstr "kO/s"
+
+#: src/pv/display.c:252
+#, fuzzy
+msgid "/s "
+msgstr "O/s "
+
+#: src/pv/display.c:257
+msgid "GB/s"
+msgstr "GO/s"
+
+#: src/pv/display.c:260
+msgid "MB/s"
+msgstr "MO/s"
+
+#: src/pv/display.c:263
+msgid "kB/s"
+msgstr "kO/s"
+
+#: src/pv/display.c:265
+msgid "B/s "
+msgstr "O/s "
+
+#: src/pv/display.c:292
+msgid "ETA"
+msgstr "ETA"
+
+#: src/pv/cursor.c:233 src/pv/cursor.c:249 src/pv/cursor.c:310
+msgid "failed to open terminal"
+msgstr "l'ouverture du terminal a échoué"
+
+#: src/pv/cursor.c:241
+#, fuzzy
+msgid "failed to lock terminal"
+msgstr "l'ouverture du terminal a échoué"
+
+#: src/pv/transfer.c:87
+msgid "buffer allocation failed"
+msgstr "l'allocation de mémoire tampon a échoué"
+
+#: src/pv/transfer.c:148
+msgid "select call failed"
+msgstr "appel de sélection a échoué"
+
+#: src/pv/transfer.c:172
+msgid "read failed"
+msgstr "la lecture a échoué"
+
+#: src/pv/transfer.c:231
+msgid "write failed"
+msgstr "l'écriture a échoué"
+
+#: src/main/help.c:31
+#, fuzzy
+msgid "show progress bar"
+msgstr "affiche la barre de progression"
+
+#: src/main/help.c:33
+#, fuzzy
+msgid "show elapsed time"
+msgstr "affiche le temps écoulé"
+
+#: src/main/help.c:35
+#, fuzzy
+msgid "show estimated time of arrival (completion)"
+msgstr "affiche l'heure approximative de l'achèvement de la tâche"
+
+#: src/main/help.c:37
+#, fuzzy
+msgid "show data transfer rate counter"
+msgstr "affiche le taux de tranfert des données"
+
+#: src/main/help.c:39
+#, fuzzy
+msgid "show number of bytes transferred"
+msgstr "affiche le nombre d'octets transférés"
+
+#: src/main/help.c:41
+#, fuzzy
+msgid "output even if standard error is not a terminal"
+msgstr "imprime vers la sortie d'erreur même si ce n'est pas un terminal"
+
+#: src/main/help.c:43
+#, fuzzy
+msgid "output percentages, not visual information"
+msgstr "imprime en pourcentage, pas les informations visuelles"
+
+#: src/main/help.c:45
+#, fuzzy
+msgid "do not output any transfer information at all"
+msgstr "n'afficher aucune information de transfert"
+
+#: src/main/help.c:47
+#, fuzzy
+msgid "use cursor positioning escape sequences"
+msgstr "utiliser les séquences d'échappements de positionnement de curseur"
+
+#: src/main/help.c:49
+#, fuzzy
+msgid "display nothing until first byte transferred"
+msgstr "ne rien afficher avant qu'au moins un octet soit tranféré"
+
+#: src/main/help.c:50
+msgid "SIZE"
+msgstr "TAILLE"
+
+#: src/main/help.c:51
+#, fuzzy
+msgid "set estimated data size to SIZE bytes"
+msgstr "ajuste la taille estimée des données à TAILLE octets"
+
+#: src/main/help.c:53
+msgid "count lines instead of bytes"
+msgstr ""
+
+#: src/main/help.c:54
+msgid "SEC"
+msgstr ""
+
+#: src/main/help.c:55
+#, fuzzy
+msgid "update every SEC seconds"
+msgstr "mise-à-jour toute les SEC secondes"
+
+#: src/main/help.c:56
+msgid "WIDTH"
+msgstr "LARGEUR"
+
+#: src/main/help.c:57
+#, fuzzy
+msgid "assume terminal is WIDTH characters wide"
+msgstr "présumer la largeur du terminal à LARGEUR caractères"
+
+#: src/main/help.c:58
+msgid "HEIGHT"
+msgstr ""
+
+#: src/main/help.c:59
+#, fuzzy
+msgid "assume terminal is HEIGHT rows high"
+msgstr "présumer la largeur du terminal à LARGEUR caractères"
+
+#: src/main/help.c:60
+msgid "NAME"
+msgstr "NOM"
+
+#: src/main/help.c:61
+#, fuzzy
+msgid "prefix visual information with NAME"
+msgstr "préfixer les informations visuelles avec NOM"
+
+#: src/main/help.c:63
+msgid "RATE"
+msgstr "TAUX"
+
+#: src/main/help.c:64
+#, fuzzy
+msgid "limit transfer to RATE bytes per second"
+msgstr "limite le taux de transfer à TAUX octets par seconde"
+
+#: src/main/help.c:65
+msgid "BYTES"
+msgstr ""
+
+#: src/main/help.c:66
+msgid "use a buffer size of BYTES"
+msgstr ""
+
+#: src/main/help.c:67
+msgid "PID"
+msgstr ""
+
+#: src/main/help.c:68
+msgid "update settings of process PID"
+msgstr ""
+
+#: src/main/help.c:71
+#, fuzzy
+msgid "show this help and exit"
+msgstr "afficher cette aide puis quitter"
+
+#: src/main/help.c:73
+#, fuzzy
+msgid "show version information and exit"
+msgstr "afficher la version puis quitter"
+
+#: src/main/help.c:79
+#, c-format
+msgid "Usage: %s [OPTION] [FILE]..."
+msgstr "Utilisation : %s [OPTIONS] [FICHIER]..."
+
+#: src/main/help.c:83
+msgid ""
+"Concatenate FILE(s), or standard input, to standard output,\n"
+"with monitoring."
+msgstr ""
+"Concatène FICHIER(s), ou l'entrée standard, sur la sortie standard\n"
+"avec monitorage."
+
+#: src/main/help.c:158
+#, c-format
+msgid "Please report any bugs to %s."
+msgstr "SVP rapporter touts bogues à %s."
+
+#. RATS: ignore
+#: src/main/options.c:84
+#, c-format
+msgid "%s: option structure allocation failed (%s)"
+msgstr "%s: l'allocation pour la structure d'une option a echoué (%s)"
+
+#: src/main/options.c:97
+#, c-format
+msgid "%s: option structure argv allocation failed (%s)"
+msgstr "%s: l'allocation pour la structure de l'option argv a echoué (%s)"
+
+#: src/main/options.c:131
+msgid "integer argument expected"
+msgstr ""
+
+#: src/main/options.c:139
+msgid "numeric argument expected"
+msgstr ""
+
+#. RATS: ignore (OK)
+#: src/main/options.c:229
+#, c-format
+msgid "Try `%s --help' for more information."
+msgstr "Essayez `%s --help' pour plus d'information."
+
+#. RATS: ignore (OK)
+#: src/main/options.c:233
+#, fuzzy, c-format
+msgid "Try `%s -h' for more information."
+msgstr "Essayez `%s -h' pour plus d'information."
+
+#: src/main/version.c:19
+#, c-format
+msgid "%s %s - Copyright(C) %s %s"
+msgstr "%s %s - Copyright(C) %s %s"
+
+#: src/main/version.c:22
+#, c-format
+msgid "Web site: %s"
+msgstr "Site Web: %s"
+
+#: src/main/version.c:26
+#, fuzzy
+msgid ""
+"This program is free software, and is being distributed under the\n"
+"terms of the Artistic License 2.0."
+msgstr ""
+"Ce programme est un logiciel libre et est distribué sous les termes\n"
+"anglophone de la Licence Artistique (Artistic License)."
+
+#: src/main/version.c:31
+msgid ""
+"This program is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+msgstr ""
+"Ce programme est distribué dans l'espoir qu'il sera utile, mais\n"
+"SANS GARANTIE AUCUNE; ni même de garantie sous-entendu que le\n"
+"programme soit COMMERCIALISABLE ou APPLICABLE À UNE TÂCHE\n"
+"PARTICULIÈRE."
+
+#~ msgid "For more information, please run `%s --license'."
+#~ msgstr "Pour plus d'information, exécutez `%s --license'."
+
+#, fuzzy
+#~ msgid "For more information, please run `%s -l'."
+#~ msgstr "Pour plus d'information, exécutez `%s -l'."
+
+#, fuzzy
+#~ msgid "show the license this program is distributed under"
+#~ msgstr "affiche la license sous laquelle ce programme est distribué"
+
+#~ msgid "%s %s - Copyright (C) %s %s"
+#~ msgstr "%s %s - Copyright (C) %s %s"
+
+#~ msgid ""
+#~ "This program is Open Source software, and is being distributed under the\n"
+#~ "terms of the Artistic License."
+#~ msgstr ""
+#~ "Ce programme est un logiciel libre et est distribué sous les termes de\n"
+#~ "la version anglophone de la Licence Artistique (Artistic License)"
+
+#~ msgid ""
+#~ "If that scrolled by too quickly, you may want to pipe it to a\n"
+#~ "pager such as `more' or `less', eg `%s --license | more'."
+#~ msgstr ""
+#~ "Si le texte à défilé trop rapidement, vous voudrez peut-être\n"
+#~ "rediriger l'impression vers une visionneuse comme `more' ou `less',\n"
+#~ "i.e. `%s --license | more'."
+
+#, fuzzy
+#~ msgid ""
+#~ "If that scrolled by too quickly, you may want to pipe it to a\n"
+#~ "pager such as `more' or `less', eg `%s -l | more'."
+#~ msgstr ""
+#~ "Si le texte à défilé trop rapidement, vous voudrez peut-être\n"
+#~ "rediriger l'impression vers une visionneuse comme `more' ou `less',\n"
+#~ "i.e. `%s -l | more'."
