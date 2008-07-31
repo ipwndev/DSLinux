@@ -1,0 +1,8 @@
+Things still to do:
+
+  - fix cursor positioning (-c) lockfiles when O_EXLOCK is unavailable
+  - fix cursor positioning (-c) to use semaphores instead of locking
+  - if the first pv exits, should the second become IPC leader?
+  - get more translations
+
+Any assistance would be appreciated.

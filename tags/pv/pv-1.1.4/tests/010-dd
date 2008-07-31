@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# Check that dd doesn't cause a SIGPIPE and doesn't drop data.
+
+#COUNT1=`cat /dev/zero | dd bs=100000 count=1000 2>/dev/null | wc -c`
+# NB cat gets it wrong sometimes too!
+COUNT1=100000000
+COUNT2=`$PROG -B 100000 -q /dev/zero | dd bs=100000 count=1000 2>/dev/null | wc -c`
+
+#echo "[$COUNT1] [$COUNT2]"
+
+test "x$COUNT1" = "x$COUNT2"
+
+# EOF
