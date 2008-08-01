@@ -3993,6 +3993,18 @@ CONFIG_USER_IMAGEMAGICK
 CONFIG_USER_PV
   Pipe Viewer is a terminal-based tool for monitoring the progress 
   of data through a pipeline.
+
+CONFIG_USER_RAWREC_RAWREC
+  rawrec and rawplay are GPL'd utilities designed to provide the 
+  user with a simple way of recording or playing raw audio data 
+  from or to their sound card
+
+CONFIG_USER_RAWREC_RAWPLAY
+  rawrec and rawplay are GPL'd utilities designed to provide the 
+  user with a simple way of recording or playing raw audio data 
+  from or to their sound card
+
+#
 #
 # END of proprietary config help
 #
