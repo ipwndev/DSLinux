@@ -1,0 +1,29 @@
+
+This is a late beta release, though it seems to work correctly for me.
+
+To install:
+
+1. Change directory to the src directory:
+ 
+     cd src
+
+2. As root, make the executables:
+
+     make
+
+3. The man page currently resides in the docs/user directory.  To view
+   it before installing it, make sure you are in that directory and do
+    
+     man ./rawrec.1
+
+4. If you want to install rawrec/rawplay in a standard location, edit
+   the Makefile and set EXE_DIR and MAN_DIR as desired (defaults are
+   /usr/local/bin and /usr/local/man/man1 respectively).  These
+   directories will be created if they don't already exist when you
+   do:
+
+     make install
+
+   to install the binary and documentation.  Of course, EXE_DIR must
+   be in your path and MAN_DIR in your man path for you to be able to
+   run the executable and view the documentation in the normal way.
