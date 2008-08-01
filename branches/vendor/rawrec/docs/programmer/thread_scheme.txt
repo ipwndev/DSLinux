@@ -1,0 +1,68 @@
+
+rawrec/rawplay uses a fairly simple thread scheme to maximize audio
+quality and dependibility, but its potentially quite confusing if you
+have to try to figure out what's going on from the source, hence this
+external description.
+
+The record and play operations are largely symmetric, and what
+asymmetry is present is due primarily to the limitations imposed by
+working with standard input and output.
+
+The main thread is the boss thread and manages two workers who do all
+the actual work (just like rl).
+
+One worker is responsible for moving data between the audio device
+(kernel audio buffer) and the application ring buffer, and the other
+for moving data between the application ring buffer and the file
+system.  These thread functions are called move_au and move_fd,
+respectively.  If possible, move_au runs at maximum priority, in order
+to avoid any glitches between buffer segment read() or write()s.
+move_fd runs at (maximum priority - 1).  
+
+When playing, the move_fd thread must fill the ring buffer segments
+with data before that data can be sent to the audio device by move_au,
+so move_fd starts first (using condition variable startup_next_cv) and
+locks the first buffer segment, then signals move_au that it can start
+(by incrementing the value associated with startup_next_cv to two).
+Thereafter, when move_fd is finished filling a buffer segment, it
+first locks the next segment (wrapping back to the beginning of the
+ring if the current segment is the last), then releases the last
+segment, so that move_au can start using it).  move_au uses the same
+system of locking the next buffer it needs before releasing the buffer
+it has just finished with.
+
+It is important that the first thread to start is not allowed to race
+all the way around the ring buffer and grab the first segment again
+before the second thread has a chance to get started.  The wrap_ready
+cv and flag protect this possibility by allowing the second thread to
+signal the first when it is ok for the first to wrap around.
+
+When recording, things work exactly the same way, except move_au
+starts first (grabs the first segment) before signaling move_fd that
+it can start).
+
+This scheme ensures that: a. the right thread gets started on the
+first buffer when the threads are launched, b. neither thread can ever
+pass the other.
+
+When playing data from standard input, there is always a chance that
+there will not be a full segment's worth of data ready in the pipeline
+for playing, so move_fd (which in this case is moveing data between
+the standard input file descriptor and the ring buffer) records the
+amount of data read for each segment, so that move_au doesn't play
+random junk or old audio data left over from the last time around the
+ring buffer.  If move_au sees too many empty segments in a row ("too
+many" is currently a magic constant), it gives up and the program
+terminates with a diagnostic).  Note that move_fd will already know
+about the empty segments, but it doesn't terminate execution, since
+move_fd may well be far ahead of move_au and there is no point in
+quiting while there is still a lot of good data to be played.
+
+When recording to standard output, the output pipe may break.  If this
+happens, move_fd terminates execution with a diagnostic.
+
+There is currently some additional magic used to make signal handling
+sort of work, but this code is hopefully temporary pending full
+LinuxThreads signal handling correctness and doesn't really bear
+describing.
+
