@@ -9,11 +9,15 @@ ELFIMAGE := $(IMAGEDIR)/image.elf
 FATFS	 := media
 OPTDIR	 := opt
 
-ROMFS_DIRS := boot dev proc sbin $(FATFS)/linux $(OPTDIR) tmp 
+ROMFS_DIRS := boot dev dev/input proc sbin $(FATFS)/linux $(OPTDIR) tmp 
 
 FS_DIRS := etc/rc.d home lib usr/bin usr/bin/coreutils usr/games usr/lib usr/share/udhcpc var/lock var/tmp var/run var/log var/mail var/www usr/share/man usr/share/consolefonts
 
 TTYP_DEVICES = 0 1 2 3 4 5 6 7 8 9 a b c d e f
+
+INPUT_DEVICES := \
+		js0,c,13,0 	js1,c,13,1 	mouse0,c,13,32	mouse1,c,13,33 \
+		mice,c,13,63	event0,c,13,64	event1,c,13,65
 
 DEVICES := \
 	tty,c,5,0      console,c,5,1      cua0,c,5,64      cua1,c,5,65  \
@@ -61,9 +65,15 @@ romfs:
 	for i in $(ROMFS_DIRS); do \
 		[ -d $(ROMFSDIR)/$$i ] || mkdir -p $(ROMFSDIR)/$$i; \
 	done
+	
 	# create device nodes
 	for i in $(DEVICES); do \
 		touch $(ROMFSDIR)/dev/@$$i; \
+	done
+	
+	# create input device nodes
+	for i in $(INPUT_DEVICES); do \
+		touch $(ROMFSDIR)/dev/input/@$$i; \
 	done
 	# these permissions are needed for openpty and family to work
 	# on non-ptmx ptys
