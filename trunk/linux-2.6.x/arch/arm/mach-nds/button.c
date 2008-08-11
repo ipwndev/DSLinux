@@ -62,7 +62,8 @@ static void ndsbutton_xkeys(u32 state)
 	{
 		input_report_key(&ndsbutton_dev, ndsbuttons2[i], !((state >> i) & 1));
 	}
-        input_sync(&ndsbutton_dev);
+       input_report_switch(&ndsbutton_dev, SW_0, ((state >> 7 )&1)); 
+       input_sync(&ndsbutton_dev);
 }
 
 static struct fifo_cb ndsbutton_fifocb = {
@@ -81,7 +82,8 @@ static int __init ndsbutton_init(void)
 
 	*(volatile u16*) 0x04000004 |= 1 << 3 ;
 
-        ndsbutton_dev.evbit[0] = BIT(EV_KEY) | BIT(EV_REP) ;
+        ndsbutton_dev.evbit[0] = BIT(EV_KEY) | BIT(EV_REP) | BIT(EV_SW);
+	ndsbutton_dev.swbit[0] = BIT(SW_0);
 	for ( i = 0 ; i < (sizeof(ndsbuttons)/sizeof(ndsbuttons[0])) ; i++ )
 		ndsbutton_dev.keybit[LONG(ndsbuttons[i])] |= BIT(ndsbuttons[i]);
 	for ( i = 0 ; i < (sizeof(ndsbuttons2)/sizeof(ndsbuttons2[0])) ; i++ )
