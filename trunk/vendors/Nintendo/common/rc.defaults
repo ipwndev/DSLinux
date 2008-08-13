@@ -167,4 +167,7 @@ font=""
 # To check for updates from Kineox on boot, change to "YES"
 check_update="NO"
 
+# To start the hinged daemon, change to "YES"
+start_hinged="NO"
+
 # End of file.

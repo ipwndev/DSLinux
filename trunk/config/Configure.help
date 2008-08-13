@@ -4004,6 +4004,12 @@ CONFIG_USER_RAWREC_RAWPLAY
   user with a simple way of recording or playing raw audio data 
   from or to their sound card
 
+CONFIG_USER_HINGED_HINGED
+  Simple daemon to handle the Nintendo DS hinge
+
+CONFIG_USER_HINGED_EXAMPLE
+  Example of how to use hinged
+
 #
 #
 # END of proprietary config help
