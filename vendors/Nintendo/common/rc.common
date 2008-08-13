@@ -46,6 +46,13 @@ then
 		echo "Not starting syslogd"
 fi
 
+if [ "$start_hinged" = "YES" ]
+then
+		/etc/rc.d/hinged start
+	else
+		echo "Not starting hinged"
+fi
+
 # setup networking
 if [ "$enable_network_on_boot" = "YES" ]
 then

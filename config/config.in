@@ -832,6 +832,10 @@ bool 'gdbserver (old)'		CONFIG_USER_GDBSERVER_GDBSERVER
 bool 'grep'			CONFIG_USER_GREP_GREP
 bool 'hd'			CONFIG_USER_HD_HD
 bool 'hexedit'			CONFIG_USER_HEXEDIT_HEXEDIT
+bool 'hinged'			CONFIG_USER_HINGED_HINGED
+if [ "$CONFIG_USER_HINGED_HINGED" = "y" ]; then
+	bool 'hinged example'	CONFIG_USER_HINGED_EXAMPLE
+fi
 bool 'hnb'			CONFIG_USER_HNB
 bool 'ImageMagick'		CONFIG_USER_IMAGEMAGICK
 bool 'lcalc'			CONFIG_USER_LCALC_LCALC
