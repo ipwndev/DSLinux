@@ -77,7 +77,7 @@ extern char _buf_dldi[];
 static int dldi_major = 240;
 
 /* We don't know how big the medium is. So we take some big number, */
-static unsigned int nsectors   = (3*1024*1024*2);	/* 3 GBytes */
+static unsigned int nsectors   = (8*1024*1024*2);	/* 8 GBytes */
 
 /*
  * The internal representation of our device.
