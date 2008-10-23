@@ -36,7 +36,7 @@ DEVICES := \
 	ptyp8,c,2,8    ptyp9,c,2,9        ptypa,c,2,10     ptypb,c,2,11 \
 	ptypc,c,2,12   ptypd,c,2,13       ptype,c,2,14     ptypf,c,2,15 \
 	\
-	dsp,c,14,3\
+	dsp,c,14,3     mixer,c,14,0 \
 	\
 	fb0,c,29,0\
 	fb1,c,29,1\
