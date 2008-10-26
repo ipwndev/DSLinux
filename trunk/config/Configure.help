@@ -4010,6 +4010,10 @@ CONFIG_USER_HINGED_HINGED
 CONFIG_USER_HINGED_EXAMPLE
   Example of how to use hinged
 
+CONFIG_USER_REPLIMENU
+  replimenu is a small menu program mainly for boot-diskettes. 
+  It's not as powerful as "dialog" but it's small and does the job 
+  
 #
 #
 # END of proprietary config help
