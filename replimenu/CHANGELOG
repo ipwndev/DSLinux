@@ -1,0 +1,78 @@
+$Id: CHANGELOG,v 1.6 2004/01/06 04:09:26 shadow Exp $
+
+replimenu change log
+
+0.9: Flicker-fix and new feature
+        * On close consoles (e.g. VESA framebuffer) the menu would flicker
+          whenever moving up/down the menu. This has now been fixed (with a
+          dirty hack, hell, entire replimenu is getting one big dirty hack).
+
+        * Inputboxes, msgboxes and yesnoboxes can now have a multi-line message
+          (icaption) in them. Separate the string in "icaption" with "\n" (see
+          example.menu) to break lines. Unfortunately, lines don't wrap (yet).
+
+0.8.1: Multiline string constants removed
+	* Removed multiline string constants to support GCC 3.3.
+
+0.8: BUG FIXES
+	* Imported replimenu into SENTINIX CVS.
+        * `labels' that are too long for screen are now simply truncated.
+	* Fixed an infinite loop bug.
+        * Added checks before giving an unsigned int a signed value (a bug that
+          created some weird output if screen was too small).
+        * My xterm crashes if window width is 2 or less when running replimenu.
+          It's probably not a replimenu bug, but rather a bug in xterm.
+
+0.7: GENERAL FIXES
+        * Reproduced some features found in a patch for replimenu 0.3
+          contributed by Paul Whittaker, made for his DIET-PC project
+          (http://diet-pc.sf.net).
+        * Spacebar has the same effect as return on checkboxes and
+          radiobuttons.
+        * Yet a new type: defaultfromenv. The `defaultfromenv' type initializes
+          an item's `default' variable (if `default' is empty in the menufile)
+          by taking the value from the RM_name environment variable (name is
+          the value of the `name' variable).
+        * Fixed help `-h' TTY problem: The isatty() check is now after the
+          getopt() stuff, it's now possible to run "replimenu -h | less".
+
+0.6: NEW FEATURES
+        * Five new types: hidden, password, chain, auto and msgbox.
+        * One new variable: exitafterauto.
+        * New command line options: -g, -a and -e.
+        * `notempty' characteristics changed.
+        * One bug that caused segfaults has been found and resolved.
+
+0.5: Caption for input boxes and PREFIX installation support.
+        * Added support for an alternative caption for input boxes and yesno
+          types using the new `icaption' menu structure member.
+        * You may now type "make PREFIX=/usr_or_whatever install" to easily
+          install replimenu somewhere else than under /usr/local.
+
+0.4: `dummy' items both first and last.
+	* You may now use `dummy' items (`br') both first and last, something
+	  which was previously un-supported.
+
+0.3: QUIT commands, exit code proxy, getopt, cosmetics and new variable.
+	* Made the Makefile target `dist' available.
+	* Added a question mark after the text on `ask' type dialog boxes.
+	* Added the global variable `nocls' to be able to prevent replimenu
+	  from clearing the screen when exiting.
+	* Made it possible to execute a command in a `QUIT' menu item.
+	* Added proxy of exit codes from the `runonexit' command and any menu
+	  items named `QUIT'. replimenu will now exit with the command's exit
+	  code.
+	* Added the `runonexitfirst', `runonexitlast', `usecommandretval' and
+	  `nocls' structure types for use with `QUIT' menu items.
+	* Replaced the old option parser with getopt, which increased size. :(
+	* One "cosmetic" change in the `dummy'-type.
+	* Added the "br" single-line variable which is an alias for a `dummy'
+	  menu item structure.
+
+0.2: MORE FEATURES AND BUG FIXES.
+	* Added a "radiobutton" menu item type.
+	* Added a "checkbox" menu item type.
+	* Changed the characteristics of the "dummy" type.
+	* Various bug fixes.
+
+0.1: INITIAL RELEASE.
