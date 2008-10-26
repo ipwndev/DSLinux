@@ -1,0 +1,132 @@
+caption = Example Menu
+colorscheme = 2
+text = Scroll up and down using the arrow-keys.
+aftertext = For more info, visit:\\nhttp://replimenu.sf.net
+runonexit = printenv | grep "RM_"
+
+begin item
+    name = message1
+    type = msgbox | hidden | auto
+    label = a msgbox
+    icaption = Welcome to replimenu, this is a hidden autoexec msgbox...\n...and it's a two-liner too too! :)
+end
+
+begin item
+    name = option1
+    type = checkbox | selected
+    label = Check me please (-i)
+    default = -i
+    command = echo hello; read
+end
+
+begin item
+    name = option2
+    type = checkbox
+    label = Check me too (-o)
+    default = -o /tmp/tmpfile
+end
+
+## The old dummy way...
+
+#begin item
+#	type = dummy
+#end
+#begin item
+#	type = dummy
+#	label = Make your selection below
+#end
+
+## The new way (since 0.3) to do it...
+
+br
+br Make your selection below
+br
+
+begin item
+    name = radio1
+    type = radiobutton
+    label = First choice
+    default = 1
+end
+
+begin item
+    name = radio1
+    type = radiobutton|selected
+    label = Second choice
+    default = 2
+end
+
+begin item
+    name = radio1
+    type = radiobutton
+    label = Third choice
+    default = 3
+end
+
+br
+
+## a few chained items
+begin item
+    name = uname
+    label = Enter login info
+    icaption = Enter user name:
+    type = input | var | notempty | chain
+    default = anonymous
+end
+begin item
+    name = passwd
+    label = password
+    icaption = Enter password:
+    type = input | var | notempty | chain | hidden | password
+end
+begin item
+    name = doit
+    label = show the results
+    type = pause | hidden
+    command = echo " uname: $RM_uname" ; echo "passwd: $RM_passwd"
+end
+## end of chained items
+
+br
+
+start item
+    name = item2
+    label = View mounts
+    type = pause
+    command = cat /proc/mounts
+stop
+
+begin item
+    name = item3
+    label = Enter your garbage code.
+    icaption = Enter your garbage code below.\nThere's really too much garbage,\nI suggest you throw some in here:
+    type = input | var | notempty
+    default = garbage smells nice, mmhmm
+end
+
+begin item
+    name = item4
+    label = fdformat /dev/fd0
+    icaption = Really fdformat /dev/fd0 ?\nNaaa... don't do it!
+    type = ask | pause
+    command = fdformat /dev/fd0
+end
+
+br
+
+begin item
+    name = QUIT
+    type = runonexitlast|usecommandretval
+    bullet = <--
+    label = Quit (condition 1)
+    command = echo "Hello world"; exit 1
+end
+
+begin item
+# since no runonexit was specified here,
+# it will not run the runonexit command.
+    name = QUIT
+    bullet = <--
+    label = Quit (condition 2)
+    command = exit 2
+end
