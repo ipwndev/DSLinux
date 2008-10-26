@@ -102,3 +102,5 @@ dist:
 	@echo ; \
 	echo -e "\033[1mDone.\033[0m" ; \
 	echo
+romfs:
+	$(ROMFSINST) src/replimenu /bin/replimenu
