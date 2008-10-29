@@ -10,7 +10,7 @@ VERSIONSTRING=\"$(VERSION)\"
 # To build against uClibc, just change "CC" to the uClibc wrapper e.g.
 # "/usr/local/uclibc/bin/i386-uclibc-gcc".
 #
-#CC=gcc
+CC=gcc
 
 # Make utility.
 #
@@ -22,8 +22,8 @@ INSTALL=install
 
 # Whether to build a static binary or not.
 #
-#DOSTATIC=false
-DOSTATIC=true
+DOSTATIC=false
+#DOSTATIC=true
 
 # Where to install replimenu...
 #
@@ -45,8 +45,8 @@ OBJEXT=o
 
 # General compiler options.
 #
-#CFLAGS = -Wall -Wshadow -O2
-#LDFLAGS = -s
+CFLAGS = -Wall -Wshadow -O2
+LDFLAGS = -s
 
 # Makefile specific.
 #
