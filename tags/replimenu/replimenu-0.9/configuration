@@ -1,0 +1,60 @@
+#
+# Makefile include for 'replimenu'.
+# Copyright (C) 2003 Michel Blomgren, michel (at) sentinix.org.
+#
+
+VERSION=0.9
+VERSIONSTRING=\"$(VERSION)\"
+
+# Define your C compiler to use.
+# To build against uClibc, just change "CC" to the uClibc wrapper e.g.
+# "/usr/local/uclibc/bin/i386-uclibc-gcc".
+#
+CC=gcc
+
+# Make utility.
+#
+MAKE=make
+
+# Installer.
+#
+INSTALL=install
+
+# Whether to build a static binary or not.
+#
+DOSTATIC=false
+#DOSTATIC=true
+
+# Where to install replimenu...
+#
+PREFIX=/usr/local
+BINDIR=$(PREFIX)/bin
+MANDIR=$(PREFIX)/man
+
+#
+# Under usual conditions, anything below should not need to be tampered with.
+#
+
+# File name of executable.
+#
+EXECNAME = replimenu
+
+# Extension for object files.
+#
+OBJEXT=o
+
+# General compiler options.
+#
+CFLAGS = -Wall -Wshadow -O2
+LDFLAGS = -s
+
+# Makefile specific.
+#
+DIRS=src
+
+# Apply static flag to LDFLAGS?
+ifeq ($(strip $(DOSTATIC)),true)
+	LDFLAGS += -static
+endif
+
+DISTFILES=CHANGELOG INSTALL README COPYING configuration Makefile example.menu src/Makefile src/functions.h src/parser.c src/readkey.c src/replimenu.c src/replimenu.h man/replimenu.1 mkreadme
