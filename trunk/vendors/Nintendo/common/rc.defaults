@@ -159,7 +159,7 @@ start_esd="NO"
 export VIEWML_PROXY=""
 
 # Edit to change the font size automatically on boot
-# Only works on DLDI builds
+# CURRENTLY NOT WORKING
 # For example: 
 # font="/usr/share/consolefonts/alt-8x8.psf"
 font=""
