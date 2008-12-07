@@ -823,6 +823,11 @@ bool 'expat-examples'		CONFIG_USER_EXPAT_EXAMPLES
 if [ "$CONFIG_USER_EXPAT_EXAMPLES" = "y" ]; then
 	define_bool CONFIG_LIB_EXPAT y
 fi
+bool 'fbview'			CONFIG_USER_FBVIEW
+if [ "$CONFIG_USER_FBVIEW" = "y" ]; then
+	define_bool CONFIG_LIB_PNG y
+	define_bool CONFIG_LIB_ZLIB y
+fi
 bool 'frob-led'			CONFIG_USER_FROB_LED_FROB_LED
 bool 'frotz'			CONFIG_USER_FROTZ_FROTZ
 bool 'gdbreplay'		CONFIG_USER_GDB_GDBREPLAY

@@ -119,6 +119,7 @@ dir_$(CONFIG_USER_ETHTOOL_ETHTOOL)          += ethtool
 dir_$(CONFIG_USER_EXPAT_EXAMPLES)           += expat-examples
 dir_$(CONFIG_USER_EZIPUPDATE_EZIPUPDATE)    += ez-ipupdate
 dir_$(CONFIG_USER_FAKEIDENTD_IDENTD)        += fakeidentd
+dir_$(CONFIG_USER_FBVIEW)    	 	    += fbview
 dir_$(CONFIG_USER_FDISK_FDISK)              += fdisk
 dir_$(CONFIG_USER_FDISK_SFDISK)             += fdisk
 dir_$(CONFIG_USER_FILEUTILS_CAT)            += fileutils
