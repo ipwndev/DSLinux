@@ -1,0 +1,624 @@
+                                 replimenu
+                            A small menu-system.
+
+For a full-featured, high-lighted documentation, see the man page
+replimenu(1). This file was generated with the command:
+"groff -mandoc -Tascii man/replimenu.1 | col -bx".
+
+
+replimenu(1)                replimenu                replimenu(1)
+
+
+
+NAME
+       replimenu - A small menu-system.
+
+VERSION
+       0.9
+
+SYNOPSIS
+       replimenu -h|-V
+       replimenu  -f  menufile [-c colorscheme] [-q] [-g WxH] [-a
+       item_names...] [-e i]
+
+DESCRIPTION
+       replimenu  is  a  small  GNU  GPL'ed  menu-system   mainly
+       intended   for  use  in  shell  installation/configuration
+       scripts, escpecially  in  an  environment  where  size  is
+       important,  e.g.  embedded systems.  replimenu doesn't use
+       (n)curses, something that results in small size  and  less
+       hazzle.
+
+CHANGES IN VERSION 0.9
+       On  slow  consoles  (e.g. VESA framebuffer) the menu would
+       flicker whenever moving up/down the  menu,  this  has  now
+       been  fixed  (with a dirty hack). I have also added a fea-
+       ture: inputboxes, msgboxes and yesnoboxes can now  have  a
+       multi-line  message  in them. Separate the string in icap-
+       tion with a \n to break lines. Unfortunately, lines  don't
+       wrap.
+
+CHANGES IN VERSION 0.8 (0.8.1)
+       Bug fixes.
+
+CHANGES IN VERSION 0.7
+       Incorporated  some features found in a patch for replimenu
+       0.3 contributed by Paul Whittaker, made  for  his  DIET-PC
+       project  (http://diet-pc.sf.net/).   The features include:
+       Spacebar has the same effect as return on  checkboxes  and
+       radiobuttons. Added one new type, defaultfromenv.
+
+CHANGES IN VERSION 0.6
+       Five  new  types; hidden, password, chain, auto and msgbox
+       -- and one new variable; exitafterauto.  The  characteris-
+       tics  of  the  notempty type has been changed, it will now
+       keep show the inputbox until the user has entered  a  non-
+       empty string. Also, three new command line options; -g, -a
+       and -e. One bug that caused segfaults has also been  found
+       and resolved.
+
+CHANGES IN VERSION 0.5
+       You  may  specify  a  custom  caption (using icaption) for
+       input boxes and yesno (ask) types instead of the label  of
+       the menu item.
+
+CHANGES IN VERSION 0.4
+       You  may now use `dummy' items both first and last (previ-
+       ously un-supported).
+
+CHANGES IN VERSION 0.3
+       Since 0.3 you have the ability to play  with  exit  codes.
+       The  return  code from the runonexit variable is passed to
+       the exit code of replimenu. You  may  also  execute  other
+       `runonexit'  commands  by  defining a command variable for
+       menu items named `QUIT'. The exit code of  these  commands
+       are also passed to replimenu. Yet another feature is to be
+       able to execute the runonexit command before or after  the
+       command  in  a  `QUIT' item, including choosing which exit
+       code to use. This is all  done  with  the  runonexitfirst,
+       runonexitlast,   usecommandretval  and  nocls  types.  The
+       default is not to execute the runonexit command in  `QUIT'
+       menu  items  that have a non-empty command variable. There
+       are two new variables in 0.3, br and nocls.
+
+HOW IT WORKS
+       In order to define a menu you have to write a menu config-
+       uration  file, menufile.  This file holds the entire menu;
+       items, commands, caption text, colour, etc.
+
+       Command line options
+
+       -f filename
+              This is the only obligatory  option.   filename  is
+              the name of a menu configuration file.
+
+       -c colorscheme
+              colorscheme  is  a  number  from  0 to 9 (currently
+              available colour-schemes), this will  override  the
+              configuration file's colour-scheme (if any).
+
+       -q     This  option  will  prevent  the user from quitting
+              replimenu, not even  a  SIGTERM/SIGINT  will  quit.
+              However, a menu item named QUIT will still quit the
+              menu.
+
+       -g WxH Force a geometry. This  will  prevent  the  ioctl()
+              TIOCGWINSZ request to figure out the current termi-
+              nal size. It's useful  for,  e.g.  telnet  sessions
+              that  don't  DO  NAWS.  You may also consider using
+              stty cols 80 rows 25  on  TTY:s  (or  pseudo-tty:s)
+              that  are  uninitialized. E.g.: replimenu -f fu.bar
+              -g 80x25.
+
+       -a item_names...
+              A comma (,) separated list of menu  item  names  to
+              automatically  execute on start-up, e.g.: replimenu
+              -f fu.bar -a fubar,snafu.
+
+       -e i   Set the `exitafterauto' flag. i is an integer (only
+              0  or  1  makes  sense).   Can  be used with the -a
+              option. This option overrides  the  `exitafterauto'
+              variable in the menufile. E.g.: replimenu -f fu.bar
+              -a fubar,snafu -e1  (will  auto-execute  the  items
+              named fubar and snafu then exit replimenu).
+
+       -h     Help.
+
+       -V     Print version and exit immediately.
+
+MENU CONFIGURATION FILE
+       The  menufile  basically  consists  of two areas, a global
+       where you specify caption text, colour-scheme, textindent,
+       etc.  and  one  where  you define the menu items and their
+       commands. All definitions are done in the manner of  vari-
+       able=value.  Please  note  that  you can not (yet) specify
+       multi-line variables (using e.g. a trailing \).
+
+       Menufile variables
+
+              caption
+                     The text that should appear in  the  caption
+                     on the first row.
+
+              text   The  text  that  should  appear in the body,
+                     right before the menu.  This  overrides  the
+                     environment variable REPLIMENU_TEXT.
+
+              aftertext
+                     The  text that should appear after the menu,
+                     just above the  copyright-line.  This  over-
+                     rides   the   environment   variable  REPLI-
+                     MENU_AFTERTEXT.
+
+              textindent
+                     On what column the text in text should start
+                     on the screen, default is 2.
+
+              aftertextindent
+                     On  what column the text in aftertext should
+                     start on the screen, default is 2.
+
+              colorscheme
+                     Which colour-scheme to use,  default  is  0.
+                     Available colour-schemes are 0 to 9.
+
+              runonexit
+                     What  command to run when exiting replimenu.
+
+              br     An alias for  a  dummy-type  structure  (see
+                     below). You may use this to easily put space
+                     or comments between menu items. You may also
+                     use dummy, an alias for br.
+
+              nocls  This variable, defined alone without option,
+                     will prevent  replimenu  from  clearing  the
+                     screen  upon exit. For `QUIT' menu items you
+                     must use the nocls type, as the default  for
+                     `QUIT'  menu  items  is  to always clear the
+                     screen.
+
+              exitafterauto
+                     Defined alone without parameters this  vari-
+                     able will tell replimenu to exit immediately
+                     after running through menu  items  with  the
+                     auto  type  set.  If there are no auto types
+                     available, replimenu will not exit.  Because
+                     the  exit  is like pressing Q, runonexit can
+                     be used together with this option.
+
+              begin menuitem
+                     Indicates the start of a  menu  item  struc-
+                     ture.  This  can  also be begin item, define
+                     item or start item.
+
+                      name   The name of the menu item.  If  name
+                             is  QUIT  then this menu item can be
+                             used to quit replimenu.
+
+                      label  The label text  that  will  visually
+                             appear in the menu.
+
+                     icaption
+                             Only  for  input  boxes  and `yesno'
+                             (`ask')  types.  You  may  use  this
+                             variable  to  optionally  specify  a
+                             different caption than label.
+
+                      bullet The icon next  to  the  label  text,
+                             defaults to NUMBERED which will enu-
+                             merate each menu item  according  to
+                             their position, starting from 1.
+
+                      type   The type and characteristics of this
+                             menu item. The variables  below  can
+                             be  OR'd  together to shape the item
+                             differently (e.g. pause | input).
+
+                             regular
+                                    A regular menu item, that is,
+                                    it  will  execute the command
+                                    and return. This  will  over-
+                                    ride any other value.
+
+                             ask    Will  ask  whether to execute
+                                    this command or not. Can also
+                                    be yesno.
+
+                             input  Will  produce  a  pop-up  box
+                                    with  an  input  field.   The
+                                    user's  input  will be passed
+                                    to the  environment  variable
+                                    RM_INPUT,  that  is,  you can
+                                    use it in the  command  vari-
+                                    able. Can also be inputbox.
+
+                             pause  This  will  present  a prompt
+                                    just after a command  returns
+                                    and  force  the user to press
+                                    any key to continue.
+
+                             msgbox Or  messagebox,  displays   a
+                                    simple  one  line message box
+                                    with an "OK-button".
+
+                             variable
+                                    Or var, changes  the  charac-
+                                    teristics  of  the  menu item
+                                    entirely. This makes the item
+                                    a   variable,   basically  an
+                                    inputbox without  a  command.
+                                    The    environment   variable
+                                    RM_name is set (where name is
+                                    the name of the menu item) to
+                                    the value of the variable. If
+                                    variable   is  used  together
+                                    with ask then the  value  can
+                                    only   be  yes  or  no.  When
+                                    replimenu   is    initialized
+                                    RM_name  is  set to the value
+                                    of default.
+
+                             checkbox
+                                    Or    option,    creates    a
+                                    selectable  menu  item.  When
+                                    the item has  an  X  in  it's
+                                    checkbox    the   environment
+                                    variable RM_name will be  set
+                                    to  the  value of default. If
+                                    the  item  is  not  selected,
+                                    RM_name will not exist in the
+                                    environment. name is  changed
+                                    to  the  actual  name  of the
+                                    menu item. This item  can  be
+                                    used  together with selected.
+
+                             radiobutton
+                                    Or radio. This menu  item  is
+                                    for   creating  an  array  of
+                                    selectable items  where  only
+                                    one   of  the  items  can  be
+                                    selected. To use  this  item,
+                                    each   radiobutton  that  you
+                                    want to be part of  the  same
+                                    array  must  share  the  same
+                                    name, and each must have dif-
+                                    ferent  default  values. When
+                                    an item is  selected  RM_name
+                                    (name  is changed to the name
+                                    of  the  item)  is   set   to
+                                    default.  This  item  can  be
+                                    used together with  selected.
+
+                             selected
+                                    To   be  used  together  with
+                                    checkbox   or    radiobutton,
+                                    makes  the  item  selected by
+                                    default.
+
+                             setenvrmitem
+                                    Or setenvitem, sets the envi-
+                                    ronment  variable  RM_ITEM to
+                                    this menu item's name on exe-
+                                    cution of the command.
+
+                             defaultfromenv
+                                    Or defaultfromenvironment, or
+                                    simply dfenv. If the  default
+                                    field  is  empty, this option
+                                    will cause replimenu to  look
+                                    for RM_name (name is the name
+                                    of the menu item)  among  the
+                                    environment  variables, if it
+                                    exists  replimenu  will   use
+                                    it's  value  as  the  default
+                                    value.
+
+                             runonexitfirst
+                                    This is only  applicable  for
+                                    menu    items   named   QUIT.
+                                    runonexitfirst   (or   simply
+                                    runonexit)  will  execute the
+                                    runonexit command before exe-
+                                    cuting  the command specified
+                                    for the `QUIT' menu item.  In
+                                    order  to  use this, the com-
+                                    mand variable for the  `QUIT'
+                                    item  must  not be empty. The
+                                    default  behaviour  of   this
+                                    option  is  to  exit with the
+                                    exit code  of  the  runonexit
+                                    command. You may choose which
+                                    exit code to use by  specify-
+                                    ing the usecommandretval type
+                                    (e.g.  runonexitfirst|usecom-
+                                    mandretval).
+
+                             runonexitlast
+                                    Same  as  above, only execute
+                                    the runonexit  command  last.
+                                    The default behaviour of this
+                                    option is to  exit  with  the
+                                    exit  code  of  the runonexit
+                                    command. You may choose which
+                                    exit  code to use by specify-
+                                    ing the usecommandretval type
+                                    (e.g.  runonexitfirst|usecom-
+                                    mandretval).
+
+                             usecommandretval
+                                    Will tell  replimenu  to  use
+                                    the  exit code of the command
+                                    in a `QUIT' menu item instead
+                                    of the runonexit code.
+
+                             nocls  This type is specifically for
+                                    `QUIT' menu  items.  It  pre-
+                                    vents replimenu from clearing
+                                    the screen upon exit.
+
+                             hidden This type  will  prevent  the
+                                    menu   item   from   visually
+                                    appearing in the  menu.  It's
+                                    still  useful  as  a  regular
+                                    menu item, but only as either
+                                    a  variable or as a member of
+                                    a chain.
+
+                             chain  If you wish  to  chain,  that
+                                    is, tie the current menu item
+                                    together with the  next  menu
+                                    item.  By pressing enter on a
+                                    menu item with the chain type
+                                    the  following menu item will
+                                    also be executed (as  if  one
+                                    pressed  the  next  menu item
+                                    consecutively). It is  mainly
+                                    useful  together  with hidden
+                                    types where  only  the  first
+                                    chained item is visible.
+
+                             password
+                                    Or  simply  passwd. This will
+                                    tell an input  type  to  show
+                                    stars  (*)  instead of actual
+                                    characters.
+
+                             auto   Also autoexec.  Automatically
+                                    execute  this  menu  item  on
+                                    start-up.  Every  menu   item
+                                    marked  auto will be executed
+                                    consecutively until there are
+                                    no  auto  types  left to exe-
+                                    cute.  You  may   also   make
+                                    replimenu  exit once the auto
+                                    run    is    complete,    see
+                                    exitafterauto.
+
+                             notempty
+                                    Don't  allow  a  variable  or
+                                    input box value to be  empty.
+                                    If  the  user enters an empty
+                                    string   in    an    inputbox
+                                    (including   var  type  input
+                                    boxes)  replimenu  will  keep
+                                    show the inputbox and ask for
+                                    input   until   a   non-empty
+                                    string has been entered.
+
+                             dummy  The  characteristics  of  the
+                                    dummy type has  been  changed
+                                    since  version  0.2.  You may
+                                    now use it to  separate  menu
+                                    items  from  each  other  or,
+                                    e.g. add text  above  a  menu
+                                    item. See the example config-
+                                    uration file below.
+
+                     default
+                             The default value of this menu item.
+                             Used  together  with  inputbox, var,
+                             checkbox or radiobutton.
+
+                     command
+                             The command to execute (if this menu
+                             item  is not a variable) when press-
+                             ing return in the menu.
+
+              end    Ends the definition of a  menu  item  struc-
+                     ture. This can also be stop.
+
+       Example configuration file
+
+              caption = Example Menu
+              colorscheme = 2
+              text = Scroll up and down using the arrow-keys.
+              aftertext = For more info, visit:\nhttp://replimenu.sf.net
+              runonexit = printenv | grep "RM_"
+              # don't clear the screen when exiting.
+              nocls
+
+              begin item
+                  name = option1
+                  type = checkbox | selected
+                  label = Check me please (-i)
+                  default = -i
+                  command = echo hello; read
+              end
+
+              begin item
+                  name = option2
+                  type = checkbox
+                  label = Check me too (-o)
+                  default = -o /tmp/tmpfile
+              end
+
+              ## The old dummy way...
+
+              #begin item
+              #    type = dummy
+              #end
+              #begin item
+              #    type = dummy
+              #    label = Make your selection below
+              #end
+
+              ## The new way (since 0.3) to do it...
+
+              br
+              br Make your selection below
+              br
+
+              begin item
+                  name = radio1
+                  type = radiobutton
+                  label = First choice
+                  default = 1
+              end
+
+              begin item
+                  name = radio1
+                  type = radiobutton|selected
+                  label = Second choice
+                  default = 2
+              end
+
+              begin item
+                  name = radio1
+                  type = radiobutton
+                  label = Third choice
+                  default = 3
+              end
+
+              br
+
+              ## a few chained items
+              begin item
+                  name = uname
+                  label = Enter login info
+                  icaption = Enter user name:
+                  type = input | var | notempty | chain
+                  default = anonymous
+              end
+              begin item
+                  name = passwd
+                  label = password
+                  icaption = Enter password:
+                  type = input | var | notempty | chain | hidden | password
+              end
+              begin item
+                  name = doit
+                  label = show the results
+                  type = pause | hidden
+                  command = echo " uname: $RM_uname" ; echo "passwd: $RM_passwd"
+              end
+              ## end of chained items
+
+              br
+
+              start item
+                  name = item2
+                  label = View mounts
+                  type = pause
+                  command = cat /proc/mounts
+              stop
+
+              begin item
+                  name = item3
+                  label = Enter your garbage code
+                  icaption = Enter your garbage code below:
+                  type = input | var | notempty
+                  default = Hello world
+              end
+
+              begin item
+                  name = item4
+                  label = fdformat /dev/fd0
+                  icaption = Really fdformat /dev/fd0 ?
+                  type = ask | pause
+                  command = fdformat /dev/fd0
+              end
+
+              br
+
+              begin item
+                  name = QUIT
+                  type = runonexitlast|usecommandretval
+                  bullet = <--
+                  label = Quit (condition 1)
+                  command = echo "Hello world"; exit 1
+              end
+
+              begin item
+              # since no runonexit was specified here,
+              # it will not run the runonexit command.
+                  name = QUIT
+                  bullet = <--
+                  label = Quit (condition 2)
+                  command = exit 2
+              end
+
+
+ENVIRONMENT VARIABLES
+       All  RM_  variables  can  be  used when executing commands
+       within the menu.
+
+       RM_ITEM
+              If setenvrmitem is specified then  this  variable's
+              value will be the name of the menu item.
+
+       RM_INPUT
+              The value of an inputbox.
+
+       RM_name
+              In variables, checkboxes and radiobuttons, the name
+              is replaced with the item's name. This is a  global
+              variable, it can be used in every item in the menu.
+
+       REPLIMENU_TEXT
+              Same as the text variable in  the  menu  file.  The
+              value  of this variable will be printed in the body
+              before the menu.
+
+       REPLIMENU_AFTERTEXT
+              Same as the aftertext variable in  the  menu  file.
+              The  value  of this variable will be printed in the
+              body after the menu.
+
+NAVIGATION
+       You may use the arrow keys, Page Up, Page Down,  Home  and
+       End  to navigate the menu. When an inputbox or an ask item
+       is displayed you may press ESC two times to cancel. Press-
+       ing  F10 or Q will quit the menu (unless the -q option was
+       specified).
+
+BUGS
+       Certainly. Report bugs to replichaun@zebra.ath.cx,  please
+       be  as  specific  as  possible  and  explain for me how to
+       repeat the bug.
+
+COPYRIGHT
+       replimenu is Copyright (C) 2003,2004 Michel Blomgren
+
+       replimenu is free software; you can redistribute it and/or
+       modify  it  under  the  terms  of  the  GNU General Public
+       License as published  by  the  Free  Software  Foundation;
+       either  version  2 of the License, or (at your option) any
+       later version.
+
+       replimenu is distributed in the hope that it will be  use-
+       ful,  but  WITHOUT  ANY WARRANTY; without even the implied
+       warranty of MERCHANTABILITY or FITNESS  FOR  A  PARTICULAR
+       PURPOSE.   See  the  GNU  General  Public License for more
+       details (refer to the COPYING-file).
+
+AUTHOR
+       Michel Blomgren (replichaun@zebra.ath.cx)
+       http://zebra.ath.cx
+       http://replimenu.sourceforge.net
+
+SEE ALSO
+       dialog(1), ncurses(3)
+
+
+
+replimenu 0.9                Dec 2003                replimenu(1)

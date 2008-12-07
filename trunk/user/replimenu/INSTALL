@@ -1,0 +1,18 @@
+
+                        replimenu by Michel Blomgren
+                                INSTALLATION
+
+	1) Read/modify the "configuration" file.
+
+        2) Type "make" to compile a dynamically linked executable, or type
+           "make DOSTATIC=true" to compile a statically linked executable.
+
+        3) To install replimenu, type "make install" or...
+           "make PREFIX=/usr install" to install it under /usr/bin and
+           /usr/man/man1 instead of /usr/local/bin and /usr/local/man/man1.
+
+           To only install the binary, just copy src/replimenu anywhere you
+           choose.
+
+	4) That's it.
+
