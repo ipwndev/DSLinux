@@ -110,8 +110,8 @@ dns2=""
 # If you want to start inetd on boot, say "YES" here
 # Don't forget to create /etc/inetd.conf!
 # To override the default options use:
-# inetd_config="/path/to/inetd.conf"
-# ssh_host_key="/path/to/ssh.key"
+inetd_config="/etc/inetd.conf"
+ssh_host_key="/etc/dropbear_rsa_host_key"
 start_inetd="NO"
 
 # To start openvpn on boot say "YES" here

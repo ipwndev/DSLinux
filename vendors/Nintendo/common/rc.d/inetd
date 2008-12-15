@@ -4,30 +4,13 @@
 [ -e /etc/rc.conf ] && . /etc/rc.conf
 
 DAEMON=inetd
-default_inetd_config=/etc/inetd.conf
-default_ssh_host_key=/etc/dropbear_rsa_host_key
 
 case "$1" in
 	start)
 		if [ ! -f "/var/run/$DAEMON.pid" ]
 		then
 			echo "Starting $DAEMON"
-			# Set defaults if none specified in /etc/rc.conf
-			if [ $inetd_config="" ]
-			then
-				echo "No inetd.conf specified in rc.conf, using default location"
-				INETD_CONF=$default_inetd_config
-			else
 				INETD_CONF=$inetd_config
-			fi
-
-			if [ $ssh_host_key="" ]
-			then
-				echo "No ssh hostkey specified in rc.conf, using default location"
-				SSH_HOST_KEY=$default_ssh_host_key
-			else
-				SSH_HOST_KEY=$ssh_host_key
-			fi
 
 			# Check for existence of config file
 			if [ ! -f $INETD_CONF ]
