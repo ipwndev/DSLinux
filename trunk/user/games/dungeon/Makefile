@@ -71,6 +71,8 @@ romfs:
 	$(ROMFSINST) dtextc.dat /$(LIBDIR)/dtextc.dat
 	$(ROMFSINST) -e CONFIG_USER_GAMES_DUNGEON \
 		-a "#dungeon stream tcp nowait root $(GAMESDIR)/dungeon" /etc/inetd.conf.example
+	$(ROMFSINST) -e CONFIG_USER_GAMES_DUNGEON \
+		-a "dungeon 8898/tcp"
 	$(ROMFSINST) -m dungeon.6 /usr/share/man/dungeon
 
 clean:
