@@ -109,6 +109,22 @@ enum FIFO_WIFI_CMDS {
 #define FIFO_SOUND_TRIGGER	(6<<24)
 #define FIFO_SOUND_POWER	(7<<24)
 
+/*
+ * Mic Commands
+ * +-------------------------------------------------------+
+ * |3 bits FIFO_MIC | 1bit unused | 28 bits command data   |
+ * +-------------------------------------------------------+
+ */
+#define FIFO_MIC_CMD(d)	(d & 0x0f000000)
+#define FIFO_MIC_DATA(d)	(d & 0x00ffffff)
+#define FIFO_MIC_DMA(d)	(FIFO_MIC_DATA(d) + 0x02000000)
+
+#define FIFO_MIC_DMA_ADDRESS	(2<<24) //FIFO_DMA_ADDRESS
+#define FIFO_MIC_DMA_SIZE	(3<<24) //FIFO_DMA_SIZE
+#define FIFO_MIC_RATE	(5<<24) //FIFO_SOUND_RATE
+#define FIFO_MIC_TRIGGER	(6<<24) //FIFO_SOUND_TRIGGER
+#define FIFO_MIC_POWER	(7<<24) //FIFO_SOUND_POWER
+
 /* FIFO registers */
 #define NDS_REG_IPCFIFOSEND (*(volatile u32*) 0x04000188)
 #define NDS_REG_IPCFIFORECV (*(volatile u32*) 0x04100000)

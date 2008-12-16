@@ -6,6 +6,7 @@
 #include "asm/arch/wifi.h"
 #include "asm/arch/firmware.h"
 
+#include "microphone.h"
 #include "sound.h"
 #include "arm7.h"
 #include "spi.h"
@@ -83,6 +84,30 @@ static void recieveFIFOCommand(void)
 				break;
 			case FIFO_SOUND_POWER:
 				sound_set_power(data & 0x1);
+				break;
+			}
+			break;
+		case FIFO_MIC:
+			switch (FIFO_MIC_CMD(data)) {
+			case FIFO_MIC_POWER:
+				if (data & 0x1) 
+					mic_on(); 
+				else mic_off();
+				break;
+			case FIFO_MIC_DMA_ADDRESS:
+				mic_set_address(FIFO_MIC_DMA(data));
+				break;
+			case FIFO_MIC_DMA_SIZE:
+				mic_set_size(FIFO_MIC_DATA(data));
+				break;
+			case FIFO_MIC_RATE:
+				mic_set_rate(FIFO_MIC_DATA(data));
+				break;
+			case FIFO_MIC_TRIGGER:
+				if (data & 1)
+					mic_start();
+				else
+					mic_stop();
 				break;
 			}
 			break;
@@ -257,6 +282,13 @@ void InterruptHandler(void)
 		NDS_IF = IRQ_TIMER0;
 		wif &= ~IRQ_TIMER0;
 		wifi_timer_handler();
+	}
+	
+	if (wif & IRQ_TIMER3) {
+		/* Acknowlege Interrupt, send interrupt to mic */
+		NDS_IF = IRQ_TIMER3;
+		wif &= ~IRQ_TIMER3;
+		mic_timer_handler();
 	}
 
 	if (wif & IRQ_ARM9) {

@@ -22,4 +22,7 @@ void power_write(enum power_reg, u8 val);
 
 void read_firmware(u32 address, u8 * destination, int count);
 
+void mic_on_off(u8 control);
+u8 mic_read8(void);
+
 #endif
