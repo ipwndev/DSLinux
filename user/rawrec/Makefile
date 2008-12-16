@@ -11,6 +11,6 @@ clean:
 	rm -f .compiled
 
 romfs:
-	#Installing as rawplay as we don't have a mic at the moment
 	$(ROMFSINST) src/rawrec /usr/bin/rawplay
-	$(ROMFSINST) -m docs/user/rawrec.1 /usr/share/man/rawplay
+	$(ROMFSINST) src/rawrec /usr/bin/rawrec
+	$(ROMFSINST) -m docs/user/rawrec.1 /usr/share/man/rawrec
