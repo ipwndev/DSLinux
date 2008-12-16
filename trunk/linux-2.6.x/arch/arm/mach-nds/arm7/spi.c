@@ -18,6 +18,7 @@ extern void swiDelay(u32 duration);
 #define SPI_POWER	(0<<8)
 #define SPI_FIRMWARE	(1<<8)
 #define SPI_TOUCH	(2<<8)
+#define SPI_MIC	(2<<8) // TODO Check
 #define SPI_8CLOCKS	(0<<10)
 #define SPI_16CLOCKS	(1<<10)
 #define SPI_SINGLE	(0<<11)
@@ -28,6 +29,12 @@ extern void swiDelay(u32 duration);
 #define POWER_READ	(1<<7)
 #define POWER_WRITE	(0<<7)
 #define POWER_REG(n)	(n)
+
+#define MIC_ON	(1)
+#define MIC_OFF	(0)
+
+#define MIC_POWER_OFFSET	(2)
+
 
 #define WAIT_FOR_NOT_BUSY() {while (REG_SPI_CR & SPI_BUSY) swiDelay(1);}
 
@@ -149,4 +156,50 @@ void read_firmware(u32 address, u8 * destination, int count)
 	}
 
 	REG_SPI_CR = 0;
+}
+
+/*
+ * mic_on_off() : Turns on/off the Microphone Amp. 
+ * Code based on neimod's example.
+ */
+void mic_on_off(u8 control) {
+	WAIT_FOR_NOT_BUSY();
+
+	REG_SPI_CR = SPI_ENABLE | SPI_POWER | SPI_1MHZ | SPI_CONTINUOUS;
+	REG_SPI_DATA = MIC_POWER_OFFSET;
+
+	WAIT_FOR_NOT_BUSY();
+
+	REG_SPI_CR = SPI_ENABLE | SPI_POWER | SPI_1MHZ;
+	REG_SPI_DATA = control;
+}
+
+/*
+ * mic_read8(): Reads a byte from the microphone
+ * Code based on neimod's example. 
+ */
+u8 mic_read8() {
+	u16 result, result2;
+
+	WAIT_FOR_NOT_BUSY();
+
+	REG_SPI_CR = SPI_ENABLE | SPI_MIC | SPI_2MHZ | SPI_CONTINUOUS;
+	REG_SPI_DATA = 0xEC;  // Touchscreen command format for AUX
+
+	WAIT_FOR_NOT_BUSY();
+
+	REG_SPI_DATA = 0x00;
+
+	WAIT_FOR_NOT_BUSY();
+
+	result = REG_SPI_DATA;
+	REG_SPI_CR = SPI_ENABLE | SPI_TOUCH | SPI_2MHZ;
+	REG_SPI_DATA = 0x00;
+
+	WAIT_FOR_NOT_BUSY();
+
+	result2 = REG_SPI_DATA;
+
+	return (((result & 0x7F) << 1) | ((result2>>7)&1));
+
 }
