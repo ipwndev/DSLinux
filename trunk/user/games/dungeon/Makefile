@@ -72,7 +72,7 @@ romfs:
 	$(ROMFSINST) -e CONFIG_USER_GAMES_DUNGEON \
 		-a "#dungeon stream tcp nowait root $(GAMESDIR)/dungeon" /etc/inetd.conf.example
 	$(ROMFSINST) -e CONFIG_USER_GAMES_DUNGEON \
-		-a "dungeon 8898/tcp"
+		-a "dungeon 8898/tcp" /etc/services
 	$(ROMFSINST) -m dungeon.6 /usr/share/man/dungeon
 
 clean:
