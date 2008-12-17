@@ -1,0 +1,69 @@
+SoXI(1)				Sound eXchange			       SoXI(1)
+
+
+
+NAME
+       SoXI - Sound eXchange Information, display sound file metadata
+
+SYNOPSIS
+       soxi [-V[level]] [-t|-r|-c|-s|-d|-b|-e|-a] infile1 ...
+
+DESCRIPTION
+       Displays	 information  from  the header of a given audio file or files.
+       Supported audio file types are listed and  described  in	 soxformat(7).
+       Note  however, that soxi is intended for use only with audio files with
+       a self-describing header.
+
+       By default, as much information as is available is  shown.   An	option
+       may be given to select a single piece of information to show.
+
+OPTIONS
+       -V     Set verbosity. See sox(1) for details.
+
+       -t     Show detected file-type.
+
+       -r     Show sample-rate.
+
+       -c     Show number of channels.
+
+       -s     Show number of samples (0 if unavailable).
+
+       -d     Show  duration in hours, minutes and seconds (0 if unavailable).
+	      Equivalent to number of samples divided by the sample-rate.
+
+       -b     Show number of bits per sample.
+
+       -e     Show the name of the audio encoding.
+
+       -a     Show file comments (annotations) if available.
+
+BUGS
+       Please report any bugs found in this version of SoX to the mailing list
+       (sox-users@lists.sourceforge.net).
+
+SEE ALSO
+       sox(1), soxformat(7), libsox(3)
+
+       The SoX web site at http://sox.sourceforge.net
+
+LICENSE
+       Copyright 2008 by Chris Bagwell and SoX Contributors.
+
+       This program is free software; you can redistribute it and/or modify it
+       under the terms of the GNU General Public License as published  by  the
+       Free  Software  Foundation;  either  version 2, or (at your option) any
+       later version.
+
+       This program is distributed in the hope that it	will  be  useful,  but
+       WITHOUT	ANY  WARRANTY;	without	 even  the  implied  warranty  of MER-
+       CHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  General
+       Public License for more details.
+
+AUTHORS
+       Chris Bagwell (cbagwell@users.sourceforge.net).	Other authors and con-
+       tributors are listed in the AUTHORS file that is distributed  with  the
+       source code.
+
+
+
+soxi			       October 28, 2008			       SoXI(1)

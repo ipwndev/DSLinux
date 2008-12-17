@@ -1,0 +1,284 @@
+                           SoX Installation
+                           ----------------
+
+This distribution will compile and run on most commonly-used systems.
+It was originally developed on a UNIX/386 machine running AT&T V3.2 but
+it's currently developed under Linux.  With a little work it should work
+with most POSIX systems.
+
+
+Compiling using a POSIX system
+------------------------------
+
+[Only if you're compiling the CVS sources, first make sure you have
+the GNU autotools installed (automake >= 1.9, autoconf >= 2.59) and
+run
+
+	autoreconf -i
+]
+
+The preferred method for compiling SoX is to use the "configure"
+scripts compatible with most UNIX systems that contain "/bin/sh" or
+equivalent (it can also be used on Windows with Cygwin).
+
+To compile and install SoX on these platforms run the following
+commands:
+
+	./configure
+	make
+	make install
+
+Optionally, to test the executable:
+
+	make installcheck
+
+(At the moment you can't run "make check", because when built
+modularly SoX can't use its format and effect modules until
+it is installed.)
+
+There are several optional parameters that you may pass to the
+configure script to customize SoX for your applications. Run
+
+	./configure --help
+
+for a complete list of options.  In addition, there are several
+optional make targets that can be used (run as "make target").
+They include: pdf, html, install-pdf, install-html
+
+
+Compiling using Microsoft's Visual C
+------------------------------------
+
+o Install cmake (http://www.cmake.org/HTML/Download.html)
+o Install any optional libraries to use with SoX
+o Unpack the SoX sources (...tar.gz) to say c:\sox
+o Type cd c:\sox
+o Type cmake .
+
+This should generate project build files for use with Visual C.
+
+
+Optional Compile Features
+-------------------------
+
+SoX can make use of some external libraries to obtain support
+for additional file formats and/or effects.  Some optional libraries
+may require pkg-config to be installed to be properly detected.
+
+SoX can detect and use the following libraries:
+
+  Ogg Vorbis - http://www.vorbis.com
+
+  Lame MP3 encoder - http://lame.sourceforge.net
+
+  MAD MP3 decoder - http://www.underbit.com/products/mad
+
+  FLAC - http://flac.sourceforge.net
+
+  AMR-NB/WB - http://www.penguin.cz/~utx/amr
+
+  libsndfile - http://www.mega-nerd.com/libsndfile
+
+  ffmpeg - http://ffmpeg.mplayerhq.hu
+
+  libao - http://xiph.org/ao
+
+  Secret Rabbit Code - http://www.mega-nerd.com/SRC
+
+  LADSPA - http://www.ladspa.org
+
+  WavPack - http://www.wavpack.com
+
+  PNG - http://www.libpng.org/pub/png
+  
+
+Configuring Optional Compile Features (POSIX system)
+----------------------------------------------------
+
+If any libraries are installed in a non-standard locations in your
+system then you can use the CPPFLAGS and LDFLAGS variables to allow
+configure to find them. For example:
+
+./configure CPPFLAGS="-I/home/sox/include -I/usr/local/multimedia/include" LDFLAGS="-L/home/sox/lib -L/usr/local/multimedia/lib"
+
+If you are compiling under cygwin and would like to create a static
+sox.exe using mingw libraries then you can use the following:
+
+./configure CC="gcc -mno-cygwin" --disable-shared
+
+The next cygwin example is used to build the cygwin version of SoX that is
+distributed by the project.  It tells gcc to prefer static libraries
+over dynamic ones and to use some static libraries compiled manually
+and installed under /usr/local.
+
+./configure LDFLAGS="-static -L/usr/local/lib" CPPFLAGS=-I/usr/local/include
+
+You can run "cygcheck.exe src/sox.exe" after compiling to see which
+dynamic DLL's will be required to be distributed with the cygwin
+executable.
+
+Newer versions of SoX include support for loading libraries for
+file formats at runtime.  If you experience problems with this
+then you may wish to revert back to the older compile-time support.
+To stick with old behavior use:
+
+./configure --without-libltdl
+
+
+Testing
+-------
+
+NOTE: If SoX was compiled with libltdl support then it will not
+run correctly from within the source file directory and must be
+first installed.  Once install, it can be ran from the source directory.
+Either install before running the following tests or configure 
+with --without-libltdl temporarily.
+
+After successfully compiling SoX, try translating a sound file. You
+should also playback the new file to make sure it sounds like the original.  
+You can either use an external program or SoX itself if compiled with 
+playback support.  
+
+To work with widest range of playback programs, you should chose a format 
+that is native to your OS; such as .wav for Windows or .aif for MacOS.  
+In the following example, we'll use .xxx as the extension of your preferred
+format.
+
+        cd src
+	./sox monkey.wav monkey.xxx
+
+You may have to give the word size and rate for the file. For example,
+this command will make a sound file with a data rate of 12,500 samples
+per second and the data formatted as 2-byte (16-bit) signed integers:
+
+	./sox monkey.voc -r 12500 -2 -s monkey.xxx 
+
+If playback support was compiled in then it can be played like this:
+
+        ./play monkey.xxx
+
+If monkey.xxx plays properly (it's a very short monkey screech),
+congratulations! SoX works.
+
+If you're adding new features to SoX or want to perform advance tests
+on a new platform then you can use the scripts "tests.sh" and
+"testall.sh" to stress SoX.
+
+
+Appendix: How To Compile SoX with MP3 Support on Win32
+------------------------------------------------------
+
+The following text, untested by the SoX team, was originally written by `Enter
+AG' and released to the public domain.
+
+= How To Compile Sox with MP3 Support =
+
+== Requirements ==
+
+The following requirements have been tested. Nevertheless, other versions may
+work as well.
+
+o Microsoft Windows (Win32, Win2k, Win2003).
+
+o CMake (Cross Platform Make) version 2.4
+  available on [http://www.cmake.org] 
+
+o Microsoft Visual Stuio 2008 (also earlier Versions)
+
+o SoX source distribution version 14.0.1
+  available on [http://sox.sourceforge.net] 
+
+o LAME source distribution version 3.97
+  available on [http://lame.sourceforge.net] 
+
+o MAD source distribution version 0.15.1b
+  available on [http://www.underbit.com/products/mad/] 
+
+== Compilation Procedure ==
+
+=== Compilation of the LAME libraries ===
+
+o Extract the LAME source distribution and open it as a Visual Studio project
+  using the VS file in the top directory.
+
+o Set the ''libmp3lame'' "Configuration Properties -> C/C++ -> Code Generation
+  -> Runtime Library" to Multi-threaded DLL (/MD).
+
+o Do the same for ''mpglib'' .
+
+o Build ''libmp3lame'' and ''mpglib.''
+
+o Rename the static library libmp3lame.lib to mp3lame.lib.
+
+o Create a folder somewhere with an arbitrary name. We used the name
+  "lameforsox". Create in this folder a new folder called "lame" and copy the
+  lame.h header file into it. Copy mp3lame.lib and mpglib.lib in the lameforsox
+  folder. Now you should have prepared the lame components for further use like
+  this:
+	...\[somewhere]\lameforsox\
+		mp3lame.lib
+		mpglib.lib
+			\lame\
+				lame.h 
+
+=== Compilation of the MAD library ===
+
+o Compile ''libmad'' with the same "Runtime Library" settings as described for
+  LAME (previous section Compilation of the LAME libraries).
+
+o Rename the static library libmad.lib to mad.lib.
+
+=== Compilation of SoX with the LAME and MAD libraries ===
+
+o Open Visual Studio and add in "Tools -> Options -> Projects and Solutions ->
+  VC++ Directories" in the "Include Directories" collection the folder
+  containing the MAD header file mad.h and the folder containing lame/lame.h
+  (...\[somewhere]\lameforsox).  Add in the "Library files" collection the
+  folder containing mad.lib and the folder containing the lame libraries
+  mp3lame.lib and mpglib.lib (...\[somewhere]\lameforsox).
+
+o Edit the CMakeLists.txt in the SoX top directory:
+  Add
+  set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} mpglib)
+  after some blank lines beneath the statement
+  if(NEED_LIBM)
+  set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} -lm)
+  endif(NEED_LIBM)
+
+o Open the windows command line console and change into the SoX top directory.
+
+o Execute cmake like this:
+  cmake.exe ./ -G "Visual Studio 9 2008"
+
+o If the Visual Studio settings are done as described above the following cmake
+  output should appear:
+  ...
+  include files HAVE_MAD_H1 – found
+  mad_stream_buffer in madmad_stream_buffer in mad – found
+  ...
+  include files HAVE_LAME_LAME_H1 – found
+  lame_init in mp3lamelame_init in mp3lame - found
+  ...
+
+o If not check CMakeFiles\CMakeError.log.
+
+o Open Visual Studio and open the SoX solution file in the SoX top directory
+  (sox.sln).
+
+o Rebuild "ALL_BUILD" and confirm all "File Modification Detected" dialogs
+  with "Reload".
+
+o Add in the libsox "Preprocessor Definitions" (right click on libsox ->
+  Properties -> Configuration Properties -> C/C++ -> Preprocessor) HAVE_STRING_H
+  before the first line.  Set the "Runtime Library" to Multi-threaded DLL (/MD)
+  as described above.
+
+o Do the same for sox and add in the "Additional Dependencies" (Linker -> Input)
+  after the last line mpglib.lib.
+
+o Now build libsox
+
+o and then sox.
+
+o Sox now prompts "mp3, mp2" in the usage output in the section "SUPPORTED FILE
+  FORMATS".
