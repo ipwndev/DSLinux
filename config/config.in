@@ -962,6 +962,7 @@ bool 'playrt'			CONFIG_USER_PLAYRT_PLAYRT
 bool 'playtzx'			CONFIG_USER_PLAYTZX_PLAYTZX
 bool 'rawrec'			CONFIG_USER_RAWREC_RAWREC
 bool 'rawplay'			CONFIG_USER_RAWREC_RAWPLAY
+bool 'sox'			CONFIG_USER_SOX
 bool 'xmp'			CONFIG_USER_XMP_XMP
 
 comment 'Video tools'

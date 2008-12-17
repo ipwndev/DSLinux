@@ -365,6 +365,7 @@ dir_$(CONFIG_USER_SMTP_SMTPFILTER)          += smtpfilter
 dir_$(CONFIG_USER_SNAPSHOT)		    += snapshot
 dir_$(CONFIG_USER_SNMPD_SNMPD)              += snmpd
 dir_$(CONFIG_USER_SNORT_SNORT)              += snort
+dir_$(CONFIG_USER_SOX) 		            += sox
 dir_$(CONFIG_USER_SPEEDTOUCH_MODEM_RUN)     += speedtouch/src
 dir_$(CONFIG_USER_STUNNEL_STUNNEL)          += stunnel
 dir_$(CONFIG_USER_SSLWRAP_SSLWRAP)          += sslwrap
