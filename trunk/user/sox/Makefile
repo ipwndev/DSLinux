@@ -21,3 +21,4 @@ clean:
 
 romfs:
 	$(ROMFSINST) src/src/sox /bin/sox
+	$(ROMFSINST) -m src/sox.1 /usr/share/man/sox
