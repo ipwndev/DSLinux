@@ -11,14 +11,14 @@ case "$1" in
 		then
 			echo "Starting $DAEMON"
 				INETD_CONF=$inetd_config
-				SSH_HOST_KEy=$ssh_host_key
+				SSH_HOST_KEY=$ssh_host_key
 
 			# Check for existence of config file
 			if [ ! -f $INETD_CONF ]
 			then
 				echo "$INETD_CONF not found!"
-				echo "Please read /etc/inetd.conf.example"
-				exit 1
+				echo "Launching configuration menu"
+				/usr/bin/cfg_inetd
 			fi
 	
 			# Check for existence of dropbear key
