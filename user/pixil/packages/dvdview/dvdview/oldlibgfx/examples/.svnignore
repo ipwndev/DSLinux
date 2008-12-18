@@ -1,8 +1,0 @@
-Makefile
-Makefile.in
-*.lo
-_libs
-.libs
-.deps
-test-libvideogfx
-bitstream_output
