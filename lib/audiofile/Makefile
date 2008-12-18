@@ -3,7 +3,8 @@
 all: .compiled
 
 AUDIOFILE_CONFIGURE_FLAGS= 	--disable-largefile --enable-static=yes \
-				--enable-shared=no --prefix=$(ROOTDIR)
+				--enable-shared=no --prefix=$(ROOTDIR) \
+				--enable-fast-install=no 
 
 .configured:
 	cd src && env CFLAGS="$(CFLAGS)"\
