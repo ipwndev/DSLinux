@@ -24769,7 +24769,7 @@ then
   # As a last resort, just hope that header and ilbrary can
   # be found in default paths and that it doesn't need
   # to link against any other libraries.
-  SNDFILE_LIBS="-lsndfile"
+  SNDFILE_LIBS="-lsndfile -lm"
   have_sndfile="maybe"
 fi
 
