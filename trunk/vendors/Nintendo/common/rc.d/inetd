@@ -11,6 +11,7 @@ case "$1" in
 		then
 			echo "Starting $DAEMON"
 				INETD_CONF=$inetd_config
+				SSH_HOST_KEy=$ssh_host_key
 
 			# Check for existence of config file
 			if [ ! -f $INETD_CONF ]
