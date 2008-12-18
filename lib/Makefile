@@ -111,6 +111,7 @@ dir_$(CONFIG_LIB_SDL_MIXER)       += sdl_mixer
 dir_$(CONFIG_LIB_SDL_MIXER_FORCE) += sdl_mixer
 dir_$(CONFIG_LIB_AUDIOFILE) += audiofile
 dir_$(CONFIG_LIB_AUDIOFILE_FORCE) += audiofile
+dir_$(CONFIG_LIB_LIBSNDFILE) += libsndfile
 dir_$(CONFIG_LIB_LIBSNDFILE_FORCE) += libsndfile
 
 # And build libraries in the prop directory last
