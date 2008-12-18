@@ -4021,6 +4021,8 @@ CONFIG_USER_FBVIEW
 CONFIG_USER_SOX
   SoX, the Swiss Army knife of sound processing programs
 
+CONFIG_LIB_LIBSAMPLERATE
+  Secret Rabbit Code (aka libsamplerate) is a Sample Rate Converter for audio.
 #
 #
 # END of proprietary config help
