@@ -20808,7 +20808,8 @@ fi
 if test -r /etc/issue; then
   { $as_echo "$as_me:$LINENO: checking distro name" >&5
 $as_echo_n "checking distro name... " >&6; }
-  DISTRO=`sed -e "s/.0-90-9;*mJH//g" < /etc/issue|tr "\n" " " | sed -e "s/(\\\\?\\\\\\\\.*//" -e "s/  */ /g" -e "s/^ //" -e "s/ $//"`
+ # DISTRO=`sed -e "s/.0-90-9;*mJH//g" < /etc/issue|tr "\n" " " | sed -e "s/(\\\\?\\\\\\\\.*//" -e "s/  */ /g" -e "s/^ //" -e "s/ $//"`
+   DISTRO=DSLinux
   { $as_echo "$as_me:$LINENO: result: \"$DISTRO\"" >&5
 $as_echo "\"$DISTRO\"" >&6; }
 
@@ -28494,7 +28495,7 @@ then
   # As a last resort, just hope that header and library can
   # be found in default paths and that it doesn't need
   # to link against any other libraries.
-  SAMPLERATE_LIBS="-lsamplerate"
+  SAMPLERATE_LIBS="-lsamplerate -lm"
   have_samplerate="maybe"
 fi
 
