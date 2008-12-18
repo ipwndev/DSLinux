@@ -102,6 +102,7 @@ bool 'Build libjpeg'		CONFIG_LIB_LIBJPEG_FORCE
 bool 'Build libupnp'    CONFIG_LIB_LIBUPNP_FORCE
 bool 'Build ncurses'		CONFIG_LIB_NCURSES_FORCE
 bool 'Build STLport'		CONFIG_LIB_STLPORT
+bool 'Build libsamplerate'	CONFIG_LIB_LIBSAMPLERATE
 dep_bool '  Build STLport as shared'	CONFIG_LIB_STLPORT_SHARED $CONFIG_LIB_STLPORT
 bool 'Build expat'		CONFIG_LIB_EXPAT_FORCE
 bool 'Build adns'		CONFIG_LIB_ADNS_FORCE
@@ -963,6 +964,9 @@ bool 'playtzx'			CONFIG_USER_PLAYTZX_PLAYTZX
 bool 'rawrec'			CONFIG_USER_RAWREC_RAWREC
 bool 'rawplay'			CONFIG_USER_RAWREC_RAWPLAY
 bool 'sox'			CONFIG_USER_SOX
+if [ "$CONFIG_USER_SOX" = "y" ]; then
+	define_bool CONFIG_LIB_LIBSAMPLERATE=y
+fi
 bool 'xmp'			CONFIG_USER_XMP_XMP
 
 comment 'Video tools'
