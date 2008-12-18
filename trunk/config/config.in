@@ -102,7 +102,7 @@ bool 'Build libjpeg'		CONFIG_LIB_LIBJPEG_FORCE
 bool 'Build libupnp'    CONFIG_LIB_LIBUPNP_FORCE
 bool 'Build ncurses'		CONFIG_LIB_NCURSES_FORCE
 bool 'Build STLport'		CONFIG_LIB_STLPORT
-bool 'Build libsamplerate'	CONFIG_LIB_LIBSAMPLERATE
+bool 'Build libsamplerate'	CONFIG_LIB_LIBSAMPLERATE_FORCE
 dep_bool '  Build STLport as shared'	CONFIG_LIB_STLPORT_SHARED $CONFIG_LIB_STLPORT
 bool 'Build expat'		CONFIG_LIB_EXPAT_FORCE
 bool 'Build adns'		CONFIG_LIB_ADNS_FORCE
@@ -126,6 +126,7 @@ bool 'Build libglib'		CONFIG_LIB_LIBGLIB_FORCE
 bool 'Build libtremor'          CONFIG_LIB_TREMOR_FORCE
 bool 'Build libSDL'             CONFIG_LIB_SDL_FORCE
 bool 'Build libSDL_Mixer'       CONFIG_LIB_SDL_MIXER_FORCE
+bool 'Build libsndfile'         CONFIG_LIB_LIBSNDFILE_FORCE
 
 comment 'Library Configuration'
 bool 'Support time zones'	CONFIG_LIB_UC_LIBC_TIMEZONE
@@ -966,6 +967,7 @@ bool 'rawplay'			CONFIG_USER_RAWREC_RAWPLAY
 bool 'sox'			CONFIG_USER_SOX
 if [ "$CONFIG_USER_SOX" = "y" ]; then
 	define_bool CONFIG_LIB_LIBSAMPLERATE=y
+	define_bool CONFIG_LIB_LIBSNDFILE=y
 fi
 bool 'xmp'			CONFIG_USER_XMP_XMP
 
