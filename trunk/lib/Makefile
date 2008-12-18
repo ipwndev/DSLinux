@@ -209,7 +209,7 @@ LINKLIBS=\
 	$(ROOTDIR)/lib/audiofile/src/libaudiofile/.libs/*.a \
 	$(ROOTDIR)/lib/libtremor/src/.libs/*.a \
 	$(ROOTDIR)/lib/sdl_mixer/src/build/.libs/*.a \
-	$(ROOTDIR)/lib/libsamplerate/src/src/.libs/*.a 
+	$(ROOTDIR)/lib/libsamplerate/src/src/.libs/*.a \
 	$(ROOTDIR)/lib/libsndfile/src/src/.libs/*.a 
 
 ##############################################################################
