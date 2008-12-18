@@ -159,6 +159,9 @@ then
 	then
 	/usr/bin/gpm -m /dev/mouse0 -t ps2 &
 	fi
+else
+	echo "********** Extra RAM NOT detected! ***********"
+	echo "You may experience crashes due to lack of memory"
 fi
 
 # show firmware version if configured
