@@ -73,6 +73,12 @@ bool 'at'			CONFIG_USER_AT_AT
 bool 'atd'			CONFIG_USER_AT_ATD
 bool 'atrun'			CONFIG_USER_AT_ATRUN
 
+comment 'Config scripts'
+bool 'Build DSLinux specific setup scripts' CONFIG_USER_REPLIMENU_CFGS
+if [ "$CONFIG_USER_REPLIMENU_CFGS" = "y" ]; then
+		define_bool CONFIG_USER_REPLIMENU y
+fi
+
 endmenu
 
 #############################################################################

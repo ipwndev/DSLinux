@@ -3,6 +3,7 @@
 [ -n "$NETWORK_CONFIG" ] && NETWORK_CONFIG_ENV="$NETWORK_CONFIG"
 [ -e /etc/rc.defaults ] && . /etc/rc.defaults
 [ -e /etc/rc.conf ] && . /etc/rc.conf
+[ -e /etc/network ] && . /etc/network
 
 # Source a custom configuration file if specified
 # in the environment.

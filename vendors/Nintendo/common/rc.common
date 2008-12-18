@@ -9,7 +9,7 @@ then
 else
 	echo "The file /etc/rc.conf does not exist on your system,"
 	echo "so the default configuration will be used."
-	echo "The file /etc/rc.defaults contains instructions on how"
+	echo "Type 'cfg_rc' at a command prompt"
 	echo "to create /etc/rc.conf to customise your dslinux installation."
 fi
 

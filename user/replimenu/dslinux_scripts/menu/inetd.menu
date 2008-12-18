@@ -1,0 +1,76 @@
+caption = inetd.conf generator
+colorscheme = 1
+text = Select which inetd services you require
+aftertext = Please remember to start inetd!
+runonexit = /usr/bin/cfg_inetd
+
+#A bodge so wrapper script knows where it was called from
+begin item
+    name = calledfrom
+    type = var | hidden
+    default = 1
+end item
+
+br Networking
+
+begin item
+    name = telnetd
+    type = checkbox
+    label = Telnet Daemon (INSECURE - USE SSHD)
+    default = telnet     stream tcp nowait root /bin/telnetd
+end
+    
+begin item
+    name = sshd
+    type = checkbox
+    label = Dropbear SSH daemon
+    default = ssh     stream tcp nowait root /usr/bin/dropbear -r /etc/dropbear_rsa_host_key -F -i
+end
+
+begin item
+    name = ftpd
+    type = checkbox
+    label = FTP Daemon
+    default = ftp     stream tcp nowait root /usr/bin/ftpd -l
+end
+
+begin item
+    name = smbd
+    type = checkbox
+    label = SAMBA Windows networking
+    default = netbios-ssn stream tcp nowait root /usr/bin/smbd -F
+end
+
+br
+br Games
+
+begin item
+    name = advent4
+    type = checkbox
+    label = Adventure daemon
+    default = advent4 stream tcp nowait root /usr/games/advent4
+end
+
+begin item
+    name = dungeon
+    type = checkbox
+    label = Dungeon daemon
+    default = dungeon stream tcp nowait root /usr/games/dungeon
+end
+
+br
+
+begin item
+    name = QUIT
+    type = runonexitlast|usecommandretval
+    bullet = <--
+    label = Quit and generate /etc/inetd.conf
+    command = echo "Generating /etc/inetd.conf"; exit 0
+end
+
+begin item
+    name = QUIT
+    bullet = <--
+    label = Quit and do nothing
+    command = exit 1
+end
