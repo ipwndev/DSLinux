@@ -1,0 +1,78 @@
+caption = Nintendo WFC Network Configuration
+colorscheme = 1
+aftertext = http://www.dslinux.org
+runonexit = /usr/bin/cfg_netwfc
+
+#A bodge so wrapper script knows where it was called from
+begin item
+    name = calledfrom
+    type = var | hidden
+    default = 1
+end item
+
+br
+br View
+br
+
+begin item
+    name = vwfc1
+    label = View Wifi Connection 1 Configuration
+    type = pause
+    command = wfcdump -c 1
+end item
+
+begin item
+    name = vwfc2
+    label = View Wifi Connection 2 Configuration
+    type = pause
+    command = wfcdump -c 2
+end item
+
+begin item
+    name = vwfc3
+    label = View Wifi Connection 3 Configuration
+    type = pause
+    command = wfcdump -c 3
+end item
+
+br
+br Select WFC
+br
+
+begin item
+    name = wfc
+    type = radiobutton | selected
+    label = 1
+    default = 1
+end item
+
+begin item
+    name = wfc
+    type = radiobutton
+    label = 2
+    default = 2
+end item
+
+begin item
+    name = wfc
+    type = radiobutton
+    label = 3
+    default = 3
+end item
+
+
+
+begin item
+    name = QUIT
+    type = runonexitlast|usecommandretval
+    bullet = <--
+    label = Quit and save settings
+    command = exit 0
+end
+
+begin item
+    name = QUIT
+    bullet = <--
+    label = Quit and do nothing
+    command = exit 1
+end

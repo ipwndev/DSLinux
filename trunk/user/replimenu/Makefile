@@ -105,3 +105,5 @@ dist:
 
 romfs:
 	$(ROMFSINST) src/replimenu /usr/bin
+	$(ROMFSINST) -e CONFIG_USER_REPLIMENU_CFGS dslinux_scripts/menu/ /usr/share/replimenu/
+	$(ROMFSINST) -e CONFIG_USER_REPLIMENU_CFGS dslinux_scripts/scripts/ /usr/bin

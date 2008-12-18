@@ -1,0 +1,97 @@
+caption = Manual Network Configuration
+colorscheme = 1
+aftertext = http://www.dslinux.org
+runonexit = /usr/bin/cfg_netmanual
+
+#A bodge so wrapper script knows where it was called from
+begin item
+    name = calledfrom
+    type = var | hidden
+    default = 1
+end item
+
+br
+br Network Configuration
+br
+
+begin item
+    name = essid
+    type = input | var | notempty
+    label = ESSID
+    default = 
+end
+
+begin item
+    name = channel
+    type = input | var | notempty
+    label = Channel
+    default = 11
+end
+
+begin item
+    name = wepkey
+    type = input | var
+    label = WEP Key (If not in use, leave empty)
+    default = 
+end
+
+br
+br Leave the following blank to use DHCP
+br
+
+begin item
+    name = ip
+    type = input | var 
+    label = IP Address
+    default =
+end
+
+begin item
+    name = gateway
+    type = input | var 
+    label = Gateway
+    default =
+end
+
+begin item
+    name = dns1
+    type = input | var 
+    label = DNS server #1
+    default = 
+end
+
+begin item
+    name = dns2
+    type = input | var 
+    label = DNS server #2
+    default = 
+end
+
+begin item
+    name = netmask
+    type = input | var 
+    label = Netmask
+    default =
+end
+
+begin item
+    name = broadcast
+    type = input | var
+    label = Broadcast
+    default =
+end
+
+begin item
+    name = QUIT
+    type = runonexitlast|usecommandretval
+    bullet = <--
+    label = Quit and save settings
+    command = exit 0
+end
+
+begin item
+    name = QUIT
+    bullet = <--
+    label = Quit and do nothing
+    command = exit 1
+end

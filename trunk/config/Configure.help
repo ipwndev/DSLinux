@@ -4014,6 +4014,9 @@ CONFIG_USER_REPLIMENU
   replimenu is a small menu program mainly for boot-diskettes. 
   It's not as powerful as "dialog" but it's small and does the job 
 
+CONFIG_USER_REPLIMENU_CFGS
+  Build DSLinux configuration menus for use with replimenu
+
 CONFIG_USER_FBVIEW
   A simple framebuffer image viewer
   It supports 24bit BMP and PNG files. 
