@@ -101,6 +101,8 @@ dir_$(CONFIG_LIB_LIBGETTEXT)	+= gettext
 dir_$(CONFIG_LIB_LIBGETTEXT_FORCE)  += gettext
 dir_$(CONFIG_LIB_LIBGLIB)	+= glib
 dir_$(CONFIG_LIB_LIBGLIB_FORCE)  += glib
+dir_$(CONFIG_LIB_LIBSAMPLERATE)  += libsamplerate
+dir_$(CONFIG_LIB_LIBSAMPLERATE_FORCE)  += libsamplerate
 dir_$(CONFIG_LIB_LIBTREMOR)       += libtremor
 dir_$(CONFIG_LIB_LIBTREMOR_FORCE) += libtremor
 dir_$(CONFIG_LIB_SDL)       += sdl
@@ -205,7 +207,8 @@ LINKLIBS=\
 	$(ROOTDIR)/lib/sdl/src/build/.libs/*.a \
 	$(ROOTDIR)/lib/audiofile/src/libaudiofile/.libs/*.a \
 	$(ROOTDIR)/lib/libtremor/src/.libs/*.a \
-	$(ROOTDIR)/lib/sdl_mixer/src/build/.libs/*.a 
+	$(ROOTDIR)/lib/sdl_mixer/src/build/.libs/*.a \
+	$(ROOTDIR)/lib/libsamplerate/src/src/.libs/*.a 
 
 ##############################################################################
 
