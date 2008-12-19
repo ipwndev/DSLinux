@@ -49,6 +49,11 @@ CONFIG_USER_AGETTY_AGETTY=y
 # CONFIG_USER_AT_ATRUN is not set
 
 #
+# Config scripts
+#
+# CONFIG_USER_REPLIMENU_CFGS is not set
+
+#
 # Library Configuration
 #
 
@@ -76,6 +81,7 @@ CONFIG_USER_AGETTY_AGETTY=y
 # CONFIG_LIB_LIBUPNP_FORCE is not set
 # CONFIG_LIB_NCURSES_FORCE is not set
 # CONFIG_LIB_STLPORT is not set
+# CONFIG_LIB_LIBSAMPLERATE_FORCE is not set
 # CONFIG_LIB_STLPORT_SHARED is not set
 # CONFIG_LIB_EXPAT_FORCE is not set
 # CONFIG_LIB_ADNS_FORCE is not set
@@ -93,6 +99,7 @@ CONFIG_USER_AGETTY_AGETTY=y
 # CONFIG_LIB_TREMOR_FORCE is not set
 # CONFIG_LIB_SDL_FORCE is not set
 # CONFIG_LIB_SDL_MIXER_FORCE is not set
+# CONFIG_LIB_LIBSNDFILE_FORCE is not set
 
 #
 # Library Configuration
@@ -495,6 +502,7 @@ CONFIG_USER_MATHOMATIC=y
 # CONFIG_USER_PLAYTZX_PLAYTZX is not set
 # CONFIG_USER_RAWREC_RAWREC is not set
 # CONFIG_USER_RAWREC_RAWPLAY is not set
+# CONFIG_USER_SOX is not set
 # CONFIG_USER_XMP_XMP is not set
 
 #
