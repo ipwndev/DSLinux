@@ -972,8 +972,8 @@ bool 'rawrec'			CONFIG_USER_RAWREC_RAWREC
 bool 'rawplay'			CONFIG_USER_RAWREC_RAWPLAY
 bool 'sox'			CONFIG_USER_SOX
 if [ "$CONFIG_USER_SOX" = "y" ]; then
-	define_bool CONFIG_LIB_LIBSAMPLERATE=y
-	define_bool CONFIG_LIB_LIBSNDFILE=y
+	define_bool CONFIG_LIB_LIBSAMPLERATE y
+	define_bool CONFIG_LIB_LIBSNDFILE y
 fi
 bool 'xmp'			CONFIG_USER_XMP_XMP
 
