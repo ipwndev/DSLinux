@@ -4,7 +4,7 @@ all: .compiled
 
 LIBSNDFILE_CONFIGURE_FLAGS= 	--enable-shared=no --enable-static=yes \
 				--prefix=$(ROOTDIR) --disable-largefile \
-				--disable-alsa
+				--disable-alsa --disable-sqlite
 
 .configured:
 	cd src && env CFLAGS="$(CFLAGS)"\
