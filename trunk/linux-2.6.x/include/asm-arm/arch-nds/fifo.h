@@ -119,11 +119,28 @@ enum FIFO_WIFI_CMDS {
 #define FIFO_MIC_DATA(d)	(d & 0x00ffffff)
 #define FIFO_MIC_DMA(d)	(FIFO_MIC_DATA(d) + 0x02000000)
 
+/* MIC arm9 => arm7 commands */
+#define FIFO_MIC_PERIOD_SIZE (1<<24)
 #define FIFO_MIC_DMA_ADDRESS	(2<<24) //FIFO_DMA_ADDRESS
 #define FIFO_MIC_DMA_SIZE	(3<<24) //FIFO_DMA_SIZE
+#define FIFO_MIC_FORMAT	(4<<24) //FIFO_SOUND_FORMAT
 #define FIFO_MIC_RATE	(5<<24) //FIFO_SOUND_RATE
 #define FIFO_MIC_TRIGGER	(6<<24) //FIFO_SOUND_TRIGGER
 #define FIFO_MIC_POWER	(7<<24) //FIFO_SOUND_POWER
+
+/* MIC arm7 => arm9 messages */
+#define FIFO_MIC_HAVEDATA	(1<<24)
+
+/* MIC FORMAT defines */
+#define MIC_FORMAT_8BIT	1
+#define MIC_FORMAT_16BIT	0
+#define MIC_FORMAT_SIGNED	2
+#define MIC_FORMAT_UNSIGNED	0
+
+#define MIC_FORMAT_U8	MIC_FORMAT_8BIT  | MIC_FORMAT_UNSIGNED
+#define MIC_FORMAT_S8	MIC_FORMAT_8BIT  | MIC_FORMAT_SIGNED
+#define MIC_FORMAT_U16	MIC_FORMAT_16BIT | MIC_FORMAT_UNSIGNED
+#define MIC_FORMAT_S16	MIC_FORMAT_16BIT | MIC_FORMAT_SIGNED
 
 /* FIFO registers */
 #define NDS_REG_IPCFIFOSEND (*(volatile u32*) 0x04000188)
@@ -149,6 +166,7 @@ struct fifo_cb
 		void (*touch_handler)(u8 pressed, u8 x, u8 y);
 		void (*time_handler)(u32 seconds);
 		void (*wifi_handler)(u8 cmd, u32 data);
+		void (*mic_handler)(void); 
 		/* ... */
 	} handler;
 };

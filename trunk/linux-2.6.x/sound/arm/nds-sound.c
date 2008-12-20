@@ -26,7 +26,7 @@
 #define TIMER_CASCADE	(TIMER_ENABLE|(1<<2))
 
 #define DMA_BUFFERSIZE	(128*1024)
-#define DMA_BUFFERSIZE_CAPTURE (32768)
+#define DMA_BUFFERSIZE_CAPTURE (64*1024)
 
 /* module parameters (see "Module Parameters") */
 static int index[SNDRV_CARDS] = SNDRV_DEFAULT_IDX;
@@ -77,18 +77,25 @@ static snd_pcm_hardware_t snd_nds_capture_hw = {
 	.info = (SNDRV_PCM_INFO_MMAP |
 		 SNDRV_PCM_INFO_NONINTERLEAVED |
 		 SNDRV_PCM_INFO_BLOCK_TRANSFER | SNDRV_PCM_INFO_MMAP_VALID),
-	.formats = SNDRV_PCM_FMTBIT_U8 /*| SNDRV_PCM_FMTBIT_U16_LE*/,
+	.formats =  SNDRV_PCM_FMTBIT_U8 | 
+				SNDRV_PCM_FMTBIT_S8 | 
+				SNDRV_PCM_FMTBIT_U16_LE |
+				SNDRV_PCM_FMTBIT_S16_LE,
 	.rates = SNDRV_PCM_RATE_8000_48000,
 	.rate_min = 8000,
 	.rate_max = 48000,
 	.channels_min = 1,
 	.channels_max = 1,
-	.buffer_bytes_max = 32768,
-	.period_bytes_min = 512,
-	.period_bytes_max = 4096,
+	.buffer_bytes_max = DMA_BUFFERSIZE_CAPTURE,
+	.period_bytes_min = DMA_BUFFERSIZE_CAPTURE/16,
+	.period_bytes_max = DMA_BUFFERSIZE_CAPTURE/8,
 	.periods_min = 1,
 	.periods_max = 1024,
 };
+
+static struct nds *capture_chip;  //Global reference for capture to deal with the FIFO signals.
+
+
 
 /* Set the sample format */
 void nds_playback_set_sample_format(struct nds *chip, snd_pcm_format_t format)
@@ -105,6 +112,27 @@ void nds_playback_set_sample_format(struct nds *chip, snd_pcm_format_t format)
 		break;
 	default:
 		break;
+	}
+}
+
+void nds_capture_set_sample_format(struct nds *chip, snd_pcm_format_t format)
+{
+	switch (format)
+	{
+		case SNDRV_PCM_FORMAT_U8:
+			nds_fifo_send(FIFO_MIC | FIFO_MIC_FORMAT | MIC_FORMAT_U8);
+			break;
+		case SNDRV_PCM_FORMAT_S8:
+			nds_fifo_send(FIFO_MIC | FIFO_MIC_FORMAT | MIC_FORMAT_S8);
+			break;
+		case SNDRV_PCM_FORMAT_U16_LE:
+			nds_fifo_send(FIFO_MIC | FIFO_MIC_FORMAT | MIC_FORMAT_U16);
+			break;
+		case SNDRV_PCM_FORMAT_S16_LE:
+			nds_fifo_send(FIFO_MIC | FIFO_MIC_FORMAT | MIC_FORMAT_S16);
+			break;
+		default:
+			snd_printk("nds_capture_set_sample_format(): Unrecognized Format: %d\n", format);
 	}
 }
 
@@ -140,6 +168,7 @@ void nds_capture_set_dma_setup(struct nds *chip, unsigned char *dma_area,
 	nds_fifo_send(FIFO_MIC | FIFO_MIC_DMA_SIZE | buffer_size);
 	nds_fifo_send(FIFO_MIC | FIFO_MIC_DMA_ADDRESS |
 		(((u32) dma_area) & 0xffffff));
+	nds_fifo_send(FIFO_MIC | FIFO_MIC_PERIOD_SIZE | period_size);
 }
 
 /* open callback */
@@ -195,12 +224,10 @@ static int snd_nds_capture_open(snd_pcm_substream_t * substream)
 /* close callback */
 static int snd_nds_capture_close(snd_pcm_substream_t * substream) 
 {
-	// turn off the power to the mic and clear the timer.
+	// turn off the power to the mic.
 	nds_fifo_send(FIFO_MIC | FIFO_MIC_POWER | 0);
-	
-	TIMER1_CR=0;
-	TIMER2_CR=0;
-  return 0;
+	capture_chip = NULL;
+	return 0;
 }
 
 /* hw_params callback */
@@ -258,65 +285,42 @@ static int snd_nds_playback_prepare(snd_pcm_substream_t * substream)
 	return 0;
 }
 
+/****************************************
+ *snd_nds_capture_prepare:
+ ****************************************/
 static int snd_nds_capture_prepare(snd_pcm_substream_t * substream)
 {
 	struct nds *chip = snd_pcm_substream_chip(substream);
 	snd_pcm_runtime_t *runtime = substream->runtime;
-	/* set up the hardware with the current configuration
-	 * for example...
-	 */
 
 	chip->buffer_size = snd_pcm_lib_buffer_bytes(substream);
 	chip->period_size = snd_pcm_lib_period_bytes(substream);
 
-	TIMER1_CR = 0;
-	TIMER2_CR = 0;
-	/* use exactly the same formula as for ARM7, to get the
-	   same period regarding rounding errors */
-	TIMER1_DATA = 0 - ((0x1000000 / runtime->rate)*2);
-
-	TIMER2_DATA = 0 - (chip -> period_size / runtime -> channels);
-
-	switch (runtime->format) {
-	case SNDRV_PCM_FORMAT_U8:
-	case SNDRV_PCM_FORMAT_S8:
-	case SNDRV_PCM_FORMAT_S16_LE:
-	case SNDRV_PCM_FORMAT_IMA_ADPCM:
-	  break;
-	default:
-	  printk("Error format is not handled?%d\n",runtime -> format);
-		break;
-	}
-
-	//nds_playback_set_channels(chip, runtime->channels);
-	//nds_playback_set_sample_format(chip, runtime->format);
+	nds_capture_set_sample_format(chip, runtime->format);
 	nds_capture_set_sample_rate(chip, runtime->rate);
 	nds_capture_set_dma_setup(chip, capturebuf,
 				   chip->buffer_size, chip->period_size);
 	chip->period = 0;
 
+	//pointer to the chip so we can log the period that are finished by the arm7.
+	capture_chip = chip;
 	return 0;
-
-
 }
-/* trigger callback */
-static int snd_nds_pcm_trigger(snd_pcm_substream_t * substream, int cmd)
+
+
+
+/****************************************
+ *snd_nds_playback_trigger()
+ ****************************************/
+static int snd_nds_playback_trigger(snd_pcm_substream_t * substream, int cmd)
 {
 	snd_pcm_runtime_t *runtime = substream->runtime;
-	int target;
-	if (substream -> stream == SNDRV_PCM_STREAM_CAPTURE)
-	{
-		target = FIFO_MIC;
-	}
-	else 
-	{
-		target = FIFO_SOUND;
-	}
 
-	switch (cmd) {
+	switch (cmd) 
+	{
 	case SNDRV_PCM_TRIGGER_START:
 		// start the PCM engine
-		nds_fifo_send(target | FIFO_SOUND_TRIGGER | 1);
+		nds_fifo_send(FIFO_SOUND | FIFO_SOUND_TRIGGER | 1);
 
 		/* wait until we know for shure that the ARM7 has 
 		   started the sound output */
@@ -329,15 +333,38 @@ static int snd_nds_pcm_trigger(snd_pcm_substream_t * substream, int cmd)
 			;
 
 		/* now we can start the timer and be shure that
-                   the timer interrupt is not comming to early. */
+	       the timer interrupt is not comming to early. */
 		TIMER1_CR = TIMER_ENABLE;
 		TIMER2_CR = TIMER_CASCADE | TIMER_IRQ_REQ;
 		break;
 	case SNDRV_PCM_TRIGGER_STOP:
 		// stop the PCM engine
-		nds_fifo_send(target | FIFO_SOUND_TRIGGER | 0);
+		nds_fifo_send(FIFO_SOUND | FIFO_SOUND_TRIGGER | 0);
 		TIMER1_CR = 0;
 		TIMER2_CR = 0;
+		break;
+	default:
+		return -EINVAL;
+	}
+	return 0;
+}
+
+/*************************************
+ *snd_nds_capture_trigger()
+ *************************************/
+static int snd_nds_capture_trigger(snd_pcm_substream_t * substream, int cmd)
+{
+
+	switch (cmd) 
+	{
+	case SNDRV_PCM_TRIGGER_START:
+		// start the PCM engine
+		nds_fifo_send(FIFO_MIC | FIFO_MIC_TRIGGER | 1);
+		break;
+	case SNDRV_PCM_TRIGGER_STOP:
+		// stop the PCM engine
+		nds_fifo_send(FIFO_MIC | FIFO_MIC_TRIGGER | 0);
+		capture_chip = NULL;
 		break;
 	default:
 		return -EINVAL;
@@ -355,15 +382,33 @@ static snd_pcm_uframes_t snd_nds_pcm_pointer(snd_pcm_substream_t * substream)
 	return chip->period * runtime->period_size;
 }
 
-static int capture_copy(snd_pcm_substream_t *substream, int channel,
+/*******************************
+ *snd_nds_capture_copy()
+ *******************************/
+static int snd_nds_capture_copy(snd_pcm_substream_t *substream, int channel,
 			snd_pcm_uframes_t pos, void *dst, snd_pcm_uframes_t count)
 {
+	snd_pcm_runtime_t *runtime = substream->runtime;
+	char *cdst = (char*)dst;
+	int cpos;
+	int ccount;
 	int i;
-	char* cdst = (char*)dst;
-	for (i=0;i<count;i++)
+	switch (runtime -> format) 
 	{
-		cdst[i] = capturebuf[pos+i];
+	default:
+	case SNDRV_PCM_FORMAT_U8:
+	case SNDRV_PCM_FORMAT_S8:
+		cpos = pos;
+		ccount = count;
+		break;
+	case SNDRV_PCM_FORMAT_S16_LE:
+	case SNDRV_PCM_FORMAT_U16_LE:
+		cpos = pos * 2;
+		ccount = count * 2;
+		break;
 	}
+	memcpy(dst, &capturebuf[cpos], ccount);
+
 	return 0;
 }
 
@@ -375,7 +420,7 @@ static snd_pcm_ops_t snd_nds_playback_ops = {
 	.hw_params = snd_nds_pcm_hw_params,
 	.hw_free = snd_nds_pcm_hw_free,
 	.prepare = snd_nds_playback_prepare,
-	.trigger = snd_nds_pcm_trigger,
+	.trigger = snd_nds_playback_trigger,
 	.pointer = snd_nds_pcm_pointer,
 };
 
@@ -387,14 +432,12 @@ static snd_pcm_ops_t snd_nds_capture_ops = {
 	.hw_params = snd_nds_pcm_hw_params,
 	.hw_free = snd_nds_pcm_hw_free,
 	.prepare = snd_nds_capture_prepare,
-	.trigger = snd_nds_pcm_trigger,
+	.trigger = snd_nds_capture_trigger,
 	.pointer = snd_nds_pcm_pointer,
-	.copy = capture_copy,
+	.copy = snd_nds_capture_copy,
 };
 
-/*
- * definitions of capture are omitted here...
- */
+
 /* create a pcm device */
 static int __devinit snd_nds_new_pcm(struct nds *chip)
 {
@@ -435,6 +478,42 @@ static int __devinit snd_nds_new_pcm(struct nds *chip)
 	return 0;
 }
 
+/*************************************
+ *nds_mic_handler(): Handles the HAVE_DATA signals from the arm7 when recording microphone data.
+ *************************************/
+static void nds_mic_handler(void) 
+{
+	struct nds *chip = capture_chip;
+	snd_pcm_substream_t *substream;
+	snd_pcm_runtime_t *runtime;
+	u8 period;
+	if (chip)
+	{
+		substream = chip->substream;
+		runtime = substream->runtime;
+
+		spin_lock(&chip->lock);
+
+		period = chip->period + 1;
+		if (period == runtime->periods)
+			period = 0;
+		chip->period = period;
+
+		spin_unlock(&chip->lock);
+
+		/* call updater, unlock before it */
+		snd_pcm_period_elapsed(chip->substream);
+	}
+}
+
+static struct fifo_cb nds_mic_fifocb = {
+	.type = FIFO_MIC,
+	.handler.mic_handler = nds_mic_handler
+};
+
+/*****************************************
+ *snd_nds_interrupt() : Handles the interrupt from the timer for sound
+ *****************************************/
 static irqreturn_t snd_nds_interrupt(int irq, void *dev_id,
 				     struct pt_regs *regs)
 {
@@ -501,7 +580,7 @@ static int __devinit snd_nds_create(snd_card_t * card, struct nds **rchip)
 	chip->card = card;
 	spin_lock_init(&chip->lock);
 
-	// TODO: register with FIFO or IPC here
+	register_fifocb(&nds_mic_fifocb);
 
 	if (request_irq(IRQ_TC2, snd_nds_interrupt,
 			SA_INTERRUPT, "NDS sound", chip)) {
@@ -518,6 +597,7 @@ static int __devinit snd_nds_create(snd_card_t * card, struct nds **rchip)
 	*rchip = chip;
 	return 0;
 }
+
 
 /* constructor -- see "Constructor" sub-section */
 static int __init snd_nds_init(void)
@@ -570,6 +650,7 @@ static int __init snd_nds_init(void)
 static void __exit snd_nds_exit(void)
 {
 	//snd_card_free(nds_sound->card);
+	unregister_fifocb(&nds_mic_fifocb);
 }
 
 module_init(snd_nds_init);

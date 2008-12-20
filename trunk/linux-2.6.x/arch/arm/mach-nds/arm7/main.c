@@ -89,6 +89,9 @@ static void recieveFIFOCommand(void)
 			break;
 		case FIFO_MIC:
 			switch (FIFO_MIC_CMD(data)) {
+			case FIFO_MIC_FORMAT:
+				mic_set_format(FIFO_MIC_DATA(data));
+				break;
 			case FIFO_MIC_POWER:
 				if (data & 0x1) 
 					mic_on(); 
@@ -99,6 +102,9 @@ static void recieveFIFOCommand(void)
 				break;
 			case FIFO_MIC_DMA_SIZE:
 				mic_set_size(FIFO_MIC_DATA(data));
+				break;
+			case FIFO_MIC_PERIOD_SIZE:
+				mic_set_period_size(FIFO_MIC_DATA(data));
 				break;
 			case FIFO_MIC_RATE:
 				mic_set_rate(FIFO_MIC_DATA(data));
