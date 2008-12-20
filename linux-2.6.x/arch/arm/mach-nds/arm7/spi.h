@@ -24,5 +24,7 @@ void read_firmware(u32 address, u8 * destination, int count);
 
 void mic_on_off(u8 control);
 u8 mic_read8(void);
+u16 mic_read12(void);
+
 
 #endif

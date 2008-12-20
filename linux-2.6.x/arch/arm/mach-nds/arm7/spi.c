@@ -18,7 +18,7 @@ extern void swiDelay(u32 duration);
 #define SPI_POWER	(0<<8)
 #define SPI_FIRMWARE	(1<<8)
 #define SPI_TOUCH	(2<<8)
-#define SPI_MIC	(2<<8) // TODO Check
+#define SPI_MIC	(2<<8)
 #define SPI_8CLOCKS	(0<<10)
 #define SPI_16CLOCKS	(1<<10)
 #define SPI_SINGLE	(0<<11)
@@ -193,7 +193,7 @@ u8 mic_read8() {
 	WAIT_FOR_NOT_BUSY();
 
 	result = REG_SPI_DATA;
-	REG_SPI_CR = SPI_ENABLE | SPI_TOUCH | SPI_2MHZ;
+	REG_SPI_CR = SPI_ENABLE | SPI_MIC | SPI_2MHZ;
 	REG_SPI_DATA = 0x00;
 
 	WAIT_FOR_NOT_BUSY();
@@ -203,3 +203,36 @@ u8 mic_read8() {
 	return (((result & 0x7F) << 1) | ((result2>>7)&1));
 
 }
+
+
+/*
+ * mic_read12() : Read a short from the microphone. 
+ * Code based on neimod's example.
+ */
+u16 mic_read12() {
+
+	static u16 result, result2;
+
+	WAIT_FOR_NOT_BUSY();
+
+	REG_SPI_CR = SPI_ENABLE | SPI_MIC | SPI_2MHZ | SPI_CONTINUOUS;
+	
+	REG_SPI_DATA = 0xE4;  // Touchscreen command format for AUX, 12bit
+
+	WAIT_FOR_NOT_BUSY();
+
+	REG_SPI_DATA = 0x00;
+
+	WAIT_FOR_NOT_BUSY();
+
+	result = REG_SPI_DATA;
+	REG_SPI_CR = SPI_ENABLE | SPI_TOUCH | SPI_2MHZ;
+	REG_SPI_DATA = 0x00;
+
+	WAIT_FOR_NOT_BUSY();
+
+	result2 = REG_SPI_DATA;
+
+	return (((result & 0x7F) << 5) | ((result2>>3)&0x1F));
+}
+
