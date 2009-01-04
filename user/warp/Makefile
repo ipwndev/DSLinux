@@ -5,7 +5,7 @@ all: .compiled
 WARP_CONFIGURE_FLAGS=--with-sdl-prefix=$(ROOTDIR)
 
 .configured:
-	cd src && LIBS="-lm -lSDL -lpthread"\
+	cd src && LIBS="-lSDL -lpthread -lm"\
 		./configure --host=arm-linux-elf \
 		--prefix=/nonexistent $(WARP_CONFIGURE_FLAGS)
 	touch $@
