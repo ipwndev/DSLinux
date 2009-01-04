@@ -101,6 +101,8 @@ dir_$(CONFIG_LIB_LIBGETTEXT)	+= gettext
 dir_$(CONFIG_LIB_LIBGETTEXT_FORCE)  += gettext
 dir_$(CONFIG_LIB_LIBGLIB)	+= glib
 dir_$(CONFIG_LIB_LIBGLIB_FORCE)  += glib
+dir_$(CONFIG_LIB_LIBSNDFILE) += libsndfile
+dir_$(CONFIG_LIB_LIBSNDFILE_FORCE) += libsndfile
 dir_$(CONFIG_LIB_LIBSAMPLERATE)  += libsamplerate
 dir_$(CONFIG_LIB_LIBSAMPLERATE_FORCE)  += libsamplerate
 dir_$(CONFIG_LIB_LIBTREMOR)       += libtremor
@@ -111,8 +113,6 @@ dir_$(CONFIG_LIB_SDL_MIXER)       += sdl_mixer
 dir_$(CONFIG_LIB_SDL_MIXER_FORCE) += sdl_mixer
 dir_$(CONFIG_LIB_AUDIOFILE) += audiofile
 dir_$(CONFIG_LIB_AUDIOFILE_FORCE) += audiofile
-dir_$(CONFIG_LIB_LIBSNDFILE) += libsndfile
-dir_$(CONFIG_LIB_LIBSNDFILE_FORCE) += libsndfile
 
 # And build libraries in the prop directory last
 dir_y += $(ROOTDIR)/prop
