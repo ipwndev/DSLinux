@@ -1,2 +1,0 @@
-Simple daemon to handle the hinge on the Nintendo DS
-Monitors /dev/input/event0 for EV_SW events and calls /usr/bin/lidopen or /usr/bin/lidclosed via system()
