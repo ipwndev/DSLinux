@@ -27,5 +27,7 @@ ntpclient.o phaselock.o: ntpclient.h
 
 adjtimex: adjtimex.o
 
+romfs:
+	$(ROMFSINST) ntpclient /usr/bin
 clean:
 	rm -f ntpclient adjtimex *.o
