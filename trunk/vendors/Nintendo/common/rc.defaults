@@ -170,4 +170,9 @@ check_update="NO"
 # To start the hinged daemon, change to "YES"
 start_hinged="NO"
 
+# Specify a ntp server for ntpclient
+# otherwise leave blank for the default
+start_ntpclient="YES"
+ntpserver=""
+
 # End of file.

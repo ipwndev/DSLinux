@@ -78,6 +78,16 @@ then
 		echo "Not starting iptables: network is down"
 	fi
 fi
+# Start ntpclient
+if [ "$start_ntpclient" = "YES" ]
+then
+	if [ "$__network_up" = "YES" ]
+	then
+		/etc/rc.d/ntpclient start
+	else
+		echo "Not starting ntpclient: network is down"
+	fi
+fi
 # start inetd if configured
 if [ "$start_inetd" = "YES" ]
 then
