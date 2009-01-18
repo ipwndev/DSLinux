@@ -1,0 +1,95 @@
+#!/bin/sh
+# This can be used as a 'skeleton' script to build new rc.d scripts around
+
+[ -e /etc/rc.defaults ] && . /etc/rc.defaults
+[ -e /etc/rc.conf ] && . /etc/rc.conf
+
+DAEMON=ntpclient
+DEFAULTOPTS="pool.ntp.org"
+
+case "$1" in
+	start)
+		
+		if [ ! -f "/var/run/$DAEMON.pid" ]
+		then
+			# Set default options if none set in rc.conf
+			if [ $ntpserver="" ]
+			then
+				echo "No options set in rc.conf for $DAEMON, using defaults"
+				ntpserver=$DEFAULTOPTS
+			fi
+			# Start Daemon
+			echo "Starting $DAEMON"
+			$DAEMON -d -h $ntpserver >> /var/log/ntpclient.log &
+			# Get Daemon pid
+			# Strip script PID from pidof output
+			DAEMONPID=`pidof $DAEMON|sed s/$$//`
+			# Write pid to file
+			echo $DAEMONPID > /var/run/$DAEMON.pid
+			# Check Daemon launched OK
+			if ps -fp$! > /dev/null 2>&1
+			then
+				echo "  >> OK"
+			else
+				echo "  ** FAILED"
+			fi
+		else
+			# Daemon already running, show status
+			echo "already running"
+			$0 status
+			exit 1
+		fi
+		;;
+	stop)
+		# Make sure we don't nuke this script 
+		# in the process of stopping daemon.
+		# killall will kill this script as well
+		# as it shares the same ps name
+		if [ ! -f "/var/run/$DAEMON.pid" ]
+                then                                   
+			# Daemon not running, show status
+                        $0 status
+			exit 1
+		fi
+		echo "Stopping $DAEMON"
+		# kill daemon
+		kill `cat /var/run/$DAEMON.pid`
+		# Remove pid file
+		rm /var/run/$DAEMON.pid
+		echo "  >> OK"
+		;;
+	restart)
+		# If daemon not running, start
+		# Otherwise start and stop daemon
+		# Ugly hack as ps id's change when using
+		# $0 start and $0 stop
+
+		if [ ! -f "/var/run/$DAEMON.pid" ]
+		then
+			echo "$DAEMON not running, starting"
+			exec /etc/rc.d/$DAEMON start
+		else
+			echo "Stopping $DAEMON"
+			kill `cat /var/run/$DAEMON.pid`
+			rm /var/run/$DAEMON.pid
+			echo "  >> OK"
+			exec /etc/rc.d/$DAEMON start
+		fi
+		;;
+
+	status)
+		
+		if [ ! -f "/var/run/$DAEMON.pid" ]
+		then
+			echo "$DAEMON is not running or pidfile does not exist"
+		else
+			DAEMONPID=`cat /var/run/$DAEMON.pid`
+			echo "$DAEMON is running with pid $DAEMONPID"
+		fi
+		;;
+	*)
+		echo "Usage: $0 <start|stop|restart|status>"
+		exit 1
+		;;
+esac
+# vim:ts=4:sw=4:ic:ai:nows:
