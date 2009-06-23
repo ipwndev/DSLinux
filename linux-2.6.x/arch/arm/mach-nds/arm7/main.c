@@ -24,6 +24,7 @@ static void recieveFIFOCommand(void)
 	u32 fifo_recv;
 	u32 data;
 	u32 seconds = 0;
+	u32 power;
 	int cmd;
 	struct nds_tx_packet *tx_packet = NULL;
 
@@ -49,8 +50,24 @@ static void recieveFIFOCommand(void)
 			}
 			break;
 		case FIFO_POWER:
-			power_write(POWER_CONTROL, POWER0_SYSTEM_POWER);
-			break;
+			cmd = FIFO_POWER_GET_CMD(data);
+			switch (cmd) {
+			case FIFO_POWER_CMD_BACKLIGHT_ENABLE:
+	 				power = power_read(POWER_CONTROL);
+		        		power_write(POWER_CONTROL, power | POWER0_LOWER_BACKLIGHT | POWER0_UPPER_BACKLIGHT);
+					
+				break;
+			case FIFO_POWER_CMD_BACKLIGHT_DISABLE:
+					power = power_read(POWER_CONTROL);
+					power &= ~(POWER0_LOWER_BACKLIGHT | POWER0_UPPER_BACKLIGHT);
+					power_write(POWER_CONTROL, power);
+				
+				break;
+			case FIFO_POWER_CMD_SYSTEM_POWER:
+					power_write(POWER_CONTROL, POWER0_SYSTEM_POWER);
+				break;
+				}
+	 		break;
 		case FIFO_TIME:
 			seconds = nds_get_time7();
 			nds_fifo_send(FIFO_TIME | FIFO_HIGH_BITS |

@@ -43,6 +43,23 @@
 #define FIFO_LOW_BITS   (1<<17)
 
 /* 
+ * Fifo commands for power management chip
+ * +-------------------------------------------------------------------------+
+ * |3 bits FIFO_FIRMWARE | 5 bits FIFO_CMD_FIRMWARE_x | 24 bits command data |
+ * +-------------------------------------------------------------------------+
+*/
+#define FIFO_POWER_CMD(c, d) (FIFO_POWER | ((c & 0x1f) << 24) | (d & 0x00ffffff))
+#define FIFO_POWER_GET_CMD(c) ((c >> 24) & 0x1f)
+#define FIFO_POWER_GET_DATA(d) (d & 0x00ffffff)
+#define FIFO_POWER_DECODE_ADDRESS(a) ((a) + 0x02000000)
+
+enum FIFO_POWER_CMDS {
+		FIFO_POWER_CMD_BACKLIGHT_ENABLE,
+		FIFO_POWER_CMD_BACKLIGHT_DISABLE,
+		FIFO_POWER_CMD_SYSTEM_POWER
+};
+
+/* 
  * Fifo commands for firmware dumper.
  * +-------------------------------------------------------------------------+
  * |3 bits FIFO_FIRMWARE | 5 bits FIFO_CMD_FIRMWARE_x | 24 bits command data |
@@ -166,7 +183,8 @@ struct fifo_cb
 		void (*touch_handler)(u8 pressed, u8 x, u8 y);
 		void (*time_handler)(u32 seconds);
 		void (*wifi_handler)(u8 cmd, u32 data);
-		void (*mic_handler)(void); 
+		void (*mic_handler)(void);
+		void (*power_handler)(u8 cmd);
 		/* ... */
 	} handler;
 };

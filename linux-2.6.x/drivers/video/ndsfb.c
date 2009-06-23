@@ -24,6 +24,7 @@
 
 #include <asm/arch/power.h>
 #include <asm/io.h>
+#include <asm/arch/fifo.h>
 
 #define	VCOUNT  	 (*(volatile u16*)0x04000006)
 #define DISPLAY_CR       (*(volatile u32*)0x04000000)
@@ -287,7 +288,7 @@ static int ndsfb_check_var(struct fb_var_screeninfo *var, struct fb_info *info)
 		if (info->par != 0) {
 			var->xres_virtual = 256;
 			var->yres_virtual = 256;
-		
+
 			if (var->bits_per_pixel != 16 && var->bits_per_pixel != 8)
 				return -EINVAL;
 
@@ -469,11 +470,9 @@ static int ndsfb_set_par(struct fb_info *info)
 static int ndsfb_blank(int blank_mode, struct fb_info *info)
 {
 	if (blank_mode) {
-		//POWER_CR &= ~ ( POWER_2D | POWER_2D_SUB | POWER_LCD_TOP | POWER_LCD_TOP ) ;
-		POWER_CR &= ~(POWER_LCD_TOP | POWER_LCD_TOP);
+		nds_fifo_send(FIFO_POWER_CMD(FIFO_POWER_CMD_BACKLIGHT_DISABLE, 0));
 	} else {
-		POWER_CR |=
-		    (POWER_2D | POWER_2D_SUB | POWER_LCD_TOP | POWER_LCD_TOP);
+		nds_fifo_send(FIFO_POWER_CMD(FIFO_POWER_CMD_BACKLIGHT_ENABLE, 0));
 	}
 	return 0;
 }
