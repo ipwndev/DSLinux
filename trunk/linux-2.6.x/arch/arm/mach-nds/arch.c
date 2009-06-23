@@ -53,12 +53,12 @@ extern void __init nds_init_irq(void);
 
 static void poweroff(void)
 {
-	nds_fifo_send(FIFO_POWER);
+	nds_fifo_send(FIFO_POWER_CMD(FIFO_POWER_CMD_SYSTEM_POWER, 0));
 }
 
 static void nds_machine_init(void)
 {
-	POWER_CR = POWER_2D | POWER_2D_SUB | POWER_LCD_TOP | POWER_LCD_BOTTOM | POWER_SWAP_LCDS ;
+	POWER_CR = POWER_2D | POWER_2D_SUB | POWER_LCD | POWER_SWAP_LCDS ;
 
 	/* Note: initial setup of wait_cr in head.S */
 
