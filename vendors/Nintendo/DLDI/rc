@@ -11,7 +11,9 @@ then
 fi
 mount -t ramfs none /var/run
 mount -t ramfs none /tmp
+mount -t sysfs none /sys
 
+# Create r/w /dev entries so dropbear will work
 mknod /var/run/ttyp0 c 3 0
 mknod /var/run/ttyp1 c 3 1
 mknod /var/run/ttyp2 c 3 2

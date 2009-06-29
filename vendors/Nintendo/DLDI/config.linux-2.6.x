@@ -1,6 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.14-hsc0
+# Mon Jun 29 18:11:46 2009
 #
 CONFIG_ARM=y
 # CONFIG_MMU is not set
@@ -609,6 +610,10 @@ CONFIG_LOGO=y
 # CONFIG_LOGO_LINUX_CLUT224 is not set
 # CONFIG_LOGO_NDS_CLUT224 is not set
 CONFIG_LOGO_NDS_BIG_CLUT224=y
+CONFIG_BACKLIGHT_LCD_SUPPORT=y
+CONFIG_BACKLIGHT_CLASS_DEVICE=y
+CONFIG_BACKLIGHT_DEVICE=y
+# CONFIG_LCD_CLASS_DEVICE is not set
 
 #
 # Sound
@@ -703,7 +708,7 @@ CONFIG_FAT_DEFAULT_IOCHARSET="iso8859-1"
 # Pseudo filesystems
 #
 CONFIG_PROC_FS=y
-# CONFIG_SYSFS is not set
+CONFIG_SYSFS=y
 # CONFIG_TMPFS is not set
 # CONFIG_HUGETLBFS is not set
 # CONFIG_HUGETLB_PAGE is not set
@@ -822,6 +827,7 @@ CONFIG_LOG_BUF_SHIFT=14
 # Security options
 #
 # CONFIG_KEYS is not set
+# CONFIG_SECURITY is not set
 
 #
 # Cryptographic options

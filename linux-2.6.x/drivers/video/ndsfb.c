@@ -469,11 +469,9 @@ static int ndsfb_set_par(struct fb_info *info)
 
 static int ndsfb_blank(int blank_mode, struct fb_info *info)
 {
-	if (blank_mode) {
-		nds_fifo_send(FIFO_POWER_CMD(FIFO_POWER_CMD_BACKLIGHT_DISABLE, 0));
-	} else {
-		nds_fifo_send(FIFO_POWER_CMD(FIFO_POWER_CMD_BACKLIGHT_ENABLE, 0));
-	}
+	/*
+	 * This is now handled by drivers/video/backlight/ndsbl.c
+	 */
 	return 0;
 }
 
