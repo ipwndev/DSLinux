@@ -45,7 +45,7 @@
 /* 
  * Fifo commands for power management chip
  * +-------------------------------------------------------------------------+
- * |3 bits FIFO_FIRMWARE | 5 bits FIFO_CMD_FIRMWARE_x | 24 bits command data |
+ * |3 bits FIFO_POWER | 5 bits FIFO_CMD_POWER_x | 24 bits command data |
  * +-------------------------------------------------------------------------+
 */
 #define FIFO_POWER_CMD(c, d) (FIFO_POWER | ((c & 0x1f) << 24) | (d & 0x00ffffff))
@@ -54,8 +54,8 @@
 #define FIFO_POWER_DECODE_ADDRESS(a) ((a) + 0x02000000)
 
 enum FIFO_POWER_CMDS {
-		FIFO_POWER_CMD_BACKLIGHT_ENABLE,
-		FIFO_POWER_CMD_BACKLIGHT_DISABLE,
+		FIFO_POWER_CMD_BACKLIGHT_POWER,
+		FIFO_POWER_CMD_BACKLIGHT_BRIGHTNESS,
 		FIFO_POWER_CMD_SYSTEM_POWER
 };
 
@@ -184,7 +184,7 @@ struct fifo_cb
 		void (*time_handler)(u32 seconds);
 		void (*wifi_handler)(u8 cmd, u32 data);
 		void (*mic_handler)(void);
-		void (*power_handler)(u8 cmd);
+		void (*power_handler)(u8 cmd, u32 data);
 		/* ... */
 	} handler;
 };

@@ -9,7 +9,7 @@ ELFIMAGE := $(IMAGEDIR)/image.elf
 FATFS	 := media
 OPTDIR	 := opt
 
-ROMFS_DIRS := boot dev dev/input proc sbin $(FATFS)/linux $(OPTDIR) tmp 
+ROMFS_DIRS := boot dev dev/input proc sbin $(FATFS)/linux $(OPTDIR) tmp sys
 
 FS_DIRS := etc/rc.d home lib usr/bin usr/bin/coreutils usr/games usr/lib usr/share/udhcpc \
 	   var/lock var/tmp var/run var/log var/mail var/www usr/share/man usr/share/consolefonts \
