@@ -1,2 +1,3 @@
 #!/bin/sh
-mp3play /usr/share/hinged/open.mp3
+mp3play /usr/share/hinged/open.mp3&
+echo 0 > /sys/class/backlight/ndsbl/power
