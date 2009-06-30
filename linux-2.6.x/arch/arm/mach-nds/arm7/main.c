@@ -18,14 +18,24 @@ static s32 xoffset, yoffset;
 
 static struct nds_firmware_block *firmware_block;
 
+int DSLiteDetect(void)
+{
+	//u32 data;
+	//data = power_read(POWER_BACKLIGHT);
+	//data &=  (1<<6);
+	if (power_read(POWER_BACKLIGHT) & (1<<6)) return 0;//DSLite
+	else
+		return 1;
+}
+	
 /* recieve outstanding FIFO commands from ARM9 */
 static void recieveFIFOCommand(void)
 {
 	u32 fifo_recv;
 	u32 data;
 	u32 seconds = 0;
-	u32 power;
 	int cmd;
+	int cmddata;
 	struct nds_tx_packet *tx_packet = NULL;
 
 	while (!(NDS_REG_IPCFIFOCNT & FIFO_EMPTY)) {
@@ -51,18 +61,50 @@ static void recieveFIFOCommand(void)
 			break;
 		case FIFO_POWER:
 			cmd = FIFO_POWER_GET_CMD(data);
+			cmddata = FIFO_POWER_GET_DATA(data);
 			switch (cmd) {
-			case FIFO_POWER_CMD_BACKLIGHT_ENABLE:
-	 				power = power_read(POWER_CONTROL);
-		        		power_write(POWER_CONTROL, power | POWER0_LOWER_BACKLIGHT | POWER0_UPPER_BACKLIGHT);
-					
-				break;
-			case FIFO_POWER_CMD_BACKLIGHT_DISABLE:
-					power = power_read(POWER_CONTROL);
-					power &= ~(POWER0_LOWER_BACKLIGHT | POWER0_UPPER_BACKLIGHT);
-					power_write(POWER_CONTROL, power);
-				
-				break;
+			case FIFO_POWER_CMD_BACKLIGHT_BRIGHTNESS:
+					if (DSLiteDetect() == 1) break;
+					switch (cmddata) {
+					case 0:
+						data = power_read(POWER_BACKLIGHT);
+						data &=  ~3;
+						power_write(POWER_BACKLIGHT, data);
+						break;
+					case 1:
+						data = power_read(POWER_BACKLIGHT);
+						data &=  ~3;
+						data |= (POWER4_BRIGHTNESS_MED);
+						power_write(POWER_BACKLIGHT, data);
+						break;
+					case 2:
+						data = power_read(POWER_BACKLIGHT);
+						data &=  ~3;
+						data |= (POWER4_BRIGHTNESS_HIGH);
+						power_write(POWER_BACKLIGHT, data);
+						break;
+					case 3:
+						
+						data = power_read(POWER_BACKLIGHT);
+						data |= (POWER4_BRIGHTNESS_MAX);
+						power_write(POWER_BACKLIGHT, data);
+						break;
+					}
+			break;
+			case FIFO_POWER_CMD_BACKLIGHT_POWER:
+					switch (cmddata) {
+					case 0:
+	 					data = power_read(POWER_CONTROL);
+		        			data &= ~(POWER0_LOWER_BACKLIGHT | POWER0_UPPER_BACKLIGHT);
+						power_write(POWER_CONTROL, data);
+						break;
+					case 1:
+						data = power_read(POWER_CONTROL);
+						data |= (POWER0_LOWER_BACKLIGHT | POWER0_UPPER_BACKLIGHT);
+						power_write(POWER_CONTROL, data);
+						break;
+					}
+			break;
 			case FIFO_POWER_CMD_SYSTEM_POWER:
 					power_write(POWER_CONTROL, POWER0_SYSTEM_POWER);
 				break;

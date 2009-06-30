@@ -67,7 +67,8 @@ static irqreturn_t ndsfifo_interrupt(int irq, void *dev_id,
 					break;
 				case FIFO_POWER:
 					cb->handler.power_handler(
-					    FIFO_POWER_GET_CMD(data));
+					    FIFO_POWER_GET_CMD(data),
+					    FIFO_POWER_GET_DATA(data));
 					break;
 				default:
 					break;
