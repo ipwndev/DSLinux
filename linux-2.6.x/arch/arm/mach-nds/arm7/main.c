@@ -18,14 +18,9 @@ static s32 xoffset, yoffset;
 
 static struct nds_firmware_block *firmware_block;
 
-int DSLiteDetect(void)
+int isDSLite(void)
 {
-	//u32 data;
-	//data = power_read(POWER_BACKLIGHT);
-	//data &=  (1<<6);
-	if (power_read(POWER_BACKLIGHT) & (1<<6)) return 0;//DSLite
-	else
-		return 1;
+	return ((power_read(POWER_BACKLIGHT)) & (1<<6));
 }
 	
 /* recieve outstanding FIFO commands from ARM9 */
@@ -64,7 +59,7 @@ static void recieveFIFOCommand(void)
 			cmddata = FIFO_POWER_GET_DATA(data);
 			switch (cmd) {
 			case FIFO_POWER_CMD_BACKLIGHT_BRIGHTNESS:
-					if (DSLiteDetect() == 1) break;
+					if (isDSLite() == 0) break;
 					switch (cmddata) {
 					case 0:
 						data = power_read(POWER_BACKLIGHT);
