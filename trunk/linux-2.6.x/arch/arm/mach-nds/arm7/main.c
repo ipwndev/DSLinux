@@ -18,7 +18,7 @@ static s32 xoffset, yoffset;
 
 static struct nds_firmware_block *firmware_block;
 
-int isDSLite(void)
+int isDSPhat(void)
 {
 	return !((power_read(POWER_BACKLIGHT)) & (1<<6));
 }
@@ -59,7 +59,7 @@ static void recieveFIFOCommand(void)
 			cmddata = FIFO_POWER_GET_DATA(data);
 			switch (cmd) {
 			case FIFO_POWER_CMD_BACKLIGHT_BRIGHTNESS:
-					if (isDSLite()) 
+					if (isDSPhat()) 
 						break;
 					switch (cmddata) {
 					case 0:
