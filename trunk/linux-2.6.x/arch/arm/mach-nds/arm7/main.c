@@ -20,7 +20,7 @@ static struct nds_firmware_block *firmware_block;
 
 int isDSLite(void)
 {
-	return ((power_read(POWER_BACKLIGHT)) & (1<<6));
+	return !((power_read(POWER_BACKLIGHT)) & (1<<6));
 }
 	
 /* recieve outstanding FIFO commands from ARM9 */
@@ -59,7 +59,8 @@ static void recieveFIFOCommand(void)
 			cmddata = FIFO_POWER_GET_DATA(data);
 			switch (cmd) {
 			case FIFO_POWER_CMD_BACKLIGHT_BRIGHTNESS:
-					if (isDSLite() == 0) break;
+					if (isDSLite()) 
+						break;
 					switch (cmddata) {
 					case 0:
 						data = power_read(POWER_BACKLIGHT);
