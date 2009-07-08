@@ -7,10 +7,16 @@ if [ -e /etc/rc.conf ]
 then
 	. /etc/rc.conf
 else
+	echo "************************************************************"
+	echo "********************   WARNING   ***************************"
+	echo "************************************************************"
 	echo "The file /etc/rc.conf does not exist on your system,"
 	echo "so the default configuration will be used."
 	echo "Type 'cfg_rc' at a command prompt"
 	echo "to create /etc/rc.conf to customise your dslinux installation."
+	echo "************************************************************"
+	echo "************************************************************"
+	echo "************************************************************"
 fi
 
 if [ ! "$font" = "" ]
