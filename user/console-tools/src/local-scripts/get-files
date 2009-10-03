@@ -1,8 +1,0 @@
-#!/bin/sh
-
-gettextize
-aclocal
-autoheader
-automake --add-missing
-autoconf
-./configure
