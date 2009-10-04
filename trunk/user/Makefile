@@ -61,6 +61,7 @@ dir_$(CONFIG_USER_CAL_CAL)                  += cal
 dir_$(CONFIG_USER_CAL_DATE)                 += cal
 dir_$(CONFIG_USER_CAMSERV)                  += camserv
 dir_$(CONFIG_USER_CAN_EXAMPLES)             += can4linux
+dir_$(CONFIG_USER_CMATRIX_CMATRIX)          += cmatrix
 dir_$(CONFIG_USER_CONSOLETOOLS_CONSOLETOOLS) += console-tools
 dir_$(CONFIG_USER_CPSCAN) 	            += cpscan
 dir_$(CONFIG_USER_DC_DC)                    += dc
