@@ -1004,6 +1004,9 @@ CONFIG_USER_CAMSERV
 CONFIG_USER_CLOCK_CLOCK
   Some kind of clock
 
+CONFIG_USER_CMATRIX_CMATRIX
+  Shows a scrolling 'Matrix' like screen in Linux
+
 CONFIG_USER_COREUTILS_COREUTILS
   GNU Coreutils v6.7
 
