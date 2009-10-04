@@ -11,7 +11,7 @@ CONSOLETOOLS_CONFIGURE_FLAGS=   --enable-static=yes --enable-shared=no \
 .configured:
 	cd src &&env LIBS="-lintl -liconv" CFLAGS="$(CFLAGS)"\
 		./configure --host=arm-linux-elf \
-		--prefix=/nonexistent $(CONSOLETOOLS_CONFIGURE_FLAGS)
+		--prefix=/usr $(CONSOLETOOLS_CONFIGURE_FLAGS)
 	touch $@
 
 .compiled: .configured
