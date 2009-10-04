@@ -1,8 +1,0 @@
-# Here is a simple example config for openvpn
-# See here for more info http://openvpn.net/static.html
-
-dev-node /dev/tun
-dev tun
-ifconfig 10.8.0.1 10.8.0.2
-log-append /var/log/openvpn.log
-secret /etc/static.key
