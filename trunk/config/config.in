@@ -786,6 +786,7 @@ bool 'bzip2'			CONFIG_USER_BZIP2_BZIP2
 if [ "$CONFIG_USER_BZIP2_BZIP2" = "y" ]; then
 	define_bool CONFIG_LIB_LIBBZ2 y
 fi
+bool 'bc'			CONFIG_USER_BC_BC
 bool 'cal'			CONFIG_USER_CAL_CAL
 bool 'chat'			CONFIG_USER_CHAT_CHAT
 if [ "$CONFIG_USER_CHAT_CHAT" = "y" ]; then
@@ -817,6 +818,7 @@ bool 'cpu'			CONFIG_USER_CPU_CPU
 bool 'cryptotest'		CONFIG_USER_CRYPTO_TOOLS_CRYPTOTEST
 bool 'cryptokeytest'		CONFIG_USER_CRYPTO_TOOLS_CRYPTOKEYTEST
 bool 'date'			CONFIG_USER_CAL_DATE
+bool 'dc'			CONFIG_USER_DC_DC
 bool 'dhrystone'   	  	CONFIG_USER_DHRYSTONE_DHRYSTONE
 bool 'dialog'			CONFIG_USER_DIALOG_DIALOG
 bool 'dict-words'		CONFIG_USER_DICTIONARY
