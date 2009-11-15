@@ -387,6 +387,9 @@ CONFIG_USER_SETSERIAL_SETSERIAL
 CONFIG_USER_SNAPSHOT
   Small program to dump the contents of a framebuffer device into a PNG file.
 
+CONFIG_USER_SQLITE
+  A command line interface for SQLite, an embedded SQL database library.
+
 CONFIG_USER_STTY_STTY
   Command to change the settings on serial devices.  For example
   you can change the baud rate,  flow control and so on.

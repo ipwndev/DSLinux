@@ -893,6 +893,7 @@ if [ "$CONFIG_USER_SNAPSHOT" = "y" ]; then
 	define_bool CONFIG_LIB_LIBPNG y
 	define_bool CONFIG_LIB_ZLIB y
 fi
+bool 'sqlite'			CONFIG_USER_SQLITE
 bool 'siggen'			CONFIG_USER_TRIPWIRE_SIGGEN
 bool 'sl'	        	CONFIG_USER_SL_SL
 bool 'strace'			CONFIG_USER_STRACE_STRACE
