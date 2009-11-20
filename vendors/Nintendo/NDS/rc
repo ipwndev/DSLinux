@@ -1,9 +1,0 @@
-#!/bin/sh
-
-mount -t proc none /proc
-mount -t ramfs none /var
-mkdir /var/tmp
-mkdir /var/home
-mkdir /var/run
-
-. /etc/rc.common

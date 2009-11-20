@@ -1,4 +1,0 @@
-config CONFIG_DVDVIEW
-	bool "Nano-X Video Player"
-	depends CONFIG_NANOX 
-	default n
