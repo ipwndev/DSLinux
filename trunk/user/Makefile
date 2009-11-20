@@ -271,6 +271,7 @@ dir_$(CONFIG_USER_PCIUTILS_LSPCI)           += pciutils
 dir_$(CONFIG_USER_PCIUTILS_SETPCI)          += pciutils
 dir_$(CONFIG_USER_PCMCIA_CS)                += pcmcia-cs
 dir_$(CONFIG_USER_PERL_PERL)                += perl
+dir_$(CONFIG_USER_PICOC_PICOC)              += picoc
 dir_$(CONFIG_USER_PING_PING)                += ping
 dir_$(CONFIG_USER_PIXIL)		    += pixil
 dir_$(CONFIG_USER_PV)			    += pv

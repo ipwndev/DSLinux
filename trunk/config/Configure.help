@@ -683,6 +683,9 @@ CONFIG_USER_PERL_PERL
   microperl, the least common denomonator of all perl builds.  Currently this
   installs nothing but the perl binary.
 
+CONFIG_USER_PICOC_PICOC
+  PicoC is a very small C interpreter.
+
 CONFIG_USER_PYTHON_PYTHON
   The Python scripting language.
 

@@ -879,6 +879,7 @@ bool 'null'			CONFIG_USER_NULL_NULL
 bool 'palmbot'			CONFIG_USER_PALMBOT_PALMBOT
 bool 'pcmcia-cs (Card Services)' CONFIG_USER_PCMCIA_CS
 bool 'perl'			CONFIG_USER_PERL_PERL
+bool 'picoc'			CONFIG_USER_PICOC_PICOC
 bool 'pv'			CONFIG_USER_PV
 bool 'python'			CONFIG_USER_PYTHON_PYTHON
 bool 'readprofile'		CONFIG_USER_READPROFILE_READPROFILE
