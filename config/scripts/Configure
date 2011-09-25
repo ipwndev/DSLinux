@@ -552,7 +552,7 @@ fi
 
 DEFAULTS=arch/$ARCH/defconfig
 if [ -f .config ]; then
-  DEFAULTS=.config
+  DEFAULTS=./.config
 fi
 
 if [ -f $DEFAULTS ]; then
@@ -561,7 +561,7 @@ if [ -f $DEFAULTS ]; then
   echo "#"
   . $DEFAULTS
   sed -e 's/# \(CONFIG_[^ ]*\) is not.*/\1=n/' <$DEFAULTS >.config-is-not.$$
-  . .config-is-not.$$
+  . ./.config-is-not.$$
   rm .config-is-not.$$
 else
   echo "#"

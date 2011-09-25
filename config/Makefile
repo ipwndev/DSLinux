@@ -38,7 +38,7 @@ oldconfig:
 	@$(CONFIG_SHELL) -n config.in
 	@HELP_FILE=Configure.help \
 		AUTOCONF_FILE=autoconf.h \
-		$(CONFIG_SHELL) $(SCRIPTSDIR)/Configure -d config.in
+		$(CONFIG_SHELL) $(SCRIPTSDIR)/Configure -d ./config.in
 
 config:
 	@$(CONFIG_SHELL) -n config.in
