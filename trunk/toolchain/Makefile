@@ -37,16 +37,16 @@ GPP_DIST	:= gcc-g++-$(GCC_VER).tar.bz2
 ELF2FLT_DIST	:= elf2flt-$(ELF2FLT_VER).tar.gz
 GENROMFS_DIST	:= genromfs-$(GENROMFS_VER).tar.gz
 LIBELF_DIST	:= libelf-$(LIBELF_VER).tar.gz
-GDB_DIST	:= gdb-$(GDB_VER).tar.bz2
+GDB_DIST	:= gdb-$(GDB_VER)a.tar.bz2
 
 # We do basic MD5 checking to prevent hassle with broken downloads.
-BINUTILS_DIST_MD5	= e26e2e06b6e4bf3acf1dc8688a94c0d1
+BINUTILS_DIST_MD5	= 1d81edd0569de4d84091526fd578dd7b
 ELF2FLT_DIST_MD5	= 704ee32b30c58307bb5187d5ea9c7e2b
 GCC_DIST_MD5		= 193e0a7a471cca70e374974bc5a60137
 GPP_DIST_MD5		= 5c79e6af5b49dd9cfd22001f3856f447
 GENROMFS_DIST_MD5	= fee69ecbf8f990fdb0ca0c7267c13e7e
 LIBELF_DIST_MD5		= be84e553686dd50c8b6d520f86f46521
-GDB_DIST_MD5		= a4df41d28dd514d64e8ccbfe125fd9a6
+GDB_DIST_MD5		= f77ce6e22dd5b8621faf4f846e7d5e33
 
 DISTFILES :=	$(DISTDIR)/$(BINUTILS_DIST) \
 		$(DISTDIR)/$(GCC_DIST) \
@@ -64,7 +64,7 @@ SOURCEFORGE_MIRROR	= http://switch.dl.sourceforge.net/sourceforge
 BINUTILS_URL	:= $(GNU_MIRROR)/binutils/$(BINUTILS_DIST)
 GCC_URL 	:= $(GNU_MIRROR)/gcc/gcc-$(GCC_VER)/$(GCC_DIST)
 GPP_URL		:= $(GNU_MIRROR)/gcc/gcc-$(GCC_VER)/$(GPP_DIST)
-ELF2FLT_URL	:= http://dslinux.in-berlin.de/$(ELF2FLT_DIST)
+ELF2FLT_URL	:= http://dslinux.org/misc/$(ELF2FLT_DIST)
 # Try this elf2flt mirror if the one above fails:
 #ELF2FLT_URL	:= http://stsp.spline.de/dslinux/$(ELF2FLT_DIST)
 GENROMFS_URL	:= $(SOURCEFORGE_MIRROR)/romfs/$(GENROMFS_DIST)
